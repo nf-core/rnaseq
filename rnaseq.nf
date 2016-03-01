@@ -56,7 +56,7 @@ version = 0.1
 // Reference genome index
 params.genome = 'GRCh37'
 params.index = params.genomes[ params.genome ].star
-params.gtf = params.genomes[ params.genome ].gtf
+params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
 // Input files
@@ -69,6 +69,8 @@ params.out = "$PWD"
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
 log.info "===================================="
+log.info "Read 1       : ${params.read1}"
+log.info "Read 2       : ${params.read2}"
 log.info "Genome       : ${params.genome}"
 log.info "Index        : ${params.index}"
 log.info "Annotation   : ${params.gtf}"
@@ -82,12 +84,12 @@ log.info "===================================="
 
 // Set up nextflow objects
 index = file(params.index)
-gtf = file(params.gtf)
+gtf   = file(params.gtf)
 bed12 = file(params.bed12)
 
 // Validate inputs
 if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
-if( !gtf.exists() ) exit 2, "Missing GTF annotation: ${gtf}"
+if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
 /*

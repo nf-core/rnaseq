@@ -1,0 +1,52 @@
+/* -------------------------------------------------
+ *  Example Nextflow config file for UPPMAX (milou)
+ * -------------------------------------------------
+ * Defines reference genomes, using iGenome paths
+ * Should be saved either with Nextflow installation or
+ * as file ~/.nextflow/config
+ */
+
+
+process {
+  executor = 'slurm'
+  cpus = 1
+  memory = '16 GB'
+  time = '48h'
+  queue = 'core'
+  clusterOptions = {
+    '-A b2013064'
+  }
+}
+
+params {
+  genomes {
+    GRCh37 {
+      bed12   = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed'
+      bismark = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/BismarkIndex'
+      bowtie  = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/BowtieIndex/genome'
+      bowtie2 = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/Bowtie2Index/genome'
+      bwa     = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/BWAIndex/genome.fa'
+      fasta   = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta'
+      gtf     = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf'
+      star    = '/sw/data/uppnex/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/'
+    }
+    GRCm38 {
+      bed12   = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes.bed'
+      bismark = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Sequence/BismarkIndex'
+      bowtie  = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Sequence/BowtieIndex/genome'
+      bowtie2 = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Sequence/Bowtie2Index/genome'
+      bwa     = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Sequence/BWAIndex/genome.fa'
+      fasta   = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Sequence/WholeGenomeFasta'
+      gtf     = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes.gtf'
+      star    = '/sw/data/uppnex/igenomes/Mus_musculus/Ensembl/GRCm38/Sequence/STARIndex/'
+    }
+    sacCer2 {
+      bismark = '/sw/data/uppnex/igenomes/Saccharomyces_cerevisiae/UCSC/sacCer2/Sequence/BismarkIndex'
+      bowtie  = '/sw/data/uppnex/igenomes/Saccharomyces_cerevisiae/UCSC/sacCer2/Sequence/BowtieIndex/genome'
+      bowtie2 = '/sw/data/uppnex/igenomes/Saccharomyces_cerevisiae/UCSC/sacCer2/Sequence/Bowtie2Index/genome'
+      bwa     = '/sw/data/uppnex/igenomes/Saccharomyces_cerevisiae/UCSC/sacCer2/Sequence/BWAIndex/genome.fa'
+      fasta   = '/sw/data/uppnex/igenomes/Saccharomyces_cerevisiae/UCSC/sacCer2/Sequence/WholeGenomeFasta'
+      star    = '/sw/data/uppnex/igenomes/Saccharomyces_cerevisiae/UCSC/sacCer2/Sequence/STARIndex/'
+    }
+  }
+}

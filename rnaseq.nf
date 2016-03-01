@@ -1,48 +1,49 @@
 #!/usr/bin/env nextflow
 
-/* ========================================================================================
- *                      R N A - S E Q    T W O    P O I N T    Z E R O
- * ========================================================================================
- * New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
- * @Authors
- * Phil Ewels <phil.ewels@scilifelab.se>
- * ----------------------------------------------------------------------------------------
- * Basic command:
- * $ nextflow rnaseq.nf
- *
- * Pipeline variables can be configured with the following command line options:
- * --genome [GRCh37 | GRCm38]
- * --index [path to STAR index]
- * --gtf [path to GTF file]
- * --files [path to input files]
- * --mode [single | paired]
- *
- * For example:
- * $ nextflow rnaseq.nf --files path/to/data/*fq.gz
- * ----------------------------------------------------------------------------------------
- * Pipeline overview:
- * - cutadapt - trimming
- * - STAR - align
- * - RSeQC
- *   - bam_stat
- *   - infer_experiment
- *   - splice junction saturation
- *   - RPKM saturation
- *   - read duplication
- *   - inner distance
- *   - gene body coverage
- *   - read distribution
- *   - junction annotation
- * - dupRadar
- * - preseq
- * - subread featureCounts - gene counts. rRNA estimation.
- * - String Tie - FPKMs for genes and transcripts
- * - MultiQC
- * ----------------------------------------------------------------------------------------
- * GA project GA_14_20 RNA-Seq Pipeline. See planning document:
- * https://docs.google.com/document/d/1_I4r-yYLl_nA5SzMKtABjDKxQxHSb5N9FMWyomVSWVU/edit#heading=h.uc2543wvne80
- * ----------------------------------------------------------------------------------------
- */
+/*
+========================================================================================
+                    R N A - S E Q    T W O    P O I N T    Z E R O
+========================================================================================
+ New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
+ @Authors
+ Phil Ewels <phil.ewels@scilifelab.se>
+----------------------------------------------------------------------------------------
+ Basic command:
+ $ nextflow rnaseq.nf
+ 
+ Pipeline variables can be configured with the following command line options:
+ --genome [GRCh37 | GRCm38]
+ --index [path to STAR index]
+ --gtf [path to GTF file]
+ --files [path to input files]
+ --mode [single | paired]
+ 
+ For example:
+ $ nextflow rnaseq.nf --files path/to/data/*fq.gz
+----------------------------------------------------------------------------------------
+ Pipeline overview:
+ - cutadapt - trimming
+ - STAR - align
+ - RSeQC
+   - bam_stat
+   - infer_experiment
+   - splice junction saturation
+   - RPKM saturation
+   - read duplication
+   - inner distance
+   - gene body coverage
+   - read distribution
+   - junction annotation
+ - dupRadar
+ - preseq
+ - subread featureCounts - gene counts. rRNA estimation.
+ - String Tie - FPKMs for genes and transcripts
+ - MultiQC
+----------------------------------------------------------------------------------------
+ GA project GA_14_20 RNA-Seq Pipeline. See planning document:
+ https://docs.google.com/document/d/1_I4r-yYLl_nA5SzMKtABjDKxQxHSb5N9FMWyomVSWVU/edit#heading=h.uc2543wvne80
+----------------------------------------------------------------------------------------
+*/
 
 
 
@@ -91,6 +92,8 @@ bed12 = file(params.bed12)
 if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
 if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
+
+
 
 /*
  * STEP 1 - FastQC
@@ -148,6 +151,7 @@ process trim_galore {
 }
 
 
+
 /*
  * STEP 3 - align with STAR
  * Inspired by https://github.com/AveraSD/nextflow-rnastar
@@ -185,6 +189,7 @@ process star {
          --outSAMtype BAM SortedByCoordinate
     """
 }
+
 
 
 /*

@@ -37,6 +37,7 @@
  * - preseq
  * - subread featureCounts - gene counts. rRNA estimation.
  * - String Tie - FPKMs for genes and transcripts
+ * - MultiQC
  * ----------------------------------------------------------------------------------------
  * GA project GA_14_20 RNA-Seq Pipeline. See planning document:
  * https://docs.google.com/document/d/1_I4r-yYLl_nA5SzMKtABjDKxQxHSb5N9FMWyomVSWVU/edit#heading=h.uc2543wvne80
@@ -56,6 +57,7 @@ version = 0.1
 params.genome = 'GRCh37'
 params.index = params.genomes[ params.genome ].star
 params.gtf = params.genomes[ params.genome ].gtf
+params.bed12 = params.genomes[ params.genome ].bed12
 
 // Input files
 params.read1 = file("data/*_1.fastq.gz")
@@ -79,9 +81,14 @@ log.info "Output dir   : ${params.out}"
 log.info "===================================="
 
 // Set up nextflow objects
-gtf = file(params.gtf)
 index = file(params.index)
+gtf = file(params.gtf)
+bed12 = file(params.bed12)
 
+// Validate inputs
+if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
+if( !gtf.exists() ) exit 2, "Missing GTF annotation: ${gtf}"
+if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
 /*
  * STEP 1 - FastQC
@@ -122,7 +129,7 @@ process trim_galore {
     module 'TrimGalore'
     
     cpus 3
-    memory '3GB'
+    memory '3 GB'
     time '8h'
 
     input:
@@ -144,14 +151,13 @@ process trim_galore {
  * Inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 
-
 process star {
     
     module 'bioinfo-tools'
     module 'star'
     
     cpus 6
-    memory '32GB'
+    memory '32 GB'
     time '5h'
 
     input:
@@ -172,9 +178,41 @@ process star {
          --sjdbGTFfile $gtf \\
          --readFilesIn $trimmed_read1 $trimmed_read2 \\
          --runThreadN ${task.cpus} \\
-		 --twopassMode Basic \\
+         --twopassMode Basic \\
          --outWigType bedGraph \\
-		 --outSAMtype BAM SortedByCoordinate
+         --outSAMtype BAM SortedByCoordinate
     """
 }
 
+
+/*
+ * STEP 4 - RNASeQC analysis
+ */
+
+process rnaseqc {
+    
+    module 'bioinfo-tools'
+    module 'rseqc'
+    
+    memoy '4 GB'
+    time '2h'
+    
+    input:
+    file bam
+    
+    output:
+    file '*.splice_events.{txt,pdf}' into results               // junction_annotation
+    file '*.splice_junction.{txt,pdf}' into results             // junction_annotation
+    file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
+    file '*.inner_distance.{txt,pdf}' into results              // inner_distance
+    file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
+    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+    
+    """
+    junction_annotation.py -i $bam -o ${bam}.rseqc -r $bed12
+    junction_saturation.py -i $bam -o ${bam}.rseqc -r $bed12
+    inner_distance.py -i $bam -o ${bam}.rseqc -r $bed12
+    geneBody_coverage.py -i $bam -o ${bam}.rseqc -r $bed12
+    """
+    
+}

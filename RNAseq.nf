@@ -162,7 +162,7 @@ process star {
     module 'bioinfo-tools'
     module 'star'
     
-    cpus 6
+    cpus 8
     memory '32 GB'
     time '5h'
 
@@ -201,25 +201,179 @@ process rnaseqc {
     module 'bioinfo-tools'
     module 'rseqc'
     
-    memoy '4 GB'
+    memory '4 GB'
     time '2h'
     
     input:
     file bam
+    file bed12
     
     output:
+    file '*.bam_stat.txt' into results                          // bam_stat
     file '*.splice_events.{txt,pdf}' into results               // junction_annotation
     file '*.splice_junction.{txt,pdf}' into results             // junction_annotation
     file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
     file '*.inner_distance.{txt,pdf}' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
     file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+    file '*.infer_experiment.txt' into results                  // infer_experiment
+    file '*.read_distribution.txt' into results                 // read_distribution
+    file '*.read_duplication.{txt,pdf}' into results            // read_duplication
+    file '*.RPKM_saturation.{txt,pdf}' into results             // RPKM_saturation
     
     """
+    bam_stat.py -i $bam 2> ${bam}.bam_stat.txt
     junction_annotation.py -i $bam -o ${bam}.rseqc -r $bed12
     junction_saturation.py -i $bam -o ${bam}.rseqc -r $bed12
     inner_distance.py -i $bam -o ${bam}.rseqc -r $bed12
     geneBody_coverage.py -i $bam -o ${bam}.rseqc -r $bed12
+    infer_experiment.py -i $bam -r $bed12 > ${bam}.infer_experiment.txt
+    read_distribution.py -i $bam -r $bed12 > ${bam}.read_distribution.txt
+    read_duplication.py -i $bam -o ${bam}.read_duplication
+    RPKM_saturation.py -i $bam -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam}.RPKM_saturation
     """
-    
 }
+
+
+
+
+
+/*
+ * STEP 5 - dupRadar
+ */
+
+process dupradar {
+    
+    module 'bioinfo-tools'
+    module 'R/3.2.3'
+    module 'picard/2.0.1'
+    
+    memoy '4 GB'
+    time '2h'
+    
+    input:
+    file bam
+    file gtf
+    
+    output:
+    file '*_duprm.bam' into dupRemovedBam
+    file '*_dupMatrix.txt' into results
+    file '*_duprateExpDens.pdf' into results
+    file '*_intercept_slope.txt' into results
+    file '*_expressionHist.pdf' into results
+    
+    shell
+    """
+    #!/usr/bin/env Rscript
+    
+    library("dupRadar")
+    
+    # Duplicate stats
+    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam}, rminput=FALSE)
+    stranded <- 2
+    paired <- TRUE
+    threads <- 8
+    dm <- analyzeDuprates(bamDuprm, ${gtf}, stranded, paired, threads)
+    write.table(dm, file=paste(${bam}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+
+    # 2D density scatter plot
+    pdf(paste0(${bam}, "_duprateExpDens.pdf"))
+    duprateExpDensPlot(DupMat=dm)
+    title("Density scatter plot")
+    dev.off()
+    fit <- duprateExpFit(DupMat=dm)
+    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam}, file=paste0(${bam}, "_intercept_slope.txt"), append=FALSE)
+
+    # Distribution of RPK values per gene
+    pdf(paste0(${bam}, "_expressionHist.pdf"))
+    expressionHist(DupMat=dm)
+    title("Distribution of RPK values per gene")
+    dev.off()
+    """
+}
+
+
+/*
+ * STEP 6 - preseq analysis
+ */
+
+process preseq {
+    
+    module 'bioinfo-tools'
+    module 'preseq'
+    
+    memory '4 GB'
+    time '2h'
+    
+    input:
+    file bam
+    
+    output:
+    file '*.ccurve.txt' into results
+    
+    """
+    preseq lc_extrap -v -B $bam -o ${bam}.ccurve.txt
+    """
+}
+
+
+
+
+/*
+ * STEP 7 - subread featureCounts
+ */
+
+process featureCounts {
+    
+    module 'bioinfo-tools'
+    module 'subread'
+    
+    memory '4 GB'
+    time '2h'
+    
+    input:
+    file bam
+    file gtf
+    
+    output:
+    file '*_gene.featureCounts.txt' into results
+    file '*_biotype.featureCounts.txt' into results
+    file '*_rRNA_counts.txt' into results
+    
+    """
+    featureCounts -a $gtf -g gene_id -o ${bam}_gene.featureCounts.txt -p -s 2 $bam
+    featureCounts -a $gtf -g gene_biotype -o ${bam}_biotype.featureCounts.txt -p -s 2 $bam
+    cut -f 1,7 ${bam}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam}_rRNA_counts.txt
+    """
+}
+
+
+
+/*
+ * STEP 8 - stringtie FPKM
+ */
+
+process featureCounts {
+    
+    module 'bioinfo-tools'
+    module 'StringTie'
+    
+    memory '4 GB'
+    time '2h'
+    
+    input:
+    file bam
+    file gtf
+    
+    output:
+    file '*_transcripts.gtf ' into results
+    file '*.gene_abund.txt' into results
+    file '*.cov_refs.gtf' into results
+    
+    """
+    stringtie $bam -o ${bam}_transcripts.gtf -v -G $gtf -A ${bam}.gene_abund.txt -C ${bam}.cov_refs.gtf -e -b ${bam}_ballgown
+    """
+}
+
+
+

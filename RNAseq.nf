@@ -61,8 +61,10 @@ params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
 // Input files
-params.read1 = file("data/*_1.fastq.gz")
-params.read2 = file("data/*_2.fastq.gz")
+params.read1 = "data/*_1.fastq.gz"
+params.read2 = "data/*_2.fastq.gz"
+read1 = file(params.read1)
+read2 = file(params.read2)
 
 // Output path
 params.out = "$PWD"
@@ -108,8 +110,8 @@ process fastqc {
     time '1h'
     
     input:
-    file read1 from params.read1
-    file read2 from params.read2
+    file read1 from read1
+    file read2 from read2
 
     output:
     file '*_fastqc.html' into fastqc_html
@@ -138,8 +140,8 @@ process trim_galore {
     time '8h'
 
     input:
-    file read1 from params.read1
-    file read2 from params.read2
+    file read1 from read1
+    file read2 from read2
     
     output:
     file '*_val_1.fq.gz' into trimmed_read1
@@ -353,7 +355,7 @@ process featureCounts {
  * STEP 8 - stringtie FPKM
  */
 
-process featureCounts {
+process stringTie {
     
     module 'bioinfo-tools'
     module 'StringTie'

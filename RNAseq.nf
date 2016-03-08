@@ -164,14 +164,14 @@ process star {
     module 'star'
     
     cpus 8
-    memory '32 GB'
+    memory '64 GB'
     time '5h'
 
     input:
     file index
     file gtf
-    file trimmed_read1
-    file trimmed_read2
+    file trimmed_read1 from trimmed_read1
+    file trimmed_read2 from trimmed_read2
 
     output:
     file '*.Aligned.sortedByCoord.out.bam' into bam
@@ -181,13 +181,16 @@ process star {
     file '*.SJ.out.tab' into results
 
     """
+    prefix=\$(echo $trimmed_read1 | sed 's/_.*/./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
          --readFilesIn $trimmed_read1 $trimmed_read2 \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
-         --outSAMtype BAM SortedByCoordinate
+         --outSAMtype BAM SortedByCoordinate\\
+         --readFilesCommand zcat\\
+         --outFileNamePrefix \$prefix
     """
 }
 
@@ -206,8 +209,8 @@ process rnaseqc {
     time '2h'
     
     input:
-    file bam
-    file bed12
+    file bam from bam
+    file bed12 from bed12
     
     output:
     file '*.bam_stat.txt' into results                          // bam_stat
@@ -253,8 +256,8 @@ process dupradar {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam from bam
+    file gtf from gtf
     
     output:
     file '*_duprm.bam' into dupRemovedBam
@@ -307,7 +310,7 @@ process preseq {
     time '2h'
     
     input:
-    file bam
+    file bam from bam
     
     output:
     file '*.ccurve.txt' into results
@@ -333,8 +336,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam from bam
+    file gtf from gtf
     
     output:
     file '*_gene.featureCounts.txt' into results
@@ -363,8 +366,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam from bam
+    file gtf from gtf
     
     output:
     file '*_transcripts.gtf ' into results

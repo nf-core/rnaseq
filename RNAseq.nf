@@ -205,8 +205,10 @@ process rnaseqc {
     module 'bioinfo-tools'
     module 'rseqc'
     
-    memory '4 GB'
+    memory '64 GB'
     time '2h'
+   
+     errorStrategy 'ignore' 
     
     input:
     file bam from bam
@@ -252,9 +254,11 @@ process dupradar {
     module 'R/3.2.3'
     module 'picard/2.0.1'
     
-    memoy '4 GB'
+    memory '16 GB'
     time '2h'
     
+    errorStrategy 'ignore'
+
     input:
     file bam from bam
     file gtf from gtf

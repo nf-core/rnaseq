@@ -208,12 +208,13 @@ process rnaseqc {
     memory '64 GB'
     time '2h'
    
-     errorStrategy 'ignore' 
+    errorStrategy 'ignore' 
     
     input:
-    file bam from bam
+    file bam
     file bed12 from bed12
-    
+   
+     
     output:
     file '*.bam_stat.txt' into results                          // bam_stat
     file '*.splice_events.{txt,pdf}' into results               // junction_annotation
@@ -221,11 +222,12 @@ process rnaseqc {
     file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
     file '*.inner_distance.{txt,pdf}' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
-    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+//    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
     file '*.infer_experiment.txt' into results                  // infer_experiment
     file '*.read_distribution.txt' into results                 // read_distribution
-    file '*.read_duplication.{txt,pdf}' into results            // read_duplication
-    file '*.RPKM_saturation.{txt,pdf}' into results             // RPKM_saturation
+    file '*DupRate.xls' into results                            // read_duplication
+    file '*DupRate_plot.pdf' into results                      // read_duplication
+    file '*.saturation.{txt,pdf}' into results             // RPKM_saturation
     
     """
     bam_stat.py -i $bam 2> ${bam}.bam_stat.txt
@@ -244,62 +246,6 @@ process rnaseqc {
 
 
 
-/*
- * STEP 5 - dupRadar
- */
-
-process dupradar {
-    
-    module 'bioinfo-tools'
-    module 'R/3.2.3'
-    module 'picard/2.0.1'
-    
-    memory '16 GB'
-    time '2h'
-    
-    errorStrategy 'ignore'
-
-    input:
-    file bam from bam
-    file gtf from gtf
-    
-    output:
-    file '*_duprm.bam' into dupRemovedBam
-    file '*_dupMatrix.txt' into results
-    file '*_duprateExpDens.pdf' into results
-    file '*_intercept_slope.txt' into results
-    file '*_expressionHist.pdf' into results
-    
-    shell
-    """
-    #!/usr/bin/env Rscript
-    
-    library("dupRadar")
-    
-    # Duplicate stats
-    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam}, rminput=FALSE)
-    stranded <- 2
-    paired <- TRUE
-    threads <- 8
-    dm <- analyzeDuprates(bamDuprm, ${gtf}, stranded, paired, threads)
-    write.table(dm, file=paste(${bam}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
-
-    # 2D density scatter plot
-    pdf(paste0(${bam}, "_duprateExpDens.pdf"))
-    duprateExpDensPlot(DupMat=dm)
-    title("Density scatter plot")
-    dev.off()
-    fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam}, file=paste0(${bam}, "_intercept_slope.txt"), append=FALSE)
-
-    # Distribution of RPK values per gene
-    pdf(paste0(${bam}, "_expressionHist.pdf"))
-    expressionHist(DupMat=dm)
-    title("Distribution of RPK values per gene")
-    dev.off()
-    """
-}
-
 
 /*
  * STEP 6 - preseq analysis
@@ -314,7 +260,7 @@ process preseq {
     time '2h'
     
     input:
-    file bam from bam
+    file bam
     
     output:
     file '*.ccurve.txt' into results
@@ -328,8 +274,64 @@ process preseq {
 
 
 /*
- * STEP 7 - subread featureCounts
+STEP 5 - dupRadar
  */
+
+process dupradar {
+    
+    module 'bioinfo-tools'
+    module 'R/3.2.3'
+    module 'picard/2.0.1'
+    
+    memory '16 GB'
+    time '2h'
+    
+    errorStrategy 'ignore'
+
+    input:
+    file bam 
+    file gtf
+    
+    output:
+    file '*_duprm.bam' into dupRemovedBam
+    file '*_dupMatrix.txt' into results
+    file '*_duprateExpDens.pdf' into results
+    file '*_intercept_slope.txt' into results
+    file '*_expressionHist.pdf' into results
+    
+    shell
+    """
+    #!/usr/bin/env Rscript
+       
+    library("dupRadar")
+              
+    # Duplicate stats
+    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam}, rminput=FALSE)
+    stranded <- 2
+    paired <- TRUE
+    threads <- 8
+    dm <- analyzeDuprates(bamDuprm, ${gtf}, stranded, paired, threads)
+    write.table(dm, file=paste(${bam}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+    
+    # 2D density scatter plot
+    pdf(paste0(${bam}, "_duprateExpDens.pdf"))
+    duprateExpDensPlot(DupMat=dm)
+    title("Density scatter plot")
+    dev.off()
+    fit <- duprateExpFit(DupMat=dm)
+    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam}, file=paste0(${bam}, "_intercept_slope.txt"), append=FALSE)
+   
+    # Distribution of RPK values per gene
+    pdf(paste0(${bam}, "_expressionHist.pdf"))
+                         expressionHist(DupMat=dm)
+    title("Distribution of RPK values per gene")
+    dev.off()
+    """
+    }
+ /*
+ * STEP 7 Feature counts
+ */
+
 
 process featureCounts {
     
@@ -340,8 +342,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam from bam
-    file gtf from gtf
+    file bam
+    file gtf
     
     output:
     file '*_gene.featureCounts.txt' into results
@@ -370,8 +372,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam from bam
-    file gtf from gtf
+    file bam
+    file gtf
     
     output:
     file '*_transcripts.gtf ' into results

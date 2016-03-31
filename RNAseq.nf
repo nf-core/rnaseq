@@ -174,7 +174,7 @@ process star {
     file trimmed_read2 from trimmed_read2
 
     output:
-    file '*.Aligned.sortedByCoord.out.bam' into bam
+    file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8
     file '*.Log.final.out' into results
     file '*.Log.out' into results
     file '*.Log.progress.out' into results
@@ -211,7 +211,7 @@ process rnaseqc {
     errorStrategy 'ignore' 
     
     input:
-    file bam
+    file bam4
     file bed12 from bed12
    
      
@@ -230,15 +230,15 @@ process rnaseqc {
     file '*.saturation.{txt,pdf}' into results             // RPKM_saturation
     
     """
-    bam_stat.py -i $bam 2> ${bam}.bam_stat.txt
-    junction_annotation.py -i $bam -o ${bam}.rseqc -r $bed12
-    junction_saturation.py -i $bam -o ${bam}.rseqc -r $bed12
-    inner_distance.py -i $bam -o ${bam}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam -o ${bam}.rseqc -r $bed12
-    infer_experiment.py -i $bam -r $bed12 > ${bam}.infer_experiment.txt
-    read_distribution.py -i $bam -r $bed12 > ${bam}.read_distribution.txt
-    read_duplication.py -i $bam -o ${bam}.read_duplication
-    RPKM_saturation.py -i $bam -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam}.RPKM_saturation
+    bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
+    junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    junction_saturation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    inner_distance.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    geneBody_coverage.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
+    read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
+    read_duplication.py -i $bam4 -o ${bam4}.read_duplication
+    RPKM_saturation.py -i $bam4 -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam4}.RPKM_saturation
     """
 }
 
@@ -260,13 +260,13 @@ process preseq {
     time '2h'
     
     input:
-    file bam
+    file bam5
     
     output:
-    file '*.ccurve.txt' into results
+    file '*.ccurve.txt' //into results
     
     """
-    preseq lc_extrap -v -B $bam -o ${bam}.ccurve.txt
+    preseq lc_extrap -v -B $bam5 -o ${bam5}.ccurve.txt
     """
 }
 
@@ -289,8 +289,8 @@ process dupradar {
     errorStrategy 'ignore'
 
     input:
-    file bam 
-    file gtf
+    file bam6 
+    file gtf from gtf
     
     output:
     file '*_duprm.bam' into dupRemovedBam
@@ -306,23 +306,23 @@ process dupradar {
     library("dupRadar")
               
     # Duplicate stats
-    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam}, rminput=FALSE)
+    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam6}, rminput=FALSE)
     stranded <- 2
     paired <- TRUE
     threads <- 8
     dm <- analyzeDuprates(bamDuprm, ${gtf}, stranded, paired, threads)
-    write.table(dm, file=paste(${bam}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+    write.table(dm, file=paste(${bam6}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
     
     # 2D density scatter plot
-    pdf(paste0(${bam}, "_duprateExpDens.pdf"))
+    pdf(paste0(${bam6}, "_duprateExpDens.pdf"))
     duprateExpDensPlot(DupMat=dm)
     title("Density scatter plot")
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam}, file=paste0(${bam}, "_intercept_slope.txt"), append=FALSE)
+    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam6}, file=paste0(${bam6}, "_intercept_slope.txt"), append=FALSE)
    
     # Distribution of RPK values per gene
-    pdf(paste0(${bam}, "_expressionHist.pdf"))
+    pdf(paste0(${bam6}, "_expressionHist.pdf"))
                          expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
     dev.off()
@@ -342,8 +342,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam7
+    file gtf from gtf
     
     output:
     file '*_gene.featureCounts.txt' into results
@@ -351,9 +351,9 @@ process featureCounts {
     file '*_rRNA_counts.txt' into results
     
     """
-    featureCounts -a $gtf -g gene_id -o ${bam}_gene.featureCounts.txt -p -s 2 $bam
-    featureCounts -a $gtf -g gene_biotype -o ${bam}_biotype.featureCounts.txt -p -s 2 $bam
-    cut -f 1,7 ${bam}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam}_rRNA_counts.txt
+    featureCounts -a $gtf -g gene_id -o ${bam7}_gene.featureCounts.txt -p -s 2 $bam7
+    featureCounts -a $gtf -g gene_biotype -o ${bam7}_biotype.featureCounts.txt -p -s 2 $bam7
+    cut -f 1,7 ${bam7}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam7}_rRNA_counts.txt
     """
 }
 
@@ -372,8 +372,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam8
+    file gtf from gtf
     
     output:
     file '*_transcripts.gtf ' into results
@@ -381,7 +381,7 @@ process featureCounts {
     file '*.cov_refs.gtf' into results
     
     """
-    stringtie $bam -o ${bam}_transcripts.gtf -v -G $gtf -A ${bam}.gene_abund.txt -C ${bam}.cov_refs.gtf -e -b ${bam}_ballgown
+    stringtie $bam8 -o ${bam8}_transcripts.gtf -v -G $gtf -A ${bam8}.gene_abund.txt -C ${bam8}.cov_refs.gtf -e -b ${bam8}_ballgown
     """
 }
 

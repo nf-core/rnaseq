@@ -294,12 +294,10 @@ process dupradar {
     //errorStrategy 'ignore'
 
     input:
-    file bam6 
+    file bam_md 
     file gtf from gtf
     
     output:
-    file '*_duprm.bam' into dupRemovedBam
-    file '*_dupMatrix.txt' into results
     file '*_duprateExpDens.pdf' into results
     file '*_intercept_slope.txt' into results
     file '*_expressionHist.pdf' into results
@@ -317,15 +315,15 @@ process dupradar {
     paired <- TRUE
     threads <- 8
     dm <- analyzeDuprates(bamDuprm, "${gtf}", stranded, paired, threads)
-    write.table(dm, file=paste("${bam6}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+    write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
     
     # 2D density scatter plot
-    pdf(paste0("${bam6}", "_duprateExpDens.pdf"))
+    pdf(paste0("${bam_md}", "_duprateExpDens.pdf"))
     duprateExpDensPlot(DupMat=dm)
     title("Density scatter plot")
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam6}", file=paste0("${bam6}", "_intercept_slope.txt"), append=FALSE)
+    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam_md}", file=paste0("${bam_md}", "_intercept_slope.txt"), append=FALSE)
    
     # Distribution of RPK values per gene
     pdf(paste0("${bam6}", "_expressionHist.pdf"))
@@ -350,7 +348,7 @@ process markDuplicates{
     file bam7
     
     output: 
-    file '*_duprm.bam' into dupRemovedBam
+    file '*_duprm.bam' into bam_md
     file '*_dupMatrix.txt' into results
 
     """

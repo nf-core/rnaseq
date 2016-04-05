@@ -179,7 +179,7 @@ process star {
     file trimmed_read2 from trimmed_read2
 
     output:
-    file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8
+    file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
     file '*.Log.final.out' into results
     file '*.Log.out' into results
     file '*.Log.progress.out' into results
@@ -286,7 +286,7 @@ process dupradar {
     
     module 'bioinfo-tools'
     module 'R/3.2.3'
-    module 'picard/2.0.1'
+    module 'picard/1.118 
     
     memory '16 GB'
     time '2h'
@@ -309,34 +309,57 @@ process dupradar {
     #!/usr/bin/env Rscript
     .libPaths( c( "/home/richam/R/nxtflow_libs", .libPaths() ) )
     source("https://bioconductor.org/biocLite.R")
-    biocLite(dupRadar)
-    library(dupRadar)
+    biocLite("dupRadar")
+    library("dupRadar")
           
     # Duplicate stats
-    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam6}, rminput=FALSE)
     stranded <- 2
     paired <- TRUE
     threads <- 8
-    dm <- analyzeDuprates(bamDuprm, ${gtf}, stranded, paired, threads)
-    write.table(dm, file=paste(${bam6}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+    dm <- analyzeDuprates(bamDuprm, "${gtf}", stranded, paired, threads)
+    write.table(dm, file=paste("${bam6}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
     
     # 2D density scatter plot
-    pdf(paste0(${bam6}, "_duprateExpDens.pdf"))
+    pdf(paste0("${bam6}", "_duprateExpDens.pdf"))
     duprateExpDensPlot(DupMat=dm)
     title("Density scatter plot")
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels=${bam6}, file=paste0(${bam6}, "_intercept_slope.txt"), append=FALSE)
+    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam6}", file=paste0("${bam6}", "_intercept_slope.txt"), append=FALSE)
    
     # Distribution of RPK values per gene
-    pdf(paste0(${bam6}, "_expressionHist.pdf"))
+    pdf(paste0("${bam6}", "_expressionHist.pdf"))
                          expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
     dev.off()
     """
     }
+
+/*
+* STEP 7 Feature counts
+*/
+
+process markDuplicates{
+
+    module 'picard/1.118'
+    
+    memory '16GB'
+    time '2h'
+    
+    input:
+    file bam7
+    
+    output: 
+    file '*_duprm.bam' into dupRemovedBam
+    file '*_dupMatrix.txt' into results
+
+    """
+    java -Xmx2g -jar /sw/apps/bioinfo/picard/1.127/milou/picard.jar MarkDuplicates INPUT=${bam7} OUTPUT=${bam7}.markDups.bam METRICS_FILE=${bam7}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' 
+    """
+    }
+
  /*
- * STEP 7 Feature counts
+ * STEP 8 Feature counts
  */
 
 
@@ -349,7 +372,7 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam7
+    file bam8
     file gtf from gtf
     
     output:
@@ -358,16 +381,16 @@ process featureCounts {
     file '*_rRNA_counts.txt' into results
     
     """
-    featureCounts -a $gtf -g gene_id -o ${bam7}_gene.featureCounts.txt -p -s 2 $bam7
-    featureCounts -a $gtf -g gene_biotype -o ${bam7}_biotype.featureCounts.txt -p -s 2 $bam7
-    cut -f 1,7 ${bam7}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam7}_rRNA_counts.txt
+    featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam7
+    featureCounts -a $gtf -g gene_biotype -o ${bam8}_biotype.featureCounts.txt -p -s 2 $bam8
+    cut -f 1,7 ${bam8}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam7}_rRNA_counts.txt
     """
 }
 
 
 
 /*
- * STEP 8 - stringtie FPKM
+ * STEP 9 - stringtie FPKM
  */
 
 process stringtieFPKM {
@@ -379,7 +402,7 @@ process stringtieFPKM {
     time '2h'
     
     input:
-    file bam8
+    file bam9
     file gtf from gtf
     
     output:
@@ -388,7 +411,7 @@ process stringtieFPKM {
     file '*.cov_refs.gtf' into results
     
     """
-    stringtie $bam8 -o ${bam8}_transcripts.gtf -v -G $gtf -A ${bam8}.gene_abund.txt -C ${bam8}.cov_refs.gtf -e -b ${bam8}_ballgown
+    stringtie $bam9 -o ${bam9}_transcripts.gtf -v -G $gtf -A ${bam9}.gene_abund.txt -C ${bam9}.cov_refs.gtf -e -b ${bam9}_ballgown
     """
 }
 

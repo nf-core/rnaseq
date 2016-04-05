@@ -84,6 +84,11 @@ log.info "Working dir  : $workDir"
 log.info "Output dir   : ${params.out}"
 log.info "===================================="
 
+//Setup R libary directory
+params.rlocation = "/home/richam/R/nxtflow_libs/"
+nxtflow_libs=file('/home/richam/R/nxtflow_libs')
+nxtflow_libs.mkdirs()
+
 // Set up nextflow objects
 index = file(params.index)
 gtf   = file(params.gtf)
@@ -248,7 +253,7 @@ process rnaseqc {
 
 
 /*
- * STEP 6 - preseq analysis
+ * STEP 5 - preseq analysis
  */
 
 process preseq {
@@ -263,7 +268,7 @@ process preseq {
     file bam5
     
     output:
-    file '*.ccurve.txt' //into results
+    file '*.ccurve.txt' into results
     
     """
     preseq lc_extrap -v -B $bam5 -o ${bam5}.ccurve.txt
@@ -274,7 +279,7 @@ process preseq {
 
 
 /*
-STEP 5 - dupRadar
+STEP 6 - dupRadar
  */
 
 process dupradar {
@@ -286,7 +291,7 @@ process dupradar {
     memory '16 GB'
     time '2h'
     
-    errorStrategy 'ignore'
+    //errorStrategy 'ignore'
 
     input:
     file bam6 
@@ -302,9 +307,11 @@ process dupradar {
     shell
     """
     #!/usr/bin/env Rscript
-       
-    library("dupRadar")
-              
+    .libPaths( c( "/home/richam/R/nxtflow_libs", .libPaths() ) )
+    source("https://bioconductor.org/biocLite.R")
+    biocLite(dupRadar)
+    library(dupRadar)
+          
     # Duplicate stats
     bamDuprm <- markDuplicates(dupremover="picard", bam=${bam6}, rminput=FALSE)
     stranded <- 2
@@ -319,7 +326,7 @@ process dupradar {
     title("Density scatter plot")
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam6}, file=paste0(${bam6}, "_intercept_slope.txt"), append=FALSE)
+    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels=${bam6}, file=paste0(${bam6}, "_intercept_slope.txt"), append=FALSE)
    
     # Distribution of RPK values per gene
     pdf(paste0(${bam6}, "_expressionHist.pdf"))
@@ -363,7 +370,7 @@ process featureCounts {
  * STEP 8 - stringtie FPKM
  */
 
-process featureCounts {
+process stringtieFPKM {
     
     module 'bioinfo-tools'
     module 'StringTie'
@@ -376,7 +383,7 @@ process featureCounts {
     file gtf from gtf
     
     output:
-    file '*_transcripts.gtf ' into results
+    file '*_transcripts.gtf' into results
     file '*.gene_abund.txt' into results
     file '*.cov_refs.gtf' into results
     

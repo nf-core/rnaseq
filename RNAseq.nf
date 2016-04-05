@@ -282,7 +282,7 @@ process preseq {
 
 process markDuplicates {
 
-    module 'picard/1.118'
+    module 'picard/2.0.1'
     
     memory '16GB'
     time '2h'
@@ -295,6 +295,7 @@ process markDuplicates {
     file '*_dupMatrix.txt' into results
 
     """
+    echo \$PICARD_HOME
     java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' 
     """
     }

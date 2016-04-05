@@ -276,6 +276,29 @@ process preseq {
 }
 
 
+/*
+* STEP 6 Mark duplicates
+*/
+
+process markDuplicates{
+
+    module 'picard/1.118'
+    
+    memory '16GB'
+    time '2h'
+    
+    input:
+    file bam6
+    
+    output: 
+    file '*.markDups.bam`' into bam_md
+    file '*_dupMatrix.txt' into results
+
+    """
+    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' 
+    """
+    }
+
 
 
 /*
@@ -286,13 +309,10 @@ process dupradar {
     
     module 'bioinfo-tools'
     module 'R/3.2.3'
-    module 'picard/1.118 
     
     memory '16 GB'
     time '2h'
     
-    //errorStrategy 'ignore'
-
     input:
     file bam_md 
     file gtf from gtf
@@ -326,33 +346,10 @@ process dupradar {
     cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam_md}", file=paste0("${bam_md}", "_intercept_slope.txt"), append=FALSE)
    
     # Distribution of RPK values per gene
-    pdf(paste0("${bam6}", "_expressionHist.pdf"))
+    pdf(paste0("${bam_md}", "_expressionHist.pdf"))
                          expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
     dev.off()
-    """
-    }
-
-/*
-* STEP 7 Mark duplicates
-*/
-
-process markDuplicates{
-
-    module 'picard/1.118'
-    
-    memory '16GB'
-    time '2h'
-    
-    input:
-    file bam7
-    
-    output: 
-    file '*_duprm.bam' into bam_md
-    file '*_dupMatrix.txt' into results
-
-    """
-    java -Xmx2g -jar /sw/apps/bioinfo/picard/1.127/milou/picard.jar MarkDuplicates INPUT=${bam7} OUTPUT=${bam7}.markDups.bam METRICS_FILE=${bam7}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' 
     """
     }
 

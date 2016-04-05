@@ -280,7 +280,7 @@ process preseq {
 * STEP 6 Mark duplicates
 */
 
-process markDuplicates{
+process markDuplicates {
 
     module 'picard/1.118'
     
@@ -291,7 +291,7 @@ process markDuplicates{
     file bam6
     
     output: 
-    file '*.markDups.bam`' into bam_md
+    file '*.markDups.bam' into bam_md
     file '*_dupMatrix.txt' into results
 
     """
@@ -302,7 +302,7 @@ process markDuplicates{
 
 
 /*
-STEP 6 - dupRadar
+STEP 7 - dupRadar
  */
 
 process dupradar {
@@ -376,9 +376,9 @@ process featureCounts {
     file '*_rRNA_counts.txt' into results
     
     """
-    featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam7
+    featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam8
     featureCounts -a $gtf -g gene_biotype -o ${bam8}_biotype.featureCounts.txt -p -s 2 $bam8
-    cut -f 1,7 ${bam8}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam7}_rRNA_counts.txt
+    cut -f 1,7 ${bam8}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam8}_rRNA_counts.txt
     """
 }
 

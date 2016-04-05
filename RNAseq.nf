@@ -336,7 +336,7 @@ process dupradar {
     }
 
 /*
-* STEP 7 Feature counts
+* STEP 7 Mark duplicates
 */
 
 process markDuplicates{

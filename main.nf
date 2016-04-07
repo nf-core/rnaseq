@@ -65,8 +65,13 @@ params.read1 = "data/*_1.fastq.gz"
 params.read2 = "data/*_2.fastq.gz"
 read1 = file(params.read1)
 read2 = file(params.read2)
+
 // Output path
 params.out = "$PWD"
+
+// R library locations
+params.rlocation = "$HOME/R/nxtflow_libs/"
+nxtflow_libs=file(params.rlocation)
 
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
@@ -79,14 +84,13 @@ log.info "Annotation   : ${params.gtf}"
 log.info "Current home : $HOME"
 log.info "Current user : $USER"
 log.info "Current path : $PWD"
+log.info "R libraries  : ${params.rlocation}"
 log.info "Script dir   : $baseDir"
 log.info "Working dir  : $workDir"
 log.info "Output dir   : ${params.out}"
 log.info "===================================="
 
-//Setup R libary directory
-params.rlocation = "/home/richam/R/nxtflow_libs/"
-nxtflow_libs=file('/home/richam/R/nxtflow_libs')
+// Create R library directories if not already existing
 nxtflow_libs.mkdirs()
 
 // Set up nextflow objects
@@ -327,7 +331,7 @@ process dupradar {
     """
     #!/usr/bin/env Rscript
     if (!("dupRadar" %in% installed.packages()[,"Package"])){
-        .libPaths( c( "/home/richam/R/nxtflow_libs", .libPaths() ) )
+        .libPaths( c( "${params.rlocation}", .libPaths() ) )
         source("https://bioconductor.org/biocLite.R")
         biocLite("dupRadar")
     }

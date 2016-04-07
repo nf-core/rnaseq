@@ -281,7 +281,7 @@ process preseq {
 */
 
 process markDuplicates {
-
+    module 'bioinfo-tools'
     module 'picard/2.0.1'
     
     memory '16GB'
@@ -292,11 +292,11 @@ process markDuplicates {
     
     output: 
     file '*.markDups.bam' into bam_md
-    file '*_dupMatrix.txt' into results
+    file '*markDups_metrics.txt' into results
 
     """
     echo \$PICARD_HOME
-    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' 
+    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
     """
     }
 
@@ -326,16 +326,18 @@ process dupradar {
     shell
     """
     #!/usr/bin/env Rscript
-    .libPaths( c( "/home/richam/R/nxtflow_libs", .libPaths() ) )
-    source("https://bioconductor.org/biocLite.R")
-    biocLite("dupRadar")
+    if (!("dupRadar" %in% installed.packages()[,"Package"])){
+        .libPaths( c( "/home/richam/R/nxtflow_libs", .libPaths() ) )
+        source("https://bioconductor.org/biocLite.R")
+        biocLite("dupRadar")
+    }
     library("dupRadar")
           
     # Duplicate stats
     stranded <- 2
     paired <- TRUE
     threads <- 8
-    dm <- analyzeDuprates(bamDuprm, "${gtf}", stranded, paired, threads)
+    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, paired, threads)
     write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
     
     # 2D density scatter plot

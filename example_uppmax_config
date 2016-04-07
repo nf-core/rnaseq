@@ -12,8 +12,8 @@ process {
   cpus = 1
   memory = '16 GB'
   time = '48h'
-/*  clusterOptions = {
-*/    '-A b2013064'
+  clusterOptions = {
+/    '-A b2013064'
   }
 }
 

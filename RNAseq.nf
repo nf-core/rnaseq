@@ -69,6 +69,10 @@ read2 = file(params.read2)
 // Output path
 params.out = "$PWD"
 
+// R library locations
+params.rlocation = "$HOME/R/nxtflow_libs/"
+nxtflow_libs=file(params.rlocation)
+
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
 log.info "===================================="
@@ -80,10 +84,14 @@ log.info "Annotation   : ${params.gtf}"
 log.info "Current home : $HOME"
 log.info "Current user : $USER"
 log.info "Current path : $PWD"
+log.info "R libraries  : ${params.rlocation}"
 log.info "Script dir   : $baseDir"
 log.info "Working dir  : $workDir"
 log.info "Output dir   : ${params.out}"
 log.info "===================================="
+
+// Create R library directories if not already existing
+nxtflow_libs.mkdirs()
 
 // Set up nextflow objects
 index = file(params.index)
@@ -165,30 +173,33 @@ process star {
     module 'star'
     
     cpus 8
-    memory '32 GB'
+    memory '64 GB'
     time '5h'
 
     input:
     file index
     file gtf
-    file trimmed_read1
-    file trimmed_read2
+    file trimmed_read1 from trimmed_read1
+    file trimmed_read2 from trimmed_read2
 
     output:
-    file '*.Aligned.sortedByCoord.out.bam' into bam
+    file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
     file '*.Log.final.out' into results
     file '*.Log.out' into results
     file '*.Log.progress.out' into results
     file '*.SJ.out.tab' into results
 
     """
+    prefix=\$(echo $trimmed_read1 | sed 's/_.*/./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
          --readFilesIn $trimmed_read1 $trimmed_read2 \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
-         --outSAMtype BAM SortedByCoordinate
+         --outSAMtype BAM SortedByCoordinate\\
+         --readFilesCommand zcat\\
+         --outFileNamePrefix \$prefix
     """
 }
 
@@ -203,13 +214,16 @@ process rnaseqc {
     module 'bioinfo-tools'
     module 'rseqc'
     
-    memory '4 GB'
+    memory '64 GB'
     time '2h'
+   
+    errorStrategy 'ignore' 
     
     input:
-    file bam
-    file bed12
-    
+    file bam4
+    file bed12 from bed12
+   
+     
     output:
     file '*.bam_stat.txt' into results                          // bam_stat
     file '*.splice_events.{txt,pdf}' into results               // junction_annotation
@@ -217,86 +231,33 @@ process rnaseqc {
     file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
     file '*.inner_distance.{txt,pdf}' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
-    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+//    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
     file '*.infer_experiment.txt' into results                  // infer_experiment
     file '*.read_distribution.txt' into results                 // read_distribution
-    file '*.read_duplication.{txt,pdf}' into results            // read_duplication
-    file '*.RPKM_saturation.{txt,pdf}' into results             // RPKM_saturation
+    file '*DupRate.xls' into results                            // read_duplication
+    file '*DupRate_plot.pdf' into results                      // read_duplication
+    file '*.saturation.{txt,pdf}' into results             // RPKM_saturation
     
     """
-    bam_stat.py -i $bam 2> ${bam}.bam_stat.txt
-    junction_annotation.py -i $bam -o ${bam}.rseqc -r $bed12
-    junction_saturation.py -i $bam -o ${bam}.rseqc -r $bed12
-    inner_distance.py -i $bam -o ${bam}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam -o ${bam}.rseqc -r $bed12
-    infer_experiment.py -i $bam -r $bed12 > ${bam}.infer_experiment.txt
-    read_distribution.py -i $bam -r $bed12 > ${bam}.read_distribution.txt
-    read_duplication.py -i $bam -o ${bam}.read_duplication
-    RPKM_saturation.py -i $bam -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam}.RPKM_saturation
+    bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
+    junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    junction_saturation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    inner_distance.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    geneBody_coverage.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
+    read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
+    read_duplication.py -i $bam4 -o ${bam4}.read_duplication
+    RPKM_saturation.py -i $bam4 -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam4}.RPKM_saturation
     """
 }
+
 
 
 
 
 
 /*
- * STEP 5 - dupRadar
- */
-
-process dupradar {
-    
-    module 'bioinfo-tools'
-    module 'R/3.2.3'
-    module 'picard/2.0.1'
-    
-    memoy '4 GB'
-    time '2h'
-    
-    input:
-    file bam
-    file gtf
-    
-    output:
-    file '*_duprm.bam' into dupRemovedBam
-    file '*_dupMatrix.txt' into results
-    file '*_duprateExpDens.pdf' into results
-    file '*_intercept_slope.txt' into results
-    file '*_expressionHist.pdf' into results
-    
-    shell
-    """
-    #!/usr/bin/env Rscript
-    
-    library("dupRadar")
-    
-    # Duplicate stats
-    bamDuprm <- markDuplicates(dupremover="picard", bam=${bam}, rminput=FALSE)
-    stranded <- 2
-    paired <- TRUE
-    threads <- 8
-    dm <- analyzeDuprates(bamDuprm, ${gtf}, stranded, paired, threads)
-    write.table(dm, file=paste(${bam}, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
-
-    # 2D density scatter plot
-    pdf(paste0(${bam}, "_duprateExpDens.pdf"))
-    duprateExpDensPlot(DupMat=dm)
-    title("Density scatter plot")
-    dev.off()
-    fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit$intercept, "progression of the duplication rate: ", fit$slope, "\n", fill=TRUE, labels=${bam}, file=paste0(${bam}, "_intercept_slope.txt"), append=FALSE)
-
-    # Distribution of RPK values per gene
-    pdf(paste0(${bam}, "_expressionHist.pdf"))
-    expressionHist(DupMat=dm)
-    title("Distribution of RPK values per gene")
-    dev.off()
-    """
-}
-
-
-/*
- * STEP 6 - preseq analysis
+ * STEP 5 - preseq analysis
  */
 
 process preseq {
@@ -308,22 +269,101 @@ process preseq {
     time '2h'
     
     input:
-    file bam
+    file bam5
     
     output:
     file '*.ccurve.txt' into results
     
     """
-    preseq lc_extrap -v -B $bam -o ${bam}.ccurve.txt
+    preseq lc_extrap -v -B $bam5 -o ${bam5}.ccurve.txt
     """
 }
 
 
+/*
+* STEP 6 Mark duplicates
+*/
+
+process markDuplicates {
+    module 'bioinfo-tools'
+    module 'picard/2.0.1'
+    
+    memory '16GB'
+    time '2h'
+    
+    input:
+    file bam6
+    
+    output: 
+    file '*.markDups.bam' into bam_md
+    file '*markDups_metrics.txt' into results
+
+    """
+    echo \$PICARD_HOME
+    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
+    """
+    }
+
 
 
 /*
- * STEP 7 - subread featureCounts
+STEP 7 - dupRadar
  */
+
+process dupradar {
+    
+    module 'bioinfo-tools'
+    module 'R/3.2.3'
+    
+    memory '16 GB'
+    time '2h'
+    
+    input:
+    file bam_md 
+    file gtf from gtf
+    
+    output:
+    file '*_duprateExpDens.pdf' into results
+    file '*_intercept_slope.txt' into results
+    file '*_expressionHist.pdf' into results
+    
+    shell
+    """
+    #!/usr/bin/env Rscript
+    if (!("dupRadar" %in% installed.packages()[,"Package"])){
+        .libPaths( c( "${params.rlocation}", .libPaths() ) )
+        source("https://bioconductor.org/biocLite.R")
+        biocLite("dupRadar")
+    }
+    library("dupRadar")
+          
+    # Duplicate stats
+    stranded <- 2
+    paired <- TRUE
+    threads <- 8
+    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, paired, threads)
+    write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+    
+    # 2D density scatter plot
+    pdf(paste0("${bam_md}", "_duprateExpDens.pdf"))
+    duprateExpDensPlot(DupMat=dm)
+    title("Density scatter plot")
+    dev.off()
+    fit <- duprateExpFit(DupMat=dm)
+    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam_md}", file=paste0("${bam_md}", "_intercept_slope.txt"), append=FALSE)
+   
+    # Distribution of RPK values per gene
+    pdf(paste0("${bam_md}", "_expressionHist.pdf"))
+                         expressionHist(DupMat=dm)
+    title("Distribution of RPK values per gene")
+    dev.off()
+    """
+    }
+
+ /*
+ * STEP 8 Feature counts
+ */
+
 
 process featureCounts {
     
@@ -334,8 +374,8 @@ process featureCounts {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam8
+    file gtf from gtf
     
     output:
     file '*_gene.featureCounts.txt' into results
@@ -343,19 +383,19 @@ process featureCounts {
     file '*_rRNA_counts.txt' into results
     
     """
-    featureCounts -a $gtf -g gene_id -o ${bam}_gene.featureCounts.txt -p -s 2 $bam
-    featureCounts -a $gtf -g gene_biotype -o ${bam}_biotype.featureCounts.txt -p -s 2 $bam
-    cut -f 1,7 ${bam}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam}_rRNA_counts.txt
+    featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam8
+    featureCounts -a $gtf -g gene_biotype -o ${bam8}_biotype.featureCounts.txt -p -s 2 $bam8
+    cut -f 1,7 ${bam8}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam8}_rRNA_counts.txt
     """
 }
 
 
 
 /*
- * STEP 8 - stringtie FPKM
+ * STEP 9 - stringtie FPKM
  */
 
-process stringTie {
+process stringtieFPKM {
     
     module 'bioinfo-tools'
     module 'StringTie'
@@ -364,16 +404,16 @@ process stringTie {
     time '2h'
     
     input:
-    file bam
-    file gtf
+    file bam9
+    file gtf from gtf
     
     output:
-    file '*_transcripts.gtf ' into results
+    file '*_transcripts.gtf' into results
     file '*.gene_abund.txt' into results
     file '*.cov_refs.gtf' into results
     
     """
-    stringtie $bam -o ${bam}_transcripts.gtf -v -G $gtf -A ${bam}.gene_abund.txt -C ${bam}.cov_refs.gtf -e -b ${bam}_ballgown
+    stringtie $bam9 -o ${bam9}_transcripts.gtf -v -G $gtf -A ${bam9}.gene_abund.txt -C ${bam9}.cov_refs.gtf -e -b ${bam9}_ballgown
     """
 }
 

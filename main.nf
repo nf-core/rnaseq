@@ -7,9 +7,10 @@
  New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
  @Authors
  Phil Ewels <phil.ewels@scilifelab.se>
+ Rickard Hammarén <rickard.hammaren@scilifelab.se>
 ----------------------------------------------------------------------------------------
  Basic command:
- $ nextflow rnaseq.nf
+ $ nextflow main.nf
  
  Pipeline variables can be configured with the following command line options:
  --genome [GRCh37 | GRCm38]
@@ -61,8 +62,8 @@ params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
 // Input files
-params.read1 = "data/*_1.fastq.gz"
-params.read2 = "data/*_2.fastq.gz"
+params.read1 = "data/*1.fastq.gz"
+params.read2 = "data/*2.fastq.gz"
 read1 = file(params.read1)
 read2 = file(params.read2)
 
@@ -103,6 +104,7 @@ if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
 if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
+results_path = './results'
 
 
 /*
@@ -116,7 +118,9 @@ process fastqc {
     
     memory '2 GB'
     time '1h'
-    
+   
+    publishDir "$results_path/fastqc"
+ 
     input:
     file read1 from read1
     file read2 from read2
@@ -146,7 +150,8 @@ process trim_galore {
     cpus 3
     memory '3 GB'
     time '8h'
-
+    
+    publishDir "$results_path/trim_galore"
     input:
     file read1 from read1
     file read2 from read2
@@ -175,7 +180,8 @@ process star {
     cpus 8
     memory '64 GB'
     time '5h'
-
+    
+    publishDir "$results_path/STAR"
     input:
     file index
     file gtf
@@ -218,7 +224,8 @@ process rnaseqc {
     time '2h'
    
     errorStrategy 'ignore' 
-    
+   
+    publishDir "$results_path/rnaseqc" 
     input:
     file bam4
     file bed12 from bed12
@@ -252,10 +259,6 @@ process rnaseqc {
 }
 
 
-
-
-
-
 /*
  * STEP 5 - preseq analysis
  */
@@ -267,7 +270,8 @@ process preseq {
     
     memory '4 GB'
     time '2h'
-    
+
+    publishDir "$results_path/preseq"    
     input:
     file bam5
     
@@ -290,7 +294,8 @@ process markDuplicates {
     
     memory '16GB'
     time '2h'
-    
+  
+    publishDir "$results_path/markDuplicates"  
     input:
     file bam6
     
@@ -318,6 +323,7 @@ process dupradar {
     memory '16 GB'
     time '2h'
     
+    publishDir "$results_path/dupradar"
     input:
     file bam_md 
     file gtf from gtf
@@ -373,6 +379,7 @@ process featureCounts {
     memory '4 GB'
     time '2h'
     
+    publishDir "$results_path/featureCounts"
     input:
     file bam8
     file gtf from gtf
@@ -402,7 +409,9 @@ process stringtieFPKM {
     
     memory '4 GB'
     time '2h'
-    
+ 
+    publishDir "$results_path/stringtieFPKM"
+   
     input:
     file bam9
     file gtf from gtf
@@ -418,4 +427,19 @@ process stringtieFPKM {
 }
 
 
+/*
+ * STEP 10 MultiQC
+ */
 
+process multiqc {
+    module 'bioinfo-tools'
+    module 'MultiQC/0.5'
+    //Testing stuff here, probably doesn't work
+
+    publishDir "$results_path/MultiQC"    
+    input:
+    file analysData from results 
+    """
+    multiqc $PWD
+    """
+}

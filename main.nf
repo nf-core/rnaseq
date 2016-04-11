@@ -196,7 +196,7 @@ process star {
     file '*.SJ.out.tab' into results
 
     """
-    prefix=\$(echo $trimmed_read1 | sed 's/_.*/./')
+    prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
          --readFilesIn $trimmed_read1 $trimmed_read2 \\
@@ -431,15 +431,15 @@ process stringtieFPKM {
  * STEP 10 MultiQC
  */
 
-process multiqc {
-    module 'bioinfo-tools'
-    module 'MultiQC/0.5'
-    //Testing stuff here, probably doesn't work
-
-    publishDir "$results_path/MultiQC"    
-    input:
-    file analysData from results 
-    """
-    multiqc $PWD
-    """
-}
+/*process multiqc 
+ *    module 'bioinfo-tools'
+ *   module 'MultiQC/0.5'
+ *   //Testing stuff here, probably doesn't work
+ *
+ *   publishDir "$results_path/MultiQC"    
+ *   input:
+ *   file analysData from results 
+ *   """
+ *   multiqc $PWD
+ *   """
+ */

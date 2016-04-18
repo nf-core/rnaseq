@@ -128,7 +128,6 @@ process fastqc {
     output:
     file '*_fastqc.html' into fastqc_html
     file '*_fastqc.zip' into fastqc_zip
-
     """
     fastqc -q ${read1} ${read2}
     """
@@ -159,7 +158,8 @@ process trim_galore {
     output:
     file '*_val_1.fq.gz' into trimmed_read1
     file '*_val_2.fq.gz' into trimmed_read2
-
+    file '*trimming_report.txt' into results
+    
     """
     trim_galore --paired --gzip --fastqc_args "-q" $read1 $read2
     """
@@ -212,10 +212,10 @@ process star {
 
 
 /*
- * STEP 4 - RNASeQC analysis
+ * STEP 4 - RSeQC analysis
  */
 
-process rnaseqc {
+process rseqc {
     
     module 'bioinfo-tools'
     module 'rseqc'
@@ -225,7 +225,7 @@ process rnaseqc {
    
     errorStrategy 'ignore' 
    
-    publishDir "$results_path/rnaseqc" 
+    publishDir "$results_path/rseqc" 
     input:
     file bam4
     file bed12 from bed12
@@ -236,15 +236,18 @@ process rnaseqc {
     file '*.splice_events.{txt,pdf}' into results               // junction_annotation
     file '*.splice_junction.{txt,pdf}' into results             // junction_annotation
     file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
-    file '*.inner_distance.{txt,pdf}' into results              // inner_distance
+    file '*.inner_distance.*' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
-//    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+    file '*.geneBodyCoverage.txt' into results
+ //   file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
     file '*.infer_experiment.txt' into results                  // infer_experiment
     file '*.read_distribution.txt' into results                 // read_distribution
     file '*DupRate.xls' into results                            // read_duplication
     file '*DupRate_plot.pdf' into results                      // read_duplication
     file '*.saturation.{txt,pdf}' into results             // RPKM_saturation
-    
+    file '*.junctionSaturation_plot.r' into results
+
+ 
     """
     bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
     junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
@@ -289,6 +292,7 @@ process preseq {
 */
 
 process markDuplicates {
+
     module 'bioinfo-tools'
     module 'picard/2.0.1'
     
@@ -307,7 +311,7 @@ process markDuplicates {
     echo \$PICARD_HOME
     java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
     """
-    }
+}
 
 
 
@@ -332,6 +336,7 @@ process dupradar {
     file '*_duprateExpDens.pdf' into results
     file '*_intercept_slope.txt' into results
     file '*_expressionHist.pdf' into results
+    file 'dup.done' into done
     
     shell
     """
@@ -363,6 +368,7 @@ process dupradar {
                          expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
     dev.off()
+    file.create("dup.done")
     """
     }
 
@@ -388,7 +394,7 @@ process featureCounts {
     file '*_gene.featureCounts.txt' into results
     file '*_biotype.featureCounts.txt' into results
     file '*_rRNA_counts.txt' into results
-    
+    file '*.summary' into results 
     """
     featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam8
     featureCounts -a $gtf -g gene_biotype -o ${bam8}_biotype.featureCounts.txt -p -s 2 $bam8
@@ -431,15 +437,21 @@ process stringtieFPKM {
  * STEP 10 MultiQC
  */
 
-/*process multiqc 
- *    module 'bioinfo-tools'
- *   module 'MultiQC/0.5'
- *   //Testing stuff here, probably doesn't work
- *
- *   publishDir "$results_path/MultiQC"    
- *   input:
- *   file analysData from results 
- *   """
- *   multiqc $PWD
- *   """
- */
+process multiqc { 
+    module 'bioinfo-tools'
+    module 'MultiQC/0.5'
+    
+    memory '4GB'   
+    time '4h'
+
+    publishDir "$results_path/MultiQC"    
+   
+    input:
+    file 'dup.done' from done  
+    
+    output:
+    file 'multiqc_report.html' into results 
+    """
+    multiqc $PWD/results
+    """
+}

@@ -67,6 +67,10 @@ params.read2 = "data/*2.fastq.gz"
 read1 = file(params.read1)
 read2 = file(params.read2)
 
+params.mode = 'SE'
+mode=params.mode
+println(mode)
+
 // Output path
 params.out = "$PWD"
 
@@ -123,11 +127,20 @@ process fastqc {
  
     input:
     file read1 from read1
+    if(mode=='PE'){
     file read2 from read2
-
+    }
     output:
     file '*_fastqc.html' into fastqc_html
     file '*_fastqc.zip' into fastqc_zip
+    
+    script:
+    if( mode=='SE')
+    """
+    fastqc -q ${read1}
+    """
+    
+    else if (mode== 'PE')
     """
     fastqc -q ${read1} ${read2}
     """
@@ -153,17 +166,34 @@ process trim_galore {
     publishDir "$results_path/trim_galore"
     input:
     file read1 from read1
+    if (mode == 'PE'){ 
     file read2 from read2
-    
+    }
+    if (mode=='SE'){
+    output:
+    file '*trimmed.fq.gz' into trimmed_read1
+    file '*trimming_report.txt' into results
+    }else if (mode == 'PE'){
     output:
     file '*_val_1.fq.gz' into trimmed_read1
     file '*_val_2.fq.gz' into trimmed_read2
     file '*trimming_report.txt' into results
+    }
+    script:
+
+    if( mode=='PE')
     
     """
     trim_galore --paired --gzip --fastqc_args "-q" $read1 $read2
     """
+    
+    else if (mode =='SE')
+     
+    """
+    trim_galore --gzip --fastqc_args "-q" $read1
+    """
 }
+
 
 
 
@@ -182,24 +212,44 @@ process star {
     time '5h'
     
     publishDir "$results_path/STAR"
+    input 
     input:
     file index
     file gtf
     file trimmed_read1 from trimmed_read1
+    if( mode=='PE'){
     file trimmed_read2 from trimmed_read2
-
+    }
     output:
     file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
     file '*.Log.final.out' into results
     file '*.Log.out' into results
     file '*.Log.progress.out' into results
     file '*.SJ.out.tab' into results
-
+    
+    script:
+    if (mode=='PE')
+    
     """
     prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
          --readFilesIn $trimmed_read1 $trimmed_read2 \\
+         --runThreadN ${task.cpus} \\
+         --twopassMode Basic \\
+         --outWigType bedGraph \\
+         --outSAMtype BAM SortedByCoordinate\\
+         --readFilesCommand zcat\\
+         --outFileNamePrefix \$prefix
+    """
+    
+    else if (mode=='SE')
+ 
+    """
+    prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
+    STAR --genomeDir $index \\
+         --sjdbGTFfile $gtf \\
+         --readFilesIn $trimmed_read1 \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
@@ -247,7 +297,10 @@ process rseqc {
     file '*.saturation.{txt,pdf}' into results             // RPKM_saturation
     file '*.junctionSaturation_plot.r' into results
 
- 
+    script:
+
+    if (mode=='PE') 
+
     """
     bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
     junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
@@ -258,6 +311,20 @@ process rseqc {
     read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
     read_duplication.py -i $bam4 -o ${bam4}.read_duplication
     RPKM_saturation.py -i $bam4 -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam4}.RPKM_saturation
+    """
+    
+    else if (mode=='SE')
+    
+    """
+    bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
+    junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    junction_saturation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    inner_distance.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    geneBody_coverage.py -i $bam4 -o ${bam4}.rseqc -r $bed12
+    infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
+    read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
+    read_duplication.py -i $bam4 -o ${bam4}.read_duplication
+    RPKM_saturation.py -i $bam4 -r $bed12 -d '++,--' -o ${bam4}.RPKM_saturation
     """
 }
 
@@ -338,7 +405,9 @@ process dupradar {
     file '*_expressionHist.pdf' into results
     file 'dup.done' into done
     
-    shell
+    script:
+    if (mode=='PE') 
+    
     """
     #!/usr/bin/env Rscript
     if (!("dupRadar" %in% installed.packages()[,"Package"])){
@@ -370,7 +439,42 @@ process dupradar {
     dev.off()
     file.create("dup.done")
     """
+
+    else if (mode=='SE')
+
+    """
+    #!/usr/bin/env Rscript
+    if (!("dupRadar" %in% installed.packages()[,"Package"])){
+        .libPaths( c( "${params.rlocation}", .libPaths() ) )
+        source("https://bioconductor.org/biocLite.R")
+        biocLite("dupRadar")
     }
+    library("dupRadar")
+          
+    # Duplicate stats
+    stranded <- 2
+    paired <- FALSE
+    threads <- 8
+    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, paired, threads)
+    write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+    
+    # 2D density scatter plot
+    pdf(paste0("${bam_md}", "_duprateExpDens.pdf"))
+    duprateExpDensPlot(DupMat=dm)
+    title("Density scatter plot")
+    dev.off()
+    fit <- duprateExpFit(DupMat=dm)
+    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam_md}", file=paste0("${bam_md}", "_intercept_slope.txt"), append=FALSE)
+   
+    # Distribution of RPK values per gene
+    pdf(paste0("${bam_md}", "_expressionHist.pdf"))
+                         expressionHist(DupMat=dm)
+    title("Distribution of RPK values per gene")
+    dev.off()
+    file.create("dup.done")
+    """
+
+}
 
  /*
  * STEP 8 Feature counts

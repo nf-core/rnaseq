@@ -122,6 +122,7 @@ Channel
     .groupTuple(sort: true)
     .set { read_files } 
 
+read_files.into  { read_files_fastqc; read_files_trimming }
 
 /*
  * STEP 1 - FastQC
@@ -129,35 +130,26 @@ Channel
 
 process fastqc {
     tag "reads: $name"
-     
+
     module 'bioinfo-tools'
     module 'FastQC'
-    
+
     memory '2 GB'
     time '1h'
-   
+
     publishDir "$results_path/fastqc"
-    if (mode == 'SE') 
-    
+
     input:
-    set file(reads:'*') from read_files
- 
+    set val(name), file(reads:'*') from read_files_fastqc
+
     output:
     file '*_fastqc.html' into fastqc_html
     file '*_fastqc.zip' into fastqc_zip
-    
-    script:
-    if ( mode == 'SE')
+
     """
     fastqc -q ${reads}
     """
-    
-    else if ( mode == 'PE')
-    """
-    fastqc -q ${reads} 
-    """
 }
-
 
 
 /*
@@ -166,44 +158,42 @@ process fastqc {
 
 process trim_galore {
     tag "reads: $name"
-      
+
     module 'bioinfo-tools'
     module 'FastQC'
     module 'cutadapt'
     module 'TrimGalore'
-    
+
     cpus 3
     memory '3 GB'
     time '8h'
-    
+
     publishDir "$results_path/trim_galore"
 
     input:
-    set val(name), file(reads:'*') from read_files
-    
-    
+    set val(name), file(reads:'*') from read_files_trimming
+
+
     output:
     file '*fq.gz' into trimmed_reads
     file '*trimming_report.txt' into results
-    
-    script:
 
-    if( mode=='PE')
-    
+    script:
+    def single = reads instanceof Path
+    if( !single ) {
+
     """
-    
+
     trim_galore --paired --gzip --fastqc_args "-q" $reads
     """
-    
-    else if (mode =='SE')
-     
+
+    }
+    else {
     """
     trim_galore --gzip --fastqc_args "-q" $reads
     """
+    }
 }
-
-
-
 
 /*
  * STEP 3 - align with STAR
@@ -224,8 +214,8 @@ process star {
     input:
     file index
     file gtf
-    file(trimmed_reads:'*') from trimmed_reads
- 
+    file (reads:'*') from trimmed_reads
+     
     output:
     file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
     file '*.Log.final.out' into results
@@ -234,28 +224,12 @@ process star {
     file '*.SJ.out.tab' into results
     
     script:
-    if (mode=='PE')
-    
-    """
-    prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
-    STAR --genomeDir $index \\
-         --sjdbGTFfile $gtf \\
-         --readFilesIn $trimmed_reads \\
-         --runThreadN ${task.cpus} \\
-         --twopassMode Basic \\
-         --outWigType bedGraph \\
-         --outSAMtype BAM SortedByCoordinate\\
-         --readFilesCommand zcat\\
-         --outFileNamePrefix \$prefix
-    """
-    
-    else if (mode=='SE')
  
     """
-    prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
+    prefix=\$(echo ${reads} | sed 's/\\.[^.]*\$/\\./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
-         --readFilesIn $trimmed_reads \\
+         --readFilesIn ${reads}  \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
@@ -263,6 +237,7 @@ process star {
          --readFilesCommand zcat\\
          --outFileNamePrefix \$prefix
     """
+    
 }
 
 
@@ -304,8 +279,8 @@ process rseqc {
     file '*.junctionSaturation_plot.r' into results
 
     script:
-
-    if (mode=='PE') 
+    def single = reads instanceof Path
+    if( !single ) {
 
     """
     bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
@@ -319,8 +294,8 @@ process rseqc {
     RPKM_saturation.py -i $bam4 -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam4}.RPKM_saturation
     """
     
-    else if (mode=='SE')
-    
+    }else{
+ 
     """
     bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
     junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
@@ -332,6 +307,7 @@ process rseqc {
     read_duplication.py -i $bam4 -o ${bam4}.read_duplication
     RPKM_saturation.py -i $bam4 -r $bed12 -d '++,--' -o ${bam4}.RPKM_saturation
     """
+    }
 }
 
 
@@ -412,8 +388,8 @@ process dupradar {
     file 'dup.done' into done
     
     script:
-    if (mode=='PE') 
-    
+    def single = reads instanceof Path
+    if( !single ) { 
     """
     #!/usr/bin/env Rscript
     if (!("dupRadar" %in% installed.packages()[,"Package"])){
@@ -446,7 +422,7 @@ process dupradar {
     file.create("dup.done")
     """
 
-    else if (mode=='SE')
+    }else{
 
     """
     #!/usr/bin/env Rscript
@@ -479,6 +455,7 @@ process dupradar {
     dev.off()
     file.create("dup.done")
     """
+    }
 
 }
 

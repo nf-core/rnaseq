@@ -61,12 +61,11 @@ params.index = params.genomes[ params.genome ].star
 params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
-// Input files
-params.read1 = "data/*1.fastq.gz"
-params.read2 = "data/*2.fastq.gz"
-read1 = file(params.read1)
-read2 = file(params.read2)
 
+params.name = "RNA-Seq Best practice"
+
+// Input files
+params.reads = "data/*.fastq.gz"
 params.mode = 'SE'
 mode=params.mode
 println(mode)
@@ -81,8 +80,7 @@ nxtflow_libs=file(params.rlocation)
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
 log.info "===================================="
-log.info "Read 1       : ${params.read1}"
-log.info "Read 2       : ${params.read2}"
+log.info "Reads        : ${params.reads}"
 log.info "Genome       : ${params.genome}"
 log.info "Index        : ${params.index}"
 log.info "Annotation   : ${params.gtf}"
@@ -110,13 +108,28 @@ if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
 results_path = './results'
 
+/*
+ * Create a channel for read files 
+ */
+ 
+Channel
+    .fromPath( params.reads )
+    .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
+    .map { path -> 
+       def prefix = readPrefix(path, params.reads)
+       tuple(prefix, path) 
+    }
+    .groupTuple(sort: true)
+    .set { read_files } 
+
 
 /*
  * STEP 1 - FastQC
  */
 
 process fastqc {
-    
+    tag "reads: $name"
+     
     module 'bioinfo-tools'
     module 'FastQC'
     
@@ -124,25 +137,24 @@ process fastqc {
     time '1h'
    
     publishDir "$results_path/fastqc"
- 
+    if (mode == 'SE') 
+    
     input:
-    file read1 from read1
-    if(mode=='PE'){
-    file read2 from read2
-    }
+    set file(reads:'*') from read_files
+ 
     output:
     file '*_fastqc.html' into fastqc_html
     file '*_fastqc.zip' into fastqc_zip
     
     script:
-    if( mode=='SE')
+    if ( mode == 'SE')
     """
-    fastqc -q ${read1}
+    fastqc -q ${reads}
     """
     
-    else if (mode== 'PE')
+    else if ( mode == 'PE')
     """
-    fastqc -q ${read1} ${read2}
+    fastqc -q ${reads} 
     """
 }
 
@@ -153,7 +165,8 @@ process fastqc {
  */
 
 process trim_galore {
-    
+    tag "reads: $name"
+      
     module 'bioinfo-tools'
     module 'FastQC'
     module 'cutadapt'
@@ -164,33 +177,28 @@ process trim_galore {
     time '8h'
     
     publishDir "$results_path/trim_galore"
+
     input:
-    file read1 from read1
-    if (mode == 'PE'){ 
-    file read2 from read2
-    }
-    if (mode=='SE'){
+    set val(name), file(reads:'*') from read_files
+    
+    
     output:
-    file '*trimmed.fq.gz' into trimmed_read1
+    file '*fq.gz' into trimmed_reads
     file '*trimming_report.txt' into results
-    }else if (mode == 'PE'){
-    output:
-    file '*_val_1.fq.gz' into trimmed_read1
-    file '*_val_2.fq.gz' into trimmed_read2
-    file '*trimming_report.txt' into results
-    }
+    
     script:
 
     if( mode=='PE')
     
     """
-    trim_galore --paired --gzip --fastqc_args "-q" $read1 $read2
+    
+    trim_galore --paired --gzip --fastqc_args "-q" $reads
     """
     
     else if (mode =='SE')
      
     """
-    trim_galore --gzip --fastqc_args "-q" $read1
+    trim_galore --gzip --fastqc_args "-q" $reads
     """
 }
 
@@ -212,14 +220,12 @@ process star {
     time '5h'
     
     publishDir "$results_path/STAR"
-    input 
+    
     input:
     file index
     file gtf
-    file trimmed_read1 from trimmed_read1
-    if( mode=='PE'){
-    file trimmed_read2 from trimmed_read2
-    }
+    file(trimmed_reads:'*') from trimmed_reads
+ 
     output:
     file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
     file '*.Log.final.out' into results
@@ -234,7 +240,7 @@ process star {
     prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
-         --readFilesIn $trimmed_read1 $trimmed_read2 \\
+         --readFilesIn $trimmed_reads \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
@@ -249,7 +255,7 @@ process star {
     prefix=\$(echo $trimmed_read1 | sed 's/\\.[^.]*\$/\\./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
-         --readFilesIn $trimmed_read1 \\
+         --readFilesIn $trimmed_reads \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
@@ -558,4 +564,47 @@ process multiqc {
     """
     multiqc $PWD/results
     """
+}
+
+/* 
+ * Helper function, given a file Path 
+ * returns the file name region matching a specified glob pattern
+ * starting from the beginning of the name up to last matching group.
+ * 
+ * For example: 
+ *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
+ * 
+ * Returns: 
+ *   'file_alpha'
+ */
+ 
+def readPrefix( Path actual, template ) {
+
+    final fileName = actual.getFileName().toString()
+
+    def filePattern = template.toString()
+    int p = filePattern.lastIndexOf('/')
+    if( p != -1 ) filePattern = filePattern.substring(p+1)
+    if( !filePattern.contains('*') && !filePattern.contains('?') ) 
+        filePattern = '*' + filePattern 
+  
+    def regex = filePattern
+                    .replace('.','\\.')
+                    .replace('*','(.*)')
+                    .replace('?','(.?)')
+                    .replace('{','(?:')
+                    .replace('}',')')
+                    .replace(',','|')
+
+    def matcher = (fileName =~ /$regex/)
+    if( matcher.matches() ) {  
+        def end = matcher.end(matcher.groupCount() )      
+        def prefix = fileName.substring(0,end)
+        while(prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') ) 
+          prefix=prefix[0..-2]
+          
+        return prefix
+    }
+    println(fileName) 
+    return fileName
 }

@@ -61,6 +61,7 @@ params.index = params.genomes[ params.genome ].star
 params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
+single='testing'
 
 params.name = "RNA-Seq Best practice"
 
@@ -113,16 +114,17 @@ results_path = './results'
  */
  
 Channel
-    .fromPath( params.reads )
-    .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
-    .map { path -> 
-       def prefix = readPrefix(path, params.reads)
-       tuple(prefix, path) 
-    }
-    .groupTuple(sort: true)
-    .set { read_files } 
-
+     .fromPath( params.reads )
+     .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
+     .map { path ->  
+        def prefix = readPrefix(path, params.reads)
+        tuple(prefix, path)
+     }
+     .groupTuple(sort: true)
+     .set { read_files }
+ 
 read_files.into  { read_files_fastqc; read_files_trimming }
+
 
 /*
  * STEP 1 - FastQC
@@ -179,7 +181,7 @@ process trim_galore {
     file '*trimming_report.txt' into results
 
     script:
-    def single = reads instanceof Path
+    single = reads instanceof Path
     if( !single ) {
 
     """
@@ -223,10 +225,14 @@ process star {
     file '*.Log.progress.out' into results
     file '*.SJ.out.tab' into results
     
+    
+    readname=$reads
+    readname = readname.split(' ')
+    
     script:
  
     """
-    prefix=\$(echo ${reads} | sed 's/\\.[^.]*\$/\\./')
+    prefix=\$(echo ${readname} | sed 's/\\.[^.]*\$/\\./' )
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
          --readFilesIn ${reads}  \\
@@ -279,7 +285,6 @@ process rseqc {
     file '*.junctionSaturation_plot.r' into results
 
     script:
-    def single = reads instanceof Path
     if( !single ) {
 
     """
@@ -388,7 +393,6 @@ process dupradar {
     file 'dup.done' into done
     
     script:
-    def single = reads instanceof Path
     if( !single ) { 
     """
     #!/usr/bin/env Rscript

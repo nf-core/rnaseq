@@ -53,7 +53,7 @@
  */
 
 // Pipeline version
-version = 0.1
+version = 0.2
 
 // Reference genome index
 params.genome = 'GRCh37'
@@ -104,6 +104,7 @@ if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
 if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
+//Seting up a directory to save results to 
 results_path = './results'
 
 /*

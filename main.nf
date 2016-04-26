@@ -67,9 +67,6 @@ params.name = "RNA-Seq Best practice"
 
 // Input files
 params.reads = "data/*.fastq.gz"
-params.mode = 'SE'
-mode=params.mode
-println(mode)
 
 // Output path
 params.out = "$PWD"
@@ -123,7 +120,7 @@ Channel
      .groupTuple(sort: true)
      .set { read_files }
  
-read_files.into  { read_files_fastqc; read_files_trimming }
+read_files.into  { read_files_fastqc; read_files_trimming;name_for_star }
 
 
 /*
@@ -174,7 +171,7 @@ process trim_galore {
 
     input:
     set val(name), file(reads:'*') from read_files_trimming
-
+    
 
     output:
     file '*fq.gz' into trimmed_reads
@@ -217,22 +214,15 @@ process star {
     file index
     file gtf
     file (reads:'*') from trimmed_reads
-     
+    set val(prefix) from name_for_star 
     output:
-    file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
-    file '*.Log.final.out' into results
-    file '*.Log.out' into results
-    file '*.Log.progress.out' into results
-    file '*.SJ.out.tab' into results
+    file '*.bam' into bam4, bam5, bam6, bam7, bam8, bam9
+    file '*Log.final.out' into results
+    file '*Log.out' into results
+    file '*Log.progress.out' into results
+    file '*SJ.out.tab' into results
     
-    
-    readname=$reads
-    readname = readname.split(' ')
-    
-    script:
- 
     """
-    prefix=\$(echo ${readname} | sed 's/\\.[^.]*\$/\\./' )
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
          --readFilesIn ${reads}  \\
@@ -241,7 +231,7 @@ process star {
          --outWigType bedGraph \\
          --outSAMtype BAM SortedByCoordinate\\
          --readFilesCommand zcat\\
-         --outFileNamePrefix \$prefix
+         --outFileNamePrefix $prefix
     """
     
 }

@@ -53,7 +53,7 @@
  */
 
 // Pipeline version
-version = 0.2
+version = 0.1
 
 // Reference genome index
 params.genome = 'GRCh37'
@@ -61,7 +61,7 @@ params.index = params.genomes[ params.genome ].star
 params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
-single='testing'
+single='null'
 
 params.name = "RNA-Seq Best practice"
 
@@ -104,7 +104,7 @@ if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
 if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
-//Seting up a directory to save results to 
+//Setting up a directory to save results to 
 results_path = './results'
 
 /*
@@ -182,16 +182,16 @@ process trim_galore {
     single = reads instanceof Path
     if( !single ) {
 
-    """
+        """
 
-    trim_galore --paired --gzip --fastqc_args "-q" $reads
-    """
+        trim_galore --paired --gzip --fastqc_args "-q" $reads
+        """
 
     }
     else {
-    """
-    trim_galore --gzip --fastqc_args "-q" $reads
-    """
+        """
+        trim_galore --gzip --fastqc_args "-q" $reads
+        """
     }
 }
 
@@ -257,7 +257,14 @@ process rseqc {
     input:
     file bam4
     file bed12 from bed12
-   
+    
+    def STRAND_RULE
+    if (!single){
+        STRAND_RULE='1+-,1-+,2++,2--'
+    }else{
+        STRAND_RULE='++,--'
+    }      
+         
      
     output:
     file '*.bam_stat.txt' into results                          // bam_stat
@@ -276,7 +283,6 @@ process rseqc {
     file '*.junctionSaturation_plot.r' into results
 
     script:
-    if( !single ) {
 
     """
     bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
@@ -287,25 +293,9 @@ process rseqc {
     infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
     read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
     read_duplication.py -i $bam4 -o ${bam4}.read_duplication
-    RPKM_saturation.py -i $bam4 -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam4}.RPKM_saturation
+    RPKM_saturation.py -i $bam4 -r $bed12 -d $STRAND_RULE -o ${bam4}.RPKM_saturation
     """
-    
-    }else{
- 
-    """
-    bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
-    junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    junction_saturation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    inner_distance.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
-    read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
-    read_duplication.py -i $bam4 -o ${bam4}.read_duplication
-    RPKM_saturation.py -i $bam4 -r $bed12 -d '++,--' -o ${bam4}.RPKM_saturation
-    """
-    }
 }
-
 
 /*
  * STEP 5 - preseq analysis
@@ -383,42 +373,12 @@ process dupradar {
     file '*_expressionHist.pdf' into results
     file 'dup.done' into done
     
-    script:
+    def paired 
     if( !single ) { 
-    """
-    #!/usr/bin/env Rscript
-    if (!("dupRadar" %in% installed.packages()[,"Package"])){
-        .libPaths( c( "${params.rlocation}", .libPaths() ) )
-        source("https://bioconductor.org/biocLite.R")
-        biocLite("dupRadar")
-    }
-    library("dupRadar")
-          
-    # Duplicate stats
-    stranded <- 2
-    paired <- TRUE
-    threads <- 8
-    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, paired, threads)
-    write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
-    
-    # 2D density scatter plot
-    pdf(paste0("${bam_md}", "_duprateExpDens.pdf"))
-    duprateExpDensPlot(DupMat=dm)
-    title("Density scatter plot")
-    dev.off()
-    fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\n", fill=TRUE, labels="${bam_md}", file=paste0("${bam_md}", "_intercept_slope.txt"), append=FALSE)
-   
-    # Distribution of RPK values per gene
-    pdf(paste0("${bam_md}", "_expressionHist.pdf"))
-                         expressionHist(DupMat=dm)
-    title("Distribution of RPK values per gene")
-    dev.off()
-    file.create("dup.done")
-    """
-
+       paired = 'TRUE'
     }else{
-
+        paired= 'FALSE'
+    }   
     """
     #!/usr/bin/env Rscript
     if (!("dupRadar" %in% installed.packages()[,"Package"])){
@@ -430,9 +390,8 @@ process dupradar {
           
     # Duplicate stats
     stranded <- 2
-    paired <- FALSE
     threads <- 8
-    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, paired, threads)
+    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, $paired, threads)
     write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
     
     # 2D density scatter plot
@@ -450,7 +409,6 @@ process dupradar {
     dev.off()
     file.create("dup.done")
     """
-    }
 
 }
 
@@ -521,7 +479,7 @@ process stringtieFPKM {
 
 process multiqc { 
     module 'bioinfo-tools'
-    module 'MultiQC/0.5'
+    module 'MultiQC'
     
     memory '4GB'   
     time '4h'

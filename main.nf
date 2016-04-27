@@ -217,7 +217,7 @@ process star {
     file (reads:'*') from trimmed_reads
     set val(prefix) from name_for_star 
     output:
-    file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_md, bam_featurecounts, bam_stringtieFPKM
+    file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
     file '*Log.final.out' into results
     file '*Log.out' into results
     file '*Log.progress.out' into results

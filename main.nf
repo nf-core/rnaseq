@@ -217,7 +217,7 @@ process star {
     file (reads:'*') from trimmed_reads
     set val(prefix) from name_for_star 
     output:
-    file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam7, bam_featurecounts, bam_stringtieFPKM
+    file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_md, bam_featurecounts, bam_stringtieFPKM
     file '*Log.final.out' into results
     file '*Log.out' into results
     file '*Log.progress.out' into results
@@ -247,11 +247,10 @@ process rseqc {
     
     module 'bioinfo-tools'
     module 'rseqc'
-    
+    module 'samtools'
     memory '64 GB'
     time '2h'
    
-    errorStrategy 'ignore' 
    
     publishDir "$results_path/rseqc" 
     input:
@@ -285,11 +284,12 @@ process rseqc {
     script:
 
     """
+    samtools index $bam_rseqc  
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
     junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
     inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    geneBody_coverage.py -i ${bam_rseqc}.bai -o ${bam_rseqc}.rseqc -r $bed12
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication

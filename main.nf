@@ -217,7 +217,7 @@ process star {
     file (reads:'*') from trimmed_reads
     set val(prefix) from name_for_star 
     output:
-    file '*.bam' into bam4, bam5, bam6, bam7, bam8, bam9
+    file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam7, bam_featurecounts, bam_stringtieFPKM
     file '*Log.final.out' into results
     file '*Log.out' into results
     file '*Log.progress.out' into results
@@ -255,7 +255,7 @@ process rseqc {
    
     publishDir "$results_path/rseqc" 
     input:
-    file bam4
+    file bam_rseqc
     file bed12 from bed12
     
     def STRAND_RULE
@@ -271,7 +271,7 @@ process rseqc {
     file '*.splice_events.{txt,pdf}' into results               // junction_annotation
     file '*.splice_junction.{txt,pdf}' into results             // junction_annotation
     file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
-    file '*.inner_distance.*' into results              // inner_distance
+    file '*.inner_distance.{txt,pdf}' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
     file '*.geneBodyCoverage.txt' into results
  //   file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
@@ -285,15 +285,15 @@ process rseqc {
     script:
 
     """
-    bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
-    junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    junction_saturation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    inner_distance.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
-    read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
-    read_duplication.py -i $bam4 -o ${bam4}.read_duplication
-    RPKM_saturation.py -i $bam4 -r $bed12 -d $STRAND_RULE -o ${bam4}.RPKM_saturation
+    bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
+    junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    geneBody_coverage.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
+    read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
+    read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
+    RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $STRAND_RULE -o ${bam_rseqc}.RPKM_saturation
     """
 }
 
@@ -311,13 +311,13 @@ process preseq {
 
     publishDir "$results_path/preseq"    
     input:
-    file bam5
+    file bam_preseq
     
     output:
     file '*.ccurve.txt' into results
     
     """
-    preseq lc_extrap -v -B $bam5 -o ${bam5}.ccurve.txt
+    preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq}.ccurve.txt
     """
 }
 
@@ -336,7 +336,7 @@ process markDuplicates {
   
     publishDir "$results_path/markDuplicates"  
     input:
-    file bam6
+    file bam_markduplicates
     
     output: 
     file '*.markDups.bam' into bam_md
@@ -344,7 +344,7 @@ process markDuplicates {
 
     """
     echo \$PICARD_HOME
-    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
+    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam_markduplicates} OUTPUT=${bam_markduplicates}.markDups.bam METRICS_FILE=${bam_markduplicates}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
     """
 }
 
@@ -427,18 +427,20 @@ process featureCounts {
     
     publishDir "$results_path/featureCounts"
     input:
-    file bam8
+    file bam_featurecounts
     file gtf from gtf
     
     output:
     file '*_gene.featureCounts.txt' into results
     file '*_biotype.featureCounts.txt' into results
     file '*_rRNA_counts.txt' into results
-    file '*.summary' into results 
+    file '*.summary' into results
+    file 'featureCounts.done' into featureCounts_done    
     """
-    featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam8
-    featureCounts -a $gtf -g gene_biotype -o ${bam8}_biotype.featureCounts.txt -p -s 2 $bam8
-    cut -f 1,7 ${bam8}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam8}_rRNA_counts.txt
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
+    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam_featurecounts}_rRNA_counts.txt
+    echo done >featureCounts.done
     """
 }
 
@@ -459,7 +461,7 @@ process stringtieFPKM {
     publishDir "$results_path/stringtieFPKM"
    
     input:
-    file bam9
+    file bam_stringtieFPKM
     file gtf from gtf
     
     output:
@@ -468,7 +470,7 @@ process stringtieFPKM {
     file '*.cov_refs.gtf' into results
     
     """
-    stringtie $bam9 -o ${bam9}_transcripts.gtf -v -G $gtf -A ${bam9}.gene_abund.txt -C ${bam9}.cov_refs.gtf -e -b ${bam9}_ballgown
+    stringtie $bam_stringtieFPKM -o ${bam_stringtieFPKM}_transcripts.gtf -v -G $gtf -A ${bam_stringtieFPKM}.gene_abund.txt -C ${bam_stringtieFPKM}.cov_refs.gtf -e -b ${bam_stringtieFPKM}_ballgown
     """
 }
 
@@ -488,6 +490,7 @@ process multiqc {
    
     input:
     file 'dup.done' from done  
+    file 'featureCounts.done' from featureCounts_done  
     
     output:
     file 'multiqc_report.html' into results 

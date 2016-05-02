@@ -249,7 +249,7 @@ process rseqc {
     module 'rseqc'
     module 'samtools'
     memory '64 GB'
-    time '2h'
+    time '4h'
    
    
     publishDir "$results_path/rseqc" 
@@ -381,13 +381,12 @@ process dupradar {
     }   
     """
     #!/usr/bin/env Rscript
-    if (!("dupRadar" %in% installed.packages()[,"Package"])){
-        .libPaths( c( "${params.rlocation}", .libPaths() ) )
+    .libPaths (c( "${params.rlocation}", .libPaths() ))
+    if(!("dupRadar" %in% installed.packages()[,"Package"])){
         source("https://bioconductor.org/biocLite.R")
         biocLite("dupRadar")
     }
     library("dupRadar")
-          
     # Duplicate stats
     stranded <- 2
     threads <- 8

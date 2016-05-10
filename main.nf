@@ -37,8 +37,9 @@
    - junction annotation
  - dupRadar
  - preseq
- - subread featureCounts - gene counts. rRNA estimation.
+ - subread featureCounts - gene counts, biotype counts, rRNA estimation.
  - String Tie - FPKMs for genes and transcripts
+ - edgeR - create MDS plot and sample pairwise distance heatmap / dendrogram
  - MultiQC
 ----------------------------------------------------------------------------------------
  GA project GA_14_20 RNA-Seq Pipeline. See planning document:
@@ -431,16 +432,14 @@ process featureCounts {
     file gtf from gtf
     
     output:
-    file '*_gene.featureCounts.txt' into results
+    file '*_gene.featureCounts.txt' into geneCounts
     file '*_biotype.featureCounts.txt' into results
     file '*_rRNA_counts.txt' into results
     file '*.summary' into results
-    file 'featureCounts.done' into featureCounts_done    
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam_featurecounts}_rRNA_counts.txt
-    echo done >featureCounts.done
     """
 }
 
@@ -476,7 +475,135 @@ process stringtieFPKM {
 
 
 /*
- * STEP 10 MultiQC
+STEP 10 - edgeR MDS and heatmap
+ */
+
+process sample_correlation {
+    
+    module 'bioinfo-tools'
+    module 'R/3.2.3'
+    
+    memory '16 GB'
+    time '2h'
+    
+    publishDir "$results_path/sample_correlation"
+    input:
+    file input_files from geneCounts.toList()
+    
+    output:
+    file 'edgeR_MDS_plot.pdf' into results
+    file 'edgeR_MDS_distance_matrix.txt' into results
+    file 'edgeR_MDS_plot_coordinates.txt' into results
+    file 'log2CPM_sample_distances_heatmap.pdf' into results
+    file 'log2CPM_sample_distances_dendrogram.pdf' into results
+    file 'log2CPM_sample_distances.txt' into results
+    file 'corr.done' into corr_done
+    
+    def filestring = '"' + input_files.join('","') + '"'
+    
+    """
+    #!/usr/bin/env Rscript
+ 
+    # Load / install required packages
+    .libPaths( c( "${params.rlocation}", .libPaths() ) )
+    if (!require("limma")){
+      source("https://bioconductor.org/biocLite.R")
+      biocLite("limma")
+      library("limma")
+    }
+ 
+    if (!require("edgeR")){
+      source("https://bioconductor.org/biocLite.R")
+      biocLite("edgeR")
+      library("edgeR")
+    }
+ 
+    if (!require("data.table")){
+      install.packages("data.table", dependencies=TRUE)
+      library("data.table")  
+    }
+ 
+    if (!require("gplots")) {
+      install.packages("gplots", dependencies=TRUE)
+      library("gplots")
+    }
+    if (!require("RColorBrewer")) {
+      install.packages("RColorBrewer", dependencies=TRUE)
+      library("RColorBrewer")
+    }
+ 
+    # Load input counts data
+    datafiles = c( $filestring )
+    
+    """ + '''
+    
+    # Load count column from all files into a list of data frames
+    # Use data.tables fread as much much faster than read.table
+    # Row names are GeneIDs
+    temp <- lapply(datafiles, fread, header=TRUE, colClasses=c(NA, rep("NULL", 5), NA))
+ 
+    # Merge into a single data frame
+    merge.all <- function(x, y) {
+      merge(x, y, all=TRUE, by="Geneid")
+    }
+    data <- data.frame(Reduce(merge.all, temp))
+ 
+    # Clean sample name headers
+    colnames(data) <- gsub("Aligned.sortedByCoord.out.bam", "", colnames(data))
+ 
+    # Set GeneID as row name
+    rownames(data) <- data[,1]
+    data[,1] <- NULL
+ 
+    # Convert data frame to edgeR DGE object
+    dataDGE <- DGEList( counts=data.matrix(data) )
+ 
+    # Normalise counts
+    dataNorm <- calcNormFactors(dataDGE)
+ 
+    # Make MDS plot
+    pdf('edgeR_MDS_plot.pdf')
+    MDSdata <- plotMDS(dataNorm)
+    dev.off()
+ 
+    # Print distance matrix to file
+    write.table(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.txt', quote=FALSE, sep="\t")
+ 
+    # Print plot x,y co-ordinates to file
+    MDSxy = MDSdata$cmdscale.out
+    colnames(MDSxy) = c(paste(MDSdata$axislabel, '1'), paste(MDSdata$axislabel, '2'))
+    write.table(MDSxy, 'edgeR_MDS_plot_coordinates.txt', quote=FALSE, sep="\t")
+ 
+    # Get the log counts per million values
+    logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)
+ 
+    # Calculate the euclidean distances between samples
+    dists = dist(t(logcpm))
+ 
+    # Plot a heatmap of correlations
+    pdf('log2CPM_sample_distances_heatmap.pdf')
+    hmap <- heatmap.2(as.matrix(dists),
+      main="Sample Correlations", key.title="Distance", trace="none",
+      dendrogram="row", margin=c(9, 9)
+    )
+    dev.off()
+ 
+    # Plot the heatmap dendrogram
+    pdf('log2CPM_sample_distances_dendrogram.pdf')
+    plot(hmap$rowDendrogram, main="Sample Dendrogram")
+    dev.off()
+ 
+    # Write clustered distance values to file
+    write.table(hmap$carpet, 'log2CPM_sample_distances.txt', quote=FALSE, sep="\t")
+    
+    file.create("corr.done")
+    '''
+
+}
+
+
+/*
+ * STEP 11 MultiQC
  */
 
 process multiqc { 
@@ -489,8 +616,8 @@ process multiqc {
     publishDir "$results_path/MultiQC"    
    
     input:
-    file 'dup.done' from done  
-    file 'featureCounts.done' from featureCounts_done  
+    file 'dup.done' from done
+    file 'corr.done' from corr_done
     
     output:
     file 'multiqc_report.html' into results 
@@ -498,6 +625,7 @@ process multiqc {
     multiqc $PWD/results
     """
 }
+
 
 /* 
  * Helper function, given a file Path 

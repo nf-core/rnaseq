@@ -501,7 +501,7 @@ process sample_correlation {
     
     def filestring = '"' + input_files.join('","') + '"'
     
-    """
+    '''
     #!/usr/bin/env Rscript
  
     # Load / install required packages
@@ -533,9 +533,7 @@ process sample_correlation {
     }
  
     # Load input counts data
-    datafiles = c( $filestring )
-    
-    """ + '''
+    datafiles = c( !{filestring} )
     
     # Load count column from all files into a list of data frames
     # Use data.tables fread as much much faster than read.table

@@ -7,9 +7,10 @@
  New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
  @Authors
  Phil Ewels <phil.ewels@scilifelab.se>
+ Rickard Hammarén <rickard.hammaren@scilifelab.se>
 ----------------------------------------------------------------------------------------
  Basic command:
- $ nextflow rnaseq.nf
+ $ nextflow main.nf
  
  Pipeline variables can be configured with the following command line options:
  --genome [GRCh37 | GRCm38]
@@ -60,11 +61,12 @@ params.index = params.genomes[ params.genome ].star
 params.gtf   = params.genomes[ params.genome ].gtf
 params.bed12 = params.genomes[ params.genome ].bed12
 
+single='null'
+
+params.name = "RNA-Seq Best practice"
+
 // Input files
-params.read1 = "data/*_1.fastq.gz"
-params.read2 = "data/*_2.fastq.gz"
-read1 = file(params.read1)
-read2 = file(params.read2)
+params.reads = "data/*.fastq.gz"
 
 // Output path
 params.out = "$PWD"
@@ -76,8 +78,7 @@ nxtflow_libs=file(params.rlocation)
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
 log.info "===================================="
-log.info "Read 1       : ${params.read1}"
-log.info "Read 2       : ${params.read2}"
+log.info "Reads        : ${params.reads}"
 log.info "Genome       : ${params.genome}"
 log.info "Index        : ${params.index}"
 log.info "Annotation   : ${params.gtf}"
@@ -103,6 +104,24 @@ if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
 if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
 
+//Setting up a directory to save results to 
+results_path = './results'
+
+/*
+ * Create a channel for read files 
+ */
+ 
+Channel
+     .fromPath( params.reads )
+     .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
+     .map { path ->  
+        def prefix = readPrefix(path, params.reads)
+        tuple(prefix, path)
+     }
+     .groupTuple(sort: true)
+     .set { read_files }
+ 
+read_files.into  { read_files_fastqc; read_files_trimming;name_for_star }
 
 
 /*
@@ -110,26 +129,27 @@ if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
  */
 
 process fastqc {
-    
+    tag "reads: $name"
+
     module 'bioinfo-tools'
     module 'FastQC'
-    
+
     memory '2 GB'
     time '1h'
-    
+
+    publishDir "$results_path/fastqc"
+
     input:
-    file read1 from read1
-    file read2 from read2
+    set val(name), file(reads:'*') from read_files_fastqc
 
     output:
     file '*_fastqc.html' into fastqc_html
     file '*_fastqc.zip' into fastqc_zip
 
     """
-    fastqc -q ${read1} ${read2}
+    fastqc -q ${reads}
     """
 }
-
 
 
 /*
@@ -137,30 +157,43 @@ process fastqc {
  */
 
 process trim_galore {
-    
+    tag "reads: $name"
+
     module 'bioinfo-tools'
     module 'FastQC'
     module 'cutadapt'
     module 'TrimGalore'
-    
+
     cpus 3
     memory '3 GB'
     time '8h'
 
+    publishDir "$results_path/trim_galore"
+
     input:
-    file read1 from read1
-    file read2 from read2
+    set val(name), file(reads:'*') from read_files_trimming
     
+
     output:
-    file '*_val_1.fq.gz' into trimmed_read1
-    file '*_val_2.fq.gz' into trimmed_read2
+    file '*fq.gz' into trimmed_reads
+    file '*trimming_report.txt' into results
 
-    """
-    trim_galore --paired --gzip --fastqc_args "-q" $read1 $read2
-    """
+    script:
+    single = reads instanceof Path
+    if( !single ) {
+
+        """
+
+        trim_galore --paired --gzip --fastqc_args "-q" $reads
+        """
+
+    }
+    else {
+        """
+        trim_galore --gzip --fastqc_args "-q" $reads
+        """
+    }
 }
-
-
 
 /*
  * STEP 3 - align with STAR
@@ -175,54 +208,62 @@ process star {
     cpus 8
     memory '64 GB'
     time '5h'
-
+    
+    publishDir "$results_path/STAR"
+    
     input:
     file index
     file gtf
-    file trimmed_read1 from trimmed_read1
-    file trimmed_read2 from trimmed_read2
-
+    file (reads:'*') from trimmed_reads
+    set val(prefix) from name_for_star 
     output:
-    file '*.Aligned.sortedByCoord.out.bam' into bam4, bam5, bam6, bam7, bam8, bam9
-    file '*.Log.final.out' into results
-    file '*.Log.out' into results
-    file '*.Log.progress.out' into results
-    file '*.SJ.out.tab' into results
-
+    file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+    file '*Log.final.out' into results
+    file '*Log.out' into results
+    file '*Log.progress.out' into results
+    file '*SJ.out.tab' into results
+    
     """
-    prefix=\$(echo $trimmed_read1 | sed 's/_.*/./')
     STAR --genomeDir $index \\
          --sjdbGTFfile $gtf \\
-         --readFilesIn $trimmed_read1 $trimmed_read2 \\
+         --readFilesIn ${reads}  \\
          --runThreadN ${task.cpus} \\
          --twopassMode Basic \\
          --outWigType bedGraph \\
          --outSAMtype BAM SortedByCoordinate\\
          --readFilesCommand zcat\\
-         --outFileNamePrefix \$prefix
+         --outFileNamePrefix $prefix
     """
+    
 }
 
 
 
 /*
- * STEP 4 - RNASeQC analysis
+ * STEP 4 - RSeQC analysis
  */
 
-process rnaseqc {
+process rseqc {
     
     module 'bioinfo-tools'
     module 'rseqc'
-    
+    module 'samtools'
     memory '64 GB'
     time '2h'
    
-    errorStrategy 'ignore' 
-    
-    input:
-    file bam4
-    file bed12 from bed12
    
+    publishDir "$results_path/rseqc" 
+    input:
+    file bam_rseqc
+    file bed12 from bed12
+    
+    def STRAND_RULE
+    if (!single){
+        STRAND_RULE='1+-,1-+,2++,2--'
+    }else{
+        STRAND_RULE='++,--'
+    }      
+         
      
     output:
     file '*.bam_stat.txt' into results                          // bam_stat
@@ -231,30 +272,30 @@ process rnaseqc {
     file '*.junctionSaturation_plot.{txt,pdf}' into results     // junction_saturation
     file '*.inner_distance.{txt,pdf}' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
-//    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+    file '*.geneBodyCoverage.txt' into results
+ //   file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
     file '*.infer_experiment.txt' into results                  // infer_experiment
     file '*.read_distribution.txt' into results                 // read_distribution
     file '*DupRate.xls' into results                            // read_duplication
     file '*DupRate_plot.pdf' into results                      // read_duplication
     file '*.saturation.{txt,pdf}' into results             // RPKM_saturation
-    
+    file '*.junctionSaturation_plot.r' into results
+
+    script:
+
     """
-    bam_stat.py -i $bam4 2> ${bam4}.bam_stat.txt
-    junction_annotation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    junction_saturation.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    inner_distance.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam4 -o ${bam4}.rseqc -r $bed12
-    infer_experiment.py -i $bam4 -r $bed12 > ${bam4}.infer_experiment.txt
-    read_distribution.py -i $bam4 -r $bed12 > ${bam4}.read_distribution.txt
-    read_duplication.py -i $bam4 -o ${bam4}.read_duplication
-    RPKM_saturation.py -i $bam4 -r $bed12 -d '1+-,1-+,2++,2--' -o ${bam4}.RPKM_saturation
+    samtools index $bam_rseqc  
+    bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
+    junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
+    infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
+    read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
+    read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
+    RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $STRAND_RULE -o ${bam_rseqc}.RPKM_saturation
     """
 }
-
-
-
-
-
 
 /*
  * STEP 5 - preseq analysis
@@ -267,15 +308,16 @@ process preseq {
     
     memory '4 GB'
     time '2h'
-    
+
+    publishDir "$results_path/preseq"    
     input:
-    file bam5
+    file bam_preseq
     
     output:
     file '*.ccurve.txt' into results
     
     """
-    preseq lc_extrap -v -B $bam5 -o ${bam5}.ccurve.txt
+    preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq}.ccurve.txt
     """
 }
 
@@ -285,14 +327,16 @@ process preseq {
 */
 
 process markDuplicates {
+
     module 'bioinfo-tools'
     module 'picard/2.0.1'
     
     memory '16GB'
     time '2h'
-    
+  
+    publishDir "$results_path/markDuplicates"  
     input:
-    file bam6
+    file bam_markduplicates
     
     output: 
     file '*.markDups.bam' into bam_md
@@ -300,9 +344,9 @@ process markDuplicates {
 
     """
     echo \$PICARD_HOME
-    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam6} OUTPUT=${bam6}.markDups.bam METRICS_FILE=${bam6}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
+    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates INPUT=${bam_markduplicates} OUTPUT=${bam_markduplicates}.markDups.bam METRICS_FILE=${bam_markduplicates}.markDups_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true PROGRAM_RECORD_ID='null' VALIDATION_STRINGENCY=LENIENT 
     """
-    }
+}
 
 
 
@@ -318,6 +362,7 @@ process dupradar {
     memory '16 GB'
     time '2h'
     
+    publishDir "$results_path/dupradar"
     input:
     file bam_md 
     file gtf from gtf
@@ -326,8 +371,14 @@ process dupradar {
     file '*_duprateExpDens.pdf' into results
     file '*_intercept_slope.txt' into results
     file '*_expressionHist.pdf' into results
+    file 'dup.done' into done
     
-    shell
+    def paired 
+    if( !single ) { 
+       paired = 'TRUE'
+    }else{
+        paired= 'FALSE'
+    }   
     """
     #!/usr/bin/env Rscript
     if (!("dupRadar" %in% installed.packages()[,"Package"])){
@@ -339,9 +390,8 @@ process dupradar {
           
     # Duplicate stats
     stranded <- 2
-    paired <- TRUE
     threads <- 8
-    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, paired, threads)
+    dm <- analyzeDuprates("${bam_md}", "${gtf}", stranded, $paired, threads)
     write.table(dm, file=paste("${bam_md}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
     
     # 2D density scatter plot
@@ -357,8 +407,10 @@ process dupradar {
                          expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
     dev.off()
+    file.create("dup.done")
     """
-    }
+
+}
 
  /*
  * STEP 8 Feature counts
@@ -373,19 +425,22 @@ process featureCounts {
     memory '4 GB'
     time '2h'
     
+    publishDir "$results_path/featureCounts"
     input:
-    file bam8
+    file bam_featurecounts
     file gtf from gtf
     
     output:
     file '*_gene.featureCounts.txt' into results
     file '*_biotype.featureCounts.txt' into results
     file '*_rRNA_counts.txt' into results
-    
+    file '*.summary' into results
+    file 'featureCounts.done' into featureCounts_done    
     """
-    featureCounts -a $gtf -g gene_id -o ${bam8}_gene.featureCounts.txt -p -s 2 $bam8
-    featureCounts -a $gtf -g gene_biotype -o ${bam8}_biotype.featureCounts.txt -p -s 2 $bam8
-    cut -f 1,7 ${bam8}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam8}_rRNA_counts.txt
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
+    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam_featurecounts}_rRNA_counts.txt
+    echo done >featureCounts.done
     """
 }
 
@@ -402,9 +457,11 @@ process stringtieFPKM {
     
     memory '4 GB'
     time '2h'
-    
+ 
+    publishDir "$results_path/stringtieFPKM"
+   
     input:
-    file bam9
+    file bam_stringtieFPKM
     file gtf from gtf
     
     output:
@@ -413,9 +470,74 @@ process stringtieFPKM {
     file '*.cov_refs.gtf' into results
     
     """
-    stringtie $bam9 -o ${bam9}_transcripts.gtf -v -G $gtf -A ${bam9}.gene_abund.txt -C ${bam9}.cov_refs.gtf -e -b ${bam9}_ballgown
+    stringtie $bam_stringtieFPKM -o ${bam_stringtieFPKM}_transcripts.gtf -v -G $gtf -A ${bam_stringtieFPKM}.gene_abund.txt -C ${bam_stringtieFPKM}.cov_refs.gtf -e -b ${bam_stringtieFPKM}_ballgown
     """
 }
 
 
+/*
+ * STEP 10 MultiQC
+ */
 
+process multiqc { 
+    module 'bioinfo-tools'
+    module 'MultiQC'
+    
+    memory '4GB'   
+    time '4h'
+
+    publishDir "$results_path/MultiQC"    
+   
+    input:
+    file 'dup.done' from done  
+    file 'featureCounts.done' from featureCounts_done  
+    
+    output:
+    file 'multiqc_report.html' into results 
+    """
+    multiqc $PWD/results
+    """
+}
+
+/* 
+ * Helper function, given a file Path 
+ * returns the file name region matching a specified glob pattern
+ * starting from the beginning of the name up to last matching group.
+ * 
+ * For example: 
+ *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
+ * 
+ * Returns: 
+ *   'file_alpha'
+ */
+ 
+def readPrefix( Path actual, template ) {
+
+    final fileName = actual.getFileName().toString()
+
+    def filePattern = template.toString()
+    int p = filePattern.lastIndexOf('/')
+    if( p != -1 ) filePattern = filePattern.substring(p+1)
+    if( !filePattern.contains('*') && !filePattern.contains('?') ) 
+        filePattern = '*' + filePattern 
+  
+    def regex = filePattern
+                    .replace('.','\\.')
+                    .replace('*','(.*)')
+                    .replace('?','(.?)')
+                    .replace('{','(?:')
+                    .replace('}',')')
+                    .replace(',','|')
+
+    def matcher = (fileName =~ /$regex/)
+    if( matcher.matches() ) {  
+        def end = matcher.end(matcher.groupCount() )      
+        def prefix = fileName.substring(0,end)
+        while(prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') ) 
+          prefix=prefix[0..-2]
+          
+        return prefix
+    }
+    println(fileName) 
+    return fileName
+}

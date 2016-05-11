@@ -184,7 +184,6 @@ process trim_galore {
     if( !single ) {
 
         """
-
         trim_galore --paired --gzip --fastqc_args "-q" $reads
         """
 
@@ -475,7 +474,7 @@ process stringtieFPKM {
 
 
 /*
-STEP 10 - edgeR MDS and heatmap
+ * STEP 10 - edgeR MDS and heatmap
  */
 
 process sample_correlation {
@@ -498,8 +497,6 @@ process sample_correlation {
     file 'log2CPM_sample_distances_dendrogram.pdf' into results
     file 'log2CPM_sample_distances.txt' into results
     file 'corr.done' into corr_done
-    
-    def filestring = '"' + input_files.join('","') + '"'
     
     '''
     #!/usr/bin/env Rscript
@@ -533,7 +530,7 @@ process sample_correlation {
     }
  
     # Load input counts data
-    datafiles = c( !{filestring} )
+    datafiles = c( "!{input_files.join(", ")}" )
     
     # Load count column from all files into a list of data frames
     # Use data.tables fread as much much faster than read.table

@@ -387,12 +387,15 @@ process dupradar {
     }   
     """
     #!/usr/bin/env Rscript
-    .libPaths (c( "${params.rlocation}", .libPaths() ))
-    if(!("dupRadar" %in% installed.packages()[,"Package"])){
-        source("https://bioconductor.org/biocLite.R")
-        biocLite("dupRadar")
+    
+    # Load / install dupRadar package
+    .libPaths( c( "${params.rlocation}", .libPaths() ) )
+    if (!require("dupRadar")){
+      source("http://bioconductor.org/biocLite.R")
+      biocLite("dupRadar", suppressUpdates=TRUE, lib="${params.rlocation}")
+      library("dupRadar")
     }
-    library("dupRadar")
+
     # Duplicate stats
     stranded <- 2
     threads <- 8
@@ -511,28 +514,28 @@ process sample_correlation {
     # Load / install required packages
     .libPaths( c( "${params.rlocation}", .libPaths() ) )
     if (!require("limma")){
-      source("https://bioconductor.org/biocLite.R")
-      biocLite("limma")
+      source("http://bioconductor.org/biocLite.R")
+      biocLite("limma", suppressUpdates=TRUE, lib="${params.rlocation}")
       library("limma")
     }
  
     if (!require("edgeR")){
-      source("https://bioconductor.org/biocLite.R")
-      biocLite("edgeR")
+      source("http://bioconductor.org/biocLite.R")
+      biocLite("edgeR", suppressUpdates=TRUE, lib="${params.rlocation}")
       library("edgeR")
     }
  
     if (!require("data.table")){
-      install.packages("data.table", dependencies=TRUE)
+      install.packages("data.table", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
       library("data.table")  
     }
  
     if (!require("gplots")) {
-      install.packages("gplots", dependencies=TRUE)
+      install.packages("gplots", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
       library("gplots")
     }
     if (!require("RColorBrewer")) {
-      install.packages("RColorBrewer", dependencies=TRUE)
+      install.packages("RColorBrewer", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
       library("RColorBrewer")
     }
  

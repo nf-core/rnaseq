@@ -534,10 +534,6 @@ process sample_correlation {
       install.packages("gplots", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
       library("gplots")
     }
-    if (!require("RColorBrewer")) {
-      install.packages("RColorBrewer", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
-      library("RColorBrewer")
-    }
  
     # Load input counts data
     datafiles = c( "!{input_files.join(", ")}" )

@@ -494,7 +494,7 @@ process multiqc {
     output:
     file 'multiqc_report.html' into results 
     """
-    multiqc $PWD/results
+    multiqc -f  $PWD/results
     """
 }
 

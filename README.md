@@ -3,6 +3,7 @@ Pipeline for RNA sequencing best practice abalysis at the NGI at Scilifelab Stoc
 
 Authors:
 Phil Ewels (@ewels)
+
 Rickard Hammarén (@Hammarn)
 
 
@@ -25,7 +26,11 @@ The human `GRCh37` genome is set as default.
 --genome 'GRCm38'
 ```
 
+### '-c'
+Path to config file - nextflow command
+
+
 An example run:
 ```
-$ nextflow main.nf --reads '*R{1,2}.fastq.gz' --genome 'GRCm38
+$ nextflow main.nf --reads '*R{1,2}.fastq.gz' --genome 'GRCm38'
 ```

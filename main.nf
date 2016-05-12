@@ -130,7 +130,7 @@ read_files.into  { read_files_fastqc; read_files_trimming;name_for_star }
  */
 
 process fastqc {
-    tag "reads: $name"
+    tag "$name"
 
     module 'bioinfo-tools'
     module 'FastQC'
@@ -158,7 +158,7 @@ process fastqc {
  */
 
 process trim_galore {
-    tag "reads: $name"
+    tag "$name"
 
     module 'bioinfo-tools'
     module 'FastQC'
@@ -201,6 +201,7 @@ process trim_galore {
  */
 
 process star {
+    tag "$name_for_star"
     
     module 'bioinfo-tools'
     module 'star'
@@ -244,6 +245,7 @@ process star {
  */
 
 process rseqc {
+    tag "$bam_rseqc"
     
     module 'bioinfo-tools'
     module 'rseqc'
@@ -302,12 +304,14 @@ process rseqc {
  */
 
 process preseq {
+    tag "$bam_preseq"
     
     module 'bioinfo-tools'
     module 'preseq'
     
     memory '4 GB'
     time '2h'
+    errorStrategy 'ignore'
 
     publishDir "$results_path/preseq"    
     input:
@@ -327,6 +331,7 @@ process preseq {
 */
 
 process markDuplicates {
+    tag "$bam_markduplicates"
 
     module 'bioinfo-tools'
     module 'picard/2.0.1'
@@ -355,6 +360,7 @@ STEP 7 - dupRadar
  */
 
 process dupradar {
+    tag "$bam_md"
     
     module 'bioinfo-tools'
     module 'R/3.2.3'
@@ -418,6 +424,7 @@ process dupradar {
 
 
 process featureCounts {
+    tag "$bam_featurecounts"
     
     module 'bioinfo-tools'
     module 'subread'
@@ -449,6 +456,7 @@ process featureCounts {
  */
 
 process stringtieFPKM {
+    tag "$bam_stringtieFPKM"
     
     module 'bioinfo-tools'
     module 'StringTie'

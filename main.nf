@@ -368,7 +368,7 @@ process dupradar {
     memory '16 GB'
     time '2h'
     
-    publishDir "$results_path/dupradar"
+    publishDir "$results_path/dupradar", pattern: '*.{pdf,txt}'
     input:
     file bam_md 
     file gtf from gtf
@@ -495,7 +495,7 @@ process sample_correlation {
     memory '16 GB'
     time '2h'
     
-    publishDir "$results_path/sample_correlation"
+    publishDir "$results_path/sample_correlation", pattern: '*.{pdf,txt}'
     input:
     file input_files from geneCounts.toList()
     

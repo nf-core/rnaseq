@@ -201,7 +201,7 @@ process trim_galore {
  */
 
 process star {
-    tag "$name_for_star"
+    tag "$prefix"
     
     module 'bioinfo-tools'
     module 'star'

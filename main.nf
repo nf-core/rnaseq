@@ -16,13 +16,18 @@
  --genome [GRCh37 | GRCm38]
  --index [path to STAR index]
  --gtf [path to GTF file]
- --files [path to input files]
- --mode [single | paired]
+ --reads [path to input files]
  
  For example:
- $ nextflow rnaseq.nf --files path/to/data/*fq.gz
+ $ nextflow main.nf --reads 'path/to/data/sample_*_{1,2}.fq.gz'
+---------------------------------------------------------------------------------------
+The pipeline can determine whether the input data is single or paired end. This relies on 
+specifying the input files correctly. For paired en data us the example above, i.e. 
+'sample_*_{1,2}.fastq.gz'. Without the glob {1,2} (or similiar) the data will be treated
+as single end.
 ----------------------------------------------------------------------------------------
  Pipeline overview:
+ - FastQC - read quility control
  - cutadapt - trimming
  - STAR - align
  - RSeQC

@@ -513,7 +513,7 @@ process sample_correlation {
     file 'log2CPM_sample_distances.txt' into results
     file 'corr.done' into corr_done
     
-    '''
+    """
     #!/usr/bin/env Rscript
  
     # Load / install required packages
@@ -541,7 +541,7 @@ process sample_correlation {
     }
  
     # Load input counts data
-    datafiles = c( "!{input_files.join(", ")}" )
+    datafiles = c( "${input_files.join(", ")}" )
     
     # Load count column from all files into a list of data frames
     # Use data.tables fread as much much faster than read.table
@@ -573,11 +573,11 @@ process sample_correlation {
     dev.off()
  
     # Print distance matrix to file
-    write.table(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.txt', quote=FALSE, sep="\t")
+    write.table(MDSdata\$distance.matrix, 'edgeR_MDS_distance_matrix.txt', quote=FALSE, sep="\t")
  
     # Print plot x,y co-ordinates to file
-    MDSxy = MDSdata$cmdscale.out
-    colnames(MDSxy) = c(paste(MDSdata$axislabel, '1'), paste(MDSdata$axislabel, '2'))
+    MDSxy = MDSdata\$cmdscale.out
+    colnames(MDSxy) = c(paste(MDSdata\$axislabel, '1'), paste(MDSdata\$axislabel, '2'))
     write.table(MDSxy, 'edgeR_MDS_plot_coordinates.txt', quote=FALSE, sep="\t")
  
     # Get the log counts per million values
@@ -596,14 +596,14 @@ process sample_correlation {
  
     # Plot the heatmap dendrogram
     pdf('log2CPM_sample_distances_dendrogram.pdf')
-    plot(hmap$rowDendrogram, main="Sample Dendrogram")
+    plot(hmap\$rowDendrogram, main="Sample Dendrogram")
     dev.off()
  
     # Write clustered distance values to file
-    write.table(hmap$carpet, 'log2CPM_sample_distances.txt', quote=FALSE, sep="\t")
+    write.table(hmap\$carpet, 'log2CPM_sample_distances.txt', quote=FALSE, sep="\t")
     
     file.create("corr.done")
-    '''
+    """
 
 }
 

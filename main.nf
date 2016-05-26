@@ -257,6 +257,8 @@ process rseqc {
     module 'samtools'
     memory '64 GB'
     time '4h'
+    
+    errorStrategy 'ignore'
    
    
     publishDir "$results_path/rseqc" 
@@ -267,11 +269,11 @@ process rseqc {
     def STRAND_RULE
     if (!single){
         STRAND_RULE='1+-,1-+,2++,2--'
-    }else{
+    } else {
         STRAND_RULE='++,--'
-    }      
-         
-     
+    }
+    
+    
     output:
     file '*.bam_stat.txt' into results                          // bam_stat
     file '*.splice_events.{txt,pdf}' into results               // junction_annotation
@@ -500,7 +502,10 @@ process sample_correlation {
     memory '16 GB'
     time '2h'
     
+    errorStrategy 'ignore'
+    
     publishDir "$results_path/sample_correlation", pattern: '*.{pdf,txt}'
+    
     input:
     file input_files from geneCounts.toList()
     
@@ -532,7 +537,7 @@ process sample_correlation {
  
     if (!require("data.table")){
       install.packages("data.table", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
-      library("data.table")  
+      library("data.table")
     }
  
     if (!require("gplots")) {
@@ -541,7 +546,7 @@ process sample_correlation {
     }
  
     # Load input counts data
-    datafiles = c( "${input_files.join(", ")}" )
+    datafiles = c( "${(input_files as List).join('", "')}" )
     
     # Load count column from all files into a list of data frames
     # Use data.tables fread as much much faster than read.table

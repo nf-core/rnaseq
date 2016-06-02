@@ -143,6 +143,8 @@ process fastqc {
     memory { 2.GB * task.attempt }
     time { 1.h * task.attempt }
 
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+  
     publishDir "$results_path/fastqc"
 
     input:
@@ -173,7 +175,7 @@ process trim_galore {
     cpus 3
     memory { 3.GB * task.attempt }
     time { 4.h * task.attempt }
-
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'terminate' }
     publishDir "$results_path/trim_galore"
 
     input:
@@ -214,7 +216,7 @@ process star {
     cpus 8
     memory { 64.GB * task.attempt }
     time  { 5.h * task.attempt }
-    errorStrategy 'retry'   
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'terminate' }   
     
  
     publishDir "$results_path/STAR"
@@ -260,7 +262,7 @@ process rseqc {
     memory { 64.GB * task.attempt }
     time  {7.h * task.attempt }
     
-    errorStrategy 'retry'
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
    
    
     publishDir "$results_path/rseqc" 
@@ -320,7 +322,8 @@ process preseq {
     
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy 'retry'
+    
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' } 'retry'
 
     publishDir "$results_path/preseq"    
     input:
@@ -347,6 +350,8 @@ process markDuplicates {
     
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
+    
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
   
     publishDir "$results_path/markDuplicates"  
     input:
@@ -377,7 +382,7 @@ process dupradar {
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
    
-    errorStrategy 'retry'
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
  
     publishDir "$results_path/dupradar", pattern: '*.{pdf,txt}'
 
@@ -446,7 +451,7 @@ process featureCounts {
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
    
-    errorStrategy 'retry'
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
  
     publishDir "$results_path/featureCounts"
     input:
@@ -480,7 +485,7 @@ process stringtieFPKM {
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
     
-    errorStrategy 'retry'
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
  
     publishDir "$results_path/stringtieFPKM"
    
@@ -511,7 +516,7 @@ process sample_correlation {
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
     
-    errorStrategy 'retry'
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
     
     publishDir "$results_path/sample_correlation", pattern: '*.{pdf,txt}'
     

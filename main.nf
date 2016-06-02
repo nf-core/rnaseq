@@ -140,8 +140,8 @@ process fastqc {
     module 'bioinfo-tools'
     module 'FastQC'
 
-    memory '2 GB'
-    time '1h'
+    memory { 2.GB * task.attempt }
+    time { 1.h * task.attempt }
 
     publishDir "$results_path/fastqc"
 
@@ -171,8 +171,8 @@ process trim_galore {
     module 'TrimGalore'
 
     cpus 3
-    memory '3 GB'
-    time '8h'
+    memory { 3.GB * task.attempt }
+    time { 4.h * task.attempt }
 
     publishDir "$results_path/trim_galore"
 
@@ -212,9 +212,11 @@ process star {
     module 'star'
     
     cpus 8
-    memory '64 GB'
-    time '5h'
+    memory { 64.GB * task.attempt }
+    time  { 5.h * task.attempt }
+    errorStrategy 'retry'   
     
+ 
     publishDir "$results_path/STAR"
     
     input:
@@ -255,10 +257,10 @@ process rseqc {
     module 'bioinfo-tools'
     module 'rseqc'
     module 'samtools'
-    memory '64 GB'
-    time '4h'
+    memory { 64.GB * task.attempt }
+    time  {7.h * task.attempt }
     
-    errorStrategy 'ignore'
+    errorStrategy 'retry'
    
    
     publishDir "$results_path/rseqc" 
@@ -282,7 +284,7 @@ process rseqc {
     file '*.inner_distance.{txt,pdf}' into results              // inner_distance
     file '*.curves.{txt,pdf}' into results                      // geneBody_coverage
     file '*.geneBodyCoverage.txt' into results
- //   file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
+    file '*.heatMap.{txt,pdf}' into results                     // geneBody_coverage
     file '*.infer_experiment.txt' into results                  // infer_experiment
     file '*.read_distribution.txt' into results                 // read_distribution
     file '*DupRate.xls' into results                            // read_duplication
@@ -316,9 +318,9 @@ process preseq {
     module 'bioinfo-tools'
     module 'preseq'
     
-    memory '4 GB'
-    time '2h'
-    errorStrategy 'ignore'
+    memory { 4.GB * task.attempt }
+    time { 2.h * task.attempt }
+    errorStrategy 'retry'
 
     publishDir "$results_path/preseq"    
     input:
@@ -343,8 +345,8 @@ process markDuplicates {
     module 'bioinfo-tools'
     module 'picard/2.0.1'
     
-    memory '16GB'
-    time '2h'
+    memory { 16.GB * task.attempt }
+    time { 2.h * task.attempt }
   
     publishDir "$results_path/markDuplicates"  
     input:
@@ -372,10 +374,13 @@ process dupradar {
     module 'bioinfo-tools'
     module 'R/3.2.3'
     
-    memory '16 GB'
-    time '2h'
-    
+    memory { 16.GB * task.attempt }
+    time { 2.h * task.attempt }
+   
+    errorStrategy 'retry'
+ 
     publishDir "$results_path/dupradar", pattern: '*.{pdf,txt}'
+
     input:
     file bam_md 
     file gtf from gtf
@@ -438,9 +443,11 @@ process featureCounts {
     module 'bioinfo-tools'
     module 'subread'
     
-    memory '4 GB'
-    time '2h'
-    
+    memory { 4.GB * task.attempt }
+    time { 2.h * task.attempt }
+   
+    errorStrategy 'retry'
+ 
     publishDir "$results_path/featureCounts"
     input:
     file bam_featurecounts
@@ -470,8 +477,10 @@ process stringtieFPKM {
     module 'bioinfo-tools'
     module 'StringTie'
     
-    memory '4 GB'
-    time '2h'
+    memory { 4.GB * task.attempt }
+    time { 2.h * task.attempt }
+    
+    errorStrategy 'retry'
  
     publishDir "$results_path/stringtieFPKM"
    
@@ -499,10 +508,10 @@ process sample_correlation {
     module 'bioinfo-tools'
     module 'R/3.2.3'
     
-    memory '16 GB'
-    time '2h'
+    memory { 16.GB * task.attempt }
+    time { 2.h * task.attempt }
     
-    errorStrategy 'ignore'
+    errorStrategy 'retry'
     
     publishDir "$results_path/sample_correlation", pattern: '*.{pdf,txt}'
     
@@ -625,14 +634,17 @@ process multiqc {
     time '4h'
 
     publishDir "$results_path/MultiQC"    
-   
+  
+    errorStrategy 'ignore'
+ 
     input:
     file 'dup.done' from done
     file 'corr.done' from corr_done
     
     output:
     file 'multiqc_report.html' into results 
-    """
+   
+     """
     multiqc -f  $PWD/results
     """
 }

@@ -144,6 +144,7 @@ process fastqc {
     time { 1.h * task.attempt }
 
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+    maxRetries 3
   
     publishDir "$results_path/fastqc"
 
@@ -175,7 +176,9 @@ process trim_galore {
     cpus 3
     memory { 3.GB * task.attempt }
     time { 4.h * task.attempt }
+    
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'terminate' }
+    maxRetries 3
     publishDir "$results_path/trim_galore"
 
     input:
@@ -214,9 +217,10 @@ process star {
     module 'star'
     
     cpus 8
-    memory { 64.GB * task.attempt }
+    memory { 32.GB * task.attempt }
     time  { 5.h * task.attempt }
-    errorStrategy { task.exitStatus == 140 ? 'retry' : 'terminate' }   
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'terminate' }
+    maxRetries 3
     
  
     publishDir "$results_path/STAR"
@@ -259,11 +263,11 @@ process rseqc {
     module 'bioinfo-tools'
     module 'rseqc'
     module 'samtools'
-    memory { 64.GB * task.attempt }
+    memory { 32.GB * task.attempt }
     time  {7.h * task.attempt }
     
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
-   
+    maxRetries 3
    
     publishDir "$results_path/rseqc" 
     input:
@@ -324,6 +328,7 @@ process preseq {
     time { 2.h * task.attempt }
     
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' } 'retry'
+    maxRetries 3
 
     publishDir "$results_path/preseq"    
     input:
@@ -352,6 +357,7 @@ process markDuplicates {
     time { 2.h * task.attempt }
     
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+    maxRetries 3
   
     publishDir "$results_path/markDuplicates"  
     input:
@@ -383,6 +389,7 @@ process dupradar {
     time { 2.h * task.attempt }
    
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+    maxRetries 3
  
     publishDir "$results_path/dupradar", pattern: '*.{pdf,txt}'
 
@@ -452,6 +459,7 @@ process featureCounts {
     time { 2.h * task.attempt }
    
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+    maxRetries 3
  
     publishDir "$results_path/featureCounts"
     input:
@@ -486,6 +494,7 @@ process stringtieFPKM {
     time { 2.h * task.attempt }
     
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+    maxRetries 3
  
     publishDir "$results_path/stringtieFPKM"
    
@@ -517,6 +526,7 @@ process sample_correlation {
     time { 2.h * task.attempt }
     
     errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' }
+    maxRetries 3
     
     publishDir "$results_path/sample_correlation", pattern: '*.{pdf,txt}'
     

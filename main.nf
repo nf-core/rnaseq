@@ -187,7 +187,7 @@ process trim_galore {
 
     output:
     file '*fq.gz' into trimmed_reads
-    file '*trimming_report.txt' into results
+    file '*trimming_report.txt' 
 
     script:
     single = reads instanceof Path
@@ -232,10 +232,10 @@ process star {
     set val(prefix) from name_for_star 
     output:
     file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
-    file '*Log.final.out' into results
-    file '*Log.out' into results
-    file '*Log.progress.out' into results
-    file '*SJ.out.tab' into results
+    file '*Log.final.out' 
+    file '*Log.out' 
+    file '*Log.progress.out' 
+    file '*SJ.out.tab' 
     
     """
     STAR --genomeDir $index \\
@@ -297,7 +297,7 @@ process rseqc {
     */
     
     output:
-    file *.{txt,pdf} into results
+    file '*.{txt,pdf}' 
  
     script:
 
@@ -328,7 +328,7 @@ process preseq {
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
     
-    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' } 'retry'
+    errorStrategy { task.exitStatus == 140 ? 'retry' : 'warning' } 
     maxRetries 3
 
     publishDir "$results_path/preseq"    
@@ -336,7 +336,7 @@ process preseq {
     file bam_preseq
     
     output:
-    file '*.ccurve.txt' into results
+    file '*.ccurve.txt' 
     
     """
     preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq}.ccurve.txt
@@ -366,7 +366,7 @@ process markDuplicates {
     
     output: 
     file '*.markDups.bam' into bam_md
-    file '*markDups_metrics.txt' into results
+    file '*markDups_metrics.txt' 
 
     """
     echo \$PICARD_HOME
@@ -398,9 +398,9 @@ process dupradar {
     file gtf from gtf
     
     output:
-    file '*_duprateExpDens.pdf' into results
-    file '*_intercept_slope.txt' into results
-    file '*_expressionHist.pdf' into results
+    file '*_duprateExpDens.pdf' 
+    file '*_intercept_slope.txt' 
+    file '*_expressionHist.pdf' 
     file 'dup.done' into done
     
     def paired 
@@ -468,9 +468,9 @@ process featureCounts {
     
     output:
     file '*_gene.featureCounts.txt' into geneCounts
-    file '*_biotype.featureCounts.txt' into results
-    file '*_rRNA_counts.txt' into results
-    file '*.summary' into results
+    file '*_biotype.featureCounts.txt' 
+    file '*_rRNA_counts.txt' 
+    file '*.summary' 
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
@@ -502,9 +502,9 @@ process stringtieFPKM {
     file gtf from gtf
     
     output:
-    file '*_transcripts.gtf' into results
-    file '*.gene_abund.txt' into results
-    file '*.cov_refs.gtf' into results
+    file '*_transcripts.gtf' 
+    file '*.gene_abund.txt' 
+    file '*.cov_refs.gtf' 
     
     """
     stringtie $bam_stringtieFPKM -o ${bam_stringtieFPKM}_transcripts.gtf -v -G $gtf -A ${bam_stringtieFPKM}.gene_abund.txt -C ${bam_stringtieFPKM}.cov_refs.gtf -e -b ${bam_stringtieFPKM}_ballgown
@@ -533,12 +533,12 @@ process sample_correlation {
     file input_files from geneCounts.toList()
     
     output:
-    file 'edgeR_MDS_plot.pdf' into results
-    file 'edgeR_MDS_distance_matrix.txt' into results
-    file 'edgeR_MDS_plot_coordinates.txt' into results
-    file 'log2CPM_sample_distances_heatmap.pdf' into results
-    file 'log2CPM_sample_distances_dendrogram.pdf' into results
-    file 'log2CPM_sample_distances.txt' into results
+    file 'edgeR_MDS_plot.pdf' 
+    file 'edgeR_MDS_distance_matrix.txt' 
+    file 'edgeR_MDS_plot_coordinates.txt' 
+    file 'log2CPM_sample_distances_heatmap.pdf' 
+    file 'log2CPM_sample_distances_dendrogram.pdf' 
+    file 'log2CPM_sample_distances.txt' 
     file 'corr.done' into corr_done
     
     """
@@ -656,7 +656,7 @@ process multiqc {
     file 'corr.done' from corr_done
     
     output:
-    file 'multiqc_report.html' into results 
+    file 'multiqc_report.html'  
    
      """
     multiqc -f  $PWD/results

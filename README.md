@@ -1,10 +1,7 @@
 # RNA-BP
-Pipeline for RNA sequencing best practice abalysis at the NGI at Scilifelab Stockholm, Sweden
+Pipeline for RNA sequencing best practice analysis at the NGI at Scilifelab Stockholm, Sweden
 
-Authors:
-Phil Ewels (@ewels)
-
-Rickard Hammarén (@Hammarn)
+Written by Phil Ewels (@ewels) and Rickard Hammarén (@Hammarn)
 
 ## Installation
 ### NextFlow installation
@@ -56,8 +53,10 @@ Location of the input FastQ files:
  --reads 'path/to/data/sample_*_{1,2}.fastq'
 ```
 
+**NB: Must be enclosed in quotes!**
+
 Note that the `{1,2}` parentheses are required to specify paired end data. Running `--reads '*.fastq'` will treat
-all files as single end. Also, note that the file path should be in quotation marks to prevent shell glob expansion.
+all files as single end. The file path should be in quotation marks to prevent shell glob expansion.
 
 If left unspecified, the pipeline will assume that the data is in a directory called `data` in the working directory.
 

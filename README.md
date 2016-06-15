@@ -1,10 +1,7 @@
 # RNA-BP
-Pipeline for RNA sequencing best practice abalysis at the NGI at Scilifelab Stockholm, Sweden
+Pipeline for RNA sequencing best practice analysis at the NGI at Scilifelab Stockholm, Sweden
 
-Authors:
-Phil Ewels (@ewels)
-
-Rickard Hammarén (@Hammarn)
+Written by Phil Ewels (@ewels) and Rickard Hammarén (@Hammarn)
 
 ## Installation
 ### NextFlow installation
@@ -13,7 +10,7 @@ information about this pipeline tool at [nextflow.io](http://www.nextflow.io/). 
 of NextFlow looks like this:
 
 ```
-curl -fsSL get.nextflow.io | bash 
+curl -fsSL get.nextflow.io | bash
 mv ./nextflow ~/bin
 ```
 Note that if you're running on the Swedish UPPMAX cluster (Milou) you can load NextFlow as an
@@ -41,29 +38,31 @@ This pipeline itself needs no installation - NextFlow will automatically fetch i
 If you prefer, you can download the files yourself from GitHub and run them directly:
 ```
 git clone https://github.com/SciLifeLab/NGI-RNAseq.git
-nextflow NGI-RNAseq/main.nf
+nextflow run NGI-RNAseq/main.nf
 ```
 
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```
-nextflow SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
 ```
 
-### `--reads` 
+### `--reads`
 Location of the input FastQ files:
 ```
  --reads 'path/to/data/sample_*_{1,2}.fastq'
 ```
 
+**NB: Must be enclosed in quotes!**
+
 Note that the `{1,2}` parentheses are required to specify paired end data. Running `--reads '*.fastq'` will treat
-all files as single end. Also, note that the file path should be in quotation marks to prevent shell glob expansion.
+all files as single end. The file path should be in quotation marks to prevent shell glob expansion.
 
 If left unspecified, the pipeline will assume that the data is in a directory called `data` in the working directory.
 
 ### `--genome`
-The reference genome to use of the analysis, needs to be one of the genome specified in the config file. 
-The human `GRCh37` genome is set as default. 
+The reference genome to use of the analysis, needs to be one of the genome specified in the config file.
+The human `GRCh37` genome is set as default.
 ```
 --genome 'GRCm38'
 ```

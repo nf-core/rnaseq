@@ -13,7 +13,7 @@
  $ nextflow main.nf
  
  Pipeline variables can be configured with the following command line options:
- --genome [GRCh37 | GRCm38]
+ --genome [ID]
  --index [path to STAR index]
  --gtf [path to GTF file]
  --reads [path to input files]
@@ -97,9 +97,9 @@ log.info "===================================="
 index = file(params.index)
 gtf   = file(params.gtf)
 bed12 = file(params.bed12)
-if( !index.exists() ) exit 1, "Missing STAR index: ${index}"
-if( !gtf.exists() )   exit 2, "Missing GTF annotation: ${gtf}"
-if( !bed12.exists() ) exit 2, "Missing BED12 annotation: ${bed12}"
+if( !index.exists() ) exit 1, "Missing STAR index: $index"
+if( !gtf.exists() )   exit 2, "Missing GTF annotation: $gtf"
+if( !bed12.exists() ) exit 2, "Missing BED12 annotation: $bed12"
 
 /*
  * Create a channel for read files
@@ -130,7 +130,6 @@ process fastqc {
      
      memory { 2.GB * task.attempt }
      time { 4.h * task.attempt }
-     
      errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
      maxRetries 3
      maxErrors '-1'
@@ -164,7 +163,6 @@ process trim_galore {
      cpus 3
      memory { 3.GB * task.attempt }
      time { 16.h * task.attempt }
-     
      errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
      maxRetries 3
      maxErrors '-1'
@@ -357,9 +355,8 @@ process markDuplicates {
      
      script:
      """
-     echo \$PICARD_HOME
      java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
-          INPUT=${bam_markduplicates} \\
+          INPUT=$bam_markduplicates \\
           OUTPUT=${bam_markduplicates}.markDups.bam \\
           METRICS_FILE=${bam_markduplicates}.markDups_metrics.txt \\
           REMOVE_DUPLICATES=false \\

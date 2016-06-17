@@ -46,6 +46,12 @@ The typical command for running the pipeline is as follows:
 ```
 nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
 ```
+or using a more manual approach ( require you to clone the git repository)
+
+```
+nextflow path_to_NGI-RNAseq/main.nf -c path_to_NGI-RNAseq/example_uppmax_config --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
+```
+
 
 ### `--reads`
 Location of the input FastQ files:
@@ -68,6 +74,11 @@ The human `GRCh37` genome is set as default.
 ```
 The `example_uppmax_config` file currently has the location of references for `GRCh37` (Human), `GRCm38` (Mouse)
 and `sacCer2` (Yeast).
+
+### `--sampleLevel`
+Used to turn of the edgeR MDS and heatmap, which require at least three samples to work. I.e use this when
+running on one or two sample only. 
+
 
 ### `-c`
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX

@@ -76,6 +76,7 @@ nxtflow_libs = file(params.rlocation)
 nxtflow_libs.mkdirs()
 
 single = 'null'
+params.sampleLevel = false
 
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
@@ -521,6 +522,8 @@ process stringtieFPKM {
  * STEP 10 - edgeR MDS and heatmap
  */
 
+
+if (params.sampleLevel == false) {
 process sample_correlation {
      module 'bioinfo-tools'
      module 'R/3.2.3'
@@ -632,7 +635,7 @@ process sample_correlation {
      file.create("corr.done")
      """
 
-}
+}}
 
 
 /*

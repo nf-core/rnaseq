@@ -131,7 +131,7 @@ process fastqc {
      memory { 2.GB * task.attempt }
      time { 4.h * task.attempt }
      
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
      maxRetries 3
      maxErrors '-1'
      
@@ -250,7 +250,7 @@ process rseqc {
      memory { 32.GB * task.attempt }
      time  {7.h * task.attempt }
      
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      
@@ -311,7 +311,7 @@ process preseq {
      
      memory { 4.GB * task.attempt }
      time { 2.h * task.attempt }
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      
@@ -342,7 +342,7 @@ process markDuplicates {
      
      memory { 16.GB * task.attempt }
      time { 2.h * task.attempt }
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      
@@ -382,7 +382,7 @@ process dupradar {
      
      memory { 16.GB * task.attempt }
      time { 2.h * task.attempt }
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      
@@ -450,7 +450,7 @@ process featureCounts {
      
      memory { 4.GB * task.attempt }
      time { 2.h * task.attempt }
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      
@@ -487,7 +487,7 @@ process stringtieFPKM {
      
      memory { 4.GB * task.attempt }
      time { 2.h * task.attempt }
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      
@@ -527,7 +527,7 @@ process sample_correlation {
      
      memory { 16.GB * task.attempt }
      time { 2.h * task.attempt }
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'warning' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
      maxRetries 3
      maxErrors '-1'
      

@@ -17,6 +17,7 @@
  --index [path to STAR index]
  --gtf [path to GTF file]
  --reads [path to input files]
+ --sampleLevel [set to true to run on sample and not project level, i.e skipping MDS plot]
  
  For example:
  $ nextflow main.nf --reads 'path/to/data/sample_*_{1,2}.fq.gz'

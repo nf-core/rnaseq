@@ -131,7 +131,7 @@ process fastqc {
      memory { 2.GB * task.attempt }
      time { 4.h * task.attempt }
      
-     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+     errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
      maxRetries 3
      maxErrors '-1'
      

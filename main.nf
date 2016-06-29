@@ -217,7 +217,6 @@ process star {
      file index
      file gtf
      file (reads:'*') from trimmed_reads
-     set val(prefix) from name_for_star
      
      output:
      file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
@@ -225,7 +224,12 @@ process star {
      file '*SJ.out.tab'
      
      script:
+    
      """
+     #Getting the prefix name for star from the name of the reads
+     f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1}
+     prefix=\$f
+     #actually runing STAR
      STAR --genomeDir $index \\
           --sjdbGTFfile $gtf \\
           --readFilesIn $reads  \\
@@ -234,9 +238,37 @@ process star {
           --outWigType bedGraph \\
           --outSAMtype BAM SortedByCoordinate \\
           --readFilesCommand zcat \\
-          --outFileNamePrefix $prefix
+          --outFileNamePrefix \$prefix
      """
 }
+
+
+/*Function that checks the alignment rate of the STAR output
+*/and returns true if the alignment passed and otherwise false
+def check_log(logs) {
+    def percent_aligned = 0;
+    logs.eachLine { line ->
+    if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
+                percent_aligned = matcher[0][1]
+            }
+    }
+    percent_aligned.toFloat()
+    if(percent_aligned.toFloat() <='10'.toFloat() ){
+        println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
+        false
+    } else {
+	println "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+        true
+   }
+}
+
+//Filter removes all 'aligned' chanels that fail the check
+ 
+aligned.filter { logs, bams -> check_log(logs) }
+    .map {  logs, bams -> bams }
+    .set {SPLIT_BAMS }
+    SPLIT_BAMS.into {bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
+
 
 
 /*

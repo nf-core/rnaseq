@@ -77,7 +77,7 @@ nxtflow_libs = file(params.rlocation)
 nxtflow_libs.mkdirs()
 
 single = 'null'
-params.sampleLevel = false
+params.sampleLevel = null
 params.strandRule = false
 
 log.info "===================================="
@@ -272,13 +272,14 @@ aligned.filter { logs, bams -> check_log(logs) }
     SPLIT_BAMS.into {bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
 
 //Counts the number of bam files from STAR. Uses this to determine whether to run 'sampleCorrelation' process or not
-bam_count.count()
-    .subscribe { if (count.toFloat() <= '3'.toFloat()){
-                    params.sampleLevel = true
-                    } else {
-                    params.sampleLevel = false
-                    }
-
+if (isNull(params.sampleLevel)){
+    bam_count.count()
+        .subscribe { if (count.toFloat() <= '3'.toFloat()){
+                        params.sampleLevel = true
+                        } else {
+                        params.sampleLevel = false
+                        }
+}}
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -340,7 +341,7 @@ process rseqc {
      infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
      read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
      read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
-     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $STRAND_RULE -o ${bam_rseqc}.RPKM_saturation
+     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc}.RPKM_saturation
      """
 }
 

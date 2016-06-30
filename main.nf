@@ -17,6 +17,7 @@
  --index [path to STAR index]
  --gtf [path to GTF file]
  --reads [path to input files]
+ --sampleLevel [set to true to run on sample and not project level, i.e skipping MDS plot]
  
  For example:
  $ nextflow main.nf --reads 'path/to/data/sample_*_{1,2}.fq.gz'
@@ -76,6 +77,8 @@ nxtflow_libs = file(params.rlocation)
 nxtflow_libs.mkdirs()
 
 single = 'null'
+params.sampleLevel = null
+params.strandRule = false
 
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
@@ -215,7 +218,6 @@ process star {
      file index
      file gtf
      file (reads:'*') from trimmed_reads
-     set val(prefix) from name_for_star
      
      output:
      file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
@@ -223,7 +225,12 @@ process star {
      file '*SJ.out.tab'
      
      script:
+    
      """
+     #Getting the prefix name for star from the name of the reads
+     f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1}
+     prefix=\$f
+     #actually runing STAR
      STAR --genomeDir $index \\
           --sjdbGTFfile $gtf \\
           --readFilesIn $reads  \\
@@ -232,11 +239,47 @@ process star {
           --outWigType bedGraph \\
           --outSAMtype BAM SortedByCoordinate \\
           --readFilesCommand zcat \\
-          --outFileNamePrefix $prefix
+          --outFileNamePrefix \$prefix
      """
 }
 
 
+//Function that checks the alignment rate of the STAR output
+//and returns true if the alignment passed and otherwise false
+
+def check_log(logs) {
+    def percent_aligned = 0;
+    logs.eachLine { line ->
+    if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
+                percent_aligned = matcher[0][1]
+            }
+    }
+    percent_aligned.toFloat()
+    if(percent_aligned.toFloat() <='10'.toFloat() ){
+        println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
+        false
+    } else {
+	println "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+        true
+   }
+}
+
+//Filter removes all 'aligned' chanels that fail the check
+ 
+aligned.filter { logs, bams -> check_log(logs) }
+    .map {  logs, bams -> bams }
+    .set {SPLIT_BAMS }
+    SPLIT_BAMS.into {bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
+
+//Counts the number of bam files from STAR. Uses this to determine whether to run 'sampleCorrelation' process or not
+if (isNull(params.sampleLevel)){
+    bam_count.count()
+        .subscribe { if (count.toFloat() <= '3'.toFloat()){
+                        params.sampleLevel = true
+                        } else {
+                        params.sampleLevel = false
+                        }
+}}
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -278,13 +321,16 @@ process rseqc {
           .saturation.{txt,pdf}                  // RPKM_saturation
      */
      
-     script:
-     def STRAND_RULE
-     if (single){
-          STRAND_RULE='++,--'
-     } else {
-          STRAND_RULE='1+-,1-+,2++,2--'
+     if (!params.strandRule){
+        if (single){
+            params.strandRule ='++,--'
+        } else {
+            params.strandRule ='1+-,1-+,2++,2--'
+        }
      }
+ 
+     
+     script:
      """
      samtools index $bam_rseqc
      bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
@@ -295,7 +341,7 @@ process rseqc {
      infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
      read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
      read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
-     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $STRAND_RULE -o ${bam_rseqc}.RPKM_saturation
+     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d ${params.strandRule} -o ${bam_rseqc}.RPKM_saturation
      """
 }
 
@@ -521,6 +567,8 @@ process stringtieFPKM {
  * STEP 10 - edgeR MDS and heatmap
  */
 
+
+if (params.sampleLevel == false) {
 process sample_correlation {
      module 'bioinfo-tools'
      module 'R/3.2.3'
@@ -632,7 +680,7 @@ process sample_correlation {
      file.create("corr.done")
      """
 
-}
+}}
 
 
 /*

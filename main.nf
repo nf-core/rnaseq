@@ -321,7 +321,7 @@ process rseqc {
           .saturation.{txt,pdf}                  // RPKM_saturation
      */
      
-     if (!params.standRule){
+     if (!params.strandRule){
         if (single){
             params.strandRule ='++,--'
         } else {
@@ -341,7 +341,7 @@ process rseqc {
      infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
      read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
      read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
-     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc}.RPKM_saturation
+     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d ${params.strandRule} -o ${bam_rseqc}.RPKM_saturation
      """
 }
 

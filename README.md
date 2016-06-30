@@ -49,7 +49,7 @@ nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
 or using a more manual approach ( require you to clone the git repository)
 
 ```
-nextflow path_to_NGI-RNAseq/main.nf -c path_to_NGI-RNAseq/example_uppmax_config --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
+nextflow path_to_NGI-RNAseq/main.nf -c path_to_your_nextflow_config --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
 ```
 
 

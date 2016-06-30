@@ -78,6 +78,7 @@ nxtflow_libs.mkdirs()
 
 single = 'null'
 params.sampleLevel = false
+params.strandRule = false
 
 log.info "===================================="
 log.info " RNAbp : RNA-Seq Best Practice v${version}"
@@ -243,8 +244,9 @@ process star {
 }
 
 
-/*Function that checks the alignment rate of the STAR output
-*/and returns true if the alignment passed and otherwise false
+//Function that checks the alignment rate of the STAR output
+//and returns true if the alignment passed and otherwise false
+
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->
@@ -267,9 +269,15 @@ def check_log(logs) {
 aligned.filter { logs, bams -> check_log(logs) }
     .map {  logs, bams -> bams }
     .set {SPLIT_BAMS }
-    SPLIT_BAMS.into {bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
+    SPLIT_BAMS.into {bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
 
-
+//Counts the number of bam files from STAR. Uses this to determine whether to run 'sampleCorrelation' process or not
+bam_count.count()
+    .subscribe { if (count.toFloat() <= '3'.toFloat()){
+                    params.sampleLevel = true
+                    } else {
+                    params.sampleLevel = false
+                    }
 
 /*
  * STEP 4 - RSeQC analysis
@@ -312,13 +320,16 @@ process rseqc {
           .saturation.{txt,pdf}                  // RPKM_saturation
      */
      
-     script:
-     def STRAND_RULE
-     if (single){
-          STRAND_RULE='++,--'
-     } else {
-          STRAND_RULE='1+-,1-+,2++,2--'
+     if (!params.standRule){
+        if (single){
+            params.strandRule ='++,--'
+        } else {
+            params.strandRule ='1+-,1-+,2++,2--'
+        }
      }
+ 
+     
+     script:
      """
      samtools index $bam_rseqc
      bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt

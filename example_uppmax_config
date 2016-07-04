@@ -12,10 +12,10 @@ process {
   cpus = 1
   memory = '16 GB'
   time = '48h'
-  clusterOptions {
-    '-A YOUR_PROJECT_ID'
+  clusterOptions = {
+    '-A YOUR_PROJECT_ID'}
   }
-}
+
 
 params {
   genomes {

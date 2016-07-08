@@ -220,11 +220,13 @@ process star {
      file '*SJ.out.tab'
      
      script:
-    
+     prefix = reads[0]
+          .replaceAll(~/.gz$/,'')
+          .replaceAll(~/\.f(ast)?q$/,'')
+          .replaceAll(~/_val_1$/,'')
+          .replaceAll(~/_trimmed$/,'')
+          .replaceAll(~/_1$/,'')
      """
-     # Getting the prefix name for star from the name of the reads
-     f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1}
-     #actually runing STAR
      STAR --genomeDir $index \\
           --sjdbGTFfile $gtf \\
           --readFilesIn $reads  \\
@@ -233,7 +235,7 @@ process star {
           --outWigType bedGraph \\
           --outSAMtype BAM SortedByCoordinate \\
           --readFilesCommand zcat \\
-          --outFileNamePrefix \$f
+          --outFileNamePrefix $prefix
      """
 }
 

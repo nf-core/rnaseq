@@ -77,7 +77,24 @@ and `sacCer2` (Yeast).
 
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap, which require at least three samples to work. I.e use this when
-running on one or two sample only. 
+running on one or two sample only.
+
+### `--strandRule`
+Some RSeQC jobs need to know the stranded nature of the library. By default, the pipeline will use
+`++,--` for single end libraries and `1+-,1-+,2++,2--` for paired end libraries. These codes are for
+strand specific libraries (antisense). `1+-,1-+,2++,2--` decodes as:
+
+*  Reads 1 mapped to `+` => parental gene on `+`
+*  Reads 1 mapped to `-` => parental gene on `-`
+*  Reads 2 mapped to `+` => parental gene on `-`
+*  Reads 2 mapped to `-` => parental gene on `+`
+
+Use this parameter to override these defaults. For example, if your data is paired end and strand specific,
+but same-sense to the reference, you could run:
+```
+nextflow run NGI-RNAseq/main.nf --strandRule '1++,1--,2+-,2-+'
+```
+Use `--strandRule 'none'` if your data is not strand specific.
 
 
 ### `-c`

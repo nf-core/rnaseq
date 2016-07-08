@@ -18,6 +18,7 @@
  --gtf [path to GTF file]
  --reads [path to input files]
  --sampleLevel [set to true to run on sample and not project level, i.e skipping MDS plot]
+ --strandRule [overwrite default strandRule used by RSeQC]
  
  For example:
  $ nextflow main.nf --reads 'path/to/data/sample_*_{1,2}.fq.gz'
@@ -105,9 +106,8 @@ if( !gtf.exists() )   exit 2, "Missing GTF annotation: $gtf"
 if( !bed12.exists() ) exit 2, "Missing BED12 annotation: $bed12"
 
 /*
- * Create a channel for read files
+ * Create a channel for input read files
  */
- 
 Channel
      .fromPath( params.reads )
      .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
@@ -124,7 +124,6 @@ read_files.into { read_files_fastqc; read_files_trimming; name_for_star }
 /*
  * STEP 1 - FastQC
  */
-
 process fastqc {
      tag "$prefix"
      
@@ -154,7 +153,6 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-
 process trim_galore {
      tag "$prefix"
      
@@ -189,11 +187,13 @@ process trim_galore {
           """
      }
 }
+
+
+
 /*
  * STEP 3 - align with STAR
  * Inspired by https://github.com/AveraSD/nextflow-rnastar
  */
-
 process star {
      tag "$prefix"
      
@@ -222,9 +222,8 @@ process star {
      script:
     
      """
-     #Getting the prefix name for star from the name of the reads
+     # Getting the prefix name for star from the name of the reads
      f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1}
-     prefix=\$f
      #actually runing STAR
      STAR --genomeDir $index \\
           --sjdbGTFfile $gtf \\
@@ -234,41 +233,39 @@ process star {
           --outWigType bedGraph \\
           --outSAMtype BAM SortedByCoordinate \\
           --readFilesCommand zcat \\
-          --outFileNamePrefix \$prefix
+          --outFileNamePrefix \$f
      """
 }
 
 
-//Function that checks the alignment rate of the STAR output
-//and returns true if the alignment passed and otherwise false
-
+// Function that checks the alignment rate of the STAR output
+// and returns true if the alignment passed and otherwise false
 def check_log(logs) {
-    def percent_aligned = 0;
-    logs.eachLine { line ->
-    if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
-                percent_aligned = matcher[0][1]
-            }
-    }
-    if(percent_aligned.toFloat() <='10'.toFloat() ){
-        println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
-        false
-    } else {
-	println "Passed aligment with ${percent_aligned}%! FOR ${logs}"
-        true
-   }
+     def percent_aligned = 0;
+     logs.eachLine { line ->
+          if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
+               percent_aligned = matcher[0][1]
+          }
+     }
+     if(percent_aligned.toFloat() <='10'.toFloat() ){
+          println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
+          false
+     } else {
+          println "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+          true
+     }
 }
-
-//Filter removes all 'aligned' channels that fail the check
-aligned.filter { logs, bams -> check_log(logs) }
-    .flatMap {  logs, bams -> bams }
-    .set {SPLIT_BAMS }
-    SPLIT_BAMS.into {bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
+// Filter removes all 'aligned' channels that fail the check
+aligned
+     .filter { logs, bams -> check_log(logs) }
+     .flatMap {  logs, bams -> bams }
+     .set { SPLIT_BAMS }
+SPLIT_BAMS.into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
 
 
 /*
  * STEP 4 - RSeQC analysis
  */
-
 process rseqc {
      tag "$bam_rseqc"
      
@@ -305,16 +302,15 @@ process rseqc {
           DupRate_plot.pdf                       // read_duplication
           .saturation.{txt,pdf}                  // RPKM_saturation
      */
-     script: 
-    println single 
-    if (!params.strandRule){
-         if (single){
-             strandRule ='++,--'
-         } else {
-             strandRule = '1+-,1-+,2++,2--'
-         }
+     script:
+     if (!params.strandRule){
+          if (single){
+               strandRule ='++,--'
+          } else {
+               strandRule = '1+-,1-+,2++,2--'
+          }
      } else {
-         strandRule = params.strandRule
+          strandRule = params.strandRule
      }
      
      """
@@ -331,10 +327,11 @@ process rseqc {
      """
 }
 
+
+
 /*
  * STEP 5 - preseq analysis
  */
-
 process preseq {
      tag "$bam_preseq"
      
@@ -365,7 +362,6 @@ process preseq {
 /*
  * STEP 6 Mark duplicates
  */
-
 process markDuplicates {
      tag "$bam_markduplicates"
      
@@ -404,7 +400,6 @@ process markDuplicates {
 /*
  * STEP 7 - dupRadar
  */
-
 process dupradar {
      tag "$bam_md"
      
@@ -468,11 +463,11 @@ process dupradar {
 
 }
 
+
+
 /*
  * STEP 8 Feature counts
  */
-
-
 process featureCounts {
      tag "$bam_featurecounts"
      
@@ -509,7 +504,6 @@ process featureCounts {
 /*
  * STEP 9 - stringtie FPKM
  */
-
 process stringtieFPKM {
      tag "$bam_stringtieFPKM"
      
@@ -547,13 +541,13 @@ process stringtieFPKM {
      """
 }
 def num_bams
-bam_count.count()
-    .subscribe{ num_bams = it}
+bam_count.count().subscribe{ num_bams = it }
+
+
 
 /*
  * STEP 10 - edgeR MDS and heatmap
  */
-
 process sample_correlation {
      module 'bioinfo-tools'
      module 'R/3.2.3'
@@ -568,7 +562,8 @@ process sample_correlation {
      
      input:
      file input_files from geneCounts.toList()
-     bam_count 
+     bam_count
+     
      output:
      file '*.{txt,pdf}' into sample_correlation_results
      
@@ -667,14 +662,12 @@ process sample_correlation {
      
      file.create("corr.done")
      """
-
-} 
+}
 
 
 /*
  * STEP 11 MultiQC
  */
-
 process multiqc {
      module 'bioinfo-tools'
      module 'MultiQC'
@@ -702,7 +695,7 @@ process multiqc {
      file '*multiqc_data'
      
      """
-     multiqc -f .
+     multiqc -f -t ngi .
      """
 }
 
@@ -718,7 +711,6 @@ process multiqc {
  * Returns:
  *   'file_alpha'
  */
- 
 def readPrefix( Path actual, template ) {
      
      final fileName = actual.getFileName().toString()

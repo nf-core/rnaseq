@@ -76,8 +76,8 @@ params.rlocation = "$HOME/R/nxtflow_libs/"
 nxtflow_libs = file(params.rlocation)
 nxtflow_libs.mkdirs()
 
-single = 'null'
-params.sampleLevel = null
+def single
+params.sampleLevel = false
 params.strandRule = false
 
 log.info "===================================="
@@ -146,7 +146,7 @@ process fastqc {
      file '*_fastqc.{zip,html}' into fastqc_results
      
      """
-     fastqc $reads
+     fastqc -q $reads
      """
 }
 
@@ -159,8 +159,6 @@ process trim_galore {
      tag "$prefix"
      
      module 'bioinfo-tools'
-     module 'FastQC'
-     module 'cutadapt'
      module 'TrimGalore'
      
      cpus 3
@@ -191,7 +189,6 @@ process trim_galore {
           """
      }
 }
-
 /*
  * STEP 3 - align with STAR
  * Inspired by https://github.com/AveraSD/nextflow-rnastar
@@ -204,7 +201,7 @@ process star {
      module 'star'
      
      cpus 8
-     memory { 32.GB * task.attempt }
+     memory '64GB'
      time  { 5.h * task.attempt }
      errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
      maxRetries 3
@@ -218,7 +215,7 @@ process star {
      file (reads:'*') from trimmed_reads
      
      output:
-     file '*.bam' into bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+     set file('*Log.final.out'), file ('*.bam') into aligned
      file '*.out' into star_logs
      file '*SJ.out.tab'
      
@@ -252,7 +249,6 @@ def check_log(logs) {
                 percent_aligned = matcher[0][1]
             }
     }
-    percent_aligned.toFloat()
     if(percent_aligned.toFloat() <='10'.toFloat() ){
         println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
         false
@@ -262,22 +258,13 @@ def check_log(logs) {
    }
 }
 
-//Filter removes all 'aligned' chanels that fail the check
- 
+//Filter removes all 'aligned' channels that fail the check
 aligned.filter { logs, bams -> check_log(logs) }
-    .map {  logs, bams -> bams }
+    .flatMap {  logs, bams -> bams }
     .set {SPLIT_BAMS }
     SPLIT_BAMS.into {bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
 
-//Counts the number of bam files from STAR. Uses this to determine whether to run 'sampleCorrelation' process or not
-if (isNull(params.sampleLevel)){
-    bam_count.count()
-        .subscribe { if (count.toFloat() <= '3'.toFloat()){
-                        params.sampleLevel = true
-                        } else {
-                        params.sampleLevel = false
-                        }
-}}
+
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -318,28 +305,29 @@ process rseqc {
           DupRate_plot.pdf                       // read_duplication
           .saturation.{txt,pdf}                  // RPKM_saturation
      */
-     
-     if (!params.strandRule){
-        if (single){
-            params.strandRule ='++,--'
-        } else {
-            params.strandRule ='1+-,1-+,2++,2--'
-        }
+     script: 
+    println single 
+    if (!params.strandRule){
+         if (single){
+             strandRule ='++,--'
+         } else {
+             strandRule = '1+-,1-+,2++,2--'
+         }
+     } else {
+         strandRule = params.strandRule
      }
- 
      
-     script:
      """
      samtools index $bam_rseqc
-     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
+     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
+     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc}.RPKM_saturation
      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
      inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
      geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
-     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
      read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
      read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
-     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d ${params.strandRule} -o ${bam_rseqc}.RPKM_saturation
      """
 }
 
@@ -558,14 +546,14 @@ process stringtieFPKM {
           -b ${bam_stringtieFPKM}_ballgown
      """
 }
-
+def num_bams
+bam_count.count()
+    .subscribe{ num_bams = it}
 
 /*
  * STEP 10 - edgeR MDS and heatmap
  */
 
-
-if (params.sampleLevel == false) {
 process sample_correlation {
      module 'bioinfo-tools'
      module 'R/3.2.3'
@@ -580,10 +568,13 @@ process sample_correlation {
      
      input:
      file input_files from geneCounts.toList()
-     
+     bam_count 
      output:
      file '*.{txt,pdf}' into sample_correlation_results
      
+     when:
+     num_bams > 2 && (!params.sampleLevel)
+
      script:
      """
      #!/usr/bin/env Rscript
@@ -677,7 +668,7 @@ process sample_correlation {
      file.create("corr.done")
      """
 
-}}
+} 
 
 
 /*
@@ -701,7 +692,6 @@ process multiqc {
      file ('star/*') from star_logs.toList()
      file ('rseqc/*') from rseqc_results.toList()
      file ('preseq/*') from preseq_results.toList()
-     file ('picard/*') from picard_results.toList()
      file ('dupradar/*') from dupradar_results.toList()
      file ('featureCounts/*') from featureCounts_logs.toList()
      file ('stringtie/*') from stringtie_log.toList()

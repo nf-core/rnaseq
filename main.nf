@@ -60,7 +60,7 @@ as single end.
  */
 
 // Pipeline version
-version = 1.0
+version = 0.1
 
 // Configurable variables
 params.genome = 'GRCh37'
@@ -76,7 +76,7 @@ params.rlocation = "$HOME/R/nxtflow_libs/"
 nxtflow_libs = file(params.rlocation)
 nxtflow_libs.mkdirs()
 
-single = 'null'
+def single
 params.sampleLevel = false
 params.strandRule = false
 
@@ -260,10 +260,7 @@ def check_log(logs) {
    }
 }
 
-//Filter removes all 'aligned' chanels that fail the check
- 
-//aligned.into {bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM}
-
+//Filter removes all 'aligned' channels that fail the check
 aligned.filter { logs, bams -> check_log(logs) }
     .flatMap {  logs, bams -> bams }
     .set {SPLIT_BAMS }
@@ -311,7 +308,8 @@ process rseqc {
           .saturation.{txt,pdf}                  // RPKM_saturation
      */
      script: 
-     if (!params.strandRule){
+    println single 
+    if (!params.strandRule){
          if (single){
              strandRule ='++,--'
          } else {
@@ -323,13 +321,13 @@ process rseqc {
      
      """
      samtools index $bam_rseqc
+     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
      RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc}.RPKM_saturation
      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
      bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
      inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
      geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
-     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
      read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
      read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
      """

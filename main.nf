@@ -669,6 +669,7 @@ process sample_correlation {
  * STEP 11 MultiQC
  */
 process multiqc {
+    module 'bioinfo-tools'
     
     memory '4GB'
     time '4h'

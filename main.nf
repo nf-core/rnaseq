@@ -200,8 +200,8 @@ process star {
     module 'bioinfo-tools'
     module 'star'
     
-    cpus 8
-    memory '64GB'
+    cpus 10
+    memory '80GB'
     time  { 5.h * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
@@ -220,13 +220,10 @@ process star {
     file '*SJ.out.tab'
     
     script:
-    prefix = reads[0]
-        .replaceAll(~/.gz$/,'')
-        .replaceAll(~/\.f(ast)?q$/,'')
-        .replaceAll(~/_val_1$/,'')
-        .replaceAll(~/_trimmed$/,'')
-        .replaceAll(~/_1$/,'')
     """
+    #Getting STAR prefix
+    f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1}
+    prefix=\$f
     STAR --genomeDir $index \\
         --sjdbGTFfile $gtf \\
         --readFilesIn $reads  \\
@@ -235,7 +232,7 @@ process star {
         --outWigType bedGraph \\
         --outSAMtype BAM SortedByCoordinate \\
         --readFilesCommand zcat \\
-        --outFileNamePrefix $prefix
+        --outFileNamePrefix \$prefix
     """
 }
 

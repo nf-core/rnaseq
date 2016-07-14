@@ -669,8 +669,6 @@ process sample_correlation {
  * STEP 11 MultiQC
  */
 process multiqc {
-    module 'bioinfo-tools'
-    module 'MultiQC'
     
     memory '4GB'
     time '4h'
@@ -694,7 +692,10 @@ process multiqc {
     file '*multiqc_report.html'
     file '*multiqc_data'
     
+    script:
     """
+    # Load MultiQC with environment module if not already in PATH
+    type multiqc >/dev/null 2>&1 || { module load multiqc; };
     multiqc -f -t ngi .
     """
 }

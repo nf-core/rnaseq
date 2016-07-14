@@ -89,6 +89,7 @@ In summary, if the lines are flattening out then you have sequenced deeply enoug
 ###RPKM saturation
 Resamples a subset of the total RNA reads and calculates the RPKM value for each subset. We use the default subsets of every 5% of the total reads. I.e 5%,10%...95%,100%. 
 A percent relative error is then calcuated based on the subsamples, this is the y-axis in the graph. 
+
 <img src= "images/saturation.png" width="500" height="500" >
 
 

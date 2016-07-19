@@ -52,6 +52,13 @@ or using a more manual approach ( require you to clone the git repository)
 nextflow path_to_NGI-RNAseq/main.nf -c path_to_your_nextflow_config --reads '*_R{1,2}.fastq.gz' --genome 'GRCm38'
 ```
 
+Note that the pipeline will create files in your working directory:
+```bash
+work            # Directory containing the nextflow working files
+results         # Finished results for each sample, one directory per pipeline step
+.nextflow_log   # Log file from Nextflow
+# Other nextflow hidden files, eg. history of pipeline runs and old logs.
+```
 
 ### `--reads`
 Location of the input FastQ files:

@@ -489,15 +489,14 @@ process featureCounts {
     
     output:
     file '*_gene.featureCounts.txt' into geneCounts
-    file '*_biotype.featureCounts.txt'
-    file '*_rRNA_counts.txt'
+    file '*_biotype_counts.txt'
     file '*.summary' into featureCounts_logs
     
     script:
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam_featurecounts}_rRNA_counts.txt
+    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt > ${bam_featurecounts}_biotype_counts.txt
     """
 }
 

@@ -489,8 +489,8 @@ process featureCounts {
     
     output:
     file '*_gene.featureCounts.txt' into geneCounts
-    file '*_biotype_counts.txt'
-    file '*.summary' into featureCounts_logs
+    file '*_gene.featureCounts.txt.summary' into featureCounts_logs
+    file '*_biotype_counts.txt' into featureCounts_biotype
     
     script:
     """
@@ -686,6 +686,7 @@ process multiqc {
     file ('preseq/*') from preseq_results.toList()
     file ('dupradar/*') from dupradar_results.toList()
     file ('featureCounts/*') from featureCounts_logs.toList()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.toList()
     file ('stringtie/*') from stringtie_log.toList()
     file ('sample_correlation_results/*') from sample_correlation_results.toList()
     

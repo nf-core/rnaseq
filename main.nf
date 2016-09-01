@@ -489,15 +489,14 @@ process featureCounts {
     
     output:
     file '*_gene.featureCounts.txt' into geneCounts
-    file '*_biotype.featureCounts.txt'
-    file '*_rRNA_counts.txt'
-    file '*.summary' into featureCounts_logs
+    file '*_gene.featureCounts.txt.summary' into featureCounts_logs
+    file '*_biotype_counts.txt' into featureCounts_biotype
     
     script:
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt | sed '1,2d' | grep 'rRNA' > ${bam_featurecounts}_rRNA_counts.txt
+    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt > ${bam_featurecounts}_biotype_counts.txt
     """
 }
 
@@ -687,6 +686,7 @@ process multiqc {
     file ('preseq/*') from preseq_results.toList()
     file ('dupradar/*') from dupradar_results.toList()
     file ('featureCounts/*') from featureCounts_logs.toList()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.toList()
     file ('stringtie/*') from stringtie_log.toList()
     file ('sample_correlation_results/*') from sample_correlation_results.toList()
     

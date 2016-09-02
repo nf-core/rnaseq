@@ -325,7 +325,7 @@ process rseqc {
     geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
-    echo "Filename $bam_rseqc RseQC version: "$(read_duplication.py --version)
+    echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
 

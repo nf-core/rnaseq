@@ -398,7 +398,7 @@ process markDuplicates {
         VALIDATION_STRINGENCY=LENIENT
 
     #Printing out version number to standard out
-    echo "File name: $bam_markduplicates MarkDuplicates version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
+    echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
     """
 }
 

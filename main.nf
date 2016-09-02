@@ -352,12 +352,12 @@ process preseq {
     file bam_preseq
     
     output:
-    file '*.txt' into preseq_results
+    file '*.ccurve.txt' into preseq_results
     
     script:
     """
     preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq}.ccurve.txt
-    echo "File name: $bam_preseq ----- preseq version: "$(preseq)
+    echo "File name: $bam_preseq  preseq version: "\$(preseq)
     """
 }
 
@@ -398,7 +398,7 @@ process markDuplicates {
         VALIDATION_STRINGENCY=LENIENT
 
     #Printing out version number to standard out
-    echo "File name: $bam_markduplicates MarkDuplicates version "$(java -Xmx2g -jar $PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
+    echo "File name: $bam_markduplicates MarkDuplicates version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
     """
 }
 
@@ -549,7 +549,7 @@ process stringtieFPKM {
         -e \\
         -b ${bam_stringtieFPKM}_ballgown
 
-    echo "Stringtie version "$(stringtie --version)
+    echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
 }
 def num_bams
@@ -675,6 +675,7 @@ process sample_correlation {
     file.create("corr.done")
 
     #Printing sessioninfo to standard out
+    print("Sample correlation info:")
     sessionInfo()
     """
 }

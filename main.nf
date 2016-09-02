@@ -325,6 +325,7 @@ process rseqc {
     geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
+    echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
 
@@ -356,6 +357,7 @@ process preseq {
     script:
     """
     preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq}.ccurve.txt
+    echo "File name: $bam_preseq  preseq version: "\$(preseq)
     """
 }
 
@@ -394,6 +396,9 @@ process markDuplicates {
         ASSUME_SORTED=true \\
         PROGRAM_RECORD_ID='null' \\
         VALIDATION_STRINGENCY=LENIENT
+
+    #Printing out version number to standard out
+    echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
     """
 }
 
@@ -460,6 +465,10 @@ process dupradar {
     expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
     dev.off()
+    
+    #Printing sessioninfo to standard out
+    print("$bam_md")
+    sessionInfo()
     """
 
 }
@@ -538,6 +547,8 @@ process stringtieFPKM {
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
         -e \\
         -b ${bam_stringtieFPKM}_ballgown
+
+    echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
 }
 def num_bams
@@ -661,6 +672,10 @@ process sample_correlation {
     write.table(hmap\$carpet, 'log2CPM_sample_distances.txt', quote=FALSE, sep="\t")
     
     file.create("corr.done")
+
+    #Printing sessioninfo to standard out
+    print("Sample correlation info:")
+    sessionInfo()
     """
 }
 

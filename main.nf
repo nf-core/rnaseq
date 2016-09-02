@@ -385,7 +385,7 @@ process markDuplicates {
     output:
     file '*.markDups.bam' into bam_md
     file '*markDups_metrics.txt' into picard_results
-    file 'versioninfo.txt'
+    
     script:
     """
     java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\

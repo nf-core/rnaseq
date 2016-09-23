@@ -455,19 +455,48 @@ process dupradar {
     pdf(paste0("$bam_md", "_duprateExpDens.pdf"))
     duprateExpDensPlot(DupMat=dm)
     title("Density scatter plot")
+    mtext("$bam_md", side=3)
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
     cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\\n",
         fill=TRUE, labels="${bam_md}", file=paste0("$bam_md", "_intercept_slope.txt"), append=FALSE )
-
+    
+    # Get numbers from dupRadar GLM
+    curve_x <- sort(log10(dm\$RPK))
+    curve_y = 100*predict(fit\$glm,data.frame(x=sort(x)),type="response")
+    # Remove all of the infinite values
+    infs = which(x %in% c(-Inf,Inf))
+    curve_x = curve_x[-infs]
+    curve_y = curve_y[-infs]
+    # Reduce number of data points
+    curve_x <- curve_x[seq(1, length(curve_x), 100)]
+    curve_y <- curve_y[seq(1, length(curve_y), 100)]
+    # Convert x values back to real counts
+    curve_x = 10^curve_x
+    # Write to file
+    write.table(
+      cbind(curve_x, curve_y),
+      file=paste0("$bam_md", "_duprateExpDensCurve.txt"),
+      quote=FALSE, row.names=FALSE
+    )
+    
+    # Distribution of expression box plot
+    pdf(paste0("$bam_md", "_duprateExpBoxplot.pdf"))
+    duprateExpBoxplot(DupMat=dm)
+    title("Percent Duplication by Expression")
+    mtext("$bam_md", side=3)
+    dev.off()
+    
     # Distribution of RPK values per gene
     pdf(paste0("$bam_md", "_expressionHist.pdf"))
     expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
+    mtext("$bam_md", side=3)
     dev.off()
 
     #Printing sessioninfo to standard out
     print("$bam_md")
+    citation("dupRadar")
     sessionInfo()
     """
 

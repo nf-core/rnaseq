@@ -458,8 +458,12 @@ process dupradar {
     mtext("$bam_md", side=3)
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
-    cat("duprate at low read counts: ", fit\$intercept, "progression of the duplication rate: ", fit\$slope, "\\n",
-        fill=TRUE, labels="${bam_md}", file=paste0("$bam_md", "_intercept_slope.txt"), append=FALSE )
+    cat(
+      paste("- dupRadar Int (duprate at low read counts):", fit$intercept),
+      paste("- dupRadar Sl (progression of the duplication rate):", fit$slope),
+      fill=TRUE, labels=bam_md,
+      file=paste0(bam_md, "_intercept_slope.txt"), append=FALSE
+    )
     
     # Get numbers from dupRadar GLM
     curve_x <- sort(log10(dm\$RPK))

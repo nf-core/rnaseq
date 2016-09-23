@@ -467,9 +467,9 @@ process dupradar {
     
     # Get numbers from dupRadar GLM
     curve_x <- sort(log10(dm\$RPK))
-    curve_y = 100*predict(fit\$glm,data.frame(x=sort(x)),type="response")
+    curve_y = 100*predict(fit$glm,data.frame(x=curve_x),type="response")
     # Remove all of the infinite values
-    infs = which(x %in% c(-Inf,Inf))
+    infs = which(curve_x %in% c(-Inf,Inf))
     curve_x = curve_x[-infs]
     curve_y = curve_y[-infs]
     # Reduce number of data points

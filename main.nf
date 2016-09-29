@@ -196,7 +196,7 @@ process trim_galore {
  * Inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 process star {
-    tag "$reads[0]"
+    tag "$reads"
     
     module 'bioinfo-tools'
     module 'star'

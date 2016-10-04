@@ -51,8 +51,6 @@ RSeQC is a package of scripts designed to evaluate the quality of RNA seq data. 
 Determines the amount of uniquely mapped reads based on the mapping quality. An example output:
 
 ```
-bam_stat.py  -i Pairend_nonStrandSpecific_36mer_Human_hg19.bam
-
 #Output (all numbers are read count)
 #==================================================
 Total records:                                 41465027
@@ -79,7 +77,7 @@ This scripts guesses how the reads were stranded for strand specific RNA-seq dat
 Example output from an unstranded(~50% sense/antisense) library of paired end data:
 
 **From MultiQC report:**
-<img src= "images/infer_experiment.png">
+<img src="images/rseqc_infer_experiment_plot.png">
 
 **From the infer_experiment.txt file:**
 
@@ -95,8 +93,7 @@ Fraction of reads explained by "1+-,1-+,2++,2--": 0.4752
 ###junction_saturation.py
 This scripts aims to determine if the used sequencing depth is enough to perform  alternative splicing analysis on the data. 
 
-![Junction Saturation](images/Junction_saturation.png)
-
+<img src="images/rseqc_junction_saturation_plot.png">
 
 A line that has plateaued indicates that all junctions have been detected and that further secuencing will not yield more results. Insteads the same fragment would be sequenced again and again. None of the lines in the example above have plataued and thus these samples could reveal more alternative splicing information if they were sequenced deeper. 
 
@@ -109,14 +106,12 @@ As of this text being written there isn't a MultiQC submodule for displaying the
 
 
 ###read_duplication.py
-This script investigates the read duplication rate. A good library will generally have a slightly declining graph. The red library in the example graph really stands out and needs investigating. 
-
+This script investigates the read duplication rate. A good library will generally have a slightly declining graph. 
 <img src= "images/rseqc_read_dups_plot.png" >
 
 ###inner_distance.py
 inner_distance.py  tries to calculate the inner distance (or insert size) between two paired RNA reads. Calculated as _start of reads 2_ - _end of read 2_. 
-Note that values can be negative if the reads overlap, this is indicative of a poor library, and fragmented RNA. As in the example picture below. 
-
+Note that values can be negative if the reads overlap, this is indicative of a poor library, and fragmented RNA.
 <img src= "images/rseqc_inner_distance_plot.png">
 
 ###gene\_body_coverage.py
@@ -130,13 +125,14 @@ read_distribution.py calculates how mapped reads are distributed over genome fea
 
 ###junction_annotation.py
 MultiQC module under way. Rscript included. Source it to generate a pie chart over the known and novel splicing junctions. 
+
 ##dupRadar
 dupRadar is A Bioconductor library for R. 
 It plots the duplication rate per gene. A good sample (i.e. without PCR duplication?) will have a sigmodial shape as seen in the example output below:  
 
 ##preseq
 Preseq estimates the complexity of a library, showing how many additional unique reads are sequenced for increasing the total read count. A shallow curve indicates that the libary has reached complexity saturation and further sequencing would likely not add further unique reads. The dashed line shows a perfectly complex library where total reads = unique reads. 
-<img src="images/preseq_complexity_curve.png">
+<img src="images/preseq_plot.png">
 
 ##subread featureCounts 
 The featureCounts program from the subread package summarises the read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations. 
@@ -165,7 +161,7 @@ The heatmap may look something like this;
 <img src= "images/mqc_hcplot_hocmzpdjsq.png" >
 **MDS plot:**
 <img src= "images/mqc_hcplot_ltqchiyxfz.png" >
-The hatmap and MDS plot together try and give you a feeling for which of your sample libraries that are most simmilar to eah other. 
+The heat map and MDS plot together try and give you a feeling for which of your sample libraries that are most simmilar to eah other. 
 
 ##MultiQC
 [MultiQC](http://multiqc.info/) is a visualation tool and is what we at NGI use to generate our hmtl reports. It collects all the reports for your samples and genearate clear and simple reports for all your samples for an easy overview of your project. Almost all of the output results of the RNA seq BP pipeline 2.0 is available in the `multiqc_report.html` file.  

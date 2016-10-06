@@ -30,6 +30,8 @@ FastQC gives general quality metrics about your reads. It provides information a
 
 For further reading and documentation see the [FastQC website](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
 
+Note that the FastQC plots displayed in the MultiQC report is for the untrimmed reads. They will thus contain adapeter sequence and potenitally regions with low quality. FastQC is ran another time after trimming, that output is included in the results dir under FastQC. 
+
 ## Cutadapt
 The NGI RNA BP 2.0 pipeline uses TrimGalore for removal of adapter contamination and trimming of low quality regions. TrimGalore is a wrapper for FastQC and Cutadapt. Where FastQC is used for indetifying  adapter contamination and regions with too low quality. Cutadapt is the used to remove these regions of the reads. 
 [TrimGalore Website](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)

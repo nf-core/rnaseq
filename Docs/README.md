@@ -9,7 +9,7 @@ NGI-RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genom
 * [STAR](#star) - alignment
 * [RSeQC](#rseqc) - RNA quality control metrics
    - [BAM stat](#bam-stat)
-   - [infer experiment](#infer-experiment)
+   - [Infer experiment](#infer-experiment)
    - [Junction saturation](#junction-saturation)
    - [RPKM saturation](#rpkm-saturation)
    - [Read duplication](#read-duplication)
@@ -18,8 +18,8 @@ NGI-RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genom
    - [Read distribution](#read-distribution)
    - [Junction annotation](#junction-annotation)
 * [dupRadar](#dupradar) - technical / biological read duplication
-* [preseq](#preseq) - library complexity
-* [subread featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
+* [Preseq](#preseq) - library complexity
+* [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
 * [StringTie](#stringtie) - FPKMs for genes and transcripts
 * [edgeR](#edger) - create MDS plot and sample pairwise distance heatmap / dendrogram
 * [MultiQC](#multiqc) - aggregate report
@@ -29,7 +29,7 @@ NGI-RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genom
 
 For further reading and documentation see the [FastQC help](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-> Note that the FastQC plots displayed in the MultiQC report is for the untrimmed reads. They will thus contain adapter sequence and potentially regions with low quality. To see how your reads look after trimming, look at the FastQC reports in the `trim_galore` directory.
+> **NB:** The FastQC plots displayed in the MultiQC report is for the untrimmed reads. They may contain adapter sequence and potentially regions with low quality. To see how your reads look after trimming, look at the FastQC reports in the `trim_galore` directory.
 
 ## TrimGalore
 The NGI-RNAseq BP 2.0 pipeline uses [TrimGalore](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for removal of adapter contamination and trimming of low quality regions. TrimGalore uses [Cutadapt](https://github.com/marcelm/cutadapt) for adapter trimming and runs FastQC after it finishes.

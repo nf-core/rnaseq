@@ -321,7 +321,7 @@ process rseqc {
     RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc}.RPKM_saturation
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
-    junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
+    junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12 2> ${bam_rseqc}.junction_annotation_log.txt
     inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
     geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt

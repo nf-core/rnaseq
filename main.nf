@@ -460,15 +460,15 @@ process dupradar {
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
     cat(
-      paste("- dupRadar Int (duprate at low read counts):", fit$intercept),
-      paste("- dupRadar Sl (progression of the duplication rate):", fit$slope),
+      paste("- dupRadar Int (duprate at low read counts):", fit\$intercept),
+      paste("- dupRadar Sl (progression of the duplication rate):", fit\$slope),
       fill=TRUE, labels=bam_md,
       file=paste0(bam_md, "_intercept_slope.txt"), append=FALSE
     )
     
     # Get numbers from dupRadar GLM
     curve_x <- sort(log10(dm\$RPK))
-    curve_y = 100*predict(fit$glm,data.frame(x=curve_x),type="response")
+    curve_y = 100*predict(fit\$glm,data.frame(x=curve_x),type="response")
     # Remove all of the infinite values
     infs = which(curve_x %in% c(-Inf,Inf))
     curve_x = curve_x[-infs]

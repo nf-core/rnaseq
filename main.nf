@@ -474,8 +474,8 @@ process dupradar {
     curve_x = curve_x[-infs]
     curve_y = curve_y[-infs]
     # Reduce number of data points
-    curve_x <- curve_x[seq(1, length(curve_x), 100)]
-    curve_y <- curve_y[seq(1, length(curve_y), 100)]
+    curve_x <- curve_x[seq(1, length(curve_x), 10)]
+    curve_y <- curve_y[seq(1, length(curve_y), 10)]
     # Convert x values back to real counts
     curve_x = 10^curve_x
     # Write to file

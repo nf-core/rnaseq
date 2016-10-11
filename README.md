@@ -3,6 +3,8 @@ Pipeline for RNA sequencing best practice analysis at the NGI at Scilifelab Stoc
 
 Written by Phil Ewels (@ewels) and Rickard Hammarén (@Hammarn)
 
+> **See the [pipeline documentation](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/Docs/README.md) for explanations of the results files.**
+
 ## Installation
 ### NextFlow installation
 To use this pipeline, you need to have a working version of NextFlow installed. You can find more
@@ -108,3 +110,11 @@ Use `--strandRule 'none'` if your data is not strand specific.
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
 projects or different sets of reference genomes.
 
+## Credits
+These scripts were written for use at the
+[National Genomics Infrastructure](https://portal.scilifelab.se/genomics/)
+at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
+For more information, please get in touch with
+[Phil Ewels](https://github.com/ewels).
+
+<p align="center"><a href="stand_alone/http://www.scilifelab.se/" target="_blank"><img src="Docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a></p>

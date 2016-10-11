@@ -1,4 +1,7 @@
-/* -------------------------------------------------
+/*
+vim: syntax=groovy
+-*- mode: groovy;-*-
+ * -------------------------------------------------
  *  Example Nextflow config file for UPPMAX (milou)
  * -------------------------------------------------
  * Defines reference genomes, using iGenome paths
@@ -15,7 +18,7 @@ process {
   clusterOptions = {
     '-A YOUR_PROJECT_ID'}
   }
-
+}
 
 params {
   genomes {

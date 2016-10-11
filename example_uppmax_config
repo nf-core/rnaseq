@@ -16,7 +16,7 @@ process {
   memory = '16 GB'
   time = '48h'
   clusterOptions = {
-    '-A YOUR_PROJECT_ID'}
+    '-A YOUR_PROJECT_ID'
   }
 }
 

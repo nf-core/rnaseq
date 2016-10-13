@@ -462,8 +462,8 @@ process dupradar {
     cat(
       paste("- dupRadar Int (duprate at low read counts):", fit\$intercept),
       paste("- dupRadar Sl (progression of the duplication rate):", fit\$slope),
-      fill=TRUE, labels=bam_md,
-      file=paste0(bam_md, "_intercept_slope.txt"), append=FALSE
+      fill=TRUE, labels="$bam_md",
+      file=paste0("$bam_md", "_intercept_slope.txt"), append=FALSE
     )
     
     # Get numbers from dupRadar GLM

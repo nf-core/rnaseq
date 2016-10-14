@@ -59,7 +59,7 @@ as single end.
  */
 
 // Pipeline version
-version = 0.1
+version = 0.2
 
 // Configurable variables
 params.genome = 'GRCh37'

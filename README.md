@@ -16,7 +16,7 @@ of NextFlow looks like this:
 curl -fsSL get.nextflow.io | bash
 mv ./nextflow ~/bin
 ```
-Note that if you're running on the Swedish UPPMAX cluster (Milou) you can load NextFlow as an
+Note that if you're running on a Swedish UPPMAX you can load NextFlow as an
 environment module:
 ```
 module load nextflow

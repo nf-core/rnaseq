@@ -3,7 +3,9 @@ Pipeline for RNA sequencing best practice analysis at the NGI at Scilifelab Stoc
 
 Written by Phil Ewels (@ewels) and Rickard Hammarén (@Hammarn)
 
-> **See the [pipeline documentation](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/Docs/README.md) for explanations of the results files.**
+## Pipeline Results
+See the [pipeline documentation](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/Docs/README.md)
+for explanations of the results files.
 
 ## Installation
 ### NextFlow installation

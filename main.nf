@@ -224,7 +224,7 @@ process star {
     script:
     """
     #Getting STAR prefix
-    f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1}
+    f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
     prefix=\$f
     STAR --genomeDir $index \\
         --sjdbGTFfile $gtf \\

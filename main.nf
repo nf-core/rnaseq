@@ -719,6 +719,8 @@ process sample_correlation {
  */
 process multiqc {
     module 'bioinfo-tools'
+    // Don't load MultiQC module here as overwrites environment installation.
+    // Load env module in process instead if multiqc command isn't found.
 
     memory '4GB'
     time '4h'
@@ -746,8 +748,8 @@ process multiqc {
     script:
     """
     # Load MultiQC with environment module if not already in PATH
-    type multiqc >/dev/null 2>&1 || { module load multiqc; };
-    multiqc -f -t ngi .
+    type multiqc >/dev/null 2>&1 || { module load MultiQC; };
+    multiqc -f .
     """
 }
 

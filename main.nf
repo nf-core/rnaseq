@@ -749,7 +749,7 @@ process multiqc {
     """
     # Load MultiQC with environment module if not already in PATH
     type multiqc >/dev/null 2>&1 || { module load MultiQC; };
-    multiqc -f -t ngi .
+    multiqc -f .
     """
 }
 

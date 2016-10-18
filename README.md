@@ -3,7 +3,7 @@ Pipeline for RNA sequencing best practice analysis at the [National Genomics Inf
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 ## Pipeline Results
-See the [pipeline documentation](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/Docs/README.md)
+See the [pipeline documentation](docs/README.md)
 for explanations of the results files.
 
 ## Installation
@@ -16,9 +16,17 @@ of NextFlow looks like this:
 curl -fsSL get.nextflow.io | bash
 mv ./nextflow ~/bin
 ```
-Note that if you're running on a Swedish UPPMAX you can load NextFlow as an environment module:
+
+#### UPPMAX
+If you're running on a Swedish UPPMAX cluster you can load NextFlow as an environment module instead:
 ```
 module load nextflow
+```
+
+The first time you load this you will get a warning about setting environment variables. To automatically set these at login, you can add the following lines to your `~/.bashrc` file:
+```bash
+export NXF_LAUNCHBASE=$SNIC_TMP
+export NXF_TEMP=$SNIC_TMP
 ```
 
 ### NextFlow configuration
@@ -115,4 +123,4 @@ These scripts were written for use at the [National Genomics Infrastructure](htt
 at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
 Written by Phil Ewels (@ewels) and Rickard Hammarén (@Hammarn).
 
-<p align="center"><a href="stand_alone/http://www.scilifelab.se/" target="_blank"><img src="Docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a></p>
+<p align="center"><a href="stand_alone/http://www.scilifelab.se/" target="_blank"><img src="docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a></p>

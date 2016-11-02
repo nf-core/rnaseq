@@ -137,6 +137,11 @@ command line flag.
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
 projects or different sets of reference genomes. **NB:** one hyphen only (core Nextflow parameter).
 
+## Stand-alone scripts
+There is a folder with some unmaintained standalone scripts that you can use:
+[stand-alone scripts](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/stand-alone-scripts).
+Currently it only contains one file, a `sbatch` script that starts after the alignment step with BAM files.
+
 ## Credits
 These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/)
 at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.

@@ -56,7 +56,6 @@ as single end.
 */
 
 
-
 /*
  * SET UP CONFIGURATION VARIABLES
  */
@@ -81,6 +80,12 @@ def single
 params.sampleLevel = false
 params.strandRule = false
 
+// Custom trimming options
+params.clip_r1 = 0
+params.clip_r2 = 0
+params.three_prime_clip_r1 = 0
+params.three_prime_clip_r2 = 0
+
 log.info "===================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "===================================="
@@ -95,6 +100,10 @@ log.info "R libraries  : ${params.rlocation}"
 log.info "Script dir   : $baseDir"
 log.info "Working dir  : $workDir"
 log.info "Output dir   : ${params.outdir}"
+log.info "Trim R1      : ${params.clip_r1}"
+log.info "Trim R2      : ${params.clip_r2}"
+log.info "Trim 3' R1   : ${params.three_prime_clip_r1}"
+log.info "Trim 3' R2   : ${params.three_prime_clip_r2}"
 log.info "Cfg Profile  : ${workflow.profile}"
 log.info "===================================="
 
@@ -114,7 +123,6 @@ Channel
     .fromFilePairs( params.reads )
     .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
     .into { read_files_fastqc; read_files_trimming }
-
 
 /*
  * STEP 1 - FastQC
@@ -160,17 +168,20 @@ process trim_galore {
 
     script:
     single = reads instanceof Path
-    if(single) {
+    c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
+    c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
+    tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
+    tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
+    if (single) {
         """
-        trim_galore --gzip $reads
+        trim_galore --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     } else {
         """
-        trim_galore --paired --gzip $reads
+        trim_galore --paired --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     }
 }
-
 
 
 /*
@@ -442,9 +453,7 @@ process dupradar {
     citation("dupRadar")
     sessionInfo()
     """
-
 }
-
 
 
 /*

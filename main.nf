@@ -86,26 +86,26 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
-log.info "===================================="
+log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
-log.info "===================================="
-log.info "Reads       : ${params.reads}"
-log.info "Genome      : ${params.genome}"
-log.info "Index       : ${params.index}"
-log.info "Annotation   : ${params.gtf}"
-log.info "Current home : $HOME"
-log.info "Current user : $USER"
-log.info "Current path : $PWD"
-log.info "R libraries  : ${params.rlocation}"
-log.info "Script dir   : $baseDir"
-log.info "Working dir  : $workDir"
-log.info "Output dir   : ${params.outdir}"
-log.info "Trim R1      : ${params.clip_r1}"
-log.info "Trim R2      : ${params.clip_r2}"
-log.info "Trim 3' R1   : ${params.three_prime_clip_r1}"
-log.info "Trim 3' R2   : ${params.three_prime_clip_r2}"
-log.info "Cfg Profile  : ${workflow.profile}"
-log.info "===================================="
+log.info "========================================="
+log.info "Reads          : ${params.reads}"
+log.info "Genome         : ${params.genome}"
+log.info "Index          : ${params.index}"
+log.info "Annotation     : ${params.gtf}"
+log.info "Current home   : $HOME"
+log.info "Current user   : $USER"
+log.info "Current path   : $PWD"
+log.info "R libraries    : ${params.rlocation}"
+log.info "Script dir     : $baseDir"
+log.info "Working dir    : $workDir"
+log.info "Output dir     : ${params.outdir}"
+if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
+if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
+if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"
+if( params.three_prime_clip_r2 > 0) log.info "Trim 3' R2     : ${params.three_prime_clip_r2}"
+log.info "Config Profile : ${workflow.profile}"
+log.info "========================================="
 
 // Validate inputs
 index = file(params.index)
@@ -114,7 +114,7 @@ bed12 = file(params.bed12)
 if( !index.exists() ) exit 1, "Missing STAR index: $index"
 if( !gtf.exists() )   exit 1, "Missing GTF annotation: $gtf"
 if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
-if($workflow.profile == 'standard' && !$params.project) exit 1, "No UPPMAX project ID found! Use --project"
+if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
 /*
  * Create a channel for input read files

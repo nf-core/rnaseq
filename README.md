@@ -34,6 +34,9 @@ personal Nextflow config file instead. Add this line to `~/.nextflow/config`:
 params.project = 'project_ID'
 ```
 
+The pipeline will exit with an error message if you try to run it pipeline with the default
+UPPMAX config profile and don't set project.
+
 ### Running using Docker
 We are in the process of setting up a Docker image with the pipeline requirements, for easier
 use and better reproducibility. Check back soon for more information on this!

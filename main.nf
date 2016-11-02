@@ -95,6 +95,7 @@ log.info "R libraries  : ${params.rlocation}"
 log.info "Script dir   : $baseDir"
 log.info "Working dir  : $workDir"
 log.info "Output dir   : ${params.outdir}"
+log.info "Cfg Profile  : ${workflow.profile}"
 log.info "===================================="
 
 // Validate inputs
@@ -102,8 +103,9 @@ index = file(params.index)
 gtf   = file(params.gtf)
 bed12 = file(params.bed12)
 if( !index.exists() ) exit 1, "Missing STAR index: $index"
-if( !gtf.exists() )   exit 2, "Missing GTF annotation: $gtf"
-if( !bed12.exists() ) exit 2, "Missing BED12 annotation: $bed12"
+if( !gtf.exists() )   exit 1, "Missing GTF annotation: $gtf"
+if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
+if($workflow.profile == 'standard' && !$params.project) exit 1, "No UPPMAX project ID found! Use --project"
 
 /*
  * Create a channel for input read files

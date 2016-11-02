@@ -117,9 +117,6 @@ Channel
 process fastqc {
     tag "$prefix"
 
-    module 'bioinfo-tools'
-    module 'FastQC'
-
     memory { 2.GB * task.attempt }
     time { 4.h * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
@@ -145,9 +142,6 @@ process fastqc {
  */
 process trim_galore {
     tag "$prefix"
-
-    module 'bioinfo-tools'
-    module 'TrimGalore'
 
     cpus 3
     memory { 3.GB * task.attempt }
@@ -187,9 +181,6 @@ process trim_galore {
 process star {
     
     tag "$reads"
-    
-    module 'bioinfo-tools'
-    module 'star'
 
     cpus 10
     memory '80GB'
@@ -258,9 +249,6 @@ aligned
 process rseqc {
     tag "$bam_rseqc"
 
-    module 'bioinfo-tools'
-    module 'rseqc'
-    module 'samtools'
     memory { 32.GB * task.attempt }
     time  { 7.h * task.attempt }
 
@@ -318,9 +306,6 @@ process rseqc {
 process preseq {
     tag "$bam_preseq"
 
-    module 'bioinfo-tools'
-    module 'preseq'
-
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
@@ -348,9 +333,6 @@ process preseq {
  */
 process markDuplicates {
     tag "$bam_markduplicates"
-
-    module 'bioinfo-tools'
-    module 'picard/2.0.1'
 
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
@@ -389,9 +371,6 @@ process markDuplicates {
  */
 process dupradar {
     tag "$bam_md"
-
-    module 'bioinfo-tools'
-    module 'R/3.2.3'
 
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
@@ -491,9 +470,6 @@ process dupradar {
 process featureCounts {
     tag "$bam_featurecounts"
 
-    module 'bioinfo-tools'
-    module 'subread'
-
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
@@ -525,9 +501,6 @@ process featureCounts {
  */
 process stringtieFPKM {
     tag "$bam_stringtieFPKM"
-
-    module 'bioinfo-tools'
-    module 'StringTie'
 
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }

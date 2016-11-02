@@ -118,6 +118,10 @@ Use `--strandRule 'none'` if your data is not strand specific.
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
 projects or different sets of reference genomes.
 
+There is a folder with some unmaintanied standalone scripts that you can use.
+[Standalone scripts](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/STANDALONE-scripts)
+Currently it only contains one file, a sbatch scripts that starts after the alignment step with BAM files.
+
 ## Credits
 These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/)
 at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.

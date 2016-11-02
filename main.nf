@@ -53,7 +53,6 @@ as single end.
 */
 
 
-
 /*
  * SET UP CONFIGURATION VARIABLES
  */
@@ -78,6 +77,13 @@ def single
 params.sampleLevel = false
 params.strandRule = false
 
+// Initializing - custom trimming options
+params.clip_r1 = 0
+params.clip_r2 = 0
+params.three_prime_clip_r1 = 0
+params.three_prime_clip_r2 = 0
+
+
 log.info "===================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "===================================="
@@ -92,6 +98,11 @@ log.info "R libraries  : ${params.rlocation}"
 log.info "Script dir   : $baseDir"
 log.info "Working dir  : $workDir"
 log.info "Output dir   : ${params.outdir}"
+log.info "Output dir   : ${params.outdir}"
+log.info "Trim R1      : ${params.clip_r1}"
+log.info "Trim R2      : ${params.clip_r2}"
+log.info "Trim 3' R1   : ${params.three_prime_clip_r1}"
+log.info "Trim 3' R2   : ${params.three_prime_clip_r2}"
 log.info "===================================="
 
 // Validate inputs
@@ -116,7 +127,6 @@ Channel
     .set { read_files }
 
 read_files.into { read_files_fastqc; read_files_trimming; name_for_star }
-
 
 /*
  * STEP 1 - FastQC
@@ -152,39 +162,43 @@ process fastqc {
  */
 process trim_galore {
     tag "$prefix"
-
+    
     module 'bioinfo-tools'
     module 'TrimGalore'
-
+    
     cpus 3
     memory { 3.GB * task.attempt }
     time { 16.h * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
-
+    
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
-
+    
     input:
     set val(prefix), file(reads:'*') from read_files_trimming
-
+    
     output:
     file '*fq.gz' into trimmed_reads
     file '*trimming_report.txt' into trimgalore_results
-
+    
     script:
     single = reads instanceof Path
-    if(single) {
+    c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
+    c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
+    tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
+    tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
+    rrbs = params.rrbs ? "--rrbs" : ''
+    if (single) {
         """
-        trim_galore --gzip $reads
+        trim_galore --gzip $rrbs $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     } else {
         """
-        trim_galore --paired --gzip $reads
+        trim_galore --paired --gzip $rrbs $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     }
 }
-
 
 
 /*
@@ -500,9 +514,7 @@ process dupradar {
     citation("dupRadar")
     sessionInfo()
     """
-
 }
-
 
 
 /*

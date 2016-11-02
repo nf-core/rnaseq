@@ -106,16 +106,9 @@ if( !bed12.exists() ) exit 2, "Missing BED12 annotation: $bed12"
  * Create a channel for input read files
  */
 Channel
-    .fromPath( params.reads )
+    .fromFilePairs( params.reads )
     .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
-    .map { path ->
-        def prefix = readPrefix(path, params.reads)
-        tuple(prefix, path)
-    }
-    .groupTuple(sort: true)
-    .set { read_files }
-
-read_files.into { read_files_fastqc; read_files_trimming; name_for_star }
+    .into { read_files_fastqc; read_files_trimming }
 
 
 /*
@@ -136,7 +129,7 @@ process fastqc {
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
-    set val(prefix), file(reads:'*') from read_files_fastqc
+    set val(prefix), file(reads) from read_files_fastqc
 
     output:
     file '*_fastqc.{zip,html}' into fastqc_results
@@ -166,7 +159,7 @@ process trim_galore {
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     input:
-    set val(prefix), file(reads:'*') from read_files_trimming
+    set val(prefix), file(reads) from read_files_trimming
 
     output:
     file '*fq.gz' into trimmed_reads
@@ -210,7 +203,7 @@ process star {
     input:
     file index
     file gtf
-    file (reads:'*') from trimmed_reads
+    file (reads) from trimmed_reads
 
     output:
     set file('*Log.final.out'), file ('*.bam') into aligned
@@ -256,8 +249,7 @@ def check_log(logs) {
 aligned
     .filter { logs, bams -> check_log(logs) }
     .flatMap {  logs, bams -> bams }
-    .set { SPLIT_BAMS }
-SPLIT_BAMS.into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
 
 
 /*
@@ -270,7 +262,7 @@ process rseqc {
     module 'rseqc'
     module 'samtools'
     memory { 32.GB * task.attempt }
-    time  {7.h * task.attempt }
+    time  { 7.h * task.attempt }
 
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
     maxRetries 3
@@ -301,15 +293,7 @@ process rseqc {
     */
 
     script:
-    if (!params.strandRule){
-        if (single){
-            strandRule ='++,--'
-        } else {
-            strandRule = '1+-,1-+,2++,2--'
-        }
-    } else {
-        strandRule = params.strandRule
-    }
+    def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--') 
 
     """
     samtools index $bam_rseqc
@@ -425,12 +409,8 @@ process dupradar {
     file '*.{pdf,txt}' into dupradar_results
 
     script:
-    def paired
-    if(single) {
-        paired = 'FALSE'
-    } else {
-        paired = 'TRUE'
-    }
+    def paired = single ? 'FALSE' :  'TRUE'
+
     """
     #!/usr/bin/env Rscript
 
@@ -750,42 +730,3 @@ process multiqc {
 }
 
 
-/*
- * Helper function, given a file Path
- * returns the file name region matching a specified glob pattern
- * starting from the beginning of the name up to last matching group.
- *
- * For example:
- *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
- *
- * Returns:
- *   'file_alpha'
- */
-def readPrefix( Path actual, template ) {
-
-    final fileName = actual.getFileName().toString()
-
-    def filePattern = template.toString()
-    int p = filePattern.lastIndexOf('/')
-    if( p != -1 ) filePattern = filePattern.substring(p+1)
-    if( !filePattern.contains('*') && !filePattern.contains('?') )
-        filePattern = '*' + filePattern
-
-    def regex = filePattern
-        .replace('.','\\.')
-        .replace('*','(.*)')
-        .replace('?','(.?)')
-        .replace('{','(?:')
-        .replace('}',')')
-        .replace(',','|')
-
-    def matcher = (fileName =~ /$regex/)
-    if( matcher.matches() ) {
-        def end = matcher.end(matcher.groupCount() )
-        def prefix = fileName.substring(0,end)
-        while(prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') )
-            prefix=prefix[0..-2]
-        return prefix
-    }
-    return fileName
-}

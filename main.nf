@@ -17,7 +17,10 @@ vim: syntax=groovy
  --genome [ID]
  --index [path to STAR index]
  --gtf [path to GTF file]
+ --bed12 [path to BED12 file]
  --reads [path to input files]
+ --outdir [path to results directory]
+ --rlocation [path to R library location]
  --sampleLevel [set to true to run on sample and not project level, i.e skipping MDS plot]
  --strandRule [overwrite default strandRule used by RSeQC]
 
@@ -119,9 +122,6 @@ process fastqc {
 
     memory { 2.GB * task.attempt }
     time { 4.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
@@ -146,9 +146,6 @@ process trim_galore {
     cpus 3
     memory { 3.GB * task.attempt }
     time { 16.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
@@ -176,7 +173,7 @@ process trim_galore {
 
 /*
  * STEP 3 - align with STAR
- * Inspired by https://github.com/AveraSD/nextflow-rnastar
+ * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 process star {
     
@@ -185,9 +182,6 @@ process star {
     cpus 10
     memory '80GB'
     time  { 5.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
@@ -252,10 +246,6 @@ process rseqc {
     memory { 32.GB * task.attempt }
     time  { 7.h * task.attempt }
 
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
-
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
 
     input:
@@ -281,7 +271,7 @@ process rseqc {
     */
 
     script:
-    def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--') 
+    def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
 
     """
     samtools index $bam_rseqc
@@ -308,9 +298,6 @@ process preseq {
 
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/preseq", mode: 'copy'
 
@@ -336,9 +323,6 @@ process markDuplicates {
 
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
 
@@ -374,9 +358,6 @@ process dupradar {
 
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
 
@@ -472,9 +453,6 @@ process featureCounts {
 
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
@@ -504,9 +482,6 @@ process stringtieFPKM {
 
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
 
@@ -543,14 +518,9 @@ bam_count.count().subscribe{ num_bams = it }
  * STEP 10 - edgeR MDS and heatmap
  */
 process sample_correlation {
-    module 'bioinfo-tools'
-    module 'R/3.2.3'
 
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
@@ -667,16 +637,11 @@ process sample_correlation {
  * STEP 11 MultiQC
  */
 process multiqc {
-    module 'bioinfo-tools'
-    // Don't load MultiQC module here as overwrites environment installation.
-    // Load env module in process instead if multiqc command isn't found.
 
     memory '4GB'
     time '4h'
 
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    errorStrategy 'ignore'
 
     input:
     file ('fastqc/*') from fastqc_results.toList()
@@ -696,8 +661,6 @@ process multiqc {
 
     script:
     """
-    # Load MultiQC with environment module if not already in PATH
-    type multiqc >/dev/null 2>&1 || { module load MultiQC; };
     multiqc -f .
     """
 }

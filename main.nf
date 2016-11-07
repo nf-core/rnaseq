@@ -655,16 +655,16 @@ process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
-    file ('fastqc/*') from fastqc_results.toList()
-    file ('trimgalore/*') from trimgalore_results.toList()
-    file ('star/*') from star_logs.toList()
-    file ('rseqc/*') from rseqc_results.toList()
-    file ('preseq/*') from preseq_results.toList()
-    file ('dupradar/*') from dupradar_results.toList()
-    file ('featureCounts/*') from featureCounts_logs.toList()
-    file ('featureCounts_biotype/*') from featureCounts_biotype.toList()
-    file ('stringtie/*') from stringtie_log.toList()
-    file ('sample_correlation_results/*') from sample_correlation_results.toList()
+    file ('fastqc/*') from fastqc_results.flatten().toList()
+    file ('trimgalore/*') from trimgalore_results.flatten().toList()
+    file ('star/*') from star_logs.flatten().toList()
+    file ('rseqc/*') from rseqc_results.flatten().toList()
+    file ('preseq/*') from preseq_results.flatten().toList()
+    file ('dupradar/*') from dupradar_results.flatten().toList()
+    file ('featureCounts/*') from featureCounts_logs.flatten().toList()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.flatten().toList()
+    file ('stringtie/*') from stringtie_log.flatten().toList()
+    file ('sample_correlation_results/*') from sample_correlation_results.flatten().toList()
 
     output:
     file '*multiqc_report.html'

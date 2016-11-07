@@ -17,7 +17,10 @@ vim: syntax=groovy
  --genome [ID]
  --index [path to STAR index]
  --gtf [path to GTF file]
+ --bed12 [path to BED12 file]
  --reads [path to input files]
+ --outdir [path to results directory]
+ --rlocation [path to R library location]
  --sampleLevel [set to true to run on sample and not project level, i.e skipping MDS plot]
  --strandRule [overwrite default strandRule used by RSeQC]
 
@@ -77,56 +80,49 @@ def single
 params.sampleLevel = false
 params.strandRule = false
 
-// Initializing - custom trimming options
+// Custom trimming options
 params.clip_r1 = 0
 params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
-
-log.info "===================================="
+log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
-log.info "===================================="
-log.info "Reads       : ${params.reads}"
-log.info "Genome      : ${params.genome}"
-log.info "Index       : ${params.index}"
-log.info "Annotation   : ${params.gtf}"
-log.info "Current home : $HOME"
-log.info "Current user : $USER"
-log.info "Current path : $PWD"
-log.info "R libraries  : ${params.rlocation}"
-log.info "Script dir   : $baseDir"
-log.info "Working dir  : $workDir"
-log.info "Output dir   : ${params.outdir}"
-log.info "Output dir   : ${params.outdir}"
-log.info "Trim R1      : ${params.clip_r1}"
-log.info "Trim R2      : ${params.clip_r2}"
-log.info "Trim 3' R1   : ${params.three_prime_clip_r1}"
-log.info "Trim 3' R2   : ${params.three_prime_clip_r2}"
-log.info "===================================="
+log.info "========================================="
+log.info "Reads          : ${params.reads}"
+log.info "Genome         : ${params.genome}"
+log.info "Index          : ${params.index}"
+log.info "Annotation     : ${params.gtf}"
+log.info "Current home   : $HOME"
+log.info "Current user   : $USER"
+log.info "Current path   : $PWD"
+log.info "R libraries    : ${params.rlocation}"
+log.info "Script dir     : $baseDir"
+log.info "Working dir    : $workDir"
+log.info "Output dir     : ${params.outdir}"
+if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
+if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
+if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"
+if( params.three_prime_clip_r2 > 0) log.info "Trim 3' R2     : ${params.three_prime_clip_r2}"
+log.info "Config Profile : ${workflow.profile}"
+log.info "========================================="
 
 // Validate inputs
 index = file(params.index)
 gtf   = file(params.gtf)
 bed12 = file(params.bed12)
 if( !index.exists() ) exit 1, "Missing STAR index: $index"
-if( !gtf.exists() )   exit 2, "Missing GTF annotation: $gtf"
-if( !bed12.exists() ) exit 2, "Missing BED12 annotation: $bed12"
+if( !gtf.exists() )   exit 1, "Missing GTF annotation: $gtf"
+if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
+if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
 /*
  * Create a channel for input read files
  */
 Channel
-    .fromPath( params.reads )
+    .fromFilePairs( params.reads )
     .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
-    .map { path ->
-        def prefix = readPrefix(path, params.reads)
-        tuple(prefix, path)
-    }
-    .groupTuple(sort: true)
-    .set { read_files }
-
-read_files.into { read_files_fastqc; read_files_trimming; name_for_star }
+    .into { read_files_fastqc; read_files_trimming }
 
 /*
  * STEP 1 - FastQC
@@ -134,19 +130,13 @@ read_files.into { read_files_fastqc; read_files_trimming; name_for_star }
 process fastqc {
     tag "$prefix"
 
-    module 'bioinfo-tools'
-    module 'FastQC'
-
     memory { 2.GB * task.attempt }
     time { 4.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
-    set val(prefix), file(reads:'*') from read_files_fastqc
+    set val(prefix), file(reads) from read_files_fastqc
 
     output:
     file '*_fastqc.{zip,html}' into fastqc_results
@@ -162,40 +152,33 @@ process fastqc {
  */
 process trim_galore {
     tag "$prefix"
-    
-    module 'bioinfo-tools'
-    module 'TrimGalore'
-    
+
     cpus 3
     memory { 3.GB * task.attempt }
     time { 16.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
-    
+
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
-    
+
     input:
-    set val(prefix), file(reads:'*') from read_files_trimming
-    
+    set val(prefix), file(reads) from read_files_trimming
+
     output:
     file '*fq.gz' into trimmed_reads
     file '*trimming_report.txt' into trimgalore_results
-    
+
     script:
     single = reads instanceof Path
     c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
     c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
     tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
-    rrbs = params.rrbs ? "--rrbs" : ''
     if (single) {
         """
-        trim_galore --gzip $rrbs $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
+        trim_galore --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     } else {
         """
-        trim_galore --paired --gzip $rrbs $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
+        trim_galore --paired --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     }
 }
@@ -203,28 +186,22 @@ process trim_galore {
 
 /*
  * STEP 3 - align with STAR
- * Inspired by https://github.com/AveraSD/nextflow-rnastar
+ * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 process star {
     
     tag "$reads"
-    
-    module 'bioinfo-tools'
-    module 'star'
 
     cpus 10
     memory '80GB'
     time  { 5.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
     input:
     file index
     file gtf
-    file (reads:'*') from trimmed_reads
+    file (reads) from trimmed_reads
 
     output:
     set file('*Log.final.out'), file ('*.bam') into aligned
@@ -270,8 +247,7 @@ def check_log(logs) {
 aligned
     .filter { logs, bams -> check_log(logs) }
     .flatMap {  logs, bams -> bams }
-    .set { SPLIT_BAMS }
-SPLIT_BAMS.into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
 
 
 /*
@@ -280,15 +256,8 @@ SPLIT_BAMS.into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_feat
 process rseqc {
     tag "$bam_rseqc"
 
-    module 'bioinfo-tools'
-    module 'rseqc'
-    module 'samtools'
     memory { 32.GB * task.attempt }
-    time  {7.h * task.attempt }
-
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
+    time  { 7.h * task.attempt }
 
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
 
@@ -315,15 +284,7 @@ process rseqc {
     */
 
     script:
-    if (!params.strandRule){
-        if (single){
-            strandRule ='++,--'
-        } else {
-            strandRule = '1+-,1-+,2++,2--'
-        }
-    } else {
-        strandRule = params.strandRule
-    }
+    def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
 
     """
     samtools index $bam_rseqc
@@ -348,14 +309,8 @@ process rseqc {
 process preseq {
     tag "$bam_preseq"
 
-    module 'bioinfo-tools'
-    module 'preseq'
-
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/preseq", mode: 'copy'
 
@@ -379,14 +334,8 @@ process preseq {
 process markDuplicates {
     tag "$bam_markduplicates"
 
-    module 'bioinfo-tools'
-    module 'picard/2.0.1'
-
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
 
@@ -420,14 +369,8 @@ process markDuplicates {
 process dupradar {
     tag "$bam_md"
 
-    module 'bioinfo-tools'
-    module 'R/3.2.3'
-
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
 
@@ -439,12 +382,8 @@ process dupradar {
     file '*.{pdf,txt}' into dupradar_results
 
     script:
-    def paired
-    if(single) {
-        paired = 'FALSE'
-    } else {
-        paired = 'TRUE'
-    }
+    def paired = single ? 'FALSE' :  'TRUE'
+
     """
     #!/usr/bin/env Rscript
 
@@ -523,14 +462,8 @@ process dupradar {
 process featureCounts {
     tag "$bam_featurecounts"
 
-    module 'bioinfo-tools'
-    module 'subread'
-
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
@@ -558,14 +491,8 @@ process featureCounts {
 process stringtieFPKM {
     tag "$bam_stringtieFPKM"
 
-    module 'bioinfo-tools'
-    module 'StringTie'
-
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
 
@@ -602,14 +529,9 @@ bam_count.count().subscribe{ num_bams = it }
  * STEP 10 - edgeR MDS and heatmap
  */
 process sample_correlation {
-    module 'bioinfo-tools'
-    module 'R/3.2.3'
 
     memory { 16.GB * task.attempt }
     time { 2.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'finish' }
-    maxRetries 3
-    maxErrors '-1'
 
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
@@ -726,16 +648,11 @@ process sample_correlation {
  * STEP 11 MultiQC
  */
 process multiqc {
-    module 'bioinfo-tools'
-    // Don't load MultiQC module here as overwrites environment installation.
-    // Load env module in process instead if multiqc command isn't found.
 
     memory '4GB'
     time '4h'
 
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    errorStrategy 'ignore'
 
     input:
     file ('fastqc/*') from fastqc_results.toList()
@@ -755,49 +672,8 @@ process multiqc {
 
     script:
     """
-    # Load MultiQC with environment module if not already in PATH
-    type multiqc >/dev/null 2>&1 || { module load MultiQC; };
     multiqc -f .
     """
 }
 
 
-/*
- * Helper function, given a file Path
- * returns the file name region matching a specified glob pattern
- * starting from the beginning of the name up to last matching group.
- *
- * For example:
- *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
- *
- * Returns:
- *   'file_alpha'
- */
-def readPrefix( Path actual, template ) {
-
-    final fileName = actual.getFileName().toString()
-
-    def filePattern = template.toString()
-    int p = filePattern.lastIndexOf('/')
-    if( p != -1 ) filePattern = filePattern.substring(p+1)
-    if( !filePattern.contains('*') && !filePattern.contains('?') )
-        filePattern = '*' + filePattern
-
-    def regex = filePattern
-        .replace('.','\\.')
-        .replace('*','(.*)')
-        .replace('?','(.?)')
-        .replace('{','(?:')
-        .replace('}',')')
-        .replace(',','|')
-
-    def matcher = (fileName =~ /$regex/)
-    if( matcher.matches() ) {
-        def end = matcher.end(matcher.groupCount() )
-        def prefix = fileName.substring(0,end)
-        while(prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') )
-            prefix=prefix[0..-2]
-        return prefix
-    }
-    return fileName
-}

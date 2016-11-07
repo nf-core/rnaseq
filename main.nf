@@ -128,15 +128,14 @@ Channel
  * STEP 1 - FastQC
  */
 process fastqc {
-    tag "$prefix"
+    tag "$name"
 
     memory { 2.GB * task.attempt }
     time { 4.h * task.attempt }
-
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
-    set val(prefix), file(reads) from read_files_fastqc
+    set val(name), file(reads) from read_files_fastqc
 
     output:
     file '*_fastqc.{zip,html}' into fastqc_results
@@ -151,16 +150,15 @@ process fastqc {
  * STEP 2 - Trim Galore!
  */
 process trim_galore {
-    tag "$prefix"
+    tag "$name"
 
-    cpus 3
-    memory { 3.GB * task.attempt }
-    time { 16.h * task.attempt }
-
+    cpus 2
+    memory { 4.GB * task.attempt }
+    time { 8.h * task.attempt }
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     input:
-    set val(prefix), file(reads) from read_files_trimming
+    set val(name), file(reads) from read_files_trimming
 
     output:
     file '*fq.gz' into trimmed_reads
@@ -174,7 +172,7 @@ process trim_galore {
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
     if (single) {
         """
-        trim_galore --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
+        trim_galore --gzip $c_r1 $tpc_r1 $reads
         """
     } else {
         """
@@ -189,19 +187,17 @@ process trim_galore {
  * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 process star {
-    
     tag "$reads"
 
     cpus 10
     memory '80GB'
     time  { 5.h * task.attempt }
-
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
     input:
     file index
     file gtf
-    file (reads) from trimmed_reads
+    file reads from trimmed_reads
 
     output:
     set file('*Log.final.out'), file ('*.bam') into aligned
@@ -212,7 +208,6 @@ process star {
     """
     #Getting STAR prefix
     f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-    prefix=\$f
     STAR --genomeDir $index \\
         --sjdbGTFfile $gtf \\
         --readFilesIn $reads  \\
@@ -221,7 +216,7 @@ process star {
         --outWigType bedGraph \\
         --outSAMtype BAM SortedByCoordinate \\
         --readFilesCommand zcat \\
-        --outFileNamePrefix \$prefix
+        --outFileNamePrefix \$f
     """
 }
 

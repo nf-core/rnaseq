@@ -48,6 +48,7 @@ params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
 // Validate inputs
+def star_index, fasta, gtf, bed12
 if( !params.star_index && !params.fasta && !params.download_fasta ){
     exit 1, "No reference genome specified!"
 }
@@ -73,9 +74,9 @@ log.info "Genome         : ${params.genome}"
 if(params.star_index)          log.info "STAR Index     : ${params.star_index}"
 else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
 else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
-if(params.gtf)                 log.info "GTF Ref        : ${params.gtf}"
+if(params.gtf)                 log.info "GTF Annotation : ${params.gtf}"
 else if(params.download_gtf)   log.info "GTF URL        : ${params.download_gtf}"
-if(params.bed12)               log.info "BED12 Ref      : ${params.bed12}"
+if(params.bed12)               log.info "BED Annotation : ${params.bed12}"
 log.info "Current home   : $HOME"
 log.info "Current user   : $USER"
 log.info "Current path   : $PWD"
@@ -95,7 +96,7 @@ log.info "========================================="
  */
 Channel
     .fromFilePairs( params.reads )
-    .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
+    .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}" }
     .into { read_files_fastqc; read_files_trimming }
 
 /*
@@ -103,7 +104,7 @@ Channel
  */
 if( !params.star_index && !params.fasta && params.downloadFasta ) {
     process downloadFASTA {
-        publishDir { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         input:
         set url from params.downloadFasta
@@ -122,7 +123,7 @@ if( !params.star_index && !params.fasta && params.downloadFasta ) {
  */
 if( !params.gtf && params.downloadGTF ) {
     process downloadGTF {
-        publishDir { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         input:
         set url from params.downloadGTF
@@ -141,7 +142,7 @@ if( !params.gtf && params.downloadGTF ) {
  */
 if( fasta && !params.star_index) {
     process makeSTARindex {
-        publishDir { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         cpus { $params.makeSTARindex.cpus ?: 12 }
         memory { $params.makeSTARindex.memory ?: 30.GB }
@@ -167,11 +168,11 @@ if( fasta && !params.star_index) {
 /*
  * PREPROCESSING - Build BED12 file
  */
-if ( !params.bed12 ){
+if ( params.bed12 ){
     bed12 = file(params.bed12)
 } else {
     process makeBED12 {
-        publishDir { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         time { $params.makeBED12.time ?: 2.h }
         errorStrategy = 'terminate'

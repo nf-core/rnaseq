@@ -38,8 +38,9 @@ The pipeline will exit with an error message if you try to run it pipeline with 
 UPPMAX config profile and don't set project.
 
 ### Running using Docker
+First, install docker on your system : [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
-You need to create a configuration file pointing to your reference genome files:
+You then need to create a configuration file pointing to your reference genome files:
 ```
 params {
   genomes {
@@ -51,7 +52,6 @@ params {
     }
   }
 }
-
 ```
 
 You can now run 

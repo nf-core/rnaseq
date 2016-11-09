@@ -38,8 +38,26 @@ The pipeline will exit with an error message if you try to run it pipeline with 
 UPPMAX config profile and don't set project.
 
 ### Running using Docker
-We are in the process of setting up a Docker image with the pipeline requirements, for easier
-use and better reproducibility. Check back soon for more information on this!
+First, install docker on your system : [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
+
+You then need to create a configuration file pointing to your reference genome files:
+```
+params {
+  genomes {
+    GRCh37' {
+            bed12   = '<path to the genome bed file>'
+            fasta   = '<path to the genome fasta file>'
+            gtf     = '<path to the genome gtf file>'
+            star     = '<path to the star index folder>'
+    }
+  }
+}
+```
+
+You can now run 
+```nextflow run SciLifeLab/NGI-RNAseq -profile docker -c <your_config>  --reads '<path to your reads>'```
+
+
 
 ### Running on other clusters
 It is entirely possible to run this pipeline on other clusters, though you will need to set up

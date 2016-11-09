@@ -6,52 +6,11 @@ vim: syntax=groovy
                 R N A - S E Q    T W O    P O I N T    Z E R O
 ========================================================================================
  New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
- @Authors
+ #### Homepage / Documentation
+ https://github.com/SciLifeLab/NGI-RNAseq
+ #### Authors
  Phil Ewels <phil.ewels@scilifelab.se>
  Rickard Hammarén <rickard.hammaren@scilifelab.se>
-----------------------------------------------------------------------------------------
- Basic command:
- $ nextflow main.nf
-
- Pipeline variables can be configured with the following command line options:
- --genome [ID]
- --index [path to STAR index]
- --gtf [path to GTF file]
- --bed12 [path to BED12 file]
- --reads [path to input files]
- --outdir [path to results directory]
- --rlocation [path to R library location]
- --sampleLevel [set to true to run on sample and not project level, i.e skipping MDS plot]
- --strandRule [overwrite default strandRule used by RSeQC]
-
- For example:
- $ nextflow main.nf --reads 'path/to/data/sample_*_{1,2}.fq.gz'
----------------------------------------------------------------------------------------
-The pipeline can determine whether the input data is single or paired end. This relies on
-specifying the input files correctly. For paired en data us the example above, i.e.
-'sample_*_{1,2}.fastq.gz'. Without the glob {1,2} (or similiar) the data will be treated
-as single end.
-----------------------------------------------------------------------------------------
- Pipeline overview:
- - FastQC - read quility control
- - cutadapt - trimming
- - STAR - align
- - RSeQC
-   - bam_stat
-   - infer_experiment
-   - splice junction saturation
-   - RPKM saturation
-   - read duplication
-   - inner distance
-   - gene body coverage
-   - read distribution
-   - junction annotation
- - dupRadar
- - preseq
- - subread featureCounts - gene counts, biotype counts, rRNA estimation.
- - String Tie - FPKMs for genes and transcripts
- - edgeR - create MDS plot and sample pairwise distance heatmap / dendrogram
- - MultiQC
 ----------------------------------------------------------------------------------------
 */
 
@@ -65,9 +24,11 @@ version = 0.2
 
 // Configurable variables
 params.genome = 'GRCh37'
-params.index = params.genomes[ params.genome ].star
-params.gtf   = params.genomes[ params.genome ].gtf
-params.bed12 = params.genomes[ params.genome ].bed12
+if( params.genomes ) {
+    params.star_index = params.genomes[ params.genome ].star
+    params.gtf   = params.genomes[ params.genome ].gtf
+    params.bed12 = params.genomes[ params.genome ].bed12
+}
 params.reads = "data/*{_1,_2}*.fastq.gz"
 params.outdir = './results'
 
@@ -86,13 +47,35 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
+// Validate inputs
+if( !params.star_index && !params.fasta && !params.download_fasta ){
+    exit 1, "No reference genome specified!"
+}
+if( params.star_index ){
+    star_index = file(params.star_index)
+    if( !star_index.exists() ) exit 1, "STAR index not found: $star_index"
+} else if ( params.fasta ){
+    fasta = file(params.fasta)
+    if( !fasta.exists() ) exit 1, "Fasta file not found: $star_index"
+}
+if( params.gtf ){
+    gtf = file(params.gtf)
+    if( !gtf.exists() ) exit 1, "Missing GTF annotation: $gtf"
+}
+if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
+
+// Header log info
 log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
 log.info "Reads          : ${params.reads}"
 log.info "Genome         : ${params.genome}"
-log.info "Index          : ${params.index}"
-log.info "Annotation     : ${params.gtf}"
+if(params.star_index)          log.info "STAR Index     : ${params.star_index}"
+else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
+else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
+if(params.gtf)                 log.info "GTF Ref        : ${params.gtf}"
+else if(params.download_gtf)   log.info "GTF URL        : ${params.download_gtf}"
+if(params.bed12)               log.info "BED12 Ref      : ${params.bed12}"
 log.info "Current home   : $HOME"
 log.info "Current user   : $USER"
 log.info "Current path   : $PWD"
@@ -107,15 +90,6 @@ if( params.three_prime_clip_r2 > 0) log.info "Trim 3' R2     : ${params.three_pr
 log.info "Config Profile : ${workflow.profile}"
 log.info "========================================="
 
-// Validate inputs
-index = file(params.index)
-gtf   = file(params.gtf)
-bed12 = file(params.bed12)
-if( !index.exists() ) exit 1, "Missing STAR index: $index"
-if( !gtf.exists() )   exit 1, "Missing GTF annotation: $gtf"
-if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
-if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
-
 /*
  * Create a channel for input read files
  */
@@ -125,13 +99,99 @@ Channel
     .into { read_files_fastqc; read_files_trimming }
 
 /*
+ * PREPROCESSING - Download Fasta
+ */
+if( !params.star_index && !params.fasta && params.downloadFasta ) {
+    process downloadFASTA {
+        publishDir { params.saveReference ? { "${params.outdir}/reference_genome", mode: 'copy' } : false }
+
+        input:
+        set url from params.downloadFasta
+
+        output:
+        file "*.{fa,fasta}" into fasta
+        
+        script:
+        """
+        curl -O -L $url
+        """
+    }
+}
+/*
+ * PREPROCESSING - Download GTF
+ */
+if( !params.gtf && params.downloadGTF ) {
+    process downloadGTF {
+        publishDir { params.saveReference ? { "${params.outdir}/reference_genome", mode: 'copy' } : false }
+
+        input:
+        set url from params.downloadGTF
+
+        output:
+        file "*.gtf" into gtf
+        
+        script:
+        """
+        curl -O -L $url
+        """
+    }
+}
+/*
+ * PREPROCESSING - Build STAR index
+ */
+if( fasta && !params.star_index) {
+    process makeSTARindex {
+        publishDir { params.saveReference ? { "${params.outdir}/reference_genome", mode: 'copy' } : false }
+
+        input:
+        file fasta
+
+        output:
+        file 'star' into star_index
+        
+        script:
+        """
+        STAR \
+            --runMode genomeGenerate \\
+            --runThreadN ${task.cpus} \\
+            --genomeDir star/ \\
+            --genomeFastaFiles $fasta
+        """
+    }
+}
+/*
+ * PREPROCESSING - Build BED12 file
+ */
+if ( !params.bed12 ){
+    bed12 = file(params.bed12)
+} else {
+    process makeBED12 {
+        publishDir { params.saveReference ? { "${params.outdir}/reference_genome", mode: 'copy' } : false }
+
+        input:
+        file gtf
+
+        output:
+        file '*.bed12' into bed12
+        
+        script:
+        """
+        convert2bed \\
+            --input=gtf \\
+            --output=bed \\
+            --max-mem=${task.mem} \\
+            > ${gtf}.bed12
+        """
+    }
+}
+if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
+
+
+/*
  * STEP 1 - FastQC
  */
 process fastqc {
     tag "$name"
-
-    memory { 2.GB * task.attempt }
-    time { 4.h * task.attempt }
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
@@ -140,6 +200,7 @@ process fastqc {
     output:
     file '*_fastqc.{zip,html}' into fastqc_results
 
+    script:
     """
     fastqc -q $reads
     """
@@ -151,10 +212,6 @@ process fastqc {
  */
 process trim_galore {
     tag "$name"
-
-    cpus 2
-    memory { 4.GB * task.attempt }
-    time { 8.h * task.attempt }
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     input:
@@ -188,14 +245,10 @@ process trim_galore {
  */
 process star {
     tag "$reads"
-
-    cpus 10
-    memory '80GB'
-    time  { 5.h * task.attempt }
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
     input:
-    file index
+    file star_index
     file gtf
     file reads from trimmed_reads
 
@@ -208,7 +261,7 @@ process star {
     """
     #Getting STAR prefix
     f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-    STAR --genomeDir $index \\
+    STAR --genomeDir $star_index \\
         --sjdbGTFfile $gtf \\
         --readFilesIn $reads  \\
         --runThreadN ${task.cpus} \\
@@ -250,10 +303,6 @@ aligned
  */
 process rseqc {
     tag "$bam_rseqc"
-
-    memory { 32.GB * task.attempt }
-    time  { 7.h * task.attempt }
-
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
 
     input:
@@ -303,10 +352,6 @@ process rseqc {
  */
 process preseq {
     tag "$bam_preseq"
-
-    memory { 4.GB * task.attempt }
-    time { 2.h * task.attempt }
-
     publishDir "${params.outdir}/preseq", mode: 'copy'
 
     input:
@@ -328,10 +373,6 @@ process preseq {
  */
 process markDuplicates {
     tag "$bam_markduplicates"
-
-    memory { 16.GB * task.attempt }
-    time { 2.h * task.attempt }
-
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
 
     input:
@@ -363,10 +404,6 @@ process markDuplicates {
  */
 process dupradar {
     tag "$bam_md"
-
-    memory { 16.GB * task.attempt }
-    time { 2.h * task.attempt }
-
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
 
     input:
@@ -456,10 +493,6 @@ process dupradar {
  */
 process featureCounts {
     tag "$bam_featurecounts"
-
-    memory { 4.GB * task.attempt }
-    time { 2.h * task.attempt }
-
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
     input:
@@ -485,10 +518,6 @@ process featureCounts {
  */
 process stringtieFPKM {
     tag "$bam_stringtieFPKM"
-
-    memory { 4.GB * task.attempt }
-    time { 2.h * task.attempt }
-
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
 
     input:
@@ -524,10 +553,6 @@ bam_count.count().subscribe{ num_bams = it }
  * STEP 10 - edgeR MDS and heatmap
  */
 process sample_correlation {
-
-    memory { 16.GB * task.attempt }
-    time { 2.h * task.attempt }
-
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
     input:
@@ -643,10 +668,6 @@ process sample_correlation {
  * STEP 11 MultiQC
  */
 process multiqc {
-
-    memory '4GB'
-    time '4h'
-
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:

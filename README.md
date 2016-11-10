@@ -40,24 +40,13 @@ UPPMAX config profile and don't set project.
 ### Running using Docker
 First, install docker on your system : [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
-You then need to create a configuration file pointing to your reference genome files:
-```
-params {
-  genomes {
-    GRCh37' {
-            bed12   = '<path to the genome bed file>'
-            fasta   = '<path to the genome fasta file>'
-            gtf     = '<path to the genome gtf file>'
-            star     = '<path to the star index folder>'
-    }
-  }
-}
+You can now run:
+```bash
+nextflow run SciLifeLab/NGI-RNAseq -profile docker -c <your_config>  --reads '<path to your reads>'
 ```
 
-You can now run 
-```nextflow run SciLifeLab/NGI-RNAseq -profile docker -c <your_config>  --reads '<path to your reads>'```
-
-
+Note that you will need to configure the reference genomes to use. See below
+for more instructions.
 
 ### Running on other clusters
 It is entirely possible to run this pipeline on other clusters, though you will need to set up
@@ -99,6 +88,8 @@ all files as single end. The file path should be in quotation marks to prevent s
 
 If left unspecified, the pipeline will assume that the data is in a directory called `data` in the working directory.
 
+## Reference Genomes
+
 ### `--genome`
 The reference genome to use of the analysis, needs to be one of the genome specified in the config file.
 The human `GRCh37` genome is used by default.
@@ -117,12 +108,73 @@ and their keys. Common genomes that are supported are:
 
 > There are numerous others - check the config file for more.
 
-### `--index`, `--gtf`, `--bed12`
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-```
---index [path to STAR index]   --gtf [path to GTF file]   --bed12 [path to bed12 file]
+If you're not running on UPPMAX (the default profile), you can create your own config
+file with paths to your reference genomes.
+See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html)
+for instructions on where to add this.
+
+The syntax for this reference configuration is as follows:
+```groovy
+params {
+  genomes {
+    'GRCh37' {
+      star    = '<path to the star index folder>'
+      fasta   = '<path to the genome fasta file>' // Used if no star index given
+      gtf     = '<path to the genome gtf file>'
+      bed12   = '<path to the genome bed file>' // Generated from GTF if not given
+    }
+    // Any number of additional genomes, key is used with --genome
+  }
+}
 ```
 
+### `--star_index`, `--fasta`, `--gtf`, `--bed12`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+```
+--star_index [path to STAR index] \
+--fasta [path to Fasta reference] \
+--gtf [path to GTF file] \
+--bed12 [path to bed12 file]
+```
+
+### `--downloadFasta`, `--downloadGTF`
+If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file
+at the start of the pipeline. The same with a GTF reference file. A required STAR index
+and BED12 files will then be generated from these downloaded files.
+
+### `--saveReference`
+Supply this parameter to save any generated reference genome files to your results folder.
+These can then be used for future pipeline runs, reducing processing times.
+
+## Job Resources
+### Automatic resubmission
+Each step in the pipeline has a default set of requirements for number of CPUs,
+memory and time. For most of the steps in the pipeline, if the job exits
+on UPPMAX with an error code of `143` (exceeded requested resources) it will
+automatically resubmit with higher requests (2*original, then 3*original).
+If it still fails after three times then the pipeline is stopped.
+
+### Custom resource requests
+Wherever process-specific requirements are set in the pipeline, the default
+value can be overwritten with config variables. These can be set on the command
+line or in a config file. The names are set as `[process name]_[resource type]`,
+for example `star_memory`.
+
+So, to override the defaults for STAR, you can do run the pipeline as follows:
+```bash
+nextflow run SciLifeLab/NGI-RNAseq --star_cpus 1 --star_memory '10 GB' --star_time '24h'
+```
+
+Alternative, these can be set in a config file:
+```groovy
+params {
+  star_cpus = 1
+  star_memory = '10 GB'
+  star_time = '24h'
+}
+```
+
+## Other command line parameters
 ### `--outdir`
 The output directory where the results will be saved.
 
@@ -150,6 +202,10 @@ Use `--strandRule 'none'` if your data is not strand specific.
 Some steps in the pipeline run R with required modules. By default, the pipeline will install
 these modules to `~/R/nxtflow_libs/` if not present. You can specify what path to use with this
 command line flag.
+
+### `--clusterOptions`
+Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
+to run on the development node (though won't work with default process time requests).
 
 ### `-c`
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX

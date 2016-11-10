@@ -57,7 +57,7 @@ if( params.star_index ){
     if( !star_index.exists() ) exit 1, "STAR index not found: $star_index"
 } else if ( params.fasta ){
     fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: $star_index"
+    if( !fasta.exists() ) exit 1, "Fasta file not found: $fasta"
 }
 if( params.gtf ){
     gtf = file(params.gtf)
@@ -88,7 +88,7 @@ if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
 if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
 if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"
 if( params.three_prime_clip_r2 > 0) log.info "Trim 3' R2     : ${params.three_prime_clip_r2}"
-log.info "Config Profile : ${workflow.profile}"
+log.info "Config Profile : " + (workflow.profile == 'standard' ? 'UPPMAX' : workflow.profile)
 log.info "========================================="
 
 /*
@@ -144,9 +144,9 @@ if( fasta && !params.star_index) {
     process makeSTARindex {
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        cpus { $params.makeSTARindex.cpus ?: 12 }
-        memory { $params.makeSTARindex.memory ?: 30.GB }
-        time { $params.makeSTARindex.time ?: 5.h }
+        cpus { $params.makeSTARindex_cpus ?: 12 }
+        memory { $params.makeSTARindex_memory ?: 30.GB }
+        time { $params.makeSTARindex_time ?: 5.h }
         errorStrategy = 'terminate'
 
         input:
@@ -174,7 +174,7 @@ if ( params.bed12 ){
     process makeBED12 {
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        time { $params.makeBED12.time ?: 2.h }
+        time { $params.makeBED12_time ?: 2.h }
         errorStrategy = 'terminate'
 
         input:
@@ -203,8 +203,8 @@ process fastqc {
     tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
-    memory { $params.fastqc.memory ?: 2.GB * task.attempt }
-    time { $params.fastqc.time ?: 4.h * task.attempt }
+    memory { (params.fastqc_memory ?: 2.GB) * task.attempt }
+    time { (params.fastqc_time ?: 4.h) * task.attempt }
     errorStrategy = task.exitStatus == 143 ? 'retry' : 'ignore'
 
     input:
@@ -227,9 +227,9 @@ process trim_galore {
     tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
-    cpus { $params.trim_galore.cpus ?: 2 * task.attempt }
-    memory { $params.trim_galore.memory ?: 4.GB * task.attempt }
-    time { $params.trim_galore.time ?: 8.h * task.attempt }
+    cpus { params.trim_galore_cpus ?: 2 }
+    memory { (params.trim_galore_memory ?: 4.GB) * task.attempt }
+    time { (params.trim_galore_time ?: 8.h) * task.attempt }
     errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
 
     input:
@@ -265,14 +265,14 @@ process star {
     tag "$reads"
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
-    cpus { $params.star.cpus ?: 10 * task.attempt }
-    memory { $params.star.memory ?: 80.GB * task.attempt }
-    time { $params.star.time ?: 5.h * task.attempt }
+    cpus { params.star_cpus ?: 10 }
+    memory { (params.star_memory ?: 80.GB) * task.attempt }
+    time { (params.star_time ?: 5.h) * task.attempt }
     errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
 
     input:
-    file star_index
-    file gtf
+    file index from star_index
+    file annotation from gtf
     file reads from trimmed_reads
 
     output:
@@ -284,8 +284,8 @@ process star {
     """
     #Getting STAR prefix
     f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-    STAR --genomeDir $star_index \\
-        --sjdbGTFfile $gtf \\
+    STAR --genomeDir $index \\
+        --sjdbGTFfile $annotation \\
         --readFilesIn $reads  \\
         --runThreadN ${task.cpus} \\
         --twopassMode Basic \\
@@ -328,8 +328,8 @@ process rseqc {
     tag "$bam_rseqc"
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
 
-    memory { $params.rseqc.memory ?: 32.GB * task.attempt }
-    time { $params.rseqc.time ?: 7.h * task.attempt }
+    memory { (params.rseqc_memory ?: 32.GB) * task.attempt }
+    time { (params.rseqc_time ?: 7.h) * task.attempt }
 
     input:
     file bam_rseqc
@@ -380,8 +380,8 @@ process preseq {
     tag "$bam_preseq"
     publishDir "${params.outdir}/preseq", mode: 'copy'
 
-    memory { $params.preseq.memory ?: 4.GB * task.attempt }
-    time { $params.preseq.time ?: 2.h * task.attempt }
+    memory { (params.preseq_memory ?: 4.GB) * task.attempt }
+    time { (params.preseq_time ?: 2.h) * task.attempt }
 
     input:
     file bam_preseq
@@ -404,8 +404,8 @@ process markDuplicates {
     tag "$bam_markduplicates"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
 
-    memory { $params.markDuplicates.memory ?: 16.GB * task.attempt }
-    time { $params.markDuplicates.time ?: 2.h * task.attempt }
+    memory { (params.markDuplicates_memory ?: 16.GB) * task.attempt }
+    time { (params.markDuplicates_time ?: 2.h) * task.attempt }
 
     input:
     file bam_markduplicates
@@ -438,8 +438,8 @@ process dupradar {
     tag "$bam_md"
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
 
-    memory { $params.dupradar.memory ?: 16.GB * task.attempt }
-    time { $params.dupradar.time ?: 2.h * task.attempt }
+    memory { (params.dupradar_memory ?: 16.GB) * task.attempt }
+    time { (params.dupradar_time ?: 2.h) * task.attempt }
 
     input:
     file bam_md
@@ -530,8 +530,8 @@ process featureCounts {
     tag "$bam_featurecounts"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
-    memory { $params.dupradar.memory ?: 4.GB * task.attempt }
-    time { $params.dupradar.time ?: 2.h * task.attempt }
+    memory { (params.dupradar_memory ?: 4.GB) * task.attempt }
+    time { (params.dupradar_time ?: 2.h) * task.attempt }
 
     input:
     file bam_featurecounts
@@ -558,8 +558,8 @@ process stringtieFPKM {
     tag "$bam_stringtieFPKM"
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
 
-    memory { $params.dupradar.memory ?: 4.GB * task.attempt }
-    time { $params.dupradar.time ?: 2.h * task.attempt }
+    memory { (params.dupradar_memory ?: 4.GB) * task.attempt }
+    time { (params.dupradar_time ?: 2.h) * task.attempt }
 
     input:
     file bam_stringtieFPKM
@@ -596,8 +596,8 @@ bam_count.count().subscribe{ num_bams = it }
 process sample_correlation {
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
-    memory { $params.dupradar.memory ?: 16.GB * task.attempt }
-    time { $params.dupradar.time ?: 2.h * task.attempt }
+    memory { (params.dupradar_memory ?: 16.GB) * task.attempt }
+    time { (params.dupradar_time ?: 2.h) * task.attempt }
 
     input:
     file input_files from geneCounts.toList()
@@ -714,8 +714,8 @@ process sample_correlation {
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
-    memory { $params.multiqc.memory ?: 4.GB * task.attempt }
-    time { $params.multiqc.time ?: 4.h * task.attempt }
+    memory { (params.multiqc_memory ?: 4.GB) * task.attempt }
+    time { (params.multiqc_time ?: 4.h) * task.attempt }
     errorStrategy = 'ignore'
 
     input:

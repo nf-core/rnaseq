@@ -28,6 +28,13 @@ RUN chmod 755 /opt/FastQC/fastqc
 RUN ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
 RUN rm /opt/fastqc_v0.11.5.zip
 
+#Install bedops
+RUN mkdir bedops
+RUN wget -q -O /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 https://github.com/bedops/bedops/releases/download/v2.4.20/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
+RUN tar xvjf /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 -C /opt/bedops
+RUN ln -s /opt/bedops/bin/convert2bed /usr/local/bin/convert2bed
+RUN rm /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
+
 #Install cutadapt
 RUN pip install cutadapt
 

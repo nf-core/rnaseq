@@ -146,6 +146,34 @@ and BED12 files will then be generated from these downloaded files.
 Supply this parameter to save any generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
+## Job Resources
+### Automatic resubmission
+Each step in the pipeline has a default set of requirements for number of CPUs,
+memory and time. For most of the steps in the pipeline, if the job exits
+on UPPMAX with an error code of `143` (exceeded requested resources) it will
+automatically resubmit with higher requests (2*original, then 3*original).
+If it still fails after three times then the pipeline is stopped.
+
+### Custom resource requests
+Wherever process-specific requirements are set in the pipeline, the default
+value can be overwritten with config variables. These can be set on the command
+line or in a config file. The names are set as `[process name]_[resource type]`,
+for example `star_memory`.
+
+So, to override the defaults for STAR, you can do run the pipeline as follows:
+```bash
+nextflow run SciLifeLab/NGI-RNAseq --star_cpus 1 --star_memory '10 GB' --star_time '24h'
+```
+
+Alternative, these can be set in a config file:
+```groovy
+params {
+  star_cpus = 1
+  star_memory = '10 GB'
+  star_time = '24h'
+}
+```
+
 ## Other command line parameters
 ### `--outdir`
 The output directory where the results will be saved.

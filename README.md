@@ -203,6 +203,10 @@ Some steps in the pipeline run R with required modules. By default, the pipeline
 these modules to `~/R/nxtflow_libs/` if not present. You can specify what path to use with this
 command line flag.
 
+### `--clusterOptions`
+Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
+to run on the development node (though won't work with default process time requests).
+
 ### `-c`
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
 projects or different sets of reference genomes. **NB:** one hyphen only (core Nextflow parameter).

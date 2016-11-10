@@ -144,9 +144,9 @@ if( fasta && !params.star_index) {
     process makeSTARindex {
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        cpus { $params.makeSTARindex_cpus ?: 12 }
-        memory { $params.makeSTARindex_memory ?: 30.GB }
-        time { $params.makeSTARindex_time ?: 5.h }
+        cpus { params.makeSTARindex_cpus ?: 12 }
+        memory { params.makeSTARindex_memory ?: 30.GB }
+        time { params.makeSTARindex_time ?: 5.h }
         errorStrategy = 'terminate'
 
         input:
@@ -174,7 +174,7 @@ if ( params.bed12 ){
     process makeBED12 {
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        time { $params.makeBED12_time ?: 2.h }
+        time { params.makeBED12_time ?: 2.h }
         errorStrategy = 'terminate'
 
         input:

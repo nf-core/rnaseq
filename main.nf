@@ -47,21 +47,42 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
-// Validate inputs
-def star_index, fasta, gtf, bed12
-if( !params.star_index && !params.fasta && !params.download_fasta ){
-    exit 1, "No reference genome specified!"
+// Choose aligner
+params.aligner = 'star'
+if (params.aligner != 'star' && params.aligner != 'hisat2'){
+    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
-if( params.star_index ){
+
+// Validate inputs
+def star_index, hisat_index, fasta, gtf, bed12
+
+if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
     if( !star_index.exists() ) exit 1, "STAR index not found: $star_index"
-} else if ( params.fasta ){
+}
+else if ( params.hisat_index && params.aligner == 'hisat2' ){
+    hisat_index = file(params.hisat_index)
+    if( !star_index.exists() ) exit 1, "HISAT2 index not found: $star_index"
+}
+else if ( params.fasta ){
     fasta = file(params.fasta)
     if( !fasta.exists() ) exit 1, "Fasta file not found: $fasta"
 }
+else if ( !params.download_fasta ){
+    exit 1, "No reference genome specified!"
+}
+
 if( params.gtf ){
     gtf = file(params.gtf)
-    if( !gtf.exists() ) exit 1, "Missing GTF annotation: $gtf"
+    if( !gtf.exists() ) exit 1, "GTF annotation file not found: $gtf"
+}
+if( params.bed12 ){
+    bed12 = file(params.bed12)
+    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: $gtf"
+}
+if( params.aligner == 'hisat2' && params.splicesites ){
+    splicesites = file(params.splicesites)
+    if( !splicesites.exists() ) exit 1, "HISAT2 splice sites file not found: $gtf"
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
@@ -71,6 +92,8 @@ log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
 log.info "Reads          : ${params.reads}"
 log.info "Genome         : ${params.genome}"
+if(params.aligner == 'star')   log.info "Aligner        : STAR"
+if(params.aligner == 'hisat2') log.info "Aligner        : HISAT2"
 if(params.star_index)          log.info "STAR Index     : ${params.star_index}"
 else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
 else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
@@ -102,98 +125,151 @@ Channel
 /*
  * PREPROCESSING - Download Fasta
  */
-if( !params.star_index && !params.fasta && params.downloadFasta ) {
-    process downloadFASTA {
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+process downloadFASTA {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        input:
-        set url from params.downloadFasta
+    when: !params.star_index && !params.fasta && params.downloadFasta
 
-        output:
-        file "*.{fa,fasta}" into fasta
-        
-        script:
-        """
-        curl -O -L $url
-        """
-    }
+    input:
+    set url from params.downloadFasta
+
+    output:
+    file "*.{fa,fasta}" into fasta
+    
+    script:
+    """
+    curl -O -L $url
+    """
 }
 /*
  * PREPROCESSING - Download GTF
  */
-if( !params.gtf && params.downloadGTF ) {
-    process downloadGTF {
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+process downloadGTF {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        input:
-        set url from params.downloadGTF
+    when: !params.gtf && params.downloadGTF
 
-        output:
-        file "*.gtf" into gtf
-        
-        script:
-        """
-        curl -O -L $url
-        """
-    }
+    input:
+    set url from params.downloadGTF
+
+    output:
+    file "*.gtf" into gtf
+    
+    script:
+    """
+    curl -O -L $url
+    """
 }
 /*
  * PREPROCESSING - Build STAR index
  */
-if( fasta && !params.star_index) {
-    process makeSTARindex {
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+process makeSTARindex {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        cpus { params.makeSTARindex_cpus ?: 12 }
-        memory { params.makeSTARindex_memory ?: 30.GB }
-        time { params.makeSTARindex_time ?: 5.h }
-        errorStrategy = 'terminate'
+    when: params.aligner == 'star' && !params.star_index && fasta
 
-        input:
-        file fasta
+    cpus { params.makeSTARindex_cpus ?: 12 }
+    memory { params.makeSTARindex_memory ?: 30.GB }
+    time { params.makeSTARindex_time ?: 5.h }
+    errorStrategy = 'terminate'
 
-        output:
-        file 'star' into star_index
-        
-        script:
-        """
-        STAR \
-            --runMode genomeGenerate \\
-            --runThreadN ${task.cpus} \\
-            --genomeDir star/ \\
-            --genomeFastaFiles $fasta
-        """
-    }
+    input:
+    file fasta
+
+    output:
+    file 'star' into star_index
+    
+    script:
+    """
+    STAR \
+        --runMode genomeGenerate \\
+        --runThreadN ${task.cpus} \\
+        --genomeDir star/ \\
+        --genomeFastaFiles $fasta
+    """
+}
+/*
+ * PREPROCESSING - Build HISAT2 splice sites file
+ */
+process makeHisatSplicesites {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+
+    when: params.aligner == 'hisat2' && !params.splicesites
+
+    time { params.makeHisatSplicesites_time ?: 2.h }
+    errorStrategy = 'terminate'
+
+    input:
+    file gtf
+
+    output:
+    file '*.hisat2_splice_sites.txt' into splicesites
+    
+    script:
+    """
+    python hisat2_extract_splice_sites.py $gtf > ${gtf}.hisat2_splice_sites.txt
+    """
+}
+/*
+ * PREPROCESSING - Build HISAT2 index
+ */
+process makeHISATindex {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+
+    when: params.aligner == 'hisat2' && !params.hisat_index && fasta
+
+    cpus { params.makeHISATindex_cpus ?: 10 }
+    memory { params.makeHISATindex_memory ?: 30.GB }
+    time { params.makeHISATindex_time ?: 5.h }
+    errorStrategy = 'terminate'
+
+    input:
+    file fasta
+    file splicesites
+    file gtf
+
+    output:
+    file '*.hisat2_index' into hisat2_index // Use a fake file as a placeholder for the base file
+    file '*.ht2'
+    
+    script:
+    """
+    f='$fasta';f=\${f%.fasta};f=\${f%.fa};
+    python hisat2_extract_exons.py $gtf > ${gtf}.hisat2exons.txt
+    hisat2-build -p ${task.cpus} \\
+                 --ss $splicesites \\
+                 --exon ${gtf}.hisat2exons.txt \\
+                 $fasta \\
+                 \${f}.hisat2_index
+    touch \${f}.hisat2_index
+    """
 }
 /*
  * PREPROCESSING - Build BED12 file
  */
-if ( params.bed12 ){
-    bed12 = file(params.bed12)
-} else {
-    process makeBED12 {
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+process makeBED12 {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-        time { params.makeBED12_time ?: 2.h }
-        errorStrategy = 'terminate'
+    when: !params.bed12
 
-        input:
-        file gtf
+    time { params.makeBED12_time ?: 2.h }
+    errorStrategy = 'terminate'
 
-        output:
-        file '*.bed12' into bed12
-        
-        script:
-        """
-        convert2bed \\
-            --input=gtf \\
-            --output=bed \\
-            --max-mem=${task.mem} \\
-            > ${gtf}.bed12
-        """
-    }
+    input:
+    file gtf
+
+    output:
+    file '*.bed12' into bed12
+    
+    script:
+    """
+    convert2bed \\
+        --input=gtf \\
+        --output=bed \\
+        --max-mem=${task.mem} \\
+        > ${gtf}.bed12
+    """
 }
-if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
 
 
 /*
@@ -265,6 +341,8 @@ process star {
     tag "$reads"
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
+    when: params.aligner == 'star'
+
     cpus { params.star_cpus ?: 10 }
     memory { (params.star_memory ?: 80.GB) * task.attempt }
     time { (params.star_time ?: 5.h) * task.attempt }
@@ -276,14 +354,14 @@ process star {
     file reads from trimmed_reads
 
     output:
-    set file('*Log.final.out'), file ('*.bam') into aligned
+    set file('*Log.final.out'), file ('*.bam') into star_aligned
     file '*.out' into star_logs
     file '*SJ.out.tab'
 
     script:
     """
     #Getting STAR prefix
-    f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
+    f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
     STAR --genomeDir $index \\
         --sjdbGTFfile $annotation \\
         --readFilesIn $reads  \\
@@ -315,10 +393,65 @@ def check_log(logs) {
     }
 }
 // Filter removes all 'aligned' channels that fail the check
-aligned
+star_aligned
     .filter { logs, bams -> check_log(logs) }
     .flatMap {  logs, bams -> bams }
     .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+
+
+/*
+ * STEP 3 - align with HISAT2
+ */
+process hisat2 {
+    tag "$reads"
+    publishDir "${params.outdir}/HISAT2", mode: 'copy'
+
+    when: params.aligner == 'hisat2'
+
+    cpus { params.star_cpus ?: 10 }
+    memory { (params.star_memory ?: 80.GB) * task.attempt }
+    time { (params.star_time ?: 5.h) * task.attempt }
+    errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+
+    input:
+    file index from hisat2_index
+    file annotation from splicesites
+    file reads from trimmed_reads
+
+    output:
+    file '*.bam' into bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM
+    file '*.hisat2_log.txt' into hisat2_logs
+
+    script:
+    if (single) {
+        """
+        f='$reads';f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
+        hisat2 -x $index \\
+               -U $reads \\
+               --known-splicesite-infile $splicesites \\
+               -p ${task.cpus} \\
+               --met-stderr \\
+               | samtools view -bS -F 4 -F 256 - > \${f}.bam
+               2> \${f}.hisat2_log.txt
+        """
+    } else {
+        """
+        f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
+        hisat2 -x $index \\
+               -1 $reads[0] \\
+               -2 $reads[0] \\
+               --known-splicesite-infile $splicesites \\
+               --no-mixed \\
+               --no-discordant \\
+               -p ${task.cpus} \\
+               --met-stderr \\
+               | samtools view -bS -F 4 -F 8 -F 256 - > \${f}.bam
+               2> \${f}.hisat2_log.txt
+        """
+    }
+}
+
+
 
 
 /*
@@ -722,6 +855,7 @@ process multiqc {
     file ('fastqc/*') from fastqc_results.flatten().toList()
     file ('trimgalore/*') from trimgalore_results.flatten().toList()
     file ('star/*') from star_logs.flatten().toList()
+    file ('hisat2/*') from hisat2_logs.flatten().toList()
     file ('rseqc/*') from rseqc_results.flatten().toList()
     file ('preseq/*') from preseq_results.flatten().toList()
     file ('dupradar/*') from dupradar_results.flatten().toList()

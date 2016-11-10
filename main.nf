@@ -26,9 +26,18 @@ version = 0.2
 params.genome = 'GRCh37'
 if( params.genomes ) {
     params.star_index = params.genomes[ params.genome ].star
+    params.fasta = params.genomes[ params.genome ].fasta
     params.gtf   = params.genomes[ params.genome ].gtf
     params.bed12 = params.genomes[ params.genome ].bed12
+} else {
+    params.star_index = false
+    params.fasta = false
+    params.gtf = false
+    params.bed12 = false
 }
+params.download_fasta = false
+params.download_gtf = false
+params.splicesites = false
 params.reads = "data/*{_1,_2}*.fastq.gz"
 params.outdir = './results'
 
@@ -125,20 +134,22 @@ Channel
 /*
  * PREPROCESSING - Download Fasta
  */
+
 process downloadFASTA {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when: !params.star_index && !params.fasta && params.downloadFasta
+    when:
+    !params.star_index && !params.fasta && params.download_fasta
 
     input:
-    set url from params.downloadFasta
+    file dl_url from params.download_fasta
 
     output:
     file "*.{fa,fasta}" into fasta
     
     script:
     """
-    curl -O -L $url
+    curl -O -L $dl_url
     """
 }
 /*
@@ -147,10 +158,11 @@ process downloadFASTA {
 process downloadGTF {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when: !params.gtf && params.downloadGTF
+    when:
+    !params.gtf && params.downloadGTF
 
     input:
-    set url from params.downloadGTF
+    file url from params.downloadGTF
 
     output:
     file "*.gtf" into gtf
@@ -166,12 +178,13 @@ process downloadGTF {
 process makeSTARindex {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when: params.aligner == 'star' && !params.star_index && fasta
-
     cpus { params.makeSTARindex_cpus ?: 12 }
     memory { params.makeSTARindex_memory ?: 30.GB }
     time { params.makeSTARindex_time ?: 5.h }
     errorStrategy = 'terminate'
+
+    when:
+    params.aligner == 'star' && !params.star_index && fasta
 
     input:
     file fasta
@@ -194,13 +207,14 @@ process makeSTARindex {
 process makeHisatSplicesites {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when: params.aligner == 'hisat2' && !params.splicesites
-
     time { params.makeHisatSplicesites_time ?: 2.h }
     errorStrategy = 'terminate'
 
+    when:
+    params.aligner == 'hisat2' && !params.splicesites
+
     input:
-    file gtf
+    file gtf from gtf
 
     output:
     file '*.hisat2_splice_sites.txt' into splicesites
@@ -216,17 +230,18 @@ process makeHisatSplicesites {
 process makeHISATindex {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when: params.aligner == 'hisat2' && !params.hisat_index && fasta
-
     cpus { params.makeHISATindex_cpus ?: 10 }
     memory { params.makeHISATindex_memory ?: 30.GB }
     time { params.makeHISATindex_time ?: 5.h }
     errorStrategy = 'terminate'
 
+    when:
+    params.aligner == 'hisat2' && !params.hisat_index && fasta
+
     input:
-    file fasta
-    file splicesites
-    file gtf
+    file fasta from fasta
+    file splicesites from splicesites
+    file gtf from gtf
 
     output:
     file '*.hisat2_index' into hisat2_index // Use a fake file as a placeholder for the base file
@@ -250,10 +265,11 @@ process makeHISATindex {
 process makeBED12 {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when: !params.bed12
-
     time { params.makeBED12_time ?: 2.h }
     errorStrategy = 'terminate'
+
+    when:
+    !params.bed12
 
     input:
     file gtf
@@ -341,12 +357,13 @@ process star {
     tag "$reads"
     publishDir "${params.outdir}/STAR", mode: 'copy'
 
-    when: params.aligner == 'star'
-
     cpus { params.star_cpus ?: 10 }
     memory { (params.star_memory ?: 80.GB) * task.attempt }
     time { (params.star_time ?: 5.h) * task.attempt }
     errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+
+    when:
+    params.aligner == 'star'
 
     input:
     file index from star_index
@@ -355,7 +372,7 @@ process star {
 
     output:
     set file('*Log.final.out'), file ('*.bam') into star_aligned
-    file '*.out' into star_logs
+    file '*.out' into alignment_logs
     file '*SJ.out.tab'
 
     script:
@@ -373,8 +390,6 @@ process star {
         --outFileNamePrefix \$f
     """
 }
-
-
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
 def check_log(logs) {
@@ -396,8 +411,7 @@ def check_log(logs) {
 star_aligned
     .filter { logs, bams -> check_log(logs) }
     .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
-
+.into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
 
 /*
  * STEP 3 - align with HISAT2
@@ -406,12 +420,13 @@ process hisat2 {
     tag "$reads"
     publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
-    when: params.aligner == 'hisat2'
-
     cpus { params.star_cpus ?: 10 }
     memory { (params.star_memory ?: 80.GB) * task.attempt }
     time { (params.star_time ?: 5.h) * task.attempt }
     errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+
+    when:
+    params.aligner == 'hisat2'
 
     input:
     file index from hisat2_index
@@ -420,7 +435,7 @@ process hisat2 {
 
     output:
     file '*.bam' into bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM
-    file '*.hisat2_log.txt' into hisat2_logs
+    file '*.hisat2_log.txt' into alignment_logs
 
     script:
     if (single) {
@@ -854,8 +869,7 @@ process multiqc {
     input:
     file ('fastqc/*') from fastqc_results.flatten().toList()
     file ('trimgalore/*') from trimgalore_results.flatten().toList()
-    file ('star/*') from star_logs.flatten().toList()
-    file ('hisat2/*') from hisat2_logs.flatten().toList()
+    file ('alignment/*') from alignment_logs.flatten().toList()
     file ('rseqc/*') from rseqc_results.flatten().toList()
     file ('preseq/*') from preseq_results.flatten().toList()
     file ('dupradar/*') from dupradar_results.flatten().toList()

@@ -56,7 +56,7 @@ if (params.aligner != 'star' && params.aligner != 'hisat2'){
 }
 
 // Validate inputs
-def star_index, hisat_index, fasta, gtf, bed12
+def star_index, hisat_index, fasta, gtf, bed12, indexing_splicesites, alignment_splicesites
 
 if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
@@ -64,7 +64,7 @@ if( params.star_index && params.aligner == 'star' ){
 }
 else if ( params.hisat_index && params.aligner == 'hisat2' ){
     hisat_index = file(params.hisat_index)
-    if( !star_index.exists() ) exit 1, "HISAT2 index not found: $star_index"
+    if( !star_index.exists() ) exit 1, "HISAT2 index not found: $hisat_index"
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
@@ -80,12 +80,12 @@ if( params.gtf ){
 }
 if( params.bed12 ){
     bed12 = file(params.bed12)
-    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: $gtf"
+    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: $bed12"
 }
 if( params.aligner == 'hisat2' && params.splicesites ){
     indexing_splicesites = file(params.splicesites)
     alignment_splicesites = file(params.splicesites)
-    if( !alignment_splicesites.exists() ) exit 1, "HISAT2 splice sites file not found: $gtf"
+    if( !alignment_splicesites.exists() ) exit 1, "HISAT2 splice sites file not found: $alignment_splicesites"
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
@@ -102,7 +102,8 @@ if(params.aligner == 'star'){
     else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
 } else if(params.aligner == 'hisat2') {
     log.info "Aligner        : HISAT2"
-    if(params.hisat2_index)        log.info "HISAT2 Index   : ${params.star_index}"
+    if(params.hisat2_index)        log.info "HISAT2 Index   : ${params.hisat2_index}"
+    else if(params.download_hisat2index) log.info "HISAT2 Index   : ${params.download_hisat2index}"
     else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
     else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
     if(params.splicesites)         log.info "Splice Sites   : ${params.splicesites}"

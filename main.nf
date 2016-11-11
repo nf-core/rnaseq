@@ -204,7 +204,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
         cpus { params.makeSTARindex_cpus ?: 12 }
         memory { params.makeSTARindex_memory ?: 30.GB }
         time { params.makeSTARindex_time ?: 5.h }
-        errorStrategy = 'terminate'
+        errorStrategy 'terminate'
 
         input:
         file fasta from fasta
@@ -235,7 +235,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         time { params.makeHisatSplicesites_time ?: 2.h }
-        errorStrategy = 'terminate'
+        errorStrategy 'terminate'
 
         input:
         file gtf from gtf
@@ -260,7 +260,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && fasta){
         cpus { params.makeHISATindex_cpus ?: 10 }
         memory { params.makeHISATindex_memory ?: 10.GB }
         time { params.makeHISATindex_time ?: 5.h }
-        errorStrategy = 'terminate'
+        errorStrategy 'terminate'
 
         input:
         file fasta from fasta
@@ -279,7 +279,8 @@ if(params.aligner == 'hisat2' && !params.hisat_index && fasta){
             ss = "--ss $splicesites"
             exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
         } else {
-            log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index. Use --hisatBuildMemory [small number] to override."
+            log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index."
+            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] and/or --makeHISATindex_memory [big number] to override."
             extract_exons = ''
             ss = ''
             exon = ''
@@ -300,7 +301,7 @@ if(!params.bed12){
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         time { params.makeBED12_time ?: 2.h }
-        errorStrategy = 'terminate'
+        errorStrategy 'terminate'
 
         input:
         file gtf
@@ -328,7 +329,7 @@ process fastqc {
 
     memory { (params.fastqc_memory ?: 2.GB) * task.attempt }
     time { (params.fastqc_time ?: 4.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'ignore'
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
 
     input:
     set val(name), file(reads) from read_files_fastqc
@@ -352,7 +353,7 @@ process trim_galore {
     cpus { params.trim_galore_cpus ?: 2 }
     memory { (params.trim_galore_memory ?: 4.GB) * task.attempt }
     time { (params.trim_galore_time ?: 8.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
     input:
     set val(name), file(reads) from read_files_trimming
@@ -408,7 +409,7 @@ if(params.aligner == 'star'){
         cpus { params.star_cpus ?: 10 }
         memory { (params.star_memory ?: 80.GB) * task.attempt }
         time { (params.star_time ?: 5.h) * task.attempt }
-        errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
         file index from star_index
@@ -454,7 +455,7 @@ if(params.aligner == 'hisat2'){
         cpus { params.star_cpus ?: 10 }
         memory { (params.star_memory ?: 80.GB) * task.attempt }
         time { (params.star_time ?: 5.h) * task.attempt }
-        errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
         file index from hisat2_index // placeholder filename stub
@@ -894,7 +895,7 @@ process multiqc {
 
     memory { (params.multiqc_memory ?: 4.GB) * task.attempt }
     time { (params.multiqc_time ?: 4.h) * task.attempt }
-    errorStrategy = 'ignore'
+    errorStrategy 'ignore'
 
     input:
     file ('fastqc/*') from fastqc_results.flatten().toList()

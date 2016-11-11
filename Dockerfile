@@ -28,6 +28,13 @@ RUN chmod 755 /opt/FastQC/fastqc
 RUN ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
 RUN rm /opt/fastqc_v0.11.5.zip
 
+#Install bedops
+RUN mkdir /opt/bedops
+RUN wget -q -O /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 https://github.com/bedops/bedops/releases/download/v2.4.20/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
+RUN tar xvjf /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 -C /opt/bedops
+RUN ln -s /opt/bedops/bin/convert2bed /usr/local/bin/convert2bed
+RUN rm /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
+
 #Install cutadapt
 RUN pip install cutadapt
 
@@ -94,9 +101,9 @@ RUN wget -q -O /opt/locfit_1.5-9.1.tar.gz https://cran.rstudio.com/src/contrib/l
 RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/locfit_1.5-9.1.tar.gz
 RUN rm /opt/locfit_1.5-9.1.tar.gz
 
-RUN wget -q -O /opt/edgeR_3.16.1.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/edgeR_3.16.1.tar.gz 
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/edgeR_3.16.1.tar.gz
-RUN rm /opt/edgeR_3.16.1.tar.gz
+RUN wget -q -O /opt/edgeR_3.16.2.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/edgeR_3.16.2.tar.gz 
+RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/edgeR_3.16.2.tar.gz
+RUN rm /opt/edgeR_3.16.2.tar.gz
 
 RUN wget -q -O /opt/chron_2.3-47.tar.gz https://cran.rstudio.com/src/contrib/chron_2.3-47.tar.gz
 RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/chron_2.3-47.tar.gz

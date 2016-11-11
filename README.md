@@ -88,6 +88,17 @@ all files as single end. The file path should be in quotation marks to prevent s
 
 If left unspecified, the pipeline will assume that the data is in a directory called `data` in the working directory.
 
+## Alignment tool
+By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads
+to the reference genome. STAR is fast and common, but requires a great deal of RAM to run, typically
+around 38GB for the Human GRCh37 reference genome.
+
+If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the
+alignment tool instead. Thought of as the successor to Tophat by many, HISAT2 has a much smaller
+memory footprint.
+
+To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file.
+
 ## Reference Genomes
 
 ### `--genome`

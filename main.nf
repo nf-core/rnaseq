@@ -26,9 +26,11 @@ version = 0.2
 params.genome = 'GRCh37'
 if( params.genomes ) {
     params.star_index = params.genomes[ params.genome ].star
+    params.fasta = params.genomes[ params.genome ].fasta
     params.gtf   = params.genomes[ params.genome ].gtf
     params.bed12 = params.genomes[ params.genome ].bed12
 }
+params.hisatBuildMemory = 200
 params.reads = "data/*{_1,_2}*.fastq.gz"
 params.outdir = './results'
 
@@ -47,21 +49,43 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
-// Validate inputs
-def star_index, fasta, gtf, bed12
-if( !params.star_index && !params.fasta && !params.download_fasta ){
-    exit 1, "No reference genome specified!"
+// Choose aligner
+params.aligner = 'star'
+if (params.aligner != 'star' && params.aligner != 'hisat2'){
+    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
-if( params.star_index ){
+
+// Validate inputs
+def star_index, hisat_index, fasta, gtf, bed12
+
+if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
     if( !star_index.exists() ) exit 1, "STAR index not found: $star_index"
-} else if ( params.fasta ){
+}
+else if ( params.hisat_index && params.aligner == 'hisat2' ){
+    hisat_index = file(params.hisat_index)
+    if( !star_index.exists() ) exit 1, "HISAT2 index not found: $star_index"
+}
+else if ( params.fasta ){
     fasta = file(params.fasta)
     if( !fasta.exists() ) exit 1, "Fasta file not found: $fasta"
 }
+else if ( ( params.aligner == 'hisat2' && !params.download_hisat2index ) && !params.download_fasta ){
+    exit 1, "No reference genome specified!"
+}
+
 if( params.gtf ){
     gtf = file(params.gtf)
-    if( !gtf.exists() ) exit 1, "Missing GTF annotation: $gtf"
+    if( !gtf.exists() ) exit 1, "GTF annotation file not found: $gtf"
+}
+if( params.bed12 ){
+    bed12 = file(params.bed12)
+    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: $gtf"
+}
+if( params.aligner == 'hisat2' && params.splicesites ){
+    indexing_splicesites = file(params.splicesites)
+    alignment_splicesites = file(params.splicesites)
+    if( !alignment_splicesites.exists() ) exit 1, "HISAT2 splice sites file not found: $gtf"
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
@@ -71,9 +95,18 @@ log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
 log.info "Reads          : ${params.reads}"
 log.info "Genome         : ${params.genome}"
-if(params.star_index)          log.info "STAR Index     : ${params.star_index}"
-else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
-else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
+if(params.aligner == 'star'){
+    log.info "Aligner        : STAR"
+    if(params.star_index)          log.info "STAR Index     : ${params.star_index}"
+    else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
+    else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
+} else if(params.aligner == 'hisat2') {
+    log.info "Aligner        : HISAT2"
+    if(params.hisat2_index)        log.info "HISAT2 Index   : ${params.star_index}"
+    else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
+    else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
+    if(params.splicesites)         log.info "Splice Sites   : ${params.splicesites}"
+}
 if(params.gtf)                 log.info "GTF Annotation : ${params.gtf}"
 else if(params.download_gtf)   log.info "GTF URL        : ${params.download_gtf}"
 if(params.bed12)               log.info "BED Annotation : ${params.bed12}"
@@ -102,35 +135,36 @@ Channel
 /*
  * PREPROCESSING - Download Fasta
  */
-if( !params.star_index && !params.fasta && params.downloadFasta ) {
+if(!params.star_index && !params.fasta && params.download_fasta){
     process downloadFASTA {
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         input:
-        set url from params.downloadFasta
+        val dl_url from params.download_fasta
 
         output:
         file "*.{fa,fasta}" into fasta
-        
+
         script:
         """
-        curl -O -L $url
+        curl -O -L $dl_url
         """
     }
 }
 /*
  * PREPROCESSING - Download GTF
  */
-if( !params.gtf && params.downloadGTF ) {
+if(!params.gtf && params.downloadGTF){
     process downloadGTF {
+        tag params.downloadGTF
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         input:
-        set url from params.downloadGTF
+        val url from params.downloadGTF
 
         output:
         file "*.gtf" into gtf
-        
+
         script:
         """
         curl -O -L $url
@@ -138,74 +172,164 @@ if( !params.gtf && params.downloadGTF ) {
     }
 }
 /*
+ * PREPROCESSING - Download HISAT2 Index
+ */
+ if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat_index){
+    process downloadGTF {
+        tag params.downloadGTF
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+
+        input:
+        val url from params.download_hisat2index
+
+        output:
+        file '*/*.1.ht2' into hisat2_index // Use single file as a placeholder for the base
+        file '*/*.ht2' into hs2_indices
+
+        script:
+        """
+        curl -O -L $url
+        tar xzf *.tar.gz
+        """
+    }
+}
+/*
  * PREPROCESSING - Build STAR index
  */
-if( fasta && !params.star_index) {
+if(params.aligner == 'star' && !params.star_index && fasta){
     process makeSTARindex {
+        tag fasta
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         cpus { params.makeSTARindex_cpus ?: 12 }
         memory { params.makeSTARindex_memory ?: 30.GB }
         time { params.makeSTARindex_time ?: 5.h }
-        errorStrategy = 'terminate'
+        errorStrategy 'terminate'
 
         input:
-        file fasta
+        file fasta from fasta
+        file gtf from gtf
 
         output:
         file 'star' into star_index
         
         script:
         """
-        STAR \
+        mkdir star
+        STAR \\
             --runMode genomeGenerate \\
             --runThreadN ${task.cpus} \\
+            --sjdbGTFfile $gtf \\
+            --sjdbOverhang 149 \\
             --genomeDir star/ \\
             --genomeFastaFiles $fasta
         """
     }
 }
 /*
+ * PREPROCESSING - Build HISAT2 splice sites file
+ */
+if(params.aligner == 'hisat2' && !params.splicesites){
+    process makeHisatSplicesites {
+        tag gtf
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+
+        time { params.makeHisatSplicesites_time ?: 2.h }
+        errorStrategy 'terminate'
+
+        input:
+        file gtf from gtf
+
+        output:
+        file "${gtf.baseName}.hisat2_splice_sites.txt" into indexing_splicesites, alignment_splicesites
+
+        script:
+        """
+        extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
+        """
+    }
+}
+/*
+ * PREPROCESSING - Build HISAT2 index
+ */
+if(params.aligner == 'hisat2' && !params.hisat_index && fasta){
+    process makeHISATindex {
+        tag fasta
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+
+        cpus { params.makeHISATindex_cpus ?: 10 }
+        memory { params.makeHISATindex_memory ?: 10.GB }
+        time { params.makeHISATindex_time ?: 5.h }
+        errorStrategy 'terminate'
+
+        input:
+        file fasta from fasta
+        file splicesites from indexing_splicesites
+        file gtf from gtf
+
+        output:
+        file "${fasta.baseName}.hisat2_index.1.ht2" into hisat2_index // Use a fake file as a placeholder for the base file
+        file "${fasta.baseName}.*.ht2" into hs2_indices
+
+        script:
+        log.info "[HISAT2 index build] Available memory: ${task.memory}"
+        if( task.memory.toGiga() > params.hisatBuildMemory ){
+            log.info "[HISAT2 index build] Over ${params.hisatBuildMemory} GB available, so using splice sites and exons in HISAT2 index"
+            extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
+            ss = "--ss $splicesites"
+            exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
+        } else {
+            log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index."
+            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] and/or --makeHISATindex_memory [big number] to override."
+            extract_exons = ''
+            ss = ''
+            exon = ''
+        }
+        """
+        $extract_exons
+        hisat2-build -p ${task.cpus} $ss $exon $fasta ${fasta.baseName}.hisat2_index
+        touch ${fasta.baseName}.hisat2_index
+        """
+    }
+}
+/*
  * PREPROCESSING - Build BED12 file
  */
-if ( params.bed12 ){
-    bed12 = file(params.bed12)
-} else {
+if(!params.bed12){
     process makeBED12 {
+        tag gtf
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         time { params.makeBED12_time ?: 2.h }
-        errorStrategy = 'terminate'
+        errorStrategy 'terminate'
 
         input:
         file gtf
 
         output:
-        file '*.bed12' into bed12
-        
+        file '${gtf.baseName}.bed' into bed12
+
         script:
         """
         convert2bed \\
             --input=gtf \\
             --output=bed \\
             --max-mem=${task.mem} \\
-            > ${gtf}.bed12
+            < $gtf > ${gtf.baseName}.bed
         """
     }
 }
-if( !bed12.exists() ) exit 1, "Missing BED12 annotation: $bed12"
 
 
 /*
  * STEP 1 - FastQC
  */
 process fastqc {
-    tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     memory { (params.fastqc_memory ?: 2.GB) * task.attempt }
     time { (params.fastqc_time ?: 4.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'ignore'
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
 
     input:
     set val(name), file(reads) from read_files_fastqc
@@ -224,13 +348,12 @@ process fastqc {
  * STEP 2 - Trim Galore!
  */
 process trim_galore {
-    tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     cpus { params.trim_galore_cpus ?: 2 }
     memory { (params.trim_galore_memory ?: 4.GB) * task.attempt }
     time { (params.trim_galore_time ?: 8.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
     input:
     set val(name), file(reads) from read_files_trimming
@@ -261,42 +384,6 @@ process trim_galore {
  * STEP 3 - align with STAR
  * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
-process star {
-    tag "$reads"
-    publishDir "${params.outdir}/STAR", mode: 'copy'
-
-    cpus { params.star_cpus ?: 10 }
-    memory { (params.star_memory ?: 80.GB) * task.attempt }
-    time { (params.star_time ?: 5.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
-
-    input:
-    file index from star_index
-    file annotation from gtf
-    file reads from trimmed_reads
-
-    output:
-    set file('*Log.final.out'), file ('*.bam') into aligned
-    file '*.out' into star_logs
-    file '*SJ.out.tab'
-
-    script:
-    """
-    #Getting STAR prefix
-    f='$reads';f=(\$f);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-    STAR --genomeDir $index \\
-        --sjdbGTFfile $annotation \\
-        --readFilesIn $reads  \\
-        --runThreadN ${task.cpus} \\
-        --twopassMode Basic \\
-        --outWigType bedGraph \\
-        --outSAMtype BAM SortedByCoordinate \\
-        --readFilesCommand zcat \\
-        --outFileNamePrefix \$f
-    """
-}
-
-
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
 def check_log(logs) {
@@ -314,11 +401,103 @@ def check_log(logs) {
         true
     }
 }
-// Filter removes all 'aligned' channels that fail the check
-aligned
-    .filter { logs, bams -> check_log(logs) }
-    .flatMap {  logs, bams -> bams }
+if(params.aligner == 'star'){
+    process star {
+        tag "$reads"
+        publishDir "${params.outdir}/STAR", mode: 'copy'
+
+        cpus { params.star_cpus ?: 10 }
+        memory { (params.star_memory ?: 80.GB) * task.attempt }
+        time { (params.star_time ?: 5.h) * task.attempt }
+        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+
+        input:
+        file index from star_index
+        file annotation from gtf
+        file reads from trimmed_reads
+
+        output:
+        set file('*Log.final.out'), file ('*.bam') into star_aligned
+        file '*.out' into alignment_logs
+        file '*SJ.out.tab'
+
+        script:
+        """
+        #Getting STAR prefix
+        f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
+        STAR --genomeDir $index \\
+            --sjdbGTFfile $annotation \\
+            --readFilesIn $reads  \\
+            --runThreadN ${task.cpus} \\
+            --twopassMode Basic \\
+            --outWigType bedGraph \\
+            --outSAMtype BAM SortedByCoordinate \\
+            --readFilesCommand zcat \\
+            --outFileNamePrefix \$f
+        """
+    }
+    // Filter removes all 'aligned' channels that fail the check
+    star_aligned
+        .filter { logs, bams -> check_log(logs) }
+        .flatMap {  logs, bams -> bams }
     .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+}
+
+
+/*
+ * STEP 3 - align with HISAT2
+ */
+if(params.aligner == 'hisat2'){
+    process hisat2 {
+        tag "$reads"
+        publishDir "${params.outdir}/HISAT2", mode: 'copy'
+
+        cpus { params.star_cpus ?: 10 }
+        memory { (params.star_memory ?: 80.GB) * task.attempt }
+        time { (params.star_time ?: 5.h) * task.attempt }
+        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+
+        input:
+        file index from hisat2_index // placeholder filename stub
+        file hs2_indices
+        file annotation from alignment_splicesites
+        file reads from trimmed_reads
+
+        output:
+        file "${reads.baseName}.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+        file "${reads.baseName}.hisat2_log.txt" into alignment_logs
+
+        script:
+        index_base = index - ~/.1.ht2$/
+        if (single) {
+            """
+            hisat2 -x $index_base \\
+                   -U $reads \\
+                   --known-splicesite-infile $splicesites \\
+                   -p ${task.cpus} \\
+                   --met-stderr \\
+                   | samtools view -bS -F 4 -F 256 - > ${reads.baseName}.bam
+                   2> ${reads.baseName}.hisat2_log.txt
+            """
+        } else {
+            """
+            f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
+            hisat2 -x $index_base \\
+                   -1 $reads[0] \\
+                   -2 $reads[0] \\
+                   --known-splicesite-infile $splicesites \\
+                   --no-mixed \\
+                   --no-discordant \\
+                   -p ${task.cpus} \\
+                   --met-stderr \\
+                   | samtools view -bS -F 4 -F 8 -F 256 - > \${f}.bam
+                   2> \${f}.hisat2_log.txt
+            """
+        }
+    }
+}
+
+
 
 
 /*
@@ -358,15 +537,15 @@ process rseqc {
 
     """
     samtools index $bam_rseqc
-    infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.infer_experiment.txt
-    RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc}.RPKM_saturation
-    junction_annotation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
-    bam_stat.py -i $bam_rseqc 2> ${bam_rseqc}.bam_stat.txt
-    junction_saturation.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12 2> ${bam_rseqc}.junction_annotation_log.txt
-    inner_distance.py -i $bam_rseqc -o ${bam_rseqc}.rseqc -r $bed12
-    geneBody_coverage.py -i ${bam_rseqc} -o ${bam_rseqc}.rseqc -r $bed12
-    read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc}.read_distribution.txt
-    read_duplication.py -i $bam_rseqc -o ${bam_rseqc}.read_duplication
+    infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
+    RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
+    junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
+    bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
+    junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
+    inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
+    geneBody_coverage.py -i ${bam_rseqc.baseName} -o ${bam_rseqc.baseName}.rseqc -r $bed12
+    read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
+    read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
     echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
@@ -387,11 +566,11 @@ process preseq {
     file bam_preseq
 
     output:
-    file '*.ccurve.txt' into preseq_results
+    file "${bam_preseq.baseName}.ccurve.txt" into preseq_results
 
     script:
     """
-    preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq}.ccurve.txt
+    preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq.baseName}.ccurve.txt
     echo "File name: $bam_preseq  preseq version: "\$(preseq)
     """
 }
@@ -411,21 +590,21 @@ process markDuplicates {
     file bam_markduplicates
 
     output:
-    file '*.markDups.bam' into bam_md
-    file '*markDups_metrics.txt' into picard_results
+    file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
+    file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
 
     script:
     """
     java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
-        OUTPUT=${bam_markduplicates}.markDups.bam \\
-        METRICS_FILE=${bam_markduplicates}.markDups_metrics.txt \\
+        OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
+        METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\
         REMOVE_DUPLICATES=false \\
         ASSUME_SORTED=true \\
         PROGRAM_RECORD_ID='null' \\
         VALIDATION_STRINGENCY=LENIENT
 
-    #Printing out version number to standard out
+    # Print version number to standard out
     echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
     """
 }
@@ -435,7 +614,7 @@ process markDuplicates {
  * STEP 7 - dupRadar
  */
 process dupradar {
-    tag "$bam_md"
+    tag "${bam_md.baseName}"
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
 
     memory { (params.dupradar_memory ?: 16.GB) * task.attempt }
@@ -466,20 +645,20 @@ process dupradar {
     stranded <- 2
     threads <- 8
     dm <- analyzeDuprates("$bam_md", "$gtf", stranded, $paired, threads)
-    write.table(dm, file=paste("$bam_md", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\\t")
+    write.table(dm, file=paste("${bam_md.baseName}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\\t")
 
     # 2D density scatter plot
-    pdf(paste0("$bam_md", "_duprateExpDens.pdf"))
+    pdf(paste0("${bam_md.baseName}", "_duprateExpDens.pdf"))
     duprateExpDensPlot(DupMat=dm)
     title("Density scatter plot")
-    mtext("$bam_md", side=3)
+    mtext("${bam_md.baseName}", side=3)
     dev.off()
     fit <- duprateExpFit(DupMat=dm)
     cat(
       paste("- dupRadar Int (duprate at low read counts):", fit\$intercept),
       paste("- dupRadar Sl (progression of the duplication rate):", fit\$slope),
-      fill=TRUE, labels="$bam_md",
-      file=paste0("$bam_md", "_intercept_slope.txt"), append=FALSE
+      fill=TRUE, labels="${bam_md.baseName}",
+      file=paste0("${bam_md.baseName}", "_intercept_slope.txt"), append=FALSE
     )
     
     # Get numbers from dupRadar GLM
@@ -497,26 +676,26 @@ process dupradar {
     # Write to file
     write.table(
       cbind(curve_x, curve_y),
-      file=paste0("$bam_md", "_duprateExpDensCurve.txt"),
+      file=paste0("${bam_md.baseName}", "_duprateExpDensCurve.txt"),
       quote=FALSE, row.names=FALSE
     )
     
     # Distribution of expression box plot
-    pdf(paste0("$bam_md", "_duprateExpBoxplot.pdf"))
+    pdf(paste0("${bam_md.baseName}", "_duprateExpBoxplot.pdf"))
     duprateExpBoxplot(DupMat=dm)
     title("Percent Duplication by Expression")
-    mtext("$bam_md", side=3)
+    mtext("${bam_md.baseName}", side=3)
     dev.off()
     
     # Distribution of RPK values per gene
-    pdf(paste0("$bam_md", "_expressionHist.pdf"))
+    pdf(paste0("${bam_md.baseName}", "_expressionHist.pdf"))
     expressionHist(DupMat=dm)
     title("Distribution of RPK values per gene")
-    mtext("$bam_md", side=3)
+    mtext("${bam_md.baseName}", side=3)
     dev.off()
 
     # Printing sessioninfo to standard out
-    print("$bam_md")
+    print("${bam_md.baseName}")
     citation("dupRadar")
     sessionInfo()
     """
@@ -538,15 +717,15 @@ process featureCounts {
     file gtf from gtf
 
     output:
-    file '*_gene.featureCounts.txt' into geneCounts
-    file '*_gene.featureCounts.txt.summary' into featureCounts_logs
-    file '*_biotype_counts.txt' into featureCounts_biotype
+    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts
+    file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
+    file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
     script:
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
-    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt > ${bam_featurecounts}_biotype_counts.txt
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
+    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """
 }
 
@@ -566,21 +745,21 @@ process stringtieFPKM {
     file gtf from gtf
 
     output:
-    file '*_transcripts.gtf'
-    file '*.gene_abund.txt'
-    file '*.cov_refs.gtf'
+    file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
+    file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
+    file "${bam_stringtieFPKM}.cov_refs.gtf"
     stdout into stringtie_log
 
     script:
     """
     stringtie $bam_stringtieFPKM \\
-        -o ${bam_stringtieFPKM}_transcripts.gtf \\
+        -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\
         -v \\
         -G $gtf \\
-        -A ${bam_stringtieFPKM}.gene_abund.txt \\
+        -A ${bam_stringtieFPKM.baseName}.gene_abund.txt \\
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
         -e \\
-        -b ${bam_stringtieFPKM}_ballgown
+        -b ${bam_stringtieFPKM.baseName}_ballgown
 
     echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
@@ -716,12 +895,12 @@ process multiqc {
 
     memory { (params.multiqc_memory ?: 4.GB) * task.attempt }
     time { (params.multiqc_time ?: 4.h) * task.attempt }
-    errorStrategy = 'ignore'
+    errorStrategy 'ignore'
 
     input:
     file ('fastqc/*') from fastqc_results.flatten().toList()
     file ('trimgalore/*') from trimgalore_results.flatten().toList()
-    file ('star/*') from star_logs.flatten().toList()
+    file ('alignment/*') from alignment_logs.flatten().toList()
     file ('rseqc/*') from rseqc_results.flatten().toList()
     file ('preseq/*') from preseq_results.flatten().toList()
     file ('dupradar/*') from dupradar_results.flatten().toList()

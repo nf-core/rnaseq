@@ -253,7 +253,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-if(params.aligner == 'hisat2' && !params.hisat_index && fasta){
+if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2index && fasta){
     process makeHISATindex {
         tag fasta
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'

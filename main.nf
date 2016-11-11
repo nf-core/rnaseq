@@ -29,15 +29,7 @@ if( params.genomes ) {
     params.fasta = params.genomes[ params.genome ].fasta
     params.gtf   = params.genomes[ params.genome ].gtf
     params.bed12 = params.genomes[ params.genome ].bed12
-} else {
-    params.star_index = false
-    params.fasta = false
-    params.gtf = false
-    params.bed12 = false
 }
-params.download_fasta = false
-params.download_gtf = false
-params.splicesites = false
 params.reads = "data/*{_1,_2}*.fastq.gz"
 params.outdir = './results'
 
@@ -134,157 +126,150 @@ Channel
 /*
  * PREPROCESSING - Download Fasta
  */
+if(!params.star_index && !params.fasta && params.download_fasta){
+    process downloadFASTA {
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-process downloadFASTA {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+        input:
+        val dl_url from params.download_fasta
 
-    when:
-    !params.star_index && !params.fasta && params.download_fasta
+        output:
+        file "*.{fa,fasta}" into fasta
 
-    input:
-    file dl_url from params.download_fasta
-
-    output:
-    file "*.{fa,fasta}" into fasta
-    
-    script:
-    """
-    curl -O -L $dl_url
-    """
+        script:
+        """
+        curl -O -L $dl_url
+        """
+    }
 }
 /*
  * PREPROCESSING - Download GTF
  */
-process downloadGTF {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+ if(!params.gtf && params.downloadGTF){
+    process downloadGTF {
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    when:
-    !params.gtf && params.downloadGTF
+        input:
+        val url from params.downloadGTF
 
-    input:
-    file url from params.downloadGTF
+        output:
+        file "*.gtf" into gtf
 
-    output:
-    file "*.gtf" into gtf
-    
-    script:
-    """
-    curl -O -L $url
-    """
+        script:
+        """
+        curl -O -L $url
+        """
+    }
 }
 /*
  * PREPROCESSING - Build STAR index
  */
-process makeSTARindex {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+if(params.aligner == 'star' && !params.star_index && fasta){
+    process makeSTARindex {
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    cpus { params.makeSTARindex_cpus ?: 12 }
-    memory { params.makeSTARindex_memory ?: 30.GB }
-    time { params.makeSTARindex_time ?: 5.h }
-    errorStrategy = 'terminate'
+        cpus { params.makeSTARindex_cpus ?: 12 }
+        memory { params.makeSTARindex_memory ?: 30.GB }
+        time { params.makeSTARindex_time ?: 5.h }
+        errorStrategy = 'terminate'
 
-    when:
-    params.aligner == 'star' && !params.star_index && fasta
+        input:
+        file fasta
 
-    input:
-    file fasta
-
-    output:
-    file 'star' into star_index
-    
-    script:
-    """
-    STAR \
-        --runMode genomeGenerate \\
-        --runThreadN ${task.cpus} \\
-        --genomeDir star/ \\
-        --genomeFastaFiles $fasta
-    """
+        output:
+        file 'star' into star_index
+        
+        script:
+        """
+        STAR \
+            --runMode genomeGenerate \\
+            --runThreadN ${task.cpus} \\
+            --genomeDir star/ \\
+            --genomeFastaFiles $fasta
+        """
+    }
 }
 /*
  * PREPROCESSING - Build HISAT2 splice sites file
  */
-process makeHisatSplicesites {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+if(params.aligner == 'hisat2' && !params.splicesites){
+    process makeHisatSplicesites {
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    time { params.makeHisatSplicesites_time ?: 2.h }
-    errorStrategy = 'terminate'
+        time { params.makeHisatSplicesites_time ?: 2.h }
+        errorStrategy = 'terminate'
 
-    when:
-    params.aligner == 'hisat2' && !params.splicesites
+        input:
+        file gtf from gtf
 
-    input:
-    file gtf from gtf
+        output:
+        file '*.hisat2_splice_sites.txt' into splicesites
 
-    output:
-    file '*.hisat2_splice_sites.txt' into splicesites
-    
-    script:
-    """
-    python hisat2_extract_splice_sites.py $gtf > ${gtf}.hisat2_splice_sites.txt
-    """
+        script:
+        """
+        python hisat2_extract_splice_sites.py $gtf > ${gtf}.hisat2_splice_sites.txt
+        """
+    }
 }
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-process makeHISATindex {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+if(params.aligner == 'hisat2' && !params.hisat_index && fasta){
+    process makeHISATindex {
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    cpus { params.makeHISATindex_cpus ?: 10 }
-    memory { params.makeHISATindex_memory ?: 30.GB }
-    time { params.makeHISATindex_time ?: 5.h }
-    errorStrategy = 'terminate'
+        cpus { params.makeHISATindex_cpus ?: 10 }
+        memory { params.makeHISATindex_memory ?: 30.GB }
+        time { params.makeHISATindex_time ?: 5.h }
+        errorStrategy = 'terminate'
 
-    when:
-    params.aligner == 'hisat2' && !params.hisat_index && fasta
+        input:
+        file fasta from fasta
+        file splicesites from splicesites
+        file gtf from gtf
 
-    input:
-    file fasta from fasta
-    file splicesites from splicesites
-    file gtf from gtf
+        output:
+        file '*.hisat2_index' into hisat2_index // Use a fake file as a placeholder for the base file
+        file '*.ht2'
 
-    output:
-    file '*.hisat2_index' into hisat2_index // Use a fake file as a placeholder for the base file
-    file '*.ht2'
-    
-    script:
-    """
-    f='$fasta';f=\${f%.fasta};f=\${f%.fa};
-    python hisat2_extract_exons.py $gtf > ${gtf}.hisat2exons.txt
-    hisat2-build -p ${task.cpus} \\
-                 --ss $splicesites \\
-                 --exon ${gtf}.hisat2exons.txt \\
-                 $fasta \\
-                 \${f}.hisat2_index
-    touch \${f}.hisat2_index
-    """
+        script:
+        """
+        f='$fasta';f=\${f%.fasta};f=\${f%.fa};
+        python hisat2_extract_exons.py $gtf > ${gtf}.hisat2exons.txt
+        hisat2-build -p ${task.cpus} \\
+                     --ss $splicesites \\
+                     --exon ${gtf}.hisat2exons.txt \\
+                     $fasta \\
+                     \${f}.hisat2_index
+        touch \${f}.hisat2_index
+        """
+    }
 }
 /*
  * PREPROCESSING - Build BED12 file
  */
-process makeBED12 {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
+if(!params.bed12){
+    process makeBED12 {
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
-    time { params.makeBED12_time ?: 2.h }
-    errorStrategy = 'terminate'
+        time { params.makeBED12_time ?: 2.h }
+        errorStrategy = 'terminate'
 
-    when:
-    !params.bed12
+        input:
+        file gtf
 
-    input:
-    file gtf
+        output:
+        file '*.bed12' into bed12
 
-    output:
-    file '*.bed12' into bed12
-    
-    script:
-    """
-    convert2bed \\
-        --input=gtf \\
-        --output=bed \\
-        --max-mem=${task.mem} \\
-        > ${gtf}.bed12
-    """
+        script:
+        """
+        convert2bed \\
+            --input=gtf \\
+            --output=bed \\
+            --max-mem=${task.mem} \\
+            > ${gtf}.bed12
+        """
+    }
 }
 
 
@@ -353,43 +338,6 @@ process trim_galore {
  * STEP 3 - align with STAR
  * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
-process star {
-    tag "$reads"
-    publishDir "${params.outdir}/STAR", mode: 'copy'
-
-    cpus { params.star_cpus ?: 10 }
-    memory { (params.star_memory ?: 80.GB) * task.attempt }
-    time { (params.star_time ?: 5.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
-
-    when:
-    params.aligner == 'star'
-
-    input:
-    file index from star_index
-    file annotation from gtf
-    file reads from trimmed_reads
-
-    output:
-    set file('*Log.final.out'), file ('*.bam') into star_aligned
-    file '*.out' into alignment_logs
-    file '*SJ.out.tab'
-
-    script:
-    """
-    #Getting STAR prefix
-    f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-    STAR --genomeDir $index \\
-        --sjdbGTFfile $annotation \\
-        --readFilesIn $reads  \\
-        --runThreadN ${task.cpus} \\
-        --twopassMode Basic \\
-        --outWigType bedGraph \\
-        --outSAMtype BAM SortedByCoordinate \\
-        --readFilesCommand zcat \\
-        --outFileNamePrefix \$f
-    """
-}
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
 def check_log(logs) {
@@ -407,62 +355,98 @@ def check_log(logs) {
         true
     }
 }
-// Filter removes all 'aligned' channels that fail the check
-star_aligned
-    .filter { logs, bams -> check_log(logs) }
-    .flatMap {  logs, bams -> bams }
-.into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+if(params.aligner == 'star'){
+    process star {
+        tag "$reads"
+        publishDir "${params.outdir}/STAR", mode: 'copy'
+
+        cpus { params.star_cpus ?: 10 }
+        memory { (params.star_memory ?: 80.GB) * task.attempt }
+        time { (params.star_time ?: 5.h) * task.attempt }
+        errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+
+        input:
+        file index from star_index
+        file annotation from gtf
+        file reads from trimmed_reads
+
+        output:
+        set file('*Log.final.out'), file ('*.bam') into star_aligned
+        file '*.out' into alignment_logs
+        file '*SJ.out.tab'
+
+        script:
+        """
+        #Getting STAR prefix
+        f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
+        STAR --genomeDir $index \\
+            --sjdbGTFfile $annotation \\
+            --readFilesIn $reads  \\
+            --runThreadN ${task.cpus} \\
+            --twopassMode Basic \\
+            --outWigType bedGraph \\
+            --outSAMtype BAM SortedByCoordinate \\
+            --readFilesCommand zcat \\
+            --outFileNamePrefix \$f
+        """
+    }
+    // Filter removes all 'aligned' channels that fail the check
+    star_aligned
+        .filter { logs, bams -> check_log(logs) }
+        .flatMap {  logs, bams -> bams }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+}
+
 
 /*
  * STEP 3 - align with HISAT2
  */
-process hisat2 {
-    tag "$reads"
-    publishDir "${params.outdir}/HISAT2", mode: 'copy'
+if(params.aligner == 'hisat2'){
+    process hisat2 {
+        tag "$reads"
+        publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
-    cpus { params.star_cpus ?: 10 }
-    memory { (params.star_memory ?: 80.GB) * task.attempt }
-    time { (params.star_time ?: 5.h) * task.attempt }
-    errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
+        cpus { params.star_cpus ?: 10 }
+        memory { (params.star_memory ?: 80.GB) * task.attempt }
+        time { (params.star_time ?: 5.h) * task.attempt }
+        errorStrategy = task.exitStatus == 143 ? 'retry' : 'terminate'
 
-    when:
-    params.aligner == 'hisat2'
+        input:
+        file index from hisat2_index
+        file annotation from splicesites
+        file reads from trimmed_reads
 
-    input:
-    file index from hisat2_index
-    file annotation from splicesites
-    file reads from trimmed_reads
+        output:
+        file '*.bam' into bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM
+        file '*.hisat2_log.txt' into alignment_logs
 
-    output:
-    file '*.bam' into bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM
-    file '*.hisat2_log.txt' into alignment_logs
-
-    script:
-    if (single) {
-        """
-        f='$reads';f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-        hisat2 -x $index \\
-               -U $reads \\
-               --known-splicesite-infile $splicesites \\
-               -p ${task.cpus} \\
-               --met-stderr \\
-               | samtools view -bS -F 4 -F 256 - > \${f}.bam
-               2> \${f}.hisat2_log.txt
-        """
-    } else {
-        """
-        f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
-        hisat2 -x $index \\
-               -1 $reads[0] \\
-               -2 $reads[0] \\
-               --known-splicesite-infile $splicesites \\
-               --no-mixed \\
-               --no-discordant \\
-               -p ${task.cpus} \\
-               --met-stderr \\
-               | samtools view -bS -F 4 -F 8 -F 256 - > \${f}.bam
-               2> \${f}.hisat2_log.txt
-        """
+        script:
+        if (single) {
+            """
+            f='$reads';f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
+            hisat2 -x $index \\
+                   -U $reads \\
+                   --known-splicesite-infile $splicesites \\
+                   -p ${task.cpus} \\
+                   --met-stderr \\
+                   | samtools view -bS -F 4 -F 256 - > \${f}.bam
+                   2> \${f}.hisat2_log.txt
+            """
+        } else {
+            """
+            f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
+            hisat2 -x $index \\
+                   -1 $reads[0] \\
+                   -2 $reads[0] \\
+                   --known-splicesite-infile $splicesites \\
+                   --no-mixed \\
+                   --no-discordant \\
+                   -p ${task.cpus} \\
+                   --met-stderr \\
+                   | samtools view -bS -F 4 -F 8 -F 256 - > \${f}.bam
+                   2> \${f}.hisat2_log.txt
+            """
+        }
     }
 }
 

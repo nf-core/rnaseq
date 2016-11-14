@@ -259,7 +259,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : null }, mode: 'copy'
 
         cpus { params.makeHISATindex_cpus ?: 10 }
-        memory { params.makeHISATindex_memory ?: 10.GB }
+        memory { params.makeHISATindex_memory ?: 16.GB }
         time { params.makeHISATindex_time ?: 5.h }
         errorStrategy 'terminate'
 
@@ -305,7 +305,7 @@ if(!params.bed12){
         errorStrategy 'terminate'
 
         input:
-        file gtf
+        file gtf from gtf
 
         output:
         file '${gtf.baseName}.bed' into bed12
@@ -413,8 +413,8 @@ if(params.aligner == 'star'){
         errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
-        file index from star_index
-        file annotation from gtf
+        file star_index from star_index
+        file gtf from gtf
         file reads from trimmed_reads
 
         output:
@@ -426,8 +426,8 @@ if(params.aligner == 'star'){
         """
         #Getting STAR prefix
         f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-        STAR --genomeDir $index \\
-            --sjdbGTFfile $annotation \\
+        STAR --genomeDir $star_index \\
+            --sjdbGTFfile $gtf \\
             --readFilesIn $reads  \\
             --runThreadN ${task.cpus} \\
             --twopassMode Basic \\

@@ -32,7 +32,7 @@ RUN rm /opt/fastqc_v0.11.5.zip
 RUN mkdir /opt/bedops
 RUN wget -q -O /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 https://github.com/bedops/bedops/releases/download/v2.4.20/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
 RUN tar xvjf /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 -C /opt/bedops
-RUN ln -s /opt/bedops/bin/convert2bed /usr/local/bin/convert2bed
+RUN ln -s /opt/bedops/bin/* /usr/local/bin/
 RUN rm /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
 
 #Install cutadapt
@@ -89,9 +89,9 @@ RUN wget -q -O /opt/dupRadar_1.4.0.tar.gz http://bioconductor.org/packages/relea
 RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/dupRadar_1.4.0.tar.gz
 RUN rm /opt/dupRadar_1.4.0.tar.gz
 
-RUN wget -q -O /opt/limma_3.30.2.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/limma_3.30.2.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/limma_3.30.2.tar.gz
-RUN rm /opt/limma_3.30.2.tar.gz
+RUN wget -q -O /opt/limma_3.30.3.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/limma_3.30.3.tar.gz
+RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/limma_3.30.3.tar.gz
+RUN rm /opt/limma_3.30.3.tar.gz
  
 RUN wget -q -O /opt/lattice_0.20-34.tar.gz https://cran.rstudio.com/src/contrib/lattice_0.20-34.tar.gz
 RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/lattice_0.20-34.tar.gz

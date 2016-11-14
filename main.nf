@@ -246,7 +246,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 
         script:
         """
-        extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
+        hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
         """
     }
 }
@@ -265,7 +265,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
 
         input:
         file fasta from fasta
-        file splicesites from indexing_splicesites
+        file indexing_splicesites from indexing_splicesites
         file gtf from gtf
 
         output:
@@ -277,7 +277,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
         if( task.memory.toGiga() > params.hisatBuildMemory ){
             log.info "[HISAT2 index build] Over ${params.hisatBuildMemory} GB available, so using splice sites and exons in HISAT2 index"
             extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
-            ss = "--ss $splicesites"
+            ss = "--ss $indexing_splicesites"
             exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
         } else {
             log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index."
@@ -425,7 +425,7 @@ if(params.aligner == 'star'){
         script:
         """
         #Getting STAR prefix
-        f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
+        f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
         STAR --genomeDir $index \\
             --sjdbGTFfile $annotation \\
             --readFilesIn $reads  \\
@@ -461,32 +461,33 @@ if(params.aligner == 'hisat2'){
         input:
         file index from hisat2_index // placeholder filename stub
         file hs2_indices
-        file annotation from alignment_splicesites
+        file alignment_splicesites from alignment_splicesites
         file reads from trimmed_reads
 
         output:
-        file "${reads.baseName}.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
-        file "${reads.baseName}.hisat2_log.txt" into alignment_logs
+        file "*.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+        file "*.hisat2_log.txt" into alignment_logs
 
         script:
         index_base = index - ~/.1.ht2$/
         if (single) {
             """
+            f='$reads';f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
             hisat2 -x $index_base \\
                    -U $reads \\
-                   --known-splicesite-infile $splicesites \\
+                   --known-splicesite-infile $alignment_splicesites \\
                    -p ${task.cpus} \\
                    --met-stderr \\
-                   | samtools view -bS -F 4 -F 256 - > ${reads.baseName}.bam
-                   2> ${reads.baseName}.hisat2_log.txt
+                   | samtools view -bS -F 4 -F 256 - > \${f}.bam
+                   2> \${f}.hisat2_log.txt
             """
         } else {
             """
-            f=('$reads');f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
+            f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
             hisat2 -x $index_base \\
                    -1 $reads[0] \\
                    -2 $reads[0] \\
-                   --known-splicesite-infile $splicesites \\
+                   --known-splicesite-infile $alignment_splicesites \\
                    --no-mixed \\
                    --no-discordant \\
                    -p ${task.cpus} \\
@@ -726,7 +727,7 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """
 }
 

@@ -210,9 +210,9 @@ if(params.aligner == 'star' && !params.star_index && fasta){
         tag fasta
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
-        cpus params.makeSTARindex_cpus
-        memory params.makeSTARindex_memory
-        time params.makeSTARindex_time
+        cpus { params.makeSTARindex_cpus }
+        memory { params.makeSTARindex_memory }
+        time { params.makeSTARindex_time }
         errorStrategy 'terminate'
 
         input:
@@ -244,7 +244,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
         tag gtf
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
-        time params.makeHisatSplicesites_time
+        time { params.makeHisatSplicesites_time }
         errorStrategy 'terminate'
 
         input:
@@ -270,9 +270,9 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
         tag fasta
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
-        cpus params.makeHISATindex_cpus
-        memory params.makeHISATindex_memory
-        time params.makeHISATindex_time
+        cpus { params.makeHISATindex_cpus }
+        memory { params.makeHISATindex_memory }
+        time { params.makeHISATindex_time }
         errorStrategy 'terminate'
 
         input:
@@ -314,7 +314,7 @@ if(!params.bed12){
         tag gtf
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
-        time params.makeBED12_time
+        time { params.makeBED12_time }
         errorStrategy 'terminate'
 
         input:
@@ -369,7 +369,7 @@ params.trim_galore_time = 8.h
 process trim_galore {
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
-    cpus params.trim_galore_cpus
+    cpus { params.trim_galore_cpus }
     memory { params.trim_galore_memory * task.attempt }
     time { params.trim_galore_time * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
@@ -428,7 +428,7 @@ if(params.aligner == 'star'){
         tag "$reads"
         publishDir "${params.outdir}/STAR", mode: 'copy'
 
-        cpus params.star_cpus
+        cpus { params.star_cpus }
         memory { params.star_memory * task.attempt }
         time { params.star_time * task.attempt }
         errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
@@ -477,7 +477,7 @@ if(params.aligner == 'hisat2'){
         tag "$reads"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
-        cpus params.star_cpus
+        cpus { params.star_cpus }
         memory { params.star_memory * task.attempt }
         time { params.star_time * task.attempt }
         errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }

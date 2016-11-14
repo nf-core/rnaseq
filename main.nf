@@ -315,7 +315,7 @@ if(!params.bed12){
         convert2bed \\
             --input=gtf \\
             --output=bed \\
-            --max-mem=${task.mem} \\
+            --max-mem=${task.memory.toGiga()}G \\
             < $gtf > ${gtf.baseName}.bed
         """
     }

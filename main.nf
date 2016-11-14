@@ -24,7 +24,7 @@ version = 0.2
 
 // Configurable variables
 params.genome = 'GRCh37'
-if( params.genomes ) {
+if( params.genomes && !params.star_index && !params.fasta && !params.gtf && !params.bed12 ) {
     params.star_index = params.genomes[ params.genome ].star
     params.fasta = params.genomes[ params.genome ].fasta
     params.gtf   = params.genomes[ params.genome ].gtf

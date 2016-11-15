@@ -11,7 +11,12 @@ services:
 
 install: 
     - curl -fsSL get.nextflow.io | bash 
-    - curl -K https://s3.eu-central-1.amazonaws.com/ngi-rnaseq-test/ngi-rna_test_set.tar.bz2 
-    - tar xvjf ngi-rna_test_set.tar.bz2 /tmp
+    - curl https://s3.eu-central-1.amazonaws.com/ngi-rnaseq-test/ngi-rna_test_set.tar.bz2 > /tmp/ngi-rna_test_set.tar.bz2
+    - tar xvjf /tmp/ngi-rna_test_set.tar.bz2 -C /tmp
+    - git clone https://github.com/Galithil/NGI-RNAseq.git /tmp/NGI-RNAseq
+    - cd /tmp/NGI-RNAseq
+    - git checkout docker_test
+    - cd -
 
-script: "nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/data/*R{1,2}.fastq.gz'"
+#script: "./nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz'"
+script: "./nextflow run /tmp/NGI-RNAseq/main.nf -profile docker_test --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz'"

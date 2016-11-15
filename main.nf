@@ -69,30 +69,37 @@ if (params.aligner != 'star' && params.aligner != 'hisat2'){
 // Validate inputs
 if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
-    if( !star_index.exists() ) exit 1, "STAR index not found: $star_index"
+    if( !star_index.exists() ) exit 1, "STAR index not found: ${params.star_index}"
 }
 else if ( params.hisat_index && params.aligner == 'hisat2' ){
     hisat_index = file(params.hisat_index)
-    if( !star_index.exists() ) exit 1, "HISAT2 index not found: $hisat_index"
+    if( !star_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat_index}"
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: $fasta"
+    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
 }
 else if ( ( params.aligner == 'hisat2' && !params.download_hisat2index ) && !params.download_fasta ){
     exit 1, "No reference genome specified!"
 }
 
 if( params.gtf ){
-    gtf = file(params.gtf)
-    if( !gtf.exists() ) exit 1, "GTF annotation file not found: $gtf"
+    gtf_makeSTARindex = file(params.gtf)
+    gtf_makeHisatSplicesites = file(params.gtf)
+    gtf_makeHISATindex = file(params.gtf)
+    gtf_makeBED12 = file(params.gtf)
+    gtf_star = file(params.gtf)
+    gtf_dupradar = file(params.gtf)
+    gtf_featureCounts = file(params.gtf)
+    gtf_stringtieFPKM = file(params.gtf)
+    if( !gtf_star.exists() ) exit 1, "GTF annotation file not found: ${params.gtf}"
 }
 else if ( !params.download_gtf ){
     exit 1, "No GTF annotation specified!"
 }
 if( params.bed12 ){
     bed12 = file(params.bed12)
-    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: $bed12"
+    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: ${params.bed12}"
 }
 if( params.aligner == 'hisat2' && params.splicesites ){
     indexing_splicesites = file(params.splicesites)
@@ -176,8 +183,7 @@ if(!params.gtf && params.download_gtf){
         val url from params.download_gtf
 
         output:
-        file "*.gtf" into gtf
-
+        file "*.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
         script:
         """
         curl -O -L $url
@@ -224,7 +230,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
 
         input:
         file fasta from fasta
-        file gtf from gtf
+        file gtf from gtf_makeSTARindex
 
         output:
         file "star" into star_index
@@ -248,14 +254,14 @@ if(params.aligner == 'star' && !params.star_index && fasta){
 params.makeHisatSplicesites_time = 2.h
 if(params.aligner == 'hisat2' && !params.splicesites){
     process makeHisatSplicesites {
-        tag gtf
+        tag gtf_makeHisatSplicesites
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         time { params.makeHisatSplicesites_time }
         errorStrategy 'terminate'
 
         input:
-        file gtf from gtf
+        file gtf from gtf_makeHisatSplicesites
 
         output:
         file "${gtf.baseName}.hisat2_splice_sites.txt" into indexing_splicesites, alignment_splicesites
@@ -285,7 +291,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
         input:
         file fasta from fasta
         file indexing_splicesites from indexing_splicesites
-        file gtf from gtf
+        file gtf from gtf_makeHISATindex
 
         output:
         file "${fasta.baseName}.hisat2_index.1.ht2" into hisat2_index // Use a fake file as a placeholder for the base file
@@ -318,14 +324,14 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
 params.makeBED12_time = 2.h
 if(!params.bed12){
     process makeBED12 {
-        tag gtf
+        tag gtf_makeBED12
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         time { params.makeBED12_time }
         errorStrategy 'terminate'
 
         input:
-        file gtf from gtf
+        file gtf from gtf_makeBED12
 
         output:
         file "${gtf.baseName}.bed" into bed12
@@ -442,7 +448,7 @@ if(params.aligner == 'star'){
 
         input:
         file index from star_index
-        file gtf from gtf
+        file gtf from gtf_star
         file reads from trimmed_reads
 
         output:
@@ -663,7 +669,7 @@ process dupradar {
 
     input:
     file bam_md
-    file gtf from gtf
+    file gtf from gtf_dupradar
 
     output:
     file "*.{pdf,txt}" into dupradar_results
@@ -757,7 +763,7 @@ process featureCounts {
 
     input:
     file bam_featurecounts
-    file gtf from gtf
+    file gtf from gtf_featureCounts
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts
@@ -787,7 +793,7 @@ process stringtieFPKM {
 
     input:
     file bam_stringtieFPKM
-    file gtf from gtf
+    file gtf from gtf_stringtieFPKM
 
     output:
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"

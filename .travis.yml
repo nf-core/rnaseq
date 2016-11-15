@@ -10,8 +10,8 @@ services:
   - docker
 
 install: 
-    -curl -fsSL get.nextflow.io | bash 
-    -curl -K https://s3.eu-central-1.amazonaws.com/ngi-rnaseq-test/ngi-rna_test_set.tar.bz2 
-    -tar xvjf ngi-rna_test_set.tar.bz2 /tmp
+    - curl -fsSL get.nextflow.io | bash 
+    - curl -K https://s3.eu-central-1.amazonaws.com/ngi-rnaseq-test/ngi-rna_test_set.tar.bz2 
+    - tar xvjf ngi-rna_test_set.tar.bz2 /tmp
 
 script: "nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/data/*R{1,2}.fastq.gz'"

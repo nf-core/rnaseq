@@ -61,8 +61,6 @@ if (params.aligner != 'star' && params.aligner != 'hisat2'){
 }
 
 // Validate inputs
-def star_index, hisat_index, fasta, gtf, bed12, indexing_splicesites, alignment_splicesites
-
 if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
     if( !star_index.exists() ) exit 1, "STAR index not found: $star_index"
@@ -134,7 +132,7 @@ log.info "========================================="
  * Create a channel for input read files
  */
 Channel
-    .fromFilePairs( params.reads )
+    .fromFilePairs( params.reads, size: -1 )
     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}" }
     .into { read_files_fastqc; read_files_trimming }
 
@@ -434,7 +432,7 @@ if(params.aligner == 'star'){
         errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
-        file star_index from star_index
+        file index from star_index
         file gtf from gtf
         file reads from trimmed_reads
 
@@ -447,7 +445,7 @@ if(params.aligner == 'star'){
         """
         #Getting STAR prefix
         f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
-        STAR --genomeDir $star_index \\
+        STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
             --readFilesIn $reads  \\
             --runThreadN ${task.cpus} \\

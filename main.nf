@@ -335,8 +335,9 @@ if(!params.bed12){
         file "${gtf.baseName}.bed" into bed12
 
         script:
+        // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
-        perl $baseDir/scripts/gtf2bed $gtf > ${gtf.baseName}.bed
+        gtf2bed $gtf > ${gtf.baseName}.bed
         """
     }
 }
@@ -669,10 +670,10 @@ process dupradar {
     file "*.{pdf,txt}" into dupradar_results
 
     script:
+    // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = single ? 'FALSE' :  'TRUE'
-
     """
-    R $baseDir/scripts/dupRadar.r $bam_md $gtf $paired
+    dupRadar.r $bam_md $gtf $paired
     """
 }
 
@@ -770,8 +771,9 @@ process sample_correlation {
     num_bams > 2 && (!params.sampleLevel)
 
     script:
+    // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     """
-    R $baseDir/scripts/edgeR_heatmap_MDS.r $input_files
+    edgeR_heatmap_MDS.r $input_files
     """
 }
 

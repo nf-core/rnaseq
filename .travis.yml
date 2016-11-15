@@ -1,7 +1,5 @@
 sudo: required
-branches:
-  only:
-      - docker_test
+
 language: java
 
 jdk: openjdk7

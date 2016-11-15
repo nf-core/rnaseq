@@ -24,18 +24,24 @@ version = 0.2
 
 // Configurable variables
 params.genome = 'GRCh37'
-params.star_index = false
-params.fasta = false
-params.gtf = false
-params.bed12 = false
-if( params.genomes ) {
-    if( params.genomes[ params.genome ].star != null ) params.star_index = params.genomes[ params.genome ].star
-    if( params.genomes[ params.genome ].fasta != null ) params.fasta = params.genomes[ params.genome ].fasta
-    if( params.genomes[ params.genome ].gtf != null ) params.gtf = params.genomes[ params.genome ].gtf
-    if( params.genomes[ params.genome ].bed12 != null ) params.bed12 = params.genomes[ params.genome ].bed12
+// Only load from config file if we're not specifying anything on the command line
+if( !params.star && !params.fasta && !params.gtf && !params.bed12 && !params.download_hisat2index && !params.download_fasta && !params.download_gtf ) {
+    params.star_index = params.genomes[ params.genome ].star ?: false
+    params.fasta = params.genomes[ params.genome ].fasta ?: false
+    params.gtf = params.genomes[ params.genome ].gtf ?: false
+    params.bed12 = params.genomes[ params.genome ].bed12 ?: false
+    params.hisat_index = params.genomes[ params.genome ].hisat2 ?: false
+} else {
+    params.star_index = false
+    params.fasta = false
+    params.gtf = false
+    params.bed12 = false
+    params.hisat_index = false
 }
-params.hisat_index = false
-params.hisatBuildMemory = 200
+params.download_hisat2index = false
+params.download_fasta = false
+params.download_gtf = false
+params.hisatBuildMemory = 200 // Required amount of memory in GB to build HISAT2 index with splice sites
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 
@@ -80,6 +86,9 @@ else if ( ( params.aligner == 'hisat2' && !params.download_hisat2index ) && !par
 if( params.gtf ){
     gtf = file(params.gtf)
     if( !gtf.exists() ) exit 1, "GTF annotation file not found: $gtf"
+}
+else if ( !params.download_gtf ){
+    exit 1, "No GTF annotation specified!"
 }
 if( params.bed12 ){
     bed12 = file(params.bed12)
@@ -158,13 +167,13 @@ if(!params.star_index && !params.fasta && params.download_fasta){
 /*
  * PREPROCESSING - Download GTF
  */
-if(!params.gtf && params.downloadGTF){
+if(!params.gtf && params.download_gtf){
     process downloadGTF {
-        tag params.downloadGTF
+        tag params.download_gtf
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        val url from params.downloadGTF
+        val url from params.download_gtf
 
         output:
         file "*.gtf" into gtf

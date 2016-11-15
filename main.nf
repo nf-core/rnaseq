@@ -28,11 +28,11 @@ params.star_index = false
 params.fasta = false
 params.gtf = false
 params.bed12 = false
-if( params.genomes && !params.star_index && !params.fasta && !params.gtf && !params.bed12 ) {
-    params.star_index = params.genomes[ params.genome ].star
-    params.fasta = params.genomes[ params.genome ].fasta
-    params.gtf   = params.genomes[ params.genome ].gtf
-    params.bed12 = params.genomes[ params.genome ].bed12
+if( params.genomes ) {
+    if( params.genomes[ params.genome ].star != null ) params.star_index = params.genomes[ params.genome ].star
+    if( params.genomes[ params.genome ].fasta != null ) params.fasta = params.genomes[ params.genome ].fasta
+    if( params.genomes[ params.genome ].gtf != null ) params.gtf = params.genomes[ params.genome ].gtf
+    if( params.genomes[ params.genome ].bed12 != null ) params.bed12 = params.genomes[ params.genome ].bed12
 }
 params.hisat_index = false
 params.hisatBuildMemory = 200
@@ -179,8 +179,8 @@ if(!params.gtf && params.downloadGTF){
  * PREPROCESSING - Download HISAT2 Index
  */
  if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat_index){
-    process downloadGTF {
-        tag params.downloadGTF
+    process downloadHS2Index {
+        tag params.download_hisat2index
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:

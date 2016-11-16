@@ -213,18 +213,10 @@ if(!params.gtf && params.download_gtf){
 /*
  * PREPROCESSING - Build STAR index
  */
-params.makeSTARindex_cpus = 12
-params.makeSTARindex_memory = 30.GB
-params.makeSTARindex_time = 5.h
 if(params.aligner == 'star' && !params.star_index && fasta){
     process makeSTARindex {
         tag fasta
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        cpus { params.makeSTARindex_cpus }
-        memory { params.makeSTARindex_memory }
-        time { params.makeSTARindex_time }
-        errorStrategy 'terminate'
 
         input:
         file fasta from fasta
@@ -249,14 +241,10 @@ if(params.aligner == 'star' && !params.star_index && fasta){
 /*
  * PREPROCESSING - Build HISAT2 splice sites file
  */
-params.makeHisatSplicesites_time = 2.h
 if(params.aligner == 'hisat2' && !params.splicesites){
     process makeHisatSplicesites {
         tag gtf_makeHisatSplicesites
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        time { params.makeHisatSplicesites_time }
-        errorStrategy 'terminate'
 
         input:
         file gtf from gtf_makeHisatSplicesites
@@ -273,18 +261,10 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-params.makeHISATindex_cpus = 10
-params.makeHISATindex_memory = 16.GB
-params.makeHISATindex_time = 5.h
 if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2index && fasta){
     process makeHISATindex {
         tag fasta
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        cpus { params.makeHISATindex_cpus }
-        memory { params.makeHISATindex_memory }
-        time { params.makeHISATindex_time }
-        errorStrategy 'terminate'
 
         input:
         file fasta from fasta
@@ -319,14 +299,10 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
 /*
  * PREPROCESSING - Build BED12 file
  */
-params.makeBED12_time = 2.h
 if(!params.bed12){
     process makeBED12 {
         tag gtf_makeBED12
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        time { params.makeBED12_time }
-        errorStrategy 'terminate'
 
         input:
         file gtf from gtf_makeBED12
@@ -346,14 +322,8 @@ if(!params.bed12){
 /*
  * STEP 1 - FastQC
  */
-params.fastqc_memory = 2.GB
-params.fastqc_time = 4.h
 process fastqc {
     publishDir "${params.outdir}/fastqc", mode: 'copy'
-
-    memory { params.fastqc_memory * task.attempt }
-    time { params.fastqc_time * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
 
     input:
     set val(name), file(reads) from read_files_fastqc
@@ -371,16 +341,8 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-params.trim_galore_cpus = 2
-params.trim_galore_memory = 4.GB
-params.trim_galore_time = 8.h
 process trim_galore {
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
-
-    cpus { params.trim_galore_cpus }
-    memory { params.trim_galore_memory * task.attempt }
-    time { params.trim_galore_time * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
     input:
     set val(name), file(reads) from read_files_trimming
@@ -428,18 +390,10 @@ def check_log(logs) {
         true
     }
 }
-params.star_cpus = 10
-params.star_memory = 80.GB
-params.star_time = 5.h
 if(params.aligner == 'star'){
     process star {
         tag "$reads"
         publishDir "${params.outdir}/STAR", mode: 'copy'
-
-        cpus { params.star_cpus }
-        memory { params.star_memory * task.attempt }
-        time { params.star_time * task.attempt }
-        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
         file index from star_index
@@ -477,18 +431,10 @@ if(params.aligner == 'star'){
 /*
  * STEP 3 - align with HISAT2
  */
-params.star_cpus = 10
-params.star_memory = 80.GB
-params.star_time = 5.h
 if(params.aligner == 'hisat2'){
     process hisat2 {
         tag "$reads"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
-
-        cpus { params.star_cpus }
-        memory { params.star_memory * task.attempt }
-        time { params.star_time * task.attempt }
-        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
         file index from hisat2_index // placeholder filename stub
@@ -537,14 +483,9 @@ if(params.aligner == 'hisat2'){
 /*
  * STEP 4 - RSeQC analysis
  */
-params.rseqc_memory = 32.GB
-params.rseqc_time = 7.h
 process rseqc {
     tag "$bam_rseqc"
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
-
-    memory { params.rseqc_memory * task.attempt }
-    time { params.rseqc_time * task.attempt }
 
     input:
     file bam_rseqc
@@ -591,14 +532,9 @@ process rseqc {
 /*
  * STEP 5 - preseq analysis
  */
-params.preseq_memory = 4.GB
-params.preseq_time = 2.h
 process preseq {
     tag "$bam_preseq"
     publishDir "${params.outdir}/preseq", mode: 'copy'
-
-    memory { params.preseq_memory * task.attempt }
-    time { params.preseq_time * task.attempt }
 
     input:
     file bam_preseq
@@ -617,14 +553,9 @@ process preseq {
 /*
  * STEP 6 Mark duplicates
  */
-params.markDuplicates_memory = 16.GB
-params.markDuplicates_time = 2.h
 process markDuplicates {
     tag "$bam_markduplicates"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
-
-    memory { params.markDuplicates_memory * task.attempt }
-    time { params.markDuplicates_time * task.attempt }
 
     input:
     file bam_markduplicates
@@ -653,14 +584,9 @@ process markDuplicates {
 /*
  * STEP 7 - dupRadar
  */
-params.dupradar_memory = 16.GB
-params.dupradar_time = 2.h
 process dupradar {
     tag "${bam_md.baseName}"
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file bam_md
@@ -681,14 +607,9 @@ process dupradar {
 /*
  * STEP 8 Feature counts
  */
-params.dupradar_memory = 4.GB
-params.dupradar_time = 2.h
 process featureCounts {
     tag "$bam_featurecounts"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file bam_featurecounts
@@ -711,14 +632,9 @@ process featureCounts {
 /*
  * STEP 9 - stringtie FPKM
  */
-params.dupradar_memory = 4.GB
-params.dupradar_time = 2.h
 process stringtieFPKM {
     tag "$bam_stringtieFPKM"
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file bam_stringtieFPKM
@@ -752,13 +668,8 @@ bam_count.count().subscribe{ num_bams = it }
 /*
  * STEP 10 - edgeR MDS and heatmap
  */
-params.dupradar_memory = 16.GB
-params.dupradar_time = 2.h
 process sample_correlation {
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file input_files from geneCounts.toList()
@@ -781,14 +692,8 @@ process sample_correlation {
 /*
  * STEP 11 MultiQC
  */
-params.multiqc_memory = 4.GB
-params.multiqc_time = 4.h
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    memory { params.multiqc_memory * task.attempt }
-    time { params.multiqc_time * task.attempt }
-    errorStrategy 'ignore'
 
     input:
     file ('fastqc/*') from fastqc_results.flatten().toList()

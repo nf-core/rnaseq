@@ -23,21 +23,12 @@ vim: syntax=groovy
 version = 0.2
 
 // Configurable variables
-params.genome = 'GRCh37'
-// Only load from config file if we're not specifying anything on the command line
-if( !params.star && !params.fasta && !params.gtf && !params.bed12 && !params.download_hisat2index && !params.download_fasta && !params.download_gtf ) {
-    params.star_index = params.genomes[ params.genome ].star ?: false
-    params.fasta = params.genomes[ params.genome ].fasta ?: false
-    params.gtf = params.genomes[ params.genome ].gtf ?: false
-    params.bed12 = params.genomes[ params.genome ].bed12 ?: false
-    params.hisat_index = params.genomes[ params.genome ].hisat2 ?: false
-} else {
-    params.star_index = false
-    params.fasta = false
-    params.gtf = false
-    params.bed12 = false
-    params.hisat_index = false
-}
+params.genome = false
+params.star_index = params.genomes[ params.genome ].star ?: false
+params.fasta = params.genomes[ params.genome ].fasta ?: false
+params.gtf = params.genomes[ params.genome ].gtf ?: false
+params.bed12 = params.genomes[ params.genome ].bed12 ?: false
+params.hisat_index = params.genomes[ params.genome ].hisat2 ?: false
 params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
@@ -73,7 +64,7 @@ if( params.star_index && params.aligner == 'star' ){
 }
 else if ( params.hisat_index && params.aligner == 'hisat2' ){
     hisat_index = file(params.hisat_index)
-    if( !star_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat_index}"
+    if( !hisat_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat_index}"
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)

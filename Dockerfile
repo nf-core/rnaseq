@@ -32,7 +32,7 @@ RUN rm /opt/fastqc_v0.11.5.zip
 RUN mkdir /opt/bedops
 RUN wget -q -O /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 https://github.com/bedops/bedops/releases/download/v2.4.20/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
 RUN tar xvjf /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2 -C /opt/bedops
-RUN ln -s /opt/bedops/bin/convert2bed /usr/local/bin/convert2bed
+RUN ln -s /opt/bedops/bin/* /usr/local/bin/
 RUN rm /opt/bedops_linux_x86_64-v2.4.20.v2.tar.bz2
 
 #Install cutadapt
@@ -78,61 +78,12 @@ RUN tar xvzf /opt/R-3.2.3.tar.gz -C /opt/
 RUN cd /opt/R-3.2.3;./configure;make;make install
 RUN rm /opt/R-3.2.3.tar.gz 
 
-#Install R packages
+#Install R Packages v2
+RUN echo 'source("https://bioconductor.org/biocLite.R")' > /opt/packages.r
+RUN echo 'biocLite()' >> /opt/packages.r
+RUN echo 'biocLite(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots"))' >> /opt/packages.r
+RUN Rscript /opt/packages.r
 RUN mkdir /usr/local/lib/R/site-library
-
-RUN wget -q -O /opt/Rsubread_1.24.0.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/Rsubread_1.24.0.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/Rsubread_1.24.0.tar.gz
-RUN rm /opt/Rsubread_1.24.0.tar.gz
-
-RUN wget -q -O /opt/dupRadar_1.4.0.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/dupRadar_1.4.0.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/dupRadar_1.4.0.tar.gz
-RUN rm /opt/dupRadar_1.4.0.tar.gz
-
-RUN wget -q -O /opt/limma_3.30.2.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/limma_3.30.2.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/limma_3.30.2.tar.gz
-RUN rm /opt/limma_3.30.2.tar.gz
- 
-RUN wget -q -O /opt/lattice_0.20-34.tar.gz https://cran.rstudio.com/src/contrib/lattice_0.20-34.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/lattice_0.20-34.tar.gz
-RUN rm /opt/lattice_0.20-34.tar.gz
-
-RUN wget -q -O /opt/locfit_1.5-9.1.tar.gz https://cran.rstudio.com/src/contrib/locfit_1.5-9.1.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/locfit_1.5-9.1.tar.gz
-RUN rm /opt/locfit_1.5-9.1.tar.gz
-
-RUN wget -q -O /opt/edgeR_3.16.2.tar.gz http://bioconductor.org/packages/release/bioc/src/contrib/edgeR_3.16.2.tar.gz 
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/edgeR_3.16.2.tar.gz
-RUN rm /opt/edgeR_3.16.2.tar.gz
-
-RUN wget -q -O /opt/chron_2.3-47.tar.gz https://cran.rstudio.com/src/contrib/chron_2.3-47.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/chron_2.3-47.tar.gz
-RUN rm /opt/chron_2.3-47.tar.gz
-
-RUN wget -q -O /opt/data.table_1.9.6.tar.gz https://cran.rstudio.com/src/contrib/data.table_1.9.6.tar.gz 
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/data.table_1.9.6.tar.gz
-RUN rm /opt/data.table_1.9.6.tar.gz
-
-RUN wget -q -O /opt/gtools_3.5.0.tar.gz https://cran.rstudio.com/src/contrib/gtools_3.5.0.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/gtools_3.5.0.tar.gz
-RUN rm /opt/gtools_3.5.0.tar.gz
-
-RUN wget -q -O /opt/gdata_2.17.0.tar.gz https://cran.rstudio.com/src/contrib/gdata_2.17.0.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/gdata_2.17.0.tar.gz
-RUN rm /opt/gdata_2.17.0.tar.gz
-
-RUN wget -q -O /opt/bitops_1.0-6.tar.gz https://cran.rstudio.com/src/contrib/bitops_1.0-6.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/bitops_1.0-6.tar.gz
-RUN rm /opt/bitops_1.0-6.tar.gz
-
-RUN wget -q -O /opt/caTools_1.17.1.tar.gz https://cran.rstudio.com/src/contrib/caTools_1.17.1.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/caTools_1.17.1.tar.gz
-RUN rm /opt/caTools_1.17.1.tar.gz
-
-RUN wget -q -O /opt/gplots_3.0.1.tar.gz https://cran.r-project.org/src/contrib/gplots_3.0.1.tar.gz
-RUN R CMD INSTALL -l /usr/local/lib/R/site-library/ /opt/gplots_3.0.1.tar.gz
-RUN rm /opt/gplots_3.0.1.tar.gz
-
 
 #Install featureCounts
 RUN wget -q -O /opt/subread-1.5.1-Linux-x86_64.tar.gz http://downloads.sourceforge.net/project/subread/subread-1.5.1/subread-1.5.1-Linux-x86_64.tar.gz

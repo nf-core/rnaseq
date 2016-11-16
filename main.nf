@@ -24,11 +24,11 @@ version = 0.2
 
 // Configurable variables
 params.genome = false
-params.star_index = params.genomes[ params.genome ].star ?: false
-params.fasta = params.genomes[ params.genome ].fasta ?: false
-params.gtf = params.genomes[ params.genome ].gtf ?: false
-params.bed12 = params.genomes[ params.genome ].bed12 ?: false
-params.hisat_index = params.genomes[ params.genome ].hisat2 ?: false
+params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
+params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
+params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
+params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
+params.hisat_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
@@ -148,17 +148,16 @@ Channel
  */
 if(!params.star_index && !params.fasta && params.download_fasta){
     process downloadFASTA {
+        tag "${params.download_fasta}"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        input:
-        val dl_url from params.download_fasta
 
         output:
         file "*.{fa,fasta}" into fasta
 
         script:
         """
-        curl -O -L $dl_url
+        curl -O -L ${params.download_fasta}
+        tar xzf *.tar.gz
         """
     }
 }
@@ -167,17 +166,16 @@ if(!params.star_index && !params.fasta && params.download_fasta){
  */
 if(!params.gtf && params.download_gtf){
     process downloadGTF {
-        tag params.download_gtf
+        tag "${params.download_gtf}"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        input:
-        val url from params.download_gtf
 
         output:
         file "*.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+
         script:
         """
-        curl -O -L $url
+        curl -O -L ${params.download_gtf}
+        tar xzf *.tar.gz
         """
     }
 }

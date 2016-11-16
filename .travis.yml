@@ -17,4 +17,5 @@ install:
     - cd -
 
 #script: "./nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz'"
-script: "./nextflow run /tmp/NGI-RNAseq/main.nf -profile docker_test --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz'"
+script: "./nextflow run /tmp/NGI-RNAseq/main.nf -profile docker_test --genome 'GRCh37' --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz';cat work/*/*/.testLog.*"
+#script: "cat work/`./nextflow run ../NGI-RNAseq/main.nf -profile docker_test  --genome 'GRCh37' --reads './data/*R{1,2}.fastq.gz' | grep 'star (' | cut -c 2-10`*/.command.err"

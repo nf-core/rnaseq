@@ -243,7 +243,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
  */
 if(params.aligner == 'hisat2' && !params.splicesites){
     process makeHisatSplicesites {
-        tag gtf_makeHisatSplicesites
+        tag "$gtf"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
@@ -263,7 +263,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
  */
 if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2index && fasta){
     process makeHISATindex {
-        tag fasta
+        tag "$fasta"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
@@ -301,7 +301,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
  */
 if(!params.bed12){
     process makeBED12 {
-        tag gtf_makeBED12
+        tag "$gtf"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
@@ -310,8 +310,7 @@ if(!params.bed12){
         output:
         file "${gtf.baseName}.bed" into bed12
 
-        script:
-        // This script is bundled with the pipeline, in NGI-RNAseq/bin/
+        script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
         gtf2bed $gtf > ${gtf.baseName}.bed
         """
@@ -595,8 +594,7 @@ process dupradar {
     output:
     file "*.{pdf,txt}" into dupradar_results
 
-    script:
-    // This script is bundled with the pipeline, in NGI-RNAseq/bin/
+    script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = single ? 'FALSE' :  'TRUE'
     """
     dupRadar.r $bam_md $gtf $paired
@@ -681,8 +679,7 @@ process sample_correlation {
     when:
     num_bams > 2 && (!params.sampleLevel)
 
-    script:
-    // This script is bundled with the pipeline, in NGI-RNAseq/bin/
+    script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     """
     edgeR_heatmap_MDS.r $input_files
     """

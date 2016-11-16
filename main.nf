@@ -157,7 +157,11 @@ if(!params.star_index && !params.fasta && params.download_fasta){
         script:
         """
         curl -O -L ${params.download_fasta}
-        tar xzf *.tar.gz
+        if [ -f *.tar.gz ]; then
+            tar xzf *.tar.gz
+        elif [ -f *.gz ]; then
+            gzip -d *.gz
+        fi
         """
     }
 }
@@ -175,7 +179,11 @@ if(!params.gtf && params.download_gtf){
         script:
         """
         curl -O -L ${params.download_gtf}
-        tar xzf *.tar.gz
+        if [ -f *.tar.gz ]; then
+            tar xzf *.tar.gz
+        elif [ -f *.gz ]; then
+            gzip -d *.gz
+        fi
         """
     }
 }
@@ -184,11 +192,8 @@ if(!params.gtf && params.download_gtf){
  */
  if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat_index){
     process downloadHS2Index {
-        tag params.download_hisat2index
+        tag "${params.download_hisat2index}"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        input:
-        val url from params.download_hisat2index
 
         output:
         file "*/*.1.ht2" into hisat2_index // Use single file as a placeholder for the base
@@ -196,8 +201,12 @@ if(!params.gtf && params.download_gtf){
 
         script:
         """
-        curl -O -L $url
-        tar xzf *.tar.gz
+        curl -O -L ${params.download_hisat2index}
+        if [ -f *.tar.gz ]; then
+            tar xzf *.tar.gz
+        elif [ -f *.gz ]; then
+            gzip -d *.gz
+        fi
         """
     }
 }

@@ -14,8 +14,9 @@ install:
     - git clone https://github.com/Galithil/NGI-RNAseq.git /tmp/NGI-RNAseq
     - cd /tmp/NGI-RNAseq
     - git checkout docker_test
+    - pip install awscli
     - cd -
 
-#script: "./nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz'"
-script: "./nextflow run /tmp/NGI-RNAseq/main.nf -profile docker_test --genome 'GRCh37' --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz';ls work/*/*; tar cvjf out.tar.gz work;uuencode out.tar.gz out.tar.gz | mail denis.moreno@scilifelab.se"
+escript: "./nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz'"
+script: "./nextflow run /tmp/NGI-RNAseq/main.nf -profile docker_test --genome 'GRCh37' --reads '/tmp/ngi-rna_test_set/*R{1,2}.fastq.gz';ls work/*/*; tar cvjf out.tar.gz work;aws --region eu-central-1 s3 cp out.tar.gz s3://ngi-rnaseq-test"
 #script: "cat work/`./nextflow run ../NGI-RNAseq/main.nf -profile docker_test  --genome 'GRCh37' --reads './data/*R{1,2}.fastq.gz' | grep 'star (' | cut -c 2-10`*/.command.err"

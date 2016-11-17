@@ -28,7 +28,7 @@ params.star_index = params.genome ? params.genomes[ params.genome ].star ?: fals
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
-params.hisat_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
@@ -62,9 +62,10 @@ if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
     if( !star_index.exists() ) exit 1, "STAR index not found: ${params.star_index}"
 }
-else if ( params.hisat_index && params.aligner == 'hisat2' ){
-    hisat_index = file(params.hisat_index)
-    if( !hisat_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat_index}"
+else if ( params.hisat2_index && params.aligner == 'hisat2' ){
+    hisat2_index = file("${params.hisat2_index}.1.ht2")
+    hs2_indices = Channel.fromPath( "${params.hisat2_index}*" )
+    if( !hisat2_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat2_index}"
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
@@ -190,7 +191,7 @@ if(!params.gtf && params.download_gtf){
 /*
  * PREPROCESSING - Download HISAT2 Index
  */
- if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat_index){
+ if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat2_index){
     process downloadHS2Index {
         tag "${params.download_hisat2index}"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
@@ -261,7 +262,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2index && fasta){
+if(params.aligner == 'hisat2' && !params.hisat2_index && !params.download_hisat2index && fasta){
     process makeHISATindex {
         tag "$fasta"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
@@ -284,7 +285,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
             exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
         } else {
             log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index."
-            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] and/or --makeHISATindex_memory [big number] to override."
+            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] to skip this check."
             extract_exons = ''
             ss = ''
             exon = ''
@@ -292,7 +293,6 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
         """
         $extract_exons
         hisat2-build -p ${task.cpus} $ss $exon $fasta ${fasta.baseName}.hisat2_index
-        touch ${fasta.baseName}.hisat2_index
         """
     }
 }
@@ -322,6 +322,7 @@ if(!params.bed12){
  * STEP 1 - FastQC
  */
 process fastqc {
+    tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
@@ -341,6 +342,7 @@ process fastqc {
  * STEP 2 - Trim Galore!
  */
 process trim_galore {
+    tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     input:
@@ -390,7 +392,7 @@ def check_log(logs) {
 }
 if(params.aligner == 'star'){
     process star {
-        tag "$reads"
+        tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy'
 
         input:
@@ -429,19 +431,19 @@ if(params.aligner == 'star'){
  * STEP 3 - align with HISAT2
  */
 if(params.aligner == 'hisat2'){
-    process hisat2 {
-        tag "$reads"
+    process hisat2Align {
+        tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
         input:
-        file index from hisat2_index // placeholder filename stub
+        file reads from trimmed_reads
+        file index from hisat2_index
         file hs2_indices
         file alignment_splicesites from alignment_splicesites
-        file reads from trimmed_reads
 
         output:
-        file "*.bam" into hisat2_bam
-        file "*.hisat2_log.txt" into alignment_logs
+        file "${prefix}.bam" into hisat2_bam
+        file "${prefix}.hisat2_log.txt" into alignment_logs
 
         script:
         index_base = index.toString() - '.1.ht2'
@@ -473,7 +475,7 @@ if(params.aligner == 'hisat2'){
     }
     
     process hisat2_sortOutput {
-        tag "$hisat2_bam"
+        tag "${hisat2_bam.baseName}"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
         input:
@@ -484,7 +486,11 @@ if(params.aligner == 'hisat2'){
 
         script:
         """
-        samtools sort $hisat2_bam -m ${task.memory.toBytes() / task.cpus} -@ ${task.cpus} -o ${hisat2_bam.baseName}.sorted.bam
+        samtools sort \\
+            $hisat2_bam \\
+            -m ${task.memory.toBytes() / task.cpus} \\
+            -@ ${task.cpus} \\
+            -o ${hisat2_bam.baseName}.sorted.bam
         """
     }
 }
@@ -496,7 +502,7 @@ if(params.aligner == 'hisat2'){
  * STEP 4 - RSeQC analysis
  */
 process rseqc {
-    tag "$bam_rseqc"
+    tag "${bam_rseqc.baseName}"
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
 
     input:
@@ -544,7 +550,7 @@ process rseqc {
  * STEP 5 - preseq analysis
  */
 process preseq {
-    tag "$bam_preseq"
+    tag "${bam_preseq.baseName}"
     publishDir "${params.outdir}/preseq", mode: 'copy'
 
     input:
@@ -565,7 +571,7 @@ process preseq {
  * STEP 6 Mark duplicates
  */
 process markDuplicates {
-    tag "$bam_markduplicates"
+    tag "${bam_markduplicates.baseName}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
 
     input:
@@ -618,7 +624,7 @@ process dupradar {
  * STEP 8 Feature counts
  */
 process featureCounts {
-    tag "$bam_featurecounts"
+    tag "${bam_featurecounts.baseName}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
     input:
@@ -643,7 +649,7 @@ process featureCounts {
  * STEP 9 - stringtie FPKM
  */
 process stringtieFPKM {
-    tag "$bam_stringtieFPKM"
+    tag "${bam_stringtieFPKM.baseName}"
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
 
     input:

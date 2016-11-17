@@ -370,7 +370,6 @@ process trim_galore {
 
 /*
  * STEP 3 - align with STAR
- * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
@@ -381,12 +380,12 @@ def check_log(logs) {
             percent_aligned = matcher[0][1]
         }
     }
-    if(percent_aligned.toFloat() <='10'.toFloat() ){
-        println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
-        false
+    if(percent_aligned.toFloat() <= '5'.toFloat() ){
+        log.info "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS."
+        return false
     } else {
-        println "Passed aligment with ${percent_aligned}%! FOR ${logs}"
-        true
+        log.info "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+        return true
     }
 }
 if(params.aligner == 'star'){
@@ -405,9 +404,8 @@ if(params.aligner == 'star'){
         file "*SJ.out.tab"
 
         script:
+        prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         """
-        #Getting STAR prefix
-        f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
             --readFilesIn $reads  \\
@@ -416,7 +414,7 @@ if(params.aligner == 'star'){
             --outWigType bedGraph \\
             --outSAMtype BAM SortedByCoordinate \\
             --readFilesCommand zcat \\
-            --outFileNamePrefix \$f
+            --outFileNamePrefix $prefix
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -442,37 +440,52 @@ if(params.aligner == 'hisat2'){
         file reads from trimmed_reads
 
         output:
-        file "*.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+        file "*.bam" into hisat2_bam
         file "*.hisat2_log.txt" into alignment_logs
 
         script:
-        index_base = index - ~/.1.ht2$/
+        index_base = index.toString() - '.1.ht2'
+        prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         if (single) {
             """
-            f='$reads';f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
             hisat2 -x $index_base \\
                    -U $reads \\
                    --known-splicesite-infile $alignment_splicesites \\
                    -p ${task.cpus} \\
                    --met-stderr \\
-                   | samtools view -bS -F 4 -F 256 - > \${f}.bam
-                   2> \${f}.hisat2_log.txt
+                   | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
+                   2> ${prefix}.hisat2_log.txt
             """
         } else {
             """
-            f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
             hisat2 -x $index_base \\
-                   -1 $reads[0] \\
-                   -2 $reads[0] \\
+                   -1 ${reads[0]} \\
+                   -2 ${reads[1]} \\
                    --known-splicesite-infile $alignment_splicesites \\
                    --no-mixed \\
                    --no-discordant \\
                    -p ${task.cpus} \\
                    --met-stderr \\
-                   | samtools view -bS -F 4 -F 8 -F 256 - > \${f}.bam
-                   2> \${f}.hisat2_log.txt
+                   | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
+                   2> ${prefix}.hisat2_log.txt
             """
         }
+    }
+    
+    process hisat2_sortOutput {
+        tag "$hisat2_bam"
+        publishDir "${params.outdir}/HISAT2", mode: 'copy'
+
+        input:
+        file hisat2_bam
+
+        output:
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+
+        script:
+        """
+        samtools sort $hisat2_bam -m ${task.memory.toBytes() / task.cpus} -@ ${task.cpus} -o ${hisat2_bam.baseName}.sorted.bam
+        """
     }
 }
 
@@ -510,7 +523,6 @@ process rseqc {
 
     script:
     def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
-
     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt

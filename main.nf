@@ -64,7 +64,7 @@ if( params.star_index && params.aligner == 'star' ){
 }
 else if ( params.hisat2_index && params.aligner == 'hisat2' ){
     hisat2_index = file("${params.hisat2_index}.1.ht2")
-    hs2_indices = Channel.fromPath( "${params.hisat2_index}*" )
+    hs2_indices = Channel.fromPath( "${params.hisat2_index}*" ).toList()
     if( !hisat2_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat2_index}"
 }
 else if ( params.fasta ){

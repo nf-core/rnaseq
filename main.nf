@@ -324,6 +324,7 @@ if(!params.bed12){
 params.fastqc_memory = 2.GB
 params.fastqc_time = 4.h
 process fastqc {
+    tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
@@ -346,6 +347,7 @@ params.trim_galore_cpus = 2
 params.trim_galore_memory = 4.GB
 params.trim_galore_time = 8.h
 process trim_galore {
+    tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     input:

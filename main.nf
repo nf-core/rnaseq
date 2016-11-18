@@ -321,9 +321,8 @@ if(!params.bed12){
 /*
  * STEP 1 - FastQC
  */
-params.fastqc_memory = 2.GB
-params.fastqc_time = 4.h
 process fastqc {
+    tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy'
 
     input:
@@ -342,10 +341,8 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-params.trim_galore_cpus = 2
-params.trim_galore_memory = 4.GB
-params.trim_galore_time = 8.h
 process trim_galore {
+    tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
 
     input:
@@ -504,8 +501,6 @@ if(params.aligner == 'hisat2'){
 /*
  * STEP 4 - RSeQC analysis
  */
-params.rseqc_memory = 32.GB
-params.rseqc_time = 7.h
 process rseqc {
     tag "${bam_rseqc.baseName}"
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
@@ -554,8 +549,6 @@ process rseqc {
 /*
  * STEP 5 - preseq analysis
  */
-params.preseq_memory = 4.GB
-params.preseq_time = 2.h
 process preseq {
     tag "${bam_preseq.baseName}"
     publishDir "${params.outdir}/preseq", mode: 'copy'
@@ -577,8 +570,6 @@ process preseq {
 /*
  * STEP 6 Mark duplicates
  */
-params.markDuplicates_memory = 16.GB
-params.markDuplicates_time = 2.h
 process markDuplicates {
     tag "${bam_markduplicates.baseName}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
@@ -610,8 +601,6 @@ process markDuplicates {
 /*
  * STEP 7 - dupRadar
  */
-params.dupradar_memory = 16.GB
-params.dupradar_time = 2.h
 process dupradar {
     tag "${bam_md.baseName}"
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
@@ -634,8 +623,6 @@ process dupradar {
 /*
  * STEP 8 Feature counts
  */
-params.dupradar_memory = 4.GB
-params.dupradar_time = 2.h
 process featureCounts {
     tag "${bam_featurecounts.baseName}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
@@ -661,8 +648,6 @@ process featureCounts {
 /*
  * STEP 9 - stringtie FPKM
  */
-params.dupradar_memory = 4.GB
-params.dupradar_time = 2.h
 process stringtieFPKM {
     tag "${bam_stringtieFPKM.baseName}"
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
@@ -699,8 +684,6 @@ bam_count.count().subscribe{ num_bams = it }
 /*
  * STEP 10 - edgeR MDS and heatmap
  */
-params.dupradar_memory = 16.GB
-params.dupradar_time = 2.h
 process sample_correlation {
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
@@ -724,8 +707,6 @@ process sample_correlation {
 /*
  * STEP 11 MultiQC
  */
-params.multiqc_memory = 4.GB
-params.multiqc_time = 4.h
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 

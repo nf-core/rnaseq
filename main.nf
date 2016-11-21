@@ -28,7 +28,7 @@ params.star_index = params.genome ? params.genomes[ params.genome ].star ?: fals
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
-params.hisat_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
@@ -62,9 +62,10 @@ if( params.star_index && params.aligner == 'star' ){
     star_index = file(params.star_index)
     if( !star_index.exists() ) exit 1, "STAR index not found: ${params.star_index}"
 }
-else if ( params.hisat_index && params.aligner == 'hisat2' ){
-    hisat_index = file(params.hisat_index)
-    if( !hisat_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat_index}"
+else if ( params.hisat2_index && params.aligner == 'hisat2' ){
+    hisat2_index = file("${params.hisat2_index}.1.ht2")
+    hs2_indices = Channel.fromPath( "${params.hisat2_index}*" ).toList()
+    if( !hisat2_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat2_index}"
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
@@ -190,7 +191,7 @@ if(!params.gtf && params.download_gtf){
 /*
  * PREPROCESSING - Download HISAT2 Index
  */
- if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat_index){
+ if( params.aligner == 'hisat2' && params.download_hisat2index && !params.hisat2_index){
     process downloadHS2Index {
         tag "${params.download_hisat2index}"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
@@ -213,18 +214,10 @@ if(!params.gtf && params.download_gtf){
 /*
  * PREPROCESSING - Build STAR index
  */
-params.makeSTARindex_cpus = 12
-params.makeSTARindex_memory = 30.GB
-params.makeSTARindex_time = 5.h
 if(params.aligner == 'star' && !params.star_index && fasta){
     process makeSTARindex {
         tag fasta
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        cpus { params.makeSTARindex_cpus }
-        memory { params.makeSTARindex_memory }
-        time { params.makeSTARindex_time }
-        errorStrategy 'terminate'
 
         input:
         file fasta from fasta
@@ -249,14 +242,10 @@ if(params.aligner == 'star' && !params.star_index && fasta){
 /*
  * PREPROCESSING - Build HISAT2 splice sites file
  */
-params.makeHisatSplicesites_time = 2.h
 if(params.aligner == 'hisat2' && !params.splicesites){
     process makeHisatSplicesites {
-        tag gtf_makeHisatSplicesites
+        tag "$gtf"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        time { params.makeHisatSplicesites_time }
-        errorStrategy 'terminate'
 
         input:
         file gtf from gtf_makeHisatSplicesites
@@ -273,18 +262,10 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-params.makeHISATindex_cpus = 10
-params.makeHISATindex_memory = 16.GB
-params.makeHISATindex_time = 5.h
-if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2index && fasta){
+if(params.aligner == 'hisat2' && !params.hisat2_index && !params.download_hisat2index && fasta){
     process makeHISATindex {
-        tag fasta
+        tag "$fasta"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        cpus { params.makeHISATindex_cpus }
-        memory { params.makeHISATindex_memory }
-        time { params.makeHISATindex_time }
-        errorStrategy 'terminate'
 
         input:
         file fasta from fasta
@@ -304,7 +285,7 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
             exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
         } else {
             log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index."
-            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] and/or --makeHISATindex_memory [big number] to override."
+            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] to skip this check."
             extract_exons = ''
             ss = ''
             exon = ''
@@ -312,21 +293,16 @@ if(params.aligner == 'hisat2' && !params.hisat_index && !params.download_hisat2i
         """
         $extract_exons
         hisat2-build -p ${task.cpus} $ss $exon $fasta ${fasta.baseName}.hisat2_index
-        touch ${fasta.baseName}.hisat2_index
         """
     }
 }
 /*
  * PREPROCESSING - Build BED12 file
  */
-params.makeBED12_time = 2.h
 if(!params.bed12){
     process makeBED12 {
-        tag gtf_makeBED12
+        tag "$gtf"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        time { params.makeBED12_time }
-        errorStrategy 'terminate'
 
         input:
         file gtf from gtf_makeBED12
@@ -334,13 +310,9 @@ if(!params.bed12){
         output:
         file "${gtf.baseName}.bed" into bed12
 
-        script:
+        script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
-        convert2bed \\
-            --input=gtf \\
-            --output=bed \\
-            --max-mem=${task.memory.toGiga()}G \\
-            < $gtf > ${gtf.baseName}.bed
+        gtf2bed $gtf > ${gtf.baseName}.bed
         """
     }
 }
@@ -349,14 +321,9 @@ if(!params.bed12){
 /*
  * STEP 1 - FastQC
  */
-params.fastqc_memory = 2.GB
-params.fastqc_time = 4.h
 process fastqc {
+    tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy'
-
-    memory { params.fastqc_memory * task.attempt }
-    time { params.fastqc_time * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'ignore' }
 
     input:
     set val(name), file(reads) from read_files_fastqc
@@ -374,16 +341,9 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-params.trim_galore_cpus = 2
-params.trim_galore_memory = 4.GB
-params.trim_galore_time = 8.h
 process trim_galore {
+    tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy'
-
-    cpus { params.trim_galore_cpus }
-    memory { params.trim_galore_memory * task.attempt }
-    time { params.trim_galore_time * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
     input:
     set val(name), file(reads) from read_files_trimming
@@ -412,7 +372,6 @@ process trim_galore {
 
 /*
  * STEP 3 - align with STAR
- * Originally inspired by https://github.com/AveraSD/nextflow-rnastar
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
@@ -423,26 +382,18 @@ def check_log(logs) {
             percent_aligned = matcher[0][1]
         }
     }
-    if(percent_aligned.toFloat() <='10'.toFloat() ){
-        println "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}"
-        false
+    if(percent_aligned.toFloat() <= '5'.toFloat() ){
+        log.info "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS."
+        return false
     } else {
-        println "Passed aligment with ${percent_aligned}%! FOR ${logs}"
-        true
+        log.info "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+        return true
     }
 }
-params.star_cpus = 10
-params.star_memory = 80.GB
-params.star_time = 5.h
 if(params.aligner == 'star'){
     process star {
-        tag "$reads"
+        tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy'
-
-        cpus { params.star_cpus }
-        memory { params.star_memory * task.attempt }
-        time { params.star_time * task.attempt }
-        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 
         input:
         file index from star_index
@@ -455,9 +406,8 @@ if(params.aligner == 'star'){
         file "*SJ.out.tab"
 
         script:
+        prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         """
-        #Getting STAR prefix
-        f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
             --readFilesIn $reads  \\
@@ -466,7 +416,7 @@ if(params.aligner == 'star'){
             --outWigType bedGraph \\
             --outSAMtype BAM SortedByCoordinate \\
             --readFilesCommand zcat \\
-            --outFileNamePrefix \$f
+            --outFileNamePrefix $prefix
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -480,57 +430,68 @@ if(params.aligner == 'star'){
 /*
  * STEP 3 - align with HISAT2
  */
-params.star_cpus = 10
-params.star_memory = 80.GB
-params.star_time = 5.h
 if(params.aligner == 'hisat2'){
-    process hisat2 {
-        tag "$reads"
+    process hisat2Align {
+        tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
-        cpus { params.star_cpus }
-        memory { params.star_memory * task.attempt }
-        time { params.star_time * task.attempt }
-        errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-
         input:
-        file index from hisat2_index // placeholder filename stub
+        file reads from trimmed_reads
+        file index from hisat2_index
         file hs2_indices
         file alignment_splicesites from alignment_splicesites
-        file reads from trimmed_reads
 
         output:
-        file "*.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
-        file "*.hisat2_log.txt" into alignment_logs
+        file "${prefix}.bam" into hisat2_bam
+        file "${prefix}.hisat2_log.txt" into alignment_logs
 
         script:
-        index_base = index - ~/.1.ht2$/
+        index_base = index.toString() - '.1.ht2'
+        prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         if (single) {
             """
-            f='$reads';f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_trimmed};f=\${f%_1};f=\${f%_R1}
             hisat2 -x $index_base \\
                    -U $reads \\
                    --known-splicesite-infile $alignment_splicesites \\
                    -p ${task.cpus} \\
                    --met-stderr \\
-                   | samtools view -bS -F 4 -F 256 - > \${f}.bam
-                   2> \${f}.hisat2_log.txt
+                   | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
+                   2> ${prefix}.hisat2_log.txt
             """
         } else {
             """
-            f=($reads);f=\${f[0]};f=\${f%.gz};f=\${f%.fastq};f=\${f%.fq};f=\${f%_val_1};f=\${f%_1};f=\${f%_R1}
             hisat2 -x $index_base \\
-                   -1 $reads[0] \\
-                   -2 $reads[0] \\
+                   -1 ${reads[0]} \\
+                   -2 ${reads[1]} \\
                    --known-splicesite-infile $alignment_splicesites \\
                    --no-mixed \\
                    --no-discordant \\
                    -p ${task.cpus} \\
                    --met-stderr \\
-                   | samtools view -bS -F 4 -F 8 -F 256 - > \${f}.bam
-                   2> \${f}.hisat2_log.txt
+                   | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
+                   2> ${prefix}.hisat2_log.txt
             """
         }
+    }
+    
+    process hisat2_sortOutput {
+        tag "${hisat2_bam.baseName}"
+        publishDir "${params.outdir}/HISAT2", mode: 'copy'
+
+        input:
+        file hisat2_bam
+
+        output:
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+
+        script:
+        """
+        samtools sort \\
+            $hisat2_bam \\
+            -m ${task.memory.toBytes() / task.cpus} \\
+            -@ ${task.cpus} \\
+            -o ${hisat2_bam.baseName}.sorted.bam
+        """
     }
 }
 
@@ -540,14 +501,9 @@ if(params.aligner == 'hisat2'){
 /*
  * STEP 4 - RSeQC analysis
  */
-params.rseqc_memory = 32.GB
-params.rseqc_time = 7.h
 process rseqc {
-    tag "$bam_rseqc"
+    tag "${bam_rseqc.baseName}"
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
-
-    memory { params.rseqc_memory * task.attempt }
-    time { params.rseqc_time * task.attempt }
 
     input:
     file bam_rseqc
@@ -573,7 +529,6 @@ process rseqc {
 
     script:
     def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
-
     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
@@ -594,14 +549,9 @@ process rseqc {
 /*
  * STEP 5 - preseq analysis
  */
-params.preseq_memory = 4.GB
-params.preseq_time = 2.h
 process preseq {
-    tag "$bam_preseq"
+    tag "${bam_preseq.baseName}"
     publishDir "${params.outdir}/preseq", mode: 'copy'
-
-    memory { params.preseq_memory * task.attempt }
-    time { params.preseq_time * task.attempt }
 
     input:
     file bam_preseq
@@ -620,14 +570,9 @@ process preseq {
 /*
  * STEP 6 Mark duplicates
  */
-params.markDuplicates_memory = 16.GB
-params.markDuplicates_time = 2.h
 process markDuplicates {
-    tag "$bam_markduplicates"
+    tag "${bam_markduplicates.baseName}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
-
-    memory { params.markDuplicates_memory * task.attempt }
-    time { params.markDuplicates_time * task.attempt }
 
     input:
     file bam_markduplicates
@@ -656,14 +601,9 @@ process markDuplicates {
 /*
  * STEP 7 - dupRadar
  */
-params.dupradar_memory = 16.GB
-params.dupradar_time = 2.h
 process dupradar {
     tag "${bam_md.baseName}"
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file bam_md
@@ -672,77 +612,10 @@ process dupradar {
     output:
     file "*.{pdf,txt}" into dupradar_results
 
-    script:
+    script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = single ? 'FALSE' :  'TRUE'
-
     """
-    #!/usr/bin/env Rscript
-
-    # Load / install dupRadar package
-    .libPaths( c( "${params.rlocation}", .libPaths() ) )
-    if (!require("dupRadar")){
-        source("http://bioconductor.org/biocLite.R")
-        biocLite("dupRadar", suppressUpdates=TRUE, lib="${params.rlocation}")
-        library("dupRadar")
-    }
-
-    # Duplicate stats
-    stranded <- 2
-    threads <- 8
-    dm <- analyzeDuprates("$bam_md", "$gtf", stranded, $paired, threads)
-    write.table(dm, file=paste("${bam_md.baseName}", "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\\t")
-
-    # 2D density scatter plot
-    pdf(paste0("${bam_md.baseName}", "_duprateExpDens.pdf"))
-    duprateExpDensPlot(DupMat=dm)
-    title("Density scatter plot")
-    mtext("${bam_md.baseName}", side=3)
-    dev.off()
-    fit <- duprateExpFit(DupMat=dm)
-    cat(
-      paste("- dupRadar Int (duprate at low read counts):", fit\$intercept),
-      paste("- dupRadar Sl (progression of the duplication rate):", fit\$slope),
-      fill=TRUE, labels="${bam_md.baseName}",
-      file=paste0("${bam_md.baseName}", "_intercept_slope.txt"), append=FALSE
-    )
-    
-    # Get numbers from dupRadar GLM
-    curve_x <- sort(log10(dm\$RPK))
-    curve_y = 100*predict(fit\$glm,data.frame(x=curve_x),type="response")
-    # Remove all of the infinite values
-    infs = which(curve_x %in% c(-Inf,Inf))
-    curve_x = curve_x[-infs]
-    curve_y = curve_y[-infs]
-    # Reduce number of data points
-    curve_x <- curve_x[seq(1, length(curve_x), 10)]
-    curve_y <- curve_y[seq(1, length(curve_y), 10)]
-    # Convert x values back to real counts
-    curve_x = 10^curve_x
-    # Write to file
-    write.table(
-      cbind(curve_x, curve_y),
-      file=paste0("${bam_md.baseName}", "_duprateExpDensCurve.txt"),
-      quote=FALSE, row.names=FALSE
-    )
-    
-    # Distribution of expression box plot
-    pdf(paste0("${bam_md.baseName}", "_duprateExpBoxplot.pdf"))
-    duprateExpBoxplot(DupMat=dm)
-    title("Percent Duplication by Expression")
-    mtext("${bam_md.baseName}", side=3)
-    dev.off()
-    
-    # Distribution of RPK values per gene
-    pdf(paste0("${bam_md.baseName}", "_expressionHist.pdf"))
-    expressionHist(DupMat=dm)
-    title("Distribution of RPK values per gene")
-    mtext("${bam_md.baseName}", side=3)
-    dev.off()
-
-    # Printing sessioninfo to standard out
-    print("${bam_md.baseName}")
-    citation("dupRadar")
-    sessionInfo()
+    dupRadar.r $bam_md $gtf $paired
     """
 }
 
@@ -750,14 +623,9 @@ process dupradar {
 /*
  * STEP 8 Feature counts
  */
-params.dupradar_memory = 4.GB
-params.dupradar_time = 2.h
 process featureCounts {
-    tag "$bam_featurecounts"
+    tag "${bam_featurecounts.baseName}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file bam_featurecounts
@@ -780,14 +648,9 @@ process featureCounts {
 /*
  * STEP 9 - stringtie FPKM
  */
-params.dupradar_memory = 4.GB
-params.dupradar_time = 2.h
 process stringtieFPKM {
-    tag "$bam_stringtieFPKM"
+    tag "${bam_stringtieFPKM.baseName}"
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file bam_stringtieFPKM
@@ -821,13 +684,8 @@ bam_count.count().subscribe{ num_bams = it }
 /*
  * STEP 10 - edgeR MDS and heatmap
  */
-params.dupradar_memory = 16.GB
-params.dupradar_time = 2.h
 process sample_correlation {
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
-
-    memory { params.dupradar_memory * task.attempt }
-    time { params.dupradar_time * task.attempt }
 
     input:
     file input_files from geneCounts.toList()
@@ -839,101 +697,9 @@ process sample_correlation {
     when:
     num_bams > 2 && (!params.sampleLevel)
 
-    script:
+    script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     """
-    #!/usr/bin/env Rscript
-
-    # Load / install required packages
-    .libPaths( c( "${params.rlocation}", .libPaths() ) )
-    if (!require("limma")){
-        source("http://bioconductor.org/biocLite.R")
-        biocLite("limma", suppressUpdates=TRUE, lib="${params.rlocation}")
-        library("limma")
-    }
-
-    if (!require("edgeR")){
-        source("http://bioconductor.org/biocLite.R")
-        biocLite("edgeR", suppressUpdates=TRUE, lib="${params.rlocation}")
-        library("edgeR")
-    }
-
-    if (!require("data.table")){
-        install.packages("data.table", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
-        library("data.table")
-    }
-
-    if (!require("gplots")) {
-        install.packages("gplots", dependencies=TRUE, repos='http://cloud.r-project.org/', lib="${params.rlocation}")
-        library("gplots")
-    }
-
-    # Load input counts data
-    datafiles = c( "${(input_files as List).join('", "')}" )
-
-    # Load count column from all files into a list of data frames
-    # Use data.tables fread as much much faster than read.table
-    # Row names are GeneIDs
-    temp <- lapply(datafiles, fread, skip="Geneid", header=TRUE, colClasses=c(NA, rep("NULL", 5), NA))
-
-    # Merge into a single data frame
-    merge.all <- function(x, y) {
-        merge(x, y, all=TRUE, by="Geneid")
-    }
-    data <- data.frame(Reduce(merge.all, temp))
-
-    # Clean sample name headers
-    colnames(data) <- gsub("Aligned.sortedByCoord.out.bam", "", colnames(data))
-
-    # Set GeneID as row name
-    rownames(data) <- data[,1]
-    data[,1] <- NULL
-
-    # Convert data frame to edgeR DGE object
-    dataDGE <- DGEList( counts=data.matrix(data) )
-
-    # Normalise counts
-    dataNorm <- calcNormFactors(dataDGE)
-
-    # Make MDS plot
-    pdf('edgeR_MDS_plot.pdf')
-    MDSdata <- plotMDS(dataNorm)
-    dev.off()
-
-    # Print distance matrix to file
-    write.table(MDSdata\$distance.matrix, 'edgeR_MDS_distance_matrix.txt', quote=FALSE, sep="\\t")
-
-    # Print plot x,y co-ordinates to file
-    MDSxy = MDSdata\$cmdscale.out
-    colnames(MDSxy) = c(paste(MDSdata\$axislabel, '1'), paste(MDSdata\$axislabel, '2'))
-    write.table(MDSxy, 'edgeR_MDS_plot_coordinates.txt', quote=FALSE, sep="\\t")
-
-    # Get the log counts per million values
-    logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)
-
-    # Calculate the euclidean distances between samples
-    dists = dist(t(logcpm))
-
-    # Plot a heatmap of correlations
-    pdf('log2CPM_sample_distances_heatmap.pdf')
-    hmap <- heatmap.2(as.matrix(dists),
-      main="Sample Correlations", key.title="Distance", trace="none",
-      dendrogram="row", margin=c(9, 9)
-    )
-    dev.off()
-
-    # Plot the heatmap dendrogram
-    pdf('log2CPM_sample_distances_dendrogram.pdf')
-    plot(hmap\$rowDendrogram, main="Sample Dendrogram")
-    dev.off()
-
-    # Write clustered distance values to file
-    write.table(hmap\$carpet, 'log2CPM_sample_distances.txt', quote=FALSE, sep="\\t")
-
-    file.create("corr.done")
-
-    # Printing sessioninfo to standard out
-    print("Sample correlation info:")
-    sessionInfo()
+    edgeR_heatmap_MDS.r $input_files
     """
 }
 
@@ -941,14 +707,8 @@ process sample_correlation {
 /*
  * STEP 11 MultiQC
  */
-params.multiqc_memory = 4.GB
-params.multiqc_time = 4.h
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    memory { params.multiqc_memory * task.attempt }
-    time { params.multiqc_time * task.attempt }
-    errorStrategy 'ignore'
 
     input:
     file ('fastqc/*') from fastqc_results.flatten().toList()

@@ -23,6 +23,7 @@ vim: syntax=groovy
 version = 0.2
 
 // Configurable variables
+params.project = false
 params.genome = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
@@ -33,6 +34,7 @@ params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
 params.hisatBuildMemory = 200 // Required amount of memory in GB to build HISAT2 index with splice sites
+params.saveReference = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 
@@ -134,6 +136,7 @@ if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
 if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"
 if( params.three_prime_clip_r2 > 0) log.info "Trim 3' R2     : ${params.three_prime_clip_r2}"
 log.info "Config Profile : " + (workflow.profile == 'standard' ? 'UPPMAX' : workflow.profile)
+if(params.project) log.info "UPPMAX Project : ${params.project}"
 log.info "========================================="
 
 /*

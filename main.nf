@@ -419,6 +419,7 @@ if(params.aligner == 'star'){
             --outWigType bedGraph \\
             --outSAMtype BAM SortedByCoordinate \\
             --readFilesCommand zcat \\
+            --runDirPerm All_RWX \\
             --outFileNamePrefix $prefix
         """
     }

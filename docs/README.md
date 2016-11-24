@@ -21,8 +21,85 @@ NGI-RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genom
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
 * [StringTie](#stringtie) - FPKMs for genes and transcripts
-* [edgeR](#edger) - create MDS plot and sample pairwise distance heatmap / dendrogram
+* [Sample_correlation](#Sample_correlation) - create MDS plot and sample pairwise distance heatmap / dendrogram
 * [MultiQC](#multiqc) - aggregate report
+
+## Output files provided
+Each process of the pipeline generates it's own directory with it's output files contained within. 
+
+* fastqc
+
+Contains two files for each of your samples:
+`sample_fastqc.zip` and `sample_fastqc.html` . The html file is the fastqc report which contains quality metrics for your untrimmed raw fastq files. The zip directory also contains the fastqc report alongside it's images. 
+
+* trim_galore
+
+Contains two (four for paired end) files for each of your samples:
+`sample_trimmed.fq.gz` wich is a fastq file containing quality trimmed reads and `sample_trimmed.fq.gz_triming_report.txt` which contains **trim\_galore**´s triming report wherein you can find out which parameters that were used. 
+	    
+* STAR
+
+In this directory you will find 5 files for each of your samples. 
+`Sample_Aligned.sortedByCoord.out.bam` this is the aligned BAM file and probably of most interest. 
+`Sample_Log.final.out` - contains the finished STAR alignment report, mapping information 
+`Sample_Log.out` main log file with a lot of detailed information about the run. This file is most useful
+for troubleshooting and debugging.
+`Sample_Log.progress.out` is written coninously by STAR and is mostly useful for debugging purposes, if the run finsihed succesfully then all info in here is found in the Log.final.out file displayed in a more compact manor. 
+`Sample_SJ.out.tab` - contains filtered *splice junctions* detected in the mapping. 
+
+* RSeQC
+
+This directory contains the following files for each sample:
+
+ `Sample_infer_experiment.txt`             
+ `Sample_junction_annotation_log.txt`        
+ `Sample_read_distribution.txt`       
+ `Sample_read_duplication.DupRate_plot.pdf`  
+ `Sample_read_duplication.DupRate_plot.r`    
+ `Sample_read_duplication.pos.DupRate.xls`   
+ `Sample_read_duplication.seq.DupRate.xls`   
+ `Sample_RPKM_saturation.eRPKM.xls`   
+ `Sample_RPKM_saturation.rawCount.xls`  
+ `Sample_RPKM_saturation.saturation.pdf`     
+ `Sample_RPKM_saturation.saturation.r`       
+ `Sample_rseqc.geneBodyCoverage.curves.pdf`
+ `Sample_rseqc.geneBodyCoverage.r`
+ `Sample_rseqc.geneBodyCoverage.txt`
+ `Sample_rseqc.inner_distance.txt`
+ `Sample_rseqc.inner_distance_freq.txt`
+ `Sample_rseqc.inner_distance_plot.r`
+ `Sample_rseqc.junction.xls`
+ `Sample_rseqc.junction_plot.r`
+ `Sample_rseqc.junctionSaturation_plot.pdf`
+ `Sample_rseqc.junctionSaturation_plot.r`
+ `Sample_rseqc.splice_events.pdf`
+ `Sample_rseqc.splice_junction.pdf`
+ `Sample_bam_stat.txt`
+ 
+ These are all quality metrics files and contains the basis for the plots in the MultiQC report. 
+ In general; the `.r` files are R scripts for generating the figures, the `.txt` are summary files, the `.xls` are data tables and the `.pdf` files are the actual figures. 
+
+* dupRadar
+
+Sample_markDups.bam_dupMatrix.txt            Sample_markDups.bam_duprateExpDens.pdf
+Sample_markDups.bam_duprateExpBoxplot.pdf    Sample_markDups.bam_expressionHist.pdf
+Sample_markDups.bam_duprateExpDensCurve.txt  Sample_markDups.bam_intercept_slope.txt
+
+* preseq
+
+`sample_ccurve.txt` is the only output file from preseq. This file contains plot values for the complexity curve (the bundled MultiQC report uses this for it's plot). 
+
+* featureCounts 
+ In here you will find three files: `Sample.bam_biotype_counts.txt` This file contains the read counts for the different bioitypes that featureCounts distinguishes.   `Sample.featureCounts.txt` contains a list of the counts for each gene id in the provided `gtf` file `Sample.featureCounts.txt.summary` is the summary file wich contains statistics about the mapping. 
+
+* StringTie
+
+These output files are covered in the explanation of the program below: 
+[StringTie](#stringtie)
+
+* Sample correlation
+
+In here you will find six files; `edgeR_MDS_distance_matrix.txt` and `edgeR_MDS_plot_coordinates.txt` conatins the data for the MDS plot, which you willl find in the `edgeR_MDS_plot.pdf` file. `log2CPM_sample_distances_dendrogram.pdf` contains a dendrogram of the euclidian distance of your samples.    `log2CPM_sample_distances.txt` contains the data used to generate the heatmap which can be found in `log2CPM_sample_distances_heatmap.pdf`.
 
 ## FastQC
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
@@ -197,7 +274,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 * `<sample>_Aligned.sortedByCoord.out.bam.cov_refs.gtf`
   * This `.gtf` file contains the transcripts that are fully covered by reads.
 
-## edgeR
+## Sample_correlation
 [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap / dendrogram showing pairwise euclidean distance (sample similarity). It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
 
 **Heatmap:**

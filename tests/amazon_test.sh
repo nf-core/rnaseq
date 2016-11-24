@@ -27,5 +27,5 @@ echo "Unpacking test set..."
 tar xvjf /tmp/ngi-rna_test_set.tar.bz2 -C /tmp
 echo "Done"
 echo "Starting nextflow..."
-nextflow run $script_path -profile amazon_test --genome amazon_test --reads '/tmp/ngi-rna_test_set/*.fastq.gz'
+nextflow run $script_path -profile amazon_test --reads '/tmp/ngi-rna_test_set/*.fastq.gz'
 

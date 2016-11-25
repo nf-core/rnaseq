@@ -386,10 +386,10 @@ def check_log(logs) {
         }
     }
     if(percent_aligned.toFloat() <= '5'.toFloat() ){
-        log.info "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS."
+        log.info "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS. (${logs.baseName})"
         return false
     } else {
-        log.info "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+        log.info "Passed aligment with ${percent_aligned}%! (${logs.baseName})"
         return true
     }
 }

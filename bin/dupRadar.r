@@ -26,7 +26,7 @@ if (!require("parallel")) {
 stranded <- 2
 threads <- detectCores()
 dm <- analyzeDuprates(input_bam, annotation_gtf, stranded, paired_end, threads)
-write.table(dm, file=paste(input_bam_basename, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\\t")
+write.table(dm, file=paste(input_bam_basename, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
 
 # 2D density scatter plot
 pdf(paste0(input_bam, "_duprateExpDens.pdf"))

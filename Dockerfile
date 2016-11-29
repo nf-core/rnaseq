@@ -104,4 +104,4 @@ RUN pip install git+git://github.com/ewels/MultiQC.git
 #Install Hisat2
 RUN git clone https://github.com/infphilo/hisat2.git /opt/hisat2
 RUN cd /opt/hisat2/;make
-RUN cp hisat2 hisat2-align-s hisat2-align-l hisat2-build hisat2-build-s hisat2-build-l hisat2-inspect hisat2-inspect-s hisat2-inspect-l /usr/local/bin/
+RUN cp /opt/hisat2/hisat2 /opt/hisat2/hisat2-align-s /opt/hisat2/hisat2-align-l /opt/hisat2/hisat2-build /opt/hisat2/hisat2-build-s /opt/hisat2/hisat2-build-l /opt/hisat2/hisat2-inspect /opt/hisat2/hisat2-inspect-s /opt/hisat2/hisat2-inspect-l /usr/local/bin/

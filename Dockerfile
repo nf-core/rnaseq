@@ -3,6 +3,7 @@ FROM openjdk:8
 LABEL authors="phil.ewels@scilifelab.se,rickard.hammaren@scilifelab.se,denis.moreno@scilifelab.se"
 
 #Install container-wide requrements gcc, pip, zlib, libssl, make, libncurses, fortran77, g++, R
+#
 RUN apt-get update
 RUN apt-get install -y libreadline-dev
 RUN apt-get install -y gcc 
@@ -99,3 +100,8 @@ RUN rm /opt/stringtie-1.3.0.Linux_x86_64.tar.gz
 
 #Install MultiQC
 RUN pip install git+git://github.com/ewels/MultiQC.git
+
+#Install Hisat2
+RUN git clone https://github.com/infphilo/hisat2.git /opt/hisat2
+RUN cd /opt/hisat2/;make
+RUN cp hisat2 hisat2-align-s hisat2-align-l hisat2-build hisat2-build-s hisat2-build-l hisat2-inspect hisat2-inspect-s hisat2-inspect-l /usr/local/bin/

@@ -61,13 +61,17 @@ if (params.aligner != 'star' && params.aligner != 'hisat2'){
 
 // Validate inputs
 if( params.star_index && params.aligner == 'star' ){
-    star_index = file(params.star_index)
-    if( !star_index.exists() ) exit 1, "STAR index not found: ${params.star_index}"
+    star_index = Channel
+        .fromPath(params.star_index)
+        .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
+        .toList()
 }
 else if ( params.hisat2_index && params.aligner == 'hisat2' ){
+    hs2_indices = Channel
+        .fromPath("${params.hisat2_index}*")
+        .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
+        .toList()
     hisat2_index = file("${params.hisat2_index}.1.ht2")
-    hs2_indices = Channel.fromPath( "${params.hisat2_index}*" ).toList()
-    if( !hisat2_index.exists() ) exit 1, "HISAT2 index not found: ${params.hisat2_index}"
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
@@ -78,27 +82,28 @@ else if ( ( params.aligner == 'hisat2' && !params.download_hisat2index ) && !par
 }
 
 if( params.gtf ){
-    gtf_makeSTARindex = file(params.gtf)
-    gtf_makeHisatSplicesites = file(params.gtf)
-    gtf_makeHISATindex = file(params.gtf)
-    gtf_makeBED12 = file(params.gtf)
-    gtf_star = file(params.gtf)
-    gtf_dupradar = file(params.gtf)
-    gtf_featureCounts = file(params.gtf)
-    gtf_stringtieFPKM = file(params.gtf)
-    if( !gtf_star.exists() ) exit 1, "GTF annotation file not found: ${params.gtf}"
+    Channel
+        .fromPath(params.gtf)
+        .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
+        .toList()
+        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
+              gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM }
 }
 else if ( !params.download_gtf ){
     exit 1, "No GTF annotation specified!"
 }
 if( params.bed12 ){
-    bed12 = file(params.bed12)
-    if( !bed12.exists() ) exit 1, "BED12 annotation file not found: ${params.bed12}"
+    bed12 = Channel
+        .fromPath(params.bed12)
+        .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
+        .toList()
 }
 if( params.aligner == 'hisat2' && params.splicesites ){
-    indexing_splicesites = file(params.splicesites)
-    alignment_splicesites = file(params.splicesites)
-    if( !alignment_splicesites.exists() ) exit 1, "HISAT2 splice sites file not found: $alignment_splicesites"
+    Channel
+        .fromPath(params.bed12)
+        .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
+        .toList()
+        .into { indexing_splicesites; alignment_splicesites }
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
@@ -385,11 +390,12 @@ def check_log(logs) {
             percent_aligned = matcher[0][1]
         }
     }
+    logname = logs.getBaseName() - 'Log.final'
     if(percent_aligned.toFloat() <= '5'.toFloat() ){
-        log.info "#################### VERY POOR ALIGNMENT RATE ONLY ${percent_aligned}%! FOR ${logs}. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS."
+        log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
         return false
     } else {
-        log.info "Passed aligment with ${percent_aligned}%! FOR ${logs}"
+        log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
         return true
     }
 }
@@ -399,9 +405,9 @@ if(params.aligner == 'star'){
         publishDir "${params.outdir}/STAR", mode: 'copy'
 
         input:
-        file index from star_index
-        file gtf from gtf_star
         file reads from trimmed_reads
+        file index from star_index.first()
+        file gtf from gtf_star.first()
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
@@ -441,9 +447,9 @@ if(params.aligner == 'hisat2'){
 
         input:
         file reads from trimmed_reads
-        file index from hisat2_index
-        file hs2_indices
-        file alignment_splicesites from alignment_splicesites
+        file index from hisat2_index.first()
+        file hs2_indices.first()
+        file alignment_splicesites from alignment_splicesites.first()
 
         output:
         file "${prefix}.bam" into hisat2_bam
@@ -511,7 +517,7 @@ process rseqc {
 
     input:
     file bam_rseqc
-    file bed12 from bed12
+    file bed12 from bed12.first()
 
     output:
     file "*.{txt,pdf,r,xls}" into rseqc_results
@@ -611,7 +617,7 @@ process dupradar {
 
     input:
     file bam_md
-    file gtf from gtf_dupradar
+    file gtf from gtf_dupradar.first()
 
     output:
     file "*.{pdf,txt}" into dupradar_results
@@ -633,7 +639,7 @@ process featureCounts {
 
     input:
     file bam_featurecounts
-    file gtf from gtf_featureCounts
+    file gtf from gtf_featureCounts.first()
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts
@@ -658,7 +664,7 @@ process stringtieFPKM {
 
     input:
     file bam_stringtieFPKM
-    file gtf from gtf_stringtieFPKM
+    file gtf from gtf_stringtieFPKM.first()
 
     output:
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"

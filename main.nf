@@ -440,7 +440,7 @@ if(params.aligner == 'star'){
 /*
  * STEP 3 - align with HISAT2
  */
-if(params.aligner == 'hisat2'){
+if( params.aligner == 'hisat2' ){
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
@@ -448,7 +448,7 @@ if(params.aligner == 'hisat2'){
         input:
         file reads from trimmed_reads
         file index from hisat2_index.first()
-        file hs2_indices.first()
+        file hs2_indices from hs2_indices
         file alignment_splicesites from alignment_splicesites.first()
 
         output:

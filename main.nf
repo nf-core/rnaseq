@@ -71,7 +71,6 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .fromPath("${params.hisat2_index}*")
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
         .toList()
-    hisat2_index = file("${params.hisat2_index}.1.ht2")
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
@@ -205,7 +204,6 @@ if(!params.gtf && params.download_gtf){
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         output:
-        file "*/*.1.ht2" into hisat2_index // Use single file as a placeholder for the base
         file "*/*.ht2" into hs2_indices
 
         script:
@@ -281,7 +279,6 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && !params.download_hisat2
         file gtf from gtf_makeHISATindex
 
         output:
-        file "${fasta.baseName}.hisat2_index.1.ht2" into hisat2_index // Use a fake file as a placeholder for the base file
         file "${fasta.baseName}.*.ht2" into hs2_indices
 
         script:
@@ -440,15 +437,14 @@ if(params.aligner == 'star'){
 /*
  * STEP 3 - align with HISAT2
  */
-if( params.aligner == 'hisat2' ){
+if(params.aligner == 'hisat2'){
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy'
 
         input:
         file reads from trimmed_reads
-        file index from hisat2_index.first()
-        file hs2_indices from hs2_indices
+        file hs2_indices from hs2_indices.first()
         file alignment_splicesites from alignment_splicesites.first()
 
         output:
@@ -456,10 +452,11 @@ if( params.aligner == 'hisat2' ){
         file "${prefix}.hisat2_log.txt" into alignment_logs
 
         script:
-        index_base = index.toString() - '.1.ht2'
+        index_base = hs2_indices[0].toString() - ~/.\d.ht2/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         if (single) {
             """
+            set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
                    -U $reads \\
                    --known-splicesite-infile $alignment_splicesites \\
@@ -470,6 +467,7 @@ if( params.aligner == 'hisat2' ){
             """
         } else {
             """
+            set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
                    -1 ${reads[0]} \\
                    -2 ${reads[1]} \\

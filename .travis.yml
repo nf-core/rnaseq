@@ -1,0 +1,24 @@
+sudo: required
+
+language: java
+
+jdk: openjdk8
+
+services:
+  - docker
+env:
+  - NXF_VER=0.22.3
+# safelist
+branches:
+   only:
+     - master
+install: 
+    - git clone https://github.com/Galithil/NGI-RNAseq.git /tmp/NGI-RNAseq
+    - cd /tmp/NGI-RNAseq/
+    - docker build -t scilifelab/ngi-rnaseq .
+    - cd /tmp/NGI-RNAseq/tests
+    - wget -qO- get.nextflow.io | bash
+    - sudo ln -s /tmp/NGI-RNAseq/tests/nextflow /usr/local/bin/nextflow
+
+#script: "./nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/*.fastq.gz'"
+script: "./docker_test_hisat.sh"

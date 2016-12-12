@@ -43,7 +43,7 @@ params.rlocation = false
 if (params.rlocation){
     nxtflow_libs = file(params.rlocation)
     nxtflow_libs.mkdirs()
-    } 
+} 
   
 def single
 params.sampleLevel = false
@@ -624,6 +624,7 @@ process dupradar {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = single ? 'FALSE' :  'TRUE'
+    def rlocation = params.rlocation ?: ''
     """
     dupRadar.r $bam_md $gtf $paired ${params.rlocation}
     """

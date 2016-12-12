@@ -626,7 +626,7 @@ process dupradar {
     def paired = single ? 'FALSE' :  'TRUE'
     def rlocation = params.rlocation ?: ''
     """
-    dupRadar.r $bam_md $gtf $paired ${params.rlocation}
+    dupRadar.r $bam_md $gtf $paired $rlocation
     """
 }
 

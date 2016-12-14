@@ -709,9 +709,9 @@ process sample_correlation {
     num_bams > 2 && (!params.sampleLevel)
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
-    def rlocation = params.rlocation ?: ''  
+    def rlocation = params.rlocation ?: ''
     """
-    edgeR_heatmap_MDS.r $input_files
+    edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
     """
 }
 

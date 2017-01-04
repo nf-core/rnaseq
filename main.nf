@@ -30,6 +30,7 @@ params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : 
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+params.splicesites = false
 params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
@@ -43,7 +44,7 @@ params.rlocation = false
 if (params.rlocation){
     nxtflow_libs = file(params.rlocation)
     nxtflow_libs.mkdirs()
-} 
+}
   
 def single
 params.sampleLevel = false
@@ -709,9 +710,9 @@ process sample_correlation {
     num_bams > 2 && (!params.sampleLevel)
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
-    def rlocation = params.rlocation ?: ''  
+    def rlocation = params.rlocation ?: ''
     """
-    edgeR_heatmap_MDS.r $input_files
+    edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
     """
 }
 

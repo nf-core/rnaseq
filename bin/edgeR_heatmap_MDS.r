@@ -1,7 +1,15 @@
 #!/usr/bin/env Rscript
 
 # Command line argument processing
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly=TRUE)
+
+# R location
+rlocation <- NULL
+if(substr(args[1], 0, 10) == 'rlocation='){
+    rlocation <- substr(args[1], 11, nchar(args[1]))
+    args <- args[-1]
+}
+
 if (length(args) < 3) {
   stop("Usage: edgeR_heatmap_MDS.r <sample_1.bam> <sample_2.bam> <sample_3.bam> (more bam files optional)", call.=FALSE)
 }
@@ -10,6 +18,9 @@ if !(\$rlocation)==''{
 { .libPaths( c( \$rlocation, .libPaths() ) ) 
 }
 # Load / install required packages
+if (!is.null(rlocation)) {
+  .libPaths( c( rlocation, .libPaths() ) )
+}
 if (!require("limma")){
     source("http://bioconductor.org/biocLite.R")
     biocLite("limma", suppressUpdates=TRUE)

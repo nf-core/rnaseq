@@ -1,6 +1,8 @@
 #!/usr/bin/env/python
-#Merges all fastq_files from all samples into one file. 
-
+######################
+# Purpose: Merges all fastq_files in current dir from each sample into one file. 
+# The script looks at all fastqz.gz files in the CWD. Those who fit the NGI flowcell regex are merged 
+# into one file. Asks for a destionation dir where the merged files will be put.
 import re
 import os
 import glob
@@ -28,7 +30,7 @@ def merge_files(dest_dir, fastq_files):
                     shutil.copyfileobj(rfp, wfp)
 
 def main():
-    destination_dir = str(raw_input("Destiantion dir:"))
+    destination_dir = str(raw_input("Destination dir:"))
     #all fastq.gz files in CWD 
     fastq_files=glob.glob('*.fastq.gz')
     merge_files(destination_dir,fastq_files)

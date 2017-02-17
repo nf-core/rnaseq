@@ -14,9 +14,6 @@ if (length(args) < 3) {
   stop("Usage: edgeR_heatmap_MDS.r <sample_1.bam> <sample_2.bam> <sample_3.bam> (more bam files optional)", call.=FALSE)
 }
 
-if !(\$rlocation)==''{
-{ .libPaths( c( \$rlocation, .libPaths() ) ) 
-}
 # Load / install required packages
 if (!is.null(rlocation)) {
   .libPaths( c( rlocation, .libPaths() ) )

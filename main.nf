@@ -698,6 +698,7 @@ bam_count.count().subscribe{ num_bams = it }
  */
 process sample_correlation {
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
+    tag "$prefix"
 
     input:
     file input_files from geneCounts.toList()
@@ -711,6 +712,8 @@ process sample_correlation {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def rlocation = params.rlocation ?: ''
+    prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
     """
@@ -721,6 +724,8 @@ process sample_correlation {
  * STEP 11 MultiQC
  */
 process multiqc {
+    tag "$prefix"
+    
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
@@ -740,6 +745,7 @@ process multiqc {
     file "*multiqc_data"
 
     script:
+    prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
     """
     multiqc -f .
     """

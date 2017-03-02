@@ -12,13 +12,18 @@ at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 The pipeline uses [Nextflow](https://www.nextflow.io), a bioinformatics workflow tool. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.
 
+This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker and AWS, and the pipeline comes with some configuration for these systems. See the [installation docs](docs/installation.md) for more information.
+
 ### Documentation
-The NGI-RNAseq pipeline comes with documentation about how to [install and configure the pipeline](docs/installation.md), how to [run the pipeline](docs/usage.md) and how to [interpret the results produced](docs/output.md).
+The NGI-RNAseq pipeline comes with documentation about the pipeline, found in the `docs/` directory:
+
+1. [Installation and configuration](docs/installation.md)
+2. [Running the pipeline](docs/usage.md)
+3. [Output and how to interpret the results](docs/output.md)
 
 ### Credits
-These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/)
-at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
-Written by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/) at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
+The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
 
 ---
 

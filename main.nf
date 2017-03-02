@@ -732,7 +732,7 @@ process multiqc {
     script:
     prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
     """
-    multiqc -f .
+    multiqc -c $baseDir/conf/multiqc_config.yaml -f .
     """
 }
 

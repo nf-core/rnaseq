@@ -7,6 +7,7 @@ nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz'
 ```
 
 Note that the pipeline will create files in your working directory:
+
 ```bash
 work            # Directory containing the nextflow working files
 results         # Finished results (configurable, see below)
@@ -41,8 +42,7 @@ To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hi
 ## Reference Genomes
 
 ### `--genome`
-The reference genome to use of the analysis, needs to be one of the genome specified in the config file.
-The human `GRCh37` genome is used by default.
+The reference genome to use for the analysis, needs to be one of the genome specified in the config file. This is `False` by default and needs to be specified (unless index files are supplied, see below).
 
 See [`conf/uppmax.config`](conf/uppmax.config) for a list of the supported reference genomes
 and their keys. Common genomes that are supported are:
@@ -51,7 +51,7 @@ and their keys. Common genomes that are supported are:
   * `--genome GRCh37`
 * Mouse
   * `--genome GRCm38`
-* Drosophila
+* _Drosophila_
   * `--genome BDGP6`
 * _S. cerevisiae_
   * `--genome 'R64-1-1'`
@@ -64,6 +64,7 @@ See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html
 for instructions on where to add this.
 
 The syntax for this reference configuration is as follows:
+
 ```groovy
 params {
   genomes {
@@ -80,6 +81,7 @@ params {
 
 ### `--star_index`, `--fasta`, `--gtf`, `--bed12`
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
 ```
 --star_index [path to STAR index] \
 --fasta [path to Fasta reference] \
@@ -101,7 +103,7 @@ These can then be used for future pipeline runs, reducing processing times.
 Each step in the pipeline has a default set of requirements for number of CPUs,
 memory and time. For most of the steps in the pipeline, if the job exits
 on UPPMAX with an error code of `143` (exceeded requested resources) it will
-automatically resubmit with higher requests (2*original, then 3*original).
+automatically resubmit with higher requests (2 x original, then 3 x original).
 If it still fails after three times then the pipeline is stopped.
 
 ### Custom resource requests
@@ -162,6 +164,14 @@ Specify the path to a specific config file (this is a core NextFlow command). Us
 projects or different sets of reference genomes. **NB:** one hyphen only (core Nextflow parameter).
 
 ## Stand-alone scripts
-There is a folder with some unmaintained standalone scripts that you can use:
-[stand-alone scripts](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/stand-alone-scripts).
-Currently it only contains one file, a `sbatch` script that starts after the alignment step with BAM files.
+The `bin` directory contains some scripts used by the pipeline which may also be run manually:
+
+* `gtf2bed`
+  * Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
+* `dupRadar.r`
+  * dupRadar script used in the _dupRadar_ pipeline process.
+* `edgeR_heatmap_MDS.r`
+  * edgeR script used in the _Sample Correlation_ process
+* `RNA-pipeline-from-BAM.sh`
+  * SLURM script used to mimic pipeline QC steps, taking an aligned BAM file as input.
+  * Potentially unmaintained, use at your own risk!

@@ -50,6 +50,7 @@ MultiQC reports the percentage of bases removed by TrimGalore in the _General St
 **Output directory: `results/trim_galore`**
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
+
 * `sample_val_1.fq.gz`, `sample_val_2.fq.gz`
   * Trimmed FastQ data, reads 1 and 2.
 * `sample_val_1.fq.gz_trimming_report.txt`
@@ -67,6 +68,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 ![STAR](images/star_alignment_plot.png)
 
 **Output directory: `results/STAR`**
+
 * `Sample_Aligned.sortedByCoord.out.bam`
   * The aligned BAM file
 * `Sample_Log.final.out`
@@ -151,6 +153,7 @@ RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junc
 
 ### RPKM saturation
 **Output:**
+
 * `Sample_RPKM_saturation.eRPKM.xls`
 * `Sample_RPKM_saturation.rawCount.xls`
 * `Sample_RPKM_saturation.saturation.pdf`
@@ -170,6 +173,7 @@ RSeQC documentation: [RPKM_saturation.py](http://rseqc.sourceforge.net/#rpkm-sat
 
 ### Read duplication
 **Output:**
+
 * `Sample_read_duplication.DupRate_plot.pdf`
 * `Sample_read_duplication.DupRate_plot.r`
 * `Sample_read_duplication.pos.DupRate.xls`
@@ -183,6 +187,7 @@ RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-du
 
 ### Inner distance
 **Output:**
+
 * `Sample_rseqc.inner_distance.txt`
 * `Sample_rseqc.inner_distance_freq.txt`
 * `Sample_rseqc.inner_distance_plot.r`
@@ -200,6 +205,7 @@ RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-dis
 
 ### Gene body coverage
 **Output:**
+
 * `Sample_rseqc.geneBodyCoverage.curves.pdf`
 * `Sample_rseqc.geneBodyCoverage.r`
 * `Sample_rseqc.geneBodyCoverage.txt`
@@ -225,6 +231,7 @@ RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-d
 
 ### Junction annotation
 **Output:**
+
 * `Sample_junction_annotation_log.txt`
 * `Sample_rseqc.junction.xls`
 * `Sample_rseqc.junction_plot.r`
@@ -325,6 +332,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
 
 **Output directory: `results/multiqc`**
+
 * `Project_multiqc_report.html`
   * MultiQC report - a standalone HTML file that can be viewed in your web browser
 * `Project_multiqc_data/`

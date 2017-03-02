@@ -258,6 +258,6 @@ at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
 Written by Phil Ewels (@ewels) and Rickard Hammarén (@Hammarn).
 
 <p align="center"><a href="stand_alone/http://www.scilifelab.se/" target="_blank"><img src="docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a>
-<a href="stand_alone/https://www.scilifelab.se/platforms/genomics/" target= _blank><img src="assets/img/NGI-final-small.png" title="NGI"></a>
+<a href="stand_alone/https://www.scilifelab.se/platforms/genomics/" target= _blank><img src="docs/images/NGI-final-small.png" title="NGI"></a>
 </p>
 

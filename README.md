@@ -27,8 +27,8 @@ The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) an
 
 ---
 
-<p align="center"><a href="stand_alone/http://www.scilifelab.se/" target="_blank"><img src="docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a>
-<a href="stand_alone/https://www.scilifelab.se/platforms/genomics/" target= _blank><img src="docs/images/NGI-final-small.png" title="NGI"></a>
+<p align="center"><a href="http://www.scilifelab.se/" target="_blank"><img src="docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a>
+<a href="https://ngisweden.scilifelab.se/" target= _blank><img src="docs/images/NGI-final-small.png" title="NGI" style="height:100px;"></a>
 </p>
 
 ---

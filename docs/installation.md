@@ -68,3 +68,9 @@ nextflow run SciLifeLab/NGI-RNAseq -profile base --reads '<path to your reads>' 
 As for Docker, the two last parameters can be entered in a configuration file that would be supplied with -c. An example would be `conf/amazon_test.config`
 
 A third approach will be to use nextflow to generate a cluster of machines, and run the pipeline there. This is currently not implemented.
+
+-----------------------------------------------------------------------------------------
+
+<p align="center"><a href="http://www.scilifelab.se/" target="_blank"><img src="images/SciLifeLab_logo.png" title="SciLifeLab"></a>
+<a href="https://ngisweden.scilifelab.se/" target= _blank><img src="images/NGI-final-small.png" title="NGI" style="height:100px;"></a>
+</p>

@@ -1,9 +1,9 @@
-# NGI-RNAseq
+# ![NGI-RNAseq](docs/images/NGI-RNAseq_logo.png)
 
 [![Build Status](https://travis-ci.org/SciLifeLab/NGI-RNAseq.svg?branch=master)](https://travis-ci.org/SciLifeLab/NGI-RNAseq)
-[![Gitter](https://img.shields.io/badge/gitter-%20join%20chat%20%E2%86%92-4fb99a.svg?style=flat-square)](https://gitter.im/SciLifeLab/NGI-RNAseq)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
-)](https://www.nextflow.io/) 
+)](https://www.nextflow.io/)
+[![Gitter](https://img.shields.io/badge/gitter-%20join%20chat%20%E2%86%92-4fb99a.svg?style=flat-square)](https://gitter.im/SciLifeLab/NGI-RNAseq)
 
 
 

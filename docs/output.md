@@ -35,7 +35,7 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 
 > **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality. To see how your reads look after trimming, look at the FastQC reports in the `trim_galore` directory.
 
-** Output directory: `results/fastqc`**
+**Output directory: `results/fastqc`**
 
 * `sample_fastqc.html`
   * FastQC report, containing quality metrics for your untrimmed raw fastq files
@@ -82,12 +82,12 @@ RSeQC is a package of scripts designed to evaluate the quality of RNA seq data. 
 
 This pipeline runs several, but not all RSeQC scripts. All of these results are summarised within the MultiQC report and described below.
 
-** Output directory: `results/rseqc`**
+**Output directory: `results/rseqc`**
 
 These are all quality metrics files and contains the raw data used for the plots in the MultiQC report. In general, the `.r` files are R scripts for generating the figures, the `.txt` are summary files, the `.xls` are data tables and the `.pdf` files are summary figures.
 
 ### BAM stat
-** Output: `Sample_bam_stat.txt` **
+**Output: `Sample_bam_stat.txt`**
 
 This script gives numerous statistics about the aligned BAM files produced by STAR. A typical output looks as follows:
 
@@ -117,7 +117,7 @@ MultiQC plots each of these statistics in a dot plot. Each sample in the project
 RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 
 ### Infer experiment
-** Output: `Sample_infer_experiment.txt` **
+**Output: `Sample_infer_experiment.txt`**
 
 This script predicts the mode of library preparation (sense-stranded or antisense-stranded) according to how aligned reads overlay gene features in the reference genome.
 Example output from an unstranded (~50% sense/antisense) library of paired end data:
@@ -137,7 +137,7 @@ RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-e
 
 
 ### Junction saturation
-** Output: **
+**Output:**
 * `Sample_rseqc.junctionSaturation_plot.pdf`
 * `Sample_rseqc.junctionSaturation_plot.r`
 
@@ -150,7 +150,7 @@ None of the lines in this example have plateaued and thus these samples could re
 RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junction-saturation-py)
 
 ### RPKM saturation
-** Output: **
+**Output:**
 * `Sample_RPKM_saturation.eRPKM.xls`
 * `Sample_RPKM_saturation.rawCount.xls`
 * `Sample_RPKM_saturation.saturation.pdf`
@@ -169,7 +169,7 @@ RSeQC documentation: [RPKM_saturation.py](http://rseqc.sourceforge.net/#rpkm-sat
 
 
 ### Read duplication
-** Output: **
+**Output:**
 * `Sample_read_duplication.DupRate_plot.pdf`
 * `Sample_read_duplication.DupRate_plot.r`
 * `Sample_read_duplication.pos.DupRate.xls`
@@ -182,7 +182,7 @@ This plot shows the number of reads (y-axis) with a given number of exact duplic
 RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-duplication-py)
 
 ### Inner distance
-** Output: **
+**Output:**
 * `Sample_rseqc.inner_distance.txt`
 * `Sample_rseqc.inner_distance_freq.txt`
 * `Sample_rseqc.inner_distance_plot.r`
@@ -199,7 +199,7 @@ This plot will not be generated for single-end data. Very short insert sizes are
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
 ### Gene body coverage
-** Output: **
+**Output:**
 * `Sample_rseqc.geneBodyCoverage.curves.pdf`
 * `Sample_rseqc.geneBodyCoverage.r`
 * `Sample_rseqc.geneBodyCoverage.txt`
@@ -214,7 +214,7 @@ RSeQC documentation: [gene\_body_coverage.py](http://rseqc.sourceforge.net/#gene
 
 
 ### Read distribution
-** Output: `Sample_read_distribution.txt`**
+**Output: `Sample_read_distribution.txt`**
 
 This tool calculates how mapped reads are distributed over genomic features. A good result for a standard RNA seq experiments is generally to have as many exonic reads as possible (`CDS_Exons`). A large amount of intronic reads could be indicative of DNA contamination in your sample or some other problem.
 
@@ -224,7 +224,7 @@ RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-d
 
 
 ### Junction annotation
-** Output:**
+**Output:**
 * `Sample_junction_annotation_log.txt`
 * `Sample_rseqc.junction.xls`
 * `Sample_rseqc.junction_plot.r`
@@ -243,7 +243,7 @@ RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junc
 ![dupRadar](images/dupRadar_plot.png)
 > _Credit: [dupRadar documentation](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html)_
 
-** Output directory: `results/dupRadar`**
+**Output directory: `results/dupRadar`**
 
 * `Sample_markDups.bam_duprateExpDens.pdf`
 * `Sample_markDups.bam_duprateExpBoxplot.pdf`
@@ -261,7 +261,7 @@ Note that these are predictive numbers only, not absolute. The MultiQC plot can 
 
 ![preseq](images/preseq_plot.png)
 
-** Output directory: `results/preseq` **
+**Output directory: `results/preseq`**
 
 * `sample_ccurve.txt`
   * This file contains plot values for the complexity curve, plotted in the MultiQC report.
@@ -275,7 +275,7 @@ RNA reads should mostly overlap genes, so be assigned.
 We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
 ![biotypes](images/featureCounts_biotype_plot.png)
 
-** Output directory: `results/featureCounts` **
+**Output directory: `results/featureCounts`**
 
 * `Sample.bam_biotype_counts.txt`
   * Read counts for the different gene biotypes that featureCounts distinguishes.
@@ -289,7 +289,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 StringTie outputs FPKM metrics for genes and transcripts as well as the transcript features that it generates.
 
-** Output directory: `results/stringtie` **
+**Output directory: `results/stringtie`**
 
 * `<sample>_Aligned.sortedByCoord.out.bam.gene_abund.txt`
   * Gene aboundances, FPKM values
@@ -306,7 +306,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 **MDS plot:**
 ![mds_plot](images/mqc_hcplot_ltqchiyxfz.png)
 
-** Output directory: `results/sample_correlation` **
+**Output directory: `results/sample_correlation`**
 
 * `edgeR_MDS_plot.pdf`
   * MDS scatter plot, showing sample similarity
@@ -324,7 +324,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 ## MultiQC
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
 
-** Output directory: `results/multiqc` **
+**Output directory: `results/multiqc`**
 * `Project_multiqc_report.html`
   * MultiQC report - a standalone HTML file that can be viewed in your web browser
 * `Project_multiqc_data/`

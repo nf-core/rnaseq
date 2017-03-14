@@ -8,10 +8,10 @@ else
     script_path=$1
 fi
 
-data_path="/tmp/"
+data_path="/tmp"
 if [ -d "./test_data" ]
 then
-    data_path="./test_data/"
+    data_path="./test_data"
     echo "Found data directory in current working directory, using ./test_data/"
 fi
 
@@ -32,5 +32,7 @@ else
 fi
 
 echo "Starting nextflow..."
+echo "nextflow run $script_path -resume -profile docker_test --aligner hisat2 --reads \"${data_path}/ngi-rna_test_set/*.fastq.gz\""
+echo "-----"
 nextflow run $script_path -resume -profile docker_test --aligner hisat2 --reads "${data_path}/ngi-rna_test_set/*.fastq.gz"
 

@@ -369,11 +369,11 @@ process trim_galore {
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
     if (single) {
         """
-        trim_galore --gzip $c_r1 $tpc_r1 $reads
+        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $reads
         """
     } else {
         """
-        trim_galore --paired --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
+        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
         """
     }
 }

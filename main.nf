@@ -698,7 +698,7 @@ process sample_correlation {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def rlocation = params.rlocation ?: ''
-    prefix = input_files[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    prefix = input_files[0].toString() - 'Aligned.sortedByCoord.out_gene.featureCounts.txt' 
 
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
@@ -730,7 +730,7 @@ process multiqc {
     file "*multiqc_data"
 
     script:
-    prefix = fastqc[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     """
     cp $baseDir/conf/multiqc_config.yaml multiqc_config.yaml
     multiqc -f .

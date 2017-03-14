@@ -714,7 +714,7 @@ process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
-    file fastqc ('fastqc/*') from fastqc_results.flatten().toList()
+    file (fastqc:'fastqc/*') from fastqc_results.flatten().toList()
     file ('trimgalore/*') from trimgalore_results.flatten().toList()
     file ('alignment/*') from alignment_logs.flatten().toList()
     file ('rseqc/*') from rseqc_results.flatten().toList()

@@ -698,7 +698,7 @@ process sample_correlation {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def rlocation = params.rlocation ?: ''
-    prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    prefix = input_files[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
 
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
@@ -714,7 +714,7 @@ process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
-    file ('fastqc/*') from fastqc_results.flatten().toList()
+    file fastqc ('fastqc/*') from fastqc_results.flatten().toList()
     file ('trimgalore/*') from trimgalore_results.flatten().toList()
     file ('alignment/*') from alignment_logs.flatten().toList()
     file ('rseqc/*') from rseqc_results.flatten().toList()
@@ -730,7 +730,7 @@ process multiqc {
     file "*multiqc_data"
 
     script:
-    prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    prefix = fastqc[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
     """
     multiqc -f .
     """

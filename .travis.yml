@@ -12,11 +12,11 @@ env:
 branches:
    only:
      - master
-install: 
-    - git clone https://github.com/Galithil/NGI-RNAseq.git /tmp/NGI-RNAseq
-    - cd /tmp/NGI-RNAseq/tests
+install:
+    - mkdir /tmp/nextflow
+    - cd /tmp/nextflow
     - wget -qO- get.nextflow.io | bash
-    - sudo ln -s /tmp/NGI-RNAseq/tests/nextflow /usr/local/bin/nextflow
+    - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
+    - cd ${TRAVIS_BUILD_DIR}/tests/
 
-#script: "./nextflow run SciLifeLab/NGI-RNAseq -profile docker_test --reads '/tmp/ngi-rna_test_set/*.fastq.gz'"
 script: "./docker_test_hisat.sh"

@@ -9,7 +9,8 @@ This pipeline itself needs no installation - NextFlow will automatically fetch i
 `SciLifeLab/NGI-RNAseq` is specified as the pipeline name.
 
 If you prefer, you can download the files yourself from GitHub and run them directly:
-```
+
+```bash
 git clone https://github.com/SciLifeLab/NGI-RNAseq.git
 nextflow run NGI-RNAseq/main.nf
 ```
@@ -61,11 +62,13 @@ There are multiple ways of running this pipeline over Amazon's EC2 service.
 
 The simplest way consists of creating an EC2 instance and running the docker flavour of this pipeline over the machine.
 
-A slightly more complex way is to use our prebuilt AMI to create a ready-to-go virtual machine. The AMI is called `scilifelab/ngi-rnaseq`, id : `ami-f23c6081`. It is available in the Ireland region (eu-west-1). This AMI comes with all the tools installed, including docker and nextflow.  The pipeline can then be run by usint the following : 
+A slightly more complex way is to use our prebuilt AMI to create a ready-to-go virtual machine. The AMI is called `scilifelab/ngi-rnaseq`, id: `ami-f23c6081`. It is available in the Ireland region (`eu-west-1`). This AMI comes with all the tools installed, including docker and nextflow.  The pipeline can then be run by creating an instance using this AMI, logging in and using the following command:
+
+```bash
+nextflow run SciLifeLab/NGI-RNAseq -profile base --reads 'path/to/data/sample_*_{1,2}.fastq' --fasta 'path/to/fasta.fz' --gtf 'path/to/genes.gtf'
 ```
-nextflow run SciLifeLab/NGI-RNAseq -profile base --reads '<path to your reads>' --fasta <path to the genome's fasta file> --gtf <path to the genome's gtf file>
-```
-As for Docker, the two last parameters can be entered in a configuration file that would be supplied with -c. An example would be `conf/amazon_test.config`
+
+As for Docker, the two last parameters can be entered in a configuration file that would be supplied with `-c`. An example would be `conf/amazon_test.config`
 
 A third approach will be to use nextflow to generate a cluster of machines, and run the pipeline there. This is currently not implemented.
 

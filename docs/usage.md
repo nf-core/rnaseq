@@ -2,7 +2,8 @@
 
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
-```
+
+```bash
 nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz'
 ```
 
@@ -17,7 +18,8 @@ results         # Finished results (configurable, see below)
 
 ### `--reads`
 Location of the input FastQ files:
-```
+
+```bash
  --reads 'path/to/data/sample_*_{1,2}.fastq'
 ```
 
@@ -82,11 +84,11 @@ params {
 ### `--star_index`, `--fasta`, `--gtf`, `--bed12`
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-```
---star_index [path to STAR index] \
---fasta [path to Fasta reference] \
---gtf [path to GTF file] \
---bed12 [path to bed12 file]
+```bash
+--star_index '[path to STAR index]' \
+--fasta '[path to Fasta reference]' \
+--gtf '[path to GTF file]' \
+--bed12 '[path to bed12 file]'
 ```
 
 ### `--downloadFasta`, `--downloadGTF`
@@ -113,11 +115,13 @@ line or in a config file. The names are set as `[process name]_[resource type]`,
 for example `star_memory`.
 
 So, to override the defaults for STAR, you can do run the pipeline as follows:
+
 ```bash
 nextflow run SciLifeLab/NGI-RNAseq --star_cpus 1 --star_memory '10 GB' --star_time '24h'
 ```
 
 Alternative, these can be set in a config file:
+
 ```groovy
 params {
   star_cpus = 1
@@ -145,7 +149,8 @@ strand specific libraries (antisense). `1+-,1-+,2++,2--` decodes as:
 
 Use this parameter to override these defaults. For example, if your data is paired end and strand specific,
 but same-sense to the reference, you could run:
-```
+
+```bash
 nextflow run NGI-RNAseq/main.nf --strandRule '1++,1--,2+-,2-+'
 ```
 Use `--strandRule 'none'` if your data is not strand specific.

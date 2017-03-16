@@ -2,7 +2,8 @@
 
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
-```
+
+```bash
 nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz'
 ```
 
@@ -17,7 +18,8 @@ results         # Finished results (configurable, see below)
 
 ### `--reads`
 Location of the input FastQ files:
-```
+
+```bash
  --reads 'path/to/data/sample_*_{1,2}.fastq'
 ```
 
@@ -82,11 +84,11 @@ params {
 ### `--star_index`, `--fasta`, `--gtf`, `--bed12`
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-```
---star_index [path to STAR index] \
---fasta [path to Fasta reference] \
---gtf [path to GTF file] \
---bed12 [path to bed12 file]
+```bash
+--star_index '[path to STAR index]' \
+--fasta '[path to Fasta reference]' \
+--gtf '[path to GTF file]' \
+--bed12 '[path to bed12 file]'
 ```
 
 ### `--downloadFasta`, `--downloadGTF`
@@ -97,6 +99,29 @@ and BED12 files will then be generated from these downloaded files.
 ### `--saveReference`
 Supply this parameter to save any generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
+
+## Adapter Trimming
+If specific additional trimming is required (for example, from additional tags),
+you can use any of the following command line parameters. These affect the command
+used to launch TrimGalore!
+
+* `--clip_r1 [int]`
+  * Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).
+* `--clip_r2 [int]`
+  * Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).
+* `--three_prime_clip_r1 [int]`
+  * Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
+* `--three_prime_clip_r2 [int]`
+  * Instructs Trim Galore to re move bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
+
+### Trimming Presets
+Some command line options are available to automatically set these trimming parameters
+for common RNA-seq library preparation kits.
+
+| Parameter | Kit                                             | 5' R1 | 5' R2 | 3' R1 | 3' R2 |
+|-----------|-------------------------------------------------|-------|-------|-------|-------|
+| `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
+
 
 ## Job Resources
 ### Automatic resubmission
@@ -113,11 +138,13 @@ line or in a config file. The names are set as `[process name]_[resource type]`,
 for example `star_memory`.
 
 So, to override the defaults for STAR, you can do run the pipeline as follows:
+
 ```bash
 nextflow run SciLifeLab/NGI-RNAseq --star_cpus 1 --star_memory '10 GB' --star_time '24h'
 ```
 
 Alternative, these can be set in a config file:
+
 ```groovy
 params {
   star_cpus = 1
@@ -145,7 +172,8 @@ strand specific libraries (antisense). `1+-,1-+,2++,2--` decodes as:
 
 Use this parameter to override these defaults. For example, if your data is paired end and strand specific,
 but same-sense to the reference, you could run:
-```
+
+```bash
 nextflow run NGI-RNAseq/main.nf --strandRule '1++,1--,2+-,2-+'
 ```
 Use `--strandRule 'none'` if your data is not strand specific.

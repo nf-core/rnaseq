@@ -56,6 +56,15 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
+// Preset trimming options
+params.pico = false
+if (params.pico){
+  params.clip_r1 = 3
+  params.clip_r2 = 0
+  params.three_prime_clip_r1 = 0
+  params.three_prime_clip_r2 = 3
+}
+
 // Choose aligner
 params.aligner = 'star'
 if (params.aligner != 'star' && params.aligner != 'hisat2'){
@@ -138,6 +147,7 @@ log.info "R libraries    : ${params.rlocation}"
 log.info "Script dir     : $baseDir"
 log.info "Working dir    : $workDir"
 log.info "Output dir     : ${params.outdir}"
+if( params.pico       ) log.info "Trim Profile   : SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
 if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
 if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"
@@ -698,7 +708,7 @@ process sample_correlation {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def rlocation = params.rlocation ?: ''
-    prefix = input_files[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    prefix = input_files[0].toString() - 'Aligned.sortedByCoord.out_gene.featureCounts.txt' 
 
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
@@ -730,7 +740,7 @@ process multiqc {
     file "*multiqc_data"
 
     script:
-    prefix = fastqc[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+    prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     """
     cp $baseDir/conf/multiqc_config.yaml multiqc_config.yaml
     multiqc -f .

@@ -100,6 +100,29 @@ and BED12 files will then be generated from these downloaded files.
 Supply this parameter to save any generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
+## Adapter Trimming
+If specific additional trimming is required (for example, from additional tags),
+you can use any of the following command line parameters. These affect the command
+used to launch TrimGalore!
+
+* `--clip_r1 [int]`
+  * Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).
+* `--clip_r2 [int]`
+  * Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).
+* `--three_prime_clip_r1 [int]`
+  * Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
+* `--three_prime_clip_r2 [int]`
+  * Instructs Trim Galore to re move bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
+
+### Trimming Presets
+Some command line options are available to automatically set these trimming parameters
+for common RNA-seq library preparation kits.
+
+| Parameter | Kit                                             | 5' R1 | 5' R2 | 3' R1 | 3' R2 |
+|-----------|-------------------------------------------------|-------|-------|-------|-------|
+| `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
+
+
 ## Job Resources
 ### Automatic resubmission
 Each step in the pipeline has a default set of requirements for number of CPUs,

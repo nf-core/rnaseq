@@ -56,6 +56,15 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
+// Preset trimming options
+params.pico = false
+if (params.pico){
+  params.clip_r1 = 3
+  params.clip_r2 = 0
+  params.three_prime_clip_r1 = 0
+  params.three_prime_clip_r2 = 3
+}
+
 // Choose aligner
 params.aligner = 'star'
 if (params.aligner != 'star' && params.aligner != 'hisat2'){
@@ -138,6 +147,7 @@ log.info "R libraries    : ${params.rlocation}"
 log.info "Script dir     : $baseDir"
 log.info "Working dir    : $workDir"
 log.info "Output dir     : ${params.outdir}"
+if( params.pico       ) log.info "Trim Profile   : SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
 if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
 if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"

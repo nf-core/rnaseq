@@ -20,9 +20,10 @@ tar --version >/dev/null 2>&1 || { echo >&2 "I require tar, but it's not install
 docker -v >/dev/null 2>&1 || { echo >&2 "I require docker, but it's not installed. Visit https://www.docker.com/products/overview#/install_the_platform  ."; exit 1; }
 nextflow -v >/dev/null 2>&1 || { echo >&2 "I require nextflow, but it's not installed. If you hava Java, run 'curl -fsSL get.nextflow.io | bash'. If not, install Java."; exit 1; }
 
-if [ -d "${data_path}/ngi-rna_test_set" ]
+data_dir=${data_path}/ngi-rna_test_set
+if [ -d $data_dir ]
 then
-    echo "Found existing test set, using ${data_path}/ngi-rna_test_set"
+    echo "Found existing test set, using $data_dir"
 else
     echo "Downloading test set..."
     curl https://export.uppmax.uu.se/b2013064/test-data/ngi-rna_test_set.tar.bz2 > ${data_path}/ngi-rna_test_set.tar.bz2
@@ -32,7 +33,7 @@ else
 fi
 
 echo "Starting nextflow..."
-echo "nextflow run $script_path -resume -profile docker_test --aligner hisat2 --reads \"${data_path}/ngi-rna_test_set/*.fastq.gz\""
+echo "nextflow run $script_path -resume -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --reads \"${data_dir}/*.fastq.gz\""
 echo "-----"
-nextflow run $script_path -resume -profile docker_test --aligner hisat2 --reads "${data_path}/ngi-rna_test_set/*.fastq.gz"
+nextflow run $script_path -resume -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --reads "${data_dir}/*.fastq.gz"
 

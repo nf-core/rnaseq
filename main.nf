@@ -708,8 +708,7 @@ process sample_correlation {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def rlocation = params.rlocation ?: ''
-    prefix = input_files[0].toString() - 'Aligned.sortedByCoord.out_gene.featureCounts.txt' 
-
+    prefix = input_files[0].toString() - 'Aligned.sortedByCoord.out_gene.featureCounts.txt'
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
     """

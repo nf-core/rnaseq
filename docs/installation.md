@@ -72,8 +72,9 @@ As for Docker, the two last parameters can be entered in a configuration file th
 
 A third approach will be to use nextflow to generate a cluster of machines, and run the pipeline there. This is currently not implemented.
 
------------------------------------------------------------------------------------------
+---
 
-<p align="center"><a href="http://www.scilifelab.se/" target="_blank"><img src="images/SciLifeLab_logo.png" title="SciLifeLab"></a>
-<a href="https://ngisweden.scilifelab.se/" target= _blank><img src="images/NGI-final-small.png" title="NGI" style="height:100px;"></a>
-</p>
+[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
+[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
+
+---

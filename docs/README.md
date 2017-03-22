@@ -9,8 +9,9 @@ The NGI-RNAseq documentation is split into a few different files:
 * [`output.md`](output.md)
   * Document describing all of the results produced by the pipeline, and how to interpret them.
 
------------------------------------------------------------------------------------------
+---
 
-<p align="center"><a href="http://www.scilifelab.se/" target="_blank"><img src="images/SciLifeLab_logo.png" title="SciLifeLab"></a>
-<a href="https://ngisweden.scilifelab.se/" target= _blank><img src="images/NGI-final-small.png" title="NGI" style="height:100px;"></a>
-</p>
+[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
+[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
+
+---

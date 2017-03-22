@@ -1,4 +1,4 @@
-# ![NGI-RNAseq](docs/images/NGI-RNAseq_logo.png)
+# ![NGI-RNAseq](https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/NGI-RNAseq_logo.png)
 
 [![Build Status](https://travis-ci.org/SciLifeLab/NGI-RNAseq.svg?branch=master)](https://travis-ci.org/SciLifeLab/NGI-RNAseq)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
@@ -23,12 +23,11 @@ The NGI-RNAseq pipeline comes with documentation about the pipeline, found in th
 
 ### Credits
 These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/) at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
-The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). Docker and AWS integration was led by Denis Moreno ([@Galithil](https://github.com/Galithil)).
 
 ---
 
-<p align="center"><a href="http://www.scilifelab.se/" target="_blank"><img src="docs/images/SciLifeLab_logo.png" title="SciLifeLab"></a>
-<a href="https://ngisweden.scilifelab.se/" target= _blank><img src="docs/images/NGI-final-small.png" title="NGI" style="height:100px;"></a>
-</p>
+[![SciLifeLab](https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
+[![National Genomics Infrastructure](https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
 
 ---

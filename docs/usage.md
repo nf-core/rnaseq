@@ -205,8 +205,9 @@ The `bin` directory contains some scripts used by the pipeline which may also be
   * Potentially unmaintained, use at your own risk!
 
 
------------------------------------------------------------------------------------------
+---
 
-<p align="center"><a href="http://www.scilifelab.se/" target="_blank"><img src="images/SciLifeLab_logo.png" title="SciLifeLab"></a>
-<a href="https://ngisweden.scilifelab.se/" target= _blank><img src="images/NGI-final-small.png" title="NGI" style="height:100px;"></a>
-</p>
+[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
+[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
+
+---

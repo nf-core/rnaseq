@@ -361,7 +361,8 @@ process fastqc {
  */
 process trim_galore {
     tag "$name"
-    publishDir "${params.outdir}/trim_galore", mode: 'copy'
+    publishDir "${params.outdir}/trim_galore", mode: 'copy',
+        saveAs: {filename -> filename.indexOf("_fastqc") > 0 ? "FastQC/$filename" : "$filename"}
 
     input:
     set val(name), file(reads) from read_files_trimming

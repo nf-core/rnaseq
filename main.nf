@@ -641,7 +641,7 @@ process featureCounts {
     file gtf from gtf_featureCounts.first()
 
     output:
-    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts
+    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
@@ -653,6 +653,8 @@ process featureCounts {
     """
 }
 
+
+
 /*
  * STEP 9 - Merge featurecounts
  */
@@ -662,15 +664,15 @@ process merge_featureCounts {
        
     
     input:
-    file (featurecounts:'featureCounts/*.featureCounts.txt') from featureCounts_logs.flatten().toList()
+    file input_files from featureCounts_to_merge.toList()
 
     output:
-    file 'all_counts.txt'
+    file 'merged_gene_counts.txt'
     
     script:
-    ```
-    merge_featurecounts.py -i $featurecounts
-    ```
+    """
+    merge_featurecounts.py -o merged_gene_counts.txt -i $input_files
+    """
 }
 
 

@@ -3,10 +3,11 @@
 import argparse
 import os
 import re
+import logging
 from collections import defaultdict
 
 
-def do_the_thing(dest_dir,out_file,input_files):
+def merge_featureCounts(dest_dir,out_file,input_files):
    table_dict=defaultdict(dict)
    sample_names=[]
    gene_list=[]
@@ -19,33 +20,30 @@ def do_the_thing(dest_dir,out_file,input_files):
        sample_names.append(sample_name)
        table_dict[sample_name]=dict()
      
-       #Extract the gene list from the first file
-       if first_file:
-           with open(input_file, 'r') as f:
-               for line in f:
-                   if not line.startswith('E'):
-                       continue
-                   line_info=line.split('\t')
-                   gene=line_info[0]
-                   gene_list.append(gene)
-       #Read the rest of the files
        with open(input_file, 'r') as f:
            for line in f:
                if not line.startswith('E'):
                    continue
+               #save the genes to a list for the first file
+               if first_file:
+                   gene_list.append(line.split('\t')[0])
                line_info=line.split('\t')
                gene=line_info[0]
-               gene_count=line_info[-1]
-               gene_count=gene_count.rstrip()
-               if gene_count.startswith('E'):
-                   print "Detected discrepancy in {}  line {}".format(input_file, line)
+               try:
+                   gene_count = int(line_info[-1].rstrip())
+                   table_dict[sample_name][gene] = gene_count
+               except TypeError:
+                       logging.info("Detected discrepancy in {}  line {}".format(input_file, line))
+                
                table_dict[sample_name][gene]=gene_count
-   
+               #Done with first file
+               first_file=False
+
    #write Output
-   print "Writing to file {}".format(out_file)
+   logging.info("Writing to file {}".format(out_file))
    with open(out_file, 'w') as f:
        #Generate header
-       line_to_write="ENSAMBLE_ID"
+       line_to_write="ENSEMBL_ID"
        sample_names.sort()
        for sample_name in sample_names:
            line_to_write+=('\t'+ sample_name)
@@ -65,9 +63,9 @@ if __name__ == "__main__":
     """)
     parser.add_argument("-d", "--dest_dir", dest='dest_dir', default='.',
                                    help="Path to output.")
-    parser.add_argument("-o", "--results_filen_name",dest='out_file', default='all_counts.txt',
+    parser.add_argument("-o", "--results_file_name",dest='out_file', default='all_counts.txt',
                                    help= "Name of the output file that will be created")
     parser.add_argument("-i", "--input_files", metavar='<input_files>', nargs='+', default='*.featureCounts.txt',
                                    help="Path to the outputfiles from FeatureCounts. ")
     args = parser.parse_args()
-    do_the_thing(args.dest_dir, args.out_file, args.input_files)
+    merge_featureCounts(args.dest_dir, args.out_file, args.input_files)

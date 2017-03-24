@@ -11,7 +11,22 @@ To start using the NGI-RNAseq pipeline, there are three steps described below:
     * [Amazon AWS](#34-configuration-amazon-ec2)
 
 ## 1) Install NextFlow
-See [nextflow.io](https://www.nextflow.io/) and [NGI-NextflowDocs](https://github.com/SciLifeLab/NGI-NextflowDocs) for instructions on how to install and configure Nextflow.
+Nextflow runs on most POSIX systems (Linux, Mac OSX etc). It can be installed by running the following commands:
+
+```bash
+# Make sure that Java v7+ is installed:
+java -version
+
+# Install Nextflow
+curl -fsSL get.nextflow.io | bash
+
+# Add Nextflow binary to your PATH:
+mv nextflow ~/bin
+# OR system-wide installation:
+# sudo mv nextflow /usr/local/bin
+```
+
+See [nextflow.io](https://www.nextflow.io/) and [NGI-NextflowDocs](https://github.com/SciLifeLab/NGI-NextflowDocs) for further instructions on how to install and configure Nextflow.
 
 ## 2) Install the Pipeline
 This pipeline itself needs no installation - NextFlow will automatically fetch it from GitHub if `SciLifeLab/NGI-RNAseq` is specified as the pipeline name.

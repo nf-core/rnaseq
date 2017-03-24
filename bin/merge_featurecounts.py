@@ -53,7 +53,11 @@ def merge_featureCounts(dest_dir,out_file,input_files):
        for gene in gene_list:
            line_to_write=gene
            for sample_name in sample_names:
-               line_to_write += ('\t{}'.format(table_dict[sample_name][gene]))
+               try:
+                   line_to_write += ('\t{}'.format(table_dict[sample_name][gene]))
+               except KeyError:
+                    #Missing gene in one of the files, i.e. no counts.
+                    line_to_write += ('\t0')
            line_to_write += "\n"
            f.write(line_to_write)
 

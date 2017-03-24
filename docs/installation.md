@@ -5,10 +5,10 @@ To start using the NGI-RNAseq pipeline, there are three steps described below:
 1. [Install Nextflow](#install-nextflow)
 2. [Install the pipeline](#install-the-pipeline)
 3. Configure the pipeline
-  * [Swedish UPPMAX System](#)
-  * [Other Clusters](#)
-  * [Docker](#)
-  * [Amazon AWS](#)
+    * [Swedish UPPMAX System](#31-configuration-uppmax)
+    * [Other Clusters](#32-configuration-other-clusters)
+    * [Docker](#33-configuration-docker)
+    * [Amazon AWS](#34-configuration-amazon-ec2)
 
 ## 1) Install NextFlow
 See [nextflow.io](https://www.nextflow.io/) and [NGI-NextflowDocs](https://github.com/SciLifeLab/NGI-NextflowDocs) for instructions on how to install and configure Nextflow.
@@ -31,13 +31,13 @@ Note that you will need to specify your UPPMAX project ID when running a pipelin
 **Optional Extra:** To avoid having to specify your project every time you run Nextflow, you can add it to your personal Nextflow config file instead. Add this line to `~/.nextflow/config`:
 
 ```groovy
-params.project = 'project_ID' # eg. b2017123
+params.project = 'project_ID' // eg. b2017123
 ```
 
 ## 3.2) Configuration: Other clusters
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the script knows where to find your reference files and how your cluster works.
 
-If you think that there are other people using the pipeline who would benefit from your configuration (eg. other common cluster setups), please let us know. We can add a new configuration and profile which can used by specifying `-profile <name>` when running the pipeline.
+> If you think that there are other people using the pipeline who would benefit from your configuration (eg. other common cluster setups), please let us know. We can add a new configuration and profile which can used by specifying `-profile <name>` when running the pipeline.
 
 If you are the only person to be running this pipeline, you can create your config file as `~/.nextflow/config` and it will be applied every time you run Nextflow. Alternatively, save the file anywhere and reference it when running the pipeline with `-c path/to/config`.
 
@@ -50,13 +50,13 @@ To specify your cluster environment, add the following line to your config file:
 
 ```groovy
 process {
-  executor = 'YOURSYSTEMTYPE'
+  executor = 'YOUR_SYSTEM_TYPE'
 }
 ```
 
 Many different cluster types are supported by Nextflow. For more information, please see the [Nextflow documentation](https://www.nextflow.io/docs/latest/executor.html).
 
-Note that you may need to specify cluster options, such as project. To do so, use the `clusterOptions` config option. For example:
+Note that you may need to specify cluster options, such as a project or queue. To do so, use the `clusterOptions` config option:
 
 ```groovy
 process {
@@ -68,9 +68,9 @@ process {
 ### Reference Genomes
 The NGI-RNAseq pipeline needs a reference genome for alignment and annotation. If not already available, start by downloading the relevant reference, for example from [illumina iGenomes](https://support.illumina.com/sequencing/sequencing_software/igenome.html).
 
-The minimal requirements are a FASTA file and a GTF file. If STAR and BED12 references are also available, the pipeline won't have to generate them so will be faster. Use the command line option `--saveReference` to keep the generated references on the first run, then these can be added to your config and used in the future.
+The minimal requirements are a FASTA file and a GTF file. If STAR and BED12 references are also specified, the pipeline won't have to generate them and will run faster. Use the command line option `--saveReference` to keep the generated references so that they can be added to your config and used again in the future.
 
-Reference genome paths can be specified on the command line each time you run with `--star_index`, `--fasta`, `--gtf` and `--bed12`. Alternatively, add the paths to the config under a relevant id and just specify this id with `--genome ID` when you run the pipeline (this can also be set as a default in your config if you only ever run with one genome):
+Reference genome paths can be specified on the command line each time you run with `--star_index`, `--fasta`, `--gtf` and `--bed12`. Alternatively, add the paths to the config under a relevant id and just specify this id with `--genome ID` when you run the pipeline _(this can also be set as a default in your config)_:
 
 ```groovy
 params {
@@ -85,8 +85,7 @@ params {
       // [..]
     }
   }
-  // Optional - default genome to run with
-  // Only used if --genome not specified on command line
+  // Optional - default genome. Ignored if --genome 'OTHER-GENOME' specified on command line
   genome = 'YOUR-ID'
 }
 ```
@@ -96,7 +95,7 @@ params {
 To run the pipeline, several software packages are required. How you satisfy these requirements is essentially up to you and depends on your system.
 
 #### Environment Modules
-If your cluster uses _environment modules_, the software may already be available. If so, just add lines to your custom config file as follows _(customise module names and versions as appropriate)_:
+If your cluster uses environment modules, the software may already be available. If so, just add lines to your custom config file as follows _(customise module names and versions as appropriate)_:
 
 ```groovy
 process {
@@ -129,7 +128,9 @@ params {
 ```
 
 #### Manual Installation
-If the software is not already available, you will need to install it. If you are able to use [Docker](https://www.docker.com/) in your environment, see the below instructions. Docker manages all software requirements so that you don't need to install anything.
+If the software is not already available, you will need to install it.
+
+If you are able to use [Docker](https://www.docker.com/), you can use the [sclifelab/ngi-rnaseq](https://hub.docker.com/r/scilifelab/ngi-rnaseq/) image which comes with all requirements. This is pulled by Nextflow automatically if you use `-profile docker` (see below for [further instructions](#33-configuration-docker)).
 
 We recommend using [Bioconda](https://bioconda.github.io/) to install the required software as the process is quite easy in our experience. This can be done as follows:
 
@@ -154,8 +155,8 @@ conda config --add channels salilab
 ```bash
 conda create --name rna_seq_py2.7 python=2.7
 source activate rna_seq_py2.7
-
-conda install bioconductor-dupradar=1.2.2 \
+conda install --yes \
+    bioconductor-dupradar=1.2.2 \
     r-essentials \
     samtools \
     star=2.5.3a \
@@ -174,12 +175,7 @@ conda install bioconductor-dupradar=1.2.2 \
     graphviz=2.38.0 \
     hisat2=2.0.5
 ```
-
-Once set up like this, just activate this conda environment before running the pipeline:
-
-```bash
-source activate rna_seq_py2.7
-```
+_(Feel free to adjust versions as required.)_
 
 ##### 3) Set up Picard
 Picard requires the `PICARD_HOME` environment variable to be set. To automatically set and unset this when you activate and deactivate your conda environment, do the following:
@@ -195,42 +191,55 @@ touch ./etc/conda/deactivate.d/env_vars.sh
 Put in `./etc/conda/activate.d/env_vars.sh`:
 ```bash
 #!/bin/sh
-export PICARD_HOME='/ABS/PATH/YOUR/HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/'
+export PICARD_HOME='/HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/'
 ```
+_(change path to your picard installation directory. Use absolute path.)_
 
-Put in `./etc/conda/deactivate.d/env_vars.sh`:
+Then add to `./etc/conda/deactivate.d/env_vars.sh`:
 ```bash
 #!/bin/sh
 unset PICARD_HOME
 ```
 
+##### 4) Usage
+Once created, the conda environment can be activated before running the pipeline and deactivated afterwards:
+
+```bash
+source activate rna_seq_py2.7
+# run pipeline
+source deactivate
+```
+
 ## 3.3) Configuration: Docker
+Docker is a great way to run NGI-RNAseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+
+Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required.
+
 First, install docker on your system : [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
-You can now run:
+Then, simply run the analysis pipeline:
 ```bash
-nextflow run SciLifeLab/NGI-RNAseq -profile docker --reads '<path to your reads>' --fasta <path to the genome's fasta file> --gtf <path to the genome's gtf file>
+nextflow run SciLifeLab/NGI-RNAseq -profile docker --reads '<path to your reads>' --fasta '<path to fasta ref>' --gtf '<path to gtf>'
 ```
-The fasta and GTF parameters can be specified in a configuration file (you can provide it with -c), look into the `conf/docker_test.config` for an example.
 
-The docker image containting all the required tools will do downloaded on during the run. It can be found on [DockerHub](https://hub.docker.com/r/scilifelab/ngi-rnaseq/)
+Nextflow will recognise `SciLifeLab/NGI-RNAseq` and download the pipeline from GitHub. The `-profile docker` configuration lists the [sclifelab/ngi-rnaseq](https://hub.docker.com/r/scilifelab/ngi-rnaseq/) image that we have created and is hosted at dockerhub, and this is downloaded.
 
-A test suite for docker has been implemented, and can be run by moving to the `tests` folder and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset.
+A reference genome is still required by the pipeline. Specifying paths to FASTA and GTF files is the minimum requirement, STAR and BED12 references will automatically be generated. See the above [Reference Genomes](#reference-genomes) documentation for instructions on how to configure Nextflow with preset paths to make this easier.
+
+A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/ewels/NGI-RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/SciLifeLab/NGI-RNAseq/) whenever changes are made to the pipeline.
 
 ## 3.4) Configuration: Amazon EC2
 There are multiple ways of running this pipeline over Amazon's EC2 service.
 
-The simplest way consists of creating an EC2 instance and running the docker flavour of this pipeline over the machine.
+The simplest way consists of creating a custom EC2 instance and running the pipeline with docker on this machine, as described above.
 
-A slightly more complex way is to use our prebuilt AMI to create a ready-to-go virtual machine. The AMI is called `scilifelab/ngi-rnaseq`, id: `ami-f23c6081`. It is available in the Ireland region (`eu-west-1`). This AMI comes with all the tools installed, including docker and nextflow.  The pipeline can then be run by creating an instance using this AMI, logging in and using the following command:
+A slightly more complex way is to use our prebuilt AMI to create a ready-to-go virtual machine. The AMI is called `scilifelab/ngi-rnaseq`, id: `ami-f23c6081`. It is available in the Ireland region (`eu-west-1`). This AMI comes with all the tools installed, including nextflow. This means that the docker image doesn't have to be downloaded and instantiated every time you launch the machine. The pipeline can then be run by creating an instance using this AMI, logging in and running the pipeline with the `base` config. For example:
 
 ```bash
-nextflow run SciLifeLab/NGI-RNAseq -profile base --reads 'path/to/data/sample_*_{1,2}.fastq' --fasta 'path/to/fasta.fz' --gtf 'path/to/genes.gtf'
+nextflow run SciLifeLab/NGI-RNAseq -profile base --reads 'data/*_{1,2}.fastq' --fasta 'path/to/fasta.fa' --gtf 'path/to/genes.gtf'
 ```
 
-As for Docker, the two last parameters can be entered in a configuration file that would be supplied with `-c`. An example would be `conf/amazon_test.config`
-
-A third approach will be to use nextflow to generate a cluster of machines, and run the pipeline there. This is currently not implemented.
+A third approach will be to use nextflow to generate a cluster of machines, and run the pipeline there. We are currently testing this approach and will add documentation when it is established.
 
 ---
 

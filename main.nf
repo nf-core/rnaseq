@@ -653,9 +653,29 @@ process featureCounts {
     """
 }
 
+/*
+ * STEP 9 - Merge featurecounts
+ */
+process merge_featureCounts {
+    
+    publishDir "${params.outdir}/featureCounts", mode: 'copy'
+       
+    
+    input:
+    file (featurecounts:'featureCounts/*.featureCounts.txt') from featureCounts_logs.flatten().toList()
+
+    output:
+    file 'all_counts.txt'
+    
+    script:
+    ```
+    merge_featurecounts.py -i $featurecounts
+    ```
+}
+
 
 /*
- * STEP 9 - stringtie FPKM
+ * STEP 10 - stringtie FPKM
  */
 process stringtieFPKM {
     tag "${bam_stringtieFPKM.baseName}"
@@ -691,7 +711,7 @@ bam_count.count().subscribe{ num_bams = it }
 
 
 /*
- * STEP 10 - edgeR MDS and heatmap
+ * STEP 11 - edgeR MDS and heatmap
  */
 process sample_correlation {
     tag "$prefix"
@@ -717,7 +737,7 @@ process sample_correlation {
 
 
 /*
- * STEP 11 MultiQC
+ * STEP 12 MultiQC
  */
 process multiqc {
     tag "$prefix"

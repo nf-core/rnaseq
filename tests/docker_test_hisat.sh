@@ -32,8 +32,9 @@ else
     echo "Done"
 fi
 
-echo "Starting nextflow..."
-echo "nextflow run $script_path -resume -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --reads \"${data_dir}/*.fastq.gz\""
+echo "Starting nextflow... Command:"
+echo $cmd
 echo "-----"
-nextflow run $script_path -resume -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --reads "${data_dir}/*.fastq.gz"
+eval $cmd
 

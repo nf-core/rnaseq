@@ -76,13 +76,11 @@ if( params.star_index && params.aligner == 'star' ){
     star_index = Channel
         .fromPath(params.star_index)
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
-        .toList()
 }
 else if ( params.hisat2_index && params.aligner == 'hisat2' ){
     hs2_indices = Channel
         .fromPath("${params.hisat2_index}*")
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
-        .toList()
 }
 else if ( params.fasta ){
     fasta = file(params.fasta)
@@ -96,7 +94,7 @@ if( params.gtf ){
     Channel
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-        .toList()
+        .collect()
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
               gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM }
 }
@@ -107,13 +105,11 @@ if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
-        .toList()
 }
 if( params.aligner == 'hisat2' && params.splicesites ){
     Channel
         .fromPath(params.bed12)
         .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
-        .toList()
         .into { indexing_splicesites; alignment_splicesites }
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
@@ -418,8 +414,8 @@ if(params.aligner == 'star'){
 
         input:
         file reads from trimmed_reads
-        file index from star_index.first()
-        file gtf from gtf_star.first()
+        file index from star_index.collect()
+        file gtf from gtf_star.collect()
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
@@ -459,8 +455,8 @@ if(params.aligner == 'hisat2'){
 
         input:
         file reads from trimmed_reads
-        file hs2_indices from hs2_indices.first()
-        file alignment_splicesites from alignment_splicesites.first()
+        file hs2_indices from hs2_indices.collect()
+        file alignment_splicesites from alignment_splicesites.collect()
 
         output:
         file "${prefix}.bam" into hisat2_bam
@@ -525,12 +521,12 @@ if(params.aligner == 'hisat2'){
  * STEP 4 - RSeQC analysis
  */
 process rseqc {
-    tag "${bam_rseqc.baseName}"
+    tag "${bam_rseqc.baseName - '.sorted'}"
     publishDir "${params.outdir}/rseqc" , mode: 'copy'
 
     input:
     file bam_rseqc
-    file bed12 from bed12.first()
+    file bed12 from bed12.collect()
 
     output:
     file "*.{txt,pdf,r,xls}" into rseqc_results
@@ -558,7 +554,7 @@ process rseqc {
  * STEP 5 - preseq analysis
  */
 process preseq {
-    tag "${bam_preseq.baseName}"
+    tag "${bam_preseq.baseName - '.sorted'}"
     publishDir "${params.outdir}/preseq", mode: 'copy'
 
     input:
@@ -579,7 +575,7 @@ process preseq {
  * STEP 6 Mark duplicates
  */
 process markDuplicates {
-    tag "${bam_markduplicates.baseName}"
+    tag "${bam_markduplicates.baseName - '.sorted'}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy'
 
     input:
@@ -610,12 +606,12 @@ process markDuplicates {
  * STEP 7 - dupRadar
  */
 process dupradar {
-    tag "${bam_md.baseName}"
+    tag "${bam_md.baseName - '.sorted.markDups'}"
     publishDir "${params.outdir}/dupradar", pattern: '*.{pdf,txt}', mode: 'copy'
 
     input:
     file bam_md
-    file gtf from gtf_dupradar.first()
+    file gtf from gtf_dupradar.collect()
 
     output:
     file "*.{pdf,txt}" into dupradar_results
@@ -633,12 +629,12 @@ process dupradar {
  * STEP 8 Feature counts
  */
 process featureCounts {
-    tag "${bam_featurecounts.baseName}"
+    tag "${bam_featurecounts.baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
     input:
     file bam_featurecounts
-    file gtf from gtf_featureCounts.first()
+    file gtf from gtf_featureCounts.collect()
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts
@@ -658,12 +654,12 @@ process featureCounts {
  * STEP 9 - stringtie FPKM
  */
 process stringtieFPKM {
-    tag "${bam_stringtieFPKM.baseName}"
+    tag "${bam_stringtieFPKM.baseName - '.sorted'}"
     publishDir "${params.outdir}/stringtieFPKM", mode: 'copy'
 
     input:
     file bam_stringtieFPKM
-    file gtf from gtf_stringtieFPKM.first()
+    file gtf from gtf_stringtieFPKM.collect()
 
     output:
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
@@ -694,11 +690,11 @@ bam_count.count().subscribe{ num_bams = it }
  * STEP 10 - edgeR MDS and heatmap
  */
 process sample_correlation {
-    tag "$prefix"
+    tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
     input:
-    file input_files from geneCounts.toList()
+    file input_files from geneCounts.collect()
     bam_count
 
     output:
@@ -709,7 +705,6 @@ process sample_correlation {
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def rlocation = params.rlocation ?: ''
-    prefix = input_files[0].toString() - 'Aligned.sortedByCoord.out_gene.featureCounts.txt'
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
     """
@@ -724,16 +719,16 @@ process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
-    file (fastqc:'fastqc/*') from fastqc_results.flatten().toList()
-    file ('trimgalore/*') from trimgalore_results.flatten().toList()
-    file ('alignment/*') from alignment_logs.flatten().toList()
-    file ('rseqc/*') from rseqc_results.flatten().toList()
-    file ('preseq/*') from preseq_results.flatten().toList()
-    file ('dupradar/*') from dupradar_results.flatten().toList()
-    file ('featureCounts/*') from featureCounts_logs.flatten().toList()
-    file ('featureCounts_biotype/*') from featureCounts_biotype.flatten().toList()
-    file ('stringtie/*') from stringtie_log.flatten().toList()
-    file ('sample_correlation_results/*') from sample_correlation_results.flatten().toList()
+    file (fastqc:'fastqc/*') from fastqc_results.collect()
+    file ('trimgalore/*') from trimgalore_results.collect()
+    file ('alignment/*') from alignment_logs.collect()
+    file ('rseqc/*') from rseqc_results.collect()
+    file ('preseq/*') from preseq_results.collect()
+    file ('dupradar/*') from dupradar_results.collect()
+    file ('featureCounts/*') from featureCounts_logs.collect()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
+    file ('stringtie/*') from stringtie_log.collect()
+    file ('sample_correlation_results/*') from sample_correlation_results.collect()
 
     output:
     file "*multiqc_report.html"

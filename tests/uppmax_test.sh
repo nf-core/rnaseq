@@ -8,7 +8,7 @@ else
     script_path=$1
 fi
 
-data_path="/tmp"
+data_path=$SNIC_NOBACKUP
 if [ -d "./test_data" ]
 then
     data_path="./test_data"
@@ -17,7 +17,6 @@ fi
 
 curl --version >/dev/null 2>&1 || { echo >&2 "I require curl, but it's not installed. Aborting."; exit 1; }
 tar --version >/dev/null 2>&1 || { echo >&2 "I require tar, but it's not installed. Aborting."; exit 1; }
-docker -v >/dev/null 2>&1 || { echo >&2 "I require docker, but it's not installed. Visit https://www.docker.com/products/overview#/install_the_platform  ."; exit 1; }
 nextflow -v >/dev/null 2>&1 || { echo >&2 "I require nextflow, but it's not installed. If you hava Java, run 'curl -fsSL get.nextflow.io | bash'. If not, install Java."; exit 1; }
 
 data_dir=${data_path}/ngi-rna_test_set
@@ -32,7 +31,7 @@ else
     echo "Done"
 fi
 
-cmd="nextflow run $script_path -resume -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --star_index ${data_dir}/star/ --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -profile devel --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --star_index ${data_dir}/star/ --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"

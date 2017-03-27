@@ -6,8 +6,6 @@ jdk: openjdk8
 
 services:
   - docker
-env:
-  - NXF_VER=0.22.3
 install:
   - mkdir /tmp/nextflow
   - cd /tmp/nextflow

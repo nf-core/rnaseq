@@ -167,7 +167,7 @@ Channel
 /*
  * PREPROCESSING - Download Fasta
  */
-if(!params.star_index && !params.fasta && params.download_fasta){
+if(((params.aligner == 'star' && !params.star_index) || (params.aligner == 'hisat2' && !params.hisat2_index)) && !params.fasta && params.download_fasta){
     process downloadFASTA {
         tag "${params.download_fasta}"
         publishDir path: "${params.outdir}/reference_genome", saveAs: { params.saveReference ? it : null }, mode: 'copy'

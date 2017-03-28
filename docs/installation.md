@@ -6,9 +6,10 @@ To start using the NGI-RNAseq pipeline, there are three steps described below:
 2. [Install the pipeline](#install-the-pipeline)
 3. Configure the pipeline
     * [Swedish UPPMAX System](#31-configuration-uppmax)
-    * [Other Clusters](#32-configuration-other-clusters)
-    * [Docker](#33-configuration-docker)
-    * [Amazon AWS](#34-configuration-amazon-ec2)
+    * [Swedish Hebbe (C3SE) System](#32-configuration-hebbe-c3se)
+    * [Other Clusters](#33-configuration-other-clusters)
+    * [Docker](#34-configuration-docker)
+    * [Amazon AWS](#35-configuration-amazon-ec2)
 
 ## 1) Install NextFlow
 Nextflow runs on most POSIX systems (Linux, Mac OSX etc). It can be installed by running the following commands:
@@ -49,7 +50,12 @@ Note that you will need to specify your UPPMAX project ID when running a pipelin
 params.project = 'project_ID' // eg. b2017123
 ```
 
-## 3.2) Configuration: Other clusters
+## 3.2) Configuration: Hebbe (C3SE)
+This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it requires significantly more setup work than at UPPMAX. This is mainly due to the fact that none of the required software is pre-installed.
+
+To use, follow the steps described below ([3.3) Configuration: Other clusters](#33-configuration-other-clusters)) to install and configure the required software. Create a config file in your home directory (`~/.nextflow/config`) with paths to your reference genome indices (see below for [instructions](#reference-genomes)). Finally, run the pipeline with `-profile hebbe --project [project-id]`. This will launch the [hebbe config](../conf/hebbe.config) which has been pre-configured with a setup suitable for the Hebbe cluster. Note that to date it has only been tested on Yeast data - if jobs are failing due to insufficient resources, please [let us know](https://github.com/SciLifeLab/NGI-RNAseq/issues) and we will update it accordingly.
+
+## 3.3) Configuration: Other clusters
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the script knows where to find your reference files and how your cluster works.
 
 > If you think that there are other people using the pipeline who would benefit from your configuration (eg. other common cluster setups), please let us know. We can add a new configuration and profile which can used by specifying `-profile <name>` when running the pipeline.
@@ -193,7 +199,7 @@ conda install --yes \
 _(Feel free to adjust versions as required.)_
 
 ##### 3) Set up Picard
-Picard requires the `PICARD_HOME` environment variable to be set. To automatically set and unset this when you activate and deactivate your conda environment, do the following:
+Picard requires the `PICARD_HOME` environment variable to be set. In some cases, a temporary directory must also be specified (if the default does not have enough available space). To automatically set and unset these when you activate and deactivate your conda environment, do the following:
 
 ```bash
 cd ~/miniconda3/envs/rna_seq_py2.7 # Or path to your conda environment
@@ -206,14 +212,15 @@ touch ./etc/conda/deactivate.d/env_vars.sh
 Put in `./etc/conda/activate.d/env_vars.sh`:
 ```bash
 #!/bin/sh
-export PICARD_HOME='/HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/'
+export PICARD_HOME='$HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/'
+export _JAVA_OPTIONS=-Djava.io.tmpdir='/path/to/tmp'
 ```
-_(change path to your picard installation directory. Use absolute path.)_
 
 Then add to `./etc/conda/deactivate.d/env_vars.sh`:
 ```bash
 #!/bin/sh
 unset PICARD_HOME
+unset _JAVA_OPTIONS
 ```
 
 ##### 4) Usage
@@ -225,7 +232,7 @@ source activate rna_seq_py2.7
 source deactivate
 ```
 
-## 3.3) Configuration: Docker
+## 3.4) Configuration: Docker
 Docker is a great way to run NGI-RNAseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
 Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required.
@@ -243,7 +250,7 @@ A reference genome is still required by the pipeline. Specifying paths to FASTA 
 
 A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/ewels/NGI-RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/SciLifeLab/NGI-RNAseq/) whenever changes are made to the pipeline.
 
-## 3.4) Configuration: Amazon EC2
+## 3.5) Configuration: Amazon EC2
 There are multiple ways of running this pipeline over Amazon's EC2 service.
 
 The simplest way consists of creating a custom EC2 instance and running the pipeline with docker on this machine, as described above.

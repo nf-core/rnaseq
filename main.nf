@@ -636,7 +636,7 @@ process featureCounts {
     file gtf from gtf_featureCounts.collect()
 
     output:
-    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts
+    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
@@ -649,8 +649,30 @@ process featureCounts {
 }
 
 
+
 /*
- * STEP 9 - stringtie FPKM
+ * STEP 9 - Merge featurecounts
+ */
+process merge_featureCounts {
+    
+    publishDir "${params.outdir}/featureCounts", mode: 'copy'
+       
+    
+    input:
+    file input_files from featureCounts_to_merge.toList()
+
+    output:
+    file 'merged_gene_counts.txt'
+    
+    script:
+    """
+    merge_featurecounts.py -o merged_gene_counts.txt -i $input_files
+    """
+}
+
+
+/*
+ * STEP 10 - stringtie FPKM
  */
 process stringtieFPKM {
     tag "${bam_stringtieFPKM.baseName - '.sorted'}"
@@ -686,7 +708,7 @@ bam_count.count().subscribe{ num_bams = it }
 
 
 /*
- * STEP 10 - edgeR MDS and heatmap
+ * STEP 11 - edgeR MDS and heatmap
  */
 process sample_correlation {
     tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
@@ -711,7 +733,7 @@ process sample_correlation {
 
 
 /*
- * STEP 11 MultiQC
+ * STEP 12 MultiQC
  */
 process multiqc {
     tag "$prefix"

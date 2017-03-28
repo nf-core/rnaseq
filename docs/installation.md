@@ -6,7 +6,7 @@ To start using the NGI-RNAseq pipeline, there are three steps described below:
 2. [Install the pipeline](#install-the-pipeline)
 3. Configure the pipeline
     * [Swedish UPPMAX System](#31-configuration-uppmax)
-    * [Chalmers Hebbe System](#32-configuration-hebbe-chalmers)
+    * [Swedish Hebbe (C3SE) System](#32-configuration-hebbe-c3se)
     * [Other Clusters](#33-configuration-other-clusters)
     * [Docker](#34-configuration-docker)
     * [Amazon AWS](#35-configuration-amazon-ec2)
@@ -50,7 +50,7 @@ Note that you will need to specify your UPPMAX project ID when running a pipelin
 params.project = 'project_ID' // eg. b2017123
 ```
 
-## 3.2) Configuration: Hebbe (Chalmers)
+## 3.2) Configuration: Hebbe (C3SE)
 This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it requires significantly more setup work than at UPPMAX. This is mainly due to the fact that none of the required software is pre-installed.
 
 To use, follow the steps described below ([3.3) Configuration: Other clusters](#33-configuration-other-clusters)) to install and configure the required software. Create a config file in your home directory (`~/.nextflow/config`) with paths to your reference genome indices (see below for [instructions](#reference-genomes)). Finally, run the pipeline with `-profile hebbe --project [project-id]`. This will launch the [hebbe config](../conf/hebbe.config) which has been pre-configured with a setup suitable for the Hebbe cluster. Note that to date it has only been tested on Yeast data - if jobs are failing due to insufficient resources, please [let us know](https://github.com/SciLifeLab/NGI-RNAseq/issues) and we will update it accordingly.

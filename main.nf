@@ -46,6 +46,9 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
+//Java memory option
+params.java_mem = '2g'
+
 def single
 params.sampleLevel = false
 params.strandRule = false
@@ -586,7 +589,8 @@ process markDuplicates {
 
     script:
     """
-    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx${params.java_mem} -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+ }
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\

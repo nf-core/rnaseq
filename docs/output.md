@@ -1,11 +1,3 @@
----
-title: "Habits"
-output:
-  html_document:
-    toc: true
-    toc_float: true
----
-
 # NGI-RNAseq Output
 
 NGI-RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genomics Infrastructure](https://ngisweden.scilifelab.se/) at [SciLifeLab](https://www.scilifelab.se/platforms/ngi/) in Stockholm, Sweden.

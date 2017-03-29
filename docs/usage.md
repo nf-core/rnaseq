@@ -123,6 +123,15 @@ for common RNA-seq library preparation kits.
 | `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
 
 
+### strand dicrection for StringTie
+StringTie versions 1.32 and later support stranded libraries with the `--fr` and `--rf` flags. 
+--rf is the default option in this pipeline but can be changed to --fr with the `feturecounts_direction`
+flag. eg.
+```groovy
+--feturecounts_direction --fr 
+```
+
+
 ## Job Resources
 ### Automatic resubmission
 Each step in the pipeline has a default set of requirements for number of CPUs,

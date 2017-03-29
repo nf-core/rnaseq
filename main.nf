@@ -46,6 +46,9 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
+// StringTie fr -rf option
+params.StringTie_direction = "--rf"
+
 //Java memory option
 params.java_mem = '2g'
 
@@ -645,7 +648,7 @@ process featureCounts {
 
     script:
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s 2 $bam_featurecounts  
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """
@@ -694,14 +697,15 @@ process stringtieFPKM {
     script:
     """
     stringtie $bam_stringtieFPKM \\
+        ${params.StringTie_direction} \\
         -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\
         -v \\
         -G $gtf \\
         -A ${bam_stringtieFPKM.baseName}.gene_abund.txt \\
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
         -e \\
-        -b ${bam_stringtieFPKM.baseName}_ballgown
-
+        -b ${bam_stringtieFPKM.baseName}_ballgown 
+    
     echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
 }

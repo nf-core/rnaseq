@@ -654,16 +654,15 @@ process featureCounts {
  * STEP 9 - Merge featurecounts
  */
 process merge_featureCounts {
-    
+    tag "${input_files[0].baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
-       
-    
+
     input:
     file input_files from featureCounts_to_merge.toList()
 
     output:
     file 'merged_gene_counts.txt'
-    
+
     script:
     """
     merge_featurecounts.py -o merged_gene_counts.txt -i $input_files
@@ -752,7 +751,7 @@ process multiqc {
     file ('sample_correlation_results/*') from sample_correlation_results.collect()
 
     output:
-    file "*multiqc_report.html"
+    file "*multiqc_report.html" into multiqc_report
     file "*multiqc_data"
 
     script:
@@ -763,4 +762,22 @@ process multiqc {
     """
 }
 
+/*
+ * STEP 13 - Output Description HTML
+ */
+process output_documentation {
+    tag "$prefix"
+    publishDir "${params.outdir}/Documentation", mode: 'copy'
 
+    input:
+    file multiqc_report
+
+    output:
+    file "results_description.html"
+
+    script:
+    def rlocation = params.rlocation ?: ''
+    """
+    markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
+    """
+}

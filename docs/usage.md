@@ -153,6 +153,11 @@ params {
 }
 ```
 
+In some cases, like when input files are abouve 35M reads, the makrDuplicate step might run out of memory.
+In order to set the memory allocation yourself with the `--java_mem` parameter.
+Default is '2g' and increasing it to '4g' should handle bigger files. Any valid java memory specification
+is viable as input though. 
+
 ## Other command line parameters
 ### `--outdir`
 The output directory where the results will be saved.

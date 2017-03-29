@@ -590,7 +590,6 @@ process markDuplicates {
     script:
     """
     java -Xmx${params.java_mem} -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
- }
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\

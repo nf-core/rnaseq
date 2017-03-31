@@ -25,7 +25,7 @@ version = 0.2
 // Configurable variables
 params.project = false
 params.genome = false
-params.stranded = false
+params.stranded = '' //set to false in uppmax.config
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -46,20 +46,6 @@ if (params.rlocation){
     nxtflow_libs = file(params.rlocation)
     nxtflow_libs.mkdirs()
 }
-
-// Setting ip strandedness  
-
-// formward
-if ( params.stranded){
-    params.StringTie_direction = "--fr"
-    params.featureCounts_direction = 1
-    params.RSeQC_direction = 
-//reverse
-} else {
-    params.StringTie_direction = "--rf"
-    params.featureCounts_direction = 2
-    params.RSeQC_direction = 
-}    
 
 
 def single
@@ -547,6 +533,8 @@ process rseqc {
     file "*.{txt,pdf,r,xls}" into rseqc_results
 
     script:
+
+    
     def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
     """
     samtools index $bam_rseqc
@@ -657,9 +645,18 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
     script:
+    if (params.stranded==''){ 
+        def featureCounts_direction = 0
+    }else if (!params.stranded){
+        def featureCounts_direction = 2
+    }else if (params.stranded)
+        def featureCounts_direction = 1
+    }
+    
+    
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s ${params.featureCounts_direction} $bam_featurecounts  
-    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s ${params.featureCounts_direction} $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """
 }
@@ -705,9 +702,17 @@ process stringtieFPKM {
     stdout into stringtie_log
 
     script:
-    """
+    
+    if (params.stranded==''){ 
+        return
+    }else if (!params.stranded){
+        def StringTie_direction = "--rf"
+    }else if (params.stranded)
+        def StringTie_direction = "--fr"
+    }
+     """
     stringtie $bam_stringtieFPKM \\
-        ${params.StringTie_direction} \\
+        $StringTie_direction \\
         -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\
         -v \\
         -G $gtf \\

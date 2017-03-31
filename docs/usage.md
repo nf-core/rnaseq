@@ -123,12 +123,13 @@ for common RNA-seq library preparation kits.
 | `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
 
 
-### strand dicrection for StringTie
-StringTie versions 1.32 and later support stranded libraries with the `--fr` and `--rf` flags. 
---rf is the default option in this pipeline but can be changed to --fr with the `feturecounts_direction`
-flag. eg.
+### strand direction for StringTie and feturecounts
+The strandedness of the library can be set py using the `--stranded` flag. It is set as 
+`false` by default. If you library instead is forward oriented simply specify the flag as `true`
+ 
+e.g.
 ```groovy
---feturecounts_direction --fr 
+--stranded true 
 ```
 
 
@@ -161,11 +162,6 @@ params {
   star_time = '24h'
 }
 ```
-
-In some cases, like when input files are abouve 35M reads, the makrDuplicate step might run out of memory.
-In order to set the memory allocation yourself with the `--java_mem` parameter.
-Default is '2g' and increasing it to '4g' should handle bigger files. Any valid java memory specification
-is viable as input though. 
 
 ## Other command line parameters
 ### `--outdir`

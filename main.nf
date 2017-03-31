@@ -25,6 +25,7 @@ version = 0.2
 // Configurable variables
 params.project = false
 params.genome = false
+params.stranded = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -46,11 +47,20 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
-// StringTie fr -rf option
-params.StringTie_direction = "--rf"
+// Setting ip strandedness  
 
-//Java memory option
-params.java_mem = '2g'
+// formward
+if ( params.stranded){
+    params.StringTie_direction = "--fr"
+    params.featureCounts_direction = 1
+    params.RSeQC_direction = 
+//reverse
+} else {
+    params.StringTie_direction = "--rf"
+    params.featureCounts_direction = 2
+    params.RSeQC_direction = 
+}    
+
 
 def single
 params.sampleLevel = false
@@ -592,7 +602,7 @@ process markDuplicates {
 
     script:
     """
-    java -Xmx${params.java_mem} -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx$task.memory.toGiga() -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\
@@ -648,8 +658,8 @@ process featureCounts {
 
     script:
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s 2 $bam_featurecounts  
-    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s ${params.featureCounts_direction} $bam_featurecounts  
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s ${params.featureCounts_direction} $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """
 }

@@ -91,7 +91,7 @@ RUN curl -fsSL https://cran.r-project.org/src/base/R-3/R-3.2.3.tar.gz -o /opt/R-
 # Install R Packages v2
 RUN echo 'source("https://bioconductor.org/biocLite.R")' > /opt/packages.r && \
     echo 'biocLite()' >> /opt/packages.r && \
-    echo 'biocLite(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots"))' >> /opt/packages.r && \
+    echo 'biocLite(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots", "markdown"))' >> /opt/packages.r && \
     Rscript /opt/packages.r && \
     mkdir /usr/local/lib/R/site-library
 

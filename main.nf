@@ -534,14 +534,13 @@ process rseqc {
     file "*.{txt,pdf,r,xls}" into rseqc_results
 
     script:
+    def strandRule = ''
     if (params.forward_stranded){
-        def strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–') 
+        strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–') 
     } else if (params.reverse){
-        def strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
-    } else {
-        def strandRule = ''
+        strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
     }
-    """
+     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
     RPKM_saturation.py -i $bam_rseqc -r $bed12  $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
@@ -595,7 +594,7 @@ process markDuplicates {
 
     script:
     """
-    java -Xmx$task.memory.toGiga()g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx${task.memory.toGiga()}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\

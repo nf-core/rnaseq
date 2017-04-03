@@ -533,9 +533,10 @@ process rseqc {
     file "*.{txt,pdf,r,xls}" into rseqc_results
 
     script:
-
-    
-    def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
+    if (params.stranded){
+        def strandRule = params.strandRule ?:  (single ? '+-,-+' : '1+-,1-+,2++,2–') 
+    }else{def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
+    }
     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt

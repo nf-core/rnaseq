@@ -25,6 +25,8 @@ version = 0.2
 // Configurable variables
 params.project = false
 params.genome = false
+params.forward_stranded = false 
+params.reverse_stranded = false 
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -45,6 +47,7 @@ if (params.rlocation){
     nxtflow_libs = file(params.rlocation)
     nxtflow_libs.mkdirs()
 }
+
 
 def single
 params.sampleLevel = false
@@ -572,11 +575,16 @@ process rseqc {
     file "*.{txt,pdf,r,xls}" into rseqc_results
 
     script:
-    def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
-    """
+    def strandRule = ''
+    if (params.forward_stranded){
+        strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–') 
+    } else if (params.reverse){
+        strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
+    }
+     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-    RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
+    RPKM_saturation.py -i $bam_rseqc -r $bed12  $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
     junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
@@ -628,7 +636,7 @@ process markDuplicates {
 
     script:
     """
-    java -Xmx2g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx${task.memory.toGiga()}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\
@@ -698,9 +706,16 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
     script:
+    def featureCounts_direction = 0
+    if (params.reverse_stranded){
+        featureCounts_direction = 2
+    } else if (params.forward_stranded) {
+        featureCounts_direction = 1
+    }
+    
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s 2 $bam_featurecounts
-    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s 2 $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """
 }
@@ -750,16 +765,23 @@ process stringtieFPKM {
     stdout into stringtie_log
 
     script:
+    def StringTie_direction = '' 
+    if (params.forward_stranded){
+        StringTie_direction = "--fr"
+    }else if (!params.reverse_stranded){
+        StringTie_direction = "--rf"
+    }
     """
     stringtie $bam_stringtieFPKM \\
+        $StringTie_direction \\
         -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\
         -v \\
         -G $gtf \\
         -A ${bam_stringtieFPKM.baseName}.gene_abund.txt \\
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
         -e \\
-        -b ${bam_stringtieFPKM.baseName}_ballgown
-
+        -b ${bam_stringtieFPKM.baseName}_ballgown 
+    
     echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
 }

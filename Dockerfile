@@ -102,10 +102,10 @@ RUN curl -fsSL http://downloads.sourceforge.net/project/subread/subread-1.5.1/su
     rm /opt/subread-1.5.1-Linux-x86_64.tar.gz
 
 # Install StringTie
-RUN curl -fsSL http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.0.Linux_x86_64.tar.gz -o /opt/stringtie-1.3.0.Linux_x86_64.tar.gz && \
-    tar xvzf /opt/stringtie-1.3.0.Linux_x86_64.tar.gz -C /opt/ && \
-    ln -s /opt/stringtie-1.3.0.Linux_x86_64/stringtie /usr/local/bin/stringtie && \
-    rm /opt/stringtie-1.3.0.Linux_x86_64.tar.gz
+RUN curl -fsSL http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.3.Linux_x86_64.tar.gz -o /opt/stringtie-1.3.3.Linux_x86_64.tar.gz && \
+    tar xvzf /opt/stringtie-1.3.3.Linux_x86_64.tar.gz -C /opt/ && \
+    ln -s /opt/stringtie-1.3.3.Linux_x86_64/stringtie /usr/local/bin/stringtie && \
+    rm /opt/stringtie-1.3.3.Linux_x86_64.tar.gz
 
 # Install MultiQC
 RUN pip install git+git://github.com/ewels/MultiQC.git

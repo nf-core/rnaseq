@@ -123,6 +123,16 @@ for common RNA-seq library preparation kits.
 | `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
 
 
+### strand direction for StringTie and feturecounts
+The strandedness of the library can be set py using the `--forward_stranded`  and `--reverse_stranded` flags. Both are set as 
+`false` by default but reversed is set to true in the Uppmax config file. If you library instead is forward oriented simply specify the`--forward_stranded` flag. 
+ 
+e.g.
+```groovy
+`--forward_stranded` 
+```
+
+
 ## Job Resources
 ### Automatic resubmission
 Each step in the pipeline has a default set of requirements for number of CPUs,

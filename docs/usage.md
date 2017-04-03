@@ -125,11 +125,11 @@ for common RNA-seq library preparation kits.
 
 ### strand direction for StringTie and feturecounts
 The strandedness of the library can be set py using the `--forward_stranded`  and `--reverse_stranded` flags. Both are set as 
-`false` by default but reversed is cahnged to true in the Uppmax config file. If you library instead is forward oriented simply specify the`--forward_stranded` flag as `true`
+`false` by default but reversed is set to true in the Uppmax config file. If you library instead is forward oriented simply specify the`--forward_stranded` flag. 
  
 e.g.
 ```groovy
-`--forward_stranded` true 
+`--forward_stranded` 
 ```
 
 

@@ -535,9 +535,9 @@ process rseqc {
 
     script:
     if (params.forward_stranded){
-        def strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '1+-,1-+,2++,2–') 
+        def strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–') 
     } else if (params.reverse){
-        def strandRule = params.strandRule ?: (single ? '-d ++,--' : '1+-,1-+,2++,2--')
+        def strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
     } else {
         def strandRule = ''
     }
@@ -650,14 +650,12 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
     script:
-    }if (params.reverse_stranded){
-        def featureCounts_direction = 2
-    }else if (params.forward_stranded)
-        def featureCounts_direction = 1
-    }else{
-        def featureCounts_direction = 0
+    def featureCounts_direction = 0
+    if (params.reverse_stranded){
+        featureCounts_direction = 2
+    } else if (params.forward_stranded) {
+        featureCounts_direction = 1
     }
-    
     
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
@@ -707,11 +705,11 @@ process stringtieFPKM {
     stdout into stringtie_log
 
     script:
-    
+    def StringTie_direction = '' 
     if (params.forward_stranded){
-        def StringTie_direction = "--fr"
+        StringTie_direction = "--fr"
     }else if (!params.reverse_stranded){
-        def StringTie_direction = "--rf"
+        StringTie_direction = "--rf"
     }
     """
     stringtie $bam_stringtieFPKM \\

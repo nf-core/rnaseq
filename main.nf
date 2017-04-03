@@ -25,7 +25,8 @@ version = 0.2
 // Configurable variables
 params.project = false
 params.genome = false
-params.stranded = '' //set to false in uppmax.config
+params.forward_stranded = false 
+params.reverse_stranded = false 
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -533,14 +534,17 @@ process rseqc {
     file "*.{txt,pdf,r,xls}" into rseqc_results
 
     script:
-    if (params.stranded){
-        def strandRule = params.strandRule ?:  (single ? '+-,-+' : '1+-,1-+,2++,2–') 
-    }else{def strandRule = params.strandRule ?: (single ? '++,--' : '1+-,1-+,2++,2--')
+    if (params.forward_stranded){
+        def strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '1+-,1-+,2++,2–') 
+    } else if (params.reverse){
+        def strandRule = params.strandRule ?: (single ? '-d ++,--' : '1+-,1-+,2++,2--')
+    } else {
+        def strandRule = ''
     }
     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-    RPKM_saturation.py -i $bam_rseqc -r $bed12 -d $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
+    RPKM_saturation.py -i $bam_rseqc -r $bed12  $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
     junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
@@ -646,12 +650,12 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
 
     script:
-    if (params.stranded==''){ 
-        def featureCounts_direction = 0
-    }else if (!params.stranded){
+    }if (params.reverse_stranded){
         def featureCounts_direction = 2
-    }else if (params.stranded)
+    }else if (params.forward_stranded)
         def featureCounts_direction = 1
+    }else{
+        def featureCounts_direction = 0
     }
     
     
@@ -704,14 +708,12 @@ process stringtieFPKM {
 
     script:
     
-    if (params.stranded==''){ 
-        return
-    }else if (!params.stranded){
-        def StringTie_direction = "--rf"
-    }else if (params.stranded)
+    if (params.forward_stranded){
         def StringTie_direction = "--fr"
+    }else if (!params.reverse_stranded){
+        def StringTie_direction = "--rf"
     }
-     """
+    """
     stringtie $bam_stringtieFPKM \\
         $StringTie_direction \\
         -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\

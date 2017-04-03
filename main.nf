@@ -595,7 +595,7 @@ process markDuplicates {
 
     script:
     """
-    java -Xmx$task.memory.toGiga() -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx$task.memory.toGiga()g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\

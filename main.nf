@@ -25,8 +25,8 @@ version = 0.2
 // Configurable variables
 params.project = false
 params.genome = false
-params.forward_stranded = false 
-params.reverse_stranded = false 
+params.forward_stranded = false
+params.reverse_stranded = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -577,8 +577,8 @@ process rseqc {
     script:
     def strandRule = ''
     if (params.forward_stranded){
-        strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–') 
-    } else if (params.reverse){
+        strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–')
+    } else if (params.reverse_stranded){
         strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
     }
      """
@@ -712,7 +712,6 @@ process featureCounts {
     } else if (params.forward_stranded) {
         featureCounts_direction = 1
     }
-    
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
@@ -765,10 +764,10 @@ process stringtieFPKM {
     stdout into stringtie_log
 
     script:
-    def StringTie_direction = '' 
+    def StringTie_direction = ''
     if (params.forward_stranded){
         StringTie_direction = "--fr"
-    }else if (!params.reverse_stranded){
+    } else if (!params.reverse_stranded){
         StringTie_direction = "--rf"
     }
     """
@@ -780,8 +779,8 @@ process stringtieFPKM {
         -A ${bam_stringtieFPKM.baseName}.gene_abund.txt \\
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
         -e \\
-        -b ${bam_stringtieFPKM.baseName}_ballgown 
-    
+        -b ${bam_stringtieFPKM.baseName}_ballgown
+
     echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
 }

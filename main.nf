@@ -9,8 +9,10 @@ vim: syntax=groovy
  #### Homepage / Documentation
  https://github.com/SciLifeLab/NGI-RNAseq
  #### Authors
- Phil Ewels <phil.ewels@scilifelab.se>
- Rickard Hammarén <rickard.hammaren@scilifelab.se>
+ Phil Ewels @ewels <phil.ewels@scilifelab.se>
+ Rickard Hammarén @Hammarn  <rickard.hammaren@scilifelab.se>
+ Docker and AWS integration by 
+ Denis Moreno @Galithil <denis.moreno@scilifelab.se> 
 ----------------------------------------------------------------------------------------
 */
 

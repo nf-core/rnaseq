@@ -3,14 +3,16 @@
 vim: syntax=groovy
 -*- mode: groovy;-*-
 ========================================================================================
-                R N A - S E Q    T W O    P O I N T    Z E R O
+               N G I - R N A S E Q    B E S T    P R A C T I C E
 ========================================================================================
  New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
  #### Homepage / Documentation
  https://github.com/SciLifeLab/NGI-RNAseq
  #### Authors
- Phil Ewels <phil.ewels@scilifelab.se>
- Rickard Hammarén <rickard.hammaren@scilifelab.se>
+ Phil Ewels @ewels <phil.ewels@scilifelab.se>
+ Rickard Hammarén @Hammarn  <rickard.hammaren@scilifelab.se>
+ Docker and AWS integration by 
+ Denis Moreno @Galithil <denis.moreno@scilifelab.se> 
 ----------------------------------------------------------------------------------------
 */
 
@@ -20,7 +22,7 @@ vim: syntax=groovy
  */
 
 // Pipeline version
-version = 0.2
+version = 1.0
 
 // Configurable variables
 params.project = false
@@ -531,8 +533,6 @@ if(params.aligner == 'hisat2'){
 }
 
 
-
-
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -595,7 +595,6 @@ process rseqc {
     echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
-
 
 
 /*
@@ -720,7 +719,6 @@ process featureCounts {
 }
 
 
-
 /*
  * STEP 9 - Merge featurecounts
  */
@@ -788,7 +786,6 @@ def num_bams
 bam_count.count().subscribe{ num_bams = it }
 
 
-
 /*
  * STEP 11 - edgeR MDS and heatmap
  */
@@ -846,6 +843,7 @@ process multiqc {
     multiqc -f . 2>&1
     """
 }
+
 
 /*
  * STEP 13 - Output Description HTML

@@ -526,7 +526,7 @@ if(params.aligner == 'hisat2'){
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
 
         script:
-        def avail_mem = task.memory == null ? '' : "-m ${avail_mem / task.cpus}"
+        def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
         """
         samtools sort \\
             $hisat2_bam \\

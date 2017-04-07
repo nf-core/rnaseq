@@ -301,8 +301,14 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && !params.download_hisat2
         file "${fasta.baseName}.*.ht2" into hs2_indices
 
         script:
-        log.info "[HISAT2 index build] Available memory: ${task.memory}"
-        if( task.memory.toGiga() > params.hisatBuildMemory ){
+        if( task.memory == null ){
+            log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
+            avail_mem = 0
+        } else {
+            log.info "[HISAT2 index build] Available memory: ${task.memory}"
+            avail_mem = task.memory.toGiga()
+        }
+        if( avail_mem > params.hisatBuildMemory ){
             log.info "[HISAT2 index build] Over ${params.hisatBuildMemory} GB available, so using splice sites and exons in HISAT2 index"
             extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
             ss = "--ss $indexing_splicesites"
@@ -522,11 +528,11 @@ if(params.aligner == 'hisat2'){
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
 
         script:
+        def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
         """
         samtools sort \\
             $hisat2_bam \\
-            -m ${task.memory.toBytes() / task.cpus} \\
-            -@ ${task.cpus} \\
+            -@ ${task.cpus} $avail_mem \\
             -o ${hisat2_bam.baseName}.sorted.bam
         """
     }
@@ -634,8 +640,14 @@ process markDuplicates {
     file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
 
     script:
+    if( task.memory == null ){
+        log.info "[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this."
+        avail_mem = 3
+    } else {
+        avail_mem = task.memory.toGiga()
+    }
     """
-    java -Xmx${task.memory.toGiga()}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx${avail_mem}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\

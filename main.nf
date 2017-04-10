@@ -11,8 +11,8 @@ vim: syntax=groovy
  #### Authors
  Phil Ewels @ewels <phil.ewels@scilifelab.se>
  Rickard Hammarén @Hammarn  <rickard.hammaren@scilifelab.se>
- Docker and AWS integration by 
- Denis Moreno @Galithil <denis.moreno@scilifelab.se> 
+ Docker and AWS integration by
+ Denis Moreno @Galithil <denis.moreno@scilifelab.se>
 ----------------------------------------------------------------------------------------
 */
 
@@ -29,6 +29,7 @@ params.project = false
 params.genome = false
 params.forward_stranded = false
 params.reverse_stranded = false
+params.unstranded = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -53,7 +54,6 @@ if (params.rlocation){
 
 def single
 params.sampleLevel = false
-params.strandRule = false
 
 // Custom trimming options
 params.clip_r1 = 0
@@ -140,6 +140,7 @@ if(params.aligner == 'star'){
 if(params.gtf)                 log.info "GTF Annotation : ${params.gtf}"
 else if(params.download_gtf)   log.info "GTF URL        : ${params.download_gtf}"
 if(params.bed12)               log.info "BED Annotation : ${params.bed12}"
+log.info "Strandedness   : ${params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None'}"
 log.info "Current home   : $HOME"
 log.info "Current user   : $USER"
 log.info "Current path   : $PWD"
@@ -489,11 +490,18 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+        def rnastrandness = ''
+        if (params.forward_stranded && !params.unstranded){
+            rnastrandness = single ? '--rna-strandness F' : '--rna-strandness FR'
+        } else if (params.reverse_stranded && !params.unstranded){
+            rnastrandness = single ? '--rna-strandness R' : '--rna-strandness RF'
+        }
         if (single) {
             """
             set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
                    -U $reads \\
+                   $rnastrandness \\
                    --known-splicesite-infile $alignment_splicesites \\
                    -p ${task.cpus} \\
                    --met-stderr \\
@@ -506,6 +514,7 @@ if(params.aligner == 'hisat2'){
             hisat2 -x $index_base \\
                    -1 ${reads[0]} \\
                    -2 ${reads[1]} \\
+                   $rnastrandness \\
                    --known-splicesite-infile $alignment_splicesites \\
                    --no-mixed \\
                    --no-discordant \\
@@ -582,10 +591,10 @@ process rseqc {
 
     script:
     def strandRule = ''
-    if (params.forward_stranded){
-        strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–')
-    } else if (params.reverse_stranded){
-        strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
+    if (params.forward_stranded && !params.unstranded){
+        strandRule = single ? '-d ++,--' : '-d 1++,1--,2+-,2-+'
+    } else if (params.reverse_stranded && !params.unstranded){
+        strandRule = single ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
     }
      """
     samtools index $bam_rseqc
@@ -718,10 +727,10 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
-    if (params.reverse_stranded){
-        featureCounts_direction = 2
-    } else if (params.forward_stranded) {
+    if (params.forward_stranded && !params.unstranded) {
         featureCounts_direction = 1
+    } else if (params.reverse_stranded && !params.unstranded){
+        featureCounts_direction = 2
     }
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
@@ -775,9 +784,9 @@ process stringtieFPKM {
 
     script:
     def StringTie_direction = ''
-    if (params.forward_stranded){
+    if (params.forward_stranded && !params.unstranded){
         StringTie_direction = "--fr"
-    } else if (!params.reverse_stranded){
+    } else if (!params.reverse_stranded && !params.unstranded){
         StringTie_direction = "--rf"
     }
     """

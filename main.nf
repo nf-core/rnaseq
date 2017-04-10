@@ -596,7 +596,7 @@ process rseqc {
     } else if (params.reverse_stranded && !params.unstranded){
         strandRule = single ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
     }
-     """
+    """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
     RPKM_saturation.py -i $bam_rseqc -r $bed12  $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation

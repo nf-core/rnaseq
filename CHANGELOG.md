@@ -15,7 +15,7 @@ This release includes a bugfix for the last major release relating to the strand
 * PE forward is now correctly `-1++,1--,2+-,2-+`
 
 ## [1.0](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0) - 2017-04-05
-The pipeline has been now validated for production.
+The pipeline has now been validated for use in our production work.
 This version includes some new features:
 
 * The output from featureCounts is now merged into a single table and supplied along side the individual reports.
@@ -26,17 +26,8 @@ This version includes some new features:
 * + Numerous minor tweaks and improvements.
 
 ## [0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.3) - 2016-12-13
-The pipeline has been now validated for production.
-
-This version includes some new features:
-
-* The output from featureCounts is now merged into a single table and supplied along side the individual reports.
-* markDuplicates JVM memory is now automatically scaled based on the process memory
-* an `html` file with results documentation is now generated and supplied amongst the results
-* It's now possible to configure the pipeline for different stranded libraries with just a simple CL flag.
-* Additional support and documentation for other platforms than Uppmax. Including `C3SE`.
-* Numerous minor tweaks and improvements.
-
+In order to properly validate this pipeline and take it into production we need to tag a stable release.
+I've tagged specific software versions in the `uppmax.config` file.
 
 ## [0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.2) - 2016-10-14
 First (semi-) stable release of the new NGI-RNAseq pipeline, as we head towards deployment in production.

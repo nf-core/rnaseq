@@ -123,6 +123,15 @@ and BED12 files will then be generated from these downloaded files.
 Supply this parameter to save any generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
+### `--saveTrimmed`
+By default, trimmed FastQ files will not be saved to the results directory. Specify this
+flag (or set to true in your config file) to copy these files when complete.
+
+### `--saveAlignedIntermediates`
+As above, by default intermediate BAM files will not be saved. The final BAM files created
+after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM
+files from STAR / HISAT2 and sorting steps.
+
 ## Adapter Trimming
 If specific additional trimming is required (for example, from additional tags),
 you can use any of the following command line parameters. These affect the command

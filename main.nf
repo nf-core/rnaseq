@@ -41,6 +41,8 @@ params.download_fasta = false
 params.download_gtf = false
 params.hisatBuildMemory = 200 // Required amount of memory in GB to build HISAT2 index with splice sites
 params.saveReference = false
+params.saveTrimmed = false
+params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 
@@ -148,6 +150,9 @@ log.info "R libraries    : ${params.rlocation}"
 log.info "Script dir     : $baseDir"
 log.info "Working dir    : $workDir"
 log.info "Output dir     : ${params.outdir}"
+log.info "Save Reference : ${params.saveReference}"
+log.info "Save Trimmed   : ${params.saveTrimmed}"
+log.info "Save Intermeds : ${params.saveAlignedIntermediates}"
 if( params.pico       ) log.info "Trim Profile   : SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
 if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
@@ -380,7 +385,7 @@ process trim_galore {
         saveAs: {filename ->
             if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
             else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-            else "$filename"
+            else params.saveTrimmed ? filename : null
         }
 
     input:
@@ -434,7 +439,10 @@ if(params.aligner == 'star'){
     process star {
         tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy',
-            saveAs: {filename -> filename.indexOf(".out") > 0 ? "logs/$filename" : "$filename"}
+            saveAs: {filename ->
+                if (filename.indexOf(".out") > 0) "logs/$filename"
+                else params.saveAlignedIntermediates ? filename : null
+            }
 
         input:
         file reads from trimmed_reads
@@ -476,7 +484,10 @@ if(params.aligner == 'hisat2'){
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
-            saveAs: {filename -> filename.indexOf("_log.txt") > 0 ? "logs/$filename" : "aligned/$filename"}
+            saveAs: {filename ->
+                if (filename.indexOf("_log.txt") > 0) "logs/$filename"
+                else params.saveAlignedIntermediates ? filename : null
+            }
 
         input:
         file reads from trimmed_reads
@@ -528,7 +539,8 @@ if(params.aligner == 'hisat2'){
 
     process hisat2_sortOutput {
         tag "${hisat2_bam.baseName}"
-        publishDir "${params.outdir}/HISAT2/aligned_sorted", mode: 'copy'
+        publishDir "${params.outdir}/HISAT2", mode: 'copy',
+            saveAs: {filename -> params.saveAlignedIntermediates ? "aligned_sorted/$filename" : null }
 
         input:
         file hisat2_bam
@@ -748,7 +760,7 @@ process merge_featureCounts {
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
     input:
-    file input_files from featureCounts_to_merge.toList()
+    file input_files from featureCounts_to_merge.collect()
 
     output:
     file 'merged_gene_counts.txt'

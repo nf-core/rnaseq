@@ -727,7 +727,7 @@ process merge_featureCounts {
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
     input:
-    file input_files from featureCounts_to_merge.toList()
+    file input_files from featureCounts_to_merge.collect()
 
     output:
     file 'merged_gene_counts.txt'

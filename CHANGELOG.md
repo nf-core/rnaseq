@@ -1,5 +1,8 @@
 # NGI-RNAseq
 
+## [1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.1) - 2017-04-19
+Hotfix to fix minor bug affecting strandedness for StringTie run.
+
 ## [1.0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.2) - 2017-04-11
 A couple of tweaks to help the pipeline in production:
 

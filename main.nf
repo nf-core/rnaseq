@@ -22,7 +22,7 @@ vim: syntax=groovy
  */
 
 // Pipeline version
-version = '1.0.2'
+version = '1.0.3'
 
 // Configurable variables
 params.project = false
@@ -798,7 +798,7 @@ process stringtieFPKM {
     def StringTie_direction = ''
     if (params.forward_stranded && !params.unstranded){
         StringTie_direction = "--fr"
-    } else if (!params.reverse_stranded && !params.unstranded){
+    } else if (params.reverse_stranded && !params.unstranded){
         StringTie_direction = "--rf"
     }
     """

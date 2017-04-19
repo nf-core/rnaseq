@@ -798,7 +798,7 @@ process stringtieFPKM {
     def StringTie_direction = ''
     if (params.forward_stranded && !params.unstranded){
         StringTie_direction = "--fr"
-    } else if (!params.reverse_stranded && !params.unstranded){
+    } else if (params.reverse_stranded && !params.unstranded){
         StringTie_direction = "--rf"
     }
     """

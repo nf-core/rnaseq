@@ -11,8 +11,8 @@ vim: syntax=groovy
  #### Authors
  Phil Ewels @ewels <phil.ewels@scilifelab.se>
  Rickard Hammarén @Hammarn  <rickard.hammaren@scilifelab.se>
- Docker and AWS integration by 
- Denis Moreno @Galithil <denis.moreno@scilifelab.se> 
+ Docker and AWS integration by
+ Denis Moreno @Galithil <denis.moreno@scilifelab.se>
 ----------------------------------------------------------------------------------------
 */
 
@@ -22,13 +22,14 @@ vim: syntax=groovy
  */
 
 // Pipeline version
-version = 1.0
+version = '1.0.3'
 
 // Configurable variables
 params.project = false
 params.genome = false
 params.forward_stranded = false
 params.reverse_stranded = false
+params.unstranded = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
@@ -40,6 +41,8 @@ params.download_fasta = false
 params.download_gtf = false
 params.hisatBuildMemory = 200 // Required amount of memory in GB to build HISAT2 index with splice sites
 params.saveReference = false
+params.saveTrimmed = false
+params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 
@@ -53,7 +56,6 @@ if (params.rlocation){
 
 def single
 params.sampleLevel = false
-params.strandRule = false
 
 // Custom trimming options
 params.clip_r1 = 0
@@ -140,6 +142,7 @@ if(params.aligner == 'star'){
 if(params.gtf)                 log.info "GTF Annotation : ${params.gtf}"
 else if(params.download_gtf)   log.info "GTF URL        : ${params.download_gtf}"
 if(params.bed12)               log.info "BED Annotation : ${params.bed12}"
+log.info "Strandedness   : ${params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None'}"
 log.info "Current home   : $HOME"
 log.info "Current user   : $USER"
 log.info "Current path   : $PWD"
@@ -147,6 +150,9 @@ log.info "R libraries    : ${params.rlocation}"
 log.info "Script dir     : $baseDir"
 log.info "Working dir    : $workDir"
 log.info "Output dir     : ${params.outdir}"
+log.info "Save Reference : ${params.saveReference}"
+log.info "Save Trimmed   : ${params.saveTrimmed}"
+log.info "Save Intermeds : ${params.saveAlignedIntermediates}"
 if( params.pico       ) log.info "Trim Profile   : SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
 if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
@@ -301,8 +307,14 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && !params.download_hisat2
         file "${fasta.baseName}.*.ht2" into hs2_indices
 
         script:
-        log.info "[HISAT2 index build] Available memory: ${task.memory}"
-        if( task.memory.toGiga() > params.hisatBuildMemory ){
+        if( task.memory == null ){
+            log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
+            avail_mem = 0
+        } else {
+            log.info "[HISAT2 index build] Available memory: ${task.memory}"
+            avail_mem = task.memory.toGiga()
+        }
+        if( avail_mem > params.hisatBuildMemory ){
             log.info "[HISAT2 index build] Over ${params.hisatBuildMemory} GB available, so using splice sites and exons in HISAT2 index"
             extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
             ss = "--ss $indexing_splicesites"
@@ -373,7 +385,7 @@ process trim_galore {
         saveAs: {filename ->
             if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
             else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-            else "$filename"
+            else params.saveTrimmed ? filename : null
         }
 
     input:
@@ -427,7 +439,10 @@ if(params.aligner == 'star'){
     process star {
         tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy',
-            saveAs: {filename -> filename.indexOf(".out") > 0 ? "logs/$filename" : "$filename"}
+            saveAs: {filename ->
+                if (filename.indexOf(".out") > 0) "logs/$filename"
+                else params.saveAlignedIntermediates ? filename : null
+            }
 
         input:
         file reads from trimmed_reads
@@ -469,7 +484,10 @@ if(params.aligner == 'hisat2'){
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
-            saveAs: {filename -> filename.indexOf("_log.txt") > 0 ? "logs/$filename" : "aligned/$filename"}
+            saveAs: {filename ->
+                if (filename.indexOf("_log.txt") > 0) "logs/$filename"
+                else params.saveAlignedIntermediates ? filename : null
+            }
 
         input:
         file reads from trimmed_reads
@@ -483,11 +501,18 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+        def rnastrandness = ''
+        if (params.forward_stranded && !params.unstranded){
+            rnastrandness = single ? '--rna-strandness F' : '--rna-strandness FR'
+        } else if (params.reverse_stranded && !params.unstranded){
+            rnastrandness = single ? '--rna-strandness R' : '--rna-strandness RF'
+        }
         if (single) {
             """
             set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
                    -U $reads \\
+                   $rnastrandness \\
                    --known-splicesite-infile $alignment_splicesites \\
                    -p ${task.cpus} \\
                    --met-stderr \\
@@ -500,6 +525,7 @@ if(params.aligner == 'hisat2'){
             hisat2 -x $index_base \\
                    -1 ${reads[0]} \\
                    -2 ${reads[1]} \\
+                   $rnastrandness \\
                    --known-splicesite-infile $alignment_splicesites \\
                    --no-mixed \\
                    --no-discordant \\
@@ -513,7 +539,8 @@ if(params.aligner == 'hisat2'){
 
     process hisat2_sortOutput {
         tag "${hisat2_bam.baseName}"
-        publishDir "${params.outdir}/HISAT2/aligned_sorted", mode: 'copy'
+        publishDir "${params.outdir}/HISAT2", mode: 'copy',
+            saveAs: {filename -> params.saveAlignedIntermediates ? "aligned_sorted/$filename" : null }
 
         input:
         file hisat2_bam
@@ -522,11 +549,11 @@ if(params.aligner == 'hisat2'){
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
 
         script:
+        def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
         """
         samtools sort \\
             $hisat2_bam \\
-            -m ${task.memory.toBytes() / task.cpus} \\
-            -@ ${task.cpus} \\
+            -@ ${task.cpus} $avail_mem \\
             -o ${hisat2_bam.baseName}.sorted.bam
         """
     }
@@ -576,12 +603,12 @@ process rseqc {
 
     script:
     def strandRule = ''
-    if (params.forward_stranded){
-        strandRule = params.strandRule ?:  (single ? '-d +-,-+' : '-d 1+-,1-+,2++,2–')
-    } else if (params.reverse_stranded){
-        strandRule = params.strandRule ?: (single ? '-d ++,--' : '-d 1+-,1-+,2++,2--')
+    if (params.forward_stranded && !params.unstranded){
+        strandRule = single ? '-d ++,--' : '-d 1++,1--,2+-,2-+'
+    } else if (params.reverse_stranded && !params.unstranded){
+        strandRule = single ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
     }
-     """
+    """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
     RPKM_saturation.py -i $bam_rseqc -r $bed12  $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
@@ -634,8 +661,14 @@ process markDuplicates {
     file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
 
     script:
+    if( task.memory == null ){
+        log.info "[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this."
+        avail_mem = 3
+    } else {
+        avail_mem = task.memory.toGiga()
+    }
     """
-    java -Xmx${task.memory.toGiga()}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
+    java -Xmx${avail_mem}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
         INPUT=$bam_markduplicates \\
         OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
         METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\
@@ -706,10 +739,10 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
-    if (params.reverse_stranded){
-        featureCounts_direction = 2
-    } else if (params.forward_stranded) {
+    if (params.forward_stranded && !params.unstranded) {
         featureCounts_direction = 1
+    } else if (params.reverse_stranded && !params.unstranded){
+        featureCounts_direction = 2
     }
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
@@ -763,9 +796,9 @@ process stringtieFPKM {
 
     script:
     def StringTie_direction = ''
-    if (params.forward_stranded){
+    if (params.forward_stranded && !params.unstranded){
         StringTie_direction = "--fr"
-    } else if (!params.reverse_stranded){
+    } else if (params.reverse_stranded && !params.unstranded){
         StringTie_direction = "--rf"
     }
     """

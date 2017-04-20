@@ -212,7 +212,7 @@ touch ./etc/conda/deactivate.d/env_vars.sh
 Put in `./etc/conda/activate.d/env_vars.sh`:
 ```bash
 #!/bin/sh
-export PICARD_HOME='$HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/'
+export PICARD_HOME="$HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/"
 export _JAVA_OPTIONS=-Djava.io.tmpdir='/path/to/tmp'
 ```
 

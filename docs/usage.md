@@ -30,6 +30,29 @@ all files as single end. The file path should be in quotation marks to prevent s
 
 If left unspecified, the pipeline will assume that the data is in a directory called `data` in the working directory.
 
+### Library strandedness
+Three command line flags / config parameters set the library strandedness for a run:
+
+* `--forward_stranded`
+* `--reverse_stranded`
+* `--unstranded`
+
+If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default.
+Use `--unstranded` or `--forward_stranded` to overwrite this.
+
+These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`)
+and StringTie:
+* `--forward_stranded`
+  * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
+  * featureCounts: `-s 1`
+  * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
+  * StringTie: `--fr`
+* `--reverse_stranded`
+  * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
+  * featureCounts: `-s 2`
+  * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
+  * StringTie: `--rf`
+
 ## Alignment tool
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads
 to the reference genome. STAR is fast and common, but requires a great deal of RAM to run, typically
@@ -100,6 +123,15 @@ and BED12 files will then be generated from these downloaded files.
 Supply this parameter to save any generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
+### `--saveTrimmed`
+By default, trimmed FastQ files will not be saved to the results directory. Specify this
+flag (or set to true in your config file) to copy these files when complete.
+
+### `--saveAlignedIntermediates`
+As above, by default intermediate BAM files will not be saved. The final BAM files created
+after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM
+files from STAR / HISAT2 and sorting steps.
+
 ## Adapter Trimming
 If specific additional trimming is required (for example, from additional tags),
 you can use any of the following command line parameters. These affect the command
@@ -121,16 +153,6 @@ for common RNA-seq library preparation kits.
 | Parameter | Kit                                             | 5' R1 | 5' R2 | 3' R1 | 3' R2 |
 |-----------|-------------------------------------------------|-------|-------|-------|-------|
 | `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
-
-
-### strand direction for StringTie and feturecounts
-The strandedness of the library can be set py using the `--forward_stranded`  and `--reverse_stranded` flags. Both are set as 
-`false` by default but reversed is set to true in the Uppmax config file. If you library instead is forward oriented simply specify the`--forward_stranded` flag. 
- 
-e.g.
-```groovy
-`--forward_stranded` 
-```
 
 
 ## Job Resources
@@ -169,24 +191,6 @@ The output directory where the results will be saved.
 
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
-
-### `--strandRule`
-Some RSeQC jobs need to know the stranded nature of the library. By default, the pipeline will use
-`++,--` for single end libraries and `1+-,1-+,2++,2--` for paired end libraries. These codes are for
-strand specific libraries (antisense). `1+-,1-+,2++,2--` decodes as:
-
-*  Reads 1 mapped to `+` => parental gene on `+`
-*  Reads 1 mapped to `-` => parental gene on `-`
-*  Reads 2 mapped to `+` => parental gene on `-`
-*  Reads 2 mapped to `-` => parental gene on `+`
-
-Use this parameter to override these defaults. For example, if your data is paired end and strand specific,
-but same-sense to the reference, you could run:
-
-```bash
-nextflow run NGI-RNAseq/main.nf --strandRule '1++,1--,2+-,2-+'
-```
-Use `--strandRule 'none'` if your data is not strand specific.
 
 ### `--rlocation`
 Some steps in the pipeline run R with required modules. By default, the pipeline will install

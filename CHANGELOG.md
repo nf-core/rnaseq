@@ -1,6 +1,8 @@
 # NGI-RNAseq
+## [1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-21
+RseQC hotfix, input file was not supplied properly to one of the scripts
 
-## [1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.1) - 2017-04-19
+## [1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-19
 Hotfix to fix minor bug affecting strandedness for StringTie run.
 
 ## [1.0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.2) - 2017-04-11

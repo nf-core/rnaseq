@@ -22,7 +22,7 @@ vim: syntax=groovy
  */
 
 // Pipeline version
-version = '1.0.3'
+version = '1.0.4'
 
 // Configurable variables
 params.project = false
@@ -584,6 +584,7 @@ process rseqc {
             else if (filename.indexOf("inner_distance.txt") > 0)                "inner_distance/$filename"
             else if (filename.indexOf("inner_distance_freq.txt") > 0)           "inner_distance/data/$filename"
             else if (filename.indexOf("inner_distance_plot.r") > 0)             "inner_distance/rscripts/$filename"
+            else if (filename.indexOf("inner_distance_plot.pdf") > 0)           "inner_distance/plots/$filename"
             else if (filename.indexOf("junction_plot.r") > 0)                   "junction_annotation/rscripts/$filename"
             else if (filename.indexOf("junction.xls") > 0)                      "junction_annotation/data/$filename"
             else if (filename.indexOf("splice_events.pdf") > 0)                 "junction_annotation/events/$filename"
@@ -616,7 +617,7 @@ process rseqc {
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
     junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
     inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
-    geneBody_coverage.py -i ${bam_rseqc.baseName} -o ${bam_rseqc.baseName}.rseqc -r $bed12
+    geneBody_coverage.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
     echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)

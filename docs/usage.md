@@ -205,6 +205,13 @@ to run on the development node (though won't work with default process time requ
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
 projects or different sets of reference genomes. **NB:** one hyphen only (core Nextflow parameter).
 
+Note - you can use this to override defaults. For example, we run on UPPMAX but don't want to use the MultiQC
+environment module as is the default. So we specify a config file using `-c` that contains the following:
+
+```groovy
+process.$multiqc.module = []
+```
+
 ## Stand-alone scripts
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:
 

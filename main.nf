@@ -440,7 +440,7 @@ if(params.aligner == 'star'){
         tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy',
             saveAs: {filename ->
-                if (filename.indexOf(".out") > 0) "logs/$filename"
+                if (filename.indexOf(".bam") == -1) "logs/$filename"
                 else params.saveAlignedIntermediates ? filename : null
             }
 

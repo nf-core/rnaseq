@@ -1,5 +1,9 @@
 # NGI-RNAseq
-## [1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-21
+## 1.0.5dev
+* Made sure that the `.bam` files ended up in the main STAR directory when `--saveAlignedIntermediates` is used, instead of `STAR/logs`
+
+
+## [1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.4) - 2017-04-21
 RseQC hotfix, input file was not supplied properly to one of the scripts
 
 ## [1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-19

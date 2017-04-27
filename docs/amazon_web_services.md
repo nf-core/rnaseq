@@ -53,8 +53,8 @@ Simplest to setup, just using a single instance.
     * This can all be done either with the web interface or the command line client. Here we will describe the web interface.
 2. Launch an EFS File system
     1. Go to the _Storage: EFS_ Dashboard
-    2. Click _Create Storage_
-    3. Leave everything as default and click through the pages to create the filesystem.
+    2. Click _Create file system_
+    3. Leave everything as default and click through the pages to create the file system.
         * Note the name of the security group that is created
     4. Once created, expand the EFS details and copy the _DNS name_ to your clipboard for later.
 3. Set up a new security group

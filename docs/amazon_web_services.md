@@ -234,8 +234,9 @@ cloud {
 }
 process {
     // Set here according to resources available on `m4.2xlarge`
+    // Memory should be a little less than Amazon lists for node type
     cpus = 8
-    memory = 32.GB
+    memory = 31.GB
 }
 ```
 
@@ -350,3 +351,4 @@ WARN: ### Task (id=9) exceed the number of CPUs provided by autoscaling instance
 These are telling you that some of the processes in the pipeline are asking for impossible
 numbers of cpus or memory. To fix this, you need to set the `params.cpus` and `params.memory`
 in the config file described above to numbers that are available on your worker node type.
+Note that the memory should be a little _below_ what Amazon lists as the available capacity.

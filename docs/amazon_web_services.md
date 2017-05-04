@@ -18,7 +18,7 @@ If you find any problems with this documentation, please let us know or better s
     * The most basic way to run the pipeline. Involves creating a server on AWS and running NextFlow without any clever parallelisation stuff.
     * Good when you're just getting started, or if you have a small amount of data.
 3. [NGI Automated Single Node Setup Script](#2-ngi-automated-single-node-setup-script) _(coming soon)_
-4. [NextFlow Integration - Elastic Clusters](#3-nextFlow-integration-elastic-clusters)
+4. [NextFlow Integration - Elastic Clusters](#3-nextflow-integration---elastic-clusters)
 
 ## AWS Concepts
 The people behind AWS love acronyms. There is a huge amount of jargon to get your head around when starting with this. We've tried to keep this documentation as simple as possible, but it helps to understand a few basics:

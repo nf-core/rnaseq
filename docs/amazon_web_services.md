@@ -203,6 +203,14 @@ Go to your [VPC dashboard page](https://eu-west-1.console.aws.amazon.com/vpc/hom
 whether you have any subnets. If you do, click _Subnets_ in the navigation on the left
 and make a note of one of the _Subnet ID_ values (_eg._ `subnet-05222a43`).
 
+#### Ensure that your security group allows access
+In order for you to log into your cluster, you need to tell AWS to allow you access.
+To do this, go to the [Security Groups tab](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#SecurityGroups:sort=groupId)
+under the EC2 dashboard and select the default security group. Switch to the
+_Inbound_ tab and check that you have permissions to access resources. If in doubt,
+set `All traffic` to `Anywhere` - not very secure, but should work (your cluster
+will still be secured with your personal SSH key).
+
 #### Configure Nextflow
 We now need to configure Nextflow so that it knows how to create your cluster.
 As it is personal to you, it cannot go in the main pipeline config. Instead, we recommend
@@ -223,6 +231,11 @@ cloud {
     spotPrice = 1
     terminateWhenIdle = true
   }
+}
+process {
+    // Set here according to resources available on `m4.2xlarge`
+    cpus = 8
+    memory = 32.GB
 }
 ```
 
@@ -307,7 +320,11 @@ A description of these parameters:
 
 ### Shut everything down and get your results
 When your pipeline has finished running, you need to shut your cluster down. Log out from the cloud
-and then run `nextflow cloud shutdown MY-CLUSTER-NAME`.
+and then run the following command:
+
+```bash
+nextflow cloud shutdown MY-CLUSTER-NAME
+```
 
 All of your results are stored on s3, you can now sync these to your local computer if you'd like:
 
@@ -318,3 +335,18 @@ aws s3 sync s3://my-bucket/results/my_project/ results/
 If you're happy with everything, you can also clean our the s3 work directory so that it doesn't
 cost money by hosting the intermediate files for a week.
 
+### Troubleshooting
+
+#### Warnings about resources not being available
+When you run your pipeline, you may get log messages that look like the following:
+
+```
+WARN: ### Task (id=6) requests an amount of resources not available in any node in the current cluster topology -- CPUs: 1; memory: 8 GB
+WARN: ### Task (id=7) requests an amount of resources not available in any node in the current cluster topology -- CPUs: 2; memory: 16 GB
+WARN: ### Task (id=8) exceed the number of CPUs provided by autoscaling instance type: m4.2xlarge -- req: 10; provided: 8
+WARN: ### Task (id=9) exceed the number of CPUs provided by autoscaling instance type: m4.2xlarge -- req: 10; provided: 8
+```
+
+These are telling you that some of the processes in the pipeline are asking for impossible
+numbers of cpus or memory. To fix this, you need to set the `params.cpus` and `params.memory`
+in the config file described above to numbers that are available on your worker node type.

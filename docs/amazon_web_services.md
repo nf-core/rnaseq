@@ -17,8 +17,8 @@ If you find any problems with this documentation, please let us know or better s
 2. [Fully Manual Single Node Setup](#1-fully-manual-single-node-setup)
     * The most basic way to run the pipeline. Involves creating a server on AWS and running NextFlow without any clever parallelisation stuff.
     * Good when you're just getting started, or if you have a small amount of data.
-3. NextFlow Integration - Single Node _(coming soon)_
-4. NextFlow Integration - Elastic Cluster _(coming soon)_
+3. [NGI Automated Single Node Setup Script](#2-ngi-automated-single-node-setup-script) _(coming soon)_
+4. [NextFlow Integration - Elastic Clusters](#3-nextFlow-integration-elastic-clusters)
 
 ## AWS Concepts
 The people behind AWS love acronyms. There is a huge amount of jargon to get your head around when starting with this. We've tried to keep this documentation as simple as possible, but it helps to understand a few basics:
@@ -143,4 +143,178 @@ Simplest to setup, just using a single instance.
     3. Select the running instance and click _Actions_ > _Instance State_ > _Terminate_
         * **If you leave this running, things will get expensive really quickly**
     4. Cancel the spot request under _Spot Requests_
+
+
+
+## 2. NGI Automated Single Node Setup Script
+Denis wrote a magic script which essentially automates nearly all of the above to make
+your life easier. More extensive docs and stuff coming soon.
+
+## 3. NextFlow Integration - Elastic Clusters
+Nextflow has built-in support for working with the AWS cloud. It can do many of the things
+described above and has native support for things like S3, auto-scaling elastic clusters
+and EFS mounts.
+
+We have created a pipeline profile called `aws` (specify with `-profile aws`). This contains
+a configuration designed for running on the AWS cloud, including links to common reference
+genomes that we store for you on S3. This means that running on the cloud is very similar
+to running on a HPC system and is super quick and easy!
+
+### AWS Setup (one time only)
+Unfortunately, we can't specify everything for you in the pipeline, you have to create
+a few things on amazon first. These things only need to be done once and can be
+reused for multiple pipeline runs.
+
+#### Set up authentication
+There are a few ways to do this, but we recommend setting up a config as used by the
+AWS command line tools, which Nextflow also understands. See the
+[AWS docs](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files)
+on this topic. For alternative methods to do this, see the
+[Nextflow docs](https://www.nextflow.io/docs/latest/amazons3.html#aws-access-and-secret-keys).
+
+We recommend that you use IAM on Amazon to limit the permissions for the user that
+runs the pipelines. Ensure that this user has access to EC2 and S3 as a minimum.
+
+#### Create an S3 bucket for your results
+We recommend using S3 to store your finished pipeline results, and also the intermediate
+files (nextflow's `work` directory). We can do a clever trick to tell S3 to automatically
+delete the work directory files after a certain amount of time (eg. a week). This way,
+you still have the intermediate files if you want to re-run the pipeline for any reason,
+but they won't cost you lots of money if you forget to delete them when you're finished.
+
+Go to your [S3 AWS console page](https://console.aws.amazon.com/s3/home) and create a new
+bucket (if required). Go into the bucket and create a directory called `results` and a
+directory called `work`. Back in the top level view, select the bucket and click the
+_Properties_ tab. Expand the dropdown called _Lifecycle_ and then _Add Rule_. Set the
+target as `work/` (or whatever you called your folder) and configure to
+_Permanently Delete_ objects after a certain number of days (eg. `7`). It doesn't hurt
+to also select _End and Clean up Incomplete Multipart Uploads_ whilst you're here.
+Give the rule a name and hit save.
+
+Finally, make a note of the bucket name and directories created. You'll need these later.
+
+#### Create a VPC + Subnet
+Nextflow requires a VPC (_virtual private cloud_) to run properly. You may have one that
+has already been automatically created, or you may need to make a new one. Either way,
+you need to make a note of the subnet ID.
+
+Go to your [VPC dashboard page](https://eu-west-1.console.aws.amazon.com/vpc/home?region=eu-west-1)
+(link is for `eu-west-1` - check that you're in the correct region). The dashboard will say
+whether you have any subnets. If you do, click _Subnets_ in the navigation on the left
+and make a note of one of the _Subnet ID_ values (_eg._ `subnet-05222a43`).
+
+#### Configure Nextflow
+We now need to configure Nextflow so that it knows how to create your cluster.
+As it is personal to you, it cannot go in the main pipeline config. Instead, we recommend
+saving everything in your personal config file, typically found in your home directory at
+`~/.nextflow/config`. Open this file and add the following:
+
+```groovy
+cloud {
+  imageId = 'ami-43f49030'
+  instanceType = 'm4.large'
+  subnetId = 'YOUR-SUBNET-ID'
+  spotPrice = 1
+  autoscale {
+    enabled = true
+    minInstances = 1
+    maxInstances = 10
+    instanceType = 'm4.2xlarge'
+    spotPrice = 1
+    terminateWhenIdle = true
+  }
+}
+```
+
+Remember to replace `YOUR-SUBNET-ID` with the subnet that you created / copied the address
+for above.
+
+#### A note about some pipeline defaults
+Note that the above details are what we consider to be "sensible defaults". These settings
+relate to the resources that you will use and how much that you'll be willing to pay for them.
+Notable are `cloud.instanceType` and `cloud.autoscale.instanceType`, which define what type
+of EC2 instance we're going to use for the head node and worker nodes. We've set `m4.large`
+and `m4.2xlarge` respectively, which should work well for most Human runs. If your samples
+are from an organism with a small genome, you may be able to get away with smaller and
+cheaper instances.
+
+Secondly, we define `cloud.spotPrice` and `cloud.autoscale.spotPrice`. These define our
+"maximum bids" for the instances on the [AWS spot market](https://aws.amazon.com/ec2/spot/).
+Both of these values are set to a super-high $1 per instance per hour. This means that the
+chance of you being outbid by someone else is tiny, and that your instances are very unlikely
+to be stopped. Note that it _doesn't_ mean that you're going to end up paying that much -
+you will be charged the lowest possible spot market rate at the time that you run.
+You can run the `nextflow cloud spot-prices` command to see the current spot price values.
+
+### Upload your raw data to S3
+In order to run your pipeline, Nextflow needs to be able to access your raw sequencing
+data. The best way to do this is to create a directory in the same S3 bucket you created
+above and to use the [AWS s3 command line tools](http://docs.aws.amazon.com/cli/latest/userguide/using-s3-commands.html)
+to upload your data.
+
+For example, if you created a directory inside the s3 bucket above called
+`raw_data/my-project`, you could sync a local directory with the following command:
+
+```bash
+aws s3 sync my_data/ s3://my-bucket/raw_data/my_project/
+```
+
+### Create your cluster with nextflow
+Now that everything is in place, we can get on with creating an AWS instance to use
+for our pipeline run! Nextflow handles most of this for us (see these two blog posts
+for more details: [one](https://www.nextflow.io/blog/2016/deploy-in-the-cloud-at-snap-of-a-finger.html)
+and [two](https://www.nextflow.io/blog/2016/enabling-elastic-computing-nextflow.html)).
+
+The above config should define basically all of the settings, so we just need to run
+the following command:
+
+```bash
+nextflow cloud create MY-CLUSTER-NAME
+```
+
+You should see a confirmation with all of the config details that we saved above.
+Type `y` and enter, then wait for your cluster to be started.
+
+Once complete, copy the `ssh` command printed by Nextflow and run it to log into
+your new cluster.
+
+### Start your analysis run
+Once you're logged into your cluster, you run the pipeline much as you normally
+would, with a couple of additional parameters. For example:
+
+```
+~/nextflow run SciLifeLab/NGI-RNAseq -w s3://my-bucket/work --reads 's3://my-bucket/raw_data/my-project/sample_*_{1,2}.fastq' --outdir 's3://my-bucket/results/my-project' -profile aws --genome GRCh37
+```
+
+A description of these parameters:
+
+* `~/nextflow`
+    * Your cluster comes with an installation of Nextflow. Make sure you use this path.
+* `-w`
+    * Sets the work directory for Nextflow. We tell it to use our s3 bucket work directory, where
+    files are automatically deleted after one week.
+    * NB: _one_ hyphen
+* `--reads`
+    * Our input data, that we've uploaded to s3 with the aws command line tools.
+    * Remember to have in quotes, as always!
+* `--outdir`
+    * Our output directory, also on s3 but in our results directory where they're safe for long term storage.
+* `-profile aws`
+    * Tells the pipeline to use the `aws` config file.
+    * NB: _one_ hyphen
+* `--genome`
+    * Key for one of the iGenome references. These are also kept on s3, but in a bucket that we host for you. These paths are specified in the `aws` profile config file.
+
+### Shut everything down and get your results
+When your pipeline has finished running, you need to shut your cluster down. Log out from the cloud
+and then run `nextflow cloud shutdown MY-CLUSTER-NAME`.
+
+All of your results are stored on s3, you can now sync these to your local computer if you'd like:
+
+```bash
+aws s3 sync s3://my-bucket/results/my_project/ results/
+```
+
+If you're happy with everything, you can also clean our the s3 work directory so that it doesn't
+cost money by hosting the intermediate files for a week.
 

@@ -924,6 +924,7 @@ workflow.onComplete {
     email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
     email_fields['errorReport'] = (workflow.errorReport ?: 'None')
     email_fields['commandLine'] = workflow.commandLine
+    email_fields['projectDir'] = workflow.projectDir
     email_fields['summary'] = summary
     email_fields['summary']['Date Started'] = workflow.start
     email_fields['summary']['Date Completed'] = workflow.complete
@@ -938,7 +939,7 @@ workflow.onComplete {
     if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
 
     // Render the e-mail HTML template
-    def f = new File("$baseDir/bin/summary_email.html")
+    def f = new File("$baseDir/assets/summary_email.html")
     def engine = new groovy.text.GStringTemplateEngine()
     def template = engine.createTemplate(f).make(email_fields)
     def email_html = template.toString()

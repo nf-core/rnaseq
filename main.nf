@@ -45,6 +45,7 @@ params.saveTrimmed = false
 params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
+params.email = false
 
 // R library locations
 params.rlocation = false
@@ -124,42 +125,45 @@ if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX proje
 log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
-log.info "Reads          : ${params.reads}"
-log.info "Genome         : ${params.genome}"
+def summary = [:]
+summary['Reads']    = params.reads
+summary['Genome']   = params.genome
 if(params.aligner == 'star'){
-    log.info "Aligner        : STAR"
-    if(params.star_index)          log.info "STAR Index     : ${params.star_index}"
-    else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
-    else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
+    summary['Aligner'] = "STAR"
+    if(params.star_index)          summary['STAR Index']   = params.star_index
+    else if(params.fasta)          summary['Fasta Ref']    = params.fasta
+    else if(params.download_fasta) summary['Fasta URL']    = params.download_fasta
 } else if(params.aligner == 'hisat2') {
-    log.info "Aligner        : HISAT2"
-    if(params.hisat2_index)        log.info "HISAT2 Index   : ${params.hisat2_index}"
-    else if(params.download_hisat2index) log.info "HISAT2 Index   : ${params.download_hisat2index}"
-    else if(params.fasta)          log.info "Fasta Ref      : ${params.fasta}"
-    else if(params.download_fasta) log.info "Fasta URL      : ${params.download_fasta}"
-    if(params.splicesites)         log.info "Splice Sites   : ${params.splicesites}"
+    summary['Aligner'] = "HISAT2"
+    if(params.hisat2_index)        summary['HISAT2 Index'] = params.hisat2_index
+    else if(params.download_hisat2index) summary['HISAT2 Index'] = params.download_hisat2index
+    else if(params.fasta)          summary['Fasta Ref']    = params.fasta
+    else if(params.download_fasta) summary['Fasta URL']    = params.download_fasta
+    if(params.splicesites)         summary['Splice Sites'] = params.splicesites
 }
-if(params.gtf)                 log.info "GTF Annotation : ${params.gtf}"
-else if(params.download_gtf)   log.info "GTF URL        : ${params.download_gtf}"
-if(params.bed12)               log.info "BED Annotation : ${params.bed12}"
-log.info "Strandedness   : ${params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None'}"
-log.info "Current home   : $HOME"
-log.info "Current user   : $USER"
-log.info "Current path   : $PWD"
-log.info "R libraries    : ${params.rlocation}"
-log.info "Script dir     : $baseDir"
-log.info "Working dir    : $workDir"
-log.info "Output dir     : ${params.outdir}"
-log.info "Save Reference : ${params.saveReference}"
-log.info "Save Trimmed   : ${params.saveTrimmed}"
-log.info "Save Intermeds : ${params.saveAlignedIntermediates}"
-if( params.pico       ) log.info "Trim Profile   : SMARTer Stranded Total RNA-Seq Kit - Pico Input"
-if( params.clip_r1 > 0) log.info "Trim R1        : ${params.clip_r1}"
-if( params.clip_r2 > 0) log.info "Trim R2        : ${params.clip_r2}"
-if( params.three_prime_clip_r1 > 0) log.info "Trim 3' R1     : ${params.three_prime_clip_r1}"
-if( params.three_prime_clip_r2 > 0) log.info "Trim 3' R2     : ${params.three_prime_clip_r2}"
-log.info "Config Profile : " + (workflow.profile == 'standard' ? 'UPPMAX' : workflow.profile)
-if(params.project) log.info "UPPMAX Project : ${params.project}"
+if(params.gtf)                 summary['GTF Annotation']  = params.gtf
+else if(params.download_gtf)   summary['GTF URL']         = params.download_gtf
+if(params.bed12)               summary['BED Annotation']  = params.bed12
+summary['Strandedness']   = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
+summary['Current home']   = "$HOME"
+summary['Current user']   = "$USER"
+summary['Current path']   = "$PWD"
+summary['Working dir']    = workflow.workDir
+summary['Output dir']     = params.outdir
+summary['R libraries']    = params.rlocation
+summary['Script dir']     = workflow.projectDir
+summary['Save Reference'] = params.saveReference
+summary['Save Trimmed']   = params.saveTrimmed
+summary['Save Intermeds'] = params.saveAlignedIntermediates
+if( params.pico ) summary['Trim Profile'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
+if( params.clip_r1 > 0) summary['Trim R1'] = params.clip_r1
+if( params.clip_r2 > 0) summary['Trim R2'] = params.clip_r2
+if( params.three_prime_clip_r1 > 0) summary["Trim 3' R1"] = params.three_prime_clip_r1
+if( params.three_prime_clip_r2 > 0) summary["Trim 3' R2"] = params.three_prime_clip_r2
+summary['Config Profile'] = (workflow.profile == 'standard' ? 'UPPMAX' : workflow.profile)
+if(params.project) summary['UPPMAX Project'] = params.project
+if(params.email) summary['E-mail Address'] = params.email
+log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
 /*
@@ -897,4 +901,61 @@ process output_documentation {
     """
     markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
     """
+}
+
+
+/*
+ * Completion e-mail notification
+ */
+workflow.onComplete {
+
+    // Build the e-mail subject and header
+    def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
+    subject += "\nContent-Type: text/html"
+
+    // Set up the e-mail variables
+    def email_fields = [:]
+    email_fields['version'] = version
+    email_fields['runName'] = workflow.runName
+    email_fields['success'] = workflow.success
+    email_fields['dateComplete'] = workflow.complete
+    email_fields['duration'] = workflow.duration
+    email_fields['exitStatus'] = workflow.exitStatus
+    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
+    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
+    email_fields['commandLine'] = workflow.commandLine
+    email_fields['summary'] = summary
+    email_fields['summary']['Date Started'] = workflow.start
+    email_fields['summary']['Date Completed'] = workflow.complete
+    email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
+    email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
+    email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
+    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
+    if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
+    if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
+    if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
+    if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
+
+    // Render the e-mail HTML template
+    def f = new File("$baseDir/bin/summary_email.html")
+    def engine = new groovy.text.GStringTemplateEngine()
+    def template = engine.createTemplate(f).make(email_fields)
+    def email_html = template.toString()
+
+    // Send the HTML e-mail
+    if (params.email) {
+        [ 'mail', '-s', subject, params.email ].execute() << email_html
+    }
+
+    // Write summary e-mail HTML to a file
+    def output_d = new File( "${params.outdir}/Documentation/" )
+    if( !output_d.exists() ) {
+      output_d.mkdirs()
+    }
+    def output_f = new File( output_d, "pipeline_report.html" )
+    output_f.withWriter { w ->
+        w << email_html
+    }
+
 }

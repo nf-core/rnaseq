@@ -201,9 +201,16 @@ command line flag.
 Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
 to run on the development node (though won't work with default process time requests).
 
+### `-name`
+Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+
+**NB:** Single hyphen (core Nextflow option)
+
 ### `-c`
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
 projects or different sets of reference genomes. **NB:** one hyphen only (core Nextflow parameter).
+
+**NB:** Single hyphen (core Nextflow option)
 
 Note - you can use this to override defaults. For example, we run on UPPMAX but don't want to use the MultiQC
 environment module as is the default. So we specify a config file using `-c` that contains the following:

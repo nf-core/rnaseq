@@ -35,6 +35,7 @@ params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : 
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.splicesites = false
 params.download_hisat2index = false
 params.download_fasta = false
@@ -54,6 +55,7 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
+multiqc_config = file(params.multiqc_config)
 
 def single
 params.sampleLevel = false
@@ -858,6 +860,7 @@ process multiqc {
     echo true
 
     input:
+    file multiqc_config
     file (fastqc:'fastqc/*') from fastqc_results.collect()
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
@@ -877,8 +880,7 @@ process multiqc {
     script:
     prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     """
-    cp $baseDir/conf/multiqc_config.yaml multiqc_config.yaml
-    multiqc -f . 2>&1
+    multiqc -f -c $multiqc_config . 2>&1
     """
 }
 

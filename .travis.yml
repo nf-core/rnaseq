@@ -12,5 +12,6 @@ install:
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
   - cd ${TRAVIS_BUILD_DIR}/tests/
+  - mkdir results
 
 script: "./docker_test_hisat.sh"

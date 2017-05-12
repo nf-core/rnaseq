@@ -137,9 +137,10 @@ log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
 def summary = [:]
-summary['Reads']     = params.reads
-summary['Data Type'] = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Genome']    = params.genome
+summary['Reads']        = params.reads
+summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
+summary['Strandedness'] = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
+summary['Genome']       = params.genome
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
     if(params.star_index)          summary['STAR Index']   = params.star_index
@@ -156,7 +157,6 @@ if(params.aligner == 'star'){
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 else if(params.download_gtf)   summary['GTF URL']         = params.download_gtf
 if(params.bed12)               summary['BED Annotation']  = params.bed12
-summary['Strandedness']   = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
 summary['Current home']   = "$HOME"
 summary['Current user']   = "$USER"
 summary['Current path']   = "$PWD"

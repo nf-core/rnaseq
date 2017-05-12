@@ -25,10 +25,18 @@ Location of the input FastQ files:
 
 **NB: Must be enclosed in quotes!**
 
-Note that the `{1,2}` parentheses are required to specify paired end data. Running `--reads '*.fastq'` will treat
-all files as single end. The file path should be in quotation marks to prevent shell glob expansion.
+Note that the `{1,2}` parentheses are required to specify paired end data. The file path should be
+in quotation marks to prevent shell glob expansion.
 
-If left unspecified, the pipeline will assume that the data is in a directory called `data` in the working directory.
+If left unspecified, the pipeline will assume that the data is in a directory called `data` in the
+working directory (`data/*{1,2}.fastq.gz`).
+
+### `--singleEnd`
+By default, the pipeline expects paired-end data. If you have single-end data, specify `--singleEnd`
+on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks,
+can then be used for `--reads`. For example: `--singleEnd --reads '*.fastq'`
+
+It is not possible to run a mixture of single-end and paired-end files in one run.
 
 ### Library strandedness
 Three command line flags / config parameters set the library strandedness for a run:

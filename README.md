@@ -21,9 +21,11 @@ The NGI-RNAseq pipeline comes with documentation about the pipeline, found in th
 2. [Running the pipeline](docs/usage.md)
 3. [Output and how to interpret the results](docs/output.md)
 
+If you're interested in running the pipeline in the cloud, please read the docs about using the pipeline with [Amazon Web Services](docs/amazon_web_services.md).
+
 ### Credits
 These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/) at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
-The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). Docker and AWS integration was led by Denis Moreno ([@Galithil](https://github.com/Galithil)).
+The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). Docker and AWS integration was led by Denis Moreno ([@Galithil](https://github.com/Galithil)) and Phil Ewels ([@ewels](https://github.com/ewels)).
 
 ---
 

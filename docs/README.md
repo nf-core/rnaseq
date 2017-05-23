@@ -8,6 +8,8 @@ The NGI-RNAseq documentation is split into a few different files:
   * Instructions on how to run the NGI-RNAseq pipeline
 * [`output.md`](output.md)
   * Document describing all of the results produced by the pipeline, and how to interpret them.
+* [`amazon_web_services.md`](amazon_web_services.md)
+  * Docs about running the pipeline in the cloud with AWS.
 
 ---
 

@@ -22,7 +22,7 @@ vim: syntax=groovy
  */
 
 // Pipeline version
-version = '1.0.4'
+version = '1.1'
 
 // Configurable variables
 params.project = false

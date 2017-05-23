@@ -35,6 +35,7 @@ params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : 
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.splicesites = false
 params.download_hisat2index = false
 params.download_fasta = false
@@ -54,8 +55,7 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
-
-def single
+multiqc_config = file(params.multiqc_config)
 params.sampleLevel = false
 
 // Custom trimming options
@@ -121,13 +121,26 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
+
+/*
+ * Create a channel for input read files
+ */
+params.singleEnd = false
+Channel
+    .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
+    .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nIf this is single-end data, please specify --singleEnd on the command line." }
+    .into { read_files_fastqc; read_files_trimming }
+
+
 // Header log info
 log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
 def summary = [:]
-summary['Reads']    = params.reads
-summary['Genome']   = params.genome
+summary['Reads']        = params.reads
+summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
+summary['Strandedness'] = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
+summary['Genome']       = params.genome
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
     if(params.star_index)          summary['STAR Index']   = params.star_index
@@ -144,7 +157,6 @@ if(params.aligner == 'star'){
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 else if(params.download_gtf)   summary['GTF URL']         = params.download_gtf
 if(params.bed12)               summary['BED Annotation']  = params.bed12
-summary['Strandedness']   = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
 summary['Current home']   = "$HOME"
 summary['Current user']   = "$USER"
 summary['Current path']   = "$PWD"
@@ -166,13 +178,6 @@ if(params.email) summary['E-mail Address'] = params.email
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
-/*
- * Create a channel for input read files
- */
-Channel
-    .fromFilePairs( params.reads, size: -1 )
-    .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}" }
-    .into { read_files_fastqc; read_files_trimming }
 
 /*
  * PREPROCESSING - Download Fasta
@@ -401,12 +406,11 @@ process trim_galore {
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
 
     script:
-    single = reads instanceof Path
     c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
     c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
     tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
-    if (single) {
+    if (params.singleEnd) {
         """
         trim_galore --fastqc --gzip $c_r1 $tpc_r1 $reads
         """
@@ -507,11 +511,11 @@ if(params.aligner == 'hisat2'){
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         def rnastrandness = ''
         if (params.forward_stranded && !params.unstranded){
-            rnastrandness = single ? '--rna-strandness F' : '--rna-strandness FR'
+            rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
         } else if (params.reverse_stranded && !params.unstranded){
-            rnastrandness = single ? '--rna-strandness R' : '--rna-strandness RF'
+            rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
         }
-        if (single) {
+        if (params.singleEnd) {
             """
             set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
@@ -609,9 +613,9 @@ process rseqc {
     script:
     def strandRule = ''
     if (params.forward_stranded && !params.unstranded){
-        strandRule = single ? '-d ++,--' : '-d 1++,1--,2+-,2-+'
+        strandRule = params.singleEnd ? '-d ++,--' : '-d 1++,1--,2+-,2-+'
     } else if (params.reverse_stranded && !params.unstranded){
-        strandRule = single ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
+        strandRule = params.singleEnd ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
     }
     """
     samtools index $bam_rseqc
@@ -712,7 +716,7 @@ process dupradar {
     file "*.{pdf,txt}" into dupradar_results
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
-    def paired = single ? 'FALSE' :  'TRUE'
+    def paired = params.singleEnd ? 'FALSE' :  'TRUE'
     def rlocation = params.rlocation ?: ''
     """
     dupRadar.r $bam_md $gtf $paired $rlocation
@@ -858,6 +862,7 @@ process multiqc {
     echo true
 
     input:
+    file multiqc_config
     file (fastqc:'fastqc/*') from fastqc_results.collect()
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
@@ -877,8 +882,7 @@ process multiqc {
     script:
     prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     """
-    cp $baseDir/conf/multiqc_config.yaml multiqc_config.yaml
-    multiqc -f . 2>&1
+    multiqc -f -c $multiqc_config . 2>&1
     """
 }
 

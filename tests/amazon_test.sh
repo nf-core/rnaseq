@@ -32,7 +32,7 @@ else
     echo "Done"
 fi
 
-cmd="nextflow run $script_path -resume -profile amazon_test --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -profile amazon_test --singleEnd --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"

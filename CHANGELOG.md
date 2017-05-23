@@ -1,6 +1,14 @@
 # NGI-RNAseq
 ## 1.0.5dev
+* Summary HTML report now created upon pipeline completion
+  * This is saved in the results folder and also e-mailed if `--email` is set.
 * Made sure that the `.bam` files ended up in the main STAR directory when `--saveAlignedIntermediates` is used, instead of `STAR/logs`
+* Pipeline assumes that it's running with Paired-end files now
+  * An error is now raised if the file glob doesn't give pairs of files
+  * If running with single-end data, use the `--singleEnd` command-line option.
+* Made MultiQC load its config file through a channel instead of directly copying from `baseDir`
+* Timelines and traces now created by default for the testing configs
+* New configs and documentation about running the pipeline on AWS
 
 
 ## [1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.4) - 2017-04-21

@@ -4,7 +4,7 @@
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz'
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
 ```
 
 Note that the pipeline will create files in your working directory:
@@ -165,37 +165,17 @@ for common RNA-seq library preparation kits.
 
 ## Job Resources
 ### Automatic resubmission
-Each step in the pipeline has a default set of requirements for number of CPUs,
-memory and time. For most of the steps in the pipeline, if the job exits
-on UPPMAX with an error code of `143` (exceeded requested resources) it will
-automatically resubmit with higher requests (2 x original, then 3 x original).
-If it still fails after three times then the pipeline is stopped.
+Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits on UPPMAX with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
 
 ### Custom resource requests
-Wherever process-specific requirements are set in the pipeline, the default
-value can be overwritten with config variables. These can be set on the command
-line or in a config file. The names are set as `[process name]_[resource type]`,
-for example `star_memory`.
-
-So, to override the defaults for STAR, you can do run the pipeline as follows:
-
-```bash
-nextflow run SciLifeLab/NGI-RNAseq --star_cpus 1 --star_memory '10 GB' --star_time '24h'
-```
-
-Alternative, these can be set in a config file:
-
-```groovy
-params {
-  star_cpus = 1
-  star_memory = '10 GB'
-  star_time = '24h'
-}
-```
+Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file. See the files in [`conf`](../conf) for examples.
 
 ## Other command line parameters
 ### `--outdir`
 The output directory where the results will be saved.
+
+### `--email`
+Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
 
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
@@ -204,6 +184,9 @@ Used to turn of the edgeR MDS and heatmap. Set automatically when running on few
 Some steps in the pipeline run R with required modules. By default, the pipeline will install
 these modules to `~/R/nxtflow_libs/` if not present. You can specify what path to use with this
 command line flag.
+
+### `--multiqc_config`
+If you would like to supply a custom config file to MultiQC, you can specify a path with `--multiqc_config`. This is used instead of the config file specific to the pipeline.
 
 ### `--clusterOptions`
 Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
@@ -216,7 +199,7 @@ Name for the pipeline run. If not specified, Nextflow will automatically generat
 
 ### `-c`
 Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
-projects or different sets of reference genomes. **NB:** one hyphen only (core Nextflow parameter).
+projects or different sets of reference genomes.
 
 **NB:** Single hyphen (core Nextflow option)
 

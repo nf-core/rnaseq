@@ -2,7 +2,7 @@
 
 NGI-RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genomics Infrastructure](https://ngisweden.scilifelab.se/) at [SciLifeLab](https://www.scilifelab.se/platforms/ngi/) in Stockholm, Sweden.
 
-This document describes the output produced by the pipeline.
+This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
@@ -39,7 +39,7 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 
 * `sample_fastqc.html`
   * FastQC report, containing quality metrics for your untrimmed raw fastq files
-* `sample_fastqc.zip`
+* `zips/sample_fastqc.zip`
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
 ## TrimGalore
@@ -53,9 +53,10 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 
 * `sample_val_1.fq.gz`, `sample_val_2.fq.gz`
   * Trimmed FastQ data, reads 1 and 2.
-* `sample_val_1.fq.gz_trimming_report.txt`
+  * NB: Only saved if `--saveTrimmed` has been specified.
+* `logs/sample_val_1.fq.gz_trimming_report.txt`
   * Trimming report (describes which parameters that were used)
-* `sample_val_1_fastqc.zip`
+* `FastQC/sample_val_1_fastqc.zip`
   * FastQC report for trimmed reads
 
 Single-end data will have slightly different file names and only one FastQ file per sample.

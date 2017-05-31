@@ -151,7 +151,7 @@ params {
 #### Manual Installation
 If the software is not already available, you will need to install it.
 
-If you are able to use [Docker](https://www.docker.com/), you can use the [sclifelab/ngi-rnaseq](https://hub.docker.com/r/scilifelab/ngi-rnaseq/) image which comes with all requirements. This is pulled by Nextflow automatically if you use `-profile docker` (see below for [further instructions](#33-configuration-docker)).
+If you are able to use [Docker](https://www.docker.com/), you can use the [sclifelab/ngi-rnaseq](https://hub.docker.com/r/scilifelab/ngi-rnaseq/) image which comes with all requirements. This is pulled by Nextflow automatically if you use `-profile docker` (see below for [further instructions](#34-configuration-docker)).
 
 We recommend using [Bioconda](https://bioconda.github.io/) to install the required software as the process is quite easy in our experience. This can be done as follows:
 
@@ -251,17 +251,7 @@ A reference genome is still required by the pipeline. Specifying paths to FASTA 
 A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/ewels/NGI-RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/SciLifeLab/NGI-RNAseq/) whenever changes are made to the pipeline.
 
 ## 3.5) Configuration: Amazon EC2
-There are multiple ways of running this pipeline over Amazon's EC2 service.
-
-The simplest way consists of creating a custom EC2 instance and running the pipeline with docker on this machine, as described above.
-
-A slightly more complex way is to use our prebuilt AMI to create a ready-to-go virtual machine. The AMI is called `scilifelab/ngi-rnaseq`, id: `ami-f23c6081`. It is available in the Ireland region (`eu-west-1`). This AMI comes with all the tools installed, including nextflow. This means that the docker image doesn't have to be downloaded and instantiated every time you launch the machine. The pipeline can then be run by creating an instance using this AMI, logging in and running the pipeline with the `base` config. For example:
-
-```bash
-nextflow run SciLifeLab/NGI-RNAseq -profile base --reads 'data/*_{1,2}.fastq' --fasta 'path/to/fasta.fa' --gtf 'path/to/genes.gtf'
-```
-
-A third approach will be to use nextflow to generate a cluster of machines, and run the pipeline there. We are currently testing this approach and will add documentation when it is established.
+There are multiple ways of running this pipeline over Amazon's EC2 service. Please see the [NGI-RNAseq with AWS](amazon_web_services.md) documentation for more information.
 
 ---
 

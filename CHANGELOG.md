@@ -1,5 +1,12 @@
 # NGI-RNAseq
 
+## 1.2dev
+
+* MultiQC now runs using `local` instead of `slurm` with default config
+  * Means that it stands a better chance of getting information from a remote database with plugins
+* MultiQC now uses the workflow name for report title and filename if specified
+
+
 ## [1.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.1) - 2017-05-23
 New release of the pipeline with a few additions:
 

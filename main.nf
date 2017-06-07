@@ -25,6 +25,7 @@ vim: syntax=groovy
 version = '1.1'
 
 // Configurable variables
+params.name = false
 params.project = false
 params.genome = false
 params.forward_stranded = false
@@ -121,6 +122,13 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 }
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 
+// Has the run name been specified by the user?
+//  this has the bonus effect of catching both -name and --name
+custom_runName = params.name
+if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
+  custom_runName = workflow.runName
+}
+
 
 /*
  * Create a channel for input read files
@@ -137,6 +145,7 @@ log.info "========================================="
 log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
 log.info "========================================="
 def summary = [:]
+summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Strandedness'] = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
@@ -804,15 +813,15 @@ process stringtieFPKM {
     stdout into stringtie_log
 
     script:
-    def StringTie_direction = ''
+    def st_direction = ''
     if (params.forward_stranded && !params.unstranded){
-        StringTie_direction = "--fr"
+        st_direction = "--fr"
     } else if (params.reverse_stranded && !params.unstranded){
-        StringTie_direction = "--rf"
+        st_direction = "--rf"
     }
     """
     stringtie $bam_stringtieFPKM \\
-        $StringTie_direction \\
+        $st_direction \\
         -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\
         -v \\
         -G $gtf \\
@@ -876,13 +885,15 @@ process multiqc {
 
     output:
     file "*multiqc_report.html" into multiqc_report
-    file "*multiqc_data"
+    file "*_data"
     val prefix into multiqc_prefix
 
     script:
     prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
+    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
+    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f -c $multiqc_config . 2>&1
+    multiqc -f $rtitle $rfilename --config $multiqc_config . 2>&1
     """
 }
 
@@ -920,7 +931,7 @@ workflow.onComplete {
     // Set up the e-mail variables
     def email_fields = [:]
     email_fields['version'] = version
-    email_fields['runName'] = workflow.runName
+    email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete
     email_fields['duration'] = workflow.duration

@@ -195,6 +195,8 @@ to run on the development node (though won't work with default process time requ
 ### `-name`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
+This is used in the MultiQC report (if not default) and in the summary HTML / e-mail (always).
+
 **NB:** Single hyphen (core Nextflow option)
 
 ### `-c`

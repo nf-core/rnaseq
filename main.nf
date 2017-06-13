@@ -65,13 +65,25 @@ params.clip_r2 = 0
 params.three_prime_clip_r1 = 0
 params.three_prime_clip_r2 = 0
 
+// Define regular variables so that they can be overwritten
+clip_r1 = params.clip_r1
+clip_r2 = params.clip_r2
+three_prime_clip_r1 = params.three_prime_clip_r1
+three_prime_clip_r2 = params.three_prime_clip_r2
+forward_stranded = params.forward_stranded
+reverse_stranded = params.reverse_stranded
+unstranded = params.unstranded
+
 // Preset trimming options
 params.pico = false
 if (params.pico){
-  params.clip_r1 = 3
-  params.clip_r2 = 0
-  params.three_prime_clip_r1 = 0
-  params.three_prime_clip_r2 = 3
+  clip_r1 = 3
+  clip_r2 = 0
+  three_prime_clip_r1 = 0
+  three_prime_clip_r2 = 3
+  forward_stranded = true
+  reverse_stranded = false
+  unstranded = false
 }
 
 // Choose aligner
@@ -148,8 +160,13 @@ def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Strandedness'] = ( params.unstranded ? 'None' : params.forward_stranded ? 'Forward' : params.reverse_stranded ? 'Reverse' : 'None' )
 summary['Genome']       = params.genome
+if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
+summary['Strandedness'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
+summary['Trim R1'] = clip_r1
+summary['Trim R2'] = clip_r2
+summary["Trim 3' R1"] = three_prime_clip_r1
+summary["Trim 3' R2"] = three_prime_clip_r2
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
     if(params.star_index)          summary['STAR Index']   = params.star_index
@@ -166,21 +183,16 @@ if(params.aligner == 'star'){
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 else if(params.download_gtf)   summary['GTF URL']         = params.download_gtf
 if(params.bed12)               summary['BED Annotation']  = params.bed12
-summary['Current home']   = "$HOME"
-summary['Current user']   = "$USER"
-summary['Current path']   = "$PWD"
-summary['Working dir']    = workflow.workDir
-summary['Output dir']     = params.outdir
-summary['R libraries']    = params.rlocation
-summary['Script dir']     = workflow.projectDir
 summary['Save Reference'] = params.saveReference
 summary['Save Trimmed']   = params.saveTrimmed
 summary['Save Intermeds'] = params.saveAlignedIntermediates
-if( params.pico ) summary['Trim Profile'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
-if( params.clip_r1 > 0) summary['Trim R1'] = params.clip_r1
-if( params.clip_r2 > 0) summary['Trim R2'] = params.clip_r2
-if( params.three_prime_clip_r1 > 0) summary["Trim 3' R1"] = params.three_prime_clip_r1
-if( params.three_prime_clip_r2 > 0) summary["Trim 3' R2"] = params.three_prime_clip_r2
+summary['Output dir']     = params.outdir
+summary['Working dir']    = workflow.workDir
+summary['Current home']   = "$HOME"
+summary['Current user']   = "$USER"
+summary['Current path']   = "$PWD"
+summary['R libraries']    = params.rlocation
+summary['Script dir']     = workflow.projectDir
 summary['Config Profile'] = (workflow.profile == 'standard' ? 'UPPMAX' : workflow.profile)
 if(params.project) summary['UPPMAX Project'] = params.project
 if(params.email) summary['E-mail Address'] = params.email
@@ -415,10 +427,10 @@ process trim_galore {
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
 
     script:
-    c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
-    c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
-    tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
-    tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
+    c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
+    c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
+    tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
+    tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
     if (params.singleEnd) {
         """
         trim_galore --fastqc --gzip $c_r1 $tpc_r1 $reads
@@ -519,9 +531,9 @@ if(params.aligner == 'hisat2'){
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         def rnastrandness = ''
-        if (params.forward_stranded && !params.unstranded){
+        if (forward_stranded && !unstranded){
             rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
-        } else if (params.reverse_stranded && !params.unstranded){
+        } else if (reverse_stranded && !unstranded){
             rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
         }
         if (params.singleEnd) {
@@ -621,9 +633,9 @@ process rseqc {
 
     script:
     def strandRule = ''
-    if (params.forward_stranded && !params.unstranded){
+    if (forward_stranded && !unstranded){
         strandRule = params.singleEnd ? '-d ++,--' : '-d 1++,1--,2+-,2-+'
-    } else if (params.reverse_stranded && !params.unstranded){
+    } else if (reverse_stranded && !unstranded){
         strandRule = params.singleEnd ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
     }
     """
@@ -757,9 +769,9 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
-    if (params.forward_stranded && !params.unstranded) {
+    if (forward_stranded && !unstranded) {
         featureCounts_direction = 1
-    } else if (params.reverse_stranded && !params.unstranded){
+    } else if (reverse_stranded && !unstranded){
         featureCounts_direction = 2
     }
     """
@@ -814,9 +826,9 @@ process stringtieFPKM {
 
     script:
     def st_direction = ''
-    if (params.forward_stranded && !params.unstranded){
+    if (forward_stranded && !unstranded){
         st_direction = "--fr"
-    } else if (params.reverse_stranded && !params.unstranded){
+    } else if (reverse_stranded && !unstranded){
         st_direction = "--rf"
     }
     """
@@ -962,6 +974,7 @@ workflow.onComplete {
     // Send the HTML e-mail
     if (params.email) {
         [ 'mail', '-s', subject, params.email ].execute() << email_html
+        log.info "[NGI-RNAseq] Sent summary e-mail to $params.email"
     }
 
     // Write summary e-mail HTML to a file
@@ -973,5 +986,6 @@ workflow.onComplete {
     output_f.withWriter { w ->
         w << email_html
     }
+    log.info "[NGI-RNAseq] Pipeline Complete"
 
 }

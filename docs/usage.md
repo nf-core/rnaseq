@@ -45,8 +45,7 @@ Three command line flags / config parameters set the library strandedness for a 
 * `--reverse_stranded`
 * `--unstranded`
 
-If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default.
-Use `--unstranded` or `--forward_stranded` to overwrite this.
+If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default. Use `--unstranded` or `--forward_stranded` to overwrite this. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`)
 and StringTie:
@@ -145,22 +144,30 @@ If specific additional trimming is required (for example, from additional tags),
 you can use any of the following command line parameters. These affect the command
 used to launch TrimGalore!
 
-* `--clip_r1 [int]`
-  * Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).
-* `--clip_r2 [int]`
-  * Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).
-* `--three_prime_clip_r1 [int]`
-  * Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
-* `--three_prime_clip_r2 [int]`
-  * Instructs Trim Galore to re move bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
+### `--clip_r1 [int]`
+Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).
 
-### Trimming Presets
-Some command line options are available to automatically set these trimming parameters
-for common RNA-seq library preparation kits.
+### `--clip_r2 [int]`
+Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).
 
-| Parameter | Kit                                             | 5' R1 | 5' R2 | 3' R1 | 3' R2 |
-|-----------|-------------------------------------------------|-------|-------|-------|-------|
-| `--pico`  | SMARTer Stranded Total RNA-Seq Kit - Pico Input | 3     | 0     | 0     | 3     |
+### `--three_prime_clip_r1 [int]`
+Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
+
+### `--three_prime_clip_r2 [int]`
+Instructs Trim Galore to re move bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
+
+
+## Library Prep Presets
+Some command line options are available to automatically set parameters for common RNA-seq library preparation kits.
+
+> Note that these presets override other command line arguments. So if you specify `--pico --clip_r1 0`, the `--clip_r1` bit will be ignored.
+
+If you have a kit that you'd like a preset added for, please let us know!
+
+### `--pico`
+Sets trimming and standedness settings for the _SMARTer Stranded Total RNA-Seq Kit - Pico Input_ kit.
+
+Equivalent to: `--forward_stranded` `--clip_r1 3` `--three_prime_clip_r2 3`
 
 
 ## Job Resources

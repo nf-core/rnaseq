@@ -1,6 +1,10 @@
 # NGI-RNAseq
 
-## 1.2
+## 1.3dev
+
+* Updated HISAT2 from v2.0.5 to v2.1.0 (UPPMAX environment module loading)
+
+## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
 
 * MultiQC now runs using `local` instead of `slurm` with default config
   * Means that it stands a better chance of getting information from a remote database with plugins

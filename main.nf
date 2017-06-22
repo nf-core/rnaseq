@@ -514,7 +514,7 @@ if(params.aligner == 'hisat2'){
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: {filename ->
-                if (filename.indexOf("_log.txt") > 0) "logs/$filename"
+                if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
                 else params.saveAlignedIntermediates ? filename : null
             }
 
@@ -525,7 +525,7 @@ if(params.aligner == 'hisat2'){
 
         output:
         file "${prefix}.bam" into hisat2_bam
-        file "${prefix}.hisat2_log.txt" into alignment_logs
+        file "${prefix}.hisat2_summary.txt" into alignment_logs
 
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
@@ -545,8 +545,9 @@ if(params.aligner == 'hisat2'){
                    --known-splicesite-infile $alignment_splicesites \\
                    -p ${task.cpus} \\
                    --met-stderr \\
+                   --new-summary \\
+                   --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
-                   2> ${prefix}.hisat2_log.txt
             """
         } else {
             """
@@ -560,8 +561,9 @@ if(params.aligner == 'hisat2'){
                    --no-discordant \\
                    -p ${task.cpus} \\
                    --met-stderr \\
+                   --new-summary \\
+                   --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
-                   2> ${prefix}.hisat2_log.txt
             """
         }
     }

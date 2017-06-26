@@ -538,7 +538,6 @@ if(params.aligner == 'hisat2'){
         }
         if (params.singleEnd) {
             """
-            set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
                    -U $reads \\
                    $rnastrandness \\
@@ -551,7 +550,6 @@ if(params.aligner == 'hisat2'){
             """
         } else {
             """
-            set -o pipefail   # Capture exit codes from HISAT2, not samtools
             hisat2 -x $index_base \\
                    -1 ${reads[0]} \\
                    -2 ${reads[1]} \\

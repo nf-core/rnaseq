@@ -2,7 +2,15 @@
 
 ## 1.3dev
 
-* Updated HISAT2 from v2.0.5 to v2.1.0 (UPPMAX environment module loading)
+* Updated HISAT2 from v2.0.5 to v2.1.0
+  * Uses `--new-summary` and `--summary-file` to give output that will work with MultiQC,
+  * UPPMAX environment module load and Docker image
+* Moved `pipefail` statement into config, applies to all processes
+* Rewrote summary e-mail commands. Now uses `sendmail`
+  * Also writes a plaintext summary. Falls back to sending this with `mail`
+* MultiQC process now runs using `local` executor for internet access on some UPPMAX clusters.
+* UPPMAX featureCounts process now loads `python/2.7.11` environment module
+* New test script for uppmax with HISAT2
 
 ## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
 

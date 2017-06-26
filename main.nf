@@ -183,9 +183,9 @@ if(params.aligner == 'star'){
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 else if(params.download_gtf)   summary['GTF URL']         = params.download_gtf
 if(params.bed12)               summary['BED Annotation']  = params.bed12
-summary['Save Reference'] = params.saveReference
-summary['Save Trimmed']   = params.saveTrimmed
-summary['Save Intermeds'] = params.saveAlignedIntermediates
+summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
+summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
+summary['Save Intermeds'] = params.saveAlignedIntermediates ? 'Yes' : 'No'
 summary['Output dir']     = params.outdir
 summary['Working dir']    = workflow.workDir
 summary['Current home']   = "$HOME"
@@ -938,10 +938,6 @@ process output_documentation {
  */
 workflow.onComplete {
 
-    // Build the e-mail subject and header
-    def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
-    subject += "\nContent-Type: text/html"
-
     // Set up the e-mail variables
     def email_fields = [:]
     email_fields['version'] = version
@@ -975,7 +971,15 @@ workflow.onComplete {
 
     // Send the HTML e-mail
     if (params.email) {
-        [ 'mail', '-s', subject, params.email ].execute() << email_html
+        def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
+        try {
+          // Try to send using `-a` mail flags (Linux)
+          [ 'mail', '-s', subject, '-a', '"MIME-Version: 1.0"', '-a', '"Content-type: text/html"', params.email ].execute() << email_html
+        } catch (all) {
+          // Catch failures and try again without `-a` (OSX)
+          subject += "\nMIME-Version: 1.0\nContent-Type: text/html"
+          [ 'mail', '-s', subject, params.email ].execute() << email_html
+        }
         log.info "[NGI-RNAseq] Sent summary e-mail to $params.email"
     }
 

@@ -937,6 +937,7 @@ process output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
+    def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
     def email_fields = [:]
     email_fields['version'] = version
     email_fields['runName'] = custom_runName ?: workflow.runName
@@ -961,24 +962,28 @@ workflow.onComplete {
     if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
     if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
 
-    // Render the e-mail TXT template
+    // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
     def tf = new File("$baseDir/assets/email_template.txt")
     def txt_template = engine.createTemplate(tf).make(email_fields)
     def email_txt = txt_template.toString()
 
-    // Render the e-mail HTML template
+    // Render the HTML template
     def hf = new File("$baseDir/assets/email_template.html")
     def html_template = engine.createTemplate(hf).make(email_fields)
     def email_html = html_template.toString()
 
+    // Render the sendmail template
+    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
+    def sf = new File("$baseDir/assets/sendmail_template.html")
+    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
+    def sendmail_html = sendmail_template.toString()
+
     // Send the HTML e-mail
     if (params.email) {
-        def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
         try {
           // Try to send HTML e-mail using sendmail
-          def html_email = "To: $params.email\nSubject: $subject\nMime-Version: 1.0\nContent-Type: text/html\n\n$email_html";
-          def smproc = [ 'sendmail', '-t' ].execute() << html_email
+          [ 'sendmail', '-t' ].execute() << sendmail_html
           log.debug "[NGI-RNAseq] Sent summary e-mail using sendmail"
         } catch (all) {
           // Catch failures and try with plaintext

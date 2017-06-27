@@ -4,7 +4,7 @@
 <body>
 <div style="font-family: Helvetica, Arial, sans-serif; padding: 30px; max-width: 800px; margin: 0 auto;">
 
-<img src="data:image/png;base64,<% out << new File("${projectDir}/assets/NGI-RNAseq_logo.png").bytes.encodeBase64().toString() %>">
+<img src="cid:ngipipelinelogo">
 
 <h1>NGI-RNAseq: RNA-Seq Best Practice v${version}</h1>
 <h2>Run Name: $runName</h2>
@@ -44,8 +44,8 @@
 
 <hr style="height: 3px; padding: 0; margin: 24px 0; background-color: #e1e4e8; border: 0;">
 
-<img src="data:image/png;base64,<% out << new File("${projectDir}/assets/SciLifeLab_logo.png").bytes.encodeBase64().toString() %>">
-<img src="data:image/png;base64,<% out << new File("${projectDir}/assets/NGI_logo.png").bytes.encodeBase64().toString() %>">
+<img src="cid:scilifelablogo">
+<img src="cid:ngilogo">
 
 </div>
 

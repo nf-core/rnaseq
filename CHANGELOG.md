@@ -7,7 +7,8 @@
   * UPPMAX environment module load and Docker image
 * Moved `pipefail` statement into config, applies to all processes
 * Rewrote summary e-mail commands. Now uses `sendmail`
-  * Also writes a plaintext summary. Falls back to sending this with `mail`
+  * Proper multipart text/html e-mail with embedded images
+  * If sendmail fails, falls back to sending plaintext using `mail`
 * MultiQC process now runs using `local` executor for internet access on some UPPMAX clusters.
 * UPPMAX featureCounts process now loads `python/2.7.11` environment module
 * New test script for uppmax with HISAT2

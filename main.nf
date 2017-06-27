@@ -16,13 +16,67 @@ vim: syntax=groovy
 ----------------------------------------------------------------------------------------
 */
 
+def helpMessage() {
+log.info"""
+=========================================
+ NGI-RNAseq : RNA-Seq Best Practice v${version}
+=========================================
+Usage:
 
+The typical command for running the pipeline is as follows:
+
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+
+Mandatory arguments:
+    --reads
+    --genome
+
+Options:
+--singleEnd                     Specifies that the input is single end reads
+Strandedness:
+--forward_stranded              The library is forward stranded
+--reverse_stranded              The library is reverse stranded
+--unstranded                    The default behaviour
+
+References                      If not specified in the configuration file or you wish to overwrite any of the references.  
+--star_index                    Path to STAR index
+--fasta                         Path to Fasta reference 
+--gtf                           Path to GTF file
+--bed12                         Path to bed12 file
+--downloadFasta                 If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline. 
+--downloadGTF                   If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
+--saveReference                 Save the generated reference files the the Results directory.
+--saveAlignedIntermediates      Save the BAM files from the Aligment step  - not done by default
+
+Trimming options
+--clip_r1 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+--clip_r2 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+--three_prime_clip_r1 [int]     Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+--three_prime_clip_r2 [int]     Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+
+Presets:
+--pico                          Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
+
+Other options:
+--outdir                        The output directory where the results will be saved
+--email                         Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+--sampleLevel                   Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
+--rlocation                     Location to save R-libraries used in the pipeline. Default value is ~/R/nxtflow_libs/
+--clusterOptions                Extra SLURM options, used in conjunction with Uppmax.config
+-name                           Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+"""
+}
 /*
  * SET UP CONFIGURATION VARIABLES
  */
 
 // Pipeline version
 version = '1.2'
+
+if (params.help){
+ helpMessage()
+ exit 1
+}
 
 // Configurable variables
 params.name = false
@@ -48,6 +102,7 @@ params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
+params.help = null
 
 // R library locations
 params.rlocation = false

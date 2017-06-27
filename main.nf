@@ -148,7 +148,7 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 params.singleEnd = false
 Channel
     .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-    .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nIf this is single-end data, please specify --singleEnd on the command line." }
+    .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
     .into { read_files_fastqc; read_files_trimming }
 
 

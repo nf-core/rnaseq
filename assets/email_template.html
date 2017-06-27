@@ -4,7 +4,7 @@
 <body>
 <div style="font-family: Helvetica, Arial, sans-serif; padding: 30px; max-width: 800px; margin: 0 auto;">
 
-<img src="data:image/png;base64,<% out << new File("${projectDir}/assets/NGI-RNAseq_logo.png").bytes.encodeBase64().toString() %>">
+<img src="cid:ngipipelinelogo">
 
 <h1>NGI-RNAseq: RNA-Seq Best Practice v${version}</h1>
 <h2>Run Name: $runName</h2>
@@ -38,14 +38,14 @@
     </tbody>
 </table>
 
-<p>NGI-RNAseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the National Genomics Infastructure at SciLifeLab Stockholm, Sweden.</p>
+<p>NGI-RNAseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the National Genomics Infrastructure at SciLifeLab Stockholm, Sweden.</p>
 <p>The pipeline uses Nextflow, a bioinformatics workflow tool. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.</p>
 <p>For more information, please see the pipeline homepage: <a href="https://github.com/SciLifeLab/NGI-RNAseq">https://github.com/SciLifeLab/NGI-RNAseq</a></p>
 
 <hr style="height: 3px; padding: 0; margin: 24px 0; background-color: #e1e4e8; border: 0;">
 
-<img src="data:image/png;base64,<% out << new File("${projectDir}/assets/SciLifeLab_logo.png").bytes.encodeBase64().toString() %>">
-<img src="data:image/png;base64,<% out << new File("${projectDir}/assets/NGI_logo.png").bytes.encodeBase64().toString() %>">
+<img src="cid:scilifelablogo">
+<img src="cid:ngilogo">
 
 </div>
 

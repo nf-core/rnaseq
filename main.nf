@@ -24,6 +24,21 @@ vim: syntax=groovy
 // Pipeline version
 version = '1.2'
 
+// Check that Nextflow version is up to date enough
+// try / throw / catch works for NF versions < 0.25 when this was implemented
+nf_required_version = '0.25.0'
+try {
+  if( ! nextflow.version.matches(">= $nf_required_version") ){
+    throw GroovyException('Nextflow version too old')
+  }
+} catch (all) {
+  log.error "====================================================\n" +
+            "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+            "  Pipeline execution will continue, but things may break.\n" +
+            "  Please run `nextflow self-update` to update Nextflow.\n" +
+            "============================================================"
+}
+
 // Configurable variables
 params.name = false
 params.project = false

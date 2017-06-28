@@ -937,7 +937,10 @@ process output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
+    def subject = "[NGI-RNAseq] Successful: $workflow.runName"
+    if(!workflow.success){
+      subject = "[NGI-RNAseq] FAILED: $workflow.runName"
+    }
     def email_fields = [:]
     email_fields['version'] = version
     email_fields['runName'] = custom_runName ?: workflow.runName

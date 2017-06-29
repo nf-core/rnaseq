@@ -453,6 +453,7 @@ process fastqc {
 
     output:
     file "*_fastqc.{zip,html}" into fastqc_results
+    stdout fastqc_stdout
 
     script:
     """
@@ -480,6 +481,8 @@ process trim_galore {
     file "*fq.gz" into trimmed_reads
     file "*trimming_report.txt" into trimgalore_results
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+    stdout into trim_galore_stdout
+
 
     script:
     c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
@@ -537,6 +540,7 @@ if(params.aligner == 'star'){
         set file("*Log.final.out"), file ('*.bam') into star_aligned
         file "*.out" into alignment_logs
         file "*SJ.out.tab"
+        file "*Log.out" into star_log       
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -581,6 +585,7 @@ if(params.aligner == 'hisat2'){
         output:
         file "${prefix}.bam" into hisat2_bam
         file "${prefix}.hisat2_summary.txt" into alignment_logs
+        stdout into hisat_stdout
 
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
@@ -721,6 +726,7 @@ process preseq {
 
     output:
     file "${bam_preseq.baseName}.ccurve.txt" into preseq_results
+    stdout into preseq_stdout 
 
     script:
     """
@@ -744,6 +750,8 @@ process markDuplicates {
     output:
     file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
     file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
+    file "${bam_markduplicates.baseName}.bam.bai"    
+    stdout into markDuplicates_stdout
 
     script:
     if( task.memory == null ){
@@ -764,6 +772,7 @@ process markDuplicates {
 
     # Print version number to standard out
     echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
+    samtools index $bam_markduplicates 
     """
 }
 
@@ -790,6 +799,7 @@ process dupradar {
 
     output:
     file "*.{pdf,txt}" into dupradar_results
+    stdout into dupradar_stdout
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = params.singleEnd ? 'FALSE' :  'TRUE'
@@ -821,6 +831,7 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
+    stdout into featurecouts_stdout    
 
     script:
     def featureCounts_direction = 0
@@ -877,7 +888,7 @@ process stringtieFPKM {
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
     file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
     file "${bam_stringtieFPKM}.cov_refs.gtf"
-    stdout into stringtie_log
+    file ".command.log" into stringtie_log, stringtie_stdout
 
     script:
     def st_direction = ''
@@ -902,7 +913,6 @@ process stringtieFPKM {
 }
 def num_bams
 bam_count.count().subscribe{ num_bams = it }
-
 
 /*
  * STEP 11 - edgeR MDS and heatmap
@@ -954,6 +964,7 @@ process multiqc {
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
     val prefix into multiqc_prefix
+    stdout into multiqc_stdout
 
     script:
     prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
@@ -984,7 +995,48 @@ process output_documentation {
     markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
     """
 }
+/*
+ * Parse software version numbers
+ */
+fastqc_version = false
+trimgalore_version = false
+star_version = false
+qualimap_version = false
+multiqc_version = false
+stringtie_version = false
+preseq_version = false
+featurecounts_version = false
+dupRadar_version = false
+marduplicates_version = false
+multiqc_version = false
 
+fastqc_stdout.subscribe { stdout ->
+  fastqc_version = stdout.find(/FastQC v(\S+)/) { match, version -> version }
+}
+trim_galore_stdout.subscribe { stdout ->
+  trim_galore_version = stdout.find(/Trim Galore version: (\S+)/) {match, version -> version}
+}
+star_log.subscribe { logfile ->
+  star_version = logfile.getText(/STAR_(\d+\.\d+\.\d+)/) { match, version -> version }
+}
+stringtie_stdout.subscribe { stdout ->
+  stringtie_version = stdout.find(/Stringtie version (\S+)/) { match, version -> version }
+}
+preseq_stdout.subscribe { logfile ->
+  preseq_version = logfile.getText(/Version: (\S+)/) { match, version -> version }
+}
+featurecounts_stdout.subscribe { stdout ->
+  featurecounts_version = stdout.find(/\s+v([\.\d]+/) {match, version -> version}
+}
+dupradar_stdout.subscribe { stdout ->
+  dupRadar_version = stdout.find(/dupRadar\_(\S+)/) {match, version -> version}
+}
+markDuplicates_stdout.subscribe { stdout ->
+  marduplicates_version = stdout.find(/Picard version (\S+)/) {match, version -> version}
+}
+multiqc_stdout.subscribe { stdout ->
+  multiqc_version = stdout.find(/This is MultiQC v(\S+)/) { match, version -> version }
+}
 
 /*
  * Completion e-mail notification

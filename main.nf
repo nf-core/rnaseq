@@ -831,7 +831,7 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
-    stdout into featurecouts_stdout    
+    stdout into featurecounts_stdout 
 
     script:
     def featureCounts_direction = 0

@@ -1022,13 +1022,13 @@ star_log.subscribe { logfile ->
   star_version = logfile.getText().find(/STAR_(\d+\.\d+\.\d+)/) { match, version -> version }
 }
 stringtie_stdout.subscribe { stdout ->
-  stringtie_version = stdout.find(/Stringtie version (\S+)/) { match, version -> version }
+  stringtie_version = stdout.getText()find(/StringTie (\S+)/) { match, version -> version }
 }
-preseq_stdout.subscribe { logfile ->
-  preseq_version = logfile.getText().find(/Version: (\S+)/) { match, version -> version }
+preseq_stdout.subscribe { stdout ->
+  preseq_version = stdout.find(/Version: (\S+)/) { match, version -> version }
 }
 featurecounts_stdout.subscribe { stdout ->
-  featurecounts_version = stdout.find(/\s+v([\.\d]+/) {match, version -> version}
+  featurecounts_version = stdout.find(/\s+v([\.\d]+)/) {match, version -> version}
 }
 dupradar_stdout.subscribe { stdout ->
   dupRadar_version = stdout.find(/dupRadar\_(\S+)/) {match, version -> version}

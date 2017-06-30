@@ -1027,8 +1027,8 @@ star_log.subscribe { logfile ->
 stringtie_stdout.subscribe { stdout ->
   stringtie_version = stdout.getText()find(/StringTie (\S+)/) { match, version -> version }
 }
-hiseq_stdout.subscribe { stdout ->
-  hiseq_version = stdout.find(/^((?!Compiler:).)* version (\S+)/) { match, version -> version }
+hisat_stdout.subscribe { stdout ->
+  hisat_version = stdout.find(/^((?!Compiler:).)* version (\S+)/) { match, version -> version }
 }
 preseq_stdout.subscribe { stdout ->
   preseq_version = stdout.find(/Version: (\S+)/) { match, version -> version }

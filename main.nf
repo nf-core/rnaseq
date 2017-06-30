@@ -1017,13 +1017,13 @@ trim_galore_stdout.subscribe { stdout ->
   trim_galore_version = stdout.find(/Trim Galore version: (\S+)/) {match, version -> version}
 }
 star_log.subscribe { logfile ->
-  star_version = logfile.getText(/STAR_(\d+\.\d+\.\d+)/) { match, version -> version }
+  star_version = logfile.getText().find(/STAR_(\d+\.\d+\.\d+)/) { match, version -> version }
 }
 stringtie_stdout.subscribe { stdout ->
   stringtie_version = stdout.find(/Stringtie version (\S+)/) { match, version -> version }
 }
 preseq_stdout.subscribe { logfile ->
-  preseq_version = logfile.getText(/Version: (\S+)/) { match, version -> version }
+  preseq_version = logfile.getText().find(/Version: (\S+)/) { match, version -> version }
 }
 featurecounts_stdout.subscribe { stdout ->
   featurecounts_version = stdout.find(/\s+v([\.\d]+/) {match, version -> version}

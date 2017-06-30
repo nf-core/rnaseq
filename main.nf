@@ -570,7 +570,7 @@ if(params.aligner == 'star'){
  * STEP 3 - align with HISAT2
  */
 if(params.aligner == 'hisat2'){
-    star_stdout = Channel.create()
+    star_log = Channel.create()
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',

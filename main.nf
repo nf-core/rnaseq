@@ -609,6 +609,7 @@ if(params.aligner == 'hisat2'){
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
+            hisat2 --version
             """
         } else {
             """
@@ -624,6 +625,7 @@ if(params.aligner == 'hisat2'){
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
+            hisat2 --version
             """
         }
     }
@@ -1003,6 +1005,7 @@ process output_documentation {
 fastqc_version = false
 trimgalore_version = false
 star_version = false
+hisat_version = false
 qualimap_version = false
 multiqc_version = false
 stringtie_version = false
@@ -1023,6 +1026,9 @@ star_log.subscribe { logfile ->
 }
 stringtie_stdout.subscribe { stdout ->
   stringtie_version = stdout.getText()find(/StringTie (\S+)/) { match, version -> version }
+}
+hiseq_stdout.subscribe { stdout ->
+  hiseq_version = stdout.find(/^((?!Compiler:).)* version (\S+)/) { match, version -> version }
 }
 preseq_stdout.subscribe { stdout ->
   preseq_version = stdout.find(/Version: (\S+)/) { match, version -> version }

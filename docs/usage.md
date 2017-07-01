@@ -184,6 +184,9 @@ The output directory where the results will be saved.
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
 
+### `--plaintext_email`
+Set to receive plain-text e-mails instead of HTML formatted.
+
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 

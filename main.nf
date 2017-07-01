@@ -63,6 +63,7 @@ params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
+params.plaintext_email = false
 
 // R library locations
 params.rlocation = false
@@ -1000,6 +1001,7 @@ workflow.onComplete {
     // Send the HTML e-mail
     if (params.email) {
         try {
+          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
           log.debug "[NGI-RNAseq] Sent summary e-mail using sendmail"
@@ -1010,6 +1012,14 @@ workflow.onComplete {
         }
         log.info "[NGI-RNAseq] Sent summary e-mail to $params.email"
     }
+
+    // Switch the embedded MIME images with base64 encoded src
+    ngirnaseqlogo = new File("$baseDir/assets/NGI-RNAseq_logo.png").bytes.encodeBase64().toString()
+    scilifelablogo = new File("$baseDir/assets/SciLifeLab_logo.png").bytes.encodeBase64().toString()
+    ngilogo = new File("$baseDir/assets/NGI_logo.png").bytes.encodeBase64().toString()
+    email_html = email_html.replaceAll(~/cid:ngirnaseqlogo/, "data:image/png;base64,$ngirnaseqlogo")
+    email_html = email_html.replaceAll(~/cid:scilifelablogo/, "data:image/png;base64,$scilifelablogo")
+    email_html = email_html.replaceAll(~/cid:ngilogo/, "data:image/png;base64,$ngilogo")
 
     // Write summary e-mail HTML to a file
     def output_d = new File( "${params.outdir}/Documentation/" )

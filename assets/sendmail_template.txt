@@ -1,0 +1,62 @@
+To: $email
+Subject: $subject
+Mime-Version: 1.0
+Content-Type: multipart/related;boundary="ngimimeboundary"
+
+--ngimimeboundary
+Content-Type: text/html; charset=utf-8
+
+$email_html
+
+--ngimimeboundary
+Content-Type: image/png;name="NGI-RNAseq_logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <ngirnaseqlogo>
+Content-Disposition: inline; filename="NGI-RNAseq_logo.png"
+
+<% out << new File("$baseDir/assets/NGI-RNAseq_logo.png").
+  bytes.
+  encodeBase64().
+  toString().
+  tokenize( '\n' )*.
+  toList()*.
+  collate( 76 )*.
+  collect { it.join() }.
+  flatten().
+  join( '\n' ) %>
+
+--ngimimeboundary
+Content-Type: image/png;name="SciLifeLab_logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <scilifelablogo>
+Content-Disposition: inline; filename="SciLifeLab_logo.png"
+
+<% out << new File("$baseDir/assets/SciLifeLab_logo.png").
+  bytes.
+  encodeBase64().
+  toString().
+  tokenize( '\n' )*.
+  toList()*.
+  collate( 76 )*.
+  collect { it.join() }.
+  flatten().
+  join( '\n' ) %>
+
+--ngimimeboundary
+Content-Type: image/png;name="NGI_logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <ngilogo>
+Content-Disposition: inline; filename="NGI_logo.png"
+
+<% out << new File("$baseDir/assets/NGI_logo.png").
+  bytes.
+  encodeBase64().
+  toString().
+  tokenize( '\n' )*.
+  toList()*.
+  collate( 76 )*.
+  collect { it.join() }.
+  flatten().
+  join( '\n' ) %>
+
+--ngimimeboundary--

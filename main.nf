@@ -77,6 +77,20 @@ if (params.help){
  helpMessage()
  exit 1
 }
+// Check that Nextflow version is up to date enough
+// try / throw / catch works for NF versions < 0.25 when this was implemented
+nf_required_version = '0.25.0'
+try {
+  if( ! nextflow.version.matches(">= $nf_required_version") ){
+    throw GroovyException('Nextflow version too old')
+  }
+} catch (all) {
+  log.error "====================================================\n" +
+            "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+            "  Pipeline execution will continue, but things may break.\n" +
+            "  Please run `nextflow self-update` to update Nextflow.\n" +
+            "============================================================"
+}
 
 // Configurable variables
 params.name = false
@@ -103,6 +117,8 @@ params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
 params.help = null
+=======
+params.plaintext_email = false
 
 // R library locations
 params.rlocation = false
@@ -1052,7 +1068,10 @@ multiqc_stdout.subscribe { stdout ->
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "NGI-RNAseq Pipeline Complete: $workflow.runName"
+    def subject = "[NGI-RNAseq] Successful: $workflow.runName"
+    if(!workflow.success){
+      subject = "[NGI-RNAseq] FAILED: $workflow.runName"
+    }
     def email_fields = [:]
     email_fields['version'] = version
     email_fields['runName'] = custom_runName ?: workflow.runName
@@ -1090,13 +1109,14 @@ workflow.onComplete {
 
     // Render the sendmail template
     def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
-    def sf = new File("$baseDir/assets/sendmail_template.html")
+    def sf = new File("$baseDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
 
     // Send the HTML e-mail
     if (params.email) {
         try {
+          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
           log.debug "[NGI-RNAseq] Sent summary e-mail using sendmail"
@@ -1107,6 +1127,14 @@ workflow.onComplete {
         }
         log.info "[NGI-RNAseq] Sent summary e-mail to $params.email"
     }
+
+    // Switch the embedded MIME images with base64 encoded src
+    ngirnaseqlogo = new File("$baseDir/assets/NGI-RNAseq_logo.png").bytes.encodeBase64().toString()
+    scilifelablogo = new File("$baseDir/assets/SciLifeLab_logo.png").bytes.encodeBase64().toString()
+    ngilogo = new File("$baseDir/assets/NGI_logo.png").bytes.encodeBase64().toString()
+    email_html = email_html.replaceAll(~/cid:ngirnaseqlogo/, "data:image/png;base64,$ngirnaseqlogo")
+    email_html = email_html.replaceAll(~/cid:scilifelablogo/, "data:image/png;base64,$scilifelablogo")
+    email_html = email_html.replaceAll(~/cid:ngilogo/, "data:image/png;base64,$ngilogo")
 
     // Write summary e-mail HTML to a file
     def output_d = new File( "${params.outdir}/Documentation/" )

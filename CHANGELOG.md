@@ -12,6 +12,8 @@
 * MultiQC process now runs using `local` executor for internet access on some UPPMAX clusters.
 * UPPMAX featureCounts process now loads `python/2.7.11` environment module
 * New test script for uppmax with HISAT2
+* Timeline and trace now always generated for every run
+* Script now checks that the version of Nextflow is recent enough and warns if not
 
 ## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
 

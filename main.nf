@@ -16,13 +16,68 @@ vim: syntax=groovy
 ----------------------------------------------------------------------------------------
 */
 
+def helpMessage() {
+log.info"""
+=========================================
+ NGI-RNAseq : RNA-Seq Best Practice v${version}
+=========================================
+Usage:
 
+The typical command for running the pipeline is as follows:
+
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+
+Mandatory arguments:
+    --reads
+    --genome
+
+Options:
+--singleEnd                     Specifies that the input is single end reads
+Strandedness:
+--forward_stranded              The library is forward stranded
+--reverse_stranded              The library is reverse stranded
+--unstranded                    The default behaviour
+
+References                      If not specified in the configuration file or you wish to overwrite any of the references.  
+--star_index                    Path to STAR index
+--fasta                         Path to Fasta reference 
+--gtf                           Path to GTF file
+--bed12                         Path to bed12 file
+--downloadFasta                 If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline. 
+--downloadGTF                   If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
+--saveReference                 Save the generated reference files the the Results directory.
+--saveAlignedIntermediates      Save the BAM files from the Aligment step  - not done by default
+
+Trimming options
+--clip_r1 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+--clip_r2 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+--three_prime_clip_r1 [int]     Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+--three_prime_clip_r2 [int]     Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+
+Presets:
+--pico                          Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
+
+Other options:
+--outdir                        The output directory where the results will be saved
+--email                         Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+--sampleLevel                   Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
+--rlocation                     Location to save R-libraries used in the pipeline. Default value is ~/R/nxtflow_libs/
+--clusterOptions                Extra SLURM options, used in conjunction with Uppmax.config
+-name                           Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+"""
+}
 /*
  * SET UP CONFIGURATION VARIABLES
  */
 
 // Pipeline version
 version = '1.2'
+
+
+if (params.help){
+ helpMessage()
+ exit 1
+}
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
@@ -63,6 +118,7 @@ params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
+params.help = false
 params.plaintext_email = false
 
 // R library locations
@@ -414,6 +470,7 @@ process fastqc {
 
     output:
     file "*_fastqc.{zip,html}" into fastqc_results
+    stdout fastqc_stdout
 
     script:
     """
@@ -441,6 +498,8 @@ process trim_galore {
     file "*fq.gz" into trimmed_reads
     file "*trimming_report.txt" into trimgalore_results
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+    stdout into trim_galore_stdout
+
 
     script:
     c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
@@ -481,6 +540,7 @@ def check_log(logs) {
     }
 }
 if(params.aligner == 'star'){
+     hisat_stdout = Channel.create()
     process star {
         tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy',
@@ -498,6 +558,7 @@ if(params.aligner == 'star'){
         set file("*Log.final.out"), file ('*.bam') into star_aligned
         file "*.out" into alignment_logs
         file "*SJ.out.tab"
+        file "*Log.out" into star_log       
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -526,6 +587,7 @@ if(params.aligner == 'star'){
  * STEP 3 - align with HISAT2
  */
 if(params.aligner == 'hisat2'){
+    star_log = Channel.create()
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
@@ -542,6 +604,7 @@ if(params.aligner == 'hisat2'){
         output:
         file "${prefix}.bam" into hisat2_bam
         file "${prefix}.hisat2_summary.txt" into alignment_logs
+        stdout into hisat_stdout
 
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
@@ -563,6 +626,7 @@ if(params.aligner == 'hisat2'){
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
+            hisat2 --version
             """
         } else {
             """
@@ -578,6 +642,7 @@ if(params.aligner == 'hisat2'){
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
+            hisat2 --version
             """
         }
     }
@@ -682,6 +747,7 @@ process preseq {
 
     output:
     file "${bam_preseq.baseName}.ccurve.txt" into preseq_results
+    stdout into preseq_stdout 
 
     script:
     """
@@ -705,6 +771,8 @@ process markDuplicates {
     output:
     file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
     file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
+    file "${bam_markduplicates.baseName}.bam.bai"    
+    stdout into markDuplicates_stdout
 
     script:
     if( task.memory == null ){
@@ -725,6 +793,7 @@ process markDuplicates {
 
     # Print version number to standard out
     echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
+    samtools index $bam_markduplicates 
     """
 }
 
@@ -751,6 +820,7 @@ process dupradar {
 
     output:
     file "*.{pdf,txt}" into dupradar_results
+    stdout into dupradar_stdout
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = params.singleEnd ? 'FALSE' :  'TRUE'
@@ -782,6 +852,7 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
+    stdout into featurecounts_stdout 
 
     script:
     def featureCounts_direction = 0
@@ -838,7 +909,7 @@ process stringtieFPKM {
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
     file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
     file "${bam_stringtieFPKM}.cov_refs.gtf"
-    stdout into stringtie_log
+    file ".command.log" into stringtie_log, stringtie_stdout
 
     script:
     def st_direction = ''
@@ -863,7 +934,6 @@ process stringtieFPKM {
 }
 def num_bams
 bam_count.count().subscribe{ num_bams = it }
-
 
 /*
  * STEP 11 - edgeR MDS and heatmap
@@ -915,6 +985,7 @@ process multiqc {
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
     val prefix into multiqc_prefix
+    stdout into multiqc_stdout
 
     script:
     prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
@@ -945,7 +1016,52 @@ process output_documentation {
     markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
     """
 }
+/*
+ * Parse software version numbers
+ */
+fastqc_version = false
+trimgalore_version = false
+star_version = false
+hisat_version = false
+qualimap_version = false
+multiqc_version = false
+stringtie_version = false
+preseq_version = false
+featurecounts_version = false
+dupRadar_version = false
+marduplicates_version = false
+multiqc_version = false
 
+fastqc_stdout.subscribe { stdout ->
+  fastqc_version = stdout.find(/FastQC v(\S+)/) { match, version -> version }
+}
+trim_galore_stdout.subscribe { stdout ->
+  trim_galore_version = stdout.find(/Trim Galore version: (\S+)/) {match, version -> version}
+}
+star_log.subscribe { logfile ->
+  star_version = logfile.getText().find(/STAR_(\d+\.\d+\.\d+)/) { match, version -> version }
+}
+stringtie_stdout.subscribe { stdout ->
+  stringtie_version = stdout.getText()find(/StringTie (\S+)/) { match, version -> version }
+}
+hisat_stdout.subscribe { stdout ->
+  hisat_version = stdout.find(/^((?!Compiler:).)* version (\S+)/) { match, version -> version }
+}
+preseq_stdout.subscribe { stdout ->
+  preseq_version = stdout.find(/Version: (\S+)/) { match, version -> version }
+}
+featurecounts_stdout.subscribe { stdout ->
+  featurecounts_version = stdout.find(/\s+v([\.\d]+)/) {match, version -> version}
+}
+dupradar_stdout.subscribe { stdout ->
+  dupRadar_version = stdout.find(/dupRadar\_(\S+)/) {match, version -> version}
+}
+markDuplicates_stdout.subscribe { stdout ->
+  marduplicates_version = stdout.find(/Picard version (\S+)/) {match, version -> version}
+}
+multiqc_stdout.subscribe { stdout ->
+  multiqc_version = stdout.find(/This is MultiQC v(\S+)/) { match, version -> version }
+}
 
 /*
  * Completion e-mail notification

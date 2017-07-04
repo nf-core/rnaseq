@@ -184,25 +184,23 @@ The output directory where the results will be saved.
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
 
+### `--plaintext_email`
+Set to receive plain-text e-mails instead of HTML formatted.
+
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
-
-### `--rlocation`
-Some steps in the pipeline run R with required modules. By default, the pipeline will install
-these modules to `~/R/nxtflow_libs/` if not present. You can specify what path to use with this
-command line flag.
-
-### `--multiqc_config`
-If you would like to supply a custom config file to MultiQC, you can specify a path with `--multiqc_config`. This is used instead of the config file specific to the pipeline.
-
-### `--clusterOptions`
-Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
-to run on the development node (though won't work with default process time requests).
 
 ### `-name`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
 This is used in the MultiQC report (if not default) and in the summary HTML / e-mail (always).
+
+**NB:** Single hyphen (core Nextflow option)
+
+### `-resume`
+Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+
+You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
 **NB:** Single hyphen (core Nextflow option)
 
@@ -218,6 +216,18 @@ environment module as is the default. So we specify a config file using `-c` tha
 ```groovy
 process.$multiqc.module = []
 ```
+
+### `--rlocation`
+Some steps in the pipeline run R with required modules. By default, the pipeline will install
+these modules to `~/R/nxtflow_libs/` if not present. You can specify what path to use with this
+command line flag.
+
+### `--multiqc_config`
+If you would like to supply a custom config file to MultiQC, you can specify a path with `--multiqc_config`. This is used instead of the config file specific to the pipeline.
+
+### `--clusterOptions`
+Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
+to run on the development node (though won't work with default process time requests).
 
 ## Stand-alone scripts
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:

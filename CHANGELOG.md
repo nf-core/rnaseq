@@ -14,6 +14,8 @@
 * New test script for uppmax with HISAT2
 * Timeline and trace now always generated for every run
 * Script now checks that the version of Nextflow is recent enough and warns if not
+* New `--help` function to give usage help
+* Software versions are now collected at run time and added to MultiQC and pipeline reports.
 
 ## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
 

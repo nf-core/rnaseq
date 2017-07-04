@@ -1,0 +1,8 @@
+#id: Heatmap
+#title: Sample Distances
+#reverseColors: True
+#description: To generate this plot, gene counts are normalised using
+#       <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html' target='_blank'>edgeR</a>.
+#       Euclidean distances between log<sub>2</sub> normalised CPM values are then calculated and clustered.
+#plot_type: heatmap
+#anchor = sample_similarity

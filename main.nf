@@ -77,7 +77,7 @@ version = '1.2'
 // Show help emssage
 if (params.help){
     helpMessage()
-    exit 1
+    exit 0
 }
 
 // Check that Nextflow version is up to date enough
@@ -1130,13 +1130,12 @@ workflow.onComplete {
           if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.debug "[NGI-RNAseq] Sent summary e-mail using sendmail"
+          log.info "[NGI-RNAseq] Sent summary e-mail to $params.email (sendmail)"
         } catch (all) {
           // Catch failures and try with plaintext
           [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.debug "[NGI-RNAseq] Sendmail failed, failing back to sending summary e-mail using mail"
+          log.info "[NGI-RNAseq] Sent summary e-mail to $params.email (mail)"
         }
-        log.info "[NGI-RNAseq] Sent summary e-mail to $params.email"
     }
 
     // Switch the embedded MIME images with base64 encoded src

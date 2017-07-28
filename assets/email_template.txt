@@ -28,6 +28,11 @@ Pipeline Configuration:
 -----------------------
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
+
+Software Versions:
+-----------------------
+<% out << software_versions.collect{ k,v -> " - $k: $v" }.join("\n") %>
+
 --
 NGI-RNAseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the National Genomics Infrastructure at SciLifeLab Stockholm, Sweden.
 The pipeline uses Nextflow, a bioinformatics workflow tool. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.

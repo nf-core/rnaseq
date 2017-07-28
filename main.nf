@@ -74,19 +74,12 @@ def helpMessage() {
 // Pipeline version
 version = '1.2'
 
-<<<<<<< HEAD
-if (params.help){
- helpMessage()
- exit 1
-}
-=======
 // Show help emssage
 if (params.help){
     helpMessage()
     exit 0
 }
 
->>>>>>> 395121e2c569010e37de754b6be4eefec285821f
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
 nf_required_version = '0.25.0'
@@ -95,19 +88,11 @@ try {
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
-<<<<<<< HEAD
-  log.error "====================================================\n" +
-            "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
-            "  Pipeline execution will continue, but things may break.\n" +
-            "  Please run `nextflow self-update` to update Nextflow.\n" +
-            "============================================================"
-=======
     log.error "====================================================\n" +
               "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please run `nextflow self-update` to update Nextflow.\n" +
               "============================================================"
->>>>>>> 395121e2c569010e37de754b6be4eefec285821f
 }
 
 // Configurable variables
@@ -134,14 +119,9 @@ params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
-<<<<<<< HEAD
 params.help = null
 params.plaintext_email = false
 params.heatmap_header = "$baseDir/assets/heatmap_header.txt"
-=======
-params.help = false
-params.plaintext_email = false
->>>>>>> 395121e2c569010e37de754b6be4eefec285821f
 
 // R library locations
 params.rlocation = false

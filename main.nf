@@ -579,7 +579,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
+        .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
 }
 
 

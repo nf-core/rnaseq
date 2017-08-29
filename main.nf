@@ -755,8 +755,11 @@ process genebody_coverage {
     file "*.{txt,pdf,r,xls}" into genebody_coverage_results
     script:
     """
-    samtools index $bam_geneBodyCoverage
-    geneBody_coverage.py -i $bam_geneBodyCoverage -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
+    cat <(samtools view -H ${bam_geneBodyCoverage.baseName}) \\
+    <(samtools view ${bam_geneBodyCoverage.baseName} | shuf -n 1000000) \\
+    | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -O BAM
+    samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
+    geneBody_coverage.py -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
     """
 }
 

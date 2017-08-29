@@ -579,7 +579,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-        .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
 }
 
 
@@ -740,6 +740,7 @@ process genebody_coverage {
     tag "${bam_geneBodyCoverage.baseName - '.sorted'}" 
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
+                 if (filename.indexOf("bam_stat.txt") > 0)                      "bam_stat/$filename"
             else if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
             else if (filename.indexOf("geneBodyCoverage.r") > 0)                "geneBodyCoverage/rscripts/$filename"
             else if (filename.indexOf("geneBodyCoverage.txt") > 0)              "geneBodyCoverage/data/$filename"
@@ -755,9 +756,9 @@ process genebody_coverage {
     file "*.{txt,pdf,r,xls}" into genebody_coverage_results
     script:
     """
-    cat <(samtools view -H ${bam_geneBodyCoverage.baseName}) \\
-    <(samtools view ${bam_geneBodyCoverage.baseName} | shuf -n 1000000) \\
-    | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -O BAM
+    cat <(samtools view -H ${bam_geneBodyCoverage}) \\
+    <(samtools view ${bam_geneBodyCoverage} | shuf -n 1000000) \\
+    | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam 
     samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
     geneBody_coverage.py -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
     """

@@ -973,6 +973,7 @@ else if(params.aligner == 'hisat2') software_versions.remove('Star')
 
 process get_software_versions {
     cache false
+    executor 'local'
 
     input:
     val fastqc from fastqc_stdout.collect()

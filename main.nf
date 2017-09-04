@@ -668,7 +668,6 @@ if(params.aligner == 'hisat2'){
         """
     }
 }
-
 bed12
 .into { bed_rseqc; bed_genebody_coverage } 
 /*
@@ -689,9 +688,6 @@ process rseqc {
             else if (filename.indexOf("RPKM_saturation.rawCount.xls") > 0)      "RPKM_saturation/counts/$filename"
             else if (filename.indexOf("RPKM_saturation.saturation.pdf") > 0)    "RPKM_saturation/$filename"
             else if (filename.indexOf("RPKM_saturation.saturation.r") > 0)      "RPKM_saturation/rscripts/$filename"
-            else if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
-            else if (filename.indexOf("geneBodyCoverage.r") > 0)                "geneBodyCoverage/rscripts/$filename"
-            else if (filename.indexOf("geneBodyCoverage.txt") > 0)              "geneBodyCoverage/data/$filename"
             else if (filename.indexOf("inner_distance.txt") > 0)                "inner_distance/$filename"
             else if (filename.indexOf("inner_distance_freq.txt") > 0)           "inner_distance/data/$filename"
             else if (filename.indexOf("inner_distance_plot.r") > 0)             "inner_distance/rscripts/$filename"
@@ -740,8 +736,7 @@ process genebody_coverage {
     tag "${bam_geneBodyCoverage.baseName - '.sorted'}" 
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
-                 if (filename.indexOf("bam_stat.txt") > 0)                      "bam_stat/$filename"
-            else if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
+            if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
             else if (filename.indexOf("geneBodyCoverage.r") > 0)                "geneBodyCoverage/rscripts/$filename"
             else if (filename.indexOf("geneBodyCoverage.txt") > 0)              "geneBodyCoverage/data/$filename"
             else "$filename"
@@ -752,13 +747,13 @@ process genebody_coverage {
     file bed12 from bed_genebody_coverage.collect()
     
     output:
-
     file "*.{txt,pdf,r,xls}" into genebody_coverage_results
+    
     script:
     """
     cat <(samtools view -H ${bam_geneBodyCoverage}) \\
-    <(samtools view ${bam_geneBodyCoverage} | shuf -n 1000000) \\
-    | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam 
+        <(samtools view ${bam_geneBodyCoverage} | shuf -n 1000000) \\
+        | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam 
     samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
     geneBody_coverage.py -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
     """

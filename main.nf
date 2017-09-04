@@ -198,6 +198,7 @@ if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
+        .into {bed_rseqc; bed_genebody_coverage}
 }
 if( params.aligner == 'hisat2' && params.splicesites ){
     Channel
@@ -448,7 +449,7 @@ if(!params.bed12){
         file gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed12
+        file "${gtf.baseName}.bed" into bed_rseqc; bed_genebody_coverage
 
         script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
@@ -669,8 +670,6 @@ if(params.aligner == 'hisat2'){
         """
     }
 }
-bed12
-.into { bed_rseqc; bed_genebody_coverage } 
 /*
  * STEP 4 - RSeQC analysis
  */

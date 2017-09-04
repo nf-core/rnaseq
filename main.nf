@@ -17,55 +17,56 @@ vim: syntax=groovy
 */
 
 def helpMessage() {
-log.info"""
-=========================================
- NGI-RNAseq : RNA-Seq Best Practice v${version}
-=========================================
-Usage:
+    log.info"""
+    =========================================
+     NGI-RNAseq : RNA-Seq Best Practice v${version}
+    =========================================
+    Usage:
 
-The typical command for running the pipeline is as follows:
+    The typical command for running the pipeline is as follows:
 
-nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+    nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
 
-Mandatory arguments:
-    --reads
-    --genome
+    Mandatory arguments:
+      --reads                       Path to input data (must be surrounded with quotes)
+      --genome                      Name of iGenomes reference
 
-Options:
---singleEnd                     Specifies that the input is single end reads
-Strandedness:
---forward_stranded              The library is forward stranded
---reverse_stranded              The library is reverse stranded
---unstranded                    The default behaviour
+    Options:
+      --singleEnd                   Specifies that the input is single end reads
+    Strandedness:
+      --forward_stranded            The library is forward stranded
+      --reverse_stranded            The library is reverse stranded
+      --unstranded                  The default behaviour
 
-References                      If not specified in the configuration file or you wish to overwrite any of the references.  
---star_index                    Path to STAR index
---fasta                         Path to Fasta reference 
---gtf                           Path to GTF file
---bed12                         Path to bed12 file
---downloadFasta                 If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline. 
---downloadGTF                   If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
---saveReference                 Save the generated reference files the the Results directory.
---saveAlignedIntermediates      Save the BAM files from the Aligment step  - not done by default
+    References                      If not specified in the configuration file or you wish to overwrite any of the references.
+      --star_index                  Path to STAR index
+      --fasta                       Path to Fasta reference
+      --gtf                         Path to GTF file
+      --bed12                       Path to bed12 file
+      --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
+      --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
+      --saveReference               Save the generated reference files the the Results directory.
+      --saveAlignedIntermediates    Save the BAM files from the Aligment step  - not done by default
 
-Trimming options
---clip_r1 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
---clip_r2 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
---three_prime_clip_r1 [int]     Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
---three_prime_clip_r2 [int]     Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+    Trimming options
+      --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+      --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+      --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+      --three_prime_clip_r2 [int]   Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
 
-Presets:
---pico                          Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
+    Presets:
+      --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
 
-Other options:
---outdir                        The output directory where the results will be saved
---email                         Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
---sampleLevel                   Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
---rlocation                     Location to save R-libraries used in the pipeline. Default value is ~/R/nxtflow_libs/
---clusterOptions                Extra SLURM options, used in conjunction with Uppmax.config
--name                           Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
-"""
+    Other options:
+      --outdir                      The output directory where the results will be saved
+      --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+      --sampleLevel                 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
+      --rlocation                   Location to save R-libraries used in the pipeline. Default value is ~/R/nxtflow_libs/
+      --clusterOptions              Extra SLURM options, used in conjunction with Uppmax.config
+      -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+    """.stripIndent()
 }
+
 /*
  * SET UP CONFIGURATION VARIABLES
  */
@@ -73,25 +74,26 @@ Other options:
 // Pipeline version
 version = '1.2'
 
-
+// Show help emssage
+params.help = false
 if (params.help){
- helpMessage()
- exit 1
+    helpMessage()
+    exit 0
 }
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
 nf_required_version = '0.25.0'
 try {
-  if( ! nextflow.version.matches(">= $nf_required_version") ){
-    throw GroovyException('Nextflow version too old')
-  }
+    if( ! nextflow.version.matches(">= $nf_required_version") ){
+        throw GroovyException('Nextflow version too old')
+    }
 } catch (all) {
-  log.error "====================================================\n" +
-            "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
-            "  Pipeline execution will continue, but things may break.\n" +
-            "  Please run `nextflow self-update` to update Nextflow.\n" +
-            "============================================================"
+    log.error "====================================================\n" +
+              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Pipeline execution will continue, but things may break.\n" +
+              "  Please run `nextflow self-update` to update Nextflow.\n" +
+              "============================================================"
 }
 
 // Configurable variables
@@ -118,7 +120,6 @@ params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
-params.help = false
 params.plaintext_email = false
 
 // R library locations
@@ -470,11 +471,12 @@ process fastqc {
 
     output:
     file "*_fastqc.{zip,html}" into fastqc_results
-    stdout fastqc_stdout
+    file '.command.out' into fastqc_stdout
 
     script:
     """
     fastqc -q $reads
+    fastqc --version
     """
 }
 
@@ -496,9 +498,8 @@ process trim_galore {
 
     output:
     file "*fq.gz" into trimmed_reads
-    file "*trimming_report.txt" into trimgalore_results
+    file "*trimming_report.txt" into trimgalore_results, trimgalore_logs
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
-    stdout into trim_galore_stdout
 
 
     script:
@@ -540,7 +541,7 @@ def check_log(logs) {
     }
 }
 if(params.aligner == 'star'){
-     hisat_stdout = Channel.create()
+    hisat_stdout = Channel.from(false)
     process star {
         tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy',
@@ -558,7 +559,7 @@ if(params.aligner == 'star'){
         set file("*Log.final.out"), file ('*.bam') into star_aligned
         file "*.out" into alignment_logs
         file "*SJ.out.tab"
-        file "*Log.out" into star_log       
+        file "*Log.out" into star_log
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -587,7 +588,7 @@ if(params.aligner == 'star'){
  * STEP 3 - align with HISAT2
  */
 if(params.aligner == 'hisat2'){
-    star_log = Channel.create()
+    star_log = Channel.from(false)
     process hisat2Align {
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
@@ -604,7 +605,7 @@ if(params.aligner == 'hisat2'){
         output:
         file "${prefix}.bam" into hisat2_bam
         file "${prefix}.hisat2_summary.txt" into alignment_logs
-        stdout into hisat_stdout
+        file '.command.log' into hisat_stdout
 
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
@@ -771,7 +772,7 @@ process preseq {
 
     output:
     file "${bam_preseq.baseName}.ccurve.txt" into preseq_results
-    stdout into preseq_stdout 
+    file '.command.log' into preseq_stdout
 
     script:
     """
@@ -795,8 +796,8 @@ process markDuplicates {
     output:
     file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
     file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
-    file "${bam_markduplicates.baseName}.bam.bai"    
-    stdout into markDuplicates_stdout
+    file "${bam_markduplicates.baseName}.bam.bai"
+    file '.command.log' into markDuplicates_stdout
 
     script:
     if( task.memory == null ){
@@ -817,7 +818,7 @@ process markDuplicates {
 
     # Print version number to standard out
     echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
-    samtools index $bam_markduplicates 
+    samtools index $bam_markduplicates
     """
 }
 
@@ -844,7 +845,7 @@ process dupradar {
 
     output:
     file "*.{pdf,txt}" into dupradar_results
-    stdout into dupradar_stdout
+    file '.command.log' into dupradar_stdout
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
     def paired = params.singleEnd ? 'FALSE' :  'TRUE'
@@ -876,7 +877,7 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
-    stdout into featurecounts_stdout 
+    file '.command.log' into featurecounts_stdout
 
     script:
     def featureCounts_direction = 0
@@ -983,6 +984,59 @@ process sample_correlation {
     """
 }
 
+/*
+ * Parse software version numbers
+ */
+software_versions = [
+  'FastQC': null, 'Trim Galore!': null, 'Star': null, 'HISAT2': null, 'StringTie': null,
+  'Preseq': null, 'featureCounts': null, 'dupRadar': null, 'Picard MarkDuplicates': null,
+  'Nextflow': "v$workflow.nextflow.version"
+]
+if(params.aligner == 'star') software_versions.remove('HISAT2')
+else if(params.aligner == 'hisat2') software_versions.remove('Star')
+
+process get_software_versions {
+    cache false
+    executor 'local'
+
+    input:
+    val fastqc from fastqc_stdout.collect()
+    val trim_galore from trimgalore_logs.collect()
+    val star from star_log.collect()
+    val stringtie from stringtie_stdout.collect()
+    val hisat from hisat_stdout.collect()
+    val preseq from preseq_stdout.collect()
+    val featurecounts from featurecounts_stdout.collect()
+    val dupradar from dupradar_stdout.collect()
+    val markDuplicates from markDuplicates_stdout.collect()
+
+    output:
+    file 'software_versions_mqc.yaml' into software_versions_yaml
+
+    exec:
+    software_versions['FastQC'] = fastqc[0].getText().find(/FastQC v(\S+)/) { match, version -> "v$version" }
+    software_versions['Trim Galore!'] = trim_galore[0].getText().find(/Trim Galore version: (\S+)/) {match, version -> "v$version"}
+    if(params.aligner == 'star') software_versions['Star'] = star[0].getText().find(/STAR_(\d+\.\d+\.\d+)/) { match, version -> "v$version" }
+    else if(params.aligner == 'hisat2') software_versions['HISAT2'] = hisat[0].getText().find(/hisat2\S+ version (\S+)/) { match, version -> "v$version" }
+    software_versions['StringTie'] = stringtie[0].getText().find(/StringTie (\S+)/) { match, version -> "v"+version.replaceAll(/\.$/, "") }
+    software_versions['Preseq'] = preseq[0].getText().find(/Version: (\S+)/) { match, version -> "v$version" }
+    software_versions['featureCounts'] = featurecounts[0].getText().find(/\s+v([\.\d]+)/) {match, version -> "v$version"}
+    software_versions['dupRadar'] = dupradar[0].getText().find(/dupRadar\_(\S+)/) {match, version -> "v$version"}
+    software_versions['Picard MarkDuplicates'] = markDuplicates[0].getText().find(/Picard version ([\d\.]+)/) {match, version -> "v$version"}
+
+    def sw_yaml_file = task.workDir.resolve('software_versions_mqc.yaml')
+    sw_yaml_file.text  = """
+    id: 'ngi-rnaseq'
+    section_name: 'NGI-RNAseq Software Versions'
+    section_href: 'https://github.com/SciLifeLab/NGI-RNAseq'
+    plot_type: 'html'
+    description: 'are collected at run time from the software output.'
+    data: |
+        <dl class=\"dl-horizontal\">
+${software_versions.collect{ k,v -> "            <dt>$k</dt><dd>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
+}
 
 /*
  * STEP 12 MultiQC
@@ -990,7 +1044,6 @@ process sample_correlation {
 process multiqc {
     tag "$prefix"
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
-    echo true
 
     input:
     file multiqc_config
@@ -1005,22 +1058,25 @@ process multiqc {
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/*') from stringtie_log.collect()
     file ('sample_correlation_results/*') from sample_correlation_results.collect()
+    file ('software_versions/*') from software_versions_yaml
 
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
+    file '.command.err' into multiqc_stderr
     val prefix into multiqc_prefix
-    stdout into multiqc_stdout
 
     script:
     prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f $rtitle $rfilename --config $multiqc_config . 2>&1
+    multiqc -f $rtitle $rfilename --config $multiqc_config .
     """
 }
-
+multiqc_stderr.subscribe { stderr ->
+  software_versions['MultiQC'] = stderr.getText().find(/This is MultiQC v(\S+)/) { match, version -> "v$version" }
+}
 
 /*
  * STEP 13 - Output Description HTML
@@ -1041,52 +1097,7 @@ process output_documentation {
     markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
     """
 }
-/*
- * Parse software version numbers
- */
-fastqc_version = false
-trimgalore_version = false
-star_version = false
-hisat_version = false
-qualimap_version = false
-multiqc_version = false
-stringtie_version = false
-preseq_version = false
-featurecounts_version = false
-dupRadar_version = false
-marduplicates_version = false
-multiqc_version = false
 
-fastqc_stdout.subscribe { stdout ->
-  fastqc_version = stdout.find(/FastQC v(\S+)/) { match, version -> version }
-}
-trim_galore_stdout.subscribe { stdout ->
-  trim_galore_version = stdout.find(/Trim Galore version: (\S+)/) {match, version -> version}
-}
-star_log.subscribe { logfile ->
-  star_version = logfile.getText().find(/STAR_(\d+\.\d+\.\d+)/) { match, version -> version }
-}
-stringtie_stdout.subscribe { stdout ->
-  stringtie_version = stdout.getText()find(/StringTie (\S+)/) { match, version -> version }
-}
-hisat_stdout.subscribe { stdout ->
-  hisat_version = stdout.find(/^((?!Compiler:).)* version (\S+)/) { match, version -> version }
-}
-preseq_stdout.subscribe { stdout ->
-  preseq_version = stdout.find(/Version: (\S+)/) { match, version -> version }
-}
-featurecounts_stdout.subscribe { stdout ->
-  featurecounts_version = stdout.find(/\s+v([\.\d]+)/) {match, version -> version}
-}
-dupradar_stdout.subscribe { stdout ->
-  dupRadar_version = stdout.find(/dupRadar\_(\S+)/) {match, version -> version}
-}
-markDuplicates_stdout.subscribe { stdout ->
-  marduplicates_version = stdout.find(/Picard version (\S+)/) {match, version -> version}
-}
-multiqc_stdout.subscribe { stdout ->
-  multiqc_version = stdout.find(/This is MultiQC v(\S+)/) { match, version -> version }
-}
 
 /*
  * Completion e-mail notification
@@ -1112,15 +1123,15 @@ workflow.onComplete {
     email_fields['summary'] = summary
     email_fields['summary']['Date Started'] = workflow.start
     email_fields['summary']['Date Completed'] = workflow.complete
-    email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
-    email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
-    email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
     email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
     email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
     if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
     if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
     if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
+    email_fields['software_versions'] = software_versions
+    email_fields['software_versions']['Nextflow Build'] = workflow.nextflow.build
+    email_fields['software_versions']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
@@ -1145,13 +1156,12 @@ workflow.onComplete {
           if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.debug "[NGI-RNAseq] Sent summary e-mail using sendmail"
+          log.info "[NGI-RNAseq] Sent summary e-mail to $params.email (sendmail)"
         } catch (all) {
           // Catch failures and try with plaintext
           [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.debug "[NGI-RNAseq] Sendmail failed, failing back to sending summary e-mail using mail"
+          log.info "[NGI-RNAseq] Sent summary e-mail to $params.email (mail)"
         }
-        log.info "[NGI-RNAseq] Sent summary e-mail to $params.email"
     }
 
     // Switch the embedded MIME images with base64 encoded src

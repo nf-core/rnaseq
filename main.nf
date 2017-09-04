@@ -75,6 +75,7 @@ def helpMessage() {
 version = '1.2'
 
 // Show help emssage
+params.help = false
 if (params.help){
     helpMessage()
     exit 0
@@ -119,7 +120,6 @@ params.saveAlignedIntermediates = false
 params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
-params.help = false
 params.plaintext_email = false
 
 // R library locations
@@ -973,6 +973,7 @@ else if(params.aligner == 'hisat2') software_versions.remove('Star')
 
 process get_software_versions {
     cache false
+    executor 'local'
 
     input:
     val fastqc from fastqc_stdout.collect()

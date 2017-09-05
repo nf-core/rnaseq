@@ -205,6 +205,8 @@ This plot will not be generated for single-end data. Very short insert sizes are
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
 ### Gene body coverage
+**NB:** In NGI-RNAseq we subsample this to 1 Million reads. This speeds up the speed significantly and has no to little effect on the results. 
+
 **Output:**
 
 * `Sample_rseqc.geneBodyCoverage.curves.pdf`

@@ -16,6 +16,9 @@
 * Script now checks that the version of Nextflow is recent enough and warns if not
 * New `--help` function to give usage help
 * Software versions are now collected at run time and added to MultiQC and pipeline reports.
+* RSeQC has been refactored, and geneBody_coverage.py moved into it's own process. 
+* The way config files work has been changed. Config settings are now inherited from `base.config` instead of `uppmax.config`
+
 
 ## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
 

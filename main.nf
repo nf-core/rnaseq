@@ -198,6 +198,7 @@ if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
+        .into {bed_rseqc; bed_genebody_coverage}
 }
 if( params.aligner == 'hisat2' && params.splicesites ){
     Channel
@@ -448,7 +449,7 @@ if(!params.bed12){
         file gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed12
+        file "${gtf.baseName}.bed" into bed_rseqc; bed_genebody_coverage
 
         script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
@@ -580,7 +581,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
 }
 
 
@@ -657,7 +658,7 @@ if(params.aligner == 'hisat2'){
         file hisat2_bam
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_geneBodyCoverage
 
         script:
         def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
@@ -669,8 +670,6 @@ if(params.aligner == 'hisat2'){
         """
     }
 }
-
-
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -689,9 +688,6 @@ process rseqc {
             else if (filename.indexOf("RPKM_saturation.rawCount.xls") > 0)      "RPKM_saturation/counts/$filename"
             else if (filename.indexOf("RPKM_saturation.saturation.pdf") > 0)    "RPKM_saturation/$filename"
             else if (filename.indexOf("RPKM_saturation.saturation.r") > 0)      "RPKM_saturation/rscripts/$filename"
-            else if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
-            else if (filename.indexOf("geneBodyCoverage.r") > 0)                "geneBodyCoverage/rscripts/$filename"
-            else if (filename.indexOf("geneBodyCoverage.txt") > 0)              "geneBodyCoverage/data/$filename"
             else if (filename.indexOf("inner_distance.txt") > 0)                "inner_distance/$filename"
             else if (filename.indexOf("inner_distance_freq.txt") > 0)           "inner_distance/data/$filename"
             else if (filename.indexOf("inner_distance_plot.r") > 0)             "inner_distance/rscripts/$filename"
@@ -708,7 +704,7 @@ process rseqc {
 
     input:
     file bam_rseqc
-    file bed12 from bed12.collect()
+    file bed12 from bed_rseqc.collect()
 
     output:
     file "*.{txt,pdf,r,xls}" into rseqc_results
@@ -723,18 +719,45 @@ process rseqc {
     """
     samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-    RPKM_saturation.py -i $bam_rseqc -r $bed12  $strandRule -o ${bam_rseqc.baseName}.RPKM_saturation
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
     junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
     inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
-    geneBody_coverage.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
     echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
 
+/*
+ * Step 4.1 Rseqc genebody_coverage
+ */
+process genebody_coverage {
+    tag "${bam_geneBodyCoverage.baseName - '.sorted'}" 
+       publishDir "${params.outdir}/rseqc" , mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
+            else if (filename.indexOf("geneBodyCoverage.r") > 0)                "geneBodyCoverage/rscripts/$filename"
+            else if (filename.indexOf("geneBodyCoverage.txt") > 0)              "geneBodyCoverage/data/$filename"
+            else "$filename"
+        }
+
+    input:
+    file bam_geneBodyCoverage
+    file bed12 from bed_genebody_coverage.collect()
+    
+    output:
+    file "*.{txt,pdf,r,xls}" into genebody_coverage_results
+    
+    script:
+    """
+    cat <(samtools view -H ${bam_geneBodyCoverage}) \\
+        <(samtools view ${bam_geneBodyCoverage} | shuf -n 1000000) \\
+        | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam 
+    samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
+    geneBody_coverage.py -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
+    """
+}
 
 /*
  * STEP 5 - preseq analysis
@@ -1027,6 +1050,7 @@ process multiqc {
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
     file ('rseqc/*') from rseqc_results.collect()
+    file ('rseqc/*') from genebody_coverage_results.collect()
     file ('preseq/*') from preseq_results.collect()
     file ('dupradar/*') from dupradar_results.collect()
     file ('featureCounts/*') from featureCounts_logs.collect()

@@ -23,10 +23,11 @@ Location of the input FastQ files:
  --reads 'path/to/data/sample_*_{1,2}.fastq'
 ```
 
-**NB: Must be enclosed in quotes!**
+Please note the following requirements:
 
-Note that the `{1,2}` parentheses are required to specify paired end data. The file path should be
-in quotation marks to prevent shell glob expansion.
+1. The path must be enclosed in quotes
+2. The path must have at least one `*` wildcard character
+3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.
 
 If left unspecified, the pipeline will assume that the data is in a directory called `data` in the
 working directory (`data/*{1,2}.fastq.gz`).

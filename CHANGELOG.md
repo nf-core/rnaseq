@@ -1,6 +1,6 @@
 # NGI-RNAseq
 
-## 1.3dev
+## [1.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3) - 2017-10-10
 
 * Updated HISAT2 from v2.0.5 to v2.1.0
   * Uses `--new-summary` and `--summary-file` to give output that will work with MultiQC,
@@ -18,6 +18,7 @@
 * Software versions are now collected at run time and added to MultiQC and pipeline reports.
 * RSeQC has been refactored, and geneBody_coverage.py moved into it's own process. 
 * The way config files work has been changed. Config settings are now inherited from `base.config` instead of `uppmax.config`
+    * igenome.config needs to be last in the profile definition for the inhertence to work properly
 
 
 ## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13

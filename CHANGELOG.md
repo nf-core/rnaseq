@@ -1,4 +1,6 @@
 # NGI-RNAseq
+## 1.4dev
+* Added a Troubleshooting section to the docs
 
 ## [1.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3) - 2017-10-10
 

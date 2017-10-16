@@ -72,7 +72,7 @@ def helpMessage() {
  */
 
 // Pipeline version
-version = '1.2'
+version = '1.3.1'
 
 // Show help emssage
 params.help = false
@@ -733,7 +733,7 @@ process rseqc {
  * Step 4.1 Rseqc genebody_coverage
  */
 process genebody_coverage {
-    tag "${bam_geneBodyCoverage.baseName - '.sorted'}" 
+    tag "${bam_geneBodyCoverage.baseName - '.sorted'}"
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
@@ -745,15 +745,15 @@ process genebody_coverage {
     input:
     file bam_geneBodyCoverage
     file bed12 from bed_genebody_coverage.collect()
-    
+
     output:
     file "*.{txt,pdf,r,xls}" into genebody_coverage_results
-    
+
     script:
     """
     cat <(samtools view -H ${bam_geneBodyCoverage}) \\
         <(samtools view ${bam_geneBodyCoverage} | shuf -n 1000000) \\
-        | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam 
+        | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
     samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
     geneBody_coverage.py -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
     """
@@ -886,7 +886,7 @@ process featureCounts {
         featureCounts_direction = 2
     }
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts  
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
     """

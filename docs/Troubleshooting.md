@@ -38,12 +38,6 @@ The pipeline can't take a list of multiple input files - it takes a glob express
 
 ### Bioinfo-tools not loaded
 For some unkown reason the bioinfo-tools module is sometimes not loaded properly which means that no other modules are loaded and the pipeline chrashes. Fortunately this is easily fixed by simply making shure to already have it loaded when starting the pipeline. 
-
-I.e. before you start the pipeline run:
-
-```
-module load bioinfo-tools
-```
 Example error message:
 
 ```
@@ -53,6 +47,12 @@ Command wrapper:
   
   Try: "module spider FastQC/0.11.5"
 
+```
+
+To fix this before you start the pipeline run:
+
+```
+module load bioinfo-tools
 ```
 
 

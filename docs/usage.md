@@ -1,9 +1,9 @@
 # NGI-RNAseq Usage
 
 ## General Nextflow info
-Nextflow handles job submissions on SLURM or other enviroments, and supervises the jobs. Thus the Nextflow proccess must run until the pipeline is finished. We recomend that you put the process runnig in the background through `screen`/`tmux` or similar tool. Alternatively submitted as it's own job through your job scheduler. 
+Nextflow handles job submissions on SLURM or other enviroments, and supervises running the jobs. Thus the Nextflow proccess must run until the pipeline is finished. We recommend that you put the process running in the background through `screen`/`tmux` or similar tool. Alternatively submitted as it's own job through your job scheduler. 
 
-It is recomnded to limit the Nexflow Java virtual machines memory. We recomend adding the following line to your enviroment (`~/.bashrc` or `~./bash_profile`):
+It is recomnded to limit the Nexflow Java virtual machines memory. We recommend adding the following line to your enviroment (`~/.bashrc` or `~./bash_profile`):
 
 ```
  NXF_OPTS='-Xms1g -Xmx4g'

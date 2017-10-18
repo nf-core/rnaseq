@@ -1052,6 +1052,7 @@ process multiqc {
     file ('rseqc/*') from rseqc_results.collect()
     file ('rseqc/*') from genebody_coverage_results.collect()
     file ('preseq/*') from preseq_results.collect()
+    file ('markDuplicates/*') from picard_results.collect()
     file ('dupradar/*') from dupradar_results.collect()
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()

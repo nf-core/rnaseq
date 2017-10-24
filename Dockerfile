@@ -11,7 +11,8 @@ RUN apt-get update && \
         gfortran \
         libbz2-dev \
         libcurl4-openssl-dev \
-        libgsl0-dev \
+        libgsl-dev \
+        libgsl2 \
         liblzma-dev \
         libncurses5-dev \
         libpcre3-dev \
@@ -73,7 +74,7 @@ RUN curl -fsSL http://smithlabresearch.org/downloads/preseq_linux_v2.0.tar.bz2 -
     ln -s /opt/preseq_v2.0/bam2mr /usr/local/bin/bam2mr && \
     rm /opt/preseq_linux_v2.0.tar.bz2
 # Make sure that libgsl.so.0 exists beause PreSeq links to that
-RUN cp /lib/x86_64-linux-gnu/libgsl.so /lib/x86_64-linux-gnu/libgsl.so.0
+RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so /lib/x86_64-linux-gnu/libgsl.so.0 
 
 # Install PicardTools
 RUN curl -fsSL https://github.com/broadinstitute/picard/releases/download/2.0.1/picard-tools-2.0.1.zip -o /opt/picard-tools-2.0.1.zip && \

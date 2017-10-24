@@ -11,7 +11,8 @@ RUN apt-get update && \
         gfortran \
         libbz2-dev \
         libcurl4-openssl-dev \
-        libgsl0-dev \
+        libgsl-dev \
+        libgsl2 \
         liblzma-dev \
         libncurses5-dev \
         libpcre3-dev \
@@ -71,7 +72,9 @@ RUN curl -fsSL http://smithlabresearch.org/downloads/preseq_linux_v2.0.tar.bz2 -
     tar xvjf /opt/preseq_linux_v2.0.tar.bz2 -C /opt/ && \
     ln -s /opt/preseq_v2.0/preseq /usr/local/bin/preseq && \
     ln -s /opt/preseq_v2.0/bam2mr /usr/local/bin/bam2mr && \
-    rm /opt/preseq_linux_v2.0.tar.bz2
+    rm /opt/preseq_linux_v2.0.tar.bz2 && \
+    # Make sure that libgsl.so.0 exists beause PreSeq links to that
+    ln -s /usr/lib/x86_64-linux-gnu/libgsl.so /lib/x86_64-linux-gnu/libgsl.so.0 
 
 # Install PicardTools
 RUN curl -fsSL https://github.com/broadinstitute/picard/releases/download/2.0.1/picard-tools-2.0.1.zip -o /opt/picard-tools-2.0.1.zip && \
@@ -93,7 +96,7 @@ RUN echo 'source("https://bioconductor.org/biocLite.R")' > /opt/packages.r && \
     echo 'biocLite()' >> /opt/packages.r && \
     echo 'biocLite(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots", "markdown"))' >> /opt/packages.r && \
     Rscript /opt/packages.r && \
-    mkdir /usr/local/lib/R/site-library
+    mkdir -p  /usr/local/lib/R/site-library
 
 # Install featureCounts
 RUN curl -fsSL http://downloads.sourceforge.net/project/subread/subread-1.5.1/subread-1.5.1-Linux-x86_64.tar.gz -o /opt/subread-1.5.1-Linux-x86_64.tar.gz && \

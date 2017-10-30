@@ -84,7 +84,7 @@ To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hi
 ### `--genome`
 The reference genome to use for the analysis, needs to be one of the genome specified in the config file. This is `False` by default and needs to be specified (unless index files are supplied, see below).
 
-See [`conf/uppmax.config`](conf/uppmax.config) for a list of the supported reference genomes
+See [`conf/uppmax.config`](../conf/uppmax.config) for a list of the supported reference genomes
 and their keys. Common genomes that are supported are:
 
 * Human

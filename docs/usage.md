@@ -1,20 +1,21 @@
 # NGI-RNAseq Usage
 
 ## General Nextflow info
-Nextflow handles job submissions on SLURM or other enviroments, and supervises running the jobs. Thus the Nextflow proccess must run until the pipeline is finished. We recommend that you put the process running in the background through `screen`/`tmux` or similar tool. Alternatively submitted as it's own job through your job scheduler. 
+Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs. Thus the Nextflow process must run until the pipeline is finished. We recommend that you put the process running in the background through `screen` / `tmux` or similar tool. Alternatively you can run nextflow within a cluster job submitted your job scheduler.
 
-It is recomnded to limit the Nexflow Java virtual machines memory. We recommend adding the following line to your enviroment (`~/.bashrc` or `~./bash_profile`):
+It is recommended to limit the Nextflow Java virtual machines memory. We recommend adding the following line to your environment (typically in `~/.bashrc` or `~./bash_profile`):
 
+```bash
+NXF_OPTS='-Xms1g -Xmx4g'
 ```
- NXF_OPTS='-Xms1g -Xmx4g'
-``` 
+
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
 nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
 ```
 
-Note that the pipeline will create files in your working directory:
+Note that the pipeline will create the following files in your working directory:
 
 ```bash
 work            # Directory containing the nextflow working files
@@ -24,10 +25,10 @@ results         # Finished results (configurable, see below)
 ```
 
 ### `--reads`
-Location of the input FastQ files:
+Use this to specify the location of your input FastQ files. For example:
 
 ```bash
- --reads 'path/to/data/sample_*_{1,2}.fastq'
+--reads 'path/to/data/sample_*_{1,2}.fastq'
 ```
 
 Please note the following requirements:
@@ -36,13 +37,14 @@ Please note the following requirements:
 2. The path must have at least one `*` wildcard character
 3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.
 
-If left unspecified, the pipeline will assume that the data is in a directory called `data` in the
-working directory (`data/*{1,2}.fastq.gz`).
+If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
 
 ### `--singleEnd`
-By default, the pipeline expects paired-end data. If you have single-end data, specify `--singleEnd`
-on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks,
-can then be used for `--reads`. For example: `--singleEnd --reads '*.fastq'`
+By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
+
+```bash
+--singleEnd --reads '*.fastq'
+```
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
 
@@ -55,8 +57,8 @@ Three command line flags / config parameters set the library strandedness for a 
 
 If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default. Use `--unstranded` or `--forward_stranded` to overwrite this. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
 
-These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`)
-and StringTie:
+These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
+
 * `--forward_stranded`
   * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
   * featureCounts: `-s 1`
@@ -69,23 +71,20 @@ and StringTie:
   * StringTie: `--rf`
 
 ## Alignment tool
-By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads
-to the reference genome. STAR is fast and common, but requires a great deal of RAM to run, typically
-around 38GB for the Human GRCh37 reference genome.
+By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads to the reference genome. STAR is fast and common, but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome.
 
-If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the
-alignment tool instead. Thought of as the successor to Tophat by many, HISAT2 has a much smaller
-memory footprint.
+If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the alignment tool instead. Developed by the same group behind the popular Tophat aligner, HISAT2 has a much smaller memory footprint.
 
 To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file.
 
 ## Reference Genomes
 
-### `--genome`
-The reference genome to use for the analysis, needs to be one of the genome specified in the config file. This is `False` by default and needs to be specified (unless index files are supplied, see below).
+The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If you are running on UPPMAX, these should work without any additional configuration. If running on AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
-See [`conf/uppmax.config`](../conf/uppmax.config) for a list of the supported reference genomes
-and their keys. Common genomes that are supported are:
+### `--genome` (using iGenomes)
+There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
+
+You can find the keys to specify the genomes in the [iGenomes config file](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/conf/igenomes.config). Common genomes that are supported are:
 
 * Human
   * `--genome GRCh37`
@@ -98,10 +97,7 @@ and their keys. Common genomes that are supported are:
 
 > There are numerous others - check the config file for more.
 
-If you're not running on UPPMAX (the default profile), you can create your own config
-file with paths to your reference genomes.
-See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html)
-for instructions on where to add this.
+Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
 
 The syntax for this reference configuration is as follows:
 
@@ -119,20 +115,23 @@ params {
 }
 ```
 
-### `--star_index`, `--fasta`, `--gtf`, `--bed12`
+### `--star_index`, `--hisat2_index`, `--fasta`, `--gtf`, `--bed12`
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
 --star_index '[path to STAR index]' \
+--hisat2_index '[path to HISAT2 index]' \
 --fasta '[path to Fasta reference]' \
 --gtf '[path to GTF file]' \
 --bed12 '[path to bed12 file]'
 ```
 
+Note that only one of `--star_index` / `--hisat2_index` are needed depending on which aligner you are using (see below).
+
+The minimum requirements are a Fasta and GTF file. If these are provided and no others, then all other reference files will be automatically generated by the pipeline.
+
 ### `--downloadFasta`, `--downloadGTF`
-If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file
-at the start of the pipeline. The same with a GTF reference file. A required STAR index
-and BED12 files will then be generated from these downloaded files.
+Instead of a path to a file, a URL can be supplied to download reference Fasta and GTF files at the start of the pipeline. A required STAR index and BED12 files will then be generated from these downloaded files.
 
 ### `--saveReference`
 Supply this parameter to save any generated reference genome files to your results folder.
@@ -143,9 +142,7 @@ By default, trimmed FastQ files will not be saved to the results directory. Spec
 flag (or set to true in your config file) to copy these files when complete.
 
 ### `--saveAlignedIntermediates`
-As above, by default intermediate BAM files will not be saved. The final BAM files created
-after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM
-files from STAR / HISAT2 and sorting steps.
+As above, by default intermediate BAM files from the alignment will not be saved. The final BAM files created after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM files from STAR / HISAT2 and sorting steps.
 
 ## Adapter Trimming
 If specific additional trimming is required (for example, from additional tags),

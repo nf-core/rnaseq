@@ -1049,13 +1049,13 @@ process multiqc {
     file (fastqc:'fastqc/*') from fastqc_results.collect()
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
-    file ('rseqc/*') from rseqc_results.collect()
-    file ('rseqc/*') from genebody_coverage_results.collect()
+    file ('rseqc/rseqc_log.*') from rseqc_results.collect()
+    file ('rseqc/genebody_*') from genebody_coverage_results.collect()
     file ('preseq/*') from preseq_results.collect()
     file ('dupradar/*') from dupradar_results.collect()
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
-    file ('stringtie/*') from stringtie_log.collect()
+    file ('stringtie/stringtie_log*') from stringtie_log.collect()
     file ('sample_correlation_results/*') from sample_correlation_results.collect()
     file ('software_versions/*') from software_versions_yaml
 

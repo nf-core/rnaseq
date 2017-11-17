@@ -55,10 +55,38 @@ curve_y <- curve_y[seq(1, length(curve_y), 10)]
 # Convert x values back to real counts
 curve_x = 10^curve_x
 # Write to file
+line="#id: dupRadar_plot
+#title: DupRadar General Linear Model
+#tt_label: '<b>{point.x:.1f} reads/kbp</b>: {point.y:,.2f}% duplicates'
+#xLog: true
+#xlab: expression (reads/kbp)
+#ylab: '% duplicate reads'
+#ymax: 101
+#ymin: 1
+#xPlotLines:
+#- color: green
+#  dashStyle: LongDash
+#  label:
+#    style: {color: green}
+#    text: 1.5 RPKM
+#    verticalAlign: bottom
+#    y: -64
+#  value: 1.5
+#  width: 2
+#- color: red
+#  dashStyle: LongDash
+#  label:
+#    style: {color: red}
+#    text: 2 read/bp
+#    verticalAlign: bottom
+#    y: -64
+#  value: 1001
+#  width: 2"
+write(line,file=paste0(input_bam_basename, "_duprateExpDensCurve_mqc.txt"),append=TRUE)
 write.table(
   cbind(curve_x, curve_y),
-  file=paste0(input_bam_basename, "_duprateExpDensCurve.txt"),
-  quote=FALSE, row.names=FALSE
+  file=paste0(input_bam_basename, "_duprateExpDensCurve_mqc.txt"),
+  quote=FALSE, row.names=FALSE, col.names=FALSE, append=TRUE, 
 )
 
 # Distribution of expression box plot

@@ -19,6 +19,7 @@ The NGI-RNAseq pipeline comes with documentation about the pipeline, found in th
 1. [Installation and configuration](docs/installation.md)
 2. [Running the pipeline](docs/usage.md)
 3. [Output and how to interpret the results](docs/output.md)
+4. [Troubleshooting](docs/Troubleshooting.md)
 
 If you're interested in running the pipeline in the cloud, please read the docs about using the pipeline with [Amazon Web Services](docs/amazon_web_services.md).
 

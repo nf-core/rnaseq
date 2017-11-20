@@ -63,6 +63,7 @@ line="#id: dupRadar_plot
 #ylab: '% duplicate reads'
 #ymax: 101
 #ymin: 1
+#xLog: true
 #xPlotLines:
 #- color: green
 #  dashStyle: LongDash

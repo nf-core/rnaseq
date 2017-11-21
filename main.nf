@@ -121,6 +121,7 @@ params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
 params.plaintext_email = false
+params.mdsplot_header = "$baseDir/assets/mdsplot_header.txt"
 params.heatmap_header = "$baseDir/assets/heatmap_header.txt"
 
 // R library locations
@@ -130,6 +131,7 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
+mdsplot_header= file(params.mdsplot_header)
 heatmap_header= file(params.heatmap_header)
 multiqc_config = file(params.multiqc_config)
 params.sampleLevel = false
@@ -971,6 +973,7 @@ process sample_correlation {
     input:
     file input_files from geneCounts.collect()
     bam_count
+    file mdsplot_header
     file heatmap_header
     output:
     file "*.{txt,pdf,csv}" into sample_correlation_results
@@ -982,8 +985,10 @@ process sample_correlation {
     def rlocation = params.rlocation ?: ''
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
+    cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
+    mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv 
     cat $heatmap_header log2CPM_sample_distances_mqc.csv >> tmp_file
-    mv tmp_file log2CPM_sample_distances_mqc.csv 
+    mv tmp_file log2CPM_sample_distances_mqc.csv
     """
 }
 

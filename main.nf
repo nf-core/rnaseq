@@ -1199,4 +1199,18 @@ workflow.onComplete {
 
     log.info "[NGI-RNAseq] Pipeline Complete"
 
+    if(!workflow.success){
+        if( workflow.profile == 'standard'){
+            if ( "hostname".execute().text.contains('.uppmax.uu.se') ) {
+                log.error "====================================================\n" +
+                        "  WARNING! You are running with the default 'standard'\n" +
+                        "  pipeline config profile, which runs on the head node\n" +
+                        "  and assumes all software is on the PATH.\n" +
+                        "  This is probably why everything broke.\n" +
+                        "  Please use `-profile uppmax` to run on UPPMAX clusters.\n" +
+                        "============================================================"
+            }
+        }
+    }
+
 }

@@ -69,18 +69,6 @@ dev.off()
 # Print distance matrix to file
 write.csv(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.csv', quote=FALSE,append=TRUE)
 
-# Write MDS plot header
-mds_text="#title: Sample Distances
-#id: MDS plot
-#title: Sample Distances
-#reverseColors: True
-#description: To generate this plot, gene counts are normalised using
-#       <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html' target='_blank'>edgeR</a>.
-#       Euclidean distances between log<sub>2</sub> normalised CPM values are then calculated and clustered.
-#plot_type: scatter
-#anchor: sample_similarity
-"
-write(mds_text,file="edgeR_MDS_Aplot_coordinates_mqc.csv", append=TRUE)
 # Print plot x,y co-ordinates to file
 MDSxy = MDSdata$cmdscale.out
 colnames(MDSxy) = c(paste(MDSdata$axislabel, '1'), paste(MDSdata$axislabel, '2'))

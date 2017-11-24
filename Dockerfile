@@ -74,7 +74,7 @@ RUN curl -fsSL http://smithlabresearch.org/downloads/preseq_linux_v2.0.tar.bz2 -
     ln -s /opt/preseq_v2.0/bam2mr /usr/local/bin/bam2mr && \
     rm /opt/preseq_linux_v2.0.tar.bz2 && \
     # Make sure that libgsl.so.0 exists beause PreSeq links to that
-    ln -s /usr/lib/x86_64-linux-gnu/libgsl.so /lib/x86_64-linux-gnu/libgsl.so.0 
+    ln -s /usr/lib/x86_64-linux-gnu/libgsl.so /lib/x86_64-linux-gnu/libgsl.so.0
 
 # Install PicardTools
 RUN curl -fsSL https://github.com/broadinstitute/picard/releases/download/2.0.1/picard-tools-2.0.1.zip -o /opt/picard-tools-2.0.1.zip && \
@@ -83,13 +83,13 @@ RUN curl -fsSL https://github.com/broadinstitute/picard/releases/download/2.0.1/
 ENV PICARD_HOME /opt/picard-tools-2.0.1
 
 # Install R
-RUN curl -fsSL https://cran.r-project.org/src/base/R-3/R-3.2.3.tar.gz -o /opt/R-3.2.3.tar.gz && \
-    tar xvzf /opt/R-3.2.3.tar.gz -C /opt/ && \
-    cd /opt/R-3.2.3 && \
+RUN curl -fsSL https://cran.r-project.org/src/base/R-3/R-3.4.2.tar.gz -o /opt/R-3.4.2.tar.gz && \
+    tar xvzf /opt/R-3.4.2.tar.gz -C /opt/ && \
+    cd /opt/R-3.4.2 && \
     ./configure && \
     make && \
     make install && \
-    rm /opt/R-3.2.3.tar.gz
+    rm /opt/R-3.4.2.tar.gz
 
 # Install R Packages v2
 RUN echo 'source("https://bioconductor.org/biocLite.R")' > /opt/packages.r && \
@@ -119,3 +119,6 @@ RUN git clone https://github.com/infphilo/hisat2.git /opt/hisat2 && \
     make && \
     cp /opt/hisat2/hisat2 /opt/hisat2/hisat2-align-s /opt/hisat2/hisat2-align-l /opt/hisat2/hisat2-build /opt/hisat2/hisat2-build-s /opt/hisat2/hisat2-build-l /opt/hisat2/hisat2-inspect /opt/hisat2/hisat2-inspect-s /opt/hisat2/hisat2-inspect-l /usr/local/bin/ && \
     cp /opt/hisat2/*.py /usr/local/bin
+
+# Create UPPMAX root directories
+RUN mkdir /pica /lupus /crex1 /crex2 /proj /scratch /sw

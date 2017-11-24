@@ -1,6 +1,10 @@
 # NGI-RNAseq
+
 ## 1.4dev
+* Changed default config to base, **UPPMAX users now need to specify `-profile uppmax`**
+* Switched UPPMAX configuration to use Singularity instead of environment modules
 * Added a Troubleshooting section to the docs
+* Refactored config for `hebbe`
 
 ## [1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16
 Hotfix to update version number in pipeline script.

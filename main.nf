@@ -25,11 +25,12 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+    nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile uppmax
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
       --genome                      Name of iGenomes reference
+      -profile                      Hardware config to use. uppmax / uppmax_modules / hebbe / docker / aws
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
@@ -72,7 +73,7 @@ def helpMessage() {
  */
 
 // Pipeline version
-version = '1.3.1'
+version = '1.4dev'
 
 // Show help emssage
 params.help = false
@@ -249,6 +250,8 @@ summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
 summary['Save Intermeds'] = params.saveAlignedIntermediates ? 'Yes' : 'No'
 summary['Output dir']     = params.outdir
 summary['Working dir']    = workflow.workDir
+summary['Container']      = workflow.container
+if(workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Current home']   = "$HOME"
 summary['Current user']   = "$USER"
 summary['Current path']   = "$PWD"

@@ -83,13 +83,13 @@ RUN curl -fsSL https://github.com/broadinstitute/picard/releases/download/2.0.1/
 ENV PICARD_HOME /opt/picard-tools-2.0.1
 
 # Install R
-RUN curl -fsSL https://cran.r-project.org/src/base/R-3/R-3.2.3.tar.gz -o /opt/R-3.2.3.tar.gz && \
-    tar xvzf /opt/R-3.2.3.tar.gz -C /opt/ && \
-    cd /opt/R-3.2.3 && \
+RUN curl -fsSL https://cran.r-project.org/src/base/R-3/R-3.4.2.tar.gz -o /opt/R-3.4.2.tar.gz && \
+    tar xvzf /opt/R-3.4.2.tar.gz -C /opt/ && \
+    cd /opt/R-3.4.2 && \
     ./configure && \
     make && \
     make install && \
-    rm /opt/R-3.2.3.tar.gz
+    rm /opt/R-3.4.2.tar.gz
 
 # Install R Packages v2
 RUN echo 'source("https://bioconductor.org/biocLite.R")' > /opt/packages.r && \

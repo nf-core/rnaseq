@@ -544,6 +544,7 @@ process trim_galore {
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
+def skipped_poor_alignment = []
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->
@@ -554,6 +555,7 @@ def check_log(logs) {
     logname = logs.getBaseName() - 'Log.final'
     if(percent_aligned.toFloat() <= '5'.toFloat() ){
         log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
+        skipped_poor_alignment << logname
         return false
     } else {
         log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
@@ -1124,6 +1126,9 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[NGI-RNAseq] Successful: $workflow.runName"
+    if(skipped_poor_alignment.size() > 0){
+        subject = "[NGI-RNAseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+    }
     if(!workflow.success){
       subject = "[NGI-RNAseq] FAILED: $workflow.runName"
     }
@@ -1150,6 +1155,7 @@ workflow.onComplete {
     email_fields['software_versions'] = software_versions
     email_fields['software_versions']['Nextflow Build'] = workflow.nextflow.build
     email_fields['software_versions']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
@@ -1199,6 +1205,10 @@ workflow.onComplete {
     output_hf.withWriter { w -> w << email_html }
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
+
+    if(skipped_poor_alignment.size() > 0){
+        log.info "[NGI-RNAseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"
+    }
 
     log.info "[NGI-RNAseq] Pipeline Complete"
 

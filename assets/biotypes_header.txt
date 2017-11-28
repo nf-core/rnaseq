@@ -1,0 +1,7 @@
+#id: Biotype Counts
+#title: Biotype Counts
+#section_name: Biotype Counts
+#description: shows reads overlapping genomic features of different biotypes.
+#max: 100
+#min: 0
+#plot_type: bargraph

@@ -544,7 +544,7 @@ process trim_galore {
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
-def skipped_poor_alignment = []
+skipped_poor_alignment = []
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->

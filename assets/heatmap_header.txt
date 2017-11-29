@@ -1,6 +1,6 @@
 #id: Sample Similarity
-#title: Sample Similarity
-#section_name: Sample Similarity
+#title: edgeR: Sample Distances 
+#section_name: edgeR: Sample Distances 
 #reverseColors: True
 #description: is generated from normalised gene counts through
 #       <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html' target='_blank'>edgeR</a>.

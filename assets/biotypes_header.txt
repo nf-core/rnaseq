@@ -1,7 +1,8 @@
 #id: Biotype Counts
-#title: Biotype Counts
-#section_name: Biotype Counts
-#description: shows reads overlapping genomic features of different biotypes.
+#title: featureCounts: Biotypes
+#section_name: Biotypes
+#description: shows reads overlapping genomic features of different biotypes. 
+#           <a href='http://bioinf.wehi.edu.au/featureCounts/' target='_blank'>featureCounts</a>.
 #max: 100
-#min: 0
+#min: u
 #plot_type: bargraph

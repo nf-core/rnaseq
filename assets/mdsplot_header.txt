@@ -1,6 +1,6 @@
 #id: MDS plot
-#title: MDS plot
-#section_name: MDS plot
+#title: edgeR: MDS Plot 
+#section_name: edgeR: MDS Plot
 #reverseColors: True
 #description: show relatedness between samples in a project.
 #            These values are calculated using <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>

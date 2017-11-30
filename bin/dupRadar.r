@@ -75,8 +75,8 @@ line="#id: DupRadar
 #                style: {color: green}
 #                text: '0.5 RPKM'
 #                verticalAlign: 'bottom'
-#                y: '-65'
-#          value: '0.5'
+#                y: -65
+#          value: 0.5
 #          width: 1
 #        - color: 'red'
 #          dashStyle: 'LongDash'
@@ -84,7 +84,7 @@ line="#id: DupRadar
 #                style: {color: red}
 #                text: '1 read/bp'
 #                verticalAlign: 'bottom'
-#                y: '-65'
+#                y: -65
 #          value: 1000
 #          width: 1"
 

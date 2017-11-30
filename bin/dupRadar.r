@@ -56,36 +56,38 @@ curve_y <- curve_y[seq(1, length(curve_y), 10)]
 curve_x = 10^curve_x
 # Write to file
 line="#id: DupRadar
-#title: DupRadar General Linear Model
-#section_name: DupRadar: General Linear Model
+#title: 'DupRadar General Linear Model'
+#section_name: 'DupRadar: General Linear Model'
 #tt_label: '<b>{point.x:.1f} reads/kbp</b>: {point.y:,.2f}% duplicates'
-#provides duplication rate quality control for RNA-Seq datasets. Highly expressed genes can be expected to have a lot of duplicate reads, but high numbers of duplicates at low read counts can indicate low library complexity with technical duplication.
-This plot shows the general linear models - a summary of the gene duplication distributions. <a href='bioconductor.org/packages/release/bioc/html/dupRadar.html' target='_blank'>DupRadar</a>.
-#xLog: true
-#xlab: expression (reads/kbp)
-#ylab: '% duplicate reads'
-#ymax: 101
-#ymin: 1
-#xLog: True
-#xPlotLines:
-#- color: green
-#  dashStyle: LongDash
-#  label:
-#    style: {color: green}
-#    text: 1.5 RPKM
-#    verticalAlign: bottom
-#    y: -64
-#  value: 1.5
-#  width: 2
-#- color: red
-#  dashStyle: LongDash
-#  label:
-#    style: {color: red}
-#    text: 2 read/bp
-#    verticalAlign: bottom
-#    y: -64
-#  value: 1001
-#  width: 2"
+#section_href: 'bioconductor.org/packages/release/bioc/html/dupRadar.html'
+#description: \"provides duplication rate quality control for RNA-Seq datasets. Highly expressed genes can be expected to have a lot of duplicate reads, but high numbers of duplicates at low read counts can indicate low library complexity with technical duplication.
+#    This plot shows the general linear models - a summary of the gene duplication distributions. \"
+#pconfig:
+#    xLog: 'True'
+#    xlab: 'expression (reads/kbp)'
+#    ylab: '% duplicate reads'
+#    ymax: 101
+#    ymin: 1
+#    xPlotLines:
+#        - color: 'green'
+#          dashStyle: 'LongDash'
+#          label:
+#                style: {color: green}
+#                text: '1.5 RPKM'
+#                verticalAlign: 'bottom'
+#                y: '-64'
+#          value: '1.5'
+#          width: 2
+#        - color: 'red'
+#          dashStyle: 'LongDash'
+#          label:
+#                style: {color: red}
+#                text: '2 read/bp'
+#                verticalAlign: 'bottom'
+#                y: '-64'
+#          value: 1001
+#          width: 2"
+
 write(line,file=paste0(input_bam_basename, "_duprateExpDensCurve_mqc.txt"),append=TRUE)
 write.table(
   cbind(curve_x, curve_y),

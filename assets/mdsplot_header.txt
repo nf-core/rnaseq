@@ -1,6 +1,5 @@
-#id: 'MDS plot'
-#title: 'edgeR: MDS Plot' 
-#section_name: 'edgeR: MDS Plot'
+#id: 'edgeR-sample-distances'
+#section_name: 'MDS Plot'
 #reverseColors: 'True'
 #description: "show relatedness between samples in a project.
 #            These values are calculated using <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html'>edgeR</a>
@@ -8,4 +7,6 @@
 #plot_type: 'scatter'
 #anchor: 'ngi_rnaseq-mds_plot'
 #pconfig:
-#    xlab: True
+#    xlab: 'Leading'
+#    title: 'MDS Plot'
+#    ylab: 'logFC'

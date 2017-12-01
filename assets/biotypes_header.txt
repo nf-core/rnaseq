@@ -1,10 +1,10 @@
-#id: 'Biotype Counts'
-#title: featureCounts: 'Biotypes'
+#id: 'biotype-counts'
 #section_name: 'Biotypes'
-#description: "shows reads overlapping genomic features of different biotypes. 
-#           <a href='http://bioinf.wehi.edu.au/featureCounts/' target='_blank'>featureCounts</a>."
+#section_href: 'http://bioinf.wehi.edu.au/featureCounts'
+#description: "shows reads overlapping genomic features of different biotypes."
 #plot_type: 'bargraph'
 #pconfig:
+#    title: featureCounts: 'Biotypes'
 #    xLog: True
 #    xlab: "expression (reads/kbp)"
 #    max: 100

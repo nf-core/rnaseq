@@ -1,5 +1,4 @@
 #id: 'Sample Similarity'
-#title: 'Sample Similarity' 
 #section_name: 'edgeR: Sample Similarity' 
 #description: "is generated from normalised gene counts through
 #       <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html' target='_blank'>edgeR</a>.
@@ -9,4 +8,4 @@
 #pconfig:
 #    title: 'edgeR: Euclidean distances'
 #    xlab: True
-#    reverseColors: 'True'
+#    reverseColors: True

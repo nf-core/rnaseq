@@ -468,7 +468,7 @@ if(!params.bed12){
         file gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed_rseqc; bed_genebody_coverage
+        file "${gtf.baseName}.bed" into bed_rseqc, bed_genebody_coverage
 
         script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """

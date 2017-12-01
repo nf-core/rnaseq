@@ -5,6 +5,7 @@
 * Switched UPPMAX configuration to use Singularity instead of environment modules
 * Added a Troubleshooting section to the docs
 * Refactored config for `hebbe`
+* Fixed bug where BED12 generation failed when only GTF supplied.
 
 ## [1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16
 Hotfix to update version number in pipeline script.

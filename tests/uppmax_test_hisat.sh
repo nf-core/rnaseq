@@ -33,9 +33,8 @@ fi
 
 run_name="Test RNA Run: "$(date +%s)
 
-cmd="nextflow run $script_path -resume -name \"$run_name\" -profile devel --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --singleEnd --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -name \"$run_name\" -profile uppmax_devel --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --singleEnd --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"
 eval $cmd
-

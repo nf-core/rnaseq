@@ -120,5 +120,6 @@ RUN git clone https://github.com/infphilo/hisat2.git /opt/hisat2 && \
     cp /opt/hisat2/hisat2 /opt/hisat2/hisat2-align-s /opt/hisat2/hisat2-align-l /opt/hisat2/hisat2-build /opt/hisat2/hisat2-build-s /opt/hisat2/hisat2-build-l /opt/hisat2/hisat2-inspect /opt/hisat2/hisat2-inspect-s /opt/hisat2/hisat2-inspect-l /usr/local/bin/ && \
     cp /opt/hisat2/*.py /usr/local/bin
 
-# Create UPPMAX root directories
-RUN mkdir /pica /lupus /crex1 /crex2 /proj /scratch /sw
+# Create root directories for UPPMAX and c3se hebbe
+RUN mkdir /pica /lupus /crex1 /crex2 /proj /scratch /sw \
+          /c3se /local /apps /usr/share/lmod/lmod /var/hasplm

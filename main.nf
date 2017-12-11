@@ -116,6 +116,7 @@ if (params.rlocation){
 }
 
 multiqc_config = file(params.multiqc_config)
+output_docs = file("$baseDir/docs/output.md")
 params.sampleLevel = false
 
 // Custom trimming options
@@ -1109,6 +1110,7 @@ process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
     input:
+    file output_docs
     val prefix from multiqc_prefix
 
     output:
@@ -1117,7 +1119,7 @@ process output_documentation {
     script:
     def rlocation = params.rlocation ?: ''
     """
-    markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
+    markdown_to_html.r $output_docs results_description.html $rlocation
     """
 }
 

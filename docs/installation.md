@@ -59,9 +59,11 @@ params.project = 'project_ID' // eg. b2017123
 ```
 
 ## 3.2) Configuration: Hebbe (C3SE)
-This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it requires significantly more setup work than at UPPMAX. This is mainly due to the fact that none of the required software is pre-installed.
+This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it hasn't had as much testing.
 
-To use, follow the steps described below ([3.3) Configuration: Other clusters](#33-configuration-other-clusters)) to install and configure the required software. Create a config file in your home directory (`~/.nextflow/config`) with paths to your reference genome indices (see below for [instructions](#reference-genomes)). Finally, run the pipeline with `-profile hebbe --project [project-id]`. This will launch the [hebbe config](../conf/hebbe.config) which has been pre-configured with a setup suitable for the Hebbe cluster. Note that to date it has only been tested on Yeast data - if jobs are failing due to insufficient resources, please [let us know](https://github.com/SciLifeLab/NGI-RNAseq/issues) and we will update it accordingly.
+To use, create a config file in your home directory (`~/.nextflow/config`) with paths to your reference genome indices (see below for [instructions](#reference-genomes)). Then, run the pipeline with `-profile hebbe --project [project-id]`. This will launch the [hebbe config](../conf/hebbe.config) which has been pre-configured with a setup suitable for the Hebbe cluster. It will download a singularity image with all of the required software - see [the c3se Singularity documentation](http://www.c3se.chalmers.se/index.php/Singularity) for more details.
+
+Note that to date the pipeline has only been tested on Yeast data on Hebbe - if jobs are failing due to insufficient resources, please [let us know](https://github.com/SciLifeLab/NGI-RNAseq/issues) and we will update it accordingly.
 
 ## 3.3) Configuration: Other clusters
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the script knows where to find your reference files and how your cluster works.

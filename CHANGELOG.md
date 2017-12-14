@@ -11,6 +11,8 @@ Many thanks to everyone who gave us feedback about the pipeline!
     * **UPPMAX users now need to specify `--reverse_stranded` for the same behaviour**
 * Switched UPPMAX configuration to use Singularity instead of environment modules
 * Switched c3se Hebbe configuration to use Singularity & refactored config
+* Made output from DupRadar, Biotype Counts and edgeR sample similarity use [MultiQC Custom Content](http://multiqc.info/docs/#custom-content) formatting
+    * These results now show up in MultiQC reports for everyone, not just people with our [custom MultiQC plugin](https://github.com/ewels/MultiQC_NGI)
 * Added a Troubleshooting section to the docs
 * Fixed bug where BED12 generation failed when only GTF supplied.
 

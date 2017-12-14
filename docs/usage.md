@@ -12,7 +12,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
-nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 ```
 
 Note that the pipeline will create the following files in your working directory:
@@ -40,6 +40,9 @@ This version number will be logged in reports when you run the pipeline, so that
 
 
 ## Main Arguments
+
+### `-profile`
+Use this parameter to describe an optional profile value. -profile docker is likely useful for users outside NGI clusters. This defaults to local.
 
 ### `--reads`
 Use this to specify the location of your input FastQ files. For example:

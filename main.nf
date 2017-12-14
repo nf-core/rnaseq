@@ -25,11 +25,12 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+    nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile uppmax
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
       --genome                      Name of iGenomes reference
+      -profile                      Hardware config to use. uppmax / uppmax_modules / hebbe / docker / aws
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
@@ -72,28 +73,13 @@ def helpMessage() {
  */
 
 // Pipeline version
-version = '1.3.1'
+version = '1.4dev'
 
 // Show help emssage
 params.help = false
 if (params.help){
     helpMessage()
     exit 0
-}
-
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
-try {
-    if( ! nextflow.version.matches(">= $nf_required_version") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please run `nextflow self-update` to update Nextflow.\n" +
-              "============================================================"
 }
 
 // Configurable variables
@@ -135,7 +121,8 @@ if (params.rlocation){
 mdsplot_header = file(params.mdsplot_header)
 heatmap_header = file(params.heatmap_header)
 biotypes_header = file(params.biotypes_header)
-multiqc_config  = file(params.multiqc_config)
+multiqc_config = file(params.multiqc_config)
+output_docs = file("$baseDir/docs/output.md")
 params.sampleLevel = false
 
 // Custom trimming options
@@ -212,7 +199,9 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
         .into { indexing_splicesites; alignment_splicesites }
 }
-if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
+if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-modules' || workflow.profile == 'uppmax-devel' ){
+    if ( !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
+}
 
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
@@ -266,18 +255,52 @@ if(params.bed12)               summary['BED Annotation']  = params.bed12
 summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
 summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
 summary['Save Intermeds'] = params.saveAlignedIntermediates ? 'Yes' : 'No'
+summary['Max Memory']     = params.max_memory
+summary['Max CPUs']       = params.max_cpus
+summary['Max Time']       = params.max_time
 summary['Output dir']     = params.outdir
 summary['Working dir']    = workflow.workDir
+summary['Container']      = workflow.container
+if(workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Current home']   = "$HOME"
 summary['Current user']   = "$USER"
 summary['Current path']   = "$PWD"
 summary['R libraries']    = params.rlocation
 summary['Script dir']     = workflow.projectDir
-summary['Config Profile'] = (workflow.profile == 'standard' ? 'UPPMAX' : workflow.profile)
+summary['Config Profile'] = workflow.profile
 if(params.project) summary['UPPMAX Project'] = params.project
 if(params.email) summary['E-mail Address'] = params.email
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
+
+
+// Check that Nextflow version is up to date enough
+// try / throw / catch works for NF versions < 0.25 when this was implemented
+nf_required_version = '0.25.0'
+try {
+    if( ! nextflow.version.matches(">= $nf_required_version") ){
+        throw GroovyException('Nextflow version too old')
+    }
+} catch (all) {
+    log.error "====================================================\n" +
+              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Pipeline execution will continue, but things may break.\n" +
+              "  Please run `nextflow self-update` to update Nextflow.\n" +
+              "============================================================"
+}
+
+// Show a big error message if we're running on the base config and an uppmax cluster
+if( workflow.profile == 'standard'){
+    if ( "hostname".execute().text.contains('.uppmax.uu.se') ) {
+        log.error "====================================================\n" +
+                  "  WARNING! You are running with the default 'standard'\n" +
+                  "  pipeline config profile, which runs on the head node\n" +
+                  "  and assumes all software is on the PATH.\n" +
+                  "  ALL JOBS ARE RUNNING LOCALLY and stuff will probably break.\n" +
+                  "  Please use `-profile uppmax` to run on UPPMAX clusters.\n" +
+                  "============================================================"
+    }
+}
 
 
 /*
@@ -455,7 +478,7 @@ if(!params.bed12){
         file gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed_rseqc; bed_genebody_coverage
+        file "${gtf.baseName}.bed" into bed_rseqc, bed_genebody_coverage
 
         script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
@@ -531,6 +554,7 @@ process trim_galore {
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
+skipped_poor_alignment = []
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->
@@ -541,6 +565,7 @@ def check_log(logs) {
     logname = logs.getBaseName() - 'Log.final'
     if(percent_aligned.toFloat() <= '5'.toFloat() ){
         log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
+        skipped_poor_alignment << logname
         return false
     } else {
         log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
@@ -1098,6 +1123,7 @@ process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
     input:
+    file output_docs
     val prefix from multiqc_prefix
 
     output:
@@ -1106,7 +1132,7 @@ process output_documentation {
     script:
     def rlocation = params.rlocation ?: ''
     """
-    markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
+    markdown_to_html.r $output_docs results_description.html $rlocation
     """
 }
 
@@ -1118,6 +1144,9 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[NGI-RNAseq] Successful: $workflow.runName"
+    if(skipped_poor_alignment.size() > 0){
+        subject = "[NGI-RNAseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+    }
     if(!workflow.success){
       subject = "[NGI-RNAseq] FAILED: $workflow.runName"
     }
@@ -1144,6 +1173,7 @@ workflow.onComplete {
     email_fields['software_versions'] = software_versions
     email_fields['software_versions']['Nextflow Build'] = workflow.nextflow.build
     email_fields['software_versions']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
@@ -1194,6 +1224,24 @@ workflow.onComplete {
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
 
+    if(skipped_poor_alignment.size() > 0){
+        log.info "[NGI-RNAseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"
+    }
+
     log.info "[NGI-RNAseq] Pipeline Complete"
+
+    if(!workflow.success){
+        if( workflow.profile == 'standard'){
+            if ( "hostname".execute().text.contains('.uppmax.uu.se') ) {
+                log.error "====================================================\n" +
+                        "  WARNING! You are running with the default 'standard'\n" +
+                        "  pipeline config profile, which runs on the head node\n" +
+                        "  and assumes all software is on the PATH.\n" +
+                        "  This is probably why everything broke.\n" +
+                        "  Please use `-profile uppmax` to run on UPPMAX clusters.\n" +
+                        "============================================================"
+            }
+        }
+    }
 
 }

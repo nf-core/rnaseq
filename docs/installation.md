@@ -34,17 +34,23 @@ See [nextflow.io](https://www.nextflow.io/) and [NGI-NextflowDocs](https://githu
 ## 2) Install the Pipeline
 This pipeline itself needs no installation - NextFlow will automatically fetch it from GitHub if `SciLifeLab/NGI-RNAseq` is specified as the pipeline name.
 
-If you prefer, you can download the files yourself from GitHub and run them directly:
+### Offline use
+
+If you need to run the pipeline on a system with no internet connection, you will need to download the files yourself from GitHub and run them directly:
 
 ```bash
-git clone https://github.com/SciLifeLab/NGI-RNAseq.git
-nextflow run NGI-RNAseq/main.nf
+wget https://github.com/SciLifeLab/NGI-RNAseq/archive/master.zip
+unzip master.zip -d /my-pipelines/
+cd /my_data/
+nextflow run /my-pipelines/NGI-RNAseq-master
 ```
 
 ## 3.1) Configuration: UPPMAX
-By default, the pipeline is configured to run on the [Swedish UPPMAX](https://www.uppmax.uu.se/) cluster (`milou` / `irma`). As such, you shouldn't need to add any custom configuration - everything _should_ work out of the box.
+The pipeline comes bundled with configurations to use the [Swedish UPPMAX](https://www.uppmax.uu.se/) clusters (tested on `milou`, `rackham`, `bianca` and `irma`). As such, you shouldn't need to add any custom configuration - everything _should_ work out of the box.
 
-Note that you will need to specify your UPPMAX project ID when running a pipeline. To do this, use the command line flag `--project <project_ID>`. The pipeline will exit with an error message if you try to run it pipeline with the default UPPMAX config profile without a project.
+To use the pipeline on UPPMAX, you **must** specificy `-profile uppmax` when running the pipeline (as of Nov 2017).
+
+Note that you will need to specify your UPPMAX project ID when running a pipeline. To do this, use the command line flag `--project <project_ID>`. The pipeline will exit with an error message if you try to run it pipeline with the UPPMAX config profile without a project.
 
 **Optional Extra:** To avoid having to specify your project every time you run Nextflow, you can add it to your personal Nextflow config file instead. Add this line to `~/.nextflow/config`:
 
@@ -53,9 +59,11 @@ params.project = 'project_ID' // eg. b2017123
 ```
 
 ## 3.2) Configuration: Hebbe (C3SE)
-This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it requires significantly more setup work than at UPPMAX. This is mainly due to the fact that none of the required software is pre-installed.
+This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it hasn't had as much testing.
 
-To use, follow the steps described below ([3.3) Configuration: Other clusters](#33-configuration-other-clusters)) to install and configure the required software. Create a config file in your home directory (`~/.nextflow/config`) with paths to your reference genome indices (see below for [instructions](#reference-genomes)). Finally, run the pipeline with `-profile hebbe --project [project-id]`. This will launch the [hebbe config](../conf/hebbe.config) which has been pre-configured with a setup suitable for the Hebbe cluster. Note that to date it has only been tested on Yeast data - if jobs are failing due to insufficient resources, please [let us know](https://github.com/SciLifeLab/NGI-RNAseq/issues) and we will update it accordingly.
+To use, create a config file in your home directory (`~/.nextflow/config`) with paths to your reference genome indices (see below for [instructions](#reference-genomes)). Then, run the pipeline with `-profile hebbe --project [project-id]`. This will launch the [hebbe config](../conf/hebbe.config) which has been pre-configured with a setup suitable for the Hebbe cluster. It will download a singularity image with all of the required software - see [the c3se Singularity documentation](http://www.c3se.chalmers.se/index.php/Singularity) for more details.
+
+Note that to date the pipeline has only been tested on Yeast data on Hebbe - if jobs are failing due to insufficient resources, please [let us know](https://github.com/SciLifeLab/NGI-RNAseq/issues) and we will update it accordingly.
 
 ## 3.3) Configuration: Other clusters
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the script knows where to find your reference files and how your cluster works.
@@ -64,10 +72,10 @@ It is entirely possible to run this pipeline on other clusters, though you will 
 
 If you are the only person to be running this pipeline, you can create your config file as `~/.nextflow/config` and it will be applied every time you run Nextflow. Alternatively, save the file anywhere and reference it when running the pipeline with `-c path/to/config`.
 
-A basic configuration comes with the pipeline, which should be applied by using the command line flag `-profile base`. This prevents the UPPMAX defaults (above) from being applied and means that you only need to configure the specifics for your system.
+A basic configuration comes with the pipeline, which runs by default (the `standard` config profile with [`conf/base.config`](../conf/base.config)). This means that you only need to configure the specifics for your system and overwrite any defaults that you want to change.
 
 ### Cluster Environment
-By default, the `base` profile uses the `local` Nextflow executor - in other words, all jobs are run in the login session. If you're using a simple server, this may be fine. If you're using a compute cluster, this is bad as all jobs will run on the head node.
+By default, pipeline uses the `local` Nextflow executor - in other words, all jobs are run in the login session. If you're using a simple server, this may be fine. If you're using a compute cluster, this is bad as all jobs will run on the head node.
 
 To specify your cluster environment, add the following line to your config file:
 
@@ -117,8 +125,38 @@ params {
 ### Software Requirements
 To run the pipeline, several software packages are required. How you satisfy these requirements is essentially up to you and depends on your system.
 
+#### Docker Image
+Docker is a software tool that allows you to run your analysis inside a "container" - basically a miniature self-contained software environment. We've already made a docker image for you, so if you can run docker and nextflow then you don't need to worry about any other software dependencies.
+
+The pipeline comes with a script to build a docker image. This runs automatically and creates a hosted docker image that you can find here: https://hub.docker.com/r/scilifelab/ngi-rnaseq/
+
+If you run the pipeline with `-profile docker` or `-with-docker 'scilifelab/ngi-rnaseq'` then nextflow will download this docker image automatically and run using this.
+
+Note that the docker images are tagged with version as well as the code, so this is a great way to ensure reproducibility. You can specify pipeline version when running with `-r`, for example `-r v1.3`. This uses pipeline code and docker image from this tagged version.
+
+#### Singularity image
+Many HPC environments are not able to run Docker due to problems with needing administrator privileges. [Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker. Even better, it can use create images directly from dockerhub. The UPPMAX configuration uses Singularity by default, meaning no problems with software dependencies and great reproducibility.
+
+To use the singularity image with a different config, use `-with-singularity 'docker://scilifelab/ngi-rnaseq'` when running the pipeline.
+
+If you intend to run the pipeline offline, nextflow will not be able to automatically download the singularity image for you. Instead, you'll have to do this yourself manually first, transfer the image file and then point to that.
+
+First, pull the image file where you have an internet connection:
+
+```bash
+singularity pull --name ngi-rnaseq.img docker://scilifelab/ngi-rnaseq
+```
+
+Then transfer this file and run the pipeline with this path:
+
+```
+nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/ngi-rnaseq.img
+```
+
 #### Environment Modules
-If your cluster uses environment modules, the software may already be available. If so, just add lines to your custom config file as follows _(customise module names and versions as appropriate)_:
+If your cluster uses environment modules, you can use the pipeline with these. There is a bundled config file to use these on UPPMAX (as was done in earlier versions of this pipeline). To use this, run the pipeline with `-profile uppmax_modules`.
+
+If running on another system, add lines to your custom config file as follows _(customise module names and versions as appropriate)_:
 
 ```groovy
 process {

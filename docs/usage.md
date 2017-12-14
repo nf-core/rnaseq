@@ -24,6 +24,23 @@ results         # Finished results (configurable, see below)
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
+### Updating the pipeline
+When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
+
+```bash
+nextflow pull scilifelab/ngi-rnaseq
+```
+
+### Reproducibility
+It's a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
+
+First, go to the [NGI-RNAseq releases page](https://github.com/SciLifeLab/NGI-RNAseq/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+
+This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
+
+
+## Main Arguments
+
 ### `--reads`
 Use this to specify the location of your input FastQ files. For example:
 
@@ -55,7 +72,19 @@ Three command line flags / config parameters set the library strandedness for a 
 * `--reverse_stranded`
 * `--unstranded`
 
-If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default. Use `--unstranded` or `--forward_stranded` to overwrite this. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+
+You can set a default in a cutom Nextflow configuration file such as one saved in `~/.nextflow/config` (see the [nextflow docs](https://www.nextflow.io/docs/latest/config.html) for more). For example:
+
+```groovy
+params {
+    reverse_stranded = true
+}
+```
+
+> **NB:** Before v1.4 of the pipeline, the UPPMAX profile ran in reverse stranded mode by default. This was removed in the v1.4 release, so all profiles now run in unstranded mode by default.
+
+If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
 
@@ -189,12 +218,6 @@ The output directory where the results will be saved.
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
 
-### `--plaintext_email`
-Set to receive plain-text e-mails instead of HTML formatted.
-
-### `--sampleLevel`
-Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
-
 ### `-name`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
@@ -221,6 +244,24 @@ environment module as is the default. So we specify a config file using `-c` tha
 ```groovy
 process.$multiqc.module = []
 ```
+
+### `--max_memory`
+Use to set a top-limit for the default memory requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_memory '8.GB'``
+
+### `--max_time`
+Use to set a top-limit for the default time requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_time '2.h'`
+
+### `--max_cpus`
+Use to set a top-limit for the default CPU requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_cpus 1`
+
+### `--plaintext_email`
+Set to receive plain-text e-mails instead of HTML formatted.
+
+### `--sampleLevel`
+Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
 ### `--rlocation`
 Some steps in the pipeline run R with required modules. By default, the pipeline will install

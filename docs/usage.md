@@ -15,6 +15,8 @@ The typical command for running the pipeline is as follows:
 nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 ```
 
+This will launch the pipeline with the `docker` configuration profile (Swedish UPPMAX users use `-profile uppmax`). See below for more information about profiles.
+
 Note that the pipeline will create the following files in your working directory:
 
 ```bash
@@ -42,7 +44,36 @@ This version number will be logged in reports when you run the pipeline, so that
 ## Main Arguments
 
 ### `-profile`
-Use this parameter to describe an optional profile value. -profile docker is likely useful for users outside NGI clusters. This defaults to local.
+Use this parameter to choose a configuration profile. `-profile docker` is likely useful for users outside of Sweden. Available profiles are:
+
+* `standard`
+    * The default profile - this is used if `-profile` is not specified at all
+    * Uses sensible defaults for requirements, runs using the `local` executor (native system calls) and expects all software to be installed and available on the `PATH`.
+    * This profile is mainly designed to be used as a starting point for other configurations and is inherited by most of the other profiles below.
+* `uppmax`
+    * Designed to be used on the Swedish [UPPMAX](http://uppmax.uu.se/) clusters such as `milou`, `rackham`, `bianca` and `irma`
+    * Launches jobs using the SLURM executor.
+    * Uses [Singularity](http://singularity.lbl.gov/) to provide all software requirements
+    * Comes with locations for illumina iGenome reference paths built in
+    * Use with `--project` to provide your UPPMAX project ID.
+* `uppmax_modules`
+    * Same profile as above, but uses UPPMAX environment modules instead of singularity.
+* `uppmax_devel`
+    * Uses the milou [devel partition](http://www.uppmax.uu.se/support/user-guides/slurm-user-guide/#tocjump_030509106905141747_8) for testing the pipeline quickly.
+    * Not suitable for proper analysis runs
+* `hebbe`
+    * Designed to be run on the [c3se Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Chalmers, Gothenburg.
+    * Uses [Singularity](http://singularity.lbl.gov/) to provide all software requirements
+    * Has the config tweaked to work with the Hebbe SLURM job scheduler (eg. no memory requirements)
+* `docker`
+    * A generic configuration profile to be used with [Docker](http://docker.com/)
+    * Runs using the `local` executor and pulls software from dockerhub: [`scilifelab/ngi-rnaseq`](http://hub.docker.com/r/scilifelab/ngi-rnaseq/)
+* `aws`
+    * A starter configuration for running the pipeline on Amazon Web Services.
+    * Specifies docker configuration and uses the `spark` job executor
+    * Requires additional configuration to run - see the documentation dedicated to this topic.
+* `none`
+    * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile.
 
 ### `--reads`
 Use this to specify the location of your input FastQ files. For example:

@@ -1,0 +1,11 @@
+#id: 'sample-similarity'
+#section_name: 'edgeR: Sample Similarity' 
+#description: "is generated from normalised gene counts through
+#       <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html' target='_blank'>edgeR</a>.
+#       Euclidean distances between log<sub>2</sub> normalised CPM values are then calculated and clustered."
+#plot_type: 'heatmap'
+#anchor: 'ngi_rnaseq-sample_similarity'
+#pconfig:
+#    title: 'edgeR: Euclidean distances'
+#    xlab: True
+#    reverseColors: True

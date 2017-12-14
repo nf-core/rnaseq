@@ -107,6 +107,9 @@ params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
 params.plaintext_email = false
+params.mdsplot_header = "$baseDir/assets/mdsplot_header.txt"
+params.heatmap_header = "$baseDir/assets/heatmap_header.txt"
+params.biotypes_header= "$baseDir/assets/biotypes_header.txt"
 
 // R library locations
 params.rlocation = false
@@ -115,6 +118,9 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
+mdsplot_header = file(params.mdsplot_header)
+heatmap_header = file(params.heatmap_header)
+biotypes_header = file(params.biotypes_header)
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
 params.sampleLevel = false
@@ -896,6 +902,7 @@ process featureCounts {
     input:
     file bam_featurecounts
     file gtf from gtf_featureCounts.collect()
+    file biotypes_header
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
@@ -913,7 +920,8 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file 
+    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts.txt
     """
 }
 
@@ -994,9 +1002,10 @@ process sample_correlation {
     input:
     file input_files from geneCounts.collect()
     bam_count
-
+    file mdsplot_header
+    file heatmap_header
     output:
-    file "*.{txt,pdf}" into sample_correlation_results
+    file "*.{txt,pdf,csv}" into sample_correlation_results
 
     when:
     num_bams > 2 && (!params.sampleLevel)
@@ -1005,6 +1014,10 @@ process sample_correlation {
     def rlocation = params.rlocation ?: ''
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
+    cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
+    mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv 
+    cat $heatmap_header log2CPM_sample_distances_mqc.csv >> tmp_file
+    mv tmp_file log2CPM_sample_distances_mqc.csv
     """
 }
 

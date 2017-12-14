@@ -67,12 +67,12 @@ MDSdata <- plotMDS(dataNorm)
 dev.off()
 
 # Print distance matrix to file
-write.table(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.txt', quote=FALSE, sep="\t")
+write.csv(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.csv', quote=FALSE,append=TRUE)
 
 # Print plot x,y co-ordinates to file
 MDSxy = MDSdata$cmdscale.out
 colnames(MDSxy) = c(paste(MDSdata$axislabel, '1'), paste(MDSdata$axislabel, '2'))
-write.table(MDSxy, 'edgeR_MDS_plot_coordinates.txt', quote=FALSE, sep="\t")
+write.csv(MDSxy, 'edgeR_MDS_Aplot_coordinates_mqc.csv', quote=FALSE, append=TRUE)
 
 # Get the log counts per million values
 logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)
@@ -94,7 +94,7 @@ plot(hmap$rowDendrogram, main="Sample Dendrogram")
 dev.off()
 
 # Write clustered distance values to file
-write.table(hmap$carpet, 'log2CPM_sample_distances.txt', quote=FALSE, sep="\t")
+write.csv(hmap$carpet, 'log2CPM_sample_distances_mqc.csv', quote=FALSE, append=TRUE)
 
 file.create("corr.done")
 

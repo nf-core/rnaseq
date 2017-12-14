@@ -72,7 +72,19 @@ Three command line flags / config parameters set the library strandedness for a 
 * `--reverse_stranded`
 * `--unstranded`
 
-If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default. Use `--unstranded` or `--forward_stranded` to overwrite this. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+
+You can set a default in a cutom Nextflow configuration file such as one saved in `~/.nextflow/config` (see the [nextflow docs](https://www.nextflow.io/docs/latest/config.html) for more). For example:
+
+```groovy
+params {
+    reverse_stranded = true
+}
+```
+
+> **NB:** Before v1.4 of the pipeline, the UPPMAX profile ran in reverse stranded mode by default. This was removed in the v1.4 release, so all profiles now run in unstranded mode by default.
+
+If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
 

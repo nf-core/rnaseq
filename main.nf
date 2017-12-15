@@ -893,7 +893,7 @@ process featureCounts {
     tag "${bam_featurecounts.baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf("_biotype_counts.txt") > 0) "biotype_counts/$filename"
+            if (filename.indexOf("_biotype_counts_mqc.txt") > 0) "biotype_counts/$filename"
             else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
             else if (filename.indexOf("_gene.featureCounts.txt") > 0) "gene_counts/$filename"
             else "$filename"
@@ -907,7 +907,7 @@ process featureCounts {
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-    file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
+    file "${bam_featurecounts.baseName}_biotype_counts_mqc.txt" into featureCounts_biotype
     file '.command.log' into featurecounts_stdout
 
     script:
@@ -920,8 +920,8 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file 
-    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts.txt
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file
+    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     """
 }
 
@@ -1015,7 +1015,7 @@ process sample_correlation {
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
     cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
-    mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv 
+    mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv
     cat $heatmap_header log2CPM_sample_distances_mqc.csv >> tmp_file
     mv tmp_file log2CPM_sample_distances_mqc.csv
     """

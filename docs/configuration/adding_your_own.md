@@ -1,0 +1,224 @@
+# NGI-RNAseq: Configuration for other clusters
+
+It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the pipeline knows how to work with your cluster.
+
+> If you think that there are other people using the pipeline who would benefit from your configuration (eg. other common cluster setups), please let us know. We can add a new configuration and profile which can used by specifying `-profile <name>` when running the pipeline.
+
+If you are the only person to be running this pipeline, you can create your config file as `~/.nextflow/config` and it will be applied every time you run Nextflow. Alternatively, save the file anywhere and reference it when running the pipeline with `-c path/to/config` (see the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more).
+
+A basic configuration comes with the pipeline, which runs by default (the `standard` config profile - see [`conf/base.config`](../conf/base.config)). This means that you only need to configure the specifics for your system and overwrite any defaults that you want to change.
+
+## Reference genomes
+Remember that you will need to define a reference genome to use. See [reference_genomes.md](reference_genomes.md) for instructions.
+
+## Cluster Environment
+By default, pipeline uses the `local` Nextflow executor - in other words, all jobs are run in the login session. If you're using a simple server, this may be fine. If you're using a compute cluster, this is bad as all jobs will run on the head node.
+
+To specify your cluster environment, add the following line to your config file:
+
+```groovy
+process {
+  executor = 'YOUR_SYSTEM_TYPE'
+}
+```
+
+Many different cluster types are supported by Nextflow. For more information, please see the [Nextflow documentation](https://www.nextflow.io/docs/latest/executor.html).
+
+Note that you may need to specify cluster options, such as a project or queue. To do so, use the `clusterOptions` config option:
+
+```groovy
+process {
+  executor = 'SLURM'
+  clusterOptions = '-A myproject'
+}
+```
+
+
+## Software Requirements
+To run the pipeline, several software packages are required. How you satisfy these requirements is essentially up to you and depends on your system. If possible, we _highly_ recommend using either Docker or Singularity.
+
+### Docker
+Docker is a great way to run NGI-RNAseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+
+Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required.
+
+First, install docker on your system: [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
+
+Then, simply run the analysis pipeline:
+```bash
+nextflow run SciLifeLab/NGI-RNAseq -profile docker --reads '<path to your reads>' --fasta '<path to fasta ref>' --gtf '<path to gtf>'
+```
+
+Nextflow will recognise `SciLifeLab/NGI-RNAseq` and download the pipeline from GitHub. The `-profile docker` configuration lists the [sclifelab/ngi-rnaseq](https://hub.docker.com/r/scilifelab/ngi-rnaseq/) image that we have created and is hosted at dockerhub, and this is downloaded.
+
+The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.3`. This uses pipeline code and docker image from this tagged version.
+
+To add docker support to your own config file (instead of using the `docker` profile, which runs locally), add the following:
+
+```groovy
+docker {
+  enabled = true
+}
+process {
+  container = wf_container
+}
+```
+
+The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
+
+A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/ewels/NGI-RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/SciLifeLab/NGI-RNAseq/) whenever changes are made to the pipeline.
+
+### Singularity image
+Many HPC environments are not able to run Docker due to security issues. [Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker. Even better, it can use create images directly from dockerhub.
+
+To use the singularity image for a single run, use `-with-singularity 'docker://scilifelab/ngi-rnaseq'`. This will download the docker container from dockerhub and create a singularity image for you dynamically.
+
+To specify singularity usage in your pipeline config file, add the following:
+
+```groovy
+singularity {
+  enabled = true
+}
+process {
+  container = "docker://$wf_container"
+}
+```
+
+The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
+
+If you intend to run the pipeline offline, nextflow will not be able to automatically download the singularity image for you. Instead, you'll have to do this yourself manually first, transfer the image file and then point to that.
+
+First, pull the image file where you have an internet connection:
+
+```bash
+singularity pull --name ngi-rnaseq.img docker://scilifelab/ngi-rnaseq
+```
+
+Then transfer this file and run the pipeline with this path:
+
+```bash
+nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/ngi-rnaseq.img
+```
+
+### Environment Modules
+If you can't use docker or singularity, but your cluster uses environment modules, you can use the pipeline with these. There is a bundled config file to use these on UPPMAX (as was done in earlier versions of this pipeline) that can be used with `-profile uppmax_modules`.
+
+To use environment modules in your own config, add lines to your custom config file as follows _(customise module names and versions as appropriate)_:
+
+```groovy
+process {
+  $makeSTARindex.module = ['star']
+  $makeHisatSplicesites.module = ['HISAT2']
+  $makeHISATindex.module = ['HISAT2']
+  $fastqc.module = ['FastQC']
+  $trim_galore.module = ['FastQC', 'TrimGalore']
+  $star.module = ['star']
+  $hisat2Align.module = ['samtools/1.3', 'HISAT2']
+  $hisat2_sortOutput.module = ['samtools/1.3']
+  $rseqc.module = ['rseqc', 'samtools/1.3']
+  $preseq.module = ['preseq']
+  $markDuplicates.module = ['picard/2.0.1']
+  $dupradar.module = ['R/3.2.3']
+  $featureCounts.module = ['subread']
+  $stringtieFPKM.module = ['StringTie/1.2.0']
+  $sample_correlation.module = ['R/3.2.3']
+  $multiqc.module = ['MultiQC']
+}
+```
+
+#### R Package Location
+If you are using a central installation of R, you may not have write permissions for installing custom modules. If this is the case, add the following to your Nextflow configuration file to specify where these files should be saved:
+
+```groovy
+params {
+  rlocation = "$HOME/R/nxtflow_libs/" // or any path
+}
+```
+
+### Manual Installation
+As a last resort, you may need to install the required software manually. We recommend using [Bioconda](https://bioconda.github.io/) to do this. The following instructions are an example only and will not be updated with the pipeline.
+
+#### 1) Install miniconda in your home directory
+``` bash
+cd
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+#### 2) Add the bioconda conda channel (and others)
+```bash
+conda config --add channels anaconda
+conda config --add channels conda-forge
+conda config --add channels defaults
+conda config --add channels r
+conda config --add channels bioconda
+conda config --add channels salilab
+```
+
+#### 3) Create a conda environment, with all necessary packages:
+```bash
+conda create --name rna_seq_py2.7 python=2.7
+source activate rna_seq_py2.7
+conda install --yes \
+    bioconductor-dupradar=1.2.2 \
+    r-essentials \
+    samtools \
+    star=2.5.3a \
+    bedtools=2.26.0 \
+    trim-galore=0.4.1 \
+    fastqc=0.11.5 \
+    rseqc=2.6.4 \
+    multiqc \
+    gsl=1.16 \
+    preseq=2.0.2 \
+    picard=2.9.0 \
+    subread=1.5.0.post3 \
+    nextflow=0.23.4 \
+    pysam=0.10.0 \
+    stringtie=1.3.3 \
+    graphviz=2.38.0 \
+    hisat2=2.0.5
+```
+_(Feel free to adjust versions as required.)_
+
+#### 4) Set up Picard
+Picard requires the `PICARD_HOME` environment variable to be set. In some cases, a temporary directory must also be specified (if the default does not have enough available space). To automatically set and unset these when you activate and deactivate your conda environment, do the following:
+
+```bash
+cd ~/miniconda3/envs/rna_seq_py2.7 # Or path to your conda environment
+mkdir -p ./etc/conda/activate.d
+mkdir -p ./etc/conda/deactivate.d
+touch ./etc/conda/activate.d/env_vars.sh
+touch ./etc/conda/deactivate.d/env_vars.sh
+```
+
+Put in `./etc/conda/activate.d/env_vars.sh`:
+```bash
+#!/bin/sh
+export PICARD_HOME="$HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/"
+export _JAVA_OPTIONS=-Djava.io.tmpdir='/path/to/tmp'
+```
+
+Then add to `./etc/conda/deactivate.d/env_vars.sh`:
+```bash
+#!/bin/sh
+unset PICARD_HOME
+unset _JAVA_OPTIONS
+```
+
+##### 5) Usage
+Once created, the conda environment can be activated before running the pipeline and deactivated afterwards:
+
+```bash
+source activate rna_seq_py2.7
+# run pipeline
+source deactivate
+```
+
+
+---
+
+[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
+[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
+
+---

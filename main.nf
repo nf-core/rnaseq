@@ -47,6 +47,7 @@ def helpMessage() {
       --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --saveReference               Save the generated reference files the the Results directory.
+      --saveTrimmed                 Save trimmed FastQ file intermediates
       --saveAlignedIntermediates    Save the BAM files from the Aligment step  - not done by default
 
     Trimming options
@@ -107,9 +108,6 @@ params.reads = "data/*{1,2}.fastq.gz"
 params.outdir = './results'
 params.email = false
 params.plaintext_email = false
-params.mdsplot_header = "$baseDir/assets/mdsplot_header.txt"
-params.heatmap_header = "$baseDir/assets/heatmap_header.txt"
-params.biotypes_header= "$baseDir/assets/biotypes_header.txt"
 
 // R library locations
 params.rlocation = false
@@ -118,11 +116,12 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
-mdsplot_header = file(params.mdsplot_header)
-heatmap_header = file(params.heatmap_header)
-biotypes_header = file(params.biotypes_header)
+mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
+heatmap_header = file("$baseDir/assets/heatmap_header.txt")
+biotypes_header = file("$baseDir/assets/biotypes_header.txt")
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
+wherearemyfiles= file("$baseDir/assets/where_are_my_files.txt")
 params.sampleLevel = false
 
 // Custom trimming options
@@ -520,16 +519,20 @@ process trim_galore {
         saveAs: {filename ->
             if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
             else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-            else params.saveTrimmed ? filename : null
+            else if (!params.saveTrimmed && filename == "where_are_my_files.txt") filename
+            else if (params.saveTrimmed && filename != "where_are_my_files.txt") filename
+            else null
         }
 
     input:
     set val(name), file(reads) from read_files_trimming
+    file wherearemyfiles
 
     output:
     file "*fq.gz" into trimmed_reads
     file "*trimming_report.txt" into trimgalore_results, trimgalore_logs
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+    file "where_are_my_files.txt"
 
 
     script:
@@ -579,19 +582,23 @@ if(params.aligner == 'star'){
         publishDir "${params.outdir}/STAR", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".bam") == -1) "logs/$filename"
-                else params.saveAlignedIntermediates ? filename : null
+                else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
+                else null
             }
 
         input:
         file reads from trimmed_reads
         file index from star_index.collect()
         file gtf from gtf_star.collect()
+        file wherearemyfiles
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
         file "*.out" into alignment_logs
         file "*SJ.out.tab"
         file "*Log.out" into star_log
+        file "where_are_my_files.txt"
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -626,18 +633,22 @@ if(params.aligner == 'hisat2'){
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
-                else params.saveAlignedIntermediates ? filename : null
+                else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
+                else null
             }
 
         input:
         file reads from trimmed_reads
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
+        file wherearemyfiles
 
         output:
         file "${prefix}.bam" into hisat2_bam
         file "${prefix}.hisat2_summary.txt" into alignment_logs
         file '.command.log' into hisat_stdout
+        file "where_are_my_files.txt"
 
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
@@ -683,13 +694,19 @@ if(params.aligner == 'hisat2'){
     process hisat2_sortOutput {
         tag "${hisat2_bam.baseName}"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
-            saveAs: {filename -> params.saveAlignedIntermediates ? "aligned_sorted/$filename" : null }
+            saveAs: { filename ->
+                if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
+                else null
+            }
 
         input:
         file hisat2_bam
+        file wherearemyfiles
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_geneBodyCoverage
+        file "where_are_my_files.txt"
 
         script:
         def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"

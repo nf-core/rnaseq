@@ -16,6 +16,33 @@ ${errorReport}
 """
 } %>
 
+
+<% if (!success){
+    out << """####################################################
+## NGI-RNAseq execution completed unsuccessfully! ##
+####################################################
+The exit status of the task that caused the workflow execution to fail was: $exitStatus.
+The full error message was:
+
+${errorReport}
+"""
+} else if(skipped_poor_alignment.size() > 0) {
+    out << """##################################################
+## NGI-RNAseq execution completed with warnings ##
+##################################################
+The pipeline finished successfully, but the following samples were skipped,
+due to very low alignment (less than 5%):
+
+  - ${skipped_poor_alignment.join("\n  - ")}
+"""
+} else {
+    out << "## NGI-RNAseq execution completed successfully! ##"
+}
+%>
+
+
+
+
 The workflow was completed at $dateComplete (duration: $duration)
 
 The command used to launch the workflow was as follows:

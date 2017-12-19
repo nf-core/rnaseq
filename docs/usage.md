@@ -12,8 +12,10 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
-nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 ```
+
+This will launch the pipeline with the `docker` configuration profile (Swedish UPPMAX users use `-profile uppmax`). See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -40,6 +42,38 @@ This version number will be logged in reports when you run the pipeline, so that
 
 
 ## Main Arguments
+
+### `-profile`
+Use this parameter to choose a configuration profile. `-profile docker` is likely useful for users outside of Sweden. Available profiles are:
+
+* `standard`
+    * The default profile - this is used if `-profile` is not specified at all
+    * Uses sensible defaults for requirements, runs using the `local` executor (native system calls) and expects all software to be installed and available on the `PATH`.
+    * This profile is mainly designed to be used as a starting point for other configurations and is inherited by most of the other profiles below.
+* `uppmax`
+    * Designed to be used on the Swedish [UPPMAX](http://uppmax.uu.se/) clusters such as `milou`, `rackham`, `bianca` and `irma`
+    * Launches jobs using the SLURM executor.
+    * Uses [Singularity](http://singularity.lbl.gov/) to provide all software requirements
+    * Comes with locations for illumina iGenome reference paths built in
+    * Use with `--project` to provide your UPPMAX project ID.
+* `uppmax_modules`
+    * Same profile as above, but uses UPPMAX environment modules instead of singularity.
+* `uppmax_devel`
+    * Uses the milou [devel partition](http://www.uppmax.uu.se/support/user-guides/slurm-user-guide/#tocjump_030509106905141747_8) for testing the pipeline quickly.
+    * Not suitable for proper analysis runs
+* `hebbe`
+    * Designed to be run on the [c3se Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Chalmers, Gothenburg.
+    * Uses [Singularity](http://singularity.lbl.gov/) to provide all software requirements
+    * Has the config tweaked to work with the Hebbe SLURM job scheduler (eg. no memory requirements)
+* `docker`
+    * A generic configuration profile to be used with [Docker](http://docker.com/)
+    * Runs using the `local` executor and pulls software from dockerhub: [`scilifelab/ngi-rnaseq`](http://hub.docker.com/r/scilifelab/ngi-rnaseq/)
+* `aws`
+    * A starter configuration for running the pipeline on Amazon Web Services.
+    * Specifies docker configuration and uses the `spark` job executor
+    * Requires additional configuration to run - see the documentation dedicated to this topic.
+* `none`
+    * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile.
 
 ### `--reads`
 Use this to specify the location of your input FastQ files. For example:
@@ -72,7 +106,19 @@ Three command line flags / config parameters set the library strandedness for a 
 * `--reverse_stranded`
 * `--unstranded`
 
-If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default. Use `--unstranded` or `--forward_stranded` to overwrite this. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+
+You can set a default in a cutom Nextflow configuration file such as one saved in `~/.nextflow/config` (see the [nextflow docs](https://www.nextflow.io/docs/latest/config.html) for more). For example:
+
+```groovy
+params {
+    reverse_stranded = true
+}
+```
+
+> **NB:** Before v1.4 of the pipeline, the UPPMAX profile ran in reverse stranded mode by default. This was removed in the v1.4 release, so all profiles now run in unstranded mode by default.
+
+If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
 
@@ -206,12 +252,6 @@ The output directory where the results will be saved.
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
 
-### `--plaintext_email`
-Set to receive plain-text e-mails instead of HTML formatted.
-
-### `--sampleLevel`
-Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
-
 ### `-name`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
@@ -238,6 +278,24 @@ environment module as is the default. So we specify a config file using `-c` tha
 ```groovy
 process.$multiqc.module = []
 ```
+
+### `--max_memory`
+Use to set a top-limit for the default memory requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_memory '8.GB'``
+
+### `--max_time`
+Use to set a top-limit for the default time requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_time '2.h'`
+
+### `--max_cpus`
+Use to set a top-limit for the default CPU requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_cpus 1`
+
+### `--plaintext_email`
+Set to receive plain-text e-mails instead of HTML formatted.
+
+### `--sampleLevel`
+Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
 ### `--rlocation`
 Some steps in the pipeline run R with required modules. By default, the pipeline will install

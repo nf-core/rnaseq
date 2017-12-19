@@ -47,6 +47,7 @@ def helpMessage() {
       --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --saveReference               Save the generated reference files the the Results directory.
+      --saveTrimmed                 Save trimmed FastQ file intermediates
       --saveAlignedIntermediates    Save the BAM files from the Aligment step  - not done by default
 
     Trimming options
@@ -115,7 +116,12 @@ if (params.rlocation){
     nxtflow_libs.mkdirs()
 }
 
+mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
+heatmap_header = file("$baseDir/assets/heatmap_header.txt")
+biotypes_header = file("$baseDir/assets/biotypes_header.txt")
 multiqc_config = file(params.multiqc_config)
+output_docs = file("$baseDir/docs/output.md")
+wherearemyfiles= file("$baseDir/assets/where_are_my_files.txt")
 params.sampleLevel = false
 
 // Custom trimming options
@@ -248,6 +254,9 @@ if(params.bed12)               summary['BED Annotation']  = params.bed12
 summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
 summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
 summary['Save Intermeds'] = params.saveAlignedIntermediates ? 'Yes' : 'No'
+summary['Max Memory']     = params.max_memory
+summary['Max CPUs']       = params.max_cpus
+summary['Max Time']       = params.max_time
 summary['Output dir']     = params.outdir
 summary['Working dir']    = workflow.workDir
 summary['Container']      = workflow.container
@@ -468,7 +477,7 @@ if(!params.bed12){
         file gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed_rseqc; bed_genebody_coverage
+        file "${gtf.baseName}.bed" into bed_rseqc, bed_genebody_coverage
 
         script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
         """
@@ -510,16 +519,20 @@ process trim_galore {
         saveAs: {filename ->
             if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
             else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-            else params.saveTrimmed ? filename : null
+            else if (!params.saveTrimmed && filename == "where_are_my_files.txt") filename
+            else if (params.saveTrimmed && filename != "where_are_my_files.txt") filename
+            else null
         }
 
     input:
     set val(name), file(reads) from read_files_trimming
+    file wherearemyfiles
 
     output:
     file "*fq.gz" into trimmed_reads
     file "*trimming_report.txt" into trimgalore_results, trimgalore_logs
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+    file "where_are_my_files.txt"
 
 
     script:
@@ -544,6 +557,7 @@ process trim_galore {
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
+skipped_poor_alignment = []
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->
@@ -554,6 +568,7 @@ def check_log(logs) {
     logname = logs.getBaseName() - 'Log.final'
     if(percent_aligned.toFloat() <= '5'.toFloat() ){
         log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
+        skipped_poor_alignment << logname
         return false
     } else {
         log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
@@ -567,19 +582,23 @@ if(params.aligner == 'star'){
         publishDir "${params.outdir}/STAR", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".bam") == -1) "logs/$filename"
-                else params.saveAlignedIntermediates ? filename : null
+                else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
+                else null
             }
 
         input:
         file reads from trimmed_reads
         file index from star_index.collect()
         file gtf from gtf_star.collect()
+        file wherearemyfiles
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
         file "*.out" into alignment_logs
         file "*SJ.out.tab"
         file "*Log.out" into star_log
+        file "where_are_my_files.txt"
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -614,18 +633,22 @@ if(params.aligner == 'hisat2'){
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
-                else params.saveAlignedIntermediates ? filename : null
+                else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
+                else null
             }
 
         input:
         file reads from trimmed_reads
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
+        file wherearemyfiles
 
         output:
         file "${prefix}.bam" into hisat2_bam
         file "${prefix}.hisat2_summary.txt" into alignment_logs
         file '.command.log' into hisat_stdout
+        file "where_are_my_files.txt"
 
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
@@ -671,13 +694,19 @@ if(params.aligner == 'hisat2'){
     process hisat2_sortOutput {
         tag "${hisat2_bam.baseName}"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
-            saveAs: {filename -> params.saveAlignedIntermediates ? "aligned_sorted/$filename" : null }
+            saveAs: { filename ->
+                if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
+                else null
+            }
 
         input:
         file hisat2_bam
+        file wherearemyfiles
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_geneBodyCoverage
+        file "where_are_my_files.txt"
 
         script:
         def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
@@ -881,7 +910,7 @@ process featureCounts {
     tag "${bam_featurecounts.baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf("_biotype_counts.txt") > 0) "biotype_counts/$filename"
+            if (filename.indexOf("_biotype_counts_mqc.txt") > 0) "biotype_counts/$filename"
             else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
             else if (filename.indexOf("_gene.featureCounts.txt") > 0) "gene_counts/$filename"
             else "$filename"
@@ -890,11 +919,12 @@ process featureCounts {
     input:
     file bam_featurecounts
     file gtf from gtf_featureCounts.collect()
+    file biotypes_header
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-    file "${bam_featurecounts.baseName}_biotype_counts.txt" into featureCounts_biotype
+    file "${bam_featurecounts.baseName}_biotype_counts_mqc.txt" into featureCounts_biotype
     file '.command.log' into featurecounts_stdout
 
     script:
@@ -907,7 +937,8 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > ${bam_featurecounts.baseName}_biotype_counts.txt
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file
+    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     """
 }
 
@@ -988,9 +1019,10 @@ process sample_correlation {
     input:
     file input_files from geneCounts.collect()
     bam_count
-
+    file mdsplot_header
+    file heatmap_header
     output:
-    file "*.{txt,pdf}" into sample_correlation_results
+    file "*.{txt,pdf,csv}" into sample_correlation_results
 
     when:
     num_bams > 2 && (!params.sampleLevel)
@@ -999,6 +1031,10 @@ process sample_correlation {
     def rlocation = params.rlocation ?: ''
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
+    cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
+    mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv
+    cat $heatmap_header log2CPM_sample_distances_mqc.csv >> tmp_file
+    mv tmp_file log2CPM_sample_distances_mqc.csv
     """
 }
 
@@ -1104,6 +1140,7 @@ process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
     input:
+    file output_docs
     val prefix from multiqc_prefix
 
     output:
@@ -1112,7 +1149,7 @@ process output_documentation {
     script:
     def rlocation = params.rlocation ?: ''
     """
-    markdown_to_html.r $baseDir/docs/output.md results_description.html $rlocation
+    markdown_to_html.r $output_docs results_description.html $rlocation
     """
 }
 
@@ -1124,6 +1161,9 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[NGI-RNAseq] Successful: $workflow.runName"
+    if(skipped_poor_alignment.size() > 0){
+        subject = "[NGI-RNAseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+    }
     if(!workflow.success){
       subject = "[NGI-RNAseq] FAILED: $workflow.runName"
     }
@@ -1150,6 +1190,7 @@ workflow.onComplete {
     email_fields['software_versions'] = software_versions
     email_fields['software_versions']['Nextflow Build'] = workflow.nextflow.build
     email_fields['software_versions']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
@@ -1199,6 +1240,10 @@ workflow.onComplete {
     output_hf.withWriter { w -> w << email_html }
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
+
+    if(skipped_poor_alignment.size() > 0){
+        log.info "[NGI-RNAseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"
+    }
 
     log.info "[NGI-RNAseq] Pipeline Complete"
 

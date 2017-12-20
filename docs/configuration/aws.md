@@ -1,14 +1,19 @@
-# NGI-RNAseq with AWS
+# NGI-RNAseq: AWS Configuration
 
 ## Introduction
 
 Amazon Web Services (AWS) are cloud-based compute systems, suitable for large-scale bioinformatics analysis. They can be an attractive way to run scalable analyses without needing to pay large up-front expenses for hardware and maintenance.
 
-NGI-RNAseq is built with NextFlow, which has a numer of AWS integrations built in. However, AWS is vast and almost infinitely configurable, and as such there are several different ways in which you can use it for your analyses. Which approach you use depends on your needs - the frequency with which you run the pipeline, the scale of data you need to analysis and your familiarity with running in the cloud.
+NGI-RNAseq is built with NextFlow, which has a number of AWS integrations built in. However, AWS is vast and almost infinitely configurable, and as such there are several different ways in which you can use it for your analyses. Which approach you use depends on your needs - the frequency with which you run the pipeline, the scale of data you need to analysis and your familiarity with running in the cloud.
 
 In this document, we describe the steps taken when running NGI-RNAseq on AWS hardware using three different methods. These have been written as a walk-through based on our experience at the time of writing. Note that we have used AWS based in Ireland (`eu-west-1`) and that the availability of different hardware can vary according to location.
 
+Please note that the state of Nextflow AWS integration has progressed very quickly, and some of these instructions may be out of date.
+
 If you find any problems with this documentation, please let us know or better still, submit a pull-request with a fix.
+
+> **Update - December 2017**
+> Nextflow has recently added support for the new AWS Batch system. This method is probably better than those described above, but we haven't tried it yet so don't have any documentation written. For more information, see https://www.nextflow.io/blog/2017/scaling-with-aws-batch.html
 
 ## Table of Contents
 
@@ -352,3 +357,11 @@ These are telling you that some of the processes in the pipeline are asking for 
 numbers of cpus or memory. To fix this, you need to set the `params.cpus` and `params.memory`
 in the config file described above to numbers that are available on your worker node type.
 Note that the memory should be a little _below_ what Amazon lists as the available capacity.
+
+
+---
+
+[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
+[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
+
+---

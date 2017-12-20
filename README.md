@@ -6,26 +6,55 @@
 
 ### Introduction
 
-NGI-RNAseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
+NGI-RNAseq is a bioinformatics analysis pipeline used for RNA sequencing data.
+
+It pre-processes raw data from FastQ inputs ([FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)), aligns the reads ([STAR](https://github.com/alexdobin/STAR) or [HiSAT2](https://ccb.jhu.edu/software/hisat2/index.shtml)), generates gene counts ([featureCounts](http://bioinf.wehi.edu.au/featureCounts/), [StringTie](https://ccb.jhu.edu/software/stringtie/)) and performs extensive quality-control on the results ([RSeQC](http://rseqc.sourceforge.net/), [dupRadar](https://bioconductor.org/packages/release/bioc/html/dupRadar.html), [Preseq](http://smithlabresearch.org/software/preseq/), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), [MultiQC](http://multiqc.info/)). See the [output documentation](docs/output.md) for more details of the results.
+
+The pipeline is built using [Nextflow](https://www.nextflow.io), a bioinformatics workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
+
+The pipeline was written at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
-
-The pipeline uses [Nextflow](https://www.nextflow.io), a bioinformatics workflow tool. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.
-
-This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker and AWS, and the pipeline comes with some configuration for these systems. See the [installation docs](docs/installation.md) for more information.
 
 ### Documentation
 The NGI-RNAseq pipeline comes with documentation about the pipeline, found in the `docs/` directory:
 
-1. [Installation and configuration](docs/installation.md)
-2. [Running the pipeline](docs/usage.md)
-3. [Output and how to interpret the results](docs/output.md)
-4. [Troubleshooting](docs/Troubleshooting.md)
-
-If you're interested in running the pipeline in the cloud, please read the docs about using the pipeline with [Amazon Web Services](docs/amazon_web_services.md).
+1. [Installation](docs/installation.md)
+2. Pipeline configuration
+    * [Local installation](docs/configuration/local.md)
+    * [Amazon Web Services (aws)](docs/configuration/aws.md)
+    * [Swedish UPPMAX clusters](docs/configuration/uppmax.md)
+    * [Swedish cs3e Hebbe cluster](docs/configuration/c3se.md)
+    * [Tübingen QBiC](docs/configuration/qbic.md)
+    * [Adding your own system](docs/configuration/adding_your_own.md)
+3. [Running the pipeline](docs/usage.md)
+4. [Output and how to interpret the results](docs/output.md)
+5. [Troubleshooting](docs/troubleshooting.md)
 
 ### Credits
-These scripts were written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/) at [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
+These scripts were written at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
 The pipeline was developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). Docker and AWS integration was led by Denis Moreno ([@Galithil](https://github.com/Galithil)) and Phil Ewels ([@ewels](https://github.com/ewels)).
+
+Many thanks to other who have helped out along the way too, including (but not limited to):
+[@pditommaso](https://github.com/pditommaso),
+[@orzechoj](https://github.com/orzechoj),
+[@apeltzer](https://github.com/apeltzer),
+[@colindaven](https://github.com/colindaven).
+
+### Participating Institutes
+NGI-RNAseq is now used by a number of core sequencing and bioinformatics facilities. Some of these are listed below. If you use this pipeline too, please let us know in an issue and we will add you to the list.
+
+<table>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/NGI_logo.png" width="200"></td>
+    <td>National Genomics Infrastructure (NGI), Sweden</td>
+    <td>https://ngisweden.scilifelab.se/</td>
+  </tr>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/QBiC_logo.png" width="200"></td>
+    <td>Quantitative Biology Center (QBiC), Germany</td>
+    <td>https://portal.qbic.uni-tuebingen.de/portal/</td>
+  </tr>
+</table>
 
 ---
 

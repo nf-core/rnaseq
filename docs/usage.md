@@ -44,36 +44,28 @@ This version number will be logged in reports when you run the pipeline, so that
 ## Main Arguments
 
 ### `-profile`
-Use this parameter to choose a configuration profile. `-profile docker` is likely useful for users outside of Sweden. Available profiles are:
+Use this parameter to choose a configuration profile. Each profile is designed for a different compute environment - follow the links below to see instructions for running on that system. Available profiles are:
 
-* `standard`
-    * The default profile - this is used if `-profile` is not specified at all
-    * Uses sensible defaults for requirements, runs using the `local` executor (native system calls) and expects all software to be installed and available on the `PATH`.
-    * This profile is mainly designed to be used as a starting point for other configurations and is inherited by most of the other profiles below.
-* `uppmax`
-    * Designed to be used on the Swedish [UPPMAX](http://uppmax.uu.se/) clusters such as `milou`, `rackham`, `bianca` and `irma`
-    * Launches jobs using the SLURM executor.
-    * Uses [Singularity](http://singularity.lbl.gov/) to provide all software requirements
-    * Comes with locations for illumina iGenome reference paths built in
-    * Use with `--project` to provide your UPPMAX project ID.
-* `uppmax_modules`
-    * Same profile as above, but uses UPPMAX environment modules instead of singularity.
-* `uppmax_devel`
-    * Uses the milou [devel partition](http://www.uppmax.uu.se/support/user-guides/slurm-user-guide/#tocjump_030509106905141747_8) for testing the pipeline quickly.
-    * Not suitable for proper analysis runs
-* `hebbe`
-    * Designed to be run on the [c3se Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Chalmers, Gothenburg.
-    * Uses [Singularity](http://singularity.lbl.gov/) to provide all software requirements
-    * Has the config tweaked to work with the Hebbe SLURM job scheduler (eg. no memory requirements)
 * `docker`
     * A generic configuration profile to be used with [Docker](http://docker.com/)
     * Runs using the `local` executor and pulls software from dockerhub: [`scilifelab/ngi-rnaseq`](http://hub.docker.com/r/scilifelab/ngi-rnaseq/)
+* `uppmax`, `uppmax_modules`, `uppmax_devel`
+    * Designed to be used on the Swedish [UPPMAX](http://uppmax.uu.se/) clusters such as `milou`, `rackham`, `bianca` and `irma`
+    * See [`docs/configuration/uppmax.md`](configuration/uppmax.md)
+* `hebbe`
+    * Designed to be run on the [c3se Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Chalmers, Gothenburg.
+    * See [`docs/configuration/c3se.md`](configuration/c3se.md)
+* `binac`, `cfc`
+    * Profiles for clusters at QBiC in Tübingen, Germany
+    * See [`docs/configuration/qbic.md`](configuration/qbic.md)
 * `aws`
-    * A starter configuration for running the pipeline on Amazon Web Services.
-    * Specifies docker configuration and uses the `spark` job executor
-    * Requires additional configuration to run - see the documentation dedicated to this topic.
+    * A starter configuration for running the pipeline on Amazon Web Services. Uses docker and Spark.
+    * See [`docs/configuration/aws.md`](configuration/aws.md)
+* `standard`
+    * The default profile, used if `-profile` is not specified at all. Runs locally and expects all software to be installed and available on the `PATH`.
+    * This profile is mainly designed to be used as a starting point for other configurations and is inherited by most of the other profiles.
 * `none`
-    * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile.
+    * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile (not recommended).
 
 ### `--reads`
 Use this to specify the location of your input FastQ files. For example:
@@ -306,8 +298,7 @@ command line flag.
 If you would like to supply a custom config file to MultiQC, you can specify a path with `--multiqc_config`. This is used instead of the config file specific to the pipeline.
 
 ### `--clusterOptions`
-Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
-to run on the development node (though won't work with default process time requests).
+Submit arbitrary cluster scheduler options (not available for all config profiles). For instance, you could use `--clusterOptions '-p devcore'` to run on the development node (though won't work with default process time requests).
 
 ## Stand-alone scripts
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:

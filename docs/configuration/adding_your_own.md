@@ -66,7 +66,7 @@ process {
 
 The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
 
-A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/ewels/NGI-RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/SciLifeLab/NGI-RNAseq/) whenever changes are made to the pipeline.
+A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/SciLifeLab/NGI-RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/SciLifeLab/NGI-RNAseq/) whenever changes are made to the pipeline.
 
 ### Singularity image
 Many HPC environments are not able to run Docker due to security issues. [Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker. Even better, it can use create images directly from dockerhub.

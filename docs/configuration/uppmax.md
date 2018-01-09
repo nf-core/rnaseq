@@ -19,17 +19,31 @@ First, to generate the singularity image, run the following command. Note that y
 
 ```bash
 singularity pull --name ngi-rnaseq.img docker://scilifelab/ngi-rnaseq
+pwd # Prints path to your singularity container
 ```
 
 The NGI-RNAseq pipeline files can be downloaded from https://github.com/SciLifeLab/NGI-RNAseq/releases
 
-Once transferred, run the pipeline with the specific paths, as so:
+Download the pipeline files and transfer the compressed archive (the `.zip`
+or `.tar.gz` file). Once transferred, extract the pipeline files.
+For example, with a `.zip` file:
 
 ```bash
-nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/ngi-rnaseq.img
+unzip 1.3.1.zip
+mv NGI-RNAseq-1.3.1 NGI-RNAseq # rename the folder
+cd NGI-RNAseq
+pwd # Prints full path to your pipeline
 ```
 
-(Note that you'll need the other common flags such as `--reads` and `--genome` in addition to this).
+Finally, move to the directory where you want to run the pipeline
+and execute Nextflow with the path to the pipeline, as so:
+
+```bash
+cd /path/to/my/data/analysis
+nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/singularity/ngi-rnaseq.img
+```
+
+(Note that you'll need the other common flags such as `--reads` and `--genome` in addition to this command).
 
 ## Environment modules and development
 If you would prefer to use environment modules instead of singularity, you can use the old version of the configuration by specifying `-profile uppmax_modules` (we don't recommend this).

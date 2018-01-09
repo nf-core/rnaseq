@@ -34,28 +34,6 @@ Samples that receive less than 5% alignment are skipped for further analysis. Yo
 ### Data organization
 The pipeline can't take a list of multiple input files - it takes a glob expression. If your fastq files are scattered in different paths then we recommend that you generate a directory with symlinked files. If running in paired end mode please make sure that your files are sensibly named so that they can be properly paired. See the previous point.
 
-## UPPMAX specific options
-
-### Bioinfo-tools not loaded
-For some unknown reason the bioinfo-tools module is sometimes not loaded properly which means that no other modules are loaded and the pipeline crashes. Fortunately this is easily fixed by simply making sure to already have it loaded when starting the pipeline.
-Example error message:
-
-```
-Command wrapper:
-
-  Lmod Warning: Did not find: FastQC/0.11.5
-
-  Try: "module spider FastQC/0.11.5"
-
-```
-
-To fix this before you start the pipeline run:
-
-```
-module load bioinfo-tools
-```
-
-
 ## Extra resources and getting help
 If you still have an issue with running the pipeline then feel free to contact us.
 Have look at the [issue tracker for our repo](https://github.com/SciLifeLab/NGI-RNAseq/issues). Maybe someone has already had the same problem?

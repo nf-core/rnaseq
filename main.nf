@@ -121,7 +121,7 @@ heatmap_header = file("$baseDir/assets/heatmap_header.txt")
 biotypes_header = file("$baseDir/assets/biotypes_header.txt")
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
-wherearemyfiles= file("$baseDir/assets/where_are_my_files.txt")
+wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
 params.sampleLevel = false
 
 // Custom trimming options

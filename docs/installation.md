@@ -1,4 +1,4 @@
-# UPPMAX: NGI-RNAseq Installation
+# NGI-RNAseq Installation
 
 To start using the NGI-RNAseq pipeline, there are three steps described below:
 

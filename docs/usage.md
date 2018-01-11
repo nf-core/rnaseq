@@ -12,8 +12,10 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
-nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37
+nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 ```
+
+This will launch the pipeline with the `docker` configuration profile (Swedish UPPMAX users use `-profile uppmax`). See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -40,6 +42,30 @@ This version number will be logged in reports when you run the pipeline, so that
 
 
 ## Main Arguments
+
+### `-profile`
+Use this parameter to choose a configuration profile. Each profile is designed for a different compute environment - follow the links below to see instructions for running on that system. Available profiles are:
+
+* `docker`
+    * A generic configuration profile to be used with [Docker](http://docker.com/)
+    * Runs using the `local` executor and pulls software from dockerhub: [`scilifelab/ngi-rnaseq`](http://hub.docker.com/r/scilifelab/ngi-rnaseq/)
+* `uppmax`, `uppmax_modules`, `uppmax_devel`
+    * Designed to be used on the Swedish [UPPMAX](http://uppmax.uu.se/) clusters such as `milou`, `rackham`, `bianca` and `irma`
+    * See [`docs/configuration/uppmax.md`](configuration/uppmax.md)
+* `hebbe`
+    * Designed to be run on the [c3se Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Chalmers, Gothenburg.
+    * See [`docs/configuration/c3se.md`](configuration/c3se.md)
+* `binac`, `cfc`
+    * Profiles for clusters at QBiC in Tübingen, Germany
+    * See [`docs/configuration/qbic.md`](configuration/qbic.md)
+* `aws`
+    * A starter configuration for running the pipeline on Amazon Web Services. Uses docker and Spark.
+    * See [`docs/configuration/aws.md`](configuration/aws.md)
+* `standard`
+    * The default profile, used if `-profile` is not specified at all. Runs locally and expects all software to be installed and available on the `PATH`.
+    * This profile is mainly designed to be used as a starting point for other configurations and is inherited by most of the other profiles.
+* `none`
+    * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config profile (not recommended).
 
 ### `--reads`
 Use this to specify the location of your input FastQ files. For example:
@@ -72,7 +98,19 @@ Three command line flags / config parameters set the library strandedness for a 
 * `--reverse_stranded`
 * `--unstranded`
 
-If not set, the pipeline will be run as unstranded. The UPPMAX configuration file sets `reverse_stranded` to true by default. Use `--unstranded` or `--forward_stranded` to overwrite this. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
+
+You can set a default in a cutom Nextflow configuration file such as one saved in `~/.nextflow/config` (see the [nextflow docs](https://www.nextflow.io/docs/latest/config.html) for more). For example:
+
+```groovy
+params {
+    reverse_stranded = true
+}
+```
+
+> **NB:** Before v1.4 of the pipeline, the UPPMAX profile ran in reverse stranded mode by default. This was removed in the v1.4 release, so all profiles now run in unstranded mode by default.
+
+If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
 
@@ -194,7 +232,7 @@ Equivalent to: `--forward_stranded` `--clip_r1 3` `--three_prime_clip_r2 3`
 
 ## Job Resources
 ### Automatic resubmission
-Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits on UPPMAX with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
+Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
 
 ### Custom resource requests
 Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file. See the files in [`conf`](../conf) for examples.
@@ -205,12 +243,6 @@ The output directory where the results will be saved.
 
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
-
-### `--plaintext_email`
-Set to receive plain-text e-mails instead of HTML formatted.
-
-### `--sampleLevel`
-Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
 ### `-name`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
@@ -227,17 +259,33 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 **NB:** Single hyphen (core Nextflow option)
 
 ### `-c`
-Specify the path to a specific config file (this is a core NextFlow command). Useful if using different UPPMAX
-projects or different sets of reference genomes.
+Specify the path to a specific config file (this is a core NextFlow command).
 
 **NB:** Single hyphen (core Nextflow option)
 
-Note - you can use this to override defaults. For example, we run on UPPMAX but don't want to use the MultiQC
-environment module as is the default. So we specify a config file using `-c` that contains the following:
+Note - you can use this to override defaults. For example, if you don't want FastQC errors to be ignored, you can specify a config file using `-c` that contains the following:
 
 ```groovy
-process.$multiqc.module = []
+process.$fastqc.errorStrategy = 'terminate'
 ```
+
+### `--max_memory`
+Use to set a top-limit for the default memory requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_memory '8.GB'``
+
+### `--max_time`
+Use to set a top-limit for the default time requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_time '2.h'`
+
+### `--max_cpus`
+Use to set a top-limit for the default CPU requirement for each process.
+Should be a string in the format integer-unit. eg. `--max_cpus 1`
+
+### `--plaintext_email`
+Set to receive plain-text e-mails instead of HTML formatted.
+
+### `--sampleLevel`
+Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
 ### `--rlocation`
 Some steps in the pipeline run R with required modules. By default, the pipeline will install
@@ -248,8 +296,7 @@ command line flag.
 If you would like to supply a custom config file to MultiQC, you can specify a path with `--multiqc_config`. This is used instead of the config file specific to the pipeline.
 
 ### `--clusterOptions`
-Submit arbitrary SLURM options (UPPMAX profile only). For instance, you could use `--clusterOptions '-p devcore'`
-to run on the development node (though won't work with default process time requests).
+Submit arbitrary cluster scheduler options (not available for all config profiles). For instance, you could use `--clusterOptions '-p devcore'` to run on the development node (though won't work with default process time requests).
 
 ## Stand-alone scripts
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:

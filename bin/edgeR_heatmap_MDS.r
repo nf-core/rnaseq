@@ -67,12 +67,12 @@ MDSdata <- plotMDS(dataNorm)
 dev.off()
 
 # Print distance matrix to file
-write.csv(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.csv', quote=FALSE)
+write.csv(MDSdata$distance.matrix, 'edgeR_MDS_distance_matrix.csv', quote=FALSE,append=TRUE)
 
 # Print plot x,y co-ordinates to file
 MDSxy = MDSdata$cmdscale.out
 colnames(MDSxy) = c(paste(MDSdata$axislabel, '1'), paste(MDSdata$axislabel, '2'))
-write.csv(MDSxy, 'edgeR_MDS_Aplot_coordinates_mqc.csv', quote=FALSE)
+write.csv(MDSxy, 'edgeR_MDS_Aplot_coordinates_mqc.csv', quote=FALSE, append=TRUE)
 
 # Get the log counts per million values
 logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)

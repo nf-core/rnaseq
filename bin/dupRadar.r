@@ -55,33 +55,39 @@ curve_y <- curve_y[seq(1, length(curve_y), 10)]
 # Convert x values back to real counts
 curve_x = 10^curve_x
 # Write to file
-line="#id: dupRadar_plot
-#title: DupRadar General Linear Model
-#tt_label: '<b>{point.x:.1f} reads/kbp</b>: {point.y:,.2f}% duplicates'
-#xLog: true
-#xlab: expression (reads/kbp)
-#ylab: '% duplicate reads'
-#ymax: 101
-#ymin: 1
-#xPlotLines:
-#- color: green
-#  dashStyle: LongDash
-#  label:
-#    style: {color: green}
-#    text: 1.5 RPKM
-#    verticalAlign: bottom
-#    y: -64
-#  value: 1.5
-#  width: 2
-#- color: red
-#  dashStyle: LongDash
-#  label:
-#    style: {color: red}
-#    text: 2 read/bp
-#    verticalAlign: bottom
-#    y: -64
-#  value: 1001
-#  width: 2"
+line="#id: DupRadar
+#section_name: 'DupRadar'
+#section_href: 'bioconductor.org/packages/release/bioc/html/dupRadar.html'
+#description: \"provides duplication rate quality control for RNA-Seq datasets. Highly expressed genes can be expected to have a lot of duplicate reads, but high numbers of duplicates at low read counts can indicate low library complexity with technical duplication.
+#    This plot shows the general linear models - a summary of the gene duplication distributions. \"
+#pconfig:
+#    title: 'DupRadar General Linear Model'
+#    xLog: True
+#    xlab: 'expression (reads/kbp)'
+#    ylab: '% duplicate reads'
+#    ymax: 100
+#    ymin: 0
+#    tt_label: '<b>{point.x:.1f} reads/kbp</b>: {point.y:,.2f}% duplicates'
+#    xPlotLines:
+#        - color: 'green'
+#          dashStyle: 'LongDash'
+#          label:
+#                style: {color: 'green'}
+#                text: '0.5 RPKM'
+#                verticalAlign: 'bottom'
+#                y: -65
+#          value: 0.5
+#          width: 1
+#        - color: 'red'
+#          dashStyle: 'LongDash'
+#          label:
+#                style: {color: 'red'}
+#                text: '1 read/bp'
+#                verticalAlign: 'bottom'
+#                y: -65
+#          value: 1000
+#          width: 1"
+
 write(line,file=paste0(input_bam_basename, "_duprateExpDensCurve_mqc.txt"),append=TRUE)
 write.table(
   cbind(curve_x, curve_y),

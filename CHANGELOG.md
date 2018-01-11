@@ -1,10 +1,21 @@
 # NGI-RNAseq
 
 ## 1.4dev
-* Changed default config to base, **UPPMAX users now need to specify `-profile uppmax`**
+The version 1.4 release contains major improvements to the NGI-RNAseq pipeline, especially focussed on the portability of the pipeline. Hopefully these changes will make it significantly easier for people to use the pipeline in different compute environments.
+
+Many thanks to everyone who gave us feedback about the pipeline!
+
+* Changed default config to `base` instead of `uppmax`
+    * **UPPMAX users now need to specify `-profile uppmax`**
+* Removed default revse stranded config for UPPMAX profile
+    * **UPPMAX users now need to specify `--reverse_stranded` for the same behaviour**
 * Switched UPPMAX configuration to use Singularity instead of environment modules
+* Switched c3se Hebbe configuration to use Singularity & refactored config
+* Added config profiles for two clusters at QBiC in Tübingen, Germany
+* Made output from DupRadar, Biotype Counts and edgeR sample similarity use [MultiQC Custom Content](http://multiqc.info/docs/#custom-content) formatting
+    * These results now show up in MultiQC reports for everyone, not just people with our [custom MultiQC plugin](https://github.com/ewels/MultiQC_NGI)
+* Reorganised and rewrote much of the documentation
 * Added a Troubleshooting section to the docs
-* Refactored config for `hebbe`
 * Fixed bug where BED12 generation failed when only GTF supplied.
 
 ## [1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16

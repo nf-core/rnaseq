@@ -34,9 +34,8 @@ fi
 
 run_name="Test RNA Run: "$(date +%s)
 
-cmd="nextflow run $script_path -resume -name \"$run_name\" -profile testing --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --star_index ${data_dir}/star/ --singleEnd --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -name \"$run_name\" -profile docker --max_memory '12.GB' --max_cpus 2 --max_time '48.h' --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --star_index ${data_dir}/star/ --singleEnd --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"
 eval $cmd
-

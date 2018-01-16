@@ -6,12 +6,14 @@ jdk: openjdk8
 
 services:
   - docker
-install:
-  - mkdir /tmp/nextflow
-  - cd /tmp/nextflow
-  - wget -qO- get.nextflow.io | bash
-  - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
+
+env:
+  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TOOL_INSTALL=all
+  - NXF_VER=0.27.0 PROFILE=docker TOOL_INSTALL=nextflow
+
+install: # Install Nextflow (and Singularity if needed)
+  - "./tests/install.sh --tool $TOOL_INSTALL"
   - cd ${TRAVIS_BUILD_DIR}/tests/
   - mkdir results
 
-script: "./docker_test_hisat.sh"
+script: "./container_test_hisat.sh -p $PROFILE"

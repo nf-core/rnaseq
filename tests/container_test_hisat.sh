@@ -16,6 +16,7 @@ do
     PROFILE=$2
     shift # past argument
     shift # past value
+    ;;
     *) # unknown option
     shift # past argument
     ;;

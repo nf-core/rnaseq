@@ -1,12 +1,27 @@
 #!/usr/bin/env bash
 
 script_path="../main.nf"
-if [ -z $1]
-then
-    echo "No argument given, going to try to run ../main.nf"
-else
-    script_path=$1
-fi
+PROFILE=docker
+
+while [[ $# -gt 0 ]]
+do
+  key=$1
+  case $key in
+    --path)
+    script_path=$2
+    shift # past argument
+    shift # past value
+    ;;
+    -p|--profile)
+    PROFILE=$2
+    shift # past argument
+    shift # past value
+    ;;
+    *) # unknown option
+    shift # past argument
+    ;;
+  esac
+done
 
 data_path="/tmp"
 if [ -d "./test_data" ]
@@ -34,7 +49,7 @@ fi
 
 run_name="Test RNA Run: "$(date +%s)
 
-cmd="nextflow run $script_path -resume -name \"$run_name\" -profile docker --max_memory '7.GB' --max_cpus 2 --max_time '48.h' --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --singleEnd --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -name \"$run_name\" -profile $PROFILE --max_memory '7.GB' --max_cpus 2 --max_time '48.h' --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --singleEnd --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"

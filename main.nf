@@ -121,7 +121,7 @@ heatmap_header = file("$baseDir/assets/heatmap_header.txt")
 biotypes_header = file("$baseDir/assets/biotypes_header.txt")
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
-wherearemyfiles= file("$baseDir/assets/where_are_my_files.txt")
+wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
 params.sampleLevel = false
 
 // Custom trimming options
@@ -746,8 +746,7 @@ process rseqc {
             else if (filename.indexOf("splice_junction.pdf") > 0)               "junction_annotation/junctions/$filename"
             else if (filename.indexOf("junctionSaturation_plot.pdf") > 0)       "junction_saturation/$filename"
             else if (filename.indexOf("junctionSaturation_plot.r") > 0)         "junction_saturation/rscripts/$filename"
-            else if (filename.indexOf("log.txt") > -1) false
-            else "$filename"
+            else filename
         }
 
     input:
@@ -778,16 +777,17 @@ process rseqc {
 }
 
 /*
- * Step 4.1 Rseqc genebody_coverage
+ * Step 4.1 Rseqc genebody_coverage with subsampling
  */
 process genebody_coverage {
     tag "${bam_geneBodyCoverage.baseName - '.sorted'}"
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
-            else if (filename.indexOf("geneBodyCoverage.r") > 0)                "geneBodyCoverage/rscripts/$filename"
-            else if (filename.indexOf("geneBodyCoverage.txt") > 0)              "geneBodyCoverage/data/$filename"
-            else "$filename"
+            else if (filename.indexOf("geneBodyCoverage.r") > 0)           "geneBodyCoverage/rscripts/$filename"
+            else if (filename.indexOf("geneBodyCoverage.txt") > 0)         "geneBodyCoverage/data/$filename"
+            else if (filename.indexOf("log.txt") > -1) false
+            else filename
         }
 
     input:
@@ -795,15 +795,19 @@ process genebody_coverage {
     file bed12 from bed_genebody_coverage.collect()
 
     output:
-    file "*.{txt,pdf,r,xls}" into genebody_coverage_results
+    file "*.{txt,pdf,r}" into genebody_coverage_results
 
     script:
     """
-    cat <(samtools view -H ${bam_geneBodyCoverage}) \\
-        <(samtools view ${bam_geneBodyCoverage} | shuf -n 1000000) \\
+    cat <(samtools view -H ${bam_geneBodyCoverage}) <(samtools view ${bam_geneBodyCoverage} \\
+        | shuf -n 1000000) \\
         | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
     samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
-    geneBody_coverage.py -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam -o ${bam_geneBodyCoverage.baseName}.rseqc -r $bed12
+    geneBody_coverage.py \\
+        -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam \\
+        -o ${bam_geneBodyCoverage.baseName}.rseqc \\
+        -r $bed12
+    mv log.txt ${bam_geneBodyCoverage.baseName}.rseqc.log.txt
     """
 }
 
@@ -1104,8 +1108,8 @@ process multiqc {
     file (fastqc:'fastqc/*') from fastqc_results.collect()
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
-    file ('rseqc/rseqc_log.*') from rseqc_results.collect()
-    file ('rseqc/genebody_*') from genebody_coverage_results.collect()
+    file ('rseqc/*') from rseqc_results.collect()
+    file ('rseqc/*') from genebody_coverage_results.collect()
     file ('preseq/*') from preseq_results.collect()
     file ('dupradar/*') from dupradar_results.collect()
     file ('featureCounts/*') from featureCounts_logs.collect()

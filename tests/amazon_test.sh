@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 script_path="../main.nf"
-if [ -z $1]
+if [ -z $1] 
 then
     echo "No argument given, going to try to run ../main.nf"
 else
     script_path=$1
 fi
 
-data_path="/tmp"
+data_path="./test_data"
 if [ -d "./test_data" ]
 then
     data_path="./test_data"
@@ -24,14 +24,14 @@ data_dir=${data_path}/ngi-rna_test_set
 if [ -d $data_dir ]
 then
     echo "Found existing test set, using $data_dir"
-else
-    echo "Downloading test set..."
-    curl https://export.uppmax.uu.se/b2013064/test-data/ngi-rna_test_set.tar.bz2 > ${data_path}/ngi-rna_test_set.tar.bz2
+else    
     echo "Unpacking test set..."
-    tar xvjf ${data_path}/ngi-rna_test_set.tar.bz2 -C ${data_path}
+    mkdir -p ${data_path}
+    tar xvjf ngi-rna_test_set.tar.bz2 -C ${data_path}
     echo "Done"
 fi
 
+run_name="Test RNA Run: "$(date +%s)
 cmd="nextflow run $script_path -resume -profile amazon_test --singleEnd --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd

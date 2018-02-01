@@ -8,7 +8,7 @@ else
     script_path=$1
 fi
 
-data_path="/tmp"
+data_path="./test_data"
 if [ -d "./test_data" ]
 then
     data_path="./test_data"
@@ -25,16 +25,15 @@ if [ -d $data_dir ]
 then
     echo "Found existing test set, using $data_dir"
 else
-    echo "Downloading test set..."
-    curl https://export.uppmax.uu.se/b2013064/test-data/ngi-rna_test_set.tar.bz2 > ${data_path}/ngi-rna_test_set.tar.bz2
     echo "Unpacking test set..."
-    tar xvjf ${data_path}/ngi-rna_test_set.tar.bz2 -C ${data_path}
+    mkdir -p ${data_path}
+    tar xvjf ngi-rna_test_set.tar.bz2 -C ${data_path}
     echo "Done"
 fi
 
 run_name="Test RNA Run: "$(date +%s)
 
-cmd="nextflow run $script_path -resume -name \"$run_name\" -profile docker --max_memory '12.GB' --max_cpus 2 --max_time '48.h' --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --star_index ${data_dir}/star/ --singleEnd --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path -resume -name \"$run_name\" -profile docker --max_memory '12.GB' --max_cpus 2 --max_time '48.h' --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --fasta ${data_dir}/genome.fa --singleEnd --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"

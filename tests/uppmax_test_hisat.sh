@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 script_path="../main.nf"
-if [ -z $1] 
+if [ -z $1]
 then
     echo "No argument given, going to try to run ../main.nf"
 else
@@ -9,11 +9,6 @@ else
 fi
 
 data_path="./test_data"
-if [ -d "./test_data" ]
-then
-    data_path="./test_data"
-    echo "Found data directory in current working directory, using ./test_data/"
-fi
 
 curl --version >/dev/null 2>&1 || { echo >&2 "I require curl, but it's not installed. Aborting."; exit 1; }
 tar --version >/dev/null 2>&1 || { echo >&2 "I require tar, but it's not installed. Aborting."; exit 1; }

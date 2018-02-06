@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 script_path="../main.nf"
-if [ -z $1] 
+if [ -z $1]
 then
     echo "No argument given, going to try to run ../main.nf"
 else

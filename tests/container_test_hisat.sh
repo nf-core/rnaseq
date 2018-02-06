@@ -24,11 +24,6 @@ do
 done
 
 data_path="/tmp"
-if [ -d "./test_data" ]
-then
-    data_path="./test_data"
-    echo "Found data directory in current working directory, using ./test_data/"
-fi
 
 curl --version >/dev/null 2>&1 || { echo >&2 "I require curl, but it's not installed. Aborting."; exit 1; }
 tar --version >/dev/null 2>&1 || { echo >&2 "I require tar, but it's not installed. Aborting."; exit 1; }
@@ -40,10 +35,10 @@ if [ -d $data_dir ]
 then
     echo "Found existing test set, using $data_dir"
 else
-    echo "Downloading test set..."
-    curl https://export.uppmax.uu.se/b2013064/test-data/ngi-rna_test_set.tar.bz2 > ${data_path}/ngi-rna_test_set.tar.bz2
+
+    mkdir -p ${data_path}
     echo "Unpacking test set..."
-    tar xvjf ${data_path}/ngi-rna_test_set.tar.bz2 -C ${data_path}
+    tar xvjf ngi-rna_test_set.tar.bz2 -C ${data_path}
     echo "Done"
 fi
 

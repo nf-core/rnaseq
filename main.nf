@@ -275,7 +275,7 @@ log.info "========================================="
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
+nf_required_version = '0.27.6'
 try {
     if( ! nextflow.version.matches(">= $nf_required_version") ){
         throw GroovyException('Nextflow version too old')
@@ -1063,18 +1063,18 @@ process multiqc {
 
     input:
     file multiqc_config
-    file (fastqc:'fastqc/*') from fastqc_results.toList()
-    file ('trimgalore/*') from trimgalore_results.toList()
-    file ('alignment/*') from alignment_logs.toList()
-    file ('rseqc/*') from rseqc_results.toList()
-    file ('rseqc/*') from genebody_coverage_results.toList()
-    file ('preseq/*') from preseq_results.toList()
-    file ('dupradar/*') from dupradar_results.toList()
-    file ('featureCounts/*') from featureCounts_logs.toList()
-    file ('featureCounts_biotype/*') from featureCounts_biotype.toList()
-    file ('stringtie/stringtie_log*') from stringtie_log.toList()
-    file ('sample_correlation_results/*') from sample_correlation_results.toList()
-    file ('software_versions/*') from software_versions_yaml.toList()
+    file (fastqc:'fastqc/*') from fastqc_results.collect()
+    file ('trimgalore/*') from trimgalore_results.collect()
+    file ('alignment/*') from alignment_logs.collect()
+    file ('rseqc/*') from rseqc_results.collect()
+    file ('rseqc/*') from genebody_coverage_results.collect()
+    file ('preseq/*') from preseq_results.collect()
+    file ('dupradar/*') from dupradar_results.collect()
+    file ('featureCounts/*') from featureCounts_logs.collect()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
+    file ('stringtie/stringtie_log*') from stringtie_log.collect()
+    file ('sample_correlation_results/*') from sample_correlation_results.toList() // toList() as process optional
+    file ('software_versions/*') from software_versions_yaml.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -1201,6 +1201,18 @@ workflow.onComplete {
     }
 
     log.info "[NGI-RNAseq] Pipeline Complete"
+
+    try {
+        if( ! nextflow.version.matches(">= $nf_required_version") ){
+            throw GroovyException('Nextflow version too old')
+        }
+    } catch (all) {
+        log.error "====================================================\n" +
+                  "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+                  "  Please be extra careful with pipeline results.\n" +
+                  "  Run `nextflow self-update` to update Nextflow.\n" +
+                  "============================================================"
+    }
 
     if(!workflow.success){
         if( workflow.profile == 'standard'){

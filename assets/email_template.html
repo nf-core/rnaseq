@@ -56,13 +56,6 @@
     </tbody>
 </table>
 
-<h3>Software Versions:</h3>
-<table style="width:100%; max-width:100%; border-spacing: 0; border-collapse: collapse; border:0; margin-bottom: 30px;">
-    <tbody style="border-bottom: 1px solid #ddd;">
-        <% out << software_versions.collect{ k,v -> "<tr><th style='text-align:left; padding: 8px 0; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'>$k</th><td style='text-align:left; padding: 8px; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'><pre style='white-space: pre-wrap; overflow: visible;'>${v ?: '<span style="color:#999999;">N/A</a>'}</pre></td></tr>" }.join("\n") %>
-    </tbody>
-</table>
-
 <p>NGI-RNAseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the National Genomics Infrastructure at SciLifeLab Stockholm, Sweden.</p>
 <p>The pipeline uses Nextflow, a bioinformatics workflow tool. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.</p>
 <p>For more information, please see the pipeline homepage: <a href="https://github.com/SciLifeLab/NGI-RNAseq">https://github.com/SciLifeLab/NGI-RNAseq</a></p>

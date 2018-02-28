@@ -9,7 +9,7 @@ input_bam <- args[1]
 annotation_gtf <- args[2]
 paired_end <- if(args[3]=='paired') TRUE else FALSE
 
-bamRegex <- "(.+)\\.bam"
+bamRegex <- "(.+)\\.bam$"
 
 if(!(grepl(bamRegex, input_bam) && file.exists(input_bam) &&  (!file.info(input_bam)$isdir))) stop("First argument '<input.bam>' must be an existing file (not a directory) with '.bam' extension...")
 if(!(file.exists(annotation_gtf) &&  (!file.info(annotation_gtf)$isdir))) stop("Second argument '<annotation.gtf>' must be an existing file (and not a directory)...")

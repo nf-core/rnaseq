@@ -8,7 +8,14 @@ if (length(args) < 3) {
 input_bam <- args[1]
 annotation_gtf <- args[2]
 paired_end <- if(args[3]=='paired') TRUE else FALSE
-input_bam_basename <- strsplit(input_bam, "\\.")[[1]][1]
+
+bamRegex <- "(.*)\\.bam"
+
+if(!(grepl(bamRegex, input_bam) && file.exists(input_bam) &&  (!file.info(input_bam)$isdir))) stop("First argument '<input.bam>' must be an existing file (not a directory) with '.bam' extension...")
+if(!(file.exists(annotation_gtf) &&  (!file.info(annotation_gtf)$isdir))) stop("Second argument '<annotation.gtf>' must be an existing file (and not a directory)...")
+
+# Remove bam file extension to generate basename
+input_bam_basename <- gsub(bamRegex, "\\1", input_bam)
 
 # Load / install packages
 if (length(args) > 3) { .libPaths( c( args[4], .libPaths() ) ) }
@@ -29,7 +36,7 @@ dm <- analyzeDuprates(input_bam, annotation_gtf, stranded, paired_end, threads)
 write.table(dm, file=paste(input_bam_basename, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
 
 # 2D density scatter plot
-pdf(paste0(input_bam, "_duprateExpDens.pdf"))
+pdf(paste0(input_bam_basename, "_duprateExpDens.pdf"))
 duprateExpDensPlot(DupMat=dm)
 title("Density scatter plot")
 mtext(input_bam_basename, side=3)

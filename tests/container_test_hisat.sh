@@ -23,7 +23,7 @@ do
   esac
 done
 
-data_path="/tmp"
+data_path="./test_data"
 
 curl --version >/dev/null 2>&1 || { echo >&2 "I require curl, but it's not installed. Aborting."; exit 1; }
 tar --version >/dev/null 2>&1 || { echo >&2 "I require tar, but it's not installed. Aborting."; exit 1; }
@@ -44,7 +44,17 @@ fi
 
 run_name="Test RNA Run: "$(date +%s)
 
-cmd="nextflow run $script_path -resume -name \"$run_name\" -profile $PROFILE --max_memory '7.GB' --max_cpus 2 --max_time '48.h' --gtf ${data_dir}/genes.gtf --bed12 ${data_dir}/genes.bed --hisat2_index ${data_dir}/r64/ --aligner hisat2 --singleEnd --reads \"${data_dir}/*.fastq.gz\""
+cmd="nextflow run $script_path \
+  -resume \
+  -name \"$run_name\" \
+  -profile $PROFILE \
+  --max_memory '7.GB' --max_cpus 2 --max_time '48.h' \
+  --gtf ${data_dir}/genes.gtf \
+  --bed12 ${data_dir}/genes.bed \
+  --hisat2_index ${data_dir}/r64/ \
+  --aligner hisat2 \
+  --singleEnd \
+  --reads \"${data_dir}/*.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-----"

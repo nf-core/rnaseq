@@ -888,10 +888,10 @@ process dupradar {
     file "*.{pdf,txt}" into dupradar_results
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
-    def paired = params.singleEnd ? 'FALSE' :  'TRUE'
+    def paired = params.singleEnd ? 'single' :  'paired'
     def rlocation = params.rlocation ?: ''
     """
-    dupRadar.r $bam_md $gtf $paired $rlocation
+    dupRadar.r $bam_md $gtf $paired ${task.cpus} $rlocation
     """
 }
 

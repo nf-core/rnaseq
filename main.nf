@@ -897,7 +897,7 @@ process dupradar {
     def paired = params.singleEnd ? 'single' :  'paired'
     def rlocation = params.rlocation ?: ''
     """
-    dupRadar.r $bamFile $gtfFile $dupradar_direction $paired ${task.cpus} $rlocation
+    dupRadar.r $bam_md $gtf $dupradar_direction $paired ${task.cpus} $rlocation
     """
 }
 

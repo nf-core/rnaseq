@@ -2,16 +2,37 @@
 
 # Command line argument processing
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 3) {
-  stop("Usage: dupRadar.r <input.bam> <annotation.gtf> <paired/single> <R-package-location (optional)>", call.=FALSE)
+if (length(args) < 5) {
+  stop("Usage: dupRadar.r <input.bam> <annotation.gtf> <strandDirection:0=unstranded/1=forward/2=reverse> <paired/single> <nbThreads> <R-package-location (optional)>", call.=FALSE)
 }
 input_bam <- args[1]
 annotation_gtf <- args[2]
-paired_end <- if(args[3]=='paired') TRUE else FALSE
-input_bam_basename <- strsplit(input_bam, "\\.")[[1]][1]
+stranded <- as.numeric(args[3])
+paired_end <- if(args[4]=='paired') TRUE else FALSE
+threads <- as.numeric(args[5])
+
+bamRegex <- "(.+)\\.bam$"
+
+if(!(grepl(bamRegex, input_bam) && file.exists(input_bam) &&  (!file.info(input_bam)$isdir))) stop("First argument '<input.bam>' must be an existing file (not a directory) with '.bam' extension...")
+if(!(file.exists(annotation_gtf) &&  (!file.info(annotation_gtf)$isdir))) stop("Second argument '<annotation.gtf>' must be an existing file (and not a directory)...")
+if(is.na(stranded) || (!(stranded %in% (0:2)))) stop("Third argument <strandDirection> must be a numeric value in 0(unstranded)/1(forward)/2(reverse)...")
+if(is.na(threads) || (threads<=0)) stop("Fifth argument <nbThreads> must be a strictly positive numeric value...")
+
+# Remove bam file extension to generate basename
+input_bam_basename <- gsub(bamRegex, "\\1", input_bam)
+
+# Debug messages (stderr)
+message("Input bam      (Arg 1): ", input_bam)
+message("Input gtf      (Arg 2): ", annotation_gtf)
+message("Strandness     (Arg 3): ", c("unstranded", "forward", "reverse")[stranded+1])
+message("paired/single  (Arg 4): ", ifelse(paired_end, 'paired', 'single'))
+message("Nb threads     (Arg 5): ", threads)
+message("R package loc. (Arg 6): ", ifelse(length(args) > 4, args[5], "Not specified"))
+message("Output basename       : ", input_bam_basename)
+
 
 # Load / install packages
-if (length(args) > 3) { .libPaths( c( args[4], .libPaths() ) ) }
+if (length(args) > 5) { .libPaths( c( args[6], .libPaths() ) ) }
 if (!require("dupRadar")){
   source("http://bioconductor.org/biocLite.R")
   biocLite("dupRadar", suppressUpdates=TRUE)
@@ -23,13 +44,11 @@ if (!require("parallel")) {
 }
 
 # Duplicate stats
-stranded <- 2
-threads <- detectCores()
 dm <- analyzeDuprates(input_bam, annotation_gtf, stranded, paired_end, threads)
 write.table(dm, file=paste(input_bam_basename, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
 
 # 2D density scatter plot
-pdf(paste0(input_bam, "_duprateExpDens.pdf"))
+pdf(paste0(input_bam_basename, "_duprateExpDens.pdf"))
 duprateExpDensPlot(DupMat=dm)
 title("Density scatter plot")
 mtext(input_bam_basename, side=3)

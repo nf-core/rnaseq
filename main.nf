@@ -275,7 +275,7 @@ log.info "========================================="
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
+nf_required_version = '0.27.6'
 try {
     if( ! nextflow.version.matches(">= $nf_required_version") ){
         throw GroovyException('Nextflow version too old')
@@ -500,12 +500,10 @@ process fastqc {
 
     output:
     file "*_fastqc.{zip,html}" into fastqc_results
-    file '.command.out' into fastqc_stdout
 
     script:
     """
     fastqc -q $reads
-    fastqc --version
     """
 }
 
@@ -530,7 +528,7 @@ process trim_galore {
 
     output:
     file "*fq.gz" into trimmed_reads
-    file "*trimming_report.txt" into trimgalore_results, trimgalore_logs
+    file "*trimming_report.txt" into trimgalore_results
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
     file "where_are_my_files.txt"
 
@@ -647,7 +645,6 @@ if(params.aligner == 'hisat2'){
         output:
         file "${prefix}.bam" into hisat2_bam
         file "${prefix}.hisat2_summary.txt" into alignment_logs
-        file '.command.log' into hisat_stdout
         file "where_are_my_files.txt"
 
         script:
@@ -670,7 +667,6 @@ if(params.aligner == 'hisat2'){
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
-            hisat2 --version
             """
         } else {
             """
@@ -686,7 +682,6 @@ if(params.aligner == 'hisat2'){
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
-            hisat2 --version
             """
         }
     }
@@ -823,12 +818,10 @@ process preseq {
 
     output:
     file "${bam_preseq.baseName}.ccurve.txt" into preseq_results
-    file '.command.log' into preseq_stdout
 
     script:
     """
     preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq.baseName}.ccurve.txt
-    echo "File name: $bam_preseq  preseq version: "\$(preseq)
     """
 }
 
@@ -848,7 +841,6 @@ process markDuplicates {
     file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
     file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
     file "${bam_markduplicates.baseName}.bam.bai"
-    file '.command.log' into markDuplicates_stdout
 
     script:
     if( task.memory == null ){
@@ -867,8 +859,6 @@ process markDuplicates {
         PROGRAM_RECORD_ID='null' \\
         VALIDATION_STRINGENCY=LENIENT
 
-    # Print version number to standard out
-    echo "File name: $bam_markduplicates Picard version "\$(java -Xmx2g -jar \$PICARD_HOME/picard.jar  MarkDuplicates --version 2>&1)
     samtools index $bam_markduplicates
     """
 }
@@ -896,13 +886,18 @@ process dupradar {
 
     output:
     file "*.{pdf,txt}" into dupradar_results
-    file '.command.log' into dupradar_stdout
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
-    def paired = params.singleEnd ? 'FALSE' :  'TRUE'
+    def dupradar_direction = 0
+    if (forward_stranded && !unstranded) {
+        dupradar_direction = 1
+    } else if (reverse_stranded && !unstranded){
+        dupradar_direction = 2
+    }    
+    def paired = params.singleEnd ? 'single' :  'paired'
     def rlocation = params.rlocation ?: ''
     """
-    dupRadar.r $bam_md $gtf $paired $rlocation
+    dupRadar.r $bam_md $gtf $dupradar_direction $paired ${task.cpus} $rlocation
     """
 }
 
@@ -929,7 +924,6 @@ process featureCounts {
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts_mqc.txt" into featureCounts_biotype
-    file '.command.log' into featurecounts_stdout
 
     script:
     def featureCounts_direction = 0
@@ -987,7 +981,7 @@ process stringtieFPKM {
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
     file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
     file "${bam_stringtieFPKM}.cov_refs.gtf"
-    file ".command.log" into stringtie_log, stringtie_stdout
+    file ".command.log" into stringtie_log
 
     script:
     def st_direction = ''
@@ -1006,12 +1000,8 @@ process stringtieFPKM {
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
         -e \\
         -b ${bam_stringtieFPKM.baseName}_ballgown
-
-    echo "File name: $bam_stringtieFPKM Stringtie version "\$(stringtie --version)
     """
 }
-def num_bams
-bam_count.count().subscribe{ num_bams = it }
 
 /*
  * STEP 11 - edgeR MDS and heatmap
@@ -1022,9 +1012,10 @@ process sample_correlation {
 
     input:
     file input_files from geneCounts.collect()
-    bam_count
+    val num_bams from bam_count.count()
     file mdsplot_header
     file heatmap_header
+
     output:
     file "*.{txt,pdf,csv}" into sample_correlation_results
 
@@ -1045,55 +1036,28 @@ process sample_correlation {
 /*
  * Parse software version numbers
  */
-software_versions = [
-  'FastQC': null, 'Trim Galore!': null, 'Star': null, 'HISAT2': null, 'StringTie': null,
-  'Preseq': null, 'featureCounts': null, 'dupRadar': null, 'Picard MarkDuplicates': null,
-  'Nextflow': "v$workflow.nextflow.version"
-]
-if(params.aligner == 'star') software_versions.remove('HISAT2')
-else if(params.aligner == 'hisat2') software_versions.remove('Star')
-
 process get_software_versions {
-    cache false
-    executor 'local'
-
-    input:
-    val fastqc from fastqc_stdout.collect()
-    val trim_galore from trimgalore_logs.collect()
-    val star from star_log.collect()
-    val stringtie from stringtie_stdout.collect()
-    val hisat from hisat_stdout.collect()
-    val preseq from preseq_stdout.collect()
-    val featurecounts from featurecounts_stdout.collect()
-    val dupradar from dupradar_stdout.collect()
-    val markDuplicates from markDuplicates_stdout.collect()
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
 
-    exec:
-    software_versions['FastQC'] = fastqc[0].getText().find(/FastQC v(\S+)/) { match, version -> "v$version" }
-    software_versions['Trim Galore!'] = trim_galore[0].getText().find(/Trim Galore version: (\S+)/) {match, version -> "v$version"}
-    if(params.aligner == 'star') software_versions['Star'] = star[0].getText().find(/STAR_(\d+\.\d+\.\d+)/) { match, version -> "v$version" }
-    else if(params.aligner == 'hisat2') software_versions['HISAT2'] = hisat[0].getText().find(/hisat2\S+ version (\S+)/) { match, version -> "v$version" }
-    software_versions['StringTie'] = stringtie[0].getText().find(/StringTie (\S+)/) { match, version -> "v"+version.replaceAll(/\.$/, "") }
-    software_versions['Preseq'] = preseq[0].getText().find(/Version: (\S+)/) { match, version -> "v$version" }
-    software_versions['featureCounts'] = featurecounts[0].getText().find(/\s+v([\.\d]+)/) {match, version -> "v$version"}
-    software_versions['dupRadar'] = dupradar[0].getText().find(/dupRadar\_(\S+)/) {match, version -> "v$version"}
-    software_versions['Picard MarkDuplicates'] = markDuplicates[0].getText().find(/Picard version ([\d\.]+)/) {match, version -> "v$version"}
-
-    def sw_yaml_file = task.workDir.resolve('software_versions_mqc.yaml')
-    sw_yaml_file.text  = """
-    id: 'ngi-rnaseq'
-    section_name: 'NGI-RNAseq Software Versions'
-    section_href: 'https://github.com/SciLifeLab/NGI-RNAseq'
-    plot_type: 'html'
-    description: 'are collected at run time from the software output.'
-    data: |
-        <dl class=\"dl-horizontal\">
-${software_versions.collect{ k,v -> "            <dt>$k</dt><dd>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
+    script:
+    """
+    echo $version &> v_ngi_rnaseq.txt
+    echo $workflow.nextflow.version &> v_nextflow.txt
+    fastqc --version &> v_fastqc.txt
+    cutadapt --version &> v_cutadapt.txt
+    trim_galore --version &> v_trim_galore.txt
+    STAR --version &> v_star.txt
+    hisat2 --version &> v_hisat2.txt
+    stringtie --version &> v_stringtie.txt
+    preseq &> v_preseq.txt
+    featureCounts -v &> v_featurecounts.txt
+    echo \$(java -Xmx1g -jar \$PICARD_HOME/picard.jar MarkDuplicates --version 2>&1) &> v_markduplicates.txt
+    samtools --version &> v_samtools.txt
+    multiqc --version &> v_multiqc.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
 }
 
 /*
@@ -1115,13 +1079,12 @@ process multiqc {
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
-    file ('sample_correlation_results/*') from sample_correlation_results.collect()
-    file ('software_versions/*') from software_versions_yaml
+    file ('sample_correlation_results/*') from sample_correlation_results.toList() // toList() as process optional
+    file ('software_versions/*') from software_versions_yaml.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
-    file '.command.err' into multiqc_stderr
     val prefix into multiqc_prefix
 
     script:
@@ -1131,9 +1094,6 @@ process multiqc {
     """
     multiqc -f $rtitle $rfilename --config $multiqc_config .
     """
-}
-multiqc_stderr.subscribe { stderr ->
-  software_versions['MultiQC'] = stderr.getText().find(/This is MultiQC v(\S+)/) { match, version -> "v$version" }
 }
 
 /*
@@ -1191,9 +1151,6 @@ workflow.onComplete {
     if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
     if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
-    email_fields['software_versions'] = software_versions
-    email_fields['software_versions']['Nextflow Build'] = workflow.nextflow.build
-    email_fields['software_versions']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
     email_fields['skipped_poor_alignment'] = skipped_poor_alignment
 
     // Render the TXT template
@@ -1250,6 +1207,18 @@ workflow.onComplete {
     }
 
     log.info "[NGI-RNAseq] Pipeline Complete"
+
+    try {
+        if( ! nextflow.version.matches(">= $nf_required_version") ){
+            throw GroovyException('Nextflow version too old')
+        }
+    } catch (all) {
+        log.error "====================================================\n" +
+                  "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+                  "  Please be extra careful with pipeline results.\n" +
+                  "  Run `nextflow self-update` to update Nextflow.\n" +
+                  "============================================================"
+    }
 
     if(!workflow.success){
         if( workflow.profile == 'standard'){

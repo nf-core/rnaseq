@@ -124,7 +124,7 @@ output_docs = file("$baseDir/docs/output.md")
 wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
 params.sampleLevel = false
 
-params.minAlgined = 15
+params.min_aln_length = 15
 
 // Custom trimming options
 params.clip_r1 = 0
@@ -231,7 +231,7 @@ summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Genome']       = params.genome
-summary['Min aligned lenght'] =  params.minAlgined
+summary['Min aligned length'] =  params.min_aln_length
 if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
 summary['Trim R1'] = clip_r1
@@ -614,7 +614,7 @@ if(params.aligner == 'star'){
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
             --outFileNamePrefix $prefix \\
-            --outFilterMatchNmin ${params.minAlgined}
+            --outFilterMatchNmin ${params.min_aln_length}
         """
     }
     // Filter removes all 'aligned' channels that fail the check

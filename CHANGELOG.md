@@ -17,6 +17,8 @@ Many thanks to everyone who gave us feedback about the pipeline!
 * Reorganised and rewrote much of the documentation
 * Added a Troubleshooting section to the docs
 * Fixed bug where BED12 generation failed when only GTF supplied.
+* Changed dupradar script to use number of threads defined by nextflow process
+* Fixed call to dupradar script that prevented interpretation of paired-ends reads and strand direction
 
 ## [1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16
 Hotfix to update version number in pipeline script.

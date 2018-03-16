@@ -124,6 +124,8 @@ output_docs = file("$baseDir/docs/output.md")
 wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
 params.sampleLevel = false
 
+params.min_aln_length = 15
+
 // Custom trimming options
 params.clip_r1 = 0
 params.clip_r2 = 0
@@ -229,6 +231,7 @@ summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Genome']       = params.genome
+summary['Min aligned length'] =  params.min_aln_length
 if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
 summary['Trim R1'] = clip_r1
@@ -610,7 +613,8 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-            --outFileNamePrefix $prefix
+            --outFileNamePrefix $prefix \\
+            --outFilterMatchNmin ${params.min_aln_length}
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -888,10 +892,16 @@ process dupradar {
     file "*.{pdf,txt}" into dupradar_results
 
     script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
-    def paired = params.singleEnd ? 'FALSE' :  'TRUE'
+    def dupradar_direction = 0
+    if (forward_stranded && !unstranded) {
+        dupradar_direction = 1
+    } else if (reverse_stranded && !unstranded){
+        dupradar_direction = 2
+    }    
+    def paired = params.singleEnd ? 'single' :  'paired'
     def rlocation = params.rlocation ?: ''
     """
-    dupRadar.r $bam_md $gtf $paired $rlocation
+    dupRadar.r $bam_md $gtf $dupradar_direction $paired ${task.cpus} $rlocation
     """
 }
 
@@ -929,7 +939,7 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > tmp_file
     cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     """
 }

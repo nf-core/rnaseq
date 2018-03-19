@@ -397,7 +397,6 @@ if(params.aligner == 'star' && !params.star_index && fasta){
             --runMode genomeGenerate \\
             --runThreadN ${task.cpus} \\
             --sjdbGTFfile $gtf \\
-            --sjdbOverhang 149 \\
             --genomeDir star/ \\
             --genomeFastaFiles $fasta
         """

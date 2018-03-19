@@ -73,8 +73,6 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Pipeline version
-version = '1.4dev'
 
 // Show help emssage
 params.help = false

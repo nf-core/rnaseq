@@ -1210,12 +1210,12 @@ workflow.onComplete {
     log.info "[NGI-RNAseq] Pipeline Complete"
 
     try {
-        if( ! nextflow.version.matches(">= $nf_required_version") ){
+        if( ! nextflow.version.matches(">= $params.nf_required_version") ){
             throw GroovyException('Nextflow version too old')
         }
     } catch (all) {
         log.error "====================================================\n" +
-                  "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+                  "  Nextflow version $params.nf_required_version required! You are running v$workflow.nextflow.version.\n" +
                   "  Please be extra careful with pipeline results.\n" +
                   "  Run `nextflow self-update` to update Nextflow.\n" +
                   "============================================================"

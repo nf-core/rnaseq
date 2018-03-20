@@ -1044,7 +1044,7 @@ process get_software_versions {
 
     script:
     """
-    echo $version &> v_ngi_rnaseq.txt
+    echo $params.version &> v_ngi_rnaseq.txt
     echo $workflow.nextflow.version &> v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt

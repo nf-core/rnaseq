@@ -607,7 +607,7 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-            --outFileNamePrefix $prefix 
+            --outFileNamePrefix $prefix
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -827,17 +827,17 @@ process preseq {
  * STEP 6 Mark duplicates
  */
 process markDuplicates {
-    tag "${bam_markduplicates.baseName - '.sorted'}"
+    tag "${bam.baseName - '.sorted'}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy',
         saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
 
     input:
-    file bam_markduplicates
+    file bam from bam_markduplicates
 
     output:
-    file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
-    file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
-    file "${bam_markduplicates.baseName}.bam.bai"
+    file "${bam.baseName}.markDups.bam" into bam_md
+    file "${bam.baseName}.markDups_metrics.txt" into picard_results
+    file "${bam.baseName}.markDups.bam.bai"
 
     script:
     if( task.memory == null ){
@@ -847,16 +847,15 @@ process markDuplicates {
         avail_mem = task.memory.toGiga()
     }
     """
-    java -Xmx${avail_mem}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
-        INPUT=$bam_markduplicates \\
-        OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
-        METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\
+    picard MarkDuplicates \\
+        INPUT=$bam \\
+        OUTPUT=${bam.baseName}.markDups.bam \\
+        METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
         REMOVE_DUPLICATES=false \\
         ASSUME_SORTED=true \\
         PROGRAM_RECORD_ID='null' \\
         VALIDATION_STRINGENCY=LENIENT
-
-    samtools index $bam_markduplicates
+    samtools index ${bam.baseName}.markDups.bam
     """
 }
 
@@ -890,7 +889,7 @@ process dupradar {
         dupradar_direction = 1
     } else if (reverse_stranded && !unstranded){
         dupradar_direction = 2
-    }    
+    }
     def paired = params.singleEnd ? 'single' :  'paired'
     def rlocation = params.rlocation ?: ''
     """
@@ -1089,7 +1088,7 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f $rtitle $rfilename --config $multiqc_config -m custom_content -m preseq -m fastqc -m picard -m rseqc -m cutadapt  -m star  . 
+    multiqc -f $rtitle $rfilename --config $multiqc_config -m custom_content -m preseq -m fastqc -m picard -m rseqc -m cutadapt  -m star  .
     """
 }
 

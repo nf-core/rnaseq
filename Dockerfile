@@ -6,4 +6,4 @@ LABEL authors="phil.ewels@scilifelab.se" \
 RUN conda update -n base conda
 COPY environment.yml /
 RUN conda env create -f /environment.yml
-ENV PATH /opt/conda/envs/nfcore-methylseq/bin:$PATH
+ENV PATH /opt/conda/envs/ngi-rnaseq/bin:$PATH

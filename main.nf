@@ -19,7 +19,7 @@ vim: syntax=groovy
 def helpMessage() {
     log.info"""
     =========================================
-     NGI-RNAseq : RNA-Seq Best Practice v${version}
+     NGI-RNAseq : RNA-Seq Best Practice v${params.version}
     =========================================
     Usage:
 
@@ -73,8 +73,6 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Pipeline version
-version = '1.4dev'
 
 // Show help emssage
 params.help = false
@@ -223,7 +221,7 @@ Channel
 
 // Header log info
 log.info "========================================="
-log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
+log.info " NGI-RNAseq : RNA-Seq Best Practice v${params.version}"
 log.info "========================================="
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
@@ -276,14 +274,13 @@ log.info "========================================="
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.27.6'
 try {
-    if( ! nextflow.version.matches(">= $nf_required_version") ){
+    if( ! nextflow.version.matches(">= $params.nf_required_version") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Nextflow version $params.nf_required_version required! You are running v$workflow.nextflow.version.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please run `nextflow self-update` to update Nextflow.\n" +
               "============================================================"
@@ -1043,7 +1040,7 @@ process get_software_versions {
 
     script:
     """
-    echo $version &> v_ngi_rnaseq.txt
+    echo $params.version &> v_ngi_rnaseq.txt
     echo $workflow.nextflow.version &> v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt
@@ -1132,7 +1129,7 @@ workflow.onComplete {
       subject = "[NGI-RNAseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = version
+    email_fields['version'] = $params.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete
@@ -1209,12 +1206,12 @@ workflow.onComplete {
     log.info "[NGI-RNAseq] Pipeline Complete"
 
     try {
-        if( ! nextflow.version.matches(">= $nf_required_version") ){
+        if( ! nextflow.version.matches(">= $params.nf_required_version") ){
             throw GroovyException('Nextflow version too old')
         }
     } catch (all) {
         log.error "====================================================\n" +
-                  "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+                  "  Nextflow version $params.nf_required_version required! You are running v$workflow.nextflow.version.\n" +
                   "  Please be extra careful with pipeline results.\n" +
                   "  Run `nextflow self-update` to update Nextflow.\n" +
                   "============================================================"

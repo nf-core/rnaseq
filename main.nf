@@ -222,7 +222,7 @@ Channel
 
 // Header log info
 log.info "========================================="
-log.info " NGI-RNAseq : RNA-Seq Best Practice v${version}"
+log.info " NGI-RNAseq : RNA-Seq Best Practice v${params.version}"
 log.info "========================================="
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName

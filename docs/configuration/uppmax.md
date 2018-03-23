@@ -17,8 +17,14 @@ If you are running the pipeline on Bianca or Irma, you will not have an active i
 
 First, to generate the singularity image, run the following command. Note that you need singularity installed - this is available on the other UPPMAX clusters (Milou and Rackham):
 
+First, pull the image file where you have an internet connection:
+
+> NB: The "tag" at the end of this command corresponds to the pipeline version.
+> Here, we're pulling the docker image for version 1.4 of the NGI-RNAseq pipeline
+> Make sure that this tag corresponds to the version of the pipeline that you're using
+
 ```bash
-singularity pull --name ngi-rnaseq.img docker://scilifelab/ngi-rnaseq
+singularity pull --name ngi-rnaseq-1.4.img docker://scilifelab/ngi-rnaseq:1.4
 pwd # Prints path to your singularity container
 ```
 
@@ -40,7 +46,7 @@ and execute Nextflow with the path to the pipeline, as so:
 
 ```bash
 cd /path/to/my/data/analysis
-nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/singularity/ngi-rnaseq.img
+nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/singularity/ngi-rnaseq-1.4.img
 ```
 
 (Note that you'll need the other common flags such as `--reads` and `--genome` in addition to this command).

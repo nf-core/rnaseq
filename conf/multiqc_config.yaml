@@ -16,3 +16,5 @@ top_modules:
 report_section_order:
     software_versions:
         order: -1000
+    ngi-rnaseq-summary:
+        order: -1100

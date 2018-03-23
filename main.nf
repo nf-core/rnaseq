@@ -1057,6 +1057,29 @@ process get_software_versions {
 }
 
 /*
+ * Pipeline parameters to go into MultiQC report
+ */
+process workflow_summary_mqc {
+
+    output:
+    file 'workflow_summary_mqc.yaml' into workflow_summary_yaml
+
+    exec:
+    def yaml_file = task.workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'ngi-rnaseq-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'NGI-RNAseq Workflow Summary'
+    section_href: 'https://github.com/SciLifeLab/NGI-RNAseq'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
+}
+
+/*
  * STEP 12 MultiQC
  */
 process multiqc {
@@ -1077,6 +1100,7 @@ process multiqc {
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
     file ('sample_correlation_results/*') from sample_correlation_results.toList() // toList() as process optional
     file ('software_versions/*') from software_versions_yaml.collect()
+    file ('workflow_summary/*') from workflow_summary_yaml.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report

@@ -764,7 +764,6 @@ process rseqc {
     inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
-    echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
 
@@ -931,7 +930,7 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > tmp_file
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 > tmp_file
     cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     """
 }
@@ -1048,8 +1047,9 @@ process get_software_versions {
     hisat2 --version &> v_hisat2.txt
     stringtie --version &> v_stringtie.txt
     preseq &> v_preseq.txt
+    read_duplication.py --version &> v_rseqc.txt
     featureCounts -v &> v_featurecounts.txt
-    echo \$(java -Xmx1g -jar \$PICARD_HOME/picard.jar MarkDuplicates --version 2>&1) &> v_markduplicates.txt
+    picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt
     multiqc --version &> v_multiqc.txt
     scrape_software_versions.py &> software_versions_mqc.yaml
@@ -1088,7 +1088,8 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f $rtitle $rfilename --config $multiqc_config -m custom_content -m preseq -m fastqc -m picard -m rseqc -m cutadapt  -m star  .
+    multiqc . -f $rtitle $rfilename --config $multiqc_config \\
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc
     """
 }
 

@@ -11,11 +11,12 @@ regexes = {
     'Trim Galore!': ['v_trim_galore.txt', r"version (\S+)"],
     'STAR': ['v_star.txt', r"(\S+)"],
     'HISAT2': ['v_hisat2.txt', r"version (\S+)"],
+    'Picard MarkDuplicates': ['v_markduplicates.txt', r"([\d\.]+)-SNAPSHOT"],
+    'Samtools': ['v_samtools.txt', r"samtools (\S+)"],
+    'featureCounts': ['v_featurecounts.txt', r"featureCounts v(\S+)"],
     'StringTie': ['v_stringtie.txt', r"(\S+)"],
     'Preseq': ['v_preseq.txt', r"Version: (\S+)"],
-    'featureCounts': ['v_featurecounts.txt', r"featureCounts (\S+)"],
-    'Picard MarkDuplicates': ['v_markduplicates.txt', r"([\d\.]+)"],
-    'Samtools': ['v_samtools.txt', r"samtools (\S+)"],
+    'RSeQC': ['v_rseqc.txt', r"read_duplication.py ([\d\.]+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
 }
 results = OrderedDict()
@@ -26,11 +27,12 @@ results['Cutadapt'] = '<span style="color:#999999;\">N/A</span>'
 results['Trim Galore!'] = '<span style="color:#999999;\">N/A</span>'
 results['STAR'] = False
 results['HISAT2'] = False
-results['StringTie'] = '<span style="color:#999999;\">N/A</span>'
-results['Preseq'] = '<span style="color:#999999;\">N/A</span>'
-results['featureCounts'] = '<span style="color:#999999;\">N/A</span>'
 results['Picard MarkDuplicates'] = '<span style="color:#999999;\">N/A</span>'
 results['Samtools'] = '<span style="color:#999999;\">N/A</span>'
+results['featureCounts'] = '<span style="color:#999999;\">N/A</span>'
+results['StringTie'] = '<span style="color:#999999;\">N/A</span>'
+results['Preseq'] = '<span style="color:#999999;\">N/A</span>'
+results['RSeQC'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
@@ -39,7 +41,7 @@ for k, v in regexes.items():
         versions = x.read()
         match = re.search(v[1], versions)
         if match:
-            results[k] = "v{}".format(match.group(1))
+            results[k] = match.group(1)
 
 # Strip STAR or HiSAT2
 for k in results:
@@ -57,5 +59,5 @@ data: |
     <dl class="dl-horizontal">
 ''')
 for k,v in results.items():
-    print("        <dt>{}</dt><dd>{}</dd>".format(k,v))
+    print("        <dt>{}</dt><dd><samp>{}</samp></dd>".format(k,v))
 print ("    </dl>")

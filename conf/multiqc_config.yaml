@@ -14,5 +14,5 @@ top_modules:
   - 'biotype-counts'
 
 report_section_order:
-    ngi-rnaseq:
+    software_versions:
         order: -1000

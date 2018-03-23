@@ -607,7 +607,7 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-            --outFileNamePrefix $prefix 
+            --outFileNamePrefix $prefix
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -764,7 +764,6 @@ process rseqc {
     inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
     read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
-    echo "Filename $bam_rseqc RseQC version: "\$(read_duplication.py --version)
     """
 }
 
@@ -827,17 +826,17 @@ process preseq {
  * STEP 6 Mark duplicates
  */
 process markDuplicates {
-    tag "${bam_markduplicates.baseName - '.sorted'}"
+    tag "${bam.baseName - '.sorted'}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy',
         saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
 
     input:
-    file bam_markduplicates
+    file bam from bam_markduplicates
 
     output:
-    file "${bam_markduplicates.baseName}.markDups.bam" into bam_md
-    file "${bam_markduplicates.baseName}.markDups_metrics.txt" into picard_results
-    file "${bam_markduplicates.baseName}.bam.bai"
+    file "${bam.baseName}.markDups.bam" into bam_md
+    file "${bam.baseName}.markDups_metrics.txt" into picard_results
+    file "${bam.baseName}.markDups.bam.bai"
 
     script:
     if( task.memory == null ){
@@ -847,16 +846,15 @@ process markDuplicates {
         avail_mem = task.memory.toGiga()
     }
     """
-    java -Xmx${avail_mem}g -jar \$PICARD_HOME/picard.jar MarkDuplicates \\
-        INPUT=$bam_markduplicates \\
-        OUTPUT=${bam_markduplicates.baseName}.markDups.bam \\
-        METRICS_FILE=${bam_markduplicates.baseName}.markDups_metrics.txt \\
+    picard MarkDuplicates \\
+        INPUT=$bam \\
+        OUTPUT=${bam.baseName}.markDups.bam \\
+        METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
         REMOVE_DUPLICATES=false \\
         ASSUME_SORTED=true \\
         PROGRAM_RECORD_ID='null' \\
         VALIDATION_STRINGENCY=LENIENT
-
-    samtools index $bam_markduplicates
+    samtools index ${bam.baseName}.markDups.bam
     """
 }
 
@@ -890,7 +888,7 @@ process dupradar {
         dupradar_direction = 1
     } else if (reverse_stranded && !unstranded){
         dupradar_direction = 2
-    }    
+    }
     def paired = params.singleEnd ? 'single' :  'paired'
     def rlocation = params.rlocation ?: ''
     """
@@ -932,7 +930,7 @@ process featureCounts {
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt > tmp_file
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 > tmp_file
     cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     """
 }
@@ -1049,12 +1047,36 @@ process get_software_versions {
     hisat2 --version &> v_hisat2.txt
     stringtie --version &> v_stringtie.txt
     preseq &> v_preseq.txt
+    read_duplication.py --version &> v_rseqc.txt
     featureCounts -v &> v_featurecounts.txt
-    echo \$(java -Xmx1g -jar \$PICARD_HOME/picard.jar MarkDuplicates --version 2>&1) &> v_markduplicates.txt
+    picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt
     multiqc --version &> v_multiqc.txt
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
+}
+
+/*
+ * Pipeline parameters to go into MultiQC report
+ */
+process workflow_summary_mqc {
+
+    output:
+    file 'workflow_summary_mqc.yaml' into workflow_summary_yaml
+
+    exec:
+    def yaml_file = task.workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'ngi-rnaseq-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'NGI-RNAseq Workflow Summary'
+    section_href: 'https://github.com/SciLifeLab/NGI-RNAseq'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
 }
 
 /*
@@ -1078,6 +1100,7 @@ process multiqc {
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
     file ('sample_correlation_results/*') from sample_correlation_results.toList() // toList() as process optional
     file ('software_versions/*') from software_versions_yaml.collect()
+    file ('workflow_summary/*') from workflow_summary_yaml.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -1089,7 +1112,8 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f $rtitle $rfilename --config $multiqc_config -m custom_content -m preseq -m fastqc -m picard -m rseqc -m cutadapt  -m star  . 
+    multiqc . -f $rtitle $rfilename --config $multiqc_config \\
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc
     """
 }
 
@@ -1129,7 +1153,7 @@ workflow.onComplete {
       subject = "[NGI-RNAseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = $params.version
+    email_fields['version'] = params.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete

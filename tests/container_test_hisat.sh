@@ -42,11 +42,8 @@ else
     echo "Done"
 fi
 
-run_name="Test RNA Run: "$(date +%s)
-
 cmd="nextflow run $script_path \
   -resume \
-  -name \"$run_name\" \
   -profile $PROFILE \
   --max_memory '7.GB' --max_cpus 2 --max_time '48.h' \
   --gtf ${data_dir}/genes.gtf \

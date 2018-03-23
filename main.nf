@@ -1128,7 +1128,7 @@ workflow.onComplete {
       subject = "[NGI-RNAseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = $params.version
+    email_fields['version'] = params.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete

@@ -7,8 +7,10 @@ Many thanks to everyone who gave us feedback about the pipeline!
 
 * Changed default config to `base` instead of `uppmax`
     * **UPPMAX users now need to specify `-profile uppmax`**
-* Removed default revse stranded config for UPPMAX profile
+* Removed default reverse stranded config for UPPMAX profile
     * **UPPMAX users now need to specify `--reverse_stranded` for the same behaviour**
+* Added an `environment.yml` file to easily create a (bio)conda environment for the pipeline
+* Rewrote the `Dockerfile` to build the docker container using conda
 * Switched UPPMAX configuration to use Singularity instead of environment modules
 * Switched c3se Hebbe configuration to use Singularity & refactored config
 * Added config profiles for two clusters at QBiC in Tübingen, Germany

@@ -90,15 +90,43 @@ If you intend to run the pipeline offline, nextflow will not be able to automati
 
 First, pull the image file where you have an internet connection:
 
+> NB: The "tag" at the end of this command corresponds to the pipeline version.
+> Here, we're pulling the docker image for version 1.4 of the NGI-RNAseq pipeline
+> Make sure that this tag corresponds to the version of the pipeline that you're using
+
 ```bash
-singularity pull --name ngi-rnaseq.img docker://scilifelab/ngi-rnaseq
+singularity pull --name ngi-rnaseq-1.4.img docker://scilifelab/ngi-rnaseq:1.4
 ```
 
 Then transfer this file and run the pipeline with this path:
 
 ```bash
-nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/ngi-rnaseq.img
+nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/ngi-rnaseq-1.4.img
 ```
+
+### Bioconda
+The workflow comes with a conda environment definition - a file called
+[`environment.yml`](../environment.yml) which lists conda channels and package names / versions.
+
+To use conda for this pipeline, first make sure that you have conda installed. We recommend miniconda:
+https://conda.io/miniconda.html
+
+Next, create a new environment using the [`environment.yml`](../environment.yml) file:
+
+```bash
+# Download the environment.yml file
+curl https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/environment.yml -o environment.yml
+
+# Create a new conda environment using it
+conda env create -f environment.yml
+
+# Activate the new conda environment
+source activate ngi-rnaseq
+```
+
+> NB: The above link grabs the latest version of `environment.yml`. It's best to be running
+> a tagged release of the pipeline - if so, make sure that you use the corresponding conda env file.
+
 
 ### Environment Modules
 If you can't use docker or singularity, but your cluster uses environment modules, you can use the pipeline with these. There is a bundled config file to use these on UPPMAX (as was done in earlier versions of this pipeline) that can be used with `-profile uppmax_modules`.
@@ -134,87 +162,6 @@ params {
   rlocation = "$HOME/R/nxtflow_libs/" // or any path
 }
 ```
-
-### Manual Installation
-As a last resort, you may need to install the required software manually. We recommend using [Bioconda](https://bioconda.github.io/) to do this. The following instructions are an example only and will not be updated with the pipeline.
-
-#### 1) Install miniconda in your home directory
-``` bash
-cd
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-```
-
-#### 2) Add the bioconda conda channel (and others)
-```bash
-conda config --add channels anaconda
-conda config --add channels conda-forge
-conda config --add channels defaults
-conda config --add channels r
-conda config --add channels bioconda
-conda config --add channels salilab
-```
-
-#### 3) Create a conda environment, with all necessary packages:
-```bash
-conda create --name rna_seq_py2.7 python=2.7
-source activate rna_seq_py2.7
-conda install --yes \
-    bioconductor-dupradar=1.2.2 \
-    r-essentials \
-    samtools \
-    star=2.5.3a \
-    bedtools=2.26.0 \
-    trim-galore=0.4.1 \
-    fastqc=0.11.5 \
-    rseqc=2.6.4 \
-    multiqc \
-    gsl=1.16 \
-    preseq=2.0.2 \
-    picard=2.9.0 \
-    subread=1.5.0.post3 \
-    nextflow=0.23.4 \
-    pysam=0.10.0 \
-    stringtie=1.3.3 \
-    graphviz=2.38.0 \
-    hisat2=2.0.5
-```
-_(Feel free to adjust versions as required.)_
-
-#### 4) Set up Picard
-Picard requires the `PICARD_HOME` environment variable to be set. In some cases, a temporary directory must also be specified (if the default does not have enough available space). To automatically set and unset these when you activate and deactivate your conda environment, do the following:
-
-```bash
-cd ~/miniconda3/envs/rna_seq_py2.7 # Or path to your conda environment
-mkdir -p ./etc/conda/activate.d
-mkdir -p ./etc/conda/deactivate.d
-touch ./etc/conda/activate.d/env_vars.sh
-touch ./etc/conda/deactivate.d/env_vars.sh
-```
-
-Put in `./etc/conda/activate.d/env_vars.sh`:
-```bash
-#!/bin/sh
-export PICARD_HOME="$HOME/miniconda3/envs/rna_seq_py2.7/share/picard-2.9.0-0/"
-export _JAVA_OPTIONS=-Djava.io.tmpdir='/path/to/tmp'
-```
-
-Then add to `./etc/conda/deactivate.d/env_vars.sh`:
-```bash
-#!/bin/sh
-unset PICARD_HOME
-unset _JAVA_OPTIONS
-```
-
-##### 5) Usage
-Once created, the conda environment can be activated before running the pipeline and deactivated afterwards:
-
-```bash
-source activate rna_seq_py2.7
-# run pipeline
-source deactivate
-```
-
 
 ---
 

@@ -1,6 +1,6 @@
 # NGI-RNAseq
 
-## 1.4dev
+## [1.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.4) - 2018-03-26
 The version 1.4 release contains major improvements to the NGI-RNAseq pipeline, especially focussed on the portability of the pipeline. Hopefully these changes will make it significantly easier for people to use the pipeline in different compute environments.
 
 Many thanks to everyone who gave us feedback about the pipeline!

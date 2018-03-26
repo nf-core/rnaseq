@@ -35,8 +35,8 @@ or `.tar.gz` file). Once transferred, extract the pipeline files.
 For example, with a `.zip` file:
 
 ```bash
-unzip 1.3.1.zip
-mv NGI-RNAseq-1.3.1 NGI-RNAseq # rename the folder
+unzip 1.4.zip
+mv NGI-RNAseq-1.4 NGI-RNAseq # rename the folder
 cd NGI-RNAseq
 pwd # Prints full path to your pipeline
 ```
@@ -50,6 +50,10 @@ nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/singularity/ngi-rnas
 ```
 
 (Note that you'll need the other common flags such as `--reads` and `--genome` in addition to this command).
+
+> NB: Note that you should _not_ use the `-r 1.4` flag recommended elsewhere. This tells Nextflow to download
+> that version of the code when it runs. Here, you have already downloaded the code, so it generates an error.
+
 
 ## Environment modules and development
 If you would prefer to use environment modules instead of singularity, you can use the old version of the configuration by specifying `-profile uppmax_modules` (we don't recommend this).

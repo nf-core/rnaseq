@@ -4,7 +4,7 @@ jdk: openjdk8
 services:
   - docker
 python:
-  - "2.7"
+  - "3.6"
 cache: pip
 matrix:
   fast_finish: true
@@ -18,9 +18,9 @@ env:
   - FLAGS="-a hisat2 -s" INST=nts
 
 install: # Install Singularity if needed
-  - ./tests/install.sh $INST
-  - cd ${TRAVIS_BUILD_DIR}/tests/
+  - "./tests/install.sh $INST"
+  - "cd ${TRAVIS_BUILD_DIR}/tests/"
 
 script:
-  - nf-core lint ${TRAVIS_BUILD_DIR}
-  - ./run_test.sh -a $FLAGS
+  - "nf-core lint $TRAVIS_BUILD_DIR"
+  - "./run_test.sh $FLAGS"

@@ -45,7 +45,7 @@ fi
 cmd="nextflow run $script_path \
   -resume \
   -profile $PROFILE \
-  --max_memory '7.GB' --max_cpus 2 --max_time '48.h' \
+  --max_memory '6.GB' --max_cpus 2 --max_time '48.h' \
   --gtf ${data_dir}/genes.gtf \
   --bed12 ${data_dir}/genes.bed \
   --hisat2_index ${data_dir}/r64/ \

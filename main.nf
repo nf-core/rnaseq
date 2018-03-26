@@ -86,25 +86,15 @@ if (params.help){
 params.name = false
 params.project = false
 params.genome = false
-params.forward_stranded = false
-params.reverse_stranded = false
-params.unstranded = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
-params.splicesites = false
 params.download_hisat2index = false
 params.download_fasta = false
 params.download_gtf = false
-params.hisatBuildMemory = 200 // Required amount of memory in GB to build HISAT2 index with splice sites
-params.saveReference = false
-params.saveTrimmed = false
-params.saveAlignedIntermediates = false
-params.reads = "data/*{1,2}.fastq.gz"
-params.outdir = './results'
 params.email = false
 params.plaintext_email = false
 
@@ -121,14 +111,6 @@ biotypes_header = file("$baseDir/assets/biotypes_header.txt")
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
 wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
-params.sampleLevel = false
-
-
-// Custom trimming options
-params.clip_r1 = 0
-params.clip_r2 = 0
-params.three_prime_clip_r1 = 0
-params.three_prime_clip_r2 = 0
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -151,13 +133,10 @@ if (params.pico){
   unstranded = false
 }
 
-// Choose aligner
-params.aligner = 'star'
+// Validate inputs
 if (params.aligner != 'star' && params.aligner != 'hisat2'){
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
-
-// Validate inputs
 if( params.star_index && params.aligner == 'star' ){
     star_index = Channel
         .fromPath(params.star_index)
@@ -213,7 +192,6 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 /*
  * Create a channel for input read files
  */
-params.singleEnd = false
 Channel
     .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }

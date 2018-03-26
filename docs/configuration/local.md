@@ -19,7 +19,7 @@ Nextflow will recognise `SciLifeLab/NGI-RNAseq` and download the pipeline from G
 For more information about how to work with reference genomes, see [`docs/configuration/reference_genomes.md`](docs/configuration/reference_genomes.md).
 
 ### Pipeline versions
-The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.3`. This uses pipeline code and docker image from this tagged version.
+The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.4`. This uses pipeline code and docker image from this tagged version.
 
 
 ## Singularity image

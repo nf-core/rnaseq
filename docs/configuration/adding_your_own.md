@@ -51,7 +51,7 @@ nextflow run SciLifeLab/NGI-RNAseq -profile docker --reads '<path to your reads>
 
 Nextflow will recognise `SciLifeLab/NGI-RNAseq` and download the pipeline from GitHub. The `-profile docker` configuration lists the [sclifelab/ngi-rnaseq](https://hub.docker.com/r/scilifelab/ngi-rnaseq/) image that we have created and is hosted at dockerhub, and this is downloaded.
 
-The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.3`. This uses pipeline code and docker image from this tagged version.
+The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.4`. This uses pipeline code and docker image from this tagged version.
 
 To add docker support to your own config file (instead of using the `docker` profile, which runs locally), add the following:
 

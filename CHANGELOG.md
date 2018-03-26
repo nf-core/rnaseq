@@ -1,6 +1,8 @@
-# NGI-RNAseq
+## nf-core/RNAseq v1.5dev
+This release marks the point where the pipeline was moved from SciLifeLab/NGI-RNAseq
+over to the new nf-core community, at nf-core/RNAseq.
 
-## [1.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.4) - 2018-03-26
+## [SciLifeLab/NGI-RNAseq v1.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.4) - 2018-03-26
 The version 1.4 release contains major improvements to the NGI-RNAseq pipeline, especially focussed on the portability of the pipeline. Hopefully these changes will make it significantly easier for people to use the pipeline in different compute environments.
 
 Many thanks to everyone who gave us feedback about the pipeline!
@@ -22,10 +24,10 @@ Many thanks to everyone who gave us feedback about the pipeline!
 * Changed dupradar script to use number of threads defined by nextflow process
 * Fixed call to dupradar script that prevented interpretation of paired-ends reads and strand direction
 
-## [1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16
+## [SciLifeLab/NGI-RNAseq v1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16
 Hotfix to update version number in pipeline script.
 
-## [1.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3) - 2017-10-10
+## [SciLifeLab/NGI-RNAseq v1.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3) - 2017-10-10
 
 * Updated HISAT2 from v2.0.5 to v2.1.0
   * Uses `--new-summary` and `--summary-file` to give output that will work with MultiQC,
@@ -46,7 +48,7 @@ Hotfix to update version number in pipeline script.
     * igenome.config needs to be last in the profile definition for the inhertence to work properly
 
 
-## [1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
+## [SciLifeLab/NGI-RNAseq v1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
 
 * MultiQC now runs using `local` instead of `slurm` with default config
   * Means that it stands a better chance of getting information from a remote database with plugins
@@ -55,7 +57,7 @@ Hotfix to update version number in pipeline script.
 * Made pipeline run in forward-stranded mode when using `--pico`
 
 
-## [1.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.1) - 2017-05-23
+## [SciLifeLab/NGI-RNAseq v1.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.1) - 2017-05-23
 New release of the pipeline with a few additions:
 
 * Summary HTML report now created upon pipeline completion
@@ -71,27 +73,27 @@ New release of the pipeline with a few additions:
 * Made MultiQC load its config file through a channel instead of directly copying from `baseDir`
 
 
-## [1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.4) - 2017-04-21
+## [SciLifeLab/NGI-RNAseq v1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.4) - 2017-04-21
 RseQC hotfix, input file was not supplied properly to one of the scripts
 
-## [1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-19
+## [SciLifeLab/NGI-RNAseq v1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-19
 Hotfix to fix minor bug affecting strandedness for StringTie run.
 
-## [1.0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.2) - 2017-04-11
+## [SciLifeLab/NGI-RNAseq v1.0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.2) - 2017-04-11
 A couple of tweaks to help the pipeline in production:
 
 * Trimming FastQ files and intermediate BAM files now not saved by default
   * This is configurable in the config or with `--saveTrimmed` / `--saveAlignedIntermediates`
 * featureCounts merge process uses `.collect()` for better consistency
 
-## [1.0.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.1) - 2017-04-10
+## [SciLifeLab/NGI-RNAseq v1.0.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.1) - 2017-04-10
 This release includes a bugfix for the last major release relating to the strandedness of `RSEQC`.
 
 * Single end reverse is now correctly `+-,-+.`
 * Single end forward is now correctly `++, --`
 * PE forward is now correctly `-1++,1--,2+-,2-+`
 
-## [1.0](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0) - 2017-04-05
+## [SciLifeLab/NGI-RNAseq v1.0](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0) - 2017-04-05
 The pipeline has now been validated for use in our production work.
 This version includes some new features:
 
@@ -102,9 +104,9 @@ This version includes some new features:
 * Additional support and documentation for other platforms than Uppmax. Inluding C3SE.
 * + Numerous minor tweaks and improvements.
 
-## [0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.3) - 2016-12-13
+## [SciLifeLab/NGI-RNAseq v0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.3) - 2016-12-13
 In order to properly validate this pipeline and take it into production we need to tag a stable release.
 I've tagged specific software versions in the `uppmax.config` file.
 
-## [0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.2) - 2016-10-14
+## [SciLifeLab/NGI-RNAseq v0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.2) - 2016-10-14
 First (semi-) stable release of the new NGI-RNAseq pipeline, as we head towards deployment in production.

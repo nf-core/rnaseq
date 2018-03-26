@@ -10,31 +10,17 @@ matrix:
   fast_finish: true
 
 env:
-  - FLAGS="-a star" INSTALL=nextflow NXF_VER=0.27.6
-  - FLAGS="-a star" INSTALL=nextflow
-  - FLAGS="-a star -s"
-  - FLAGS="-a hisat2" INSTALL=nextflow NXF_VER=0.27.6
-  - FLAGS="-a hisat2" INSTALL=nextflow
-  - FLAGS="-a hisat2 -s"
+  - FLAGS="-a star" INST=nt NXF_VER=0.27.6
+  - FLAGS="-a star" INST=nt
+  - FLAGS="-a star -s" INST=nts
+  - FLAGS="-a hisat2" INST=nt NXF_VER=0.27.6
+  - FLAGS="-a hisat2" INST=nt
+  - FLAGS="-a hisat2 -s" INST=nts
 
 install: # Install Singularity if needed
-  - $(INST) && cd ${TRAVIS_BUILD_DIR}/tests/
-  - mkdir results
-
-install:
-  # Install Nextflow
-  - mkdir /tmp/nextflow
-  - cd /tmp/nextflow
-  - wget -qO- get.nextflow.io | bash
-  - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # Install nf-core/tools
-  - git clone https://github.com/nf-core/tools.git /tmp/nf-core-tools
-  - cd /tmp/nf-core-tools
-  - pip install --user -e .
-  # Reset
-  - cd ${TRAVIS_BUILD_DIR}/tests
+  - ./tests/install.sh $INST
+  - cd ${TRAVIS_BUILD_DIR}/tests/
 
 script:
   - nf-core lint ${TRAVIS_BUILD_DIR}
-  - ./run_test.sh -a $ALIGNER -b # Run, build reference genome
-  - ./run_test.sh -a $ALIGNER    # Basic run
+  - ./run_test.sh -a $FLAGS

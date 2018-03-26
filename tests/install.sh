@@ -1,24 +1,13 @@
 #!/bin/bash
-TOOL="all"
 
-while [[ $# -gt 0 ]]
-do
-  key="$1"
-  case $key in
-    -t|--tool)
-    TOOL="$2"
-    shift # past argument
-    shift # past value
-    ;;
-    *) # unknown option
-    shift # past argument
-    ;;
-  esac
-done
+# usage: install.sh nst
+#   letters represent tools:
+#     n = nextflow
+#     s = singularity
+#     t = nf-core/tools
 
 # Install Nextflow
-if [[ "$TOOL" = nextflow ]] || [[ "$TOOL" = all ]]
-then
+if [[ $1 = *n* ]]; then
   cd $HOME
   curl -fsSL get.nextflow.io | bash
   chmod +x nextflow
@@ -26,8 +15,7 @@ then
 fi
 
 # Install Singularity
-if [[ "$TOOL" = singularity ]] || [[ "$TOOL" = all ]]
-then
+if [[ $1 = *s* ]]; then
   sudo apt-get install squashfs-tools
   cd $HOME
   wget https://github.com/singularityware/singularity/releases/download/$SGT_VER/singularity-$SGT_VER.tar.gz
@@ -38,4 +26,9 @@ then
   sudo make install
   cd ..
   rm -rf singularity-$SGT_VER*
+fi
+
+# Install nf-core/tools
+if [[ $1 = *t* ]]; then
+    pip install --upgrade --force-reinstall git+https://github.com/nf-core/tools.git
 fi

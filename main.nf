@@ -41,6 +41,7 @@ def helpMessage() {
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --star_index                  Path to STAR index
+      --hisat2_index                Path to HiSAT2 index
       --fasta                       Path to Fasta reference
       --gtf                         Path to GTF file
       --bed12                       Path to bed12 file

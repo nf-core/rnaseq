@@ -1,21 +1,40 @@
 sudo: required
-
 language: java
-
 jdk: openjdk8
-
 services:
   - docker
+python:
+  - "2.7"
+cache: pip
+matrix:
+  fast_finish: true
 
 env:
-  - SGT_VER=2.4.2 PROFILE=singularity TOOL_INSTALL=all NXF_VER=0.27.6
-  - SGT_VER=2.4.2 PROFILE=singularity TOOL_INSTALL=all
-  - PROFILE=docker TOOL_INSTALL=nextflow NXF_VER=0.27.6
-  - PROFILE=docker TOOL_INSTALL=nextflow
+  - FLAGS="-a star" INSTALL=nextflow NXF_VER=0.27.6
+  - FLAGS="-a star" INSTALL=nextflow
+  - FLAGS="-a star -s"
+  - FLAGS="-a hisat2" INSTALL=nextflow NXF_VER=0.27.6
+  - FLAGS="-a hisat2" INSTALL=nextflow
+  - FLAGS="-a hisat2 -s"
 
-install: # Install Nextflow (and Singularity if needed)
-  - "./tests/install.sh --tool $TOOL_INSTALL"
-  - cd ${TRAVIS_BUILD_DIR}/tests/
+install: # Install Singularity if needed
+  - $(INST) && cd ${TRAVIS_BUILD_DIR}/tests/
   - mkdir results
 
-script: "./container_test_hisat.sh -p $PROFILE"
+install:
+  # Install Nextflow
+  - mkdir /tmp/nextflow
+  - cd /tmp/nextflow
+  - wget -qO- get.nextflow.io | bash
+  - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
+  # Install nf-core/tools
+  - git clone https://github.com/nf-core/tools.git /tmp/nf-core-tools
+  - cd /tmp/nf-core-tools
+  - pip install --user -e .
+  # Reset
+  - cd ${TRAVIS_BUILD_DIR}/tests
+
+script:
+  - nf-core lint ${TRAVIS_BUILD_DIR}
+  - ./run_test.sh -a $ALIGNER -b # Run, build reference genome
+  - ./run_test.sh -a $ALIGNER    # Basic run

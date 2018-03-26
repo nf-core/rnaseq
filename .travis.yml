@@ -1,5 +1,5 @@
 sudo: required
-language: java
+language: python
 jdk: openjdk8
 services:
   - docker

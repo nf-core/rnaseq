@@ -23,4 +23,5 @@ install: # Install Singularity if needed
 
 script:
   - "nf-core lint $TRAVIS_BUILD_DIR"
+  - "./run_test.sh $FLAGS -b"
   - "./run_test.sh $FLAGS"

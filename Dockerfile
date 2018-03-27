@@ -7,4 +7,4 @@ COPY environment.yml /
 RUN conda update -n base conda && \
     conda env create -f /environment.yml && \
     conda clean -a
-ENV PATH /opt/conda/envs/ngi-rnaseq/bin:$PATH
+ENV PATH /opt/conda/envs/nfcore-rnaseq/bin:$PATH

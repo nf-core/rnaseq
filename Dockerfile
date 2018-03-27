@@ -3,7 +3,8 @@ MAINTAINER Phil Ewels <phil.ewels@scilifelab.se>
 LABEL authors="phil.ewels@scilifelab.se" \
     description="Docker image containing all requirements for the NGI-RNAseq pipeline"
 
-RUN conda update -n base conda
 COPY environment.yml /
-RUN conda env create -f /environment.yml
+RUN conda update -n base conda && \
+    conda env create -f /environment.yml && \
+    conda clean -a
 ENV PATH /opt/conda/envs/ngi-rnaseq/bin:$PATH

@@ -12,10 +12,10 @@ matrix:
 env:
   - FLAGS="-a star" INST=nt NXF_VER=0.27.6
   - FLAGS="-a star" INST=nt
-  - FLAGS="-a star -s" INST=nts
+  - FLAGS="-a star -s" INST=nts SGT_VER=2.4.5
   - FLAGS="-a hisat2" INST=nt NXF_VER=0.27.6
   - FLAGS="-a hisat2" INST=nt
-  - FLAGS="-a hisat2 -s" INST=nts
+  - FLAGS="-a hisat2 -s" INST=nts SGT_VER=2.4.5
 
 install: # Install Singularity if needed
   - "./tests/install.sh $INST"

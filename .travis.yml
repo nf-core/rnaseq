@@ -25,3 +25,4 @@ script:
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
   - "travis_wait 30 ./run_test.sh ${FLAGS} -b"
   - "travis_wait 30 ./run_test.sh ${FLAGS}"
+  - "tree --dirsfirst results/"

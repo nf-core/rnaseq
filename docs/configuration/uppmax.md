@@ -1,4 +1,4 @@
-# NGI-RNAseq: UPPMAX Configuration
+# nfcore/RNAseq: UPPMAX Configuration
 
 The pipeline comes bundled with configurations to use the [Swedish UPPMAX](https://www.uppmax.uu.se/) clusters (tested on `milou`, `rackham`, `bianca` and `irma`). As such, you shouldn't need to add any custom configuration - everything _should_ work out of the box.
 
@@ -20,15 +20,15 @@ First, to generate the singularity image, run the following command. Note that y
 First, pull the image file where you have an internet connection:
 
 > NB: The "tag" at the end of this command corresponds to the pipeline version.
-> Here, we're pulling the docker image for version 1.4 of the NGI-RNAseq pipeline
+> Here, we're pulling the docker image for version 1.4 of the nfcore/RNAseq pipeline
 > Make sure that this tag corresponds to the version of the pipeline that you're using
 
 ```bash
-singularity pull --name ngi-rnaseq-1.4.img docker://scilifelab/ngi-rnaseq:1.4
+singularity pull --name nfcore-rnaseq-1.4.img docker://nfcore/rnaseq:1.4
 pwd # Prints path to your singularity container
 ```
 
-The NGI-RNAseq pipeline files can be downloaded from https://github.com/SciLifeLab/NGI-RNAseq/releases
+The nfcore/RNAseq pipeline files can be downloaded from https://github.com/nf-core/RNAseq/releases
 
 Download the pipeline files and transfer the compressed archive (the `.zip`
 or `.tar.gz` file). Once transferred, extract the pipeline files.
@@ -36,8 +36,8 @@ For example, with a `.zip` file:
 
 ```bash
 unzip 1.4.zip
-mv NGI-RNAseq-1.4 NGI-RNAseq # rename the folder
-cd NGI-RNAseq
+mv RNAseq-1.4 nfcore-RNAseq # rename the folder
+cd nfcore-RNAseq
 pwd # Prints full path to your pipeline
 ```
 
@@ -46,7 +46,7 @@ and execute Nextflow with the path to the pipeline, as so:
 
 ```bash
 cd /path/to/my/data/analysis
-nextflow run /path/to/NGI-RNAseq -with-singularity /path/to/singularity/ngi-rnaseq-1.4.img
+nextflow run /path/to/nfcore-RNAseq -with-singularity /path/to/singularity/nfcore-rnaseq-1.4.img
 ```
 
 (Note that you'll need the other common flags such as `--reads` and `--genome` in addition to this command).

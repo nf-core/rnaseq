@@ -7,7 +7,7 @@ vim: syntax=groovy
 ========================================================================================
  New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
  #### Homepage / Documentation
- https://github.com/SciLifeLab/NGI-RNAseq
+ https://github.com/nf-core/RNAseq
  #### Authors
  Phil Ewels @ewels <phil.ewels@scilifelab.se>
  Rickard Hammarén @Hammarn  <rickard.hammaren@scilifelab.se>
@@ -19,13 +19,13 @@ vim: syntax=groovy
 def helpMessage() {
     log.info"""
     =========================================
-     NGI-RNAseq : RNA-Seq Best Practice v${params.version}
+     nfcore/RNAseq : RNA-Seq Best Practice v${params.version}
     =========================================
     Usage:
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run SciLifeLab/NGI-RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile uppmax
+    nextflow run nf-core/RNAseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile uppmax
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
@@ -200,7 +200,7 @@ Channel
 
 // Header log info
 log.info "========================================="
-log.info " NGI-RNAseq : RNA-Seq Best Practice v${params.version}"
+log.info " nfcore/RNAseq : RNA-Seq Best Practice v${params.version}"
 log.info "========================================="
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
@@ -455,7 +455,7 @@ if(!params.bed12){
         output:
         file "${gtf.baseName}.bed" into bed_rseqc, bed_genebody_coverage
 
-        script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
+        script: // This script is bundled with the pipeline, in nfcore/RNAseq/bin/
         """
         gtf2bed $gtf > ${gtf.baseName}.bed
         """
@@ -861,7 +861,7 @@ process dupradar {
     output:
     file "*.{pdf,txt}" into dupradar_results
 
-    script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
+    script: // This script is bundled with the pipeline, in nfcore/RNAseq/bin/
     def dupradar_direction = 0
     if (forward_stranded && !unstranded) {
         dupradar_direction = 1
@@ -996,7 +996,7 @@ process sample_correlation {
     when:
     num_bams > 2 && (!params.sampleLevel)
 
-    script: // This script is bundled with the pipeline, in NGI-RNAseq/bin/
+    script: // This script is bundled with the pipeline, in nfcore/RNAseq/bin/
     def rlocation = params.rlocation ?: ''
     """
     edgeR_heatmap_MDS.r "rlocation=$rlocation" $input_files
@@ -1046,10 +1046,10 @@ process workflow_summary_mqc {
     exec:
     def yaml_file = task.workDir.resolve('workflow_summary_mqc.yaml')
     yaml_file.text  = """
-    id: 'ngi-rnaseq-summary'
+    id: 'nfcore-rnaseq-summary'
     description: " - this information is collected when the pipeline is started."
-    section_name: 'NGI-RNAseq Workflow Summary'
-    section_href: 'https://github.com/SciLifeLab/NGI-RNAseq'
+    section_name: 'nfcore/RNAseq Workflow Summary'
+    section_href: 'https://github.com/nf-core/RNAseq'
     plot_type: 'html'
     data: |
         <dl class=\"dl-horizontal\">
@@ -1124,12 +1124,12 @@ process output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[NGI-RNAseq] Successful: $workflow.runName"
+    def subject = "[nfcore/RNAseq] Successful: $workflow.runName"
     if(skipped_poor_alignment.size() > 0){
-        subject = "[NGI-RNAseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+        subject = "[nfcore/RNAseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
     }
     if(!workflow.success){
-      subject = "[NGI-RNAseq] FAILED: $workflow.runName"
+      subject = "[nfcore/RNAseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
     email_fields['version'] = params.version
@@ -1176,11 +1176,11 @@ workflow.onComplete {
           if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[NGI-RNAseq] Sent summary e-mail to $params.email (sendmail)"
+          log.info "[nfcore/RNAseq] Sent summary e-mail to $params.email (sendmail)"
         } catch (all) {
           // Catch failures and try with plaintext
           [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[NGI-RNAseq] Sent summary e-mail to $params.email (mail)"
+          log.info "[nfcore/RNAseq] Sent summary e-mail to $params.email (mail)"
         }
     }
 
@@ -1203,10 +1203,10 @@ workflow.onComplete {
     output_tf.withWriter { w -> w << email_txt }
 
     if(skipped_poor_alignment.size() > 0){
-        log.info "[NGI-RNAseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"
+        log.info "[nfcore/RNAseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"
     }
 
-    log.info "[NGI-RNAseq] Pipeline Complete"
+    log.info "[nfcore/RNAseq] Pipeline Complete"
 
     try {
         if( ! nextflow.version.matches(">= $params.nf_required_version") ){

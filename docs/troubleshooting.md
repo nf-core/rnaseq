@@ -36,9 +36,9 @@ The pipeline can't take a list of multiple input files - it takes a glob express
 
 ## Extra resources and getting help
 If you still have an issue with running the pipeline then feel free to contact us.
-Have look at the [issue tracker for our repo](https://github.com/SciLifeLab/NGI-RNAseq/issues). Maybe someone has already had the same problem?
+Have look at the [issue tracker for our repo](https://github.com/nf-core/RNAseq/issues). Maybe someone has already had the same problem?
 
 Gitter is a chatt client connected to Github, feel free to come in and chat with us;
-[NGI-RNAseq Gitter]((https://gitter.im/SciLifeLab/NGI-RNAseq))
+[nfcore/RNAseq Gitter]((https://gitter.im/nf-core/RNAseq))
 
 If you have problems that are related to Nextflow and not our pipeline then check out the [Nextflow gitter channel](https://gitter.im/nextflow-io/nextflow) or the [google group](https://groups.google.com/forum/#!forum/nextflow).

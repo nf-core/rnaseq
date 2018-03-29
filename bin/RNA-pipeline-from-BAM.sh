@@ -3,7 +3,7 @@
 #SBATCH -p core
 #SBATCH -n 4
 #SBATCH -t 24:00:00
-#SBATCH -J NGI-RNA-seq-standalone
+#SBATCH -J nfcore-RNAseq-standalone
 
 ######## DESCRIPTION ####
 # This scipt was created in order to do some quick analysis with BAM files as input.

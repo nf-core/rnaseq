@@ -1,12 +1,12 @@
-# NGI-RNAseq: AWS Configuration
+# nfcore/RNAseq: AWS Configuration
 
 ## Introduction
 
 Amazon Web Services (AWS) are cloud-based compute systems, suitable for large-scale bioinformatics analysis. They can be an attractive way to run scalable analyses without needing to pay large up-front expenses for hardware and maintenance.
 
-NGI-RNAseq is built with NextFlow, which has a number of AWS integrations built in. However, AWS is vast and almost infinitely configurable, and as such there are several different ways in which you can use it for your analyses. Which approach you use depends on your needs - the frequency with which you run the pipeline, the scale of data you need to analysis and your familiarity with running in the cloud.
+nfcore/RNAseq is built with NextFlow, which has a number of AWS integrations built in. However, AWS is vast and almost infinitely configurable, and as such there are several different ways in which you can use it for your analyses. Which approach you use depends on your needs - the frequency with which you run the pipeline, the scale of data you need to analysis and your familiarity with running in the cloud.
 
-In this document, we describe the steps taken when running NGI-RNAseq on AWS hardware using three different methods. These have been written as a walk-through based on our experience at the time of writing. Note that we have used AWS based in Ireland (`eu-west-1`) and that the availability of different hardware can vary according to location.
+In this document, we describe the steps taken when running nfcore/RNAseq on AWS hardware using three different methods. These have been written as a walk-through based on our experience at the time of writing. Note that we have used AWS based in Ireland (`eu-west-1`) and that the availability of different hardware can vary according to location.
 
 Please note that the state of Nextflow AWS integration has progressed very quickly, and some of these instructions may be out of date.
 
@@ -73,9 +73,9 @@ Simplest to setup, just using a single instance.
 4. Launch an Amazon Machine Instance (AMI)
     1. Go to the EC2 Dashboard
     2. Click _Launch Instance_
-    3. Select the _Community AMIs_ tab and search for the NGI-RNAseq AMI that we have created
+    3. Select the _Community AMIs_ tab and search for the nfcore/RNAseq AMI that we have created
         * AMI id: `ami-9a5c79e9`
-        * This image contains all of the required software for the NGI-RNAseq pipeline and is maintained by us for easy use by the community.
+        * This image contains all of the required software for the nfcore/RNAseq pipeline and is maintained by us for easy use by the community.
     4. Click Select
     5. Select the `m4.4xlarge` Instance Type
         * If running with STAR and Human data, we need around 34GB RAM. This is the cheapest instance type with that memory available.
@@ -129,7 +129,7 @@ Simplest to setup, just using a single instance.
     4. Run the pipeline!
         * If you've downloaded the test data, this command should work:
         ```
-        nextflow run SciLifeLab/NGI-RNAseq -profile base --gtf ngi-rna_test_set/genes.gtf --bed12 ngi-rna_test_set/genes.bed --star_index ngi-rna_test_set/star/ --reads "ngi-rna_test_set/*.fastq.gz"
+        nextflow run nf-core/RNAseq -profile base --gtf ngi-rna_test_set/genes.gtf --bed12 ngi-rna_test_set/genes.bed --star_index ngi-rna_test_set/star/ --reads "ngi-rna_test_set/*.fastq.gz"
         ```
 6. Retrieve your finished results to your local computer
     1. Use SCP on your local machine to pull your data back from the EFS file system:
@@ -302,7 +302,7 @@ Once you're logged into your cluster, you run the pipeline much as you normally
 would, with a couple of additional parameters. For example:
 
 ```
-~/nextflow run SciLifeLab/NGI-RNAseq -w s3://my-bucket/work --reads 's3://my-bucket/raw_data/my-project/sample_*_{1,2}.fastq' --outdir 's3://my-bucket/results/my-project' -profile aws --genome GRCh37
+~/nextflow run nf-core/RNAseq -w s3://my-bucket/work --reads 's3://my-bucket/raw_data/my-project/sample_*_{1,2}.fastq' --outdir 's3://my-bucket/results/my-project' -profile aws --genome GRCh37
 ```
 
 A description of these parameters:

@@ -1,6 +1,6 @@
-# NGI-RNAseq Documentation
+# nfcore/RNAseq Documentation
 
-The NGI-RNAseq documentation is split into the following files:
+The nfcore/RNAseq documentation is split into the following files:
 
 
 1. [Installation](installation.md)

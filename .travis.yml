@@ -10,19 +10,19 @@ matrix:
   fast_finish: true
 
 env:
-  - FLAGS="-a star" INST=nt NXF_VER=0.27.6
-  - FLAGS="-a star" INST=nt
-  - FLAGS="-a star -s" INST=nts SGT_VER=2.4.5
-  - FLAGS="-a hisat2" INST=nt NXF_VER=0.27.6
-  - FLAGS="-a hisat2" INST=nt
-  - FLAGS="-a hisat2 -s" INST=nts SGT_VER=2.4.5
+  - T=nt  FL="-a star" NXF_VER=0.27.6
+  - T=nt  FL="-a star"
+  - T=nts FL="-a star -s"
+  - T=nt  FL="-a hisat2" NXF_VER=0.27.6
+  - T=nt  FL="-a hisat2"
+  - T=nts FL="-a hisat2 -s"
 
-install: # Install Singularity if needed
-  - "./tests/install.sh $INST"
+install:
+  - "./tests/install.sh $T"
   - "cd ${TRAVIS_BUILD_DIR}/tests/"
 
 script:
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
-  - "./run_test.sh ${FLAGS} -b"
-  - "./run_test.sh ${FLAGS}"
+  - "./run_test.sh ${FL} -b"
+  - "./run_test.sh ${FL}"
   - "find results/" # Print results files

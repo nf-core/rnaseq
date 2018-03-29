@@ -9,12 +9,12 @@ Content-Type: text/html; charset=utf-8
 $email_html
 
 --ngimimeboundary
-Content-Type: image/png;name="NGI-RNAseq_logo.png"
+Content-Type: image/png;name="nfcore-rnaseq_logo.png"
 Content-Transfer-Encoding: base64
 Content-ID: <ngirnaseqlogo>
-Content-Disposition: inline; filename="NGI-RNAseq_logo.png"
+Content-Disposition: inline; filename="nfcore-rnaseq_logo.png"
 
-<% out << new File("$baseDir/assets/NGI-RNAseq_logo.png").
+<% out << new File("$baseDir/assets/nfcore-rnaseq_logo.png").
   bytes.
   encodeBase64().
   toString().

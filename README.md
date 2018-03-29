@@ -1,4 +1,4 @@
-# ![NGI-RNAseq](https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/NGI-RNAseq_logo.png)
+# ![NGI-RNAseq](https://raw.githubusercontent.com/SciLifeLab/NGI-RNAseq/master/docs/images/nfcore-rnaseq_logo.png)
 
 [![Build Status](https://travis-ci.org/nf-core/RNAseq.svg?branch=master)](https://travis-ci.org/nf-core/rnaseq)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.27.6-brightgreen.svg)](https://www.nextflow.io/)

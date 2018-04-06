@@ -6,6 +6,8 @@
 #     s = singularity
 #     t = nf-core/tools
 
+SGT_VER=2.4.5
+
 # Install Nextflow
 if [[ $1 = *n* ]]; then
   cd $HOME

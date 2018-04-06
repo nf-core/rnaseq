@@ -1,5 +1,5 @@
 ========================================
- nfcore/RNAseq: RNA-Seq Best Practice v${version}
+ nfcore/RNAseq: version ${version}
 ========================================
 Run Name: $runName
 

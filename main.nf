@@ -1,26 +1,22 @@
 #!/usr/bin/env nextflow
 /*
-vim: syntax=groovy
--*- mode: groovy;-*-
-========================================================================================
-               N G I - R N A S E Q    B E S T    P R A C T I C E
-========================================================================================
- New RNA-Seq Best Practice Analysis Pipeline. Started March 2016.
+===============================================================
+ nf-core/RNAseq
+===============================================================
+ RNA-Seq Analysis Pipeline. Started March 2016.
  #### Homepage / Documentation
  https://github.com/nf-core/RNAseq
  #### Authors
  Phil Ewels @ewels <phil.ewels@scilifelab.se>
  Rickard Hammarén @Hammarn  <rickard.hammaren@scilifelab.se>
- Docker and AWS integration by
- Denis Moreno @Galithil <denis.moreno@scilifelab.se>
-----------------------------------------------------------------------------------------
+---------------------------------------------------------------
 */
 
 def helpMessage() {
     log.info"""
-    =========================================
-     nfcore/RNAseq : RNA-Seq Best Practice v${params.version}
-    =========================================
+    ===================================
+     nfcore/RNAseq  ~  version ${params.version}
+    ===================================
     Usage:
 
     The typical command for running the pipeline is as follows:
@@ -199,9 +195,9 @@ Channel
 
 
 // Header log info
-log.info "========================================="
-log.info " nfcore/RNAseq : RNA-Seq Best Practice v${params.version}"
-log.info "========================================="
+log.info "==================================="
+log.info " nfcore/RNAseq  ~  version ${params.version}"
+log.info "==================================="
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
@@ -1101,7 +1097,7 @@ process multiqc {
  */
 process output_documentation {
     tag "$prefix"
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     input:
     file output_docs
@@ -1193,7 +1189,7 @@ workflow.onComplete {
     email_html = email_html.replaceAll(~/cid:ngilogo/, "data:image/png;base64,$ngilogo")
 
     // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/Documentation/" )
+    def output_d = new File( "${params.outdir}/pipeline_info/" )
     if( !output_d.exists() ) {
       output_d.mkdirs()
     }

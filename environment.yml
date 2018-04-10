@@ -13,7 +13,6 @@ dependencies:
   - star=2.5.4a
   - hisat2=2.1.0
   - picard=2.18.1
-  - r-kernsmooth=2.23_15
   - bioconductor-dupradar=1.8.0
   - conda-forge::r-data.table=1.10.4
   - conda-forge::r-gplots=3.0.1

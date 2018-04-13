@@ -1,8 +1,8 @@
 # nfcore/RNAseq Output
 
-nfcore/RNAseq is the new RNA-seq Best Practice pipeline used by the [National Genomics Infrastructure](https://ngisweden.scilifelab.se/) at [SciLifeLab](https://www.scilifelab.se/platforms/ngi/) in Stockholm, Sweden.
+nfcore/RNAseq is an RNA-seq analysis pipeline. This document describes the output produced by the pipeline.
 
-This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
@@ -43,7 +43,7 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
 ## TrimGalore
-The nfcore/RNAseq BP 2.0 pipeline uses [TrimGalore](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for removal of adapter contamination and trimming of low quality regions. TrimGalore uses [Cutadapt](https://github.com/marcelm/cutadapt) for adapter trimming and runs FastQC after it finishes.
+The nfcore/RNAseq pipeline uses [TrimGalore](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for removal of adapter contamination and trimming of low quality regions. TrimGalore uses [Cutadapt](https://github.com/marcelm/cutadapt) for adapter trimming and runs FastQC after it finishes.
 
 MultiQC reports the percentage of bases removed by TrimGalore in the _General Statistics_ table, along with a line plot showing where reads were trimmed.
 
@@ -193,19 +193,20 @@ RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-du
 * `Sample_rseqc.inner_distance_freq.txt`
 * `Sample_rseqc.inner_distance_plot.r`
 
-The inner distance script tries to calculate the inner distance (or insert size) between two paired RNA reads. This is calculated as the start of read 1 to the end of read 2:
+The inner distance script tries to calculate the inner distance between two paired RNA reads. It is the distance between the end of read 1 to the start of read 2, 
+and it is sometimes confused with the insert size (see [this blog post](http://thegenomefactory.blogspot.com.au/2013/08/paired-end-read-confusion-library.html) for disambiguation):
 ![inner distance concept](images/inner_distance_concept.png)
-> _Credit: RSeQC documentation._
+> _Credit: modified from RSeQC documentation._
 
 Note that values can be negative if the reads overlap. A typical set of samples may look like this:
 ![Inner distance](images/rseqc_inner_distance_plot.png)
 
-This plot will not be generated for single-end data. Very short insert sizes are often seen in old or degraded samples (_eg._ FFPE).
+This plot will not be generated for single-end data. Very short inner distances are often seen in old or degraded samples (_eg._ FFPE).
 
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
 ### Gene body coverage
-**NB:** In nfcore/RNAseq we subsample this to 1 Million reads. This speeds up the speed significantly and has no to little effect on the results.
+**NB:** In nfcore/RNAseq we subsample this to 1 Million reads. This speeds up this task significantly and has no to little effect on the results.
 
 **Output:**
 

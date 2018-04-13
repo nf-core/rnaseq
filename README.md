@@ -28,6 +28,7 @@ The nfcore/RNAseq pipeline comes with documentation about the pipeline, found in
     * [Swedish UPPMAX clusters](docs/configuration/uppmax.md)
     * [Swedish cs3e Hebbe cluster](docs/configuration/c3se.md)
     * [Tübingen QBiC](docs/configuration/qbic.md)
+    ' [CCGA Kiel](docs/configuration/ccga.md)
     * [Adding your own system](docs/configuration/adding_your_own.md)
 3. [Running the pipeline](docs/usage.md)
 4. [Output and how to interpret the results](docs/output.md)

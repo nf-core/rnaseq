@@ -193,19 +193,20 @@ RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-du
 * `Sample_rseqc.inner_distance_freq.txt`
 * `Sample_rseqc.inner_distance_plot.r`
 
-The inner distance script tries to calculate the inner distance (or insert size) between two paired RNA reads. This is calculated as the start of read 1 to the end of read 2:
+The inner distance script tries to calculate the inner distance between two paired RNA reads. It is the distance between the end of read 1 to the start of read 2, 
+and it is sometimes confused with the insert size (see [this blog post](http://thegenomefactory.blogspot.com.au/2013/08/paired-end-read-confusion-library.html) for disambiguation):
 ![inner distance concept](images/inner_distance_concept.png)
-> _Credit: RSeQC documentation._
+> _Credit: modified from RSeQC documentation._
 
 Note that values can be negative if the reads overlap. A typical set of samples may look like this:
 ![Inner distance](images/rseqc_inner_distance_plot.png)
 
-This plot will not be generated for single-end data. Very short insert sizes are often seen in old or degraded samples (_eg._ FFPE).
+This plot will not be generated for single-end data. Very short inner distances are often seen in old or degraded samples (_eg._ FFPE).
 
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
 ### Gene body coverage
-**NB:** In nfcore/RNAseq we subsample this to 1 Million reads. This speeds up the speed significantly and has no to little effect on the results.
+**NB:** In nfcore/RNAseq we subsample this to 1 Million reads. This speeds up this task significantly and has no to little effect on the results.
 
 **Output:**
 

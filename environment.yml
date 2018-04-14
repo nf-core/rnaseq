@@ -2,9 +2,9 @@
 #   conda env create -f environment.yml
 name: nfcore-rnaseq-1.5dev
 channels:
-  - defaults
-  - conda-forge
   - bioconda
+  - conda-forge
+  - defaults
 dependencies:
   # Default bismark
   - fastqc=0.11.7
@@ -12,7 +12,6 @@ dependencies:
   - star=2.5.4a
   - hisat2=2.1.0
   - picard=2.18.2
-  - r-kernsmooth=2.23_15
   - bioconductor-dupradar=1.8.0
   - conda-forge::r-data.table=1.10.4
   - conda-forge::r-gplots=3.0.1

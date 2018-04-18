@@ -11,11 +11,11 @@ module load miniconda2
 conda env create -f /path/to/git/environment.yml
 ```
 
-Each time you wish to run the pipeline, activate the conda environment:
+Each time you wish to run the pipeline, activate the conda environment, specifying the desired version (VERSION, e.g. 1.5):
 
 ```
 module load miniconda2
-source activate nfcore-rnaseq
+source activate nfcore-rnaseq-VERSION
 ```
 
 Finally, load the Nextflow module:

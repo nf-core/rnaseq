@@ -1,6 +1,6 @@
-# nfcore/RNAseq Documentation
+# nfcore/rnaseq Documentation
 
-The nfcore/RNAseq documentation is split into the following files:
+The nfcore/rnaseq documentation is split into the following files:
 
 
 1. [Installation](installation.md)

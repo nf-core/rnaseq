@@ -1,4 +1,4 @@
-# nfcore/RNAseq: C3SE (Hebbe) Configuration
+# nfcore/rnaseq: C3SE (Hebbe) Configuration
 
 This pipeline has been successfully used on the [Hebbe cluster](http://www.c3se.chalmers.se/index.php/Hebbe) in Gothenburg, though it hasn't had as much testing as some of the other profiles.
 

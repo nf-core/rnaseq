@@ -1,6 +1,6 @@
-## nf-core/RNAseq v1.5dev
+## nf-core/rnaseq v1.5dev
 This release marks the point where the pipeline was moved from SciLifeLab/NGI-RNAseq
-over to the new nf-core community, at nf-core/RNAseq.
+over to the new nf-core community, at nf-core/rnaseq.
 
 ## [SciLifeLab/NGI-RNAseq v1.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.4) - 2018-03-26
 The version 1.4 release contains major improvements to the NGI-RNAseq pipeline, especially focussed on the portability of the pipeline. Hopefully these changes will make it significantly easier for people to use the pipeline in different compute environments.

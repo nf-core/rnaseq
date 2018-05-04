@@ -4,7 +4,7 @@ from collections import OrderedDict
 import re
 
 regexes = {
-    'nfcore/RNAseq': ['v_ngi_rnaseq.txt', r"(\S+)"],
+    'nfcore/rnaseq': ['v_ngi_rnaseq.txt', r"(\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
     'Cutadapt': ['v_cutadapt.txt', r"(\S+)"],
@@ -20,7 +20,7 @@ regexes = {
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
 }
 results = OrderedDict()
-results['nfcore/RNAseq'] = '<span style="color:#999999;\">N/A</span>'
+results['nfcore/rnaseq'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
 results['Cutadapt'] = '<span style="color:#999999;\">N/A</span>'
@@ -51,8 +51,8 @@ for k in results:
 # Dump to YAML
 print ('''
 id: 'software_versions'
-section_name: 'nfcore/RNAseq Software Versions'
-section_href: 'https://github.com/nf-core/RNAseq'
+section_name: 'nfcore/rnaseq Software Versions'
+section_href: 'https://github.com/nf-core/rnaseq'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'
 data: |

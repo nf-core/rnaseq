@@ -1,6 +1,6 @@
-# nfcore/RNAseq: Reference Genomes Configuration
+# nfcore/rnaseq: Reference Genomes Configuration
 
-The nfcore/RNAseq pipeline needs a reference genome for alignment and annotation. If not already available, start by downloading the relevant reference, for example from [illumina iGenomes](https://support.illumina.com/sequencing/sequencing_software/igenome.html).
+The nfcore/rnaseq pipeline needs a reference genome for alignment and annotation. If not already available, start by downloading the relevant reference, for example from [illumina iGenomes](https://support.illumina.com/sequencing/sequencing_software/igenome.html).
 
 The minimal requirements are a FASTA file and a GTF file. If STAR and BED12 references are also specified, the pipeline won't have to generate them and will run faster. Use the command line option `--saveReference` to keep the generated references so that they can be added to your config and used again in the future.
 
@@ -41,7 +41,7 @@ If possible, we recommend making this resource available on your cluster. We hav
 To add iGenomes to your config file, add the following line to the end of your config file:
 
 ```groovy
-includeConfig '/path/to/nfcore-RNAseq/conf/igenomes.config'
+includeConfig '/path/to/nfcore-rnaseq/conf/igenomes.config'
 ```
 
 This works best when you have a `profile` set up in the pipeline - see [`nextflow.config`](../../nextflow.config).

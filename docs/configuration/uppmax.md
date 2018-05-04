@@ -1,4 +1,4 @@
-# nfcore/RNAseq: UPPMAX Configuration
+# nfcore/rnaseq: UPPMAX Configuration
 
 The pipeline comes bundled with configurations to use the [Swedish UPPMAX](https://www.uppmax.uu.se/) clusters (tested on `milou`, `rackham`, `bianca` and `irma`). As such, you shouldn't need to add any custom configuration - everything _should_ work out of the box.
 
@@ -20,7 +20,7 @@ First, to generate the singularity image, run the following command. Note that y
 First, pull the image file where you have an internet connection:
 
 > NB: The "tag" at the end of this command corresponds to the pipeline version.
-> Here, we're pulling the docker image for version 1.4 of the nfcore/RNAseq pipeline
+> Here, we're pulling the docker image for version 1.4 of the nfcore/rnaseq pipeline
 > Make sure that this tag corresponds to the version of the pipeline that you're using
 
 ```bash
@@ -28,7 +28,7 @@ singularity pull --name nfcore-rnaseq-1.4.img docker://nfcore/rnaseq:1.4
 pwd # Prints path to your singularity container
 ```
 
-The nfcore/RNAseq pipeline files can be downloaded from https://github.com/nf-core/RNAseq/releases
+The nfcore/rnaseq pipeline files can be downloaded from https://github.com/nf-core/rnaseq/releases
 
 Download the pipeline files and transfer the compressed archive (the `.zip`
 or `.tar.gz` file). Once transferred, extract the pipeline files.
@@ -36,8 +36,8 @@ For example, with a `.zip` file:
 
 ```bash
 unzip 1.4.zip
-mv RNAseq-1.4 nfcore-RNAseq # rename the folder
-cd nfcore-RNAseq
+mv rnaseq-1.4 nfcore-rnaseq # rename the folder
+cd nfcore-rnaseq
 pwd # Prints full path to your pipeline
 ```
 
@@ -46,7 +46,7 @@ and execute Nextflow with the path to the pipeline, as so:
 
 ```bash
 cd /path/to/my/data/analysis
-nextflow run /path/to/nfcore-RNAseq -with-singularity /path/to/singularity/nfcore-rnaseq-1.4.img
+nextflow run /path/to/nfcore-rnaseq -with-singularity /path/to/singularity/nfcore-rnaseq-1.4.img
 ```
 
 (Note that you'll need the other common flags such as `--reads` and `--genome` in addition to this command).

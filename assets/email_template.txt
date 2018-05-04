@@ -1,13 +1,13 @@
 ========================================
- nfcore/RNAseq: version ${version}
+ nfcore/rnaseq: version ${version}
 ========================================
 Run Name: $runName
 
 <% if (success){
-    out << "## nfcore/RNAseq execution completed successfully! ##"
+    out << "## nfcore/rnaseq execution completed successfully! ##"
 } else {
     out << """####################################################
-## nfcore/RNAseq execution completed unsuccessfully! ##
+## nfcore/rnaseq execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -19,7 +19,7 @@ ${errorReport}
 
 <% if (!success){
     out << """####################################################
-## nfcore/RNAseq execution completed unsuccessfully! ##
+## nfcore/rnaseq execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -28,7 +28,7 @@ ${errorReport}
 """
 } else if(skipped_poor_alignment.size() > 0) {
     out << """##################################################
-## nfcore/RNAseq execution completed with warnings ##
+## nfcore/rnaseq execution completed with warnings ##
 ##################################################
 The pipeline finished successfully, but the following samples were skipped,
 due to very low alignment (less than 5%):
@@ -36,7 +36,7 @@ due to very low alignment (less than 5%):
   - ${skipped_poor_alignment.join("\n  - ")}
 """
 } else {
-    out << "## nfcore/RNAseq execution completed successfully! ##"
+    out << "## nfcore/rnaseq execution completed successfully! ##"
 }
 %>
 
@@ -57,6 +57,6 @@ Pipeline Configuration:
 
 
 --
-nfcore/RNAseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the National Genomics Infrastructure at SciLifeLab Stockholm, Sweden.
+nfcore/rnaseq is a bioinformatics best-practice analysis pipeline used for RNA sequencing data at the National Genomics Infrastructure at SciLifeLab Stockholm, Sweden.
 The pipeline uses Nextflow, a bioinformatics workflow tool. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.
-For more information, please see the pipeline homepage: https://github.com/nf-core/RNAseq
+For more information, please see the pipeline homepage: https://github.com/nf-core/rnaseq

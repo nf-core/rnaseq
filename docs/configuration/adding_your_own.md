@@ -1,4 +1,4 @@
-# nfcore/RNAseq: Configuration for other clusters
+# nfcore/rnaseq: Configuration for other clusters
 
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the pipeline knows how to work with your cluster.
 
@@ -38,7 +38,7 @@ process {
 To run the pipeline, several software packages are required. How you satisfy these requirements is essentially up to you and depends on your system. If possible, we _highly_ recommend using either Docker or Singularity.
 
 ### Docker
-Docker is a great way to run nfcore/RNAseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+Docker is a great way to run nfcore/rnaseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
 Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required.
 
@@ -46,10 +46,10 @@ First, install docker on your system: [Docker Installation Instructions](https:/
 
 Then, simply run the analysis pipeline:
 ```bash
-nextflow run nf-core/RNAseq -profile docker --reads '<path to your reads>' --fasta '<path to fasta ref>' --gtf '<path to gtf>'
+nextflow run nf-core/rnaseq -profile docker --reads '<path to your reads>' --fasta '<path to fasta ref>' --gtf '<path to gtf>'
 ```
 
-Nextflow will recognise `nf-core/RNAseq` and download the pipeline from GitHub. The `-profile docker` configuration lists the [nfcore/rnaseq](https://hub.docker.com/r/nfcore/rnaseq/) image that we have created and is hosted at dockerhub, and this is downloaded.
+Nextflow will recognise `nf-core/rnaseq` and download the pipeline from GitHub. The `-profile docker` configuration lists the [nfcore/rnaseq](https://hub.docker.com/r/nfcore/rnaseq/) image that we have created and is hosted at dockerhub, and this is downloaded.
 
 The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.4`. This uses pipeline code and docker image from this tagged version.
 
@@ -66,7 +66,7 @@ process {
 
 The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
 
-A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/nf-core/RNAseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/nf-core/RNAseq/) whenever changes are made to the pipeline.
+A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/nf-core/rnaseq/tree/master/tests) and running `./docker_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/nf-core/rnaseq/) whenever changes are made to the pipeline.
 
 ### Singularity image
 Many HPC environments are not able to run Docker due to security issues. [Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker. Even better, it can use create images directly from dockerhub.
@@ -91,7 +91,7 @@ If you intend to run the pipeline offline, nextflow will not be able to automati
 First, pull the image file where you have an internet connection:
 
 > NB: The "tag" at the end of this command corresponds to the pipeline version.
-> Here, we're pulling the docker image for version 1.4 of the nfcore/RNAseq pipeline
+> Here, we're pulling the docker image for version 1.4 of the nfcore/rnaseq pipeline
 > Make sure that this tag corresponds to the version of the pipeline that you're using
 
 ```bash
@@ -101,7 +101,7 @@ singularity pull --name nfcore-rnaseq-1.4.img docker://nfcore/rnaseq:1.4
 Then transfer this file and run the pipeline with this path:
 
 ```bash
-nextflow run /path/to/nfcore-RNAseq -with-singularity /path/to/nfcore-rnaseq-1.4.img
+nextflow run /path/to/nfcore-rnaseq -with-singularity /path/to/nfcore-rnaseq-1.4.img
 ```
 
 ### Bioconda
@@ -115,7 +115,7 @@ Next, create a new environment using the [`environment.yml`](../environment.yml)
 
 ```bash
 # Download the environment.yml file
-curl https://raw.githubusercontent.com/nf-core/RNAseq/master/environment.yml -o environment.yml
+curl https://raw.githubusercontent.com/nf-core/rnaseq/master/environment.yml -o environment.yml
 
 # Create a new conda environment using it
 conda env create -f environment.yml

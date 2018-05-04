@@ -6,7 +6,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  # Default bismark
+  - conda-forge::openjdk=8.0.144 # Needed for FastQC - conda build hangs without this
   - fastqc=0.11.7
   - trim-galore=0.4.5
   - star=2.5.4a

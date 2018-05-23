@@ -70,9 +70,7 @@ Content-Transfer-Encoding: base64
 Content-ID: <mqcreport>
 Content-Disposition: attachment; filename=\"${mqcFileObj.getName()}\"
 
-"""
-
-out << mqcFileObj.
+${mqcFileObj.
   bytes.
   encodeBase64().
   toString().
@@ -81,7 +79,8 @@ out << mqcFileObj.
   collate( 76 )*.
   collect { it.join() }.
   flatten().
-  join( '\n' )
+  join( '\n' )}
+"""
 }}
 %>
 

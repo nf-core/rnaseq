@@ -1,17 +1,17 @@
 To: $email
 Subject: $subject
 Mime-Version: 1.0
-Content-Type: multipart/related;boundary="ngimimeboundary"
+Content-Type: multipart/related;boundary="nfcoremimeboundary"
 
---ngimimeboundary
+--nfcoremimeboundary
 Content-Type: text/html; charset=utf-8
 
 $email_html
 
---ngimimeboundary
+--nfcoremimeboundary
 Content-Type: image/png;name="nfcore-rnaseq_logo.png"
 Content-Transfer-Encoding: base64
-Content-ID: <ngirnaseqlogo>
+Content-ID: <nfcorernaseqlogo>
 Content-Disposition: inline; filename="nfcore-rnaseq_logo.png"
 
 <% out << new File("$baseDir/assets/nfcore-rnaseq_logo.png").
@@ -25,7 +25,7 @@ Content-Disposition: inline; filename="nfcore-rnaseq_logo.png"
   flatten().
   join( '\n' ) %>
 
---ngimimeboundary
+--nfcoremimeboundary
 Content-Type: image/png;name="SciLifeLab_logo.png"
 Content-Transfer-Encoding: base64
 Content-ID: <scilifelablogo>
@@ -42,7 +42,7 @@ Content-Disposition: inline; filename="SciLifeLab_logo.png"
   flatten().
   join( '\n' ) %>
 
---ngimimeboundary
+--nfcoremimeboundary
 Content-Type: image/png;name="NGI_logo.png"
 Content-Transfer-Encoding: base64
 Content-ID: <ngilogo>
@@ -59,4 +59,30 @@ Content-Disposition: inline; filename="NGI_logo.png"
   flatten().
   join( '\n' ) %>
 
---ngimimeboundary--
+<%
+if (mqcFile){
+def mqcFileObj = new File("$mqcFile")
+if (mqcFileObj.length() < 25000000){
+out << """
+--nfcoremimeboundary
+Content-Type: application; name=\"multiqc_report\"
+Content-Transfer-Encoding: base64
+Content-ID: <mqcreport>
+Content-Disposition: attachment; filename=\"${mqcFileObj.getName()}\"
+
+"""
+
+out << mqcFileObj.
+  bytes.
+  encodeBase64().
+  toString().
+  tokenize( '\n' )*.
+  toList()*.
+  collate( 76 )*.
+  collect { it.join() }.
+  flatten().
+  join( '\n' )
+}}
+%>
+
+--nfcoremimeboundary--

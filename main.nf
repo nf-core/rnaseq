@@ -104,6 +104,7 @@ if (params.rlocation){
 mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
 heatmap_header = file("$baseDir/assets/heatmap_header.txt")
 biotypes_header = file("$baseDir/assets/biotypes_header.txt")
+biotypes_gs_header = file("$baseDir/assets/biotypes_gs_header.txt")
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
 wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
@@ -879,7 +880,7 @@ process featureCounts {
     tag "${bam_featurecounts.baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy',
         saveAs: {filename ->
-            if (filename.indexOf("_biotype_counts_mqc.txt") > 0) "biotype_counts/$filename"
+            if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
             else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
             else if (filename.indexOf("_gene.featureCounts.txt") > 0) "gene_counts/$filename"
             else "$filename"
@@ -893,7 +894,7 @@ process featureCounts {
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-    file "${bam_featurecounts.baseName}_biotype_counts_mqc.txt" into featureCounts_biotype
+    file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
 
     script:
     def featureCounts_direction = 0
@@ -902,11 +903,14 @@ process featureCounts {
     } else if (reverse_stranded && !unstranded){
         featureCounts_direction = 2
     }
+    // Try to get real sample name
+    sample_name = bam_featurecounts.baseName - ~/Aligned.sortedByCoord.out/
     """
     featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 > tmp_file
-    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
+    awk 'BEGIN{FS="\t"; print "Sample\tpercent_rRNA"}(\$0 !~ /^#/){total_count += \$2; if(\$1 == "rRNA"){rna_count=\$2}}END{print \"$sample_name\" FS (rna_count/total_count)*100;}' \
+        ${bam_featurecounts.baseName}_biotype_counts_mqc.txt | cat $biotypes_gs_header - > ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
     """
 }
 
@@ -1149,6 +1153,17 @@ workflow.onComplete {
     if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
     email_fields['skipped_poor_alignment'] = skipped_poor_alignment
 
+    // On success try attach the multiqc report
+    def mqc_report = null
+    def find_mqc_report = {it.eachFileMatch(~/.*multiqc_report.html/) {mqc_report = it}}
+    try {
+        if (workflow.success) {
+            find_mqc_report(new File("${params.outdir}/MultiQC/"))
+        }
+    } catch (all) {
+        // complain nothing just move on
+    }
+
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
     def tf = new File("$baseDir/assets/email_template.txt")
@@ -1161,7 +1176,7 @@ workflow.onComplete {
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
+    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report ]
     def sf = new File("$baseDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()

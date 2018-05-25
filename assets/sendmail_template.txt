@@ -62,10 +62,10 @@ Content-Disposition: inline; filename="NGI_logo.png"
 <%
 if (mqcFile){
 def mqcFileObj = new File("$mqcFile")
-if (mqcFileObj.length() < 25000000){
+if (mqcFileObj.length() < mqcMaxSize){
 out << """
 --nfcoremimeboundary
-Content-Type: application; name=\"multiqc_report\"
+Content-Type: text/html; name=\"multiqc_report\"
 Content-Transfer-Encoding: base64
 Content-ID: <mqcreport>
 Content-Disposition: attachment; filename=\"${mqcFileObj.getName()}\"

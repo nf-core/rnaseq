@@ -292,11 +292,6 @@ Set to receive plain-text e-mails instead of HTML formatted.
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
-### `--rlocation`
-Some steps in the pipeline run R with required modules. By default, the pipeline will install
-these modules to `~/R/nxtflow_libs/` if not present. You can specify what path to use with this
-command line flag.
-
 ### `--multiqc_config`
 If you would like to supply a custom config file to MultiQC, you can specify a path with `--multiqc_config`. This is used instead of the config file specific to the pipeline.
 
@@ -315,11 +310,3 @@ The `bin` directory contains some scripts used by the pipeline which may also be
 * `RNA-pipeline-from-BAM.sh`
   * SLURM script used to mimic pipeline QC steps, taking an aligned BAM file as input.
   * Potentially unmaintained, use at your own risk!
-
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

@@ -1,28 +1,33 @@
 sudo: required
-language: python
+language: java
 jdk: openjdk8
-services:
-  - docker
-python:
-  - "3.6"
-cache: pip
-matrix:
-  fast_finish: true
+services: docker
 
-env:
-  - T=nt  FL="-a star" NXF_VER=0.27.6
-  - T=nt  FL="-a star"
-  - T=nts FL="-a star -s"
-  - T=nt  FL="-a hisat2" NXF_VER=0.27.6
-  - T=nt  FL="-a hisat2"
-  - T=nts FL="-a hisat2 -s"
+before_install: docker pull nfcore/rnaseq:latest
 
 install:
-  - "./tests/install.sh $T"
-  - "cd ${TRAVIS_BUILD_DIR}/tests/"
+  # Install Nextflow
+  - mkdir /tmp/nextflow
+  - cd /tmp/nextflow
+  - wget -qO- get.nextflow.io | bash
+  - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
+  # Install nf-core/tools
+  - git clone https://github.com/nf-core/tools.git /tmp/nf-core-tools
+  - cd /tmp/nf-core-tools
+  - pip install --user -e .
+  # Make test directories
+  - mkdir ${TRAVIS_BUILD_DIR}/tests
+  - cd ${TRAVIS_BUILD_DIR}/tests
+
+
+env:
+  - NXF_VER=0.30.1
+  - ''
 
 script:
+  # Lint the pipeline code
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
-  - "./run_test.sh ${FL} -b"
-  - "./run_test.sh ${FL}"
-  - "find results/" # Print results files
+  # Run, build reference genome with STAR
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  # Run, build reference genome with HISAT2
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2

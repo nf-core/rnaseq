@@ -49,11 +49,3 @@ This works best when you have a `profile` set up in the pipeline - see [`nextflo
 The hosting fees for AWS iGenomes are currently funded by a grant from Amazon. We hope that this work will be extended past the end of the grant expiry date (mid 2018), but we can't be sure at this point.
 
 For more information about the AWS iGenomes, see https://ewels.github.io/AWS-iGenomes/
-
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

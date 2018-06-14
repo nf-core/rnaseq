@@ -357,11 +357,3 @@ These are telling you that some of the processes in the pipeline are asking for 
 numbers of cpus or memory. To fix this, you need to set the `params.cpus` and `params.memory`
 in the config file described above to numbers that are available on your worker node type.
 Note that the memory should be a little _below_ what Amazon lists as the available capacity.
-
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

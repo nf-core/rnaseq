@@ -59,4 +59,14 @@ nfcore/rnaseq is now used by a number of core sequencing and bioinformatics faci
     <td>Quantitative Biology Center (QBiC), Germany</td>
     <td>https://portal.qbic.uni-tuebingen.de/portal/</td>
   </tr>
+  <tr>
+    <td><img src="docs/images/gis_logo.png" width="100"></td>
+    <td>Genome Institute of Singapore</td>
+    <td>https://www.a-star.edu.sg/gis/</td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/igap_logo.png" width="100"></td>
+    <td>iGap</td>
+    <td>http://www.igap.io</td>
+  </tr>
 </table>

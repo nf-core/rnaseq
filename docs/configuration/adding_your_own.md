@@ -154,15 +154,6 @@ process {
 }
 ```
 
-#### R Package Location
-If you are using a central installation of R, you may not have write permissions for installing custom modules. If this is the case, add the following to your Nextflow configuration file to specify where these files should be saved:
-
-```groovy
-params {
-  rlocation = "$HOME/R/nxtflow_libs/" // or any path
-}
-```
-
 ---
 
 [![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)

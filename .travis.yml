@@ -5,29 +5,28 @@ services: docker
 
 before_install: docker pull nfcore/rnaseq:latest
 
+addons:
+  apt:
+    update: true
+
+env:
+  matrix:
+    - CE=docker NXF_VER=0.30.1
+    - CE=docker
+    - CE=singularity NXF_VER=0.30.1
+    - CE=singularity
+
 install:
-  # Install Nextflow
-  - mkdir /tmp/nextflow
-  - cd /tmp/nextflow
-  - wget -qO- get.nextflow.io | bash
-  - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # Install nf-core/tools
-  - git clone https://github.com/nf-core/tools.git /tmp/nf-core-tools
-  - cd /tmp/nf-core-tools
-  - pip install --user -e .
+  # Install Nextflow, nf-core tools and Singularity if needed
+  - "./scripts/install.sh --engine $CE"
   # Make test directories
   - mkdir ${TRAVIS_BUILD_DIR}/tests
   - cd ${TRAVIS_BUILD_DIR}/tests
-
-
-env:
-  - NXF_VER=0.30.1
-  - ''
 
 script:
   # Lint the pipeline code
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
   # Run, build reference genome with STAR
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,$CE
   # Run, build reference genome with HISAT2
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,$CE --aligner hisat2

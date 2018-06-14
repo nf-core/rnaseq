@@ -24,18 +24,10 @@ env:
   - NXF_VER=0.30.1
   - ''
 
-env:
-  - T=nt  FL="-a star" NXF_VER=0.27.6
-  - T=nt  FL="-a star"
-  - T=nts FL="-a star -s"
-  - T=nt  FL="-a hisat2" NXF_VER=0.27.6
-  - T=nt  FL="-a hisat2"
-  - T=nts FL="-a hisat2 -s"
-
 script:
   # Lint the pipeline code
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
   # Run, build reference genome with STAR
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
   # Run, build reference genome with HISAT2
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner HISAT2
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2

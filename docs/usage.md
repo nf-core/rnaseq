@@ -310,11 +310,3 @@ The `bin` directory contains some scripts used by the pipeline which may also be
 * `RNA-pipeline-from-BAM.sh`
   * SLURM script used to mimic pipeline QC steps, taking an aligned BAM file as input.
   * Potentially unmaintained, use at your own risk!
-
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

@@ -35,8 +35,7 @@ The nfcore/rnaseq pipeline comes with documentation about the pipeline, found in
 5. [Troubleshooting](docs/troubleshooting.md)
 
 ### Credits
-These scripts were written at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden.
-The pipeline was initially developed by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+These scripts were originally written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),
@@ -44,29 +43,3 @@ Many thanks to other who have helped out along the way too, including (but not l
 [@orzechoj](https://github.com/orzechoj),
 [@apeltzer](https://github.com/apeltzer),
 [@colindaven](https://github.com/colindaven).
-
-### Participating Institutes
-nfcore/rnaseq is now used by a number of core sequencing and bioinformatics facilities. Some of these are listed below. If you use this pipeline too, please let us know in an issue and we will add you to the list.
-
-<table>
-  <tr>
-    <td><img src="docs/images/NGI_logo.png" width="200"></td>
-    <td>National Genomics Infrastructure (NGI), Sweden</td>
-    <td>https://ngisweden.scilifelab.se/</td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/QBiC_logo.png" width="200"></td>
-    <td>Quantitative Biology Center (QBiC), Germany</td>
-    <td>https://portal.qbic.uni-tuebingen.de/portal/</td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/gis_logo.png" width="100"></td>
-    <td>Genome Institute of Singapore</td>
-    <td>https://www.a-star.edu.sg/gis/</td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/igap_logo.png" width="100"></td>
-    <td>iGap</td>
-    <td>http://www.igap.io</td>
-  </tr>
-</table>

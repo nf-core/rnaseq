@@ -59,10 +59,3 @@ nextflow run /path/to/nfcore-rnaseq -with-singularity /path/to/singularity/nfcor
 If you would prefer to use environment modules instead of singularity, you can use the old version of the configuration by specifying `-profile uppmax_modules` (we don't recommend this).
 
 For pipeline development work on `milou`, use `-profile uppmax_devel` - this uses the milou [devel partition](http://www.uppmax.uu.se/support/user-guides/slurm-user-guide/#tocjump_030509106905141747_8) for testing the pipeline quickly. Please note that this is _not_ suitable for proper analysis runs - only tiny test datasets.
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

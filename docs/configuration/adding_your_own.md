@@ -153,10 +153,3 @@ process {
   $multiqc.module = ['MultiQC']
 }
 ```
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

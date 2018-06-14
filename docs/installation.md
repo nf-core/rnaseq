@@ -45,10 +45,3 @@ unzip master.zip -d /my-pipelines/
 cd /my_data/
 nextflow run /my-pipelines/rnaseq-master
 ```
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

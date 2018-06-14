@@ -15,10 +15,3 @@ The nfcore/rnaseq documentation is split into the following files:
 3. [Running the pipeline](usage.md)
 4. [Output and how to interpret the results](output.md)
 5. [Troubleshooting](troubleshooting.md)
-
----
-
-[![SciLifeLab](images/SciLifeLab_logo.png)](http://www.scilifelab.se/)
-[![National Genomics Infrastructure](images/NGI_logo.png)](https://ngisweden.scilifelab.se/)
-
----

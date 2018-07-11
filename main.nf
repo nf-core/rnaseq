@@ -299,6 +299,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
         file "star" into star_index
 
         script:
+        def avail_mem = task.memory == null ? '' : "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}"
         """
         mkdir star
         STAR \\
@@ -306,7 +307,8 @@ if(params.aligner == 'star' && !params.star_index && fasta){
             --runThreadN ${task.cpus} \\
             --sjdbGTFfile $gtf \\
             --genomeDir star/ \\
-            --genomeFastaFiles $fasta
+            --genomeFastaFiles $fasta \\
+            $avail_mem
         """
     }
 }
@@ -510,6 +512,7 @@ if(params.aligner == 'star'){
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+        def avail_mem = task.memory == null ? '' : "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}"
         """
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
@@ -517,7 +520,7 @@ if(params.aligner == 'star'){
             --runThreadN ${task.cpus} \\
             --twopassMode Basic \\
             --outWigType bedGraph \\
-            --outSAMtype BAM SortedByCoordinate \\
+            --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
             --outFileNamePrefix $prefix
@@ -527,7 +530,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp }
 }
 
 
@@ -610,7 +613,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_geneBodyCoverage
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_forSubsamp, bam_skipSubsamp
         file "where_are_my_files.txt"
 
         script:
@@ -681,10 +684,35 @@ process rseqc {
 }
 
 /*
- * Step 4.1 Rseqc genebody_coverage with subsampling
+ * Step 4.1 Subsample the BAM files if necessary
+ */
+bam_forSubsamp
+    .filter { it.size() > params.subsampFilesizeThreshold }
+    .map { [it, params.subsampFilesizeThreshold / it.size() ] }
+    .set{ bam_forSubsampFiltered }
+bam_skipSubsamp
+    .filter { it.size() <= params.subsampFilesizeThreshold }
+    .set{ bam_skipSubsampFiltered }
+process bam_subsample {
+    tag "${bam.baseName - '.sorted'}"
+
+    input:
+    set file(bam), val(fraction) from bam_forSubsampFiltered
+
+    output:
+    file "*_subsamp.bam" into bam_subsampled
+
+    script:
+    """
+    samtools view -s $fraction -b $bam | samtools sort -o ${bam.baseName}_subsamp.bam
+    """
+}
+
+/*
+ * Step 4.2 Rseqc genebody_coverage
  */
 process genebody_coverage {
-    tag "${bam_geneBodyCoverage.baseName - '.sorted'}"
+    tag "${bam.baseName - '.sorted'}"
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
@@ -695,7 +723,7 @@ process genebody_coverage {
         }
 
     input:
-    file bam_geneBodyCoverage
+    file bam from bam_subsampled.concat(bam_skipSubsampFiltered)
     file bed12 from bed_genebody_coverage.collect()
 
     output:
@@ -703,15 +731,12 @@ process genebody_coverage {
 
     script:
     """
-    cat <(samtools view -H ${bam_geneBodyCoverage}) <(samtools view ${bam_geneBodyCoverage} \\
-        | shuf -n 1000000) \\
-        | samtools sort - -o ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
-    samtools index ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam
+    samtools index $bam
     geneBody_coverage.py \\
-        -i ${bam_geneBodyCoverage.baseName}_subsamp_sorted.bam \\
-        -o ${bam_geneBodyCoverage.baseName}.rseqc \\
+        -i $bam \\
+        -o ${bam.baseName}.rseqc \\
         -r $bed12
-    mv log.txt ${bam_geneBodyCoverage.baseName}.rseqc.log.txt
+    mv log.txt ${bam.baseName}.rseqc.log.txt
     """
 }
 

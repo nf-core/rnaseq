@@ -530,7 +530,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_geneBodyCoverage }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp }
 }
 
 
@@ -613,7 +613,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_geneBodyCoverage
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_forSubsamp, bam_skipSubsamp
         file "where_are_my_files.txt"
 
         script:
@@ -686,28 +686,25 @@ process rseqc {
 /*
  * Step 4.1 Subsample the BAM files if necessary
  */
+bam_forSubsamp
+    .filter { it.size() > params.subsampFilesizeThreshold }
+    .map { [it, params.subsampFilesizeThreshold / it.size() ] }
+    .set{ bam_forSubsampFiltered }
+bam_skipSubsamp
+    .filter { it.size() <= params.subsampFilesizeThreshold }
+    .set{ bam_skipSubsampFiltered }
 process bam_subsample {
     tag "${bam.baseName - '.sorted'}"
 
     input:
-    file bam from bam_geneBodyCoverage
+    set file(bam), val(fraction) from bam_forSubsampFiltered
 
     output:
-    file "*_subsamp.bam" into bam_subsampled_geneBodyCoverage
-    file "*_subsamp.bam.bai" into bam_subsampled_idx_geneBodyCoverage
+    file "*_subsamp.bam" into bam_subsampled
 
     script:
     """
-    filesize=`du -k \$(readlink $bam) | cut -f1`
-    fraction=\$((10000000000 / filesize))
-    echo "$bam filesize = \$filesize, fraction = \$fraction"
-    if [ \$filesize -gt 10000000000 ];
-    then
-        samtools view -s \$fraction -b $bam | samtools sort -o ${bam.baseName}_subsamp.bam
-    else
-        mv $bam ${bam.baseName}_subsamp.bam
-    fi;
-    samtools index ${bam.baseName}_subsamp.bam
+    samtools view -s $fraction -b $bam | samtools sort -o ${bam.baseName}_subsamp.bam
     """
 }
 
@@ -726,8 +723,7 @@ process genebody_coverage {
         }
 
     input:
-    file bam from bam_subsampled_geneBodyCoverage
-    file bam_idx from bam_subsampled_idx_geneBodyCoverage
+    file bam from bam_subsampled.concat(bam_skipSubsampFiltered)
     file bed12 from bed_genebody_coverage.collect()
 
     output:
@@ -735,6 +731,7 @@ process genebody_coverage {
 
     script:
     """
+    samtools index $bam
     geneBody_coverage.py \\
         -i $bam \\
         -o ${bam.baseName}.rseqc \\

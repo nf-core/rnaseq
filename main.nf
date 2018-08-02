@@ -58,7 +58,7 @@ def helpMessage() {
 
     Other options:
       --outdir                      The output directory where the results will be saved
-      --workDir                     The temporary directory where intermediate data will be saved
+      -w/--work-dir                 The temporary directory where intermediate data will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
       --sampleLevel                 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
       --clusterOptions              Extra SLURM options, used in conjunction with Uppmax.config
@@ -174,7 +174,7 @@ if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-modules' || work
 //AWSBatch sanity checking
 if(workflow.profile == 'awsbatch'){
     if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-    if (!params.workDir.startsWith('s3') || !params.outdir.startsWith('s3')) exit 1, "Specify S3 URLs for workDir and outdir parameters on AWSBatch!"
+    if (!workflow.workDir.startsWith('s3') || !params.outdir.startsWith('s3')) exit 1, "Specify S3 URLs for workDir and outdir parameters on AWSBatch!"
 }
 
 // Has the run name been specified by the user?

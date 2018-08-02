@@ -58,6 +58,8 @@ Use this parameter to choose a configuration profile. Each profile is designed f
 * `binac`, `cfc`
     * Profiles for clusters at QBiC in Tübingen, Germany
     * See [`docs/configuration/qbic.md`](configuration/qbic.md)
+* `awsbatch`
+    * Profile for running on AWSBatch, specific parameters are described below
 * `aws`
     * A starter configuration for running the pipeline on Amazon Web Services. Uses docker and Spark.
     * See [`docs/configuration/aws.md`](configuration/aws.md)
@@ -242,6 +244,16 @@ Each step in the pipeline has a default set of requirements for number of CPUs, 
 ### Custom resource requests
 Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file. See the files in [`conf`](../conf) for examples.
 
+## AWS Batch specific parameters
+Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use the `-awsbatch` profile and then specify all of the following parameters.
+### `--awsqueue`
+The JobQueue that you intend to use on AWS Batch.
+### `--awsregion`
+The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs. 
+
+Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't. 
+
+### 
 ## Other command line parameters
 ### `--outdir`
 The output directory where the results will be saved.

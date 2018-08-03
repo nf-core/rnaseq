@@ -26,7 +26,7 @@ def helpMessage() {
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
       --genome                      Name of iGenomes reference
-      -profile                      Hardware config to use. uppmax / uppmax_modules / hebbe / docker / aws
+      -profile                      Configuration profile to use. uppmax / uppmax_modules / hebbe / docker / aws
 
     Options:
       --singleEnd                   Specifies that the input is single end reads

@@ -4,7 +4,7 @@ Bootstrap:docker
 %labels
     MAINTAINER Phil Ewels <phil.ewels@scilifelab.se>
     DESCRIPTION Container image containing all requirements for the nf-core/rnaseq pipeline
-    VERSION 1.5dev
+    VERSION 1.0dev
 
 %files
     environment.yml /

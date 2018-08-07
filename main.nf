@@ -83,6 +83,11 @@ if (params.help){
     exit 0
 }
 
+// Check if genome exists in the config file
+if (!params.genomes[params.genome]) {
+  exit 1, "Genome string not found in the config file"
+  }
+
 // Configurable variables
 params.name = false
 params.project = false

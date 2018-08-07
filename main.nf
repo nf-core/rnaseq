@@ -1042,6 +1042,9 @@ process get_software_versions {
  */
 process workflow_summary_mqc {
 
+    when:
+    !params.skip_multiqc
+
     output:
     file 'workflow_summary_mqc.yaml' into workflow_summary_yaml
 
@@ -1064,7 +1067,6 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * STEP 12 MultiQC
  */
 process multiqc {
-    tag "$prefix"
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     when:
@@ -1089,10 +1091,8 @@ process multiqc {
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
-    val prefix into multiqc_prefix
 
     script:
-    prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
@@ -1105,12 +1105,10 @@ process multiqc {
  * STEP 13 - Output Description HTML
  */
 process output_documentation {
-    tag "$prefix"
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     input:
     file output_docs
-    val prefix from multiqc_prefix
 
     output:
     file "results_description.html"
@@ -1160,7 +1158,7 @@ workflow.onComplete {
     // On success try attach the multiqc report
     def mqc_report = null
     try {
-        if (workflow.success) {
+        if (workflow.success && !params.skip_multiqc) {
             mqc_report = multiqc_report.getVal()
             if (mqc_report.getClass() == ArrayList){
                 log.warn "[nfcore/rnaseq] Found multiple reports from process 'multiqc', will use only one"

@@ -85,7 +85,7 @@ if (params.help){
 
 // Check if genome exists in the config file
 if (!params.genomes.containsKey(params.genome)) {
-  exit 1, "The provided genome '${params.genome}' is not available in the iconfig file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+  exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
   }
 
 // Configurable variables

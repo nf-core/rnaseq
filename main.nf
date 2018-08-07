@@ -1047,7 +1047,7 @@ process multiqc {
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
-    file ('sample_correlation_results/*') from sample_correlation_results.toList() // toList() as process optional
+    file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array 
     file ('software_versions/*') from software_versions_yaml.collect()
     file ('workflow_summary/*') from workflow_summary_yaml.collect()
 

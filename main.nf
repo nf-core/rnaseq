@@ -790,7 +790,7 @@ process genebody_coverage {
     !params.skip_qc && !params.skip_genebody_coverage
 
     input:
-    file bigwig from bigwig_for_genebody
+    file bigwig from bigwig_for_genebody.collect()
     file bed12 from bed_genebody_coverage.collect()
 
     output:

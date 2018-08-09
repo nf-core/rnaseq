@@ -675,7 +675,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_forSubsamp, bam_skipSubsamp
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody, bam_skipSubsamp
         file "where_are_my_files.txt"
 
         script:
@@ -748,31 +748,30 @@ process rseqc {
     """
 }
 
-/*
- * Step 4.1 Subsample the BAM files if necessary
- */
-bam_forSubsamp
-    .filter { it.size() > params.subsampFilesizeThreshold }
-    .map { [it, params.subsampFilesizeThreshold / it.size() ] }
-    .set{ bam_forSubsampFiltered }
-bam_skipSubsamp
-    .filter { it.size() <= params.subsampFilesizeThreshold }
-    .set{ bam_skipSubsampFiltered }
-process bam_subsample {
-    tag "${bam.baseName - '.sorted'}"
 
-    input:
-    set file(bam), val(fraction) from bam_forSubsampFiltered
+/*
+ * Step 4.1 Rseqc create BigWig coverage 
+ */ 
+
+process createBigWig {
+    tag "${bam.baseName - '.sorted'}"
+    publishDir "${params.outdir}/bigwig", mode: 'copy'
+
+    when:
+    !params.skip_qc && !params.skip_genebody_coverage
+
+    input: 
+    file bam from bam_for_genebody
 
     output:
-    file "*_subsamp.bam" into bam_subsampled
+    file "*.bigwig" into bigwig_for_genebody
 
     script:
     """
-    samtools view -s $fraction -b $bam | samtools sort -o ${bam.baseName}_subsamp.bam
+    samtools index $bam
+    bamCoverage -b $bam -p ${task.cpus} -o $bam.bigwig
     """
 }
-
 /*
  * Step 4.2 Rseqc genebody_coverage
  */
@@ -791,7 +790,7 @@ process genebody_coverage {
     !params.skip_qc && !params.skip_genebody_coverage
 
     input:
-    file bam from bam_subsampled.concat(bam_skipSubsampFiltered)
+    file bigwig from bigwig_for_genebody
     file bed12 from bed_genebody_coverage.collect()
 
     output:
@@ -799,9 +798,8 @@ process genebody_coverage {
 
     script:
     """
-    samtools index $bam
-    geneBody_coverage.py \\
-        -i $bam \\
+    geneBody_coverage2.py \\
+        -i $bigwig \\
         -o ${bam.baseName}.rseqc \\
         -r $bed12
     mv log.txt ${bam.baseName}.rseqc.log.txt

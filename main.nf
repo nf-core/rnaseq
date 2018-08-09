@@ -40,6 +40,7 @@ def helpMessage() {
       --hisat2_index                Path to HiSAT2 index
       --fasta                       Path to Fasta reference
       --gtf                         Path to GTF file
+      --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
       --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
@@ -104,6 +105,7 @@ params.genome = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
+params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
@@ -173,9 +175,13 @@ if( params.gtf ){
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
               gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM }
+} else if( params.gff ){
+  gffFile = Channel.fromPath(params.gff)
+                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 } else {
-    exit 1, "No GTF annotation specified!"
+    exit 1, "No GTF or GFF3 annotation specified!"
 }
+
 if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12)
@@ -262,6 +268,7 @@ if(params.aligner == 'star'){
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
 }
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
+if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
 summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
 summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
@@ -407,6 +414,26 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
         hisat2-build -p ${task.cpus} $ss $exon $fasta ${fasta.baseName}.hisat2_index
         """
     }
+}
+/*
+ * PREPROCESSING - Convert GFF3 to GTF
+ */
+if(params.gff){
+  process convertGFFtoGTF {
+      tag "$gff"
+
+      input:
+      file gff from gffFile
+
+      output:
+      file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
+            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+
+      script:
+      """
+      gffread  $gff -T -o > ${gff.baseName}.gtf
+      """
+  }
 }
 /*
  * PREPROCESSING - Build BED12 file

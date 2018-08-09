@@ -24,4 +24,4 @@ dependencies:
   - subread=1.6.1
   - gffread=0.9.9
   - multiqc=1.6
-  - deeptools=3.3.1
+  - deeptools=3.1.1

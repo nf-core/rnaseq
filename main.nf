@@ -176,24 +176,8 @@ if( params.gtf ){
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
               gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM }
 } else if( params.gff ){
-  gffFile = Channel
-                .fromPath(params.gff)
-                .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
-  process convertGFFtoGTF {
-      tag "$gff"
-
-      input:
-      file gff from gffFile
-
-      output:
-      file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
-            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
-
-      script:
-      """
-      gffread  $gff -T -o > ${gff.baseName}.gtf
-      """
-  }
+  gffFile = Channel.fromPath(params.gff)
+                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 } else {
     exit 1, "No GTF or GFF3 annotation specified!"
 }
@@ -430,6 +414,26 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
         hisat2-build -p ${task.cpus} $ss $exon $fasta ${fasta.baseName}.hisat2_index
         """
     }
+}
+/*
+ * PREPROCESSING - Convert GFF3 to GTF
+ */
+if(params.gff){
+  process convertGFFtoGTF {
+      tag "$gff"
+
+      input:
+      file gff from gffFile
+
+      output:
+      file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
+            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+
+      script:
+      """
+      gffread  $gff -T -o > ${gff.baseName}.gtf
+      """
+  }
 }
 /*
  * PREPROCESSING - Build BED12 file

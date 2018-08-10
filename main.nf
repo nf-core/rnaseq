@@ -776,7 +776,7 @@ process createBigWig {
  * Step 4.2 Rseqc genebody_coverage
  */
 process genebody_coverage {
-    tag "${bigwig.baseName - '.bigwig'}"
+    tag "${bigwig.baseName - '.sorted'}"
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"

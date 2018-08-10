@@ -100,6 +100,7 @@ params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: 
 params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
+params.seqCenter = false
 
 mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
 heatmap_header = file("$baseDir/assets/heatmap_header.txt")
@@ -529,6 +530,7 @@ if(params.aligner == 'star'){
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         def avail_mem = task.memory == null ? '' : "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}"
+        RG = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter'" : ''
         """
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
@@ -539,7 +541,8 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-            --outFileNamePrefix $prefix
+            --outFileNamePrefix $prefix \\
+            $RG
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -579,6 +582,7 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+        RG = params.seqCenter ? "--rg-id ${prefix} --rg 'CN:${params.seqCenter}'" : ''
         def rnastrandness = ''
         if (forward_stranded && !unstranded){
             rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
@@ -595,6 +599,7 @@ if(params.aligner == 'hisat2'){
                    --met-stderr \\
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
+                   $RG \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
             """
         } else {
@@ -610,6 +615,7 @@ if(params.aligner == 'hisat2'){
                    --met-stderr \\
                    --new-summary \\
                    --summary-file ${prefix}.hisat2_summary.txt \\
+                   $RG \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
             """
         }
@@ -800,7 +806,7 @@ process markDuplicates {
         avail_mem = task.memory.toGiga()
     }
     """
-    picard MarkDuplicates \\
+    picard -Xmx${avail_mem}g MarkDuplicates \\
         INPUT=$bam \\
         OUTPUT=${bam.baseName}.markDups.bam \\
         METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\

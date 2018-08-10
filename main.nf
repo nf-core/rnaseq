@@ -754,7 +754,7 @@ process rseqc {
  */ 
 
 process createBigWig {
-    tag "${bam.baseName - '.sorted'}"
+    tag "${bam.baseName}"
     publishDir "${params.outdir}/bigwig", mode: 'copy'
 
     when:

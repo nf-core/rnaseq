@@ -769,7 +769,7 @@ process createBigWig {
     script:
     """
     samtools index $bam
-    bamCoverage -b $bam -p ${task.cpus} -o ${bam.baseName - 'sorted'}.bigwig
+    bamCoverage -b $bam -p ${task.cpus} -o ${bam.baseName}.bigwig
     """
 }
 /*

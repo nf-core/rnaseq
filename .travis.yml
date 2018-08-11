@@ -28,6 +28,6 @@ script:
   # Lint the pipeline code
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
   # Run, build reference genome with STAR
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  - travis_wait 40 nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
   # Run, build reference genome with HISAT2
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2
+  - travis_wait 40 nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2

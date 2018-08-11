@@ -800,9 +800,9 @@ process genebody_coverage {
     """
     geneBody_coverage2.py \\
         -i $bigwig \\
-        -o ${bam.baseName}.rseqc \\
+        -o ${bigwig.baseName}.rseqc \\
         -r $bed12
-    mv log.txt ${bam.baseName}.rseqc.log.txt
+    mv log.txt ${bigwig.baseName}.rseqc.log.txt
     """
 }
 

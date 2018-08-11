@@ -800,7 +800,7 @@ process genebody_coverage {
     """
     geneBody_coverage2.py \\
         -i $bigwig \\
-        -o ${bigwig.baseName}.rseqc \\
+        -o ${bigwig.baseName}.rseqc.txt \\
         -r $bed12
     """
 }

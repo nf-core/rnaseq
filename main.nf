@@ -802,7 +802,6 @@ process genebody_coverage {
         -i $bigwig \\
         -o ${bigwig.baseName}.rseqc \\
         -r $bed12
-    mv log.txt ${bigwig.baseName}.rseqc.log.txt
     """
 }
 

@@ -754,7 +754,7 @@ process rseqc {
  */ 
 
 process createBigWig {
-    tag "${bam.baseName}"
+    tag "${bam.baseName - 'sortedByCoord.out'}"
     publishDir "${params.outdir}/bigwig", mode: 'copy'
 
     when:
@@ -790,7 +790,7 @@ process genebody_coverage {
     !params.skip_qc && !params.skip_genebody_coverage
 
     input:
-    file bigwig from bigwig_for_genebody.collect()
+    file bigwig from bigwig_for_genebody
     file bed12 from bed_genebody_coverage.collect()
 
     output:

@@ -40,6 +40,7 @@ def helpMessage() {
       --hisat2_index                Path to HiSAT2 index
       --fasta                       Path to Fasta reference
       --gtf                         Path to GTF file
+      --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
       --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
@@ -66,6 +67,15 @@ def helpMessage() {
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
       --seqCenter                   Add sequencing center in @RG line of output BAM header
 
+    QC options:
+      --skip_qc                     Skip all QC steps aside from MultiQC
+      --skip_fastqc                 Skip FastQC
+      --skip_rseqc                  Skip RSeQC
+      --skip_genebody_coverage      Skip calculating genebody coverage
+      --skip_preseq                 Skip Preseq
+      --skip_dupradar               Skip dupRadar
+      --skip_multiqc                Skip MultiQC
+
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
       --awsregion                   The AWS Region for your AWS Batch job to run on
@@ -85,7 +95,7 @@ if (params.help){
 }
 
 // Check if genome exists in the config file
-if (!params.genomes.containsKey(params.genome)) {
+if (!params.genomes.containsKey(params.genome) && params.genome) {
   exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
   }
 
@@ -96,12 +106,20 @@ params.genome = false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
+params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 params.seqCenter = false
+params.skip_qc = false
+params.skip_fastqc = false
+params.skip_rseqc = false
+params.skip_genebody_coverage = false
+params.skip_preseq = false
+params.skip_dupradar = false
+params.skip_multiqc = false
 
 mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
 heatmap_header = file("$baseDir/assets/heatmap_header.txt")
@@ -159,9 +177,13 @@ if( params.gtf ){
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
               gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM }
+} else if( params.gff ){
+  gffFile = Channel.fromPath(params.gff)
+                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 } else {
-    exit 1, "No GTF annotation specified!"
+    exit 1, "No GTF or GFF3 annotation specified!"
 }
+
 if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12)
@@ -248,6 +270,7 @@ if(params.aligner == 'star'){
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
 }
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
+if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
 summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
 summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
@@ -395,6 +418,26 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
     }
 }
 /*
+ * PREPROCESSING - Convert GFF3 to GTF
+ */
+if(params.gff){
+  process convertGFFtoGTF {
+      tag "$gff"
+
+      input:
+      file gff from gffFile
+
+      output:
+      file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
+            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+
+      script:
+      """
+      gffread  $gff -T -o > ${gff.baseName}.gtf
+      """
+  }
+}
+/*
  * PREPROCESSING - Build BED12 file
  */
 if(!params.bed12){
@@ -424,6 +467,9 @@ process fastqc {
     tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy',
         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+
+    when:
+    !params.skip_qc && !params.skip_fastqc
 
     input:
     set val(name), file(reads) from raw_reads_fastqc
@@ -677,6 +723,9 @@ process rseqc {
             else filename
         }
 
+    when:
+    !params.skip_qc
+
     input:
     file bam_rseqc
     file bed12 from bed_rseqc.collect()
@@ -742,6 +791,9 @@ process genebody_coverage {
             else filename
         }
 
+    when:
+    !params.skip_qc && !params.skip_genebody_coverage
+
     input:
     file bam from bam_subsampled.concat(bam_skipSubsampFiltered)
     file bed12 from bed_genebody_coverage.collect()
@@ -766,6 +818,9 @@ process genebody_coverage {
 process preseq {
     tag "${bam_preseq.baseName - '.sorted'}"
     publishDir "${params.outdir}/preseq", mode: 'copy'
+
+    when:
+    !params.skip_qc && !params.skip_preseq
 
     input:
     file bam_preseq
@@ -821,6 +876,7 @@ process markDuplicates {
  * STEP 7 - dupRadar
  */
 process dupradar {
+
     tag "${bam_md.baseName - '.sorted.markDups'}"
     publishDir "${params.outdir}/dupradar", mode: 'copy',
         saveAs: {filename ->
@@ -832,6 +888,9 @@ process dupradar {
             else if (filename.indexOf("_intercept_slope.txt") > 0) "intercepts_slopes/$filename"
             else "$filename"
         }
+
+    when:
+    !params.skip_qc && !params.skip_dupradar
 
     input:
     file bam_md
@@ -1019,6 +1078,9 @@ process get_software_versions {
  */
 process workflow_summary_mqc {
 
+    when:
+    !params.skip_multiqc
+
     output:
     file 'workflow_summary_mqc.yaml' into workflow_summary_yaml
 
@@ -1041,32 +1103,32 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * STEP 12 MultiQC
  */
 process multiqc {
-    tag "$prefix"
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
+
+    when:
+    !params.skip_multiqc
 
     input:
     file multiqc_config
-    file (fastqc:'fastqc/*') from fastqc_results.collect()
+    file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
-    file ('rseqc/*') from rseqc_results.collect()
-    file ('rseqc/*') from genebody_coverage_results.collect()
-    file ('preseq/*') from preseq_results.collect()
-    file ('dupradar/*') from dupradar_results.collect()
+    file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
+    file ('rseqc/*') from genebody_coverage_results.collect().ifEmpty([])
+    file ('preseq/*') from preseq_results.collect().ifEmpty([])
+    file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
-    file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array 
+    file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()
     file ('workflow_summary/*') from workflow_summary_yaml.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
-    val prefix into multiqc_prefix
 
     script:
-    prefix = fastqc[0].toString() - '_fastqc.html' - 'fastqc/'
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
@@ -1079,12 +1141,10 @@ process multiqc {
  * STEP 13 - Output Description HTML
  */
 process output_documentation {
-    tag "$prefix"
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     input:
     file output_docs
-    val prefix from multiqc_prefix
 
     output:
     file "results_description.html"
@@ -1134,7 +1194,7 @@ workflow.onComplete {
     // On success try attach the multiqc report
     def mqc_report = null
     try {
-        if (workflow.success) {
+        if (workflow.success && !params.skip_multiqc) {
             mqc_report = multiqc_report.getVal()
             if (mqc_report.getClass() == ArrayList){
                 log.warn "[nfcore/rnaseq] Found multiple reports from process 'multiqc', will use only one"

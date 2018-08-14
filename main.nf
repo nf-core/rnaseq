@@ -577,7 +577,7 @@ if(params.aligner == 'star'){
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         def avail_mem = task.memory == null ? '' : "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}"
-        def seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter'" : ''
+        seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter'" : ''
         """
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
@@ -628,7 +628,7 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        def seqCenter = params.seqCenter ? "--rg-id ${prefix} --rg CN:${params.seqCenter.replaceAll("\\s","_")}" : ''
+        seqCenter = params.seqCenter ? "--rg-id ${prefix} --rg CN:${params.seqCenter.replaceAll('\\s','_')}" : ''
         def rnastrandness = ''
         if (forward_stranded && !unstranded){
             rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'

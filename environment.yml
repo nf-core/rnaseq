@@ -9,7 +9,7 @@ dependencies:
   - conda-forge::openjdk=8.0.144 # Needed for FastQC - conda build hangs without this
   - fastqc=0.11.7
   - trim-galore=0.5.0
-  - star=2.6.0c
+  - star=2.6.1a
   - hisat2=2.1.0
   - picard=2.18.11
   - bioconductor-dupradar=1.8.0

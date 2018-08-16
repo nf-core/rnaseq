@@ -15,7 +15,7 @@
 def helpMessage() {
     log.info"""
     ===================================
-     nfcore/rnaseq  ~  version ${params.version}
+     nfcore/rnaseq  ~  version ${manifest.pipelineVersion}
     ===================================
     Usage:
 
@@ -246,7 +246,7 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
- nf-core/rnaseq : RNA-Seq Best Practice v${params.version}
+ nf-core/rnaseq : RNA-Seq Best Practice v${manifest.pipelineVersion}
 ======================================================="""
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
@@ -295,20 +295,6 @@ if(params.email) {
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
-
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-try {
-    if( ! nextflow.version.matches(">= $params.nf_required_version") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version $params.nf_required_version required! You are running v$workflow.nextflow.version.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please run `nextflow self-update` to update Nextflow.\n" +
-              "============================================================"
-}
 
 // Show a big error message if we're running on the base config and an uppmax cluster
 if( workflow.profile == 'standard'){
@@ -754,8 +740,8 @@ process rseqc {
 
 
 /*
- * Step 4.1 Rseqc create BigWig coverage 
- */ 
+ * Step 4.1 Rseqc create BigWig coverage
+ */
 
 process createBigWig {
     tag "${bam.baseName - 'sortedByCoord.out'}"
@@ -764,7 +750,7 @@ process createBigWig {
     when:
     !params.skip_qc && !params.skip_genebody_coverage
 
-    input: 
+    input:
     file bam from bam_for_genebody
 
     output:
@@ -1052,7 +1038,7 @@ process get_software_versions {
 
     script:
     """
-    echo $params.version &> v_ngi_rnaseq.txt
+    echo $manifest.pipelineVersion &> v_ngi_rnaseq.txt
     echo $workflow.nextflow.version &> v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt
@@ -1167,7 +1153,7 @@ workflow.onComplete {
       subject = "[nfcore/rnaseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = params.version
+    email_fields['version'] = manifest.pipelineVersion
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete
@@ -1252,18 +1238,6 @@ workflow.onComplete {
     }
 
     log.info "[nfcore/rnaseq] Pipeline Complete"
-
-    try {
-        if( ! nextflow.version.matches(">= $params.nf_required_version") ){
-            throw GroovyException('Nextflow version too old')
-        }
-    } catch (all) {
-        log.error "====================================================\n" +
-                  "  Nextflow version $params.nf_required_version required! You are running v$workflow.nextflow.version.\n" +
-                  "  Please be extra careful with pipeline results.\n" +
-                  "  Run `nextflow self-update` to update Nextflow.\n" +
-                  "============================================================"
-    }
 
     if(!workflow.success){
         if( workflow.profile == 'standard'){

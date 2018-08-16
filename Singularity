@@ -3,7 +3,7 @@ Bootstrap:docker
 
 %labels
     MAINTAINER Phil Ewels <phil.ewels@scilifelab.se>
-    DESCRIPTION Singularity image containing all requirements for nf-core/rnaseq pipeline
+    DESCRIPTION Singularity image containing all requirements for the nf-core/rnaseq pipeline
     VERSION 1.0dev
 
 %environment

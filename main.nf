@@ -13,10 +13,17 @@
 */
 
 def helpMessage() {
-    log.info"""
-    ===================================
-     nfcore/rnaseq  ~  version ${manifest.pipelineVersion}
-    ===================================
+    log.info """
+    =======================================================
+                                              ,--./,-.
+              ___     __   __   __   ___     /,-._.--~\'
+        |\\ | |__  __ /  ` /  \\ |__) |__         }  {
+        | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
+                                              `._,._,\'
+
+     nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
+    =======================================================
+    
     Usage:
 
     The typical command for running the pipeline is as follows:
@@ -246,7 +253,7 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
- nf-core/rnaseq : RNA-Seq Best Practice v${manifest.pipelineVersion}
+ nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
 ======================================================="""
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
@@ -1038,7 +1045,7 @@ process get_software_versions {
 
     script:
     """
-    echo $manifest.pipelineVersion &> v_ngi_rnaseq.txt
+    echo $params.pipelineVersion &> v_ngi_rnaseq.txt
     echo $workflow.nextflow.version &> v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt
@@ -1153,7 +1160,7 @@ workflow.onComplete {
       subject = "[nfcore/rnaseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = manifest.pipelineVersion
+    email_fields['version'] = params.pipelineVersion
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete

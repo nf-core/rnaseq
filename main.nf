@@ -1055,6 +1055,7 @@ process get_software_versions {
     stringtie --version &> v_stringtie.txt
     preseq &> v_preseq.txt
     read_duplication.py --version &> v_rseqc.txt
+    echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
     featureCounts -v &> v_featurecounts.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt

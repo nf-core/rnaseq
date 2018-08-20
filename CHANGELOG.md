@@ -8,7 +8,7 @@ over to the new [nf-core](http://nf-co.re/) community, at [nf-core/rnaseq](https
 View the previous changelog at [SciLifeLab/NGI-RNAseq/CHANGELOG.md](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/CHANGELOG.md)
 
 In addition to porting to the new nf-core community, the pipeline has had a number of major changes in this version.
-There have been 157 commits by 16 different contributors coving 70 different files in the pipeline: 7,357 additions and 8,236 deletions!
+There have been 157 commits by 16 different contributors covering 70 different files in the pipeline: 7,357 additions and 8,236 deletions!
 
 In summary, the main changes are:
 

@@ -117,6 +117,8 @@ params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : fals
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
+params.reads_folder = ""
+params.reads_extension = "fastq.gz"
 params.email = false
 params.plaintext_email = false
 params.seqCenter = false
@@ -224,6 +226,7 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 /*
  * Create a channel for input read files
  */
+reads_files="${params.reads_folder}/*.${params.reads_extension}"
 if(params.readPaths){
     if(params.singleEnd){
         Channel
@@ -240,8 +243,8 @@ if(params.readPaths){
     }
 } else {
     Channel
-        .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
+        .fromFilePairs( $reads_files, size: params.singleEnd ? 1 : 2 )
+        .ifEmpty { exit 1, "Cannot find any reads matching: ${reads_files}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
         .into { raw_reads_fastqc; raw_reads_trimgalore }
 }
 
@@ -257,7 +260,7 @@ log.info """=======================================================
 ======================================================="""
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
-summary['Reads']        = params.reads
+summary['Reads']        = reads_files
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Genome']       = params.genome
 if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
@@ -1262,3 +1265,4 @@ workflow.onComplete {
     }
 
 }
+

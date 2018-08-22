@@ -1,28 +1,33 @@
 sudo: required
-language: java
+language: python
 jdk: openjdk8
 services: docker
+python: '3.6'
+cache: pip
+matrix:
+  fast_finish: true
 
-before_install: docker pull nfcore/rnaseq:latest
+before_install:
+  # PRs to master are only ok if coming from dev branch
+  - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
+  # Pull the docker image first so the test doesn't wait for this
+  - docker pull nfcore/rnaseq
+  # Fake the tag locally so that the pipeline runs properly
+  - docker tag nfcore/rnaseq nfcore/rnaseq:1.0
 
 install:
   # Install Nextflow
-  - mkdir /tmp/nextflow
-  - cd /tmp/nextflow
+  - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
   # Install nf-core/tools
-  - git clone https://github.com/nf-core/tools.git /tmp/nf-core-tools
-  - cd /tmp/nf-core-tools
-  - pip install --user -e .
-  # Make test directories
-  - mkdir ${TRAVIS_BUILD_DIR}/tests
-  - cd ${TRAVIS_BUILD_DIR}/tests
-
+  - pip install nf-core
+  # Reset
+  - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
 
 env:
-  - NXF_VER=0.30.1
-  - ''
+  - NXF_VER='0.31.1' # Specify a minimum NF version that should be tested and work
+  - NXF_VER='' # Plus: get the latest NF version and check that it works
 
 script:
   # Lint the pipeline code

@@ -23,7 +23,7 @@ def helpMessage() {
 
      nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
     =======================================================
-    
+
     Usage:
 
     The typical command for running the pipeline is as follows:
@@ -80,7 +80,8 @@ def helpMessage() {
       --skip_rseqc                  Skip RSeQC
       --skip_genebody_coverage      Skip calculating genebody coverage
       --skip_preseq                 Skip Preseq
-      --skip_dupradar               Skip dupRadar
+      --skip_dupradar               Skip dupRadar (and Picard MarkDups)
+      --skip_edger                  Skip edgeR MDS plot and heatmap
       --skip_multiqc                Skip MultiQC
 
     AWSBatch options:
@@ -126,6 +127,7 @@ params.skip_rseqc = false
 params.skip_genebody_coverage = false
 params.skip_preseq = false
 params.skip_dupradar = false
+params.skip_edger = false
 params.skip_multiqc = false
 
 mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
@@ -717,7 +719,7 @@ process rseqc {
         }
 
     when:
-    !params.skip_qc
+    !params.skip_qc && !params.skip_rseqc
 
     input:
     file bam_rseqc
@@ -832,6 +834,9 @@ process markDuplicates {
     tag "${bam.baseName - '.sorted'}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy',
         saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
+
+    when:
+    !params.skip_qc && !params.skip_dupradar
 
     input:
     file bam from bam_markduplicates
@@ -1012,6 +1017,9 @@ process stringtieFPKM {
 process sample_correlation {
     tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
+
+    when:
+    !params.skip_qc && !params.skip_edger
 
     input:
     file input_files from geneCounts.collect()

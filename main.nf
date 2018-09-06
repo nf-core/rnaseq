@@ -75,7 +75,7 @@ def helpMessage() {
       --seqCenter                   Add sequencing center in @RG line of output BAM header
 
     QC options:
-      --skip_qc                     Skip all QC steps aside from MultiQC
+      --skip_qc                     Skip all QC steps apart from MultiQC
       --skip_fastqc                 Skip FastQC
       --skip_rseqc                  Skip RSeQC
       --skip_genebody_coverage      Skip calculating genebody coverage

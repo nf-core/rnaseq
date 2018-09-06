@@ -237,6 +237,19 @@ Sets trimming and standedness settings for the _SMARTer Stranded Total RNA-Seq K
 Equivalent to: `--forward_stranded` `--clip_r1 3` `--three_prime_clip_r2 3`
 
 
+## Skipping QC steps
+The pipeline contains a large number of quality control steps. Sometimes, it may not be desirable to run all of them if time and compute resources are limited.
+The following options make this easy:
+
+* `--skip_qc` -                Skip **all QC steps**, apart from MultiQC
+* `--skip_fastqc` -            Skip FastQC
+* `--skip_rseqc` -             Skip RSeQC
+* `--skip_genebody_coverage` - Skip calculating the genebody coverage
+* `--skip_preseq` -            Skip Preseq
+* `--skip_dupradar` -          Skip dupRadar (and Picard MarkDups)
+* `--skip_edger` -             Skip edgeR MDS plot and heatmap
+* `--skip_multiqc` -           Skip MultiQC
+
 ## Job Resources
 ### Automatic resubmission
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
@@ -249,11 +262,11 @@ Running the pipeline on AWS Batch requires a couple of specific parameters to be
 ### `--awsqueue`
 The JobQueue that you intend to use on AWS Batch.
 ### `--awsregion`
-The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs. 
+The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs.
 
-Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't. 
+Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
-### 
+###
 ## Other command line parameters
 ### `--outdir`
 The output directory where the results will be saved.

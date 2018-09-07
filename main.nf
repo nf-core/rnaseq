@@ -205,7 +205,7 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
         .into { indexing_splicesites; alignment_splicesites }
 }
-if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-modules' || workflow.profile == 'uppmax-devel' ){
+if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
     if ( !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 }
 

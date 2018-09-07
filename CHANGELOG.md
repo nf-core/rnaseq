@@ -2,6 +2,11 @@
 
 ## Version 1.1dev
 
+#### Pipeline updates
+* Wrote docs and made minor tweaks to the `--skip_qc` and associated options
+* Removed the depreciated `uppmax-modules` config profile
+* Updated the `hebbe` config profile to use the new `withName` syntax too
+
 #### Bug Fixes
 * [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
 

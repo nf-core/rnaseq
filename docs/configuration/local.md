@@ -19,7 +19,7 @@ Nextflow will recognise `nf-core/rnaseq` and download the pipeline from GitHub. 
 For more information about how to work with reference genomes, see [`docs/configuration/reference_genomes.md`](docs/configuration/reference_genomes.md).
 
 ### Pipeline versions
-The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.4`. This uses pipeline code and docker image from this tagged version.
+The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r 1.0`. This uses pipeline code and docker image from this tagged version.
 
 
 ## Singularity image
@@ -32,15 +32,15 @@ If you intend to run the pipeline offline, nextflow will not be able to automati
 First, pull the image file where you have an internet connection:
 
 > NB: The "tag" at the end of this command corresponds to the pipeline version.
-> Here, we're pulling the docker image for version 1.4 of the nfcore/rnaseq pipeline
+> Here, we're pulling the docker image for version 1.0 of the nfcore/rnaseq pipeline
 > Make sure that this tag corresponds to the version of the pipeline that you're using
 
 ```bash
-singularity pull --name nfcore-rnaseq-1.4.img docker://nfcore/rnaseq:1.4
+singularity pull --name nfcore-rnaseq-1.0.img docker://nfcore/rnaseq:1.0
 ```
 
 Then transfer this file and run the pipeline with this path:
 
 ```bash
-nextflow run /path/to/nfcore-rnaseq -with-singularity /path/to/nfcore-rnaseq-1.4.img
+nextflow run /path/to/nfcore-rnaseq -with-singularity /path/to/nfcore-rnaseq-1.0.img
 ```

@@ -7,13 +7,13 @@ QBiC has two clusters available to run and analyze data directly. For both syste
 
 You may use the pipeline with the `-profile binac` switch when starting the pipeline. A typical call could work like this for example
 ```
-nextflow run -profile binac nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
+nextflow run -profile binac nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 
 ``` 
 # Core Facility Cluster (CFC)
 
 You may use the pipeline with the `-profile cfc` switch when starting the pipeline. A typical call could work like this for example
 ```
-nextflow run -profile cfc nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
+nextflow run -profile cfc nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 
 ``` 
 
 ---

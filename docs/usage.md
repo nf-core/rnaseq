@@ -36,7 +36,7 @@ nextflow pull nf-core/rnaseq
 ### Reproducibility
 It's a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nfcore/rnaseq releases page](https://github.com/nf-core/rnaseq/releases) and find the latest version number - numeric only (eg. `1.4`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.4`.
+First, go to the [nfcore/rnaseq releases page](https://github.com/nf-core/rnaseq/releases) and find the latest version number - numeric only (eg. `1.0`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.0`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -109,8 +109,6 @@ params {
     reverse_stranded = true
 }
 ```
-
-> **NB:** Before v1.4 of the pipeline, the UPPMAX profile ran in reverse stranded mode by default. This was removed in the v1.4 release, so all profiles now run in unstranded mode by default.
 
 If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 

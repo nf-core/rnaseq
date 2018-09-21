@@ -472,7 +472,7 @@ if(mergeLanes){
 */ 
 process mergeLanes {
     tag "$name"
-    publishDir "${params.outdir}/merged_fastq", mode: 'copy'}
+    publishDir "${params.outdir}/merged_fastq", mode: 'copy'
 
     when: params.mergeLanes
 
@@ -486,8 +486,6 @@ process mergeLanes {
     '''
     samtools merge --threads ${task.cpus} $reads ${name}.merged.bam
     '''
-
-
 }
 
 

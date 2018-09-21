@@ -474,7 +474,7 @@ process mergeLanes {
     tag "$name"
     publishDir "${params.outdir}/merged_fastq", mode: 'copy'
 
-    when: params.mergeLanes
+    when: "${params.mergeLanes}"
 
     input:
     set val(name), file(reads) from raw_grouped_fastqs

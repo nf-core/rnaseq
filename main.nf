@@ -37,6 +37,8 @@ def helpMessage() {
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
+      --mergeLanes                  Specifies a regular expression to merge samples that were sequenced on multiple lanes together
+
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
@@ -121,6 +123,7 @@ params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 params.seqCenter = false
+params.mergeLanes = false
 params.skip_qc = false
 params.skip_fastqc = false
 params.skip_rseqc = false
@@ -264,6 +267,7 @@ summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Genome']       = params.genome
 if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
+summary['Merge Lanes?'] = params.mergeLanes
 summary['Trim R1'] = clip_r1
 summary['Trim R2'] = clip_r2
 summary["Trim 3' R1"] = three_prime_clip_r1
@@ -454,6 +458,33 @@ if(!params.bed12){
     }
 }
 
+//TODO check this out! 
+if(mergeLanes){
+    raw_reads_fastqc
+    .groupTuple(~/^.*_(L[0-9]+)_.*\.fastq\.gz/)
+    .set { raw_grouped_fastqs }
+}
+
+/*
+ * Step 0 - mergeLanes (if set)
+ * 
+*/ 
+process mergeLanes {
+    tag "$name"
+    publishDir "${params.outdir}/merged_fastq", mode: 'copy'}
+
+    when: params.mergeLanes
+
+    input:
+    set val(name), file(reads) from raw_grouped_fastqs
+
+    output:
+    set val(name), file(reads) into raw_reads_fastqc_merged, raw_reads_trimgalore_merged
+
+
+}
+
+
 
 /*
  * STEP 1 - FastQC
@@ -467,7 +498,7 @@ process fastqc {
     !params.skip_qc && !params.skip_fastqc
 
     input:
-    set val(name), file(reads) from raw_reads_fastqc
+    set val(name), file(reads) from (params.mergeLanes ? raw_reads_fastqc_merged : raw_reads_fastqc)
 
     output:
     file "*_fastqc.{zip,html}" into fastqc_results
@@ -494,7 +525,7 @@ process trim_galore {
         }
 
     input:
-    set val(name), file(reads) from raw_reads_trimgalore
+    set val(name), file(reads) from (params.mergeLanes ? raw_reads_trimgalore_merged : raw_reads_trimgalore)
     file wherearemyfiles
 
     output:

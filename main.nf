@@ -463,7 +463,7 @@ if(mergeLanes){
     raw_reads_fastqc
     .groupTuple(~/^.*_(L[0-9]+)_.*\.fastq\.gz/)
     .set { raw_grouped_fastqs }
-    .dump()
+    .dump(tag: 'laneMerging')
 }
 
 /*

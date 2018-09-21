@@ -482,6 +482,11 @@ process mergeLanes {
     output:
     set val(name), file(reads) into raw_reads_fastqc_merged, raw_reads_trimgalore_merged
 
+    script:
+    '''
+    samtools merge --threads ${task.cpus} $reads ${name}.merged.bam
+    '''
+
 
 }
 

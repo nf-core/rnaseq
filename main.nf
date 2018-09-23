@@ -37,7 +37,8 @@ def helpMessage() {
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
-      --mergeLanes                  Specifies a regular expression to merge samples that were sequenced on multiple lanes together
+      --mergeLanes                  Specifies to merge samples that were sequenced on multiple lanes together
+      --mergeRegex                  Specifies the required regular expression to use for merging multiple lanes together
 
     Strandedness:
       --forward_stranded            The library is forward stranded
@@ -124,6 +125,7 @@ params.email = false
 params.plaintext_email = false
 params.seqCenter = false
 params.mergeLanes = false
+params.mergeRegex = '^.*?(?=L)'
 params.skip_qc = false
 params.skip_fastqc = false
 params.skip_rseqc = false
@@ -461,11 +463,13 @@ if(!params.bed12){
 //TODO check this out! 
 if("$params.mergeLanes"){
     raw_reads_fastqc
-    .groupTuple(~/^.*_(L[0-9]+)_.*\.fastq\.gz/)
+    .map{ it -> [ extract_lanes(it, id_regex), it ] }
+    .groupTuple()
     .set { raw_grouped_fastqs }
     .dump(tag: 'laneMerging')
 }
 
+channel.map { it -> [ extractYourKeyLogic(it), it ] } .groupTuple()
 /*
  * Step 0 - mergeLanes (if set)
  * 

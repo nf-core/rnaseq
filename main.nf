@@ -1313,11 +1313,11 @@ workflow.onComplete {
 
 //Function to extract e.g. multiple lane information from input files and can be used to group them
 
-def extract_lanes(String name, String regex) {
+def extract_lanes(ArrayList name, String regex) {
   //übergebe pattern was klar unterscheidet zwischen 
   //zwischen ID und Lanes / bzw R1/r2
   //Default regex matched "^.*?(?=L)" (alles bis zur Lane als ID)
-  def matcher = (name ==~ /regex/)
+  def matcher = (element ==~ /regex/)
   return matcher
 }
 

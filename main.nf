@@ -1317,7 +1317,7 @@ def extract_lanes(ArrayList name, String regex) {
   //übergebe pattern was klar unterscheidet zwischen 
   //zwischen ID und Lanes / bzw R1/r2
   //Default regex matched "^.*?(?=L)" (alles bis zur Lane als ID)
-  def matcher = (element ==~ /regex/)
+  def matcher = (name ==~ /regex/)
   return matcher
 }
 

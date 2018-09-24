@@ -463,7 +463,7 @@ if(!params.bed12){
 //TODO check this out! 
 if("$params.mergeLanes"){
     raw_reads_fastqc
-    .map{ it -> [ extract_lanes(it, "${params.id_regex}"), it ] }
+    .map{ it -> [ extract_lanes(it, "${params.mergeRegex}"), it ] }
     .groupTuple()
     .set { raw_grouped_fastqs }
     .dump(tag: 'laneMerging')

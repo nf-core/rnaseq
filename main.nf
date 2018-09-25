@@ -480,7 +480,7 @@ process mergeLanes {
     when: "${params.mergeLanes}"
 
     input:
-    set val(name), file(reads) from raw_grouped_fastqs
+    file(reads) from raw_grouped_fastqs
 
     output:
     set val(name), file(reads) into raw_reads_fastqc_merged, raw_reads_trimgalore_merged

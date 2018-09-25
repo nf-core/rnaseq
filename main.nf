@@ -469,7 +469,6 @@ if("$params.mergeLanes"){
     .set { raw_grouped_fastqs }
 }
 
-channel.map { it -> [ extractYourKeyLogic(it), it ] } .groupTuple()
 /*
  * Step 0 - mergeLanes (if set)
  * 

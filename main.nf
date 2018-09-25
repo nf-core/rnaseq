@@ -465,8 +465,15 @@ if("$params.mergeLanes"){
     raw_reads_fastqc
     .map{ it -> [ extract_lanes(it, params.mergeRegex), it ] }
     .groupTuple()
-    .dump(tag: 'laneMerging')
     .set { raw_grouped_fastqs }
+}
+
+if (params.verbose) fastqs = raw_grouped_fastqs.view {
+  "FastQs to process:\n\
+  ${it[0]}\n
+  ${it[1]}\n
+  ${it[2]}\n
+  ${it[3]}\n"
 }
 
 /*

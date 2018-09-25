@@ -465,8 +465,8 @@ if("$params.mergeLanes"){
     raw_reads_fastqc
     .map{ it -> [ extract_lanes(it, params.mergeRegex), it ] }
     .groupTuple()
-    .set { raw_grouped_fastqs }
     .dump(tag: 'laneMerging')
+    .set { raw_grouped_fastqs }
 }
 
 channel.map { it -> [ extractYourKeyLogic(it), it ] } .groupTuple()

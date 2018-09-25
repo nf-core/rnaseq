@@ -460,21 +460,22 @@ if(!params.bed12){
     }
 }
 
-//TODO check this out! 
 if("$params.mergeLanes"){
     raw_reads_fastqc
-    .map{ it -> [ extract_lanes(it, params.mergeRegex), it ] }
+    .map{ it -> files.collect { it.name }.findAll { it ==~ regex }}
     .groupTuple()
     .set { raw_grouped_fastqs }
 }
 
-if (params.verbose) fastqs = raw_grouped_fastqs.view {
-  "FastQs to process:\n\
-  ${it[0]}\n\
-  ${it[1]}\n\
-  ${it[2]}\n\
-  ${it[3]}\n"
-}
+it[0] ==~ params.mergeRegex
+
+// if (params.verbose) fastqs = raw_grouped_fastqs.view {
+//   "FastQs to process:\n\
+//   ${it[0]}\n\
+//   ${it[1]}\n\
+//   ${it[2]}\n\
+//   ${it[3]}\n"
+// }.set {raw_grouped_fastqs}
 
 /*
  * Step 0 - mergeLanes (if set)
@@ -1320,8 +1321,6 @@ workflow.onComplete {
 //Function to extract e.g. multiple lane information from input files and can be used to group them
 
 def extract_lanes(ArrayList name, String regex) {
-  //übergebe pattern was klar unterscheidet zwischen 
-  //zwischen ID und Lanes / bzw R1/r2
-  //Default regex matched "^.*?(?=L)" (alles bis zur Lane als ID)
   return name.findAll { it ==~ regex }
+  it[0] ==~ regex
 }

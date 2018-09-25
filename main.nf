@@ -463,7 +463,7 @@ if(!params.bed12){
 //TODO check this out! 
 if("$params.mergeLanes"){
     raw_reads_fastqc
-    .map{ it -> [ it.findAll("${params.mergeRegex}"), it ] }
+    .map{ it -> [ extract_lanes(it, params.mergeRegex), it ] }
     .groupTuple()
     .set { raw_grouped_fastqs }
     .dump(tag: 'laneMerging')
@@ -1317,5 +1317,5 @@ def extract_lanes(ArrayList name, String regex) {
   //übergebe pattern was klar unterscheidet zwischen 
   //zwischen ID und Lanes / bzw R1/r2
   //Default regex matched "^.*?(?=L)" (alles bis zur Lane als ID)
-  return name.findAll { it ==~ /regex/}
+  return name.findAll { it ==~ regex }
 }

@@ -335,7 +335,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
         file "star" into star_index
 
         script:
-        def avail_mem = task.memory == null ? '' : "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}"
+        def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
         mkdir star
         STAR \\
@@ -387,7 +387,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
         file "${fasta.baseName}.*.ht2" into hs2_indices
 
         script:
-        if( task.memory == null ){
+        if( !task.memory ){
             log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
             avail_mem = 0
         } else {
@@ -571,7 +571,7 @@ if(params.aligner == 'star'){
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        def avail_mem = task.memory == null ? '' : "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}"
+        def avail_mem = task.memory ? "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}" : ''
         seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter'" : ''
         """
         STAR --genomeDir $index \\
@@ -678,7 +678,7 @@ if(params.aligner == 'hisat2'){
         file "where_are_my_files.txt"
 
         script:
-        def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
+        def avail_mem = task.memory ? "-m ${task.memory.toBytes() / task.cpus}" : ''
         """
         samtools sort \\
             $hisat2_bam \\
@@ -847,7 +847,7 @@ process markDuplicates {
     file "${bam.baseName}.markDups.bam.bai"
 
     script:
-    if( task.memory == null ){
+    if( !task.memory ){
         log.info "[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this."
         avail_mem = 3
     } else {

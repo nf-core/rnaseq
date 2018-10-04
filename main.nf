@@ -21,7 +21,7 @@ def helpMessage() {
         | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                               `._,._,\'
 
-     nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
+     nf-core/rnaseq : RNA-Seq Best Practice v${workflow.manifest.version}
     =======================================================
 
     Usage:
@@ -255,7 +255,7 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
- nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
+ nf-core/rnaseq : RNA-Seq Best Practice v${workflow.manifest.version}
 ======================================================="""
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
@@ -1053,7 +1053,7 @@ process get_software_versions {
 
     script:
     """
-    echo $params.pipelineVersion &> v_ngi_rnaseq.txt
+    echo $workflow.manifest.version &> v_ngi_rnaseq.txt
     echo $workflow.nextflow.version &> v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt
@@ -1169,7 +1169,7 @@ workflow.onComplete {
       subject = "[nfcore/rnaseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = params.pipelineVersion
+    email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete

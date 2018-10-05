@@ -1,5 +1,20 @@
 # nf-core/rnaseq
 
+## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
+
+#### Pipeline updates
+* Wrote docs and made minor tweaks to the `--skip_qc` and associated options
+* Removed the depreciated `uppmax-modules` config profile
+* Updated the `hebbe` config profile to use the new `withName` syntax too
+* Use new `workflow.manifest` variables in the pipeline script
+* Updated minimum nextflow version to `0.32.0`
+
+#### Bug Fixes
+* [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
+* [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
+* [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
+
+
 ## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
 
 This release marks the point where the pipeline was moved from [SciLifeLab/NGI-RNAseq](https://github.com/SciLifeLab/NGI-RNAseq)

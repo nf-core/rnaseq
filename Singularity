@@ -4,10 +4,10 @@ Bootstrap:docker
 %labels
     MAINTAINER Phil Ewels <phil.ewels@scilifelab.se>
     DESCRIPTION Singularity image containing all requirements for the nf-core/rnaseq pipeline
-    VERSION 1.0
+    VERSION 1.1
 
 %environment
-    PATH=/opt/conda/envs/nf-core-rnaseq-1.0/bin:$PATH
+    PATH=/opt/conda/envs/nf-core-rnaseq-1.1/bin:$PATH
     export PATH
 
 %files

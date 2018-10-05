@@ -21,9 +21,9 @@ def helpMessage() {
         | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                               `._,._,\'
 
-     nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
+     nf-core/rnaseq : RNA-Seq Best Practice v${workflow.manifest.version}
     =======================================================
-    
+
     Usage:
 
     The typical command for running the pipeline is as follows:
@@ -75,12 +75,13 @@ def helpMessage() {
       --seqCenter                   Add sequencing center in @RG line of output BAM header
 
     QC options:
-      --skip_qc                     Skip all QC steps aside from MultiQC
+      --skip_qc                     Skip all QC steps apart from MultiQC
       --skip_fastqc                 Skip FastQC
       --skip_rseqc                  Skip RSeQC
       --skip_genebody_coverage      Skip calculating genebody coverage
       --skip_preseq                 Skip Preseq
-      --skip_dupradar               Skip dupRadar
+      --skip_dupradar               Skip dupRadar (and Picard MarkDups)
+      --skip_edger                  Skip edgeR MDS plot and heatmap
       --skip_multiqc                Skip MultiQC
 
     AWSBatch options:
@@ -126,6 +127,7 @@ params.skip_rseqc = false
 params.skip_genebody_coverage = false
 params.skip_preseq = false
 params.skip_dupradar = false
+params.skip_edger = false
 params.skip_multiqc = false
 
 mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
@@ -203,7 +205,7 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
         .into { indexing_splicesites; alignment_splicesites }
 }
-if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-modules' || workflow.profile == 'uppmax-devel' ){
+if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
     if ( !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 }
 
@@ -253,7 +255,7 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
- nf-core/rnaseq : RNA-Seq Best Practice v${params.pipelineVersion}
+ nf-core/rnaseq : RNA-Seq Best Practice v${workflow.manifest.version}
 ======================================================="""
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
@@ -333,7 +335,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
         file "star" into star_index
 
         script:
-        def avail_mem = task.memory == null ? '' : "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}"
+        def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
         mkdir star
         STAR \\
@@ -385,7 +387,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
         file "${fasta.baseName}.*.ht2" into hs2_indices
 
         script:
-        if( task.memory == null ){
+        if( !task.memory ){
             log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
             avail_mem = 0
         } else {
@@ -569,7 +571,7 @@ if(params.aligner == 'star'){
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        def avail_mem = task.memory == null ? '' : "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}"
+        def avail_mem = task.memory ? "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}" : ''
         seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter'" : ''
         """
         STAR --genomeDir $index \\
@@ -676,7 +678,7 @@ if(params.aligner == 'hisat2'){
         file "where_are_my_files.txt"
 
         script:
-        def avail_mem = task.memory == null ? '' : "-m ${task.memory.toBytes() / task.cpus}"
+        def avail_mem = task.memory ? "-m ${task.memory.toBytes() / task.cpus}" : ''
         """
         samtools sort \\
             $hisat2_bam \\
@@ -717,7 +719,7 @@ process rseqc {
         }
 
     when:
-    !params.skip_qc
+    !params.skip_qc && !params.skip_rseqc
 
     input:
     file bam_rseqc
@@ -833,6 +835,9 @@ process markDuplicates {
     publishDir "${params.outdir}/markDuplicates", mode: 'copy',
         saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
 
+    when:
+    !params.skip_qc && !params.skip_dupradar
+
     input:
     file bam from bam_markduplicates
 
@@ -842,7 +847,7 @@ process markDuplicates {
     file "${bam.baseName}.markDups.bam.bai"
 
     script:
-    if( task.memory == null ){
+    if( !task.memory ){
         log.info "[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this."
         avail_mem = 3
     } else {
@@ -1013,6 +1018,9 @@ process sample_correlation {
     tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
+    when:
+    !params.skip_qc && !params.skip_edger
+
     input:
     file input_files from geneCounts.collect()
     val num_bams from bam_count.count()
@@ -1045,7 +1053,7 @@ process get_software_versions {
 
     script:
     """
-    echo $params.pipelineVersion &> v_ngi_rnaseq.txt
+    echo $workflow.manifest.version &> v_ngi_rnaseq.txt
     echo $workflow.nextflow.version &> v_nextflow.txt
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt
@@ -1161,7 +1169,7 @@ workflow.onComplete {
       subject = "[nfcore/rnaseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
-    email_fields['version'] = params.pipelineVersion
+    email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete

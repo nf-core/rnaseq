@@ -53,7 +53,7 @@ def mqc_feature_stat(bfile, features, outfile, sname=None):
         return
 
     # Prepare the output strings
-    out_head, out_value, out_mqc = ("Sample", sname, mqc_main)
+    out_head, out_value, out_mqc = ("Sample", "'{}'".format(sname), mqc_main)
     for ft, pt in fpercent.items():
         out_head = "{}\tpercent_{}".format(out_head, ft)
         out_value = "{}\t{}".format(out_value, pt)
@@ -72,4 +72,3 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--output", dest='output', default='biocount_percent.tsv', type=str, help="Sample Name")
     args = parser.parse_args()
     mqc_feature_stat(args.biocount, args.features, args.output, args.sample)
-

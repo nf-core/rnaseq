@@ -1,6 +1,6 @@
 # nf-core/rnaseq
 
-## Version 1.1dev
+## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 
 #### Pipeline updates
 * Wrote docs and made minor tweaks to the `--skip_qc` and associated options
@@ -13,8 +13,6 @@
 * [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
 * [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
 * [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
-
-
 
 
 ## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20

@@ -41,7 +41,6 @@ def helpMessage() {
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
       --unstranded                  The default behaviour
-      --fcExtraAttributes           Define which extra parameters should also be included in featureCounts (default: gene_names)
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --star_index                  Path to STAR index
@@ -129,7 +128,6 @@ three_prime_clip_r2 = params.three_prime_clip_r2
 forward_stranded = params.forward_stranded
 reverse_stranded = params.reverse_stranded
 unstranded = params.unstranded
-fcExtraAttributes = params.fcExtraAttributes
 
 // Preset trimming options
 if (params.pico){
@@ -925,7 +923,7 @@ process featureCounts {
     // Try to get real sample name
     sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt --extraAttributes ${params.fcExtraAttributes} -p -s $featureCounts_direction $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv

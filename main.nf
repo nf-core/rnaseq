@@ -32,10 +32,10 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
       -profile                      Configuration profile to use. uppmax / uppmax_modules / hebbe / docker / aws
 
     Options:
+      --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
     Strandedness:
       --forward_stranded            The library is forward stranded
@@ -49,8 +49,6 @@ def helpMessage() {
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
-      --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
-      --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --saveReference               Save the generated reference files the the Results directory.
       --saveTrimmed                 Save trimmed FastQ file intermediates
       --saveAlignedIntermediates    Save the BAM files from the Aligment step  - not done by default
@@ -96,7 +94,6 @@ def helpMessage() {
 
 
 // Show help emssage
-params.help = false
 if (params.help){
     helpMessage()
     exit 0
@@ -107,28 +104,14 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
   }
 
-// Configurable variables
-params.name = false
-params.project = false
-params.genome = false
+// Reference index path configuration
+// Define these here - after the profiles are loaded with the iGenomes paths
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
-params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
-params.email = false
-params.plaintext_email = false
-params.seqCenter = false
-params.skip_qc = false
-params.skip_fastqc = false
-params.skip_rseqc = false
-params.skip_genebody_coverage = false
-params.skip_preseq = false
-params.skip_dupradar = false
-params.skip_edger = false
-params.skip_multiqc = false
 
 mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
 heatmap_header = file("$baseDir/assets/heatmap_header.txt")
@@ -147,7 +130,6 @@ reverse_stranded = params.reverse_stranded
 unstranded = params.unstranded
 
 // Preset trimming options
-params.pico = false
 if (params.pico){
     clip_r1 = 3
     clip_r2 = 0

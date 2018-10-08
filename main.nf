@@ -32,10 +32,10 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
       -profile                      Configuration profile to use. uppmax / uppmax_modules / hebbe / docker / aws
 
     Options:
+      --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
     Strandedness:
       --forward_stranded            The library is forward stranded
@@ -49,8 +49,6 @@ def helpMessage() {
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
-      --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
-      --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --saveReference               Save the generated reference files the the Results directory.
       --saveTrimmed                 Save trimmed FastQ file intermediates
       --saveAlignedIntermediates    Save the BAM files from the Aligment step  - not done by default

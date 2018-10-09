@@ -1,5 +1,9 @@
 # nf-core/rnaseq
 
+## [dev]
+
+* Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
+
 ## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 
 #### Pipeline updates

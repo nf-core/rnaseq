@@ -13,7 +13,7 @@ def merge_featureCounts(dest_dir,out_file,input_files):
    
    table_dict=defaultdict(dict)
    sample_names=[]
-   genes=set()
+   genes=set() #ToDo need to hold an array actually... or get the appropriate lines (?)
    for input_file in input_files:
        logger.info("Reading from {}".format(input_file))
        sample_name=os.path.basename(input_file)
@@ -22,7 +22,7 @@ def merge_featureCounts(dest_dir,out_file,input_files):
        table_dict[sample_name]=dict()
      
        with open(input_file, 'r') as f:
-           f.readline()
+           f.readline() #Todo keep the header and extract --extraAttributes [length] to use that downstream
            f.readline()
            for line in f:
                #save the genes to a list for the first file

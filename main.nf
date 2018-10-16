@@ -946,9 +946,15 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt'
 
     script:
+    if (input_files.size() = 1) {
     """
-     csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name" $input_files |csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
+    mv $input_files[0] 'merged_gene_counts.txt'
+    """    
+    } else {
     """
+    csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name" $input_files |csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
+    """
+    }
 }
 
 

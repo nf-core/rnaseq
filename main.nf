@@ -947,7 +947,7 @@ process merge_featureCounts {
 
     script:
     """
-    merge_featurecounts.py -o merged_gene_counts.txt -i $input_files
+     csvtk join -t -f "Geneid" $input_files | csvtk cut -t -F -f "-6--2" | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand,-gene_name" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
     """
 }
 

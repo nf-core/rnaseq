@@ -670,6 +670,7 @@ if(params.aligner == 'hisat2'){
         """
     }
 }
+
 /*
  * STEP 4 - RSeQC analysis
  */

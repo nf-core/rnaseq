@@ -946,7 +946,7 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt'
 
     script:
-    if (input_files.size() = 1) {
+    if (input_files.size() == 1) {
     """
     mv $input_files[0] 'merged_gene_counts.txt'
     """    

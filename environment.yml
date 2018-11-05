@@ -6,22 +6,22 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - anaconda::openjdk=8.0.152 # Needed for FastQC - conda build hangs without this
-  - bioconda::fastqc=0.11.8
-  - bioconda::trim-galore=0.5.0
-  - bioconda::star=2.6.1b
-  - bioconda::hisat2=2.1.0
-  - bioconda::picard=2.18.15
-  - bioconda::bioconductor-dupradar=1.10.0
+  - conda-forge::openjdk=8.0.144 # Needed for FastQC - conda build hangs without this
+  - fastqc=0.11.8
+  - trim-galore=0.5.0
+  - star=2.6.1b
+  - hisat2=2.1.0
+  - picard=2.18.14
+  - bioconductor-dupradar=1.8.0
   - conda-forge::r-data.table=1.11.4
   - conda-forge::r-gplots=3.0.1
-  - bioconda::bioconductor-edger=3.22.5
+  - bioconductor-edger=3.20.7
   - conda-forge::r-markdown=0.8
-  - bioconda::preseq=2.0.3
-  - bioconda::rseqc=2.6.4
-  - bioconda::samtools=1.9
-  - bioconda::stringtie=1.3.4
-  - bioconda::subread=1.6.2
-  - bioconda::gffread=0.9.9
-  - bioconda::deeptools=3.1.3
-  - bioconda::multiqc=1.6
+  - preseq=2.0.3
+  - rseqc=2.6.4
+  - samtools=1.9
+  - stringtie=1.3.4
+  - subread=1.6.2
+  - gffread=0.9.9
+  - deeptools=3.1.3
+  - multiqc=1.6

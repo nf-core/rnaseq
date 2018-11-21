@@ -136,11 +136,6 @@ If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.sh
 
 To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file.
 
-#### Minimum alignment lengths
-When using STAR as the aligner then the pipeline sets the minimum alignment length to 15 base pairs. This filters out very short read alignments that can result from soft-clipping.
-
-To customise this threshold, use the pipeline command line parameter `--min_aln_length [num]`, where `[num]` is the minimum required alignment length in base pairs. Mapping sensitivity can be improved by increasing this value, or made more flexible by decreasing it. The default value in STAR is `0`.
-
 ## Reference Genomes
 
 The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If you are running on UPPMAX, these should work without any additional configuration. If running on AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.

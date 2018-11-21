@@ -126,7 +126,10 @@ These flags affect the commands used for several steps in the pipeline - namely 
   * StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
-By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline. This behaviour can be modified specifying an appropriate `featureCounts --extraAttributes` parameter. See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf). Note that you can also specify more than one desired value, separated by a comma.
+By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline.
+This behaviour can be modified by specifying `--fcExtraAttributes` when running the pipeline, which is passed on to featureCounts as an `--extraAttributes` parameter.
+See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
+Note that you can also specify more than one desired value, separated by a comma:
 ``--fcExtraAttributes gene_id,...``
 
 ## Alignment tool

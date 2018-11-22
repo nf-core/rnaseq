@@ -1,7 +1,12 @@
 # nf-core/rnaseq
 
-## [dev]
+## Version 1.2dev
 
+#### Bug Fixes
+* Fixed conda bug which caused problems with environment resolution due to changes in bioconda [#113](https://github.com/nf-core/rnaseq/issues/113)
+* Remove legacy rseqc `strandRule` config code. [#119](https://github.com/nf-core/rnaseq/issues/119)
+* Removed some outdated documentation about non-existent features
+* Config refactoring and code cleaning
 * Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
 
 ## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05

@@ -61,6 +61,7 @@ def helpMessage() {
 
     Presets:
       --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
+      --fcExtraAttributes           Define which extra parameters should also be included in featureCounts (default: gene_names)
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -670,6 +671,7 @@ if(params.aligner == 'hisat2'){
         """
     }
 }
+
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -910,6 +912,7 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
+    def extraAttributes = params.fcExtraAttributes ? "--extraAttributes ${params.fcExtraAttributes}" : ''
     if (forward_stranded && !unstranded) {
         featureCounts_direction = 1
     } else if (reverse_stranded && !unstranded){
@@ -918,7 +921,7 @@ process featureCounts {
     // Try to get real sample name
     sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
@@ -940,9 +943,18 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt'
 
     script:
+    if (input_files.size() == 1) {
     """
-    merge_featurecounts.py -o merged_gene_counts.txt -i $input_files
+    mv $input_files[0] 'merged_gene_counts.txt'
+    """    
+    } else {
     """
+    csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name" $input_files  | \ 
+    csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" |  \ 
+    sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \ 
+    > merged_gene_counts.txt
+    """
+    }
 }
 
 

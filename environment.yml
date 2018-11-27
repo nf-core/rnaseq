@@ -17,6 +17,7 @@ dependencies:
   - conda-forge::r-gplots=3.0.1
   - bioconda::bioconductor-edger=3.22.5
   - conda-forge::r-markdown=0.8
+  - bioconda::csvtk=0.15.0
   - bioconda::preseq=2.0.3
   - bioconda::rseqc=2.6.4
   - bioconda::samtools=1.9

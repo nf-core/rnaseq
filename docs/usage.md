@@ -125,6 +125,13 @@ These flags affect the commands used for several steps in the pipeline - namely 
   * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
   * StringTie: `--rf`
 
+## FeatureCounts Extra Gene Names
+By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline.
+This behaviour can be modified by specifying `--fcExtraAttributes` when running the pipeline, which is passed on to featureCounts as an `--extraAttributes` parameter.
+See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
+Note that you can also specify more than one desired value, separated by a comma:
+``--fcExtraAttributes gene_id,...``
+
 ## Alignment tool
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads to the reference genome. STAR is fast and common, but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome.
 

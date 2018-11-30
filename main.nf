@@ -115,13 +115,13 @@ params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : 
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
 
-ch_mdsplot_header = Channel.fromFile(file("$baseDir/assets/mdsplot_header.txt"))
-ch_heatmap_header = Channel.fromFile(file("$baseDir/assets/heatmap_header.txt"))
-ch_biotypes_header = Channel.fromFile(file("$baseDir/assets/biotypes_header.txt"))
-ch_multiqc_config = Channel.fromFile(file(params.multiqc_config))
-ch_output_docs = Channel.fromFile(file("$baseDir/docs/output.md"))
-Channel.fromFile(file("$baseDir/assets/where_are_my_files.txt"))
-       .set(ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort)
+ch_mdsplot_header = Channel.fromPath(file("$baseDir/assets/mdsplot_header.txt"))
+ch_heatmap_header = Channel.fromPath(file("$baseDir/assets/heatmap_header.txt"))
+ch_biotypes_header = Channel.fromPath(file("$baseDir/assets/biotypes_header.txt"))
+ch_multiqc_config = Channel.fromPath(file(params.multiqc_config))
+ch_output_docs = Channel.fromPath(file("$baseDir/docs/output.md"))
+Channel.fromPath(file("$baseDir/assets/where_are_my_files.txt"))
+       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1

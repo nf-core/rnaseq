@@ -13,7 +13,7 @@ before_install:
   # Pull the docker image first so the test doesn't wait for this
   - docker pull nfcore/rnaseq
   # Fake the tag locally so that the pipeline runs properly
-  - docker tag nfcore/rnaseq nfcore/rnaseq:1.1
+  - docker tag nfcore/rnaseq nfcore/rnaseq:latest
 
 install:
   # Install Nextflow

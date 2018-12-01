@@ -114,12 +114,14 @@ params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : fals
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
-mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
-heatmap_header = file("$baseDir/assets/heatmap_header.txt")
-biotypes_header = file("$baseDir/assets/biotypes_header.txt")
-multiqc_config = file(params.multiqc_config)
-output_docs = file("$baseDir/docs/output.md")
-wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
+
+ch_mdsplot_header = Channel.fromPath(file("$baseDir/assets/mdsplot_header.txt"))
+ch_heatmap_header = Channel.fromPath(file("$baseDir/assets/heatmap_header.txt"))
+ch_biotypes_header = Channel.fromPath(file("$baseDir/assets/biotypes_header.txt"))
+ch_multiqc_config = Channel.fromPath(file(params.multiqc_config))
+ch_output_docs = Channel.fromPath(file("$baseDir/docs/output.md"))
+Channel.fromPath(file("$baseDir/assets/where_are_my_files.txt"))
+       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -478,7 +480,7 @@ process trim_galore {
 
     input:
     set val(name), file(reads) from raw_reads_trimgalore
-    file wherearemyfiles
+    file wherearemyfiles from ch_where_trim_galore
 
     output:
     file "*fq.gz" into trimmed_reads
@@ -543,7 +545,7 @@ if(params.aligner == 'star'){
         file reads from trimmed_reads
         file index from star_index.collect()
         file gtf from gtf_star.collect()
-        file wherearemyfiles
+        file wherearemyfiles from ch_where_star
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
@@ -597,7 +599,7 @@ if(params.aligner == 'hisat2'){
         file reads from trimmed_reads
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
-        file wherearemyfiles
+        file wherearemyfiles from ch_where_hisat2
 
         output:
         file "${prefix}.bam" into hisat2_bam
@@ -655,7 +657,7 @@ if(params.aligner == 'hisat2'){
 
         input:
         file hisat2_bam
-        file wherearemyfiles
+        file wherearemyfiles from ch_where_hisat2_sort
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
@@ -903,7 +905,7 @@ process featureCounts {
     input:
     file bam_featurecounts
     file gtf from gtf_featureCounts.collect()
-    file biotypes_header
+    file biotypes_header from ch_biotypes_header
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
@@ -1013,8 +1015,8 @@ process sample_correlation {
     input:
     file input_files from geneCounts.collect()
     val num_bams from bam_count.count()
-    file mdsplot_header
-    file heatmap_header
+    file mdsplot_header from ch_mdsplot_header
+    file heatmap_header from ch_heatmap_header
 
     output:
     file "*.{txt,pdf,csv}" into sample_correlation_results
@@ -1097,7 +1099,7 @@ process multiqc {
     !params.skip_multiqc
 
     input:
-    file multiqc_config
+    file multiqc_config from ch_multiqc_config
     file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
@@ -1132,7 +1134,7 @@ process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     input:
-    file output_docs
+    file output_docs from ch_output_docs
 
     output:
     file "results_description.html"

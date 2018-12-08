@@ -118,7 +118,7 @@ params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: 
 ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")
 ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt")
-ch_multiqc_config = Channel.fromPath(params.multiqc_config))
+ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt")
        .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}

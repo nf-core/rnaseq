@@ -158,8 +158,9 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
+    Channel.fromPath(params.fasta)
+           .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
 }
 else {
     exit 1, "No reference genome specified!"
@@ -313,7 +314,7 @@ if(params.aligner == 'star' && !params.star_index && fasta){
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file fasta from fasta
+        file fasta from ch_fasta_for_star_index
         file gtf from gtf_makeSTARindex
 
         output:
@@ -364,7 +365,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file fasta from fasta
+        file fasta from ch_fasta_for_hisat_index
         file indexing_splicesites from indexing_splicesites
         file gtf from gtf_makeHISATindex
 

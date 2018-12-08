@@ -307,7 +307,7 @@ if( workflow.profile == 'standard'){
 /*
  * PREPROCESSING - Build STAR index
  */
-if(params.aligner == 'star' && !params.star_index && fasta){
+if(params.aligner == 'star' && !params.star_index && params.fasta){
     process makeSTARindex {
         tag fasta
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -358,7 +358,7 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
+if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
     process makeHISATindex {
         tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },

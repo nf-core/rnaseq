@@ -309,7 +309,7 @@ if( workflow.profile == 'standard'){
  */
 if(params.aligner == 'star' && !params.star_index && params.fasta){
     process makeSTARindex {
-        tag fasta
+        tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 

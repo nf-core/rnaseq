@@ -115,12 +115,12 @@ params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : 
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
 
-ch_mdsplot_header = Channel.fromPath(file("$baseDir/assets/mdsplot_header.txt"))
-ch_heatmap_header = Channel.fromPath(file("$baseDir/assets/heatmap_header.txt"))
-ch_biotypes_header = Channel.fromPath(file("$baseDir/assets/biotypes_header.txt"))
-ch_multiqc_config = Channel.fromPath(file(params.multiqc_config))
-ch_output_docs = Channel.fromPath(file("$baseDir/docs/output.md"))
-Channel.fromPath(file("$baseDir/assets/where_are_my_files.txt"))
+ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
+ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")
+ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt")
+ch_multiqc_config = Channel.fromPath(params.multiqc_config)
+ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
+Channel.fromPath("$baseDir/assets/where_are_my_files.txt")
        .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
 // Define regular variables so that they can be overwritten
@@ -158,8 +158,9 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
+    Channel.fromPath(params.fasta)
+           .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
 }
 else {
     exit 1, "No reference genome specified!"
@@ -306,14 +307,14 @@ if( workflow.profile == 'standard'){
 /*
  * PREPROCESSING - Build STAR index
  */
-if(params.aligner == 'star' && !params.star_index && fasta){
+if(params.aligner == 'star' && !params.star_index && params.fasta){
     process makeSTARindex {
-        tag fasta
+        tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file fasta from fasta
+        file fasta from ch_fasta_for_star_index
         file gtf from gtf_makeSTARindex
 
         output:
@@ -357,14 +358,14 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
+if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
     process makeHISATindex {
         tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file fasta from fasta
+        file fasta from ch_fasta_for_hisat_index
         file indexing_splicesites from indexing_splicesites
         file gtf from gtf_makeHISATindex
 

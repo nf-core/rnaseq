@@ -954,7 +954,6 @@ process merge_featureCounts {
     sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \\ 
     > merged_gene_counts.txt
     """
-    }
 }
 
 

@@ -931,6 +931,7 @@ process featureCounts {
     """
 }
 
+dump_me = featureCounts_to_merge.dump().set { featureCounts_to_merge }
 
 /*
  * STEP 9 - Merge featurecounts
@@ -947,8 +948,10 @@ process merge_featureCounts {
 
     script:
     //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-    def merge = ("$input_files.size()" == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
+    def list = input_files.size()
+    def merge = (input_files.size() == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
     """
+    echo $list
     $merge $input_files  | \\ 
     csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" |  \\ 
     sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \\ 

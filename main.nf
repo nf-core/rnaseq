@@ -906,7 +906,7 @@ process featureCounts {
     input:
     file bam_featurecounts
     file gtf from gtf_featureCounts.collect()
-    file biotypes_header from ch_biotypes_header
+    file biotypes_header from ch_biotypes_header.collect()
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
@@ -948,13 +948,10 @@ process merge_featureCounts {
 
     script:
     //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-    def single = input_files instanceof Path ? 1 : x.size()
+    def single = input_files instanceof Path ? 1 : input_files.size()
     def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
     """
-    $merge $input_files  | \\ 
-    csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" |  \\ 
-    sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \\ 
-    > merged_gene_counts.txt
+    $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
     """
 }
 

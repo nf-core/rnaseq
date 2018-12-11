@@ -931,8 +931,6 @@ process featureCounts {
     """
 }
 
-dump_me = featureCounts_to_merge.dump().set { featureCounts_to_merge }
-
 /*
  * STEP 9 - Merge featurecounts
  */

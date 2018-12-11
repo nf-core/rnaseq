@@ -946,6 +946,7 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt'
 
     script:
+    //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
     def merge = ("$input_files.size()" == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
     """
     $merge $input_files  | \\ 

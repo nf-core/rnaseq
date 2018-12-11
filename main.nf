@@ -481,7 +481,7 @@ process trim_galore {
 
     input:
     set val(name), file(reads) from raw_reads_trimgalore
-    file wherearemyfiles from ch_where_trim_galore
+    file wherearemyfiles from ch_where_trim_galore.collect
 
     output:
     file "*fq.gz" into trimmed_reads
@@ -546,7 +546,7 @@ if(params.aligner == 'star'){
         file reads from trimmed_reads
         file index from star_index.collect()
         file gtf from gtf_star.collect()
-        file wherearemyfiles from ch_where_star
+        file wherearemyfiles from ch_where_star.collect()
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
@@ -600,7 +600,7 @@ if(params.aligner == 'hisat2'){
         file reads from trimmed_reads
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
-        file wherearemyfiles from ch_where_hisat2
+        file wherearemyfiles from ch_where_hisat2.collect()
 
         output:
         file "${prefix}.bam" into hisat2_bam
@@ -658,7 +658,7 @@ if(params.aligner == 'hisat2'){
 
         input:
         file hisat2_bam
-        file wherearemyfiles from ch_where_hisat2_sort
+        file wherearemyfiles from ch_where_hisat2_sort.collect()
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody

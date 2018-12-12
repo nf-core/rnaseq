@@ -662,7 +662,7 @@ if(params.aligner == 'hisat2'){
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
-        file "${hisat2_bam.baseName}.sorted.bai" into bam_index_rseqc
+        file "${hisat2_bam.baseName}.sorted.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
         script:
@@ -745,13 +745,13 @@ process createBigWig {
 
     input:
     file bam from bam_for_genebody
+    file index from bam_index_genebody
 
     output:
     file "*.bigwig" into bigwig_for_genebody
 
     script:
     """
-    samtools index $bam
     bamCoverage -b $bam -p ${task.cpus} -o ${bam.baseName}.bigwig
     """
 }

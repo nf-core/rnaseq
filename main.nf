@@ -414,7 +414,7 @@ if(params.gff){
 
       script:
       """
-      gffread  $gff -T -o > ${gff.baseName}.gtf
+      gffread  $gff -T -o ${gff.baseName}.gtf
       """
   }
 }

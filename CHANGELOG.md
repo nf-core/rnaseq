@@ -9,7 +9,7 @@
 * Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
 * Remove legacy rseqc `strandRule` config code. [#119](https://github.com/nf-core/rnaseq/issues/119)
 * Added STRINGTIE ballgown output to results folder [#125](https://github.com/nf-core/rnaseq/issues/125)
-
+* BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
 
 
 #### Bug Fixes

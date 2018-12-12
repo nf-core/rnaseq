@@ -554,6 +554,7 @@ if(params.aligner == 'star'){
         file "*SJ.out.tab"
         file "*Log.out" into star_log
         file "where_are_my_files.txt"
+        file "*.bai" into bam_index_rseqc, bam_index_genebody
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -571,6 +572,7 @@ if(params.aligner == 'star'){
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
             --outFileNamePrefix $prefix $seqCenter \\
+        samtools index *.bam
         """
     }
     // Filter removes all 'aligned' channels that fail the check

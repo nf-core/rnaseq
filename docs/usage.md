@@ -308,6 +308,15 @@ Should be a string in the format integer-unit. eg. `--max_time '2.h'`
 Use to set a top-limit for the default CPU requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_cpus 1`
 
+### `--hisatBuildMemory`
+Required amount of memory in GB to build HISAT2 index with splice sites.
+The HiSAT2 index build can proceed with or without exon / splice junction information.
+To work with this, a very large amount of memory is required.
+If this memory is not available, the index build will proceed without splicing information.
+The `--hisatBuildMemory` option changes this threshold. By default it is `200GB` - if your system
+`--max_memory` is set to `128GB` but your genome is small enough to build using this, then you can
+allow the exon build to proceed by supplying `--hisatBuildMemory 100GB`
+
 ### `--plaintext_email`
 Set to receive plain-text e-mails instead of HTML formatted.
 

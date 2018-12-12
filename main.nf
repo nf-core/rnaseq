@@ -32,10 +32,10 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
       -profile                      Configuration profile to use. uppmax / uppmax_modules / hebbe / docker / aws
 
     Options:
+      --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
     Strandedness:
       --forward_stranded            The library is forward stranded
@@ -49,8 +49,6 @@ def helpMessage() {
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
-      --downloadFasta               If no STAR / Fasta reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
-      --downloadGTF                 If no GTF reference is supplied, a URL can be supplied to download a Fasta file at the start of the pipeline.
       --saveReference               Save the generated reference files the the Results directory.
       --saveTrimmed                 Save trimmed FastQ file intermediates
       --saveAlignedIntermediates    Save the BAM files from the Aligment step  - not done by default
@@ -63,6 +61,7 @@ def helpMessage() {
 
     Presets:
       --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
+      --fcExtraAttributes           Define which extra parameters should also be included in featureCounts (default: gene_names)
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -96,7 +95,6 @@ def helpMessage() {
 
 
 // Show help emssage
-params.help = false
 if (params.help){
     helpMessage()
     exit 0
@@ -107,35 +105,23 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
   }
 
-// Configurable variables
-params.name = false
-params.project = false
-params.genome = false
+// Reference index path configuration
+// Define these here - after the profiles are loaded with the iGenomes paths
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
-params.multiqc_config = "$baseDir/assets/multiqc_config.yaml"
-params.email = false
-params.plaintext_email = false
-params.seqCenter = false
-params.skip_qc = false
-params.skip_fastqc = false
-params.skip_rseqc = false
-params.skip_genebody_coverage = false
-params.skip_preseq = false
-params.skip_dupradar = false
-params.skip_edger = false
-params.skip_multiqc = false
 
-mdsplot_header = file("$baseDir/assets/mdsplot_header.txt")
-heatmap_header = file("$baseDir/assets/heatmap_header.txt")
-biotypes_header = file("$baseDir/assets/biotypes_header.txt")
-multiqc_config = file(params.multiqc_config)
-output_docs = file("$baseDir/docs/output.md")
-wherearemyfiles = file("$baseDir/assets/where_are_my_files.txt")
+
+ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
+ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")
+ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt")
+ch_multiqc_config = Channel.fromPath(params.multiqc_config)
+ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
+Channel.fromPath("$baseDir/assets/where_are_my_files.txt")
+       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -147,7 +133,6 @@ reverse_stranded = params.reverse_stranded
 unstranded = params.unstranded
 
 // Preset trimming options
-params.pico = false
 if (params.pico){
     clip_r1 = 3
     clip_r2 = 0
@@ -173,8 +158,9 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
+    Channel.fromPath(params.fasta)
+           .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
 }
 else {
     exit 1, "No reference genome specified!"
@@ -321,14 +307,14 @@ if( workflow.profile == 'standard'){
 /*
  * PREPROCESSING - Build STAR index
  */
-if(params.aligner == 'star' && !params.star_index && fasta){
+if(params.aligner == 'star' && !params.star_index && params.fasta){
     process makeSTARindex {
-        tag fasta
+        tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file fasta from fasta
+        file fasta from ch_fasta_for_star_index
         file gtf from gtf_makeSTARindex
 
         output:
@@ -372,14 +358,14 @@ if(params.aligner == 'hisat2' && !params.splicesites){
 /*
  * PREPROCESSING - Build HISAT2 index
  */
-if(params.aligner == 'hisat2' && !params.hisat2_index && fasta){
+if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
     process makeHISATindex {
         tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file fasta from fasta
+        file fasta from ch_fasta_for_hisat_index
         file indexing_splicesites from indexing_splicesites
         file gtf from gtf_makeHISATindex
 
@@ -428,7 +414,7 @@ if(params.gff){
 
       script:
       """
-      gffread  $gff -T -o > ${gff.baseName}.gtf
+      gffread  $gff -T -o ${gff.baseName}.gtf
       """
   }
 }
@@ -495,7 +481,7 @@ process trim_galore {
 
     input:
     set val(name), file(reads) from raw_reads_trimgalore
-    file wherearemyfiles
+    file wherearemyfiles from ch_where_trim_galore.collect()
 
     output:
     file "*fq.gz" into trimmed_reads
@@ -560,7 +546,7 @@ if(params.aligner == 'star'){
         file reads from trimmed_reads
         file index from star_index.collect()
         file gtf from gtf_star.collect()
-        file wherearemyfiles
+        file wherearemyfiles from ch_where_star.collect()
 
         output:
         set file("*Log.final.out"), file ('*.bam') into star_aligned
@@ -568,10 +554,12 @@ if(params.aligner == 'star'){
         file "*SJ.out.tab"
         file "*Log.out" into star_log
         file "where_are_my_files.txt"
+        file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        def avail_mem = task.memory ? "--limitBAMsortRAM ${task.memory.toBytes() - 100000000}" : ''
+        def star_mem = task.memory ?: params.star_memory ?: false
+        def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
         seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter'" : ''
         """
         STAR --genomeDir $index \\
@@ -583,7 +571,9 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-            --outFileNamePrefix $prefix $seqCenter \\
+             --outFileNamePrefix $prefix $seqCenter
+            
+        samtools index ${prefix}Aligned.sortedByCoord.out.bam
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -613,7 +603,7 @@ if(params.aligner == 'hisat2'){
         file reads from trimmed_reads
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
-        file wherearemyfiles
+        file wherearemyfiles from ch_where_hisat2.collect()
 
         output:
         file "${prefix}.bam" into hisat2_bam
@@ -671,10 +661,11 @@ if(params.aligner == 'hisat2'){
 
         input:
         file hisat2_bam
-        file wherearemyfiles
+        file wherearemyfiles from ch_where_hisat2_sort.collect()
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
+        file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
         script:
@@ -684,9 +675,11 @@ if(params.aligner == 'hisat2'){
             $hisat2_bam \\
             -@ ${task.cpus} $avail_mem \\
             -o ${hisat2_bam.baseName}.sorted.bam
+        samtools index ${hisat2_bam.baseName}.sorted.bam
         """
     }
 }
+
 /*
  * STEP 4 - RSeQC analysis
  */
@@ -723,20 +716,14 @@ process rseqc {
 
     input:
     file bam_rseqc
+    file index from bam_index_rseqc
     file bed12 from bed_rseqc.collect()
 
     output:
     file "*.{txt,pdf,r,xls}" into rseqc_results
 
     script:
-    def strandRule = ''
-    if (forward_stranded && !unstranded){
-        strandRule = params.singleEnd ? '-d ++,--' : '-d 1++,1--,2+-,2-+'
-    } else if (reverse_stranded && !unstranded){
-        strandRule = params.singleEnd ? '-d +-,-+' : '-d 1+-,1-+,2++,2--'
-    }
     """
-    samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
@@ -761,13 +748,13 @@ process createBigWig {
 
     input:
     file bam from bam_for_genebody
+    file index from bam_index_genebody
 
     output:
     file "*.bigwig" into bigwig_for_genebody
 
     script:
     """
-    samtools index $bam
     bamCoverage -b $bam -p ${task.cpus} -o ${bam.baseName}.bigwig
     """
 }
@@ -924,7 +911,7 @@ process featureCounts {
     input:
     file bam_featurecounts
     file gtf from gtf_featureCounts.collect()
-    file biotypes_header
+    file biotypes_header from ch_biotypes_header.collect()
 
     output:
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
@@ -933,6 +920,7 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
+    def extraAttributes = params.fcExtraAttributes ? "--extraAttributes ${params.fcExtraAttributes}" : ''
     if (forward_stranded && !unstranded) {
         featureCounts_direction = 1
     } else if (reverse_stranded && !unstranded){
@@ -941,13 +929,12 @@ process featureCounts {
     // Try to get real sample name
     sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
     """
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
     featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
     """
 }
-
 
 /*
  * STEP 9 - Merge featurecounts
@@ -963,8 +950,11 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt'
 
     script:
+    //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+    def single = input_files instanceof Path ? 1 : input_files.size()
+    def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
     """
-    merge_featurecounts.py -o merged_gene_counts.txt -i $input_files
+    $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
     """
 }
 
@@ -978,6 +968,7 @@ process stringtieFPKM {
         saveAs: {filename ->
             if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
             else if (filename.indexOf("cov_refs.gtf") > 0) "cov_refs/$filename"
+            else if (filename.indexOf("ballgown") > 0) "ballgown/$filename"
             else "$filename"
         }
 
@@ -990,6 +981,7 @@ process stringtieFPKM {
     file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
     file "${bam_stringtieFPKM}.cov_refs.gtf"
     file ".command.log" into stringtie_log
+    file "${bam_stringtieFPKM.baseName}_ballgown"
 
     script:
     def st_direction = ''
@@ -1024,8 +1016,8 @@ process sample_correlation {
     input:
     file input_files from geneCounts.collect()
     val num_bams from bam_count.count()
-    file mdsplot_header
-    file heatmap_header
+    file mdsplot_header from ch_mdsplot_header
+    file heatmap_header from ch_heatmap_header
 
     output:
     file "*.{txt,pdf,csv}" into sample_correlation_results
@@ -1108,7 +1100,7 @@ process multiqc {
     !params.skip_multiqc
 
     input:
-    file multiqc_config
+    file multiqc_config from ch_multiqc_config
     file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect()
@@ -1143,7 +1135,7 @@ process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     input:
-    file output_docs
+    file output_docs from ch_output_docs
 
     output:
     file "results_description.html"

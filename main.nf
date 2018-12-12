@@ -572,6 +572,7 @@ if(params.aligner == 'star'){
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
             --outFileNamePrefix $prefix $seqCenter \\
+            
         samtools index ${prefix}Aligned.sortedByCoord.out.bam \\
         """
     }

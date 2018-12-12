@@ -573,7 +573,7 @@ if(params.aligner == 'star'){
             --runDirPerm All_RWX \\
             --outFileNamePrefix $prefix $seqCenter \\
             
-        samtools index ${prefix}Aligned.sortedByCoord.out.bam \\
+        samtools index ${prefix}Aligned.sortedByCoord.out.bam
         """
     }
     // Filter removes all 'aligned' channels that fail the check

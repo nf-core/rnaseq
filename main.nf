@@ -554,6 +554,7 @@ if(params.aligner == 'star'){
         file "*SJ.out.tab"
         file "*Log.out" into star_log
         file "where_are_my_files.txt"
+        file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
         script:
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -570,7 +571,9 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-            --outFileNamePrefix $prefix $seqCenter \\
+             --outFileNamePrefix $prefix $seqCenter
+            
+        samtools index ${prefix}Aligned.sortedByCoord.out.bam
         """
     }
     // Filter removes all 'aligned' channels that fail the check
@@ -662,6 +665,7 @@ if(params.aligner == 'hisat2'){
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
+        file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
         script:
@@ -671,6 +675,7 @@ if(params.aligner == 'hisat2'){
             $hisat2_bam \\
             -@ ${task.cpus} $avail_mem \\
             -o ${hisat2_bam.baseName}.sorted.bam
+        samtools index ${hisat2_bam.baseName}.sorted.bam
         """
     }
 }
@@ -711,6 +716,7 @@ process rseqc {
 
     input:
     file bam_rseqc
+    file index from bam_index_rseqc
     file bed12 from bed_rseqc.collect()
 
     output:
@@ -718,7 +724,6 @@ process rseqc {
 
     script:
     """
-    samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
@@ -743,13 +748,13 @@ process createBigWig {
 
     input:
     file bam from bam_for_genebody
+    file index from bam_index_genebody
 
     output:
     file "*.bigwig" into bigwig_for_genebody
 
     script:
     """
-    samtools index $bam
     bamCoverage -b $bam -p ${task.cpus} -o ${bam.baseName}.bigwig
     """
 }

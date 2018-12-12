@@ -963,6 +963,7 @@ process stringtieFPKM {
         saveAs: {filename ->
             if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
             else if (filename.indexOf("cov_refs.gtf") > 0) "cov_refs/$filename"
+            else if (filename.indexOf("ballgown") > 0) "ballgown/$filename"
             else "$filename"
         }
 
@@ -975,6 +976,7 @@ process stringtieFPKM {
     file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
     file "${bam_stringtieFPKM}.cov_refs.gtf"
     file ".command.log" into stringtie_log
+    file "${bam_stringtieFPKM.baseName}_ballgown"
 
     script:
     def st_direction = ''

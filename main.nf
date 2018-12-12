@@ -662,6 +662,7 @@ if(params.aligner == 'hisat2'){
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
+        file "${hisat2_bam.baseName}.sorted.bai" into bam_index_rseqc
         file "where_are_my_files.txt"
 
         script:
@@ -671,6 +672,7 @@ if(params.aligner == 'hisat2'){
             $hisat2_bam \\
             -@ ${task.cpus} $avail_mem \\
             -o ${hisat2_bam.baseName}.sorted.bam
+        samtools index ${hisat2_bam.baseName}.sorted.bam
         """
     }
 }
@@ -711,6 +713,7 @@ process rseqc {
 
     input:
     file bam_rseqc
+    file index from bam_index_rseqc
     file bed12 from bed_rseqc.collect()
 
     output:
@@ -718,7 +721,6 @@ process rseqc {
 
     script:
     """
-    samtools index $bam_rseqc
     infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
     junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
     bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt

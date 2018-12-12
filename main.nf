@@ -664,7 +664,7 @@ if(params.aligner == 'hisat2'){
 
         output:
         file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
-        file "${hisat2_bam.baseName}.sorted.bai" into bam_index_rseqc, bam_index_genebody
+        file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
         script:

@@ -2,20 +2,21 @@
 
 ## Version 1.2dev
 
-
 #### Pipeline updates
 * Removed some outdated documentation about non-existent features
 * Config refactoring and code cleaning
 * Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
 * Remove legacy rseqc `strandRule` config code. [#119](https://github.com/nf-core/rnaseq/issues/119)
 * Added STRINGTIE ballgown output to results folder [#125](https://github.com/nf-core/rnaseq/issues/125)
+* HiSAT index build now requests `200GB` memory, enough to use the exons / splice junction option for building.
+  * Added documentation about the `--hisatBuildMemory` option.
 * BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
-
 
 #### Bug Fixes
 * Fixed conda bug which caused problems with environment resolution due to changes in bioconda [#113](https://github.com/nf-core/rnaseq/issues/113)
 * Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
 * Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
+
 
 ## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 

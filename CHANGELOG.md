@@ -1,5 +1,10 @@
 # nf-core/rnaseq
 
+## [Unreleased]
+
+#### Pipeline Updates
+* Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
+
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
 #### Pipeline updates

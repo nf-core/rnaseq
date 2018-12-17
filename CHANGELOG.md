@@ -1,6 +1,6 @@
 # nf-core/rnaseq
 
-## Version 1.2dev
+## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
 #### Pipeline updates
 * Removed some outdated documentation about non-existent features

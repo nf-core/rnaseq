@@ -324,7 +324,7 @@ The `--hisatBuildMemory` option changes this threshold. By default it is `200GB`
 allow the exon build to proceed by supplying `--hisatBuildMemory 100GB`
 
 ### `--subsampFilesizeThreshold`
-This parameter defines from which threshold in file size the RSeQC `gene_body_coverage` is executed on subsampled files instead of the entire BAM file. 
+This parameter defines the threshold in BAM file size (in bytes) at which data subsampling is used prior to the RSeQC `gene_body_coverage` step. This step is done to speed up and reduce compute resources for the gene body coverage analysis .
 For very large files this means, that the BAM file will be subsampled to compute the `gene_body_coverage`, for small files there will not be a subsampling step.
 
 ### `--plaintext_email`

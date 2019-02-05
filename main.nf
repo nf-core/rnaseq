@@ -582,7 +582,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_for_genebody }
+    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
 }
 
 
@@ -666,7 +666,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles from ch_where_hisat2_sort.collect()
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM, bam_for_genebody
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
         file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
@@ -736,35 +736,37 @@ process rseqc {
     """
 }
 
-
 /*
- * Step 4.1 Rseqc create BigWig coverage
+ * Step 4.1 Subsample the BAM files if necessary
  */
+bam_forSubsamp
+    .filter { it.size() > params.subsampFilesizeThreshold }
+    .map { [it, params.subsampFilesizeThreshold / it.size() ] }
+    .set{ bam_forSubsampFiltered }
+bam_skipSubsamp
+    .filter { it.size() <= params.subsampFilesizeThreshold }
+    .set{ bam_skipSubsampFiltered }
 
-process createBigWig {
-    tag "${bam.baseName - 'sortedByCoord.out'}"
-    publishDir "${params.outdir}/bigwig", mode: 'copy'
-
-    when:
-    !params.skip_qc && !params.skip_genebody_coverage
+process bam_subsample {
+    tag "${bam.baseName - '.sorted'}"
 
     input:
-    file bam from bam_for_genebody
-    file index from bam_index_genebody
+    set file(bam), val(fraction) from bam_forSubsampFiltered
 
     output:
-    file "*.bigwig" into bigwig_for_genebody
+    file "*_subsamp.bam" into bam_subsampled
 
     script:
     """
-    bamCoverage -b $bam -p ${task.cpus} -o ${bam.baseName}.bigwig
+    samtools view -s $fraction -b $bam | samtools sort -o ${bam.baseName}_subsamp.bam
     """
 }
+
 /*
  * Step 4.2 Rseqc genebody_coverage
  */
 process genebody_coverage {
-    tag "${bigwig.baseName}"
+    tag "${bam.baseName - '.sorted'}"
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
@@ -778,7 +780,7 @@ process genebody_coverage {
     !params.skip_qc && !params.skip_genebody_coverage
 
     input:
-    file bigwig from bigwig_for_genebody
+    file bam from bam_subsampled.concat(bam_skipSubsampFiltered)
     file bed12 from bed_genebody_coverage.collect()
 
     output:
@@ -786,10 +788,12 @@ process genebody_coverage {
 
     script:
     """
-    geneBody_coverage2.py \\
-        -i $bigwig \\
-        -o ${bigwig.baseName}.rseqc.txt \\
+    samtools index $bam
+    geneBody_coverage.py \\
+        -i $bam \\
+        -o ${bam.baseName}.rseqc \\
         -r $bed12
+    mv log.txt ${bam.baseName}.rseqc.log.txt
     """
 }
 

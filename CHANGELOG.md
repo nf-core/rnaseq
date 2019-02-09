@@ -1,5 +1,21 @@
 # nf-core/rnaseq
 
+## [Unreleased]
+
+#### Pipeline Updates
+* Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
+* Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
+
+#### Dependency Updates
+* RSeQC 2.6.4 -> 3.0.0
+* Picard 2.18.15 -> 2.18.23
+* r-data.table 1.11.4 -> 1.12.0
+* r-markdown 0.8 -> 0.9
+* csvtk 0.15.0 -> 0.17.0 
+* subread 1.6.2 -> 1.6.3
+* gffread 0.9.9 -> 0.9.12
+* multiqc 1.6 -> 1.7
+
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
 #### Pipeline updates

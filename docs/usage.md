@@ -126,11 +126,17 @@ These flags affect the commands used for several steps in the pipeline - namely 
   * StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
+### Default Attribute Type 
+
+By default, the pipeline uses `gene_name` as the default gene identifier group. In case you need to adjust this, specify using the option `--fcGroupFeatures` to use a different category present in your provided GTF file. Please also take care to use a suitable attribute to categorize the `biotype` of the selected features in your GTF then, using the option `--fcGroupFeaturesType` (default: `gene_biotype`).
+
+### Extra Gene Names
 By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline.
 This behaviour can be modified by specifying `--fcExtraAttributes` when running the pipeline, which is passed on to featureCounts as an `--extraAttributes` parameter.
 See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
 Note that you can also specify more than one desired value, separated by a comma:
 ``--fcExtraAttributes gene_id,...``
+
 
 ## Alignment tool
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads to the reference genome. STAR is fast and common, but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome.
@@ -316,6 +322,11 @@ If this memory is not available, the index build will proceed without splicing i
 The `--hisatBuildMemory` option changes this threshold. By default it is `200GB` - if your system
 `--max_memory` is set to `128GB` but your genome is small enough to build using this, then you can
 allow the exon build to proceed by supplying `--hisatBuildMemory 100GB`
+
+### `--subsampFilesizeThreshold`
+This parameter defines the threshold in BAM file size (in bytes) at which data subsampling is used prior to the RSeQC `gene_body_coverage` step. This step is done to speed up and reduce compute resources for the gene body coverage analysis .
+For very large files this means, that the BAM file will be subsampled to compute the `gene_body_coverage`, for small files there will not be a subsampling step.
+By default this parameter is set to `10000000000` - ten gigabytes.
 
 ### `--plaintext_email`
 Set to receive plain-text e-mails instead of HTML formatted.

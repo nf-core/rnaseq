@@ -39,18 +39,18 @@
             "type": "boolean"
         },
         {
-            "name": "reverse_stranded",
-            "label": "Reverse stranded",
-            "usage": "Samples are made using a reverse-stranded library type.",
+            "name": "forward_stranded",
+            "label": "Forward stranded",
+            "usage": "Samples are made using a forward-stranded library type.",
             "group": "Main options",
             "render": "check-box",
             "default_value": false,
             "type": "boolean"
         },
         {
-            "name": "forward_stranded",
-            "label": "Forward stranded",
-            "usage": "Samples are made using a forward-stranded library type.",
+            "name": "reverse_stranded",
+            "label": "Reverse stranded",
+            "usage": "Samples are made using a reverse-stranded library type.",
             "group": "Main options",
             "render": "check-box",
             "default_value": false,
@@ -141,6 +141,66 @@
                     "Sscrofa10.2",
                     "AGPv3"
             ],
+            "default_value": ""
+        },
+        {
+            "name": "star_index",
+            "label": "STAR index",
+            "usage": "Path to STAR index",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "hisat2_index",
+            "label": "HISAT2 index",
+            "usage": "Path to HiSAT2 index",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "fasta",
+            "label": "FASTA",
+            "usage": "Path to Fasta reference",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "gtf",
+            "label": "GTF",
+            "usage": "Path to GTF file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "gff",
+            "label": "GFF",
+            "usage": "Path to GFF3 file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "bed12",
+            "label": "BED12",
+            "usage": "Path to bed12 file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
             "default_value": ""
         },
         {
@@ -452,7 +512,7 @@
         {
             "name": "seqCenter",
             "label": "Sequencing center",
-            "usage": "Use to label BAM file headers with the name of the sequencing center",
+            "usage": "Add sequencing center in @RG line of output BAM header",
             "group": "Advanced",
             "render": "textfield",
             "pattern": ".*",

@@ -372,7 +372,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
         file gtf from gtf_makeHISATindex
 
         output:
-        file "${fasta.baseName}.*.ht2" into hs2_indices
+        file "${fasta.baseName}.*.ht2*" into hs2_indices
 
         script:
         if( !task.memory ){

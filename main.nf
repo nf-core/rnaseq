@@ -613,7 +613,7 @@ if(params.aligner == 'hisat2'){
         file "where_are_my_files.txt"
 
         script:
-        index_base = hs2_indices[0].toString() - ~/(.\d.ht2)?(.\d.ht2l)?/
+        index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         seqCenter = params.seqCenter ? "--rg-id ${prefix} --rg CN:${params.seqCenter.replaceAll('\\s','_')}" : ''
         def rnastrandness = ''

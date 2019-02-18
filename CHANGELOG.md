@@ -1,10 +1,11 @@
 # nf-core/rnaseq
 
-## [Unreleased]
+## Version 1.3dev
 
 #### Pipeline Updates
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
+* Added a `parameters.settings.json` file for use with the new `nf-core launch` helper tool.
 * Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
 
 #### Bug fixes
@@ -16,7 +17,7 @@
 * Picard 2.18.15 -> 2.18.23
 * r-data.table 1.11.4 -> 1.12.0
 * r-markdown 0.8 -> 0.9
-* csvtk 0.15.0 -> 0.17.0 
+* csvtk 0.15.0 -> 0.17.0
 * subread 1.6.2 -> 1.6.3
 * gffread 0.9.9 -> 0.9.12
 * multiqc 1.6 -> 1.7

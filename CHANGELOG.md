@@ -5,6 +5,7 @@
 #### Pipeline Updates
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
+* Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
 
 #### Bug fixes
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)

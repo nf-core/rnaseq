@@ -675,7 +675,7 @@ if(params.aligner == 'hisat2'){
         """
         samtools sort \\
             $hisat2_bam \\
-            -@ ${task.cpus} -m ${avail_mem} \\
+            -@ ${task.cpus} ${avail_mem} \\
             -o ${hisat2_bam.baseName}.sorted.bam
         samtools index ${hisat2_bam.baseName}.sorted.bam
         """

@@ -671,11 +671,12 @@ if(params.aligner == 'hisat2'){
         file "where_are_my_files.txt"
 
         script:
-        def avail_mem = task.memory ? "-m ${task.memory.toBytes() / task.cpus}" : ''
+        def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
+        def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
         """
         samtools sort \\
             $hisat2_bam \\
-            -@ ${task.cpus} $avail_mem \\
+            -@ ${task.cpus} ${avail_mem} \\
             -o ${hisat2_bam.baseName}.sorted.bam
         samtools index ${hisat2_bam.baseName}.sorted.bam
         """

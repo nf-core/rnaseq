@@ -43,25 +43,6 @@ ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt").set{ ch_where }
 
-// Define regular variables so that they can be overwritten
-clip_r1 = params.clip_r1
-clip_r2 = params.clip_r2
-three_prime_clip_r1 = params.three_prime_clip_r1
-three_prime_clip_r2 = params.three_prime_clip_r2
-forward_stranded = params.forward_stranded
-reverse_stranded = params.reverse_stranded
-unstranded = params.unstranded
-
-// Preset trimming options
-if (params.pico){
-    clip_r1 = 3
-    clip_r2 = 0
-    three_prime_clip_r1 = 0
-    three_prime_clip_r2 = 3
-    forward_stranded = true
-    reverse_stranded = false
-    unstranded = false
-}
 
 // Validate inputs
 if (params.aligner != 'star' && params.aligner != 'hisat2'){
@@ -125,13 +106,6 @@ if(workflow.profile == 'awsbatch'){
     if (!workflow.workDir.startsWith('s3') || !params.outdir.startsWith('s3')) exit 1, "Specify S3 URLs for workDir and outdir parameters on AWSBatch!"
 }
 
-// Has the run name been specified by the user?
-//  this has the bonus effect of catching both -name and --name
-custom_runName = params.name
-if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
-  custom_runName = workflow.runName
-}
-
 
 /*
  * Create a channel for input read files
@@ -159,62 +133,7 @@ if(params.readPaths){
 
 include 'modules/rnaseq' as _ params(params)
 
-
-log.info """=======================================================
-                                          ,--./,-.
-          ___     __   __   __   ___     /,-._.--~\'
-    |\\ | |__  __ /  ` /  \\ |__) |__         }  {
-    | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
-                                          `._,._,\'
- nf-core/rnaseq : RNA-Seq Best Practice v${workflow.manifest.version}
-======================================================="""
-def summary = [:]
-summary['Run Name']     = custom_runName ?: workflow.runName
-summary['Reads']        = params.reads
-summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Genome']       = params.genome
-if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
-summary['Strandedness'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
-summary['Trim R1'] = clip_r1
-summary['Trim R2'] = clip_r2
-summary["Trim 3' R1"] = three_prime_clip_r1
-summary["Trim 3' R2"] = three_prime_clip_r2
-if(params.aligner == 'star'){
-    summary['Aligner'] = "STAR"
-    if(params.star_index)          summary['STAR Index']   = params.star_index
-    else if(params.fasta)          summary['Fasta Ref']    = params.fasta
-} else if(params.aligner == 'hisat2') {
-    summary['Aligner'] = "HISAT2"
-    if(params.hisat2_index)        summary['HISAT2 Index'] = params.hisat2_index
-    else if(params.fasta)          summary['Fasta Ref']    = params.fasta
-    if(params.splicesites)         summary['Splice Sites'] = params.splicesites
-}
-if(params.gtf)                 summary['GTF Annotation']  = params.gtf
-if(params.gff)                 summary['GFF3 Annotation']  = params.gff
-if(params.bed12)               summary['BED Annotation']  = params.bed12
-summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
-summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
-summary['Save Intermeds'] = params.saveAlignedIntermediates ? 'Yes' : 'No'
-summary['Max Memory']     = params.max_memory
-summary['Max CPUs']       = params.max_cpus
-summary['Max Time']       = params.max_time
-summary['Output dir']     = params.outdir
-summary['Working dir']    = workflow.workDir
-summary['Container']      = workflow.container
-if(workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Current home']   = "$HOME"
-summary['Current user']   = "$USER"
-summary['Current path']   = "$PWD"
-summary['Script dir']     = workflow.projectDir
-summary['Config Profile'] = workflow.profile
-if(params.project) summary['UPPMAX Project'] = params.project
-if(params.email) {
-    summary['E-mail Address'] = params.email
-    summary['MultiQC maxsize'] = params.maxMultiqcEmailFileSize
-}
-log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
-log.info "========================================="
-
+summary = create_summary()
 
 // Show a big error message if we're running on the base config and an uppmax cluster
 if( workflow.profile == 'standard'){
@@ -271,14 +190,11 @@ if(!params.bed12){
     makeBED12(ch_gtf_make).set { ch_bed12 }
 }
 
-
 /*
  * STEP 1 - FastQC
  */
 
-
  fastqc(ch_raw_reads)
-
 
 /*
  * STEP 2 - Trim Galore!
@@ -320,12 +236,13 @@ if(params.aligner == 'star'){
     // Filter removes all 'aligned' channels that fail the check
     star.output
         .first 
-        .filter { logs, bams -> rnaseq.check_log(logs) }
+        .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
         .set { ch_bam }
     
     star.output.second.set { alignment_logs }
-    star.output.third.set { star_log }
+    star.output.fourth.set { star_log }
+    star.output.sixth.set { ch_bam_index }
 }
 
 /*
@@ -352,7 +269,7 @@ if(params.aligner == 'hisat2'){
  * STEP 4 - RSeQC analysis
  */
 
- rseqc( bam_ch, ch_bam_index, ch_bed12.collect() )
+ rseqc( ch_bam, ch_bam_index, ch_bed12.collect() )
 
 /*
  * Step 4.1 Rseqc create BigWig coverage
@@ -364,14 +281,12 @@ createBigWig(ch_bam, ch_bam_index)
  * Step 4.2 Rseqc genebody_coverage
  */
 
-genebody_coverage(bigwig.output, ch_bed12.collect()) 
-
+genebody_coverage(createBigWig.output, ch_bed12.collect()) 
 
 /*
  * STEP 5 - preseq analysis
  */
  preseq( ch_bam )
-
 
 /*
  * STEP 6 Mark duplicates
@@ -381,34 +296,30 @@ genebody_coverage(bigwig.output, ch_bed12.collect())
  markDuplicates.output.first.set { bam_md }
  markDuplicates.output.second.set { picard_results }
 
-
 /*
  * STEP 7 - dupRadar
  */
 
  dupradar( markDuplicates.output.first, ch_gtf_make.collect() ) 
 
-
 /*
  * STEP 8 Feature counts
  */
  featureCounts( ch_bam, ch_gtf_make.collect(), ch_biotypes_header.collect() )
  featureCounts.output.first.set {ch_feature_counts }
- featureCounts.output.second { featureCounts_logs }
- featureCounts.output.third { featureCounts_biotype }
+ featureCounts.output.second.set { featureCounts_logs }
+ featureCounts.output.third.set { featureCounts_biotype }
 
 /*
  * STEP 9 - Merge featurecounts
  */
  merge_featureCounts( ch_feature_counts.collect() )
 
-
 /*
  * STEP 10 - stringtie FPKM
  */
  stringtieFPKM(ch_bam, ch_gtf_make.collect())
  stringtieFPKM.output.fourth.set { stringtie_log }
-
 
 /*
  * STEP 11 - edgeR MDS and heatmap
@@ -425,12 +336,10 @@ genebody_coverage(bigwig.output, ch_bed12.collect())
  */
 get_software_versions() 
 
-
 /*
  * Pipeline parameters to go into MultiQC report
  */
- workflow_summary_mqc() 
-
+ workflow_summary_mqc()
 
 /*
  * STEP 12 MultiQC
@@ -452,106 +361,17 @@ get_software_versions()
     workflow_summary_mqc.output.collect()
  ) 
 
-
 /*
  * STEP 13 - Output Description HTML
  */
  output_documentation( ch_output_docs )
-
 
 /*
  * Completion e-mail notification
  */
 workflow.onComplete {
 
-    // Set up the e-mail variables
-    def subject = "[nfcore/rnaseq] Successful: $workflow.runName"
-    if(skipped_poor_alignment.size() > 0){
-        subject = "[nfcore/rnaseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
-    }
-    if(!workflow.success){
-      subject = "[nfcore/rnaseq] FAILED: $workflow.runName"
-    }
-    def email_fields = [:]
-    email_fields['version'] = workflow.manifest.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
-    email_fields['success'] = workflow.success
-    email_fields['dateComplete'] = workflow.complete
-    email_fields['duration'] = workflow.duration
-    email_fields['exitStatus'] = workflow.exitStatus
-    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-    email_fields['commandLine'] = workflow.commandLine
-    email_fields['projectDir'] = workflow.projectDir
-    email_fields['summary'] = summary
-    email_fields['summary']['Date Started'] = workflow.start
-    email_fields['summary']['Date Completed'] = workflow.complete
-    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-    if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-    if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-    if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-    if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
-    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
-
-    // On success try attach the multiqc report
-    def mqc_report = null
-    try {
-        if (workflow.success && !params.skip_multiqc) {
-            mqc_report = multiqc_report.getVal()
-            if (mqc_report.getClass() == ArrayList){
-                log.warn "[nfcore/rnaseq] Found multiple reports from process 'multiqc', will use only one"
-                mqc_report = mqc_report[0]
-                }
-        }
-    } catch (all) {
-        log.warn "[nfcore/rnaseq] Could not attach MultiQC report to summary email"
-    }
-
-    // Render the TXT template
-    def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
-    def txt_template = engine.createTemplate(tf).make(email_fields)
-    def email_txt = txt_template.toString()
-
-    // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
-    def html_template = engine.createTemplate(hf).make(email_fields)
-    def email_html = html_template.toString()
-
-    // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
-    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-    def sendmail_html = sendmail_template.toString()
-
-    // Send the HTML e-mail
-    if (params.email) {
-        try {
-          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
-          // Try to send HTML e-mail using sendmail
-          [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nfcore/rnaseq] Sent summary e-mail to $params.email (sendmail)"
-        } catch (all) {
-          // Catch failures and try with plaintext
-          [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[nfcore/rnaseq] Sent summary e-mail to $params.email (mail)"
-        }
-    }
-
-    // Switch the embedded MIME images with base64 encoded src
-    ngirnaseqlogo = new File("$baseDir/assets/nfcore-rnaseq_logo.png").bytes.encodeBase64().toString()
-    email_html = email_html.replaceAll(~/cid:ngilogo/, "data:image/png;base64,$ngilogo")
-
-    // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/pipeline_info/" )
-    if( !output_d.exists() ) {
-      output_d.mkdirs()
-    }
-    def output_hf = new File( output_d, "pipeline_report.html" )
-    output_hf.withWriter { w -> w << email_html }
-    def output_tf = new File( output_d, "pipeline_report.txt" )
-    output_tf.withWriter { w -> w << email_txt }
+    send_email(summary, skipped_poor_alignment)
 
     if(skipped_poor_alignment.size() > 0){
         log.info "[nfcore/rnaseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"

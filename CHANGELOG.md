@@ -7,6 +7,7 @@
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
 * Added a `parameters.settings.json` file for use with the new `nf-core launch` helper tool.
 * Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
+* Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
 
 #### Bug fixes
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)

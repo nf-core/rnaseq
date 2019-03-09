@@ -74,3 +74,18 @@ def print_usage() {
       --awsregion                   The AWS Region for your AWS Batch job to run on
     """.stripIndent()
 }
+
+def check_profile() {
+  // Show a big error message if we're running on the base config and an uppmax cluster
+  if( workflow.profile == 'standard'){
+      if ( "hostname".execute().text.contains('.uppmax.uu.se') ) {
+          log.error "====================================================\n" +
+                    "  WARNING! You are running with the default 'standard'\n" +
+                    "  pipeline config profile, which runs on the head node\n" +
+                    "  and assumes all software is on the PATH.\n" +
+                    "  ALL JOBS ARE RUNNING LOCALLY and stuff will probably break.\n" +
+                    "  Please use `-profile uppmax` to run on UPPMAX clusters.\n" +
+                    "============================================================"
+      }
+  }
+}

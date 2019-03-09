@@ -85,7 +85,71 @@ def create_summary() {
     return summary
 }
 
-def send_email(summary, skipped_poor_alignment) {
+def get_input_reads() {
+    if(!params.readPaths) {
+        return Channel
+            .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
+            .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
+    }
+
+    if(params.singleEnd){
+        return Channel
+            .from(params.readPaths)
+            .map { row -> [ row[0], [file(row[1][0])]] }
+            .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
+    } 
+
+    return Channel
+        .from(params.readPaths)
+        .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
+        .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
+}
+
+// Function that checks the alignment rate of the STAR output
+// and returns true if the alignment passed and otherwise false
+skipped_poor_alignment = []
+
+def check_log(logs) {
+    def percent_aligned = 0;
+    logs.eachLine { line ->
+        if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
+            percent_aligned = matcher[0][1]
+        }
+    }
+    logname = logs.getBaseName() - 'Log.final'
+    if(percent_aligned.toFloat() <= '5'.toFloat() ){
+        log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
+        skipped_poor_alignment << logname
+        return false
+    } else {
+        log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
+        return true
+    }
+}
+
+def print_completion_info() {
+    if(skipped_poor_alignment.size() > 0){
+        log.info "[nfcore/rnaseq] WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!"
+    }
+
+    log.info "[nfcore/rnaseq] Pipeline Complete"
+
+    if(!workflow.success){
+        if( workflow.profile == 'standard'){
+            if ( "hostname".execute().text.contains('.uppmax.uu.se') ) {
+                log.error "====================================================\n" +
+                        "  WARNING! You are running with the default 'standard'\n" +
+                        "  pipeline config profile, which runs on the head node\n" +
+                        "  and assumes all software is on the PATH.\n" +
+                        "  This is probably why everything broke.\n" +
+                        "  Please use `-profile uppmax` to run on UPPMAX clusters.\n" +
+                        "============================================================"
+            }
+        }
+    }
+}
+
+def send_email(summary) {
    // Set up the e-mail variables
     def subject = "[nfcore/rnaseq] Successful: $workflow.runName"
     if(skipped_poor_alignment.size() > 0){

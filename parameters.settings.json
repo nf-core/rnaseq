@@ -441,16 +441,6 @@
             "default_value": ""
         },
         {
-            "name": "clusterOptions",
-            "label": "Cluster job options",
-            "usage": "Submit arbitrary cluster scheduler options (not available for all config profiles).",
-            "render": "textfield",
-            "pattern": ".*",
-            "type": "string",
-            "default_value": "",
-            "group": "Cluster job submission"
-        },
-        {
             "name": "awsregion",
             "label": "AWS Region",
             "usage": "The AWS region to run your job in.",

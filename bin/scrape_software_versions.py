@@ -53,7 +53,7 @@ for k in results:
 # Dump to YAML
 print ('''
 id: 'software_versions'
-section_name: 'nfcore/rnaseq Software Versions'
+section_name: 'nf-core/rnaseq Software Versions'
 section_href: 'https://github.com/nf-core/rnaseq'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'

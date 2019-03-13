@@ -2,7 +2,7 @@
  Where are my files?
 =====================
 
-By default, the nfcore/rnaseq pipeline does not save large intermediate files to the
+By default, the nf-core/rnaseq pipeline does not save large intermediate files to the
 results directory. This is to try to conserve disk space.
 
 These files can be found in the pipeline `work` directory if needed.

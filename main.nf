@@ -235,18 +235,14 @@ if(params.readPaths){
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-summary['Pipeline Name']    = 'nf-core/rnaseq'
-summary['Pipeline Version'] = workflow.manifest.version
+if(workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Reads']            = params.reads
 summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Genome']           = params.genome
-if( params.pico ) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
+if(params.genome) summary['Genome'] = params.genome
+if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
-summary['Trim R1']          = clip_r1
-summary['Trim R2']          = clip_r2
-summary["Trim 3' R1"]       = three_prime_clip_r1
-summary["Trim 3' R2"]       = three_prime_clip_r2
+summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2"
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
     if(params.star_index)          summary['STAR Index']   = params.star_index
@@ -260,20 +256,14 @@ if(params.aligner == 'star'){
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
-summary['Save Reference'] = params.saveReference ? 'Yes' : 'No'
-summary['Save Trimmed']   = params.saveTrimmed ? 'Yes' : 'No'
-summary['Save Intermeds'] = params.saveAlignedIntermediates ? 'Yes' : 'No'
-summary['Max Memory']     = params.max_memory
-summary['Max CPUs']       = params.max_cpus
-summary['Max Time']       = params.max_time
-summary['Output dir']     = params.outdir
-summary['Working dir']    = workflow.workDir
+summary['Save prefs']     = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
+summary['Max Resources']  = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 summary['Container']      = workflow.container
-if(workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Current home']   = workflow.homeDir
-summary['Current user']   = workflow.userName
-summary['Current path']   = workflow.launchDir
+summary['Output dir']     = params.outdir
+summary['Launch dir']     = workflow.launchDir
+summary['Working dir']    = workflow.workDir
 summary['Script dir']     = workflow.projectDir
+summary['User']           = workflow.userName
 summary['Config Profile'] = workflow.profile
 if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
 if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact

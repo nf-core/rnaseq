@@ -6,14 +6,14 @@ To start using the nf-core/rnaseq pipeline, follow the steps below:
 <!-- TOC START min:2 max:3 link:true asterisk:true update:true -->
 * [Install NextFlow](#install-nextflow)
 * [Install the pipeline](#install-the-pipeline)
-    * [Automatic](#automatic)
-    * [Offline](#offline)
-    * [Development](#development)
+  * [Automatic](#automatic)
+  * [Offline](#offline)
+  * [Development](#development)
 * [Pipeline configuration](#pipeline-configuration)
-    * [Docker](#docker)
-    * [Singularity](#singularity)
-    * [Conda](#conda)
-    * [Configuration profiles](#configuration-profiles)
+  * [Docker](#docker)
+  * [Singularity](#singularity)
+  * [Conda](#conda)
+  * [Configuration profiles](#configuration-profiles)
 * [Reference genomes](#reference-genomes)
 <!-- TOC END -->
 
@@ -78,7 +78,7 @@ Be warned of two important points about this default configuration:
 ### Docker
 First, install docker on your system: [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
-Then, running the pipeline with the option `-profile docker` tells Nextflow to enable Docker for this run. An image containing all of the software requirements will be automatically fetched and used from dockerhub (https://hub.docker.com/r/nfcore/rnaseq).
+Then, running the pipeline with the option `-profile docker` tells Nextflow to enable Docker for this run. An image containing all of the software requirements will be automatically fetched and used from dockerhub ([https://hub.docker.com/r/nfcore/rnaseq](https://hub.docker.com/r/nfcore/rnaseq)).
 
 ### Singularity
 If you're not able to use Docker then [Singularity](http://singularity.lbl.gov/) is a great alternative.

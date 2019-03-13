@@ -1,7 +1,6 @@
 # nf-core/rnaseq: Troubleshooting
 
 ## Input files not found
-
 If only no file, only one input file , or only read one and not read two is picked up then something is wrong with your input file declaration
 
 1. The path must be enclosed in quotes (`'` or `"`)
@@ -17,7 +16,7 @@ ERROR ~ Cannot find any reads matching: *{1,2}.fastq.gz
 
 Note that if your sample name is "messy" then you have to be very particular with your glob specification. A file name like `L1-1-D-2h_S1_L002_R1_001.fastq.gz` can be difficult enough for a human to read. Specifying `*{1,2}*.gz` wont work give you what you want Whilst `*{R1,R2}*.gz` will.
 
-### Some of my samples are missing!
+### Some samples are missing
 If the pipeline ran without crashing and some samples are missing then there are two possible explanations:
 
 1. You made a mistake when declaring the input files - in that case see above.

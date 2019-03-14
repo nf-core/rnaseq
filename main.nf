@@ -1139,7 +1139,7 @@ workflow.onComplete {
     // Set up the e-mail variables
     def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
     if(skipped_poor_alignment.size() > 0){
-        subject = "[n-fcore/rnaseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+        subject = "[nf-core/rnaseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
     }
     if(!workflow.success){
       subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
@@ -1237,7 +1237,7 @@ workflow.onComplete {
     }
 
     if(workflow.success){
-        log.info "${c_purple}[nf-core/rnaseq]${c_green} Pipeline complete${c_reset}"
+        log.info "${c_purple}[nf-core/rnaseq]${c_green} Pipeline completed successfully${c_reset}"
     } else {
         checkHostname()
         log.info "${c_purple}[nf-core/rnaseq]${c_red} Pipeline completed with errors${c_reset}"

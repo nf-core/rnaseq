@@ -258,12 +258,16 @@ if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
 summary['Save prefs']     = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
 summary['Max Resources']  = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-summary['Container']      = workflow.container
+if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 summary['Output dir']     = params.outdir
 summary['Launch dir']     = workflow.launchDir
 summary['Working dir']    = workflow.workDir
 summary['Script dir']     = workflow.projectDir
 summary['User']           = workflow.userName
+if(workflow.profile == 'awsbatch'){
+   summary['AWS Region'] = params.awsregion
+   summary['AWS Queue']  = params.awsqueue
+}
 summary['Config Profile'] = workflow.profile
 if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
 if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
@@ -329,6 +333,7 @@ process get_software_versions {
  */
 if(params.aligner == 'star' && !params.star_index && params.fasta){
     process makeSTARindex {
+        label 'high_memory'
         tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                    saveAs: { params.saveReference ? it : null }, mode: 'copy'
@@ -489,6 +494,7 @@ process fastqc {
  * STEP 2 - Trim Galore!
  */
 process trim_galore {
+    label 'low_memory'
     tag "$name"
     publishDir "${params.outdir}/trim_galore", mode: 'copy',
         saveAs: {filename ->
@@ -553,6 +559,7 @@ def check_log(logs) {
 if(params.aligner == 'star'){
     hisat_stdout = Channel.from(false)
     process star {
+        label 'high_memory'
         tag "$prefix"
         publishDir "${params.outdir}/STAR", mode: 'copy',
             saveAs: {filename ->
@@ -610,6 +617,7 @@ if(params.aligner == 'star'){
 if(params.aligner == 'hisat2'){
     star_log = Channel.from(false)
     process hisat2Align {
+        label 'high_memory'
         tag "$prefix"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: {filename ->
@@ -671,6 +679,7 @@ if(params.aligner == 'hisat2'){
     }
 
     process hisat2_sortOutput {
+        label 'mid_memory'
         tag "${hisat2_bam.baseName}"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: { filename ->
@@ -705,6 +714,7 @@ if(params.aligner == 'hisat2'){
  * STEP 4 - RSeQC analysis
  */
 process rseqc {
+    label 'mid_memory'
     tag "${bam_rseqc.baseName - '.sorted'}"
     publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
@@ -785,6 +795,7 @@ process bam_subsample {
  * Step 4.2 Rseqc genebody_coverage
  */
 process genebody_coverage {
+    label 'mid_memory'
     tag "${bam.baseName - '.sorted'}"
        publishDir "${params.outdir}/rseqc" , mode: 'copy',
         saveAs: {filename ->
@@ -843,6 +854,7 @@ process preseq {
  * STEP 6 Mark duplicates
  */
 process markDuplicates {
+    label 'low_memory'
     tag "${bam.baseName - '.sorted'}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy',
         saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
@@ -883,7 +895,7 @@ process markDuplicates {
  * STEP 7 - dupRadar
  */
 process dupradar {
-
+    label 'low_memory'
     tag "${bam_md.baseName - '.sorted.markDups'}"
     publishDir "${params.outdir}/dupradar", mode: 'copy',
         saveAs: {filename ->
@@ -924,6 +936,7 @@ process dupradar {
  * STEP 8 Feature counts
  */
 process featureCounts {
+    label 'low_memory'
     tag "${bam_featurecounts.baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy',
         saveAs: {filename ->
@@ -1032,6 +1045,7 @@ process stringtieFPKM {
  * STEP 11 - edgeR MDS and heatmap
  */
 process sample_correlation {
+    label 'low_memory'
     tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
     publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 

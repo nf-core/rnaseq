@@ -1,8 +1,6 @@
-# nfcore/rnaseq Output
+# nf-core/rnaseq Output
 
-nfcore/rnaseq is an RNA-seq analysis pipeline. This document describes the output produced by the pipeline.
-
-Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
@@ -12,15 +10,15 @@ and processes data using the following steps:
 * [TrimGalore](#trimgalore) - adapter trimming
 * [STAR](#star) - alignment
 * [RSeQC](#rseqc) - RNA quality control metrics
-   - [BAM stat](#bam-stat)
-   - [Infer experiment](#infer-experiment)
-   - [Junction saturation](#junction-saturation)
-   - [RPKM saturation](#rpkm-saturation)
-   - [Read duplication](#read-duplication)
-   - [Inner distance](#inner-distance)
-   - [Gene body coverage](#gene-body-coverage)
-   - [Read distribution](#read-distribution)
-   - [Junction annotation](#junction-annotation)
+  * [BAM stat](#bam-stat)
+  * [Infer experiment](#infer-experiment)
+  * [Junction saturation](#junction-saturation)
+  * [RPKM saturation](#rpkm-saturation)
+  * [Read duplication](#read-duplication)
+  * [Inner distance](#inner-distance)
+  * [Gene body coverage](#gene-body-coverage)
+  * [Read distribution](#read-distribution)
+  * [Junction annotation](#junction-annotation)
 * [dupRadar](#dupradar) - technical / biological read duplication
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
@@ -94,7 +92,7 @@ These are all quality metrics files and contains the raw data used for the plots
 
 This script gives numerous statistics about the aligned BAM files produced by STAR. A typical output looks as follows:
 
-```
+```txt
 #Output (all numbers are read count)
 #==================================================
 Total records:                                 41465027
@@ -130,12 +128,13 @@ Example output from an unstranded (~50% sense/antisense) library of paired end d
 
 **From the `infer_experiment.txt` file:**
 
-```
+```txt
 This is PairEnd Data
 Fraction of reads failed to determine: 0.0409
 Fraction of reads explained by "1++,1--,2+-,2-+": 0.4839
 Fraction of reads explained by "1+-,1-+,2++,2--": 0.4752
 ```
+
 RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
 
 
@@ -345,4 +344,4 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 * `Project_multiqc_data/`
   * Directory containing parsed statistics from the different tools used in the pipeline
 
-For more information about how to use MultiQC reports, see http://multiqc.info
+For more information about how to use MultiQC reports, see [http://multiqc.info](http://multiqc.info)

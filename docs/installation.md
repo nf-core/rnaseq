@@ -2,8 +2,8 @@
 
 To start using the nf-core/rnaseq pipeline, follow the steps below:
 
-<!-- Install Atom plugin markdown-toc-auto for this ToC to auto-update on save -->
-<!-- TOC START min:2 max:3 link:true asterisk:true update:true -->
+<!-- Install Atom plugin markdown-toc-auto for this ToC -->
+<!-- TOC START min:2 max:3 link:true asterisk:true -->
 * [Install NextFlow](#install-nextflow)
 * [Install the pipeline](#install-the-pipeline)
   * [Automatic](#automatic)

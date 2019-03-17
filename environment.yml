@@ -1,0 +1,11 @@
+# You can use this file to create a conda environment for this pipeline:
+#   conda env create -f environment.yml
+name: nf-core-rnaseq-1.3dev
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  # TODO nf-core: Add required software dependencies here
+  - fastqc=0.11.8
+  - multiqc=1.6

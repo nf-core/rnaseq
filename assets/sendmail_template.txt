@@ -1,0 +1,36 @@
+To: $email
+Subject: $subject
+Mime-Version: 1.0
+Content-Type: multipart/related;boundary="nfcoremimeboundary"
+
+--nfcoremimeboundary
+Content-Type: text/html; charset=utf-8
+
+$email_html
+
+<%
+if (mqcFile){
+def mqcFileObj = new File("$mqcFile")
+if (mqcFileObj.length() < mqcMaxSize){
+out << """
+--nfcoremimeboundary
+Content-Type: text/html; name=\"multiqc_report\"
+Content-Transfer-Encoding: base64
+Content-ID: <mqcreport>
+Content-Disposition: attachment; filename=\"${mqcFileObj.getName()}\"
+
+${mqcFileObj.
+  bytes.
+  encodeBase64().
+  toString().
+  tokenize( '\n' )*.
+  toList()*.
+  collate( 76 )*.
+  collect { it.join() }.
+  flatten().
+  join( '\n' )}
+"""
+}}
+%>
+
+--nfcoremimeboundary--

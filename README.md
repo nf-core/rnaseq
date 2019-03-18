@@ -1,4 +1,4 @@
-# ![nfcore/rnaseq](docs/images/nfcore-rnaseq_logo.png)
+# ![nf-core/rnaseq](docs/images/nfcore-rnaseq_logo.png)
 
 [![Build Status](https://travis-ci.org/nf-core/rnaseq.svg?branch=master)](https://travis-ci.org/nf-core/rnaseq)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.32.0-brightgreen.svg)](https://www.nextflow.io/)
@@ -10,24 +10,20 @@
 
 ### Introduction
 
-**nfcore/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data.
+**nf-core/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data.
 
 The workflow processes raw data from FastQ inputs ([FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)), aligns the reads ([STAR](https://github.com/alexdobin/STAR) or [HiSAT2](https://ccb.jhu.edu/software/hisat2/index.shtml)), generates gene counts ([featureCounts](http://bioinf.wehi.edu.au/featureCounts/), [StringTie](https://ccb.jhu.edu/software/stringtie/)) and performs extensive quality-control on the results ([RSeQC](http://rseqc.sourceforge.net/), [dupRadar](https://bioconductor.org/packages/release/bioc/html/dupRadar.html), [Preseq](http://smithlabresearch.org/software/preseq/), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), [MultiQC](http://multiqc.info/)). See the [output documentation](docs/output.md) for more details of the results.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a bioinformatics workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
 
 ### Documentation
-The nfcore/rnaseq pipeline comes with documentation about the pipeline, found in the `docs/` directory:
+The nf-core/rnaseq pipeline comes with documentation about the pipeline, found in the `docs/` directory:
 
 1. [Installation](docs/installation.md)
 2. Pipeline configuration
     * [Local installation](docs/configuration/local.md)
-    * [Amazon Web Services (aws)](docs/configuration/aws.md)
-    * [Swedish UPPMAX clusters](docs/configuration/uppmax.md)
-    * [Swedish cs3e Hebbe cluster](docs/configuration/c3se.md)
-    * [Tübingen QBiC](docs/configuration/qbic.md)
-    * [CCGA Kiel](docs/configuration/ccga.md)
     * [Adding your own system](docs/configuration/adding_your_own.md)
+    * [Reference genomes](docs/configuration/reference_genomes.md)
 3. [Running the pipeline](docs/usage.md)
 4. [Output and how to interpret the results](docs/output.md)
 5. [Troubleshooting](docs/troubleshooting.md)

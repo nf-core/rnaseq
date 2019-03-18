@@ -1,6 +1,6 @@
-# nfcore/rnaseq: Reference Genomes Configuration
+# nf-core/rnaseq: Reference Genomes Configuration
 
-The nfcore/rnaseq pipeline needs a reference genome for alignment and annotation.
+The nf-core/rnaseq pipeline needs a reference genome for alignment and annotation.
 
 These paths can be supplied on the command line at run time (see the [usage docs](../usage.md)),
 but for convenience it's often better to save these paths in a nextflow config file.
@@ -46,10 +46,11 @@ Multiple reference index types are held together with consistent structure for m
 We have put a copy of iGenomes up onto AWS S3 hosting and this pipeline is configured to use this by default.
 The hosting fees for AWS iGenomes are currently kindly funded by a grant from Amazon.
 The pipeline will automatically download the required reference files when you run the pipeline.
-For more information about the AWS iGenomes, see [https://ewels.github.io/AWS-iGenomes/](https://ewels.github.io/AWS-iGenomes/)
+
+For more information about AWS iGenomes, see [https://ewels.github.io/AWS-iGenomes/](https://ewels.github.io/AWS-iGenomes/).
+
 Downloading the files takes time and bandwidth, so we recommend making a local copy of the iGenomes resource.
 Once downloaded, you can customise the variable `params.igenomes_base` in your custom configuration file to point to the reference location.
-
 For example:
 
 ```nextflow

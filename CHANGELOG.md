@@ -1,4 +1,4 @@
-# nf-core/rnaseq
+# nf-core/rnaseq: Changelog
 
 ## Version 1.3dev
 

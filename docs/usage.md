@@ -1,4 +1,4 @@
-# nf-core/rnaseq Usage
+# nf-core/rnaseq: Usage
 
 ## Table of contents
 
@@ -9,7 +9,7 @@
 * [Running the pipeline](#running-the-pipeline)
   * [Updating the pipeline](#updating-the-pipeline)
   * [Reproducibility](#reproducibility)
-* [Main Arguments](#main-arguments)
+* [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
   * [`--reads`](#--reads)
   * [`--singleEnd`](#--singleend)
@@ -102,7 +102,7 @@ First, go to the [nf-core/rnaseq releases page](https://github.com/nf-core/rnase
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
 
-## Main Arguments
+## Main arguments
 
 ### `-profile`
 Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments. Note that multiple profiles can be loaded, for example: `-profile docker` - the order of arguments is important!
@@ -386,7 +386,6 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 
 > Note that the nf-core/tools helper package has a `download` command to download all required pipeline
 > files + singularity containers + institutional configs in one go for you, to make this process easier.
-
 
 ### `--max_memory`
 Use to set a top-limit for the default memory requirement for each process.

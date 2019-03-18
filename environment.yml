@@ -8,7 +8,7 @@ channels:
 dependencies:
   - fastqc=0.11.8
   - trim-galore=0.5.0
-  - star=2.7.0d
+  - star=2.6.1d
   - hisat2=2.1.0
   - picard=2.18.27
   - bioconductor-dupradar=1.12.1

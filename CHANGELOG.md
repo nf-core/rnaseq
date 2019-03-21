@@ -20,7 +20,8 @@
 * r-data.table 1.11.4 -> 1.12.0
 * r-markdown 0.8 -> 0.9
 * csvtk 0.15.0 -> 0.17.0
-* subread 1.6.2 -> 1.6.3
+* stringtie 1.3.4 -> 1.3.5
+* subread 1.6.2 -> 1.6.4
 * gffread 0.9.9 -> 0.9.12
 * multiqc 1.6 -> 1.7
 

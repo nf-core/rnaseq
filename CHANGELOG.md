@@ -8,6 +8,7 @@
 * Added a `parameters.settings.json` file for use with the new `nf-core launch` helper tool.
 * Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
 * Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
+* Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
 
 #### Bug fixes
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)

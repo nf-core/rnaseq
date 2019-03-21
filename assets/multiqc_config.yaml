@@ -20,3 +20,7 @@ report_section_order:
         order: -1000
     nf-core-rnaseq-summary:
         order: -1100
+
+table_columns_visible:
+    FastQC:
+        percent_duplicates: False

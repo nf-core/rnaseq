@@ -852,7 +852,6 @@ process preseq {
  * STEP 6 Mark duplicates
  */
 process markDuplicates {
-    label 'low_memory'
     tag "${bam.baseName - '.sorted'}"
     publishDir "${params.outdir}/markDuplicates", mode: 'copy',
         saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}

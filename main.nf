@@ -869,14 +869,9 @@ process markDuplicates {
     file "${bam.baseName}.markDups.bam.bai"
 
     script:
-    if( !task.memory ){
-        log.info "[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this."
-        avail_mem = 3
-    } else {
-        avail_mem = task.memory.toGiga()
-    }
+
     """
-    picard -Xmx${avail_mem}g MarkDuplicates \\
+    picard ${params.markdup_java_options} MarkDuplicates \\
         INPUT=$bam \\
         OUTPUT=${bam.baseName}.markDups.bam \\
         METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\

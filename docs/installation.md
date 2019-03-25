@@ -84,16 +84,21 @@ Then, running the pipeline with the option `-profile docker` tells Nextflow to e
 If you're not able to use Docker then [Singularity](http://singularity.lbl.gov/) is a great alternative.
 The process is very similar: running the pipeline with the option `-profile singularity` tells Nextflow to enable singularity for this run. An image containing all of the software requirements will be automatically fetched and used from singularity hub.
 
+#### Running offline
 If running offline with Singularity, you'll need to download and transfer the Singularity image first:
 
 ```bash
-singularity pull --name nf-core-rnaseq.simg nf-core/rnaseq
+singularity pull --name nf-core-rnaseq-1.3.img docker://nf-core/rnaseq:1.3
 ```
+
+> NB: The "tag" at the end of this command corresponds to the pipeline version.
+> Here, we're pulling the docker image for version 1.3 of the nf-core/rnaseq pipeline
+> Make sure that this tag corresponds to the version of the pipeline that you're using
 
 Once transferred, use `-with-singularity` and specify the path to the image file:
 
 ```bash
-nextflow run /path/to/nf-core-rnaseq -with-singularity nf-core-rnaseq.simg
+nextflow run /path/to/nf-core-rnaseq -with-singularity /path/to/nf-core-rnaseq-1.3.img
 ```
 
 Remember to pull updated versions of the singularity image if you update the pipeline.

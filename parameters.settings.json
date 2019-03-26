@@ -1,0 +1,552 @@
+{
+    "parameters": [
+        {
+            "name": "reads",
+            "label": "Input files",
+            "usage": "Specify the location of your input FastQ files.",
+            "group": "Main options",
+            "default_value": "'data/*{1,2}.fastq.gz'",
+            "render": "textfield",
+            "pattern": ".*\\*.*",
+            "type": "string"
+        },
+        {
+            "name": "outdir",
+            "label": "Output directory",
+            "usage": "Set where to save the results from the pipeline",
+            "group": "Main options",
+            "default_value": "./results",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string"
+        },
+        {
+            "name": "pico",
+            "label": "Library type: Pico",
+            "usage": "Set trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit.",
+            "group": "Main options",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "singleEnd",
+            "label": "Single-end sequencing input",
+            "usage": "Use single-end sequencing inputs instead of paired-end.",
+            "group": "Main options",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "forward_stranded",
+            "label": "Forward stranded",
+            "usage": "Samples are made using a forward-stranded library type.",
+            "group": "Main options",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "reverse_stranded",
+            "label": "Reverse stranded",
+            "usage": "Samples are made using a reverse-stranded library type.",
+            "group": "Main options",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "clip_r1",
+            "label": "Read Clipping: 5' R1",
+            "usage": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).",
+            "group": "Read trimming",
+            "render": "textfield",
+            "pattern": "\\d*",
+            "type": "integer",
+            "default_value": 0
+        },
+        {
+            "name": "clip_r2",
+            "label": "Read Clipping: 5' R1",
+            "usage": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).",
+            "group": "Read trimming",
+            "render": "textfield",
+            "pattern": "\\d*",
+            "type": "integer",
+            "default_value": 0
+        },
+        {
+            "name": "three_prime_clip_r1",
+            "label": "Read Clipping: 3' R1",
+            "usage": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed.",
+            "group": "Read trimming",
+            "render": "textfield",
+            "pattern": "\\d*",
+            "type": "integer",
+            "default_value": 0
+        },
+        {
+            "name": "three_prime_clip_r2",
+            "label": "Read Clipping: 3' R2",
+            "usage": "Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
+            "group": "Read trimming",
+            "render": "textfield",
+            "pattern": "\\d*",
+            "type": "integer",
+            "default_value": 0
+        },
+        {
+            "name": "aligner",
+            "label": "Alignment tool",
+            "usage": "Choose whether to align reads with STAR or HISAT2",
+            "type": "string",
+            "render": "radio-button",
+            "choices": [
+                    "star",
+                    "hisat2"
+            ],
+            "default_value": "star",
+            "group": "Alignment"
+        },
+        {
+            "name": "genome",
+            "label": "Alignment reference iGenomes key",
+            "usage": "Ref. genome key for iGenomes",
+            "group": "Alignment",
+            "render": "drop-down",
+            "type": "string",
+            "choices": [
+                    "",
+                    "GRCh37",
+                    "GRCm38",
+                    "TAIR10",
+                    "EB2",
+                    "UMD3.1",
+                    "WBcel235",
+                    "CanFam3.1",
+                    "GRCz10",
+                    "BDGP6",
+                    "EquCab2",
+                    "EB1",
+                    "Galgal4",
+                    "Gm01",
+                    "Mmul_1",
+                    "IRGSP-1.0",
+                    "CHIMP2.1.4",
+                    "Rnor_6.0",
+                    "R64-1-1",
+                    "EF2",
+                    "Sbi1",
+                    "Sscrofa10.2",
+                    "AGPv3"
+            ],
+            "default_value": ""
+        },
+        {
+            "name": "star_index",
+            "label": "STAR index",
+            "usage": "Path to STAR index",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "hisat2_index",
+            "label": "HISAT2 index",
+            "usage": "Path to HiSAT2 index",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "fasta",
+            "label": "FASTA",
+            "usage": "Path to Fasta reference",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "gtf",
+            "label": "GTF",
+            "usage": "Path to GTF file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "gff",
+            "label": "GFF",
+            "usage": "Path to GFF3 file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "bed12",
+            "label": "BED12",
+            "usage": "Path to bed12 file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "igenomes_base",
+            "label": "iGenomes base path",
+            "usage": "Base path for iGenomes reference files",
+            "group": "Alignment",
+            "default_value": "s3://ngi-igenomes/igenomes/",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string"
+        },
+        {
+            "name": "splicesites",
+            "label": "HISAT2 splice sites file",
+            "usage": "Optional splice-sites file for building a HISAT2 alignment index",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
+            "name": "fcGroupFeatures",
+            "label": "FeatureCounts Group Features",
+            "usage": "By default, the pipeline uses `gene_name` as the default gene identifier group. Specifying `--fcGroupFeatures` uses a different category present in your provided GTF file.",
+            "default_value": "gene_id",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string",
+            "group": "FeatureCount settings"
+        },
+        {
+            "name": "fcGroupFeaturesType",
+            "label": "FeatureCounts Group Features Biotype",
+            "usage": "GTF attribute name that gives the biotype of a feature.",
+            "group": "FeatureCount settings",
+            "default_value": "gene_biotype",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string"
+        },
+        {
+            "name": "fcExtraAttributes",
+            "label": "FeatureCounts Extra Gene Names",
+            "usage": "By default the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers. --fcExtraAttributes is passed to featureCounts as an --extraAttributes parameter",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string",
+            "default_value": "",
+            "group": "FeatureCount settings"
+        },
+        {
+            "name": "container",
+            "label": "Software container",
+            "usage": "Dockerhub address for pipeline container",
+            "default_value": "nfcore/rnaseq:latest",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string",
+            "group": "Pipeline defaults"
+        },
+        {
+            "name": "plaintext_email",
+            "label": "Plain text email",
+            "usage": "Set to receive plain-text e-mails instead of HTML formatted.",
+            "group": "Pipeline defaults",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "help",
+            "label": "Help",
+            "usage": "Specify to show the pipeline help text.",
+            "group": "Pipeline defaults",
+            "render": "none",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "sampleLevel",
+            "label": "sampleLevel",
+            "usage": "Turn off project-level analysis (edgeR MDS plot and heatmap).",
+            "group": "Pipeline defaults",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "email",
+            "label": "Your email address",
+            "usage": "Your email address, required to receive completion notification.",
+            "group": "Pipeline defaults",
+            "render": "textfield",
+            "pattern": "^$|(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)",
+            "type": "string",
+            "default_value": ""
+        },
+        {
+            "name": "max_cpus",
+            "label": "Maximum available CPUs",
+            "usage": "Use to set a top-limit for the default CPUs requirement for each process.",
+            "group": "Pipeline defaults",
+            "default_value": 16,
+            "render": "textfield",
+            "type": "integer"
+        },
+        {
+            "name": "max_time",
+            "label": "Maximum available time",
+            "usage": "Use to set a top-limit for the default time requirement for each process.",
+            "group": "Pipeline defaults",
+            "default_value": "10d",
+            "render": "textfield",
+            "pattern": "\\d+[smhd]",
+            "type": "string"
+        },
+        {
+            "name": "max_memory",
+            "label": "Maximum available memory",
+            "usage": "Use to set a top-limit for the default memory requirement for each process.",
+            "group": "Pipeline defaults",
+            "default_value": "128.GB",
+            "render": "textfield",
+            "pattern": "\\d+\\.[KMGT]?B",
+            "type": "string"
+        },
+        {
+            "name": "saveTrimmed",
+            "label": "Save Trimmed FastQ files",
+            "usage": "Save the trimmed FastQ files the the results directory.",
+            "group": "Pipeline defaults",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "saveAlignedIntermediates",
+            "label": "Save Aligned Intermediate BAM files",
+            "usage": "Save intermediate BAM files the the results directory.",
+            "group": "Pipeline defaults",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "saveReference",
+            "label": "Save reference genome index",
+            "usage": "Save the generated reference files the the results directory.",
+            "group": "Pipeline defaults",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "maxMultiqcEmailFileSize",
+            "label": "Maximum MultiQC email file size",
+            "usage": "Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached.",
+            "group": "Pipeline defaults",
+            "default_value": "25.MB",
+            "render": "textfield",
+            "pattern": "\\d+\\.[KMGT]?B",
+            "type": "string"
+        },
+        {
+            "name": "skip_qc",
+            "label": "Skip all QC steps, apart from MultiQC",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_multiqc",
+            "label": "Skip MultiQC",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_genebody_coverage",
+            "label": "Skip RSeQC gene body coverage",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_edger",
+            "label": "Skip edgeR QC analysis",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_dupradar",
+            "label": "Skip DupRadar QC",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_rseqc",
+            "label": "Skip RSeQC steps, apart from Gene body coverage",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_preseq",
+            "label": "Skip Preseq analysis",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skip_fastqc",
+            "label": "Skip FastQC",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "project",
+            "label": "Cluster project",
+            "usage": "For use on HPC systems where a project ID is required for job submission",
+            "group": "Cluster job submission",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string",
+            "default_value": ""
+        },
+        {
+            "name": "awsregion",
+            "label": "AWS Region",
+            "usage": "The AWS region to run your job in.",
+            "group": "AWS cloud usage",
+            "default_value": "eu-west-1",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string"
+        },
+        {
+            "name": "awsqueue",
+            "label": "AWS job queue",
+            "usage": "The JobQueue that you intend to use on AWS Batch.",
+            "group": "AWS cloud usage",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string",
+            "default_value": ""
+        },
+        {
+            "name": "tracedir",
+            "label": "Trace directory",
+            "usage": "Set to where the pipeline trace should be saved. Set to local path when using AWS on S3.",
+            "group": "AWS cloud usage",
+            "default_value": "./results/pipeline_info",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string"
+        },
+        {
+            "name": "subsampFilesizeThreshold",
+            "label": "Subsample file-size threshold",
+            "usage": "Defines the threshold in BAM file size (in bytes) at which data subsampling is used prior to the RSeQC `gene_body_coverage` step.",
+            "group": "Advanced",
+            "default_value": 10000000000,
+            "render": "textfield",
+            "pattern": "\\d*",
+            "type": "integer"
+        },
+        {
+            "name": "name",
+            "label": "Custom run name",
+            "usage": "Helper variable. Do not set, use -name instead.",
+            "group": "Advanced",
+            "render": "none",
+            "pattern": ".*",
+            "type": "string",
+            "default_value": ""
+        },
+        {
+            "name": "hisatBuildMemory",
+            "label": "HISAT2 indexing: required memory for splice sites in GB",
+            "usage": "HISAT2 needs a very large amount of memory to build an index with splice sites. If the available memory is below this threshold, the index build will proceed without splicing information.",
+            "group": "Advanced",
+            "default_value": 200,
+            "render": "textfield",
+            "type": "integer"
+        },
+        {
+            "name": "seqCenter",
+            "label": "Sequencing center",
+            "usage": "Add sequencing center in @RG line of output BAM header",
+            "group": "Advanced",
+            "render": "textfield",
+            "pattern": ".*",
+            "type": "string",
+            "default_value": ""
+        },
+        {
+            "name": "star_memory",
+            "label": "STAR memory",
+            "usage": "Instead of using the default amount available, force STAR to use a given amount of memory",
+            "group": "Advanced",
+            "render": "textfield",
+            "pattern": "^$|\\d+\\.[KMGT]?B",
+            "type": "string",
+            "default_value": ""
+        },
+        {
+            "name": "multiqc_config",
+            "label": "MultiQC Config",
+            "usage": "Path to a config file for MultiQC",
+            "group": "Advanced",
+            "default_value": "/Users/ewels/GitHub/nf-core/rnaseq/assets/multiqc_config.yaml",
+            "render": "file",
+            "pattern": ".*\\.yaml",
+            "type": "string"
+        },
+        {
+            "name": "unstranded",
+            "label": "Unstranded",
+            "usage": "Force the library strandedness to be unstranded",
+            "render": "none",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Advanced"
+        },
+        {
+            "name": "readPaths",
+            "label": "Read Paths",
+            "usage": "For use with nextflow config files only",
+            "group": "Advanced",
+            "render": "none",
+            "pattern": ".*",
+            "type": "string",
+            "default_value": ""
+        }
+    ]
+}

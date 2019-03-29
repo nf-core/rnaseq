@@ -1,5 +1,10 @@
 # nf-core/rnaseq: Changelog
 
+## Version 1.4dev
+
+#### Pipeline updates
+* get MultiQC to save plots as stand alone files
+
 ## Version 1.3
 
 #### Pipeline Updates

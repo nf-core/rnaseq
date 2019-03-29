@@ -5,7 +5,7 @@
 #### Pipeline updates
 * get MultiQC to save plots as stand alone files
 
-## Version 1.3
+## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 
 #### Pipeline Updates
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)

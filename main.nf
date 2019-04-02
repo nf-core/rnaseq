@@ -1095,6 +1095,7 @@ process multiqc {
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
+    file "multiqc_plots/*"
 
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''

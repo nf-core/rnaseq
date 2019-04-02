@@ -301,9 +301,11 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
+    file "software_versions.csv"
 
     script:
     """
@@ -1096,7 +1098,6 @@ process multiqc {
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
     file "multiqc_plots/*"
-    file "software_versions.csv"
 
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''

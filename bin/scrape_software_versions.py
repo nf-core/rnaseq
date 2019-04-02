@@ -2,6 +2,7 @@
 from __future__ import print_function
 from collections import OrderedDict
 import re
+import csv
 
 regexes = {
     'nf-core/rnaseq': ['v_ngi_rnaseq.txt', r"(\S+)"],
@@ -63,3 +64,9 @@ data: |
 for k,v in results.items():
     print("        <dt>{}</dt><dd><samp>{}</samp></dd>".format(k,v))
 print ("    </dl>")
+
+# Write out regexes.items() as csv file: 
+with open('software_versions.csv', 'wb') as f:
+    w = csv.DictWriter(f, regexes.items().keys())
+    w.writeheader()
+    w.writerow(regexes.items())

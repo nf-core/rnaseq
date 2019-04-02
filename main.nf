@@ -1096,6 +1096,7 @@ process multiqc {
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
     file "multiqc_plots/*"
+    file "software_versions.csv"
 
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''

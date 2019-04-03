@@ -67,6 +67,6 @@ print ("    </dl>")
 
 # Write out regexes.items() as csv file: 
 with open('software_versions.csv', 'wb') as f:
-    w = csv.DictWriter(f, regexes.items().keys())
+    w = csv.DictWriter(f, regexes.keys())
     w.writeheader()
     w.writerow(regexes.items())

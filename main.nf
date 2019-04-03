@@ -301,7 +301,11 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf(".csv") > 0) filename
+            else null
+        }
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml

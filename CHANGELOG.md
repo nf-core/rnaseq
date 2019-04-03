@@ -4,6 +4,8 @@
 
 #### Pipeline updates
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
+* Set number of CPUs to 4 for `mid_memory` tasks
+* Increase to 8 CPUs for `genebody_coverage`
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 

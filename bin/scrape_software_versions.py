@@ -2,7 +2,6 @@
 from __future__ import print_function
 from collections import OrderedDict
 import re
-import csv
 
 regexes = {
     'nf-core/rnaseq': ['v_ngi_rnaseq.txt', r"(\S+)"],

@@ -66,7 +66,6 @@ for k,v in results.items():
 print ("    </dl>")
 
 # Write out regexes as csv file: 
-with open('software_versions.csv', 'wb') as f:
-    w = csv.DictWriter(f, regexes.keys())
-    w.writeheader()
-    w.writerow(regexes)
+with open('software_versions.csv', 'w') as f:
+    for k,v in results.items():
+        f.write("{}\t{}\n".format(k,v))

@@ -37,6 +37,8 @@ results['StringTie'] = '<span style="color:#999999;\">N/A</span>'
 results['Preseq'] = '<span style="color:#999999;\">N/A</span>'
 results['deepTools'] = '<span style="color:#999999;\">N/A</span>'
 results['RSeQC'] = '<span style="color:#999999;\">N/A</span>'
+results['DupRadar'] = '<span style="color:#999999;\">N/A</span>'
+results['edgeR'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex

@@ -19,7 +19,7 @@ regexes = {
     'Preseq': ['v_preseq.txt', r"Version: (\S+)"],
     'RSeQC': ['v_rseqc.txt', r"read_duplication.py ([\d\.]+)"],
     'dupRadar': ['v_dupRadar.txt', r"(\S+)"],
-    'edgeR: ['v_edgeR.txt', r"(\S+)"],
+    'edgeR': ['v_edgeR.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
 }
 results = OrderedDict()

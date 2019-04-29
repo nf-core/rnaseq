@@ -18,6 +18,8 @@ regexes = {
     'StringTie': ['v_stringtie.txt', r"(\S+)"],
     'Preseq': ['v_preseq.txt', r"Version: (\S+)"],
     'RSeQC': ['v_rseqc.txt', r"read_duplication.py ([\d\.]+)"],
+    'DupRadar': ['v_dupRadar.txt', r"version (\S+)"],
+    'edgeR: ['v_edgeR.txt', r"version (\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
 }
 results = OrderedDict()
@@ -64,7 +66,7 @@ for k,v in results.items():
     print("        <dt>{}</dt><dd><samp>{}</samp></dd>".format(k,v))
 print ("    </dl>")
 
-# Write out regexes as csv file: 
+# Write out regexes as csv file:
 with open('software_versions.csv', 'w') as f:
     for k,v in results.items():
         f.write("{}\t{}\n".format(k,v))

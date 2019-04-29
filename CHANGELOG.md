@@ -3,7 +3,7 @@
 ## Version 1.4dev
 
 #### Pipeline updates
-* Obtain edgeR version information [#198](https://github.com/nf-core/rnaseq/issues/198)
+* Obtain edgeR + dupRadar version information [#198](https://github.com/nf-core/rnaseq/issues/198) and [#112](https://github.com/nf-core/rnaseq/issues/112)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)

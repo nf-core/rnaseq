@@ -25,4 +25,4 @@ table_columns_visible:
     FastQC:
         percent_duplicates: False
 
-export_plots: true
+export_plots: True

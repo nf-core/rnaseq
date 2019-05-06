@@ -36,7 +36,8 @@
 * subread 1.6.2 -> 1.6.4
 * gffread 0.9.9 -> 0.9.12
 * multiqc 1.6 -> 1.7
-* deeptools 3.20 -> 3.2.1
+* deeptools 3.2.0 -> 3.2.1
+* trim-galore 0.5.0 -> 0.6.1
 * qualimap 2.2.2b
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12

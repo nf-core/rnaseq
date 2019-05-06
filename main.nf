@@ -68,6 +68,7 @@ def helpMessage() {
       --skip_qc                     Skip all QC steps apart from MultiQC
       --skip_fastqc                 Skip FastQC
       --skip_rseqc                  Skip RSeQC
+      --skip_qualimap               Skip Qualimap
       --skip_genebody_coverage      Skip calculating genebody coverage
       --skip_preseq                 Skip Preseq
       --skip_dupradar               Skip dupRadar (and Picard MarkDups)
@@ -159,7 +160,7 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -613,7 +614,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+    .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
 }
 
 
@@ -699,7 +700,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles from ch_where_hisat2_sort.collect()
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_qualimap, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
         file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
@@ -890,6 +891,38 @@ process markDuplicates {
     samtools index ${bam.baseName}.markDups.bam
     """
 }
+
+
+process qualimap {
+    label 'low_memory'
+    tag "${bam.baseName}"
+    publishDir "${params.outdir}/qualimap", mode: 'copy'
+
+    when:
+    !params.skip_qc && !params.skip_qualimap
+
+    input:
+    file bam from bam_qualimap
+    file gtf from gtf_qualimap.collect()
+
+    output:
+    file "${bam.baseName}" into qualimap_results
+
+    script:
+    def qualimap_direction = 'non-strand-specific'
+    if (forward_stranded){
+        qualimap_direction = 'strand-specific-forward'
+    }else if (reverse_stranded){
+        qualimap_direction = 'strand-specific-reverse'
+    }
+    def paired = params.singleEnd ? '' : '-pe'
+    memory = task.memory.toGiga() + "G"
+    """
+    unset DISPLAY
+    qualimap --java-mem-size=${memory} rnaseq $paired -s -bam $bam -gtf $gtf -outdir ${bam.baseName}
+    """
+}
+
 
 
 /*
@@ -1091,6 +1124,7 @@ process multiqc {
     file ('alignment/*') from alignment_logs.collect()
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
     file ('rseqc/*') from genebody_coverage_results.collect().ifEmpty([])
+    file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     file ('featureCounts/*') from featureCounts_logs.collect()
@@ -1110,7 +1144,7 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
     multiqc . -f $rtitle $rfilename --config $multiqc_config \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap
     """
 }
 

@@ -858,7 +858,7 @@ process preseq {
 
 
 /*
- * STEP 6 Mark duplicates
+ * STEP 6 - Mark duplicates
  */
 process markDuplicates {
     tag "${bam.baseName - '.sorted'}"
@@ -892,7 +892,9 @@ process markDuplicates {
     """
 }
 
-
+/*
+ * STEP 7 - Qualimap
+ */
 process qualimap {
     label 'low_memory'
     tag "${bam.baseName}"
@@ -919,14 +921,14 @@ process qualimap {
     memory = task.memory.toGiga() + "G"
     """
     unset DISPLAY
-    qualimap --java-mem-size=${memory} rnaseq $paired -s -bam $bam -gtf $gtf -outdir ${bam.baseName}
+    qualimap --java-mem-size=${memory} rnaseq $qualimap_direction $paired -s -bam $bam -gtf $gtf -outdir ${bam.baseName}
     """
 }
 
 
 
 /*
- * STEP 7 - dupRadar
+ * STEP 8 - dupRadar
  */
 process dupradar {
     label 'low_memory'
@@ -967,7 +969,7 @@ process dupradar {
 
 
 /*
- * STEP 8 Feature counts
+ * STEP 9 - Feature counts
  */
 process featureCounts {
     label 'low_memory'
@@ -1009,7 +1011,7 @@ process featureCounts {
 }
 
 /*
- * STEP 9 - Merge featurecounts
+ * STEP 10 - Merge featurecounts
  */
 process merge_featureCounts {
     tag "${input_files[0].baseName - '.sorted'}"
@@ -1032,7 +1034,7 @@ process merge_featureCounts {
 
 
 /*
- * STEP 10 - stringtie FPKM
+ * STEP 11 - stringtie FPKM
  */
 process stringtieFPKM {
     tag "${bam_stringtieFPKM.baseName - '.sorted'}"
@@ -1076,7 +1078,7 @@ process stringtieFPKM {
 }
 
 /*
- * STEP 11 - edgeR MDS and heatmap
+ * STEP 12 - edgeR MDS and heatmap
  */
 process sample_correlation {
     label 'low_memory'
@@ -1109,7 +1111,7 @@ process sample_correlation {
 }
 
 /*
- * STEP 12 MultiQC
+ * STEP 13 - MultiQC
  */
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
@@ -1149,7 +1151,7 @@ process multiqc {
 }
 
 /*
- * STEP 13 - Output Description HTML
+ * STEP 14 - Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'

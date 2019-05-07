@@ -249,8 +249,7 @@ Junction annotation compares detected splice junctions to a reference gene model
 RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
 
 ## Qualimap
-[Qualimap](http://qualimap.bioinfo.cipf.es/) is a standalone package written in java. It calculates 
-read alignment assignment, transcript coverage, read genomic origin, junction analysis and 3'-5' bias.
+[Qualimap](http://qualimap.bioinfo.cipf.es/) is a standalone package written in java. It calculates read alignment assignment, transcript coverage, read genomic origin, junction analysis and 3'-5' bias.
 
 **Output directory: `results/qualimap`**
 

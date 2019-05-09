@@ -19,6 +19,7 @@ and processes data using the following steps:
   * [Gene body coverage](#gene-body-coverage)
   * [Read distribution](#read-distribution)
   * [Junction annotation](#junction-annotation)
+* [Qualimap](#qualimap) - RNA quality control metrics
 * [dupRadar](#dupradar) - technical / biological read duplication
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
@@ -246,6 +247,19 @@ Junction annotation compares detected splice junctions to a reference gene model
 ![Junction annotation](images/rseqc_junction_annotation_junctions_plot.png)
 
 RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
+
+## Qualimap
+[Qualimap](http://qualimap.bioinfo.cipf.es/) is a standalone package written in java. It calculates read alignment assignment, transcript coverage, read genomic origin, junction analysis and 3'-5' bias.
+
+**Output directory: `results/qualimap`**
+
+* `rnaseq_qc_results.txt`
+* `qualimapReport.html`
+* `css`
+* `raw_data_qualimapReport`
+* `images_qualimapReport`
+
+Qualimap RNAseq documentation: [Qualimap docs](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#rna-seq-qc).
 
 ## dupRadar
 [dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library for R. It plots the duplication rate against expression (RPKM) for every gene. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.

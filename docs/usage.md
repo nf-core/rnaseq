@@ -167,17 +167,19 @@ params {
 
 If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
-These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
+These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
 
 * `--forward_stranded`
   * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
   * featureCounts: `-s 1`
   * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
+  * Qualimap: `-pe strand-specific-forward`
   * StringTie: `--fr`
 * `--reverse_stranded`
   * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
   * featureCounts: `-s 2`
   * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
+  * Qualimap: `-pe strand-specific-reverse`
   * StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
@@ -303,6 +305,7 @@ The following options make this easy:
 * `--skip_qc` -                Skip **all QC steps**, apart from MultiQC
 * `--skip_fastqc` -            Skip FastQC
 * `--skip_rseqc` -             Skip RSeQC
+* `--skip_qualimap` -          Skip Qualimap
 * `--skip_genebody_coverage` - Skip calculating the genebody coverage
 * `--skip_preseq` -            Skip Preseq
 * `--skip_dupradar` -          Skip dupRadar (and Picard MarkDups)

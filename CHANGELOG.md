@@ -5,9 +5,18 @@
 #### Dependency Updates
 * Added htseq=0.11.2
 
-## Version 1.3
+## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
+#### Pipeline updates
+
+* Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)
+* Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
+* Obtain edgeR + dupRadar version information [#198](https://github.com/nf-core/rnaseq/issues/198) and [#112](https://github.com/nf-core/rnaseq/issues/112)
+* Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
+* Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
+* Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
 
 #### Pipeline Updates
+
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
 * Added a `parameters.settings.json` file for use with the new `nf-core launch` helper tool.
@@ -16,21 +25,27 @@
 * Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
 
 #### Bug fixes
+
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)
 * Fixing HISAT2 BAM sorting using more memory than available on the system
 * Fixing MarkDuplicates memory consumption issues following [#179](https://github.com/nf-core/rnaseq/pull/179)
 
 
 #### Dependency Updates
+
 * RSeQC 2.6.4 -> 3.0.0
-* Picard 2.18.15 -> 2.18.23
-* r-data.table 1.11.4 -> 1.12.0
+* Picard 2.18.15 -> 2.20.0
+* r-data.table 1.11.4 -> 1.12.2
+* bioconductor-edger 3.24.1 -> 3.24.3
 * r-markdown 0.8 -> 0.9
 * csvtk 0.15.0 -> 0.17.0
-* stringtie 1.3.4 -> 1.3.5
+* stringtie 1.3.4 -> 1.3.6
 * subread 1.6.2 -> 1.6.4
 * gffread 0.9.9 -> 0.9.12
 * multiqc 1.6 -> 1.7
+* deeptools 3.2.0 -> 3.2.1
+* trim-galore 0.5.0 -> 0.6.1
+* qualimap 2.2.2b
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 

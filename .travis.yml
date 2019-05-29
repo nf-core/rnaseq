@@ -43,4 +43,4 @@ script:
   # Run, build reference genome with HISAT2
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2
   # Run, count gene expression with HTSeq
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --gene_counter htseq
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2 --gene_counter htseq

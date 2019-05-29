@@ -1073,8 +1073,6 @@ if (params.gene_counter == "htseq"){
       } else if (reverse_stranded && !unstranded){
           htseqcount_direction = "reverse"
       }
-      // Try to get real sample name
-      sample_name = bam_htseqcount.baseName - 'Aligned.sortedByCoord.out'
       """
       htseq-count --order pos \
         --stranded ${strandedness} \

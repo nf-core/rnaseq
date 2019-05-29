@@ -106,6 +106,8 @@ params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : fals
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
+ // Default to HTSeq as gene expression quantifier
+params.gene_quantifer = params.gene_quantifer ?  params.gene_quantifier.lower() ?: "htseq" : "htseq"
 
 ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")
@@ -154,6 +156,11 @@ else if ( params.fasta ){
 }
 else {
     exit 1, "No reference genome specified!"
+}
+
+// Validate inputs
+if (params.gene_quantifer != 'featurecounts' && params.gene_quantifer != 'htseq'){
+    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'featurecounts', 'htseq'"
 }
 
 if( params.gtf ){

@@ -26,3 +26,4 @@ dependencies:
   - gffread=0.9.12
   - deeptools=3.2.1
   - multiqc=1.7
+  - htseq=0.11.2

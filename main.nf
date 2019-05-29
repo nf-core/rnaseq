@@ -331,6 +331,7 @@ process get_software_versions {
     read_duplication.py --version &> v_rseqc.txt
     echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
     featureCounts -v &> v_featurecounts.txt
+    htseq-count --help &> v_htseq-count.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt
     multiqc --version &> v_multiqc.txt

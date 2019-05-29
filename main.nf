@@ -27,7 +27,7 @@ def helpMessage() {
     Options:
       --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
-      --gene_quantifer              Specify either "featurecounts" or "htseq" as the gene expression quantifier
+      --gene_counter                Specify either "featurecounts" or "htseq" as the gene expression quantifier
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
@@ -106,9 +106,6 @@ params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : fals
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
- // Default to HTSeq as gene expression quantifier
-params.gene_quantifer = params.gene_quantifer ? params.gene_quantifier.lower() ?: "htseq" : "htseq"
-
 ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")
 ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt")
@@ -159,8 +156,8 @@ else {
 }
 
 // Validate inputs
-if (params.gene_quantifer != 'featurecounts' && params.gene_quantifer != 'htseq'){
-    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'featurecounts', 'htseq'"
+if (params.gene_counter != 'featurecounts' && params.gene_counter != 'htseq'){
+    exit 1, "Invalid gene_counter option: ${params.gene_counter}. Valid options: 'featurecounts', 'htseq'"
 }
 
 if( params.gtf ){
@@ -981,7 +978,7 @@ process dupradar {
  * STEP 9 - Feature counts
  */
 
-if (params.gene_quantifer == "featurecounts"){
+if (params.gene_counter == "featurecounts"){
   process featureCounts {
       label 'low_memory'
       tag "${bam_featurecounts.baseName - '.sorted'}"
@@ -1044,7 +1041,7 @@ if (params.gene_quantifer == "featurecounts"){
   }
 }
 
-if (params.gene_quantifer == "htseq"){
+if (params.gene_counter == "htseq"){
     /*
    * STEP 8 HTSeq-Count
    */

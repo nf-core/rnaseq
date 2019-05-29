@@ -1056,8 +1056,8 @@ if (params.gene_counter == "htseq"){
           }
 
       input:
-      file bam_htseqcount
-      file gtf from gtf_htseqcount.collect()
+      file bam_featurecounts
+      file gtf from gtf_featureCounts.collect()
       file biotypes_header from ch_biotypes_header.collect()
 
       output:

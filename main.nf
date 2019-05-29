@@ -1097,7 +1097,7 @@ if (params.gene_counter == "htseq"){
         ${gtf} \
         > ${bam_htseqcount.baseName}_biotype.htseq-count.txt
 
-      # Remove lines specifying no alignment
+      # Remove lines specifying no alignment, aka starting with two underscores
       grep -v '^__' ${bam_htseqcount.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_htseqcount.baseName}_biotype_counts_mqc.txt
       """
   }

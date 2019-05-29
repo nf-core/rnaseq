@@ -1,5 +1,10 @@
 # nf-core/rnaseq: Changelog
 
+## Version 1.4dev
+
+#### Dependency Updates
+* Added htseq=0.11.2
+
 ## Version 1.3
 
 #### Pipeline Updates
@@ -26,7 +31,6 @@
 * subread 1.6.2 -> 1.6.4
 * gffread 0.9.9 -> 0.9.12
 * multiqc 1.6 -> 1.7
-* Added htseq=0.11.2
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 

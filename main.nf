@@ -165,7 +165,7 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_gene_counter; gtf_stringtieFPKM }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -448,7 +448,7 @@ if(params.gff){
 
       output:
       file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
-            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+            gtf_star, gtf_dupradar, gtf_gene_counter, gtf_stringtieFPKM
 
       script:
       """
@@ -620,7 +620,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+    .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_gene_counter; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
 }
 
 
@@ -706,7 +706,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles from ch_where_hisat2_sort.collect()
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_qualimap, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_qualimap, bam_preseq, bam_markduplicates, bam_gene_counter, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
         file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
@@ -981,8 +981,8 @@ process dupradar {
 if (params.gene_counter == "featurecounts"){
   process featureCounts {
       label 'low_memory'
-      tag "${bam_featurecounts.baseName - '.sorted'}"
-      publishDir "${params.outdir}/featureCounts", mode: 'copy',
+      tag "${bam_gene_counter.baseName - '.sorted'}"
+      publishDir "${params.outdir}/gene_counter", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
               else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
@@ -991,14 +991,14 @@ if (params.gene_counter == "featurecounts"){
           }
 
       input:
-      file bam_featurecounts
-      file gtf from gtf_featureCounts.collect()
+      file bam_gene_counter
+      file gtf from gtf_gene_counter.collect()
       file biotypes_header from ch_biotypes_header.collect()
 
       output:
-      file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
-      file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-      file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
+      file "${bam_gene_counter.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+      file "${bam_gene_counter.baseName}_gene.featureCounts.txt.summary" into gene_counter_logs
+      file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
 
       script:
       def featureCounts_direction = 0
@@ -1009,12 +1009,12 @@ if (params.gene_counter == "featurecounts"){
           featureCounts_direction = 2
       }
       // Try to get real sample name
-      sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
+      sample_name = bam_gene_counter.baseName - 'Aligned.sortedByCoord.out'
       """
-      featureCounts -a $gtf -g ${params.fcGroupFeatures} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
-      featureCounts -a $gtf -g ${params.fcGroupFeaturesType} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-      cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
-      mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
+      featureCounts -a $gtf -g ${params.fcGroupFeatures} -o ${bam_gene_counter.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_gene_counter
+      featureCounts -a $gtf -g ${params.fcGroupFeaturesType} -o ${bam_gene_counter.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_gene_counter
+      cut -f 1,7 ${bam_gene_counter.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
+      mqc_features_stat.py ${bam_gene_counter.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_gene_counter.baseName}_biotype_counts_gs_mqc.tsv
       """
   }
 
@@ -1023,7 +1023,7 @@ if (params.gene_counter == "featurecounts"){
    */
   process merge_featureCounts {
       tag "${input_files[0].baseName - '.sorted'}"
-      publishDir "${params.outdir}/featureCounts", mode: 'copy'
+      publishDir "${params.outdir}/gene_counter", mode: 'copy'
 
       input:
       file input_files from featureCounts_to_merge.collect()
@@ -1047,7 +1047,7 @@ if (params.gene_counter == "htseq"){
    */
   process htseqcount {
       tag "${bam_htseqcount.baseName - '.sorted'}"
-      publishDir "${params.outdir}/htseq-count", mode: 'copy',
+      publishDir "${params.outdir}/gene_counter", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
               else if (filename.indexOf("_gene.htseq-count.txt.summary") > 0) "gene_count_summaries/$filename"
@@ -1056,14 +1056,14 @@ if (params.gene_counter == "htseq"){
           }
 
       input:
-      file bam_featurecounts
-      file gtf from gtf_featureCounts.collect()
+      file bam_gene_counter
+      file gtf from gtf_gene_counter.collect()
       file biotypes_header from ch_biotypes_header.collect()
 
       output:
       file "${bam_htseqcount.baseName}_gene.htseq-count.txt" into geneCounts, htseqcount_to_merge
-      file "${bam_htseqcount.baseName}_biotype.htseq-count.txt" into htseqcount_logs
-      file "${bam_htseqcount.baseName}_biotype_counts*mqc.{txt,tsv}" into htseqcount_biotype
+      file "${bam_htseqcount.baseName}_biotype.htseq-count.txt" into gene_counter_logs
+      file "${bam_htseqcount.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
 
       script:
       def strandedness = "no"
@@ -1106,7 +1106,7 @@ if (params.gene_counter == "htseq"){
    */
   process merge_htseqcount {
       tag "${input_files[0].baseName - '.sorted'}"
-      publishDir "${params.outdir}/htseq-count", mode: 'copy'
+      publishDir "${params.outdir}/gene_counter", mode: 'copy'
 
       input:
       file input_files from htseqcount_to_merge.collect()
@@ -1119,14 +1119,13 @@ if (params.gene_counter == "htseq"){
       def single = input_files instanceof Path ? 1 : input_files.size()
       def merge = (single == 1) ? 'cat' : 'csvtk join -t --no-header-row --fields 1,2'
       """
-      echo gene $input_files | sed 's/.sorted_gene.htseq-count.txt//g' | sed 's/ /,/g' > header.csv
+      echo gene $input_files | sed 's/.sorted_gene.htseq-count.txt//g' | tr ' ' '\t' > header.txt
       # translate tabs to commas
       # Replace two-column gene names with "gene_name (gene_id)", e.g. "MALAT1 (ENSG00000251562)"
-      $merge $input_files | \
-        tr '\t' , |\
-        awk '{FS=","; OFS=","} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' |\
-        cut -d, -f '1,3-' |\
-        cat header.csv -  > merged_gene_counts.csv
+      $merge $input_files | \\
+        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' | \\
+        cut -f '1,3-' | \\
+        cat header.txt -  > merged_gene_counts.txt
       """
   }
 }
@@ -1229,10 +1228,8 @@ process multiqc {
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-    file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
-    file ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
-    file ('htseq/*') from htseqcount_logs.collect().ifEmpty([])
-    file ('htseq_biotype/*') from htseqcount_biotype.collect().ifEmpty([])
+    file ('gene_counter/*') from gene_counter_logs.collect().ifEmpty([])
+    file ('gene_counter_biotype/*') from gene_counter_biotype.collect().ifEmpty([])
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()

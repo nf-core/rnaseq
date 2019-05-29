@@ -107,7 +107,7 @@ params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : 
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
  // Default to HTSeq as gene expression quantifier
-params.gene_quantifer = params.gene_quantifer ?  params.gene_quantifier.lower() ?: "htseq" : "htseq"
+params.gene_quantifer = params.gene_quantifer ? params.gene_quantifier.lower() ?: "htseq" : "htseq"
 
 ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")

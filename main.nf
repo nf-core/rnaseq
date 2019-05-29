@@ -1067,7 +1067,6 @@ if (params.gene_counter == "htseq"){
 
       script:
       def strandedness = "no"
-      def extraAttributes = params.fcExtraAttributes ? "--extraAttributes ${params.fcExtraAttributes}" : ''
       if (forward_stranded && !unstranded) {
           htseqcount_direction = "yes"
       } else if (reverse_stranded && !unstranded){

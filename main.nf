@@ -27,6 +27,7 @@ def helpMessage() {
     Options:
       --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
+      --transgene_fastas            Additional fasta files containing transgene sequences to map to
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
@@ -153,6 +154,12 @@ else if ( params.fasta ){
 }
 else {
     exit 1, "No reference genome specified!"
+}
+
+if ( params.transgene_fastas ){
+    Channel.fromPath(params.tokenize(","))
+           .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+           .into { ch_transgene_fastas }
 }
 
 if( params.gtf ){
@@ -334,6 +341,23 @@ process get_software_versions {
     unset DISPLAY && qualimap rnaseq  > v_qualimap.txt 2>&1 || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
+}
+
+process make_transgene_gtfs {
+
+  when:
+    params.transgene_fastas
+
+  input:
+    file fasta from ch_transgene_fastas
+
+  output:
+    file "${fasta.baseName}.gtf"
+
+
+  """
+  fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
+  """
 }
 
 /*

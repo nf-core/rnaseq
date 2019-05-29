@@ -1230,8 +1230,10 @@ process multiqc {
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-    file ('featureCounts/*') from featureCounts_logs.collect()
-    file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
+    file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
+    file ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
+    file ('htseq/*') from htseqcount_logs.collect().ifEmpty([])
+    file ('htseq_biotype/*') from htseqcount_biotype.collect().ifEmpty([])
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()
@@ -1247,7 +1249,7 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
     multiqc . -f $rtitle $rfilename --config $multiqc_config \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap -m htseq
     """
 }
 

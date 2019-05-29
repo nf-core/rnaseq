@@ -44,8 +44,7 @@ def fasta2gtf(fasta, output):
 
     for ff in fiter:
         name, seq = ff
-        # Add +1 for length because GTFs are 1-based
-        length = len(seq) + 1
+        length = len(seq)
         line = line_template.format(name=name, length=length)
         lines.append(line)
 

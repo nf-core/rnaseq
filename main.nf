@@ -1092,23 +1092,13 @@ if (params.gene_quantifer == "htseq"){
       # NOTE: ENSEMBL uses "gene_biotype" while vs GENCODE uses "gene_type"
       htseq-count --order pos \
         --stranded ${strandedness} \
-        --idattr gene_biotype \
+        --idattr ${params.fcGroupFeaturesType} \
         --mode union \
         --nonunique all \
         --format bam \
         ${bam_htseqcount} \
         ${gtf} \
         > ${bam_htseqcount.baseName}_biotype.htseq-count.txt
-      # Run a second time but this time append to the same file
-      htseq-count --order pos \
-        --stranded ${strandedness} \
-        --idattr gene_type \
-        --mode union \
-        --nonunique all \
-        --format bam \
-        ${bam_htseqcount} \
-        ${gtf} \
-        >> ${bam_htseqcount.baseName}_biotype.htseq-count.txt
 
       # Remove lines specifying no alignment
       grep -v '^__' ${bam_htseqcount.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_htseqcount.baseName}_biotype_counts_mqc.txt

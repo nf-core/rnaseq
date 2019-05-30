@@ -39,7 +39,7 @@ def fasta2gtf(fasta, output):
     fiter = fasta_iter(fasta)
     # GTF output lines
     lines = []
-    attributes = 'gene_id "{name}_transgene"; gene_name "{name}_transgene"; transcript_id "{name}_transgene";\n'
+    attributes = 'gene_id "{name}_transgene"; gene_name "{name}_transgene"; transcript_id "{name}_transgene"; gene_biotype "{name}_transgene"; gene_type "{name}_transgene"\n'
     line_template = "{name}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
 
     for ff in fiter:

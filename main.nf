@@ -980,7 +980,7 @@ process dupradar {
  * STEP 9 - Feature counts
  */
 
-if (params.gene_counter == "featurecounts"){
+
   process featureCounts {
       label 'low_memory'
       tag "${bam_gene_counter.baseName - '.sorted'}"
@@ -992,13 +992,16 @@ if (params.gene_counter == "featurecounts"){
               else "$filename"
           }
 
+      when:
+      params.gene_counter == "featurecounts"
+
       input:
       file bam_gene_counter
       file gtf from gtf_gene_counter.collect()
       file biotypes_header from ch_biotypes_header.collect()
 
       output:
-      file "${bam_gene_counter.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+      file "${bam_gene_counter.baseName}_gene.featureCounts.txt" into geneCounts, gene_counts_to_merge
       file "${bam_gene_counter.baseName}_gene.featureCounts.txt.summary" into gene_counter_logs
       file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
 
@@ -1020,30 +1023,9 @@ if (params.gene_counter == "featurecounts"){
       """
   }
 
-  /*
-   * STEP 10 - Merge featurecounts
-   */
-  process merge_featureCounts {
-      tag "${input_files[0].baseName - '.sorted'}"
-      publishDir "${params.outdir}/gene_counter", mode: 'copy'
 
-      input:
-      file input_files from featureCounts_to_merge.collect()
-
-      output:
-      file 'merged_gene_counts.txt'
-
-      script:
-      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def single = input_files instanceof Path ? 1 : input_files.size()
-      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
-      """
-      $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
-      """
-  }
 }
 
-if (params.gene_counter == "htseq"){
     /*
    * STEP 8 HTSeq-Count
    */
@@ -1057,13 +1039,16 @@ if (params.gene_counter == "htseq"){
               else "$filename"
           }
 
+      when:
+      params.gene_counter == "htseq"
+
       input:
       file bam_gene_counter
       file gtf from gtf_gene_counter.collect()
       file biotypes_header from ch_biotypes_header.collect()
 
       output:
-      file "${bam_gene_counter.baseName}_gene.htseq-count.txt" into geneCounts, htseqcount_to_merge
+      file "${bam_gene_counter.baseName}_gene.htseq-count.txt" into geneCounts, gene_counts_to_merge
       file "${bam_gene_counter.baseName}_biotype.htseq-count.txt" into gene_counter_logs
       file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
 
@@ -1101,34 +1086,43 @@ if (params.gene_counter == "htseq"){
       """
   }
 
+
   /*
-   * STEP 9 - Merge htseqcount
+   * STEP 10 - Merge featurecounts
    */
-  process merge_htseqcount {
+  process merge_gene_counts {
       tag "${input_files[0].baseName - '.sorted'}"
       publishDir "${params.outdir}/gene_counter", mode: 'copy'
 
       input:
-      file input_files from htseqcount_to_merge.collect()
+      file input_files from gene_counts_to_merge.collect()
 
       output:
-      file 'merged_gene_counts.csv'
+      file 'merged_gene_counts.txt'
 
       script:
-      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def single = input_files instanceof Path ? 1 : input_files.size()
-      def merge = (single == 1) ? 'cat' : 'csvtk join -t --no-header-row --fields 1,2'
-      """
-      echo gene $input_files | sed 's/.sorted_gene.htseq-count.txt//g' | tr ' ' '\t' > header.txt
-      # translate tabs to commas
-      # Replace two-column gene names with "gene_name (gene_id)", e.g. "MALAT1 (ENSG00000251562)"
-      $merge $input_files | \\
-        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' | \\
-        cut -f '1,3-' | \\
-        cat header.txt -  > merged_gene_counts.txt
-      """
-  }
-}
+      if (params.gene_counter == "featurecounts"){
+        //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+        def single = input_files instanceof Path ? 1 : input_files.size()
+        def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
+        """
+        $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
+        """
+      } else {
+        //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+        def single = input_files instanceof Path ? 1 : input_files.size()
+        def merge = (single == 1) ? 'cat' : 'csvtk join -t --no-header-row --fields 1,2'
+        """
+        echo gene $input_files | sed 's/.sorted_gene.htseq-count.txt//g' | tr ' ' '\t' > header.txt
+        # translate tabs to commas
+        # Replace two-column gene names with "gene_name (gene_id)", e.g. "MALAT1 (ENSG00000251562)"
+        $merge $input_files | \\
+          awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' | \\
+          cut -f '1,3-' | \\
+          cat header.txt -  > merged_gene_counts.txt
+        """
+      }
+
 // End gene quantification
 
 

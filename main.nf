@@ -1048,7 +1048,7 @@ if (params.gene_counter == "htseq"){
    * STEP 8 HTSeq-Count
    */
   process htseqcount {
-      tag "${bam_htseqcount.baseName - '.sorted'}"
+      tag "${bam_gene_counter.baseName - '.sorted'}"
       publishDir "${params.outdir}/gene_counter", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
@@ -1063,9 +1063,9 @@ if (params.gene_counter == "htseq"){
       file biotypes_header from ch_biotypes_header.collect()
 
       output:
-      file "${bam_htseqcount.baseName}_gene.htseq-count.txt" into geneCounts, htseqcount_to_merge
-      file "${bam_htseqcount.baseName}_biotype.htseq-count.txt" into gene_counter_logs
-      file "${bam_htseqcount.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
+      file "${bam_gene_counter.baseName}_gene.htseq-count.txt" into geneCounts, htseqcount_to_merge
+      file "${bam_gene_counter.baseName}_biotype.htseq-count.txt" into gene_counter_logs
+      file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
 
       script:
       def strandedness = "no"
@@ -1082,9 +1082,9 @@ if (params.gene_counter == "htseq"){
         --mode union \
         --nonunique all \
         --format bam \
-        ${bam_htseqcount} \
+        ${bam_gene_counter} \
         ${gtf} \
-        > ${bam_htseqcount.baseName}_gene.htseq-count.txt
+        > ${bam_gene_counter.baseName}_gene.htseq-count.txt
       # NOTE: ENSEMBL uses "gene_biotype" while vs GENCODE uses "gene_type"
       htseq-count --order pos \
         --stranded ${strandedness} \
@@ -1092,12 +1092,12 @@ if (params.gene_counter == "htseq"){
         --mode union \
         --nonunique all \
         --format bam \
-        ${bam_htseqcount} \
+        ${bam_gene_counter} \
         ${gtf} \
-        > ${bam_htseqcount.baseName}_biotype.htseq-count.txt
+        > ${bam_gene_counter.baseName}_biotype.htseq-count.txt
 
       # Remove lines specifying no alignment, aka starting with two underscores
-      grep -v '^__' ${bam_htseqcount.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_htseqcount.baseName}_biotype_counts_mqc.txt
+      grep -v '^__' ${bam_gene_counter.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
       """
   }
 

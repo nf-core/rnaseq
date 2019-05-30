@@ -373,7 +373,7 @@ if ( params.transgene_fastas ){
     """
   }
 
-  process combine_genome_annotation_gzs {
+  process combine_genome_annotations {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                saveAs: { params.saveReference ? it : null }, mode: 'copy'
     tag "${genome_name}"

@@ -149,8 +149,11 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
 }
 else if ( params.fasta ){
   if ( params.transgene_fastas ){
-      Channel.fromPath(params?.toString()?.tokenize(","))
-             .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+      // transgene_paths = params.transgene_fastas?.toString()?.tokenize(",")
+      // transgene_names = transgene_paths.each{ it -> it.getBaseName() }
+
+      Channel.fromPath(params.transgene_fastas)
+             .ifEmpty { exit 1, "Fasta file not found: ${params.transgene_fastas}" }
              .into { ch_transgene_fastas_for_gtf; ch_transgene_fastas_to_concat }
      Channel.fromPath(params.fasta)
             .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
@@ -262,6 +265,9 @@ if(params.genome) summary['Genome'] = params.genome
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2"
+if (params.transgene_fastas){
+  summary["Transgenes"] = params.transgene_fastas
+}
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
     if(params.star_index)          summary['STAR Index']   = params.star_index
@@ -376,10 +382,7 @@ if ( params.transgene_fastas ){
   process combine_genome_annotations {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                saveAs: { params.saveReference ? it : null }, mode: 'copy'
-    tag "${genome_name}"
-
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+    tag "${params.genome}_plus"
 
     input:
     file genome_fastas from ch_genome_fasta
@@ -388,12 +391,12 @@ if ( params.transgene_fastas ){
     file transgene_gtfs from ch_transgene_gtfs.collect()
 
     output:
-    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, genome_fasta_ch)
-    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_htseqcount, gtf_stringtieFPKM, gtf_dexseq)
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index)
+    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM)
 
     script:
-    transgenomes = transgene_fastas.getBaseName().sort().join("+")
-    genome_name = params.genome + "__" + transgenomes
+    // transgenomes = transgene_fastas.getBaseName().sort().join("+")
+    genome_name = "${ch_genome_fasta.baseName}_plus"
     """
     cat $genome_fastas $transgene_fastas > ${genome_name}.fa
     cat $genome_gtf $transgene_gtfs > ${genome_name}.gtf

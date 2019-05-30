@@ -27,7 +27,7 @@ def helpMessage() {
     Options:
       --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
-      --transgene_fastas            Additional fasta files containing transgene sequences to map to
+      --transgene_fastas            Additional fasta files containing transgene sequences to map to, comma-separated
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
@@ -148,26 +148,40 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta ){
+  if ( params.transgene_fastas ){
+      Channel.fromPath(params?.toString()?.tokenize(","))
+             .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+             .into { ch_transgene_fastas_for_gtf; ch_transgene_fastas_to_concat }
+     Channel.fromPath(params.fasta)
+            .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+            .set { ch_genome_fasta }
+  } else {
     Channel.fromPath(params.fasta)
            .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
            .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
+  }
 }
 else {
     exit 1, "No reference genome specified!"
 }
 
-if ( params.transgene_fastas ){
-    Channel.fromPath(params.tokenize(","))
-           .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
-           .into { ch_transgene_fastas }
-}
+
 
 if( params.gtf ){
+  if ( params.transgene_fastas ){
+    Channel
+        .fromPath(params.gtf)
+        .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
+        .set { ch_genome_gtf }
+
+  } else {
     Channel
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
               gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM }
+
+  }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -343,22 +357,52 @@ process get_software_versions {
     """
 }
 
-process make_transgene_gtfs {
+if ( params.transgene_fastas ){
+  process make_transgene_gtfs {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+    input:
+      file fasta from ch_transgene_fastas_for_gtf
 
-  when:
-    params.transgene_fastas
-
-  input:
-    file fasta from ch_transgene_fastas
-
-  output:
-    file "${fasta.baseName}.gtf"
+    output:
+      file "${fasta.baseName}.gtf" into ch_transgene_gtfs
 
 
-  """
-  fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
-  """
+    """
+    fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
+    """
+  }
+
+  process combine_genome_annotation_gzs {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+    tag "${genome_name}"
+
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+    input:
+    file genome_fastas from ch_genome_fasta
+    file genome_gtf from ch_genome_gtf
+    file transgene_fastas from ch_transgene_fastas_to_concat.collect()
+    file transgene_gtfs from ch_transgene_gtfs.collect()
+
+    output:
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, genome_fasta_ch)
+    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_htseqcount, gtf_stringtieFPKM, gtf_dexseq)
+
+    script:
+    transgenomes = transgene_fastas.getBaseName().sort().join("+")
+    genome_name = params.genome + "__" + transgenomes
+    """
+    cat $genome_fastas $transgene_fastas > ${genome_name}.fa
+    cat $genome_gtf $transgene_gtfs > ${genome_name}.gtf
+    """
+  }
 }
+
+
+
 
 /*
  * PREPROCESSING - Build STAR index

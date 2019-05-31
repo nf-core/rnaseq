@@ -108,7 +108,8 @@ params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: 
 
 ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt")
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt")
-ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt")
+Channel.fromPath("$baseDir/assets/biotypes_header.txt")
+        .into{ ch_biotypes_header_htseq; ch_biotypes_header_featurecounts }
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt")
        .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
@@ -165,7 +166,7 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_gene_counter; gtf_stringtieFPKM }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_htseq; gtf_featurecounts; ; gtf_stringtieFPKM }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -622,7 +623,7 @@ if(params.aligner == 'star'){
     star_aligned
         .filter { logs, bams -> check_log(logs) }
         .flatMap {  logs, bams -> bams }
-    .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_gene_counter; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+    .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_htseq; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
 }
 
 
@@ -708,7 +709,7 @@ if(params.aligner == 'hisat2'){
         file wherearemyfiles from ch_where_hisat2_sort.collect()
 
         output:
-        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_qualimap, bam_preseq, bam_markduplicates, bam_gene_counter, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
+        file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_qualimap, bam_preseq, bam_markduplicates, bam_htseq, bam_featurecounts, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
         file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
         file "where_are_my_files.txt"
 
@@ -980,10 +981,10 @@ process dupradar {
  * STEP 9 - Feature counts
  */
 
-
+if (params.gene_counter == "featurecounts"){
   process featureCounts {
       label 'low_memory'
-      tag "${bam_gene_counter.baseName - '.sorted'}"
+      tag "${bam_featurecounts.baseName - '.sorted'}"
       publishDir "${params.outdir}/gene_counter", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
@@ -992,18 +993,15 @@ process dupradar {
               else "$filename"
           }
 
-      when:
-      params.gene_counter == "featurecounts"
-
       input:
-      file bam_gene_counter
-      file gtf from gtf_gene_counter.collect()
-      file biotypes_header from ch_biotypes_header.collect()
+      file bam_featurecounts
+      file gtf from gtf_featurecounts.collect()
+      file biotypes_header from ch_biotypes_header_featurecounts.collect()
 
       output:
-      file "${bam_gene_counter.baseName}_gene.featureCounts.txt" into geneCounts, gene_counts_to_merge
-      file "${bam_gene_counter.baseName}_gene.featureCounts.txt.summary" into gene_counter_logs
-      file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
+      file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, gene_counts_to_merge
+      file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into gene_counter_logs
+      file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
 
       script:
       def featureCounts_direction = 0
@@ -1014,24 +1012,25 @@ process dupradar {
           featureCounts_direction = 2
       }
       // Try to get real sample name
-      sample_name = bam_gene_counter.baseName - 'Aligned.sortedByCoord.out'
+      sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
       """
-      featureCounts -a $gtf -g ${params.fcGroupFeatures} -o ${bam_gene_counter.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_gene_counter
-      featureCounts -a $gtf -g ${params.fcGroupFeaturesType} -o ${bam_gene_counter.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_gene_counter
-      cut -f 1,7 ${bam_gene_counter.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
-      mqc_features_stat.py ${bam_gene_counter.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_gene_counter.baseName}_biotype_counts_gs_mqc.tsv
+      featureCounts -a $gtf -g ${params.fcGroupFeatures} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
+      featureCounts -a $gtf -g ${params.fcGroupFeaturesType} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+      cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
+      mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
       """
+    }
 }
 
 
 
-
+if (params.gene_counter == "htseq"){
   /*
  * STEP 8 HTSeq-Count
  */
 process htseqcount {
-    tag "${bam_gene_counter.baseName - '.sorted'}"
-    publishDir "${params.outdir}/gene_counter", mode: 'copy',
+    tag "${bam_htseq.baseName - '.sorted'}"
+    publishDir "${params.outdir}/htseq", mode: 'copy',
         saveAs: {filename ->
             if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
             else if (filename.indexOf("_gene.htseq-count.txt.summary") > 0) "gene_count_summaries/$filename"
@@ -1039,18 +1038,15 @@ process htseqcount {
             else "$filename"
         }
 
-    when:
-    params.gene_counter == "htseq"
-
     input:
-    file bam_gene_counter
-    file gtf from gtf_gene_counter.collect()
-    file biotypes_header from ch_biotypes_header.collect()
+    file bam_htseq
+    file gtf from gtf_htseq.collect()
+    file biotypes_header from ch_biotypes_header_htseq.collect()
 
     output:
-    file "${bam_gene_counter.baseName}_gene.htseq-count.txt" into geneCounts, gene_counts_to_merge
-    file "${bam_gene_counter.baseName}_biotype.htseq-count.txt" into gene_counter_logs
-    file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
+    file "${bam_htseq.baseName}_gene.htseq-count.txt" into geneCounts, gene_counts_to_merge
+    file "${bam_htseq.baseName}_biotype.htseq-count.txt" into htseq_logs
+    file "${bam_htseq.baseName}_biotype_counts*mqc.{txt,tsv}" into htseq_biotype
 
     script:
     def strandedness = "no"
@@ -1067,9 +1063,9 @@ process htseqcount {
       --mode union \
       --nonunique all \
       --format bam \
-      ${bam_gene_counter} \
+      ${bam_htseq} \
       ${gtf} \
-      > ${bam_gene_counter.baseName}_gene.htseq-count.txt
+      > ${bam_htseq.baseName}_gene.htseq-count.txt
     # NOTE: ENSEMBL uses "gene_biotype" while vs GENCODE uses "gene_type"
     htseq-count --order pos \
       --stranded ${strandedness} \
@@ -1077,14 +1073,16 @@ process htseqcount {
       --mode union \
       --nonunique all \
       --format bam \
-      ${bam_gene_counter} \
+      ${bam_htseq} \
       ${gtf} \
-      > ${bam_gene_counter.baseName}_biotype.htseq-count.txt
+      > ${bam_htseq.baseName}_biotype.htseq-count.txt
 
     # Remove lines specifying no alignment, aka starting with two underscores
-    grep -v '^__' ${bam_gene_counter.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
+    grep -v '^__' ${bam_htseq.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_htseq.baseName}_biotype_counts_mqc.txt
     """
+  }
 }
+
 
 
 /*

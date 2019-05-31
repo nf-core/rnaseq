@@ -27,7 +27,7 @@ def helpMessage() {
     Options:
       --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
-      --transgene_fastas            Additional fasta files containing transgene sequences to map to, comma-separated
+      --additional_fasta            Additional fasta files containing e.g. ERCCs spike-ins, transgene sequences to map to
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
@@ -148,13 +148,13 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta ){
-  if ( params.transgene_fastas ){
-      // transgene_paths = params.transgene_fastas?.toString()?.tokenize(",")
+  if ( params.additional_fasta ){
+      // transgene_paths = params.additional_fasta?.toString()?.tokenize(",")
       // transgene_names = transgene_paths.each{ it -> it.getBaseName() }
 
-      Channel.fromPath(params.transgene_fastas)
-             .ifEmpty { exit 1, "Fasta file not found: ${params.transgene_fastas}" }
-             .into { ch_transgene_fastas_for_gtf; ch_transgene_fastas_to_concat }
+      Channel.fromPath(params.additional_fasta)
+             .ifEmpty { exit 1, "Fasta file not found: ${params.additional_fasta}" }
+             .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
      Channel.fromPath(params.fasta)
             .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
             .set { ch_genome_fasta }
@@ -171,7 +171,7 @@ else {
 
 
 if( params.gtf ){
-  if ( params.transgene_fastas ){
+  if ( params.additional_fasta ){
     Channel
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
@@ -265,8 +265,8 @@ if(params.genome) summary['Genome'] = params.genome
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2"
-if (params.transgene_fastas){
-  summary["Transgenes"] = params.transgene_fastas
+if (params.additional_fasta){
+  summary["Transgenes"] = params.additional_fasta
 }
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
@@ -363,15 +363,15 @@ process get_software_versions {
     """
 }
 
-if ( params.transgene_fastas ){
-  process make_transgene_gtfs {
+if ( params.additional_fasta ){
+  process make_additional_gtf {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                saveAs: { params.saveReference ? it : null }, mode: 'copy'
     input:
-      file fasta from ch_transgene_fastas_for_gtf
+      file fasta from ch_additional_fasta_for_gtf
 
     output:
-      file "${fasta.baseName}.gtf" into ch_transgene_gtfs
+      file "${fasta.baseName}.gtf" into ch_additional_gtf
 
 
     """
@@ -382,24 +382,26 @@ if ( params.transgene_fastas ){
   process combine_genome_annotations {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                saveAs: { params.saveReference ? it : null }, mode: 'copy'
-    tag "${params.genome}_plus"
+    tag "${genome_name}"
 
     input:
-    file genome_fastas from ch_genome_fasta
+    file genome_fasta from ch_genome_fasta
     file genome_gtf from ch_genome_gtf
-    file transgene_fastas from ch_transgene_fastas_to_concat.collect()
-    file transgene_gtfs from ch_transgene_gtfs.collect()
+    file additional_fasta from ch_additional_fasta_to_concat
+    file additional_gtf from ch_additional_gtf
 
     output:
     file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index)
     file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM)
 
     script:
-    // transgenomes = transgene_fastas.getBaseName().sort().join("+")
-    genome_name = "${ch_genome_fasta.baseName}_plus"
+    main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
+
+    transgenomes = additional_fasta.collect{ it.getBaseName() }.sort().join("+")
+    genome_name = "${main_genome_name}_plus"
     """
-    cat $genome_fastas $transgene_fastas > ${genome_name}.fa
-    cat $genome_gtf $transgene_gtfs > ${genome_name}.gtf
+    cat $genome_fasta $additional_fasta > ${genome_name}.fa
+    cat $genome_gtf $additional_gtf > ${genome_name}.gtf
     """
   }
 }

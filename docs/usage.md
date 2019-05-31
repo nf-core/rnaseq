@@ -24,6 +24,7 @@
   * [`--saveReference`](#--savereference)
   * [`--saveTrimmed`](#--savetrimmed)
   * [`--saveAlignedIntermediates`](#--savealignedintermediates)
+  * [`--additional_fasta`](#--additional_fasta)
 * [Adapter Trimming](#adapter-trimming)
   * [`--clip_r1 [int]`](#--clip_r1-int)
   * [`--clip_r2 [int]`](#--clip_r2-int)
@@ -266,6 +267,9 @@ flag (or set to true in your config file) to copy these files when complete.
 
 ### `--saveAlignedIntermediates`
 As above, by default intermediate BAM files from the alignment will not be saved. The final BAM files created after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM files from STAR / HISAT2 and sorting steps.
+
+### `--additional_fasta`
+If provided, any genes here will get concatenated to the existing genome fasta, a GTF will be automatically created using the entire sequence as the "gene," "transcript," and "exon," and the alignment index will get created off of the combined fasta and GTF. It is recommended to save the reference so you do not need to create it again.
 
 ## Adapter Trimming
 If specific additional trimming is required (for example, from additional tags),

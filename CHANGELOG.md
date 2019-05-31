@@ -10,6 +10,7 @@
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
+* Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 

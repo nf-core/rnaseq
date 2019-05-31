@@ -1021,107 +1021,108 @@ process dupradar {
       cut -f 1,7 ${bam_gene_counter.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
       mqc_features_stat.py ${bam_gene_counter.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_gene_counter.baseName}_biotype_counts_gs_mqc.tsv
       """
-  }
-
-
 }
 
-    /*
-   * STEP 8 HTSeq-Count
-   */
-  process htseqcount {
-      tag "${bam_gene_counter.baseName - '.sorted'}"
-      publishDir "${params.outdir}/gene_counter", mode: 'copy',
-          saveAs: {filename ->
-              if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
-              else if (filename.indexOf("_gene.htseq-count.txt.summary") > 0) "gene_count_summaries/$filename"
-              else if (filename.indexOf("_gene.htseq-count.txt") > 0) "gene_counts/$filename"
-              else "$filename"
-          }
 
-      when:
-      params.gene_counter == "htseq"
-
-      input:
-      file bam_gene_counter
-      file gtf from gtf_gene_counter.collect()
-      file biotypes_header from ch_biotypes_header.collect()
-
-      output:
-      file "${bam_gene_counter.baseName}_gene.htseq-count.txt" into geneCounts, gene_counts_to_merge
-      file "${bam_gene_counter.baseName}_biotype.htseq-count.txt" into gene_counter_logs
-      file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
-
-      script:
-      def strandedness = "no"
-      if (forward_stranded && !unstranded) {
-          htseqcount_direction = "yes"
-      } else if (reverse_stranded && !unstranded){
-          htseqcount_direction = "reverse"
-      }
-      """
-      htseq-count --order pos \
-        --stranded ${strandedness} \
-        --idattr gene_id \
-        --additional-attr gene_name \
-        --mode union \
-        --nonunique all \
-        --format bam \
-        ${bam_gene_counter} \
-        ${gtf} \
-        > ${bam_gene_counter.baseName}_gene.htseq-count.txt
-      # NOTE: ENSEMBL uses "gene_biotype" while vs GENCODE uses "gene_type"
-      htseq-count --order pos \
-        --stranded ${strandedness} \
-        --idattr ${params.fcGroupFeaturesType} \
-        --mode union \
-        --nonunique all \
-        --format bam \
-        ${bam_gene_counter} \
-        ${gtf} \
-        > ${bam_gene_counter.baseName}_biotype.htseq-count.txt
-
-      # Remove lines specifying no alignment, aka starting with two underscores
-      grep -v '^__' ${bam_gene_counter.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
-      """
-  }
 
 
   /*
-   * STEP 10 - Merge featurecounts
-   */
-  process merge_gene_counts {
-      tag "${input_files[0].baseName - '.sorted'}"
-      publishDir "${params.outdir}/gene_counter", mode: 'copy'
+ * STEP 8 HTSeq-Count
+ */
+process htseqcount {
+    tag "${bam_gene_counter.baseName - '.sorted'}"
+    publishDir "${params.outdir}/gene_counter", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
+            else if (filename.indexOf("_gene.htseq-count.txt.summary") > 0) "gene_count_summaries/$filename"
+            else if (filename.indexOf("_gene.htseq-count.txt") > 0) "gene_counts/$filename"
+            else "$filename"
+        }
 
-      input:
-      file input_files from gene_counts_to_merge.collect()
+    when:
+    params.gene_counter == "htseq"
 
-      output:
-      file 'merged_gene_counts.txt'
+    input:
+    file bam_gene_counter
+    file gtf from gtf_gene_counter.collect()
+    file biotypes_header from ch_biotypes_header.collect()
 
-      script:
-      if (params.gene_counter == "featurecounts"){
-        //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-        def single = input_files instanceof Path ? 1 : input_files.size()
-        def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
-        """
-        $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
-        """
-      } else {
-        //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-        def single = input_files instanceof Path ? 1 : input_files.size()
-        def merge = (single == 1) ? 'cat' : 'csvtk join -t --no-header-row --fields 1,2'
-        """
-        echo gene $input_files | sed 's/.sorted_gene.htseq-count.txt//g' | tr ' ' '\t' > header.txt
-        # translate tabs to commas
-        # Replace two-column gene names with "gene_name (gene_id)", e.g. "MALAT1 (ENSG00000251562)"
-        $merge $input_files | \\
-          awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' | \\
-          cut -f '1,3-' | \\
-          cat header.txt -  > merged_gene_counts.txt
-        """
-      }
+    output:
+    file "${bam_gene_counter.baseName}_gene.htseq-count.txt" into geneCounts, gene_counts_to_merge
+    file "${bam_gene_counter.baseName}_biotype.htseq-count.txt" into gene_counter_logs
+    file "${bam_gene_counter.baseName}_biotype_counts*mqc.{txt,tsv}" into gene_counter_biotype
+
+    script:
+    def strandedness = "no"
+    if (forward_stranded && !unstranded) {
+        htseqcount_direction = "yes"
+    } else if (reverse_stranded && !unstranded){
+        htseqcount_direction = "reverse"
+    }
+    """
+    htseq-count --order pos \
+      --stranded ${strandedness} \
+      --idattr gene_id \
+      --additional-attr gene_name \
+      --mode union \
+      --nonunique all \
+      --format bam \
+      ${bam_gene_counter} \
+      ${gtf} \
+      > ${bam_gene_counter.baseName}_gene.htseq-count.txt
+    # NOTE: ENSEMBL uses "gene_biotype" while vs GENCODE uses "gene_type"
+    htseq-count --order pos \
+      --stranded ${strandedness} \
+      --idattr ${params.fcGroupFeaturesType} \
+      --mode union \
+      --nonunique all \
+      --format bam \
+      ${bam_gene_counter} \
+      ${gtf} \
+      > ${bam_gene_counter.baseName}_biotype.htseq-count.txt
+
+    # Remove lines specifying no alignment, aka starting with two underscores
+    grep -v '^__' ${bam_gene_counter.baseName}_biotype.htseq-count.txt | cat $biotypes_header - >> ${bam_gene_counter.baseName}_biotype_counts_mqc.txt
+    """
+}
+
+
+/*
+ * STEP 10 - Merge featurecounts
+ */
+process merge_gene_counts {
+    tag "${input_files[0].baseName - '.sorted'}"
+    publishDir "${params.outdir}/gene_counter", mode: 'copy'
+
+    input:
+    file input_files from gene_counts_to_merge.collect()
+
+    output:
+    file 'merged_gene_counts.txt'
+
+    script:
+    if (params.gene_counter == "featurecounts"){
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = input_files instanceof Path ? 1 : input_files.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
+      """
+      $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
+      """
+    } else {
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = input_files instanceof Path ? 1 : input_files.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t --no-header-row --fields 1,2'
+      """
+      echo gene $input_files | sed 's/.sorted_gene.htseq-count.txt//g' | tr ' ' '\t' > header.txt
+      # translate tabs to commas
+      # Replace two-column gene names with "gene_name (gene_id)", e.g. "MALAT1 (ENSG00000251562)"
+      $merge $input_files | \\
+        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' | \\
+        cut -f '1,3-' | \\
+        cat header.txt -  > merged_gene_counts.txt
+      """
+    }
+}
 
 // End gene quantification
 

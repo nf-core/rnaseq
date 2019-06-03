@@ -23,6 +23,7 @@ and processes data using the following steps:
 * [dupRadar](#dupradar) - technical / biological read duplication
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
+* [Salmon](#salmon) - gene counts, biotype counts, rRNA estimation.
 * [StringTie](#stringtie) - FPKMs for genes and transcripts
 * [Sample_correlation](#Sample_correlation) - create MDS plot and sample pairwise distance heatmap / dendrogram
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
@@ -300,6 +301,32 @@ We also use featureCounts to count overlaps with different classes of features. 
 ![biotypes](images/featureCounts_biotype_plot.png)
 
 **Output directory: `results/featureCounts`**
+
+* `Sample.bam_biotype_counts.txt`
+  * Read counts for the different gene biotypes that featureCounts distinguishes.
+* `Sample.featureCounts.txt`
+  * Read the counts for each gene provided in the reference `gtf` file
+* `Sample.featureCounts.txt.summary`
+  * Summary file, containing statistics about the counts
+
+## Salmon
+[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps reads to a transcriptome and counts gene expression per transcript.
+
+### Salmon Index
+
+**Output directory: `results/reference_transcriptome`**
+
+* `Sample.bam_biotype_counts.txt`
+  * Read counts for the different gene biotypes that featureCounts distinguishes.
+* `Sample.featureCounts.txt`
+  * Read the counts for each gene provided in the reference `gtf` file
+* `Sample.featureCounts.txt.summary`
+  * Summary file, containing statistics about the counts
+
+
+### Salmon quant
+
+**Output directory: `results/salmon`**
 
 * `Sample.bam_biotype_counts.txt`
   * Read counts for the different gene biotypes that featureCounts distinguishes.

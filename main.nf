@@ -161,7 +161,7 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM, gtf_salmon }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -1027,6 +1027,13 @@ if (params.transcriptome){
             salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
             """
         }
+    }
+
+    process merge_salmon_quant {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+
     }
 }
 

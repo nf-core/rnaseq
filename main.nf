@@ -450,7 +450,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
 if(params.transcriptome){
   process salmon_index {
       tag "$transcriptome.simpleName"
-      publishDir path: { "${params.outdir}" },
+      publishDir path: { "${params.outdir}/reference_transcriptome" },
                  mode: 'copy'
 
       input:

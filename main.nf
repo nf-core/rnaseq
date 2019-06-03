@@ -161,7 +161,7 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM, gtf_salmon }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -479,7 +479,7 @@ if(params.gff){
 
       output:
       file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
-            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon
 
       script:
       """
@@ -1007,10 +1007,11 @@ process dupradar {
 if (params.transcriptome){
     process salmon_quant {
         tag "$sample"
-        publishDir "${params.outdir}/Salmon", mode: 'copy'
+        publishDir "${params.outdir}/salmon", mode: 'copy'
 
         input:
         file index from index_ch.collect()
+        file gtff from
         set sample, file(reads) from raw_salmon
 
         output:
@@ -1019,11 +1020,11 @@ if (params.transcriptome){
         script:
         if (params.singleEnd){
             """
-            salmon quant --validateMappings --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
+            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
             """
         }else{
             """
-            salmon quant --validateMappings --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
+            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
             """
         }
     }

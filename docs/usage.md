@@ -17,6 +17,8 @@
 * [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
   * [Default Attribute Type](#default-attribute-type)
   * [Extra Gene Names](#extra-gene-names)
+* [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
+  * [Indexing the transcriptome](#indexing-the-transcriptome)
 * [Alignment tool](#alignment-tool)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
@@ -194,6 +196,15 @@ This behaviour can be modified by specifying `--fcExtraAttributes` when running 
 See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
 Note that you can also specify more than one desired value, separated by a comma:
 ``--fcExtraAttributes gene_id,...``
+
+
+## Transcriptome mapping with Salmon
+
+If the option `--transcriptome` is provided to a fasta file of cDNA sequences, the pipeline will also run transcriptome quantification using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html).
+
+### Indexing the transcriptome
+
+The transcriptome is indexed using the default parameters of Salmon, using the default k-mer size of 31. As [discussed](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode), the a k-mer size off 31 works well with reads that are length 75bp or longer.
 
 
 ## Alignment tool

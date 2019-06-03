@@ -448,7 +448,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
  * PREPROCESSING - Create Salmon transcriptome index
  */
 if(params.transcriptome){
-  process index {
+  process salmon_index {
       tag "$transcriptome.simpleName"
       publishDir path: { "${params.outdir}" },
                  mode: 'copy'
@@ -1002,6 +1002,31 @@ process dupradar {
     """
     dupRadar.r $bam_md $gtf $dupradar_direction $paired ${task.cpus}
     """
+}
+
+if (params.transcriptome){
+    process salmon_quant {
+        tag "$sample"
+        publishDir "${params.outdir}/Salmon", mode: 'copy'
+
+        input:
+        file index from index_ch.collect()
+        set sample, file(reads) from raw_salmon
+
+        output:
+        file(sample) into quant_ch
+
+        script:
+        if (params.singleEnd){
+            """
+            salmon quant --validateMappings --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
+            """
+        }else{
+            """
+            salmon quant --validateMappings --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
+            """
+        }
+    }
 }
 
 

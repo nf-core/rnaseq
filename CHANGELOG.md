@@ -7,7 +7,7 @@
 * Add Salmon index for transcriptome
 
 #### Dependency Updates
-* Added htseq=0.11.2
+* Added salmon=0.14.0
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 #### Pipeline updates

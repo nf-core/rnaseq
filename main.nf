@@ -1011,20 +1011,26 @@ if (params.transcriptome){
 
         input:
         file index from index_ch.collect()
-        file gtff from
+        file gtf from gtf_salmon
         set sample, file(reads) from raw_salmon
 
         output:
         file(sample) into quant_ch
+        file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
+        file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
 
         script:
         if (params.singleEnd){
             """
             salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }else{
             """
             salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }
     }
@@ -1033,6 +1039,26 @@ if (params.transcriptome){
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
+      input:
+      file transcript_quants from salmon_transcript_quant.collect()
+      file gene_quants from salmon_gene_quant.collect()
+
+      output:
+      file 'salmon_merged_gene_counts.txt'
+      file 'salmon_merged_transcript_counts.txt'
+
+      script:
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = input_files instanceof Path ? 1 : input_files.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      """
+      ## Merge gene counts
+      echo gene_id $input_files | sed 's/.quant.genes.ids-only.txt//g' | tr ' ' '\t' > gene_header.txt
+      $merge $input_files | csvtk cut -t -f "Name" | tail -n +2 | cat gene_header.txt - > merged_gene_counts.txt
+      ## Merge transcript counts
+      echo gene_id $input_files | sed 's/.quant.ids-only.txt//g' | tr ' ' '\t' > transcript_header.txt
+      $merge $input_files | csvtk cut -t -f "Name" | tail -n +2 | cat transcript_header.txt - > merged_transcript_counts.txt
+      """
 
     }
 }

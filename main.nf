@@ -36,6 +36,7 @@ def helpMessage() {
       --star_index                  Path to STAR index
       --hisat2_index                Path to HiSAT2 index
       --fasta                       Path to Fasta reference
+      --transcriptome               Path to Fasta transcriptome
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
@@ -168,6 +169,15 @@ if( params.gtf ){
     exit 1, "No GTF or GFF3 annotation specified!"
 }
 
+if (params.transcriptome){
+  Channel
+      .fromPath(params.transcriptome)
+      .ifEmpty { exit 1, "Transcript fasta file is unreachable: ${params.transcriptome}"  }
+      .set { tx_fasta_ch  }
+}
+
+
+
 if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12)
@@ -251,6 +261,7 @@ if(params.aligner == 'star'){
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
 }
+if(params.transcriptome)       summary['Transcriptome sequences']  = params.transcriptome
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
@@ -431,6 +442,31 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
         """
     }
 }
+
+
+/*
+ * PREPROCESSING - Create Salmon transcriptome index
+ */
+if(params.transcriptome){
+  process index {
+      tag "$transcriptome.simpleName"
+      publishDir path: { "${params.outdir}" },
+                 mode: 'copy'
+
+      input:
+      file transcriptome from tx_fasta_ch
+
+      output:
+      file 'salmon_index' into index_ch
+
+      script:
+      """
+      salmon index --threads $task.cpus -t $transcriptome -i salmon_index
+      """
+  }
+}
+
+
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */

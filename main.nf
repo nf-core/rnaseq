@@ -261,7 +261,7 @@ if(params.aligner == 'star'){
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
 }
-if(params.transcriptome)       summary['Transcriptome sequences']  = params.transcriptome
+if(params.transcriptome)       summary['Transcriptome']  = params.transcriptome
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12

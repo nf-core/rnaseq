@@ -2,6 +2,10 @@
 
 ## Version 1.4dev
 
+#### Pipeline updates
+
+* Add Salmon index for transcriptome
+
 #### Dependency Updates
 * Added htseq=0.11.2
 

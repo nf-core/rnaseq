@@ -1052,12 +1052,25 @@ if (params.transcriptome){
       def single = input_files instanceof Path ? 1 : input_files.size()
       def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
       """
+      ## Merge transcript counts
+      echo transcript_id gene_name $input_files | sed 's/.quant.ids-only.txt//g' | tr ' ' '\t' > transcript_header.txt
+      ## Gene transcript_id <--> gene_name mapping
+      awk -F "\t" '$3 == "transcript" { print $9 }' $gtf | grep -oP '(?<=transcript_id ")(\w+)' > transcript_ids.txt
+      awk -F "\t" '$3 == "transcript" { print $9 }' $gtf | grep -oP '(?<=gene_name ")(\w+)' > transcript_gene_names.txt
+      paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
+      $merge $input_files \\
+        | csvtk cut -t -f "Name" \\
+        | tail -n +2 \\
+        | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
+        | cat transcript_header.txt - \\
+        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' |\\
+        cut  -f '1,3-' |\\
+        > merged_transcript_counts.txt
+
       ## Merge gene counts
       echo gene_id $input_files | sed 's/.quant.genes.ids-only.txt//g' | tr ' ' '\t' > gene_header.txt
       $merge $input_files | csvtk cut -t -f "Name" | tail -n +2 | cat gene_header.txt - > merged_gene_counts.txt
-      ## Merge transcript counts
-      echo gene_id $input_files | sed 's/.quant.ids-only.txt//g' | tr ' ' '\t' > transcript_header.txt
-      $merge $input_files | csvtk cut -t -f "Name" | tail -n +2 | cat transcript_header.txt - > merged_transcript_counts.txt
+
       """
 
     }

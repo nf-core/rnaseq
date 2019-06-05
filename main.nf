@@ -1163,7 +1163,7 @@ if (params.transcriptome){
         | csvtk join -t -f 1 transcript_ids__to__gene_names.txt - \\
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
-        | csvtk tab2csv |
+        | csvtk tab2csv \\
         > salmon_merged_transcript_tpm.csv
       """
     }
@@ -1192,7 +1192,7 @@ if (params.transcriptome){
         | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
-        | csvtk tab2csv |
+        | csvtk tab2csv \\
         > salmon_merged_gene_tpm.csv
       """
     }

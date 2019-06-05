@@ -7,6 +7,7 @@
 * Add Salmon index for transcriptome
 
 #### Dependency Updates
+* Force matplotlib=3.0.3
 * Added salmon=0.14.0
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
@@ -50,6 +51,7 @@
 * deeptools 3.2.0 -> 3.2.1
 * trim-galore 0.5.0 -> 0.6.1
 * qualimap 2.2.2b
+* matplotlib 3.0.3
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 

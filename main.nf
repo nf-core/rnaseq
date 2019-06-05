@@ -450,16 +450,16 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
  * PREPROCESSING - Create Salmon transcriptome index
  */
 if(params.transcriptome){
-  process salmon_index {
+  process makeSalmonIndex {
       tag "$transcriptome.simpleName"
-      publishDir path: { "${params.outdir}/reference_transcriptome" },
-                 mode: 'copy'
+      publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                         saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
       input:
       file transcriptome from tx_fasta_ch
 
       output:
-      file 'salmon_index' into index_ch
+      file 'salmon_index' into salmon_index_ch
 
       script:
       """
@@ -1083,8 +1083,8 @@ if (params.transcriptome){
 
         input:
         set sample, file(reads) from trimmed_reads_salmon
-        file index from index_ch.collect()
-        file gtf from gtf_salmon_quant
+        file index from salmon_index_ch.collect()
+        file gtf from gtf_salmon_quant.collect()
 
         output:
         file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant

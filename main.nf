@@ -1122,20 +1122,15 @@ if (params.transcriptome){
             """
         }
     }
-
-    process merge_salmon_quant {
+    process merge_salmon_transcript_quant {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       file transcript_quants from salmon_transcript_quant.collect()
-      file gene_quants from salmon_gene_quant.collect()
       file gtf from gtf_merge_salmon_quant
-      // Use gene_id, gene_name mapping from featurecounts to make sure it matches
-      file featurecounts_merged from featurecounts_merged
 
       output:
-      file 'salmon_merged_gene_counts.txt'
       file 'salmon_merged_transcript_counts.txt'
 
       script:
@@ -1157,7 +1152,26 @@ if (params.transcriptome){
         awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' |\\
         cut  -f '1,3-' |\\
         > merged_transcript_counts.txt
+      """
+    }
 
+    process merge_salmon_gene_quant {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      file gene_quants from salmon_gene_quant.collect()
+      // Use gene_id, gene_name mapping from featurecounts to make sure it matches
+      file featurecounts_merged from featurecounts_merged
+
+      output:
+      file 'salmon_merged_gene_counts.txt'
+
+      script:
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = gene_quants instanceof Path ? 1 : gene_quants.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      """
       ## Merge gene counts
       ## Make header
       echo gene_id gene_name $gene_quants | sed 's/.quant.genes.ids-only.txt//g' | tr ' ' '\t' > gene_header.txt
@@ -1169,7 +1183,6 @@ if (params.transcriptome){
         | cat gene_header.txt - > merged_gene_counts.txt
 
       """
-
     }
 }
 

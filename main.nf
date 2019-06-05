@@ -338,6 +338,7 @@ process get_software_versions {
     read_duplication.py --version &> v_rseqc.txt
     echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
     featureCounts -v &> v_featurecounts.txt
+    salmon --version &> v_salmon.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt
     multiqc --version &> v_multiqc.txt
@@ -1078,7 +1079,7 @@ process merge_featureCounts {
 if (params.transcriptome){
     process salmon_quant {
         tag "$sample"
-        publishDir "${params.outdir}/salmon", mode: 'copy'
+        publishDir "${params.outdir}/salmon/", mode: 'copy'
 
         input:
         file index from index_ch.collect()
@@ -1091,15 +1092,31 @@ if (params.transcriptome){
         file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
 
         script:
+        def strandedness = params.unstranded ? 'U' : 'SR'
         if (params.singleEnd){
             """
-            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
+            salmon quant --validateMappings \\
+                         --seqBias --useVBOpt --gcBias \\
+                         --geneMap ${gtf} \\
+                         --threads $task.cpus \\
+                         --libType=$strandedness \\
+                         --index $index \\
+                         -r ${reads[0]} \\
+                         -o $sample
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }else{
             """
-            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
+            salmon quant --validateMappings \\
+                         --seqBias --useVBOpt --gcBias \\
+                         --geneMap ${gtf} \\
+                         --threads $task.cpus \\
+                         --libType=$strandedness \\
+                         --index $index \\
+                         -1 ${reads[0]} \\
+                         -2 ${reads[2]} \\
+                         -o $sample
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
             """
@@ -1123,7 +1140,7 @@ if (params.transcriptome){
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def single = input_files instanceof Path ? 1 : input_files.size()
+      def single = transcript_quants instanceof Path ? 1 : transcript_quants.size()
       def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
       """
       ## Merge transcript counts

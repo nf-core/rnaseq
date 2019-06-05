@@ -161,7 +161,8 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM;
+              gtf_salmon_quant; gtf_merge_salmon_quant }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -479,7 +480,7 @@ if(params.gff){
 
       output:
       file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
-            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon
+            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon_quant, gtf_merge_salmon_quant
 
       script:
       """
@@ -1004,77 +1005,6 @@ process dupradar {
     """
 }
 
-if (params.transcriptome){
-    process salmon_quant {
-        tag "$sample"
-        publishDir "${params.outdir}/salmon", mode: 'copy'
-
-        input:
-        file index from index_ch.collect()
-        file gtf from gtf_salmon
-        set sample, file(reads) from raw_salmon
-
-        output:
-        file(sample) into quant_ch
-        file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
-        file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
-
-        script:
-        if (params.singleEnd){
-            """
-            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
-            """
-        }else{
-            """
-            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
-            """
-        }
-    }
-
-    process merge_salmon_quant {
-      label 'low_memory'
-      publishDir "${params.outdir}/salmon", mode: 'copy'
-
-      input:
-      file transcript_quants from salmon_transcript_quant.collect()
-      file gene_quants from salmon_gene_quant.collect()
-
-      output:
-      file 'salmon_merged_gene_counts.txt'
-      file 'salmon_merged_transcript_counts.txt'
-
-      script:
-      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def single = input_files instanceof Path ? 1 : input_files.size()
-      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
-      """
-      ## Merge transcript counts
-      echo transcript_id gene_name $input_files | sed 's/.quant.ids-only.txt//g' | tr ' ' '\t' > transcript_header.txt
-      ## Gene transcript_id <--> gene_name mapping
-      awk -F "\t" '$3 == "transcript" { print $9 }' $gtf | grep -oP '(?<=transcript_id ")(\w+)' > transcript_ids.txt
-      awk -F "\t" '$3 == "transcript" { print $9 }' $gtf | grep -oP '(?<=gene_name ")(\w+)' > transcript_gene_names.txt
-      paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
-      $merge $input_files \\
-        | csvtk cut -t -f "Name" \\
-        | tail -n +2 \\
-        | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
-        | cat transcript_header.txt - \\
-        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' |\\
-        cut  -f '1,3-' |\\
-        > merged_transcript_counts.txt
-
-      ## Merge gene counts
-      echo gene_id $input_files | sed 's/.quant.genes.ids-only.txt//g' | tr ' ' '\t' > gene_header.txt
-      $merge $input_files | csvtk cut -t -f "Name" | tail -n +2 | cat gene_header.txt - > merged_gene_counts.txt
-
-      """
-
-    }
-}
 
 
 /*
@@ -1130,7 +1060,7 @@ process merge_featureCounts {
     file input_files from featureCounts_to_merge.collect()
 
     output:
-    file 'merged_gene_counts.txt'
+    file 'merged_gene_counts.txt' into featurecounts_merged
 
     script:
     //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1143,7 +1073,92 @@ process merge_featureCounts {
 
 
 /*
- * STEP 11 - stringtie FPKM
+ * STEP 11 - Salmon on transcriptome
+ */
+if (params.transcriptome){
+    process salmon_quant {
+        tag "$sample"
+        publishDir "${params.outdir}/salmon", mode: 'copy'
+
+        input:
+        file index from index_ch.collect()
+        file gtf from gtf_salmon_quant
+        set sample, file(reads) from raw_salmon
+
+        output:
+        file(sample) into quant_ch
+        file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
+        file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
+
+        script:
+        if (params.singleEnd){
+            """
+            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -r ${reads[0]} -o $sample
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
+            """
+        }else{
+            """
+            salmon quant --validateMappings --geneMap ${gtf} --threads $task.cpus --libType=A -i $index -1 ${reads[0]} -2 ${reads[1]} -o $sample
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
+            """
+        }
+    }
+
+    process merge_salmon_quant {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      file transcript_quants from salmon_transcript_quant.collect()
+      file gene_quants from salmon_gene_quant.collect()
+      file gtf from gtf_merge_salmon_quant
+      // Use gene_id, gene_name mapping from featurecounts to make sure it matches
+      file featurecounts_merged from featurecounts_merged
+
+      output:
+      file 'salmon_merged_gene_counts.txt'
+      file 'salmon_merged_transcript_counts.txt'
+
+      script:
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = input_files instanceof Path ? 1 : input_files.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      """
+      ## Merge transcript counts
+      echo transcript_id gene_name $transcript_quants | sed 's/.quant.ids-only.txt//g' | tr ' ' '\\t' > transcript_header.txt
+      ## Gene transcript_id <--> gene_name mapping
+      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=transcript_id ")(\\w+)' > transcript_ids.txt
+      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > transcript_gene_names.txt
+      paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
+      $merge $transcript_quants \\
+        | csvtk cut -t -f "Name" \\
+        | tail -n +2 \\
+        | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
+        | cat transcript_header.txt - \\
+        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' |\\
+        cut  -f '1,3-' |\\
+        > merged_transcript_counts.txt
+
+      ## Merge gene counts
+      ## Make header
+      echo gene_id gene_name $gene_quants | sed 's/.quant.genes.ids-only.txt//g' | tr ' ' '\t' > gene_header.txt
+      ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
+      $merge $gene_quants \\
+        | csvtk cut -t -f "Name" \\
+        | tail -n +2 \\
+        | csvtk join -t -f 1 - \$(csvtk cut -t -f 1,2 $featurecounts_merged) \\
+        | cat gene_header.txt - > merged_gene_counts.txt
+
+      """
+
+    }
+}
+
+
+/*
+ * STEP 12 - stringtie FPKM
  */
 process stringtieFPKM {
     tag "${bam_stringtieFPKM.baseName - '.sorted'}"
@@ -1187,7 +1202,7 @@ process stringtieFPKM {
 }
 
 /*
- * STEP 12 - edgeR MDS and heatmap
+ * STEP 13 - edgeR MDS and heatmap
  */
 process sample_correlation {
     label 'low_memory'
@@ -1220,7 +1235,7 @@ process sample_correlation {
 }
 
 /*
- * STEP 13 - MultiQC
+ * STEP 14 - MultiQC
  */
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
@@ -1260,7 +1275,7 @@ process multiqc {
 }
 
 /*
- * STEP 14 - Output Description HTML
+ * STEP 15 - Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'

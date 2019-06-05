@@ -1103,8 +1103,12 @@ if (params.transcriptome){
                          --index $index \\
                          -r ${reads[0]} \\
                          -o $sample
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
+              | sed "s:TPM:$sample:" \\
+              > ${sample}/${sample}.quant.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
+              | sed "s:TPM:$sample:" \\
+              > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }else{
             """
@@ -1117,11 +1121,20 @@ if (params.transcriptome){
                          -1 ${reads[0]} \\
                          -2 ${reads[2]} \\
                          -o $sample
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf > ${sample}/${sample}.quant.ids-only.txt
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf > ${sample}/${sample}.quant.genes.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
+              | sed "s:TPM:$sample:" \\
+              > ${sample}/${sample}.quant.ids-only.txt
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
+              | sed "s:TPM:$sample:" \\
+              > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }
     }
+}
+
+
+
+if (params.transcriptome){
     process merge_salmon_transcript_quant {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
@@ -1139,18 +1152,15 @@ if (params.transcriptome){
       def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
       """
       ## Merge transcript counts
-      echo transcript_id gene_name $transcript_quants | sed 's/.quant.ids-only.txt//g' | tr ' ' '\\t' > transcript_header.txt
       ## Gene transcript_id <--> gene_name mapping
       awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=transcript_id ")(\\w+)' > transcript_ids.txt
       awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > transcript_gene_names.txt
       paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
       $merge $transcript_quants \\
-        | csvtk cut -t -f "Name" \\
         | tail -n +2 \\
         | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
-        | cat transcript_header.txt - \\
-        awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' |\\
-        cut  -f '1,3-' |\\
+        | awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | cut  -f '1,3-' \\
         > merged_transcript_counts.txt
       """
     }
@@ -1173,14 +1183,14 @@ if (params.transcriptome){
       def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
       """
       ## Merge gene counts
-      ## Make header
-      echo gene_id gene_name $gene_quants | sed 's/.quant.genes.ids-only.txt//g' | tr ' ' '\t' > gene_header.txt
+      csvtk cut -t -f 1,2 $featurecounts_merged > gene_id__to__gene_name.txt
       ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
       $merge $gene_quants \\
-        | csvtk cut -t -f "Name" \\
         | tail -n +2 \\
-        | csvtk join -t -f 1 - \$(csvtk cut -t -f 1,2 $featurecounts_merged) \\
-        | cat gene_header.txt - > merged_gene_counts.txt
+        | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
+        | awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | cut  -f '1,3-' \\
+        > merged_gene_counts.txt
 
       """
     }

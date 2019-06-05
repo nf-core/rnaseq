@@ -1119,7 +1119,7 @@ if (params.transcriptome){
                          --libType=$strandedness \\
                          --index $index \\
                          -1 ${reads[0]} \\
-                         -2 ${reads[2]} \\
+                         -2 ${reads[1]} \\
                          -o $sample
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
               | sed "s:TPM:$sample:" \\
@@ -1159,7 +1159,7 @@ if (params.transcriptome){
       $merge $transcript_quants \\
         | tail -n +2 \\
         | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
-        | awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         > merged_transcript_counts.txt
       """
@@ -1188,7 +1188,7 @@ if (params.transcriptome){
       $merge $gene_quants \\
         | tail -n +2 \\
         | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
-        | awk '{FS="\t"; OFS="\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         > merged_gene_counts.txt
 

@@ -52,6 +52,7 @@
 * trim-galore 0.5.0 -> 0.6.1
 * qualimap 2.2.2b
 * matplotlib 3.0.3
+* r-base 3.5.1
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 

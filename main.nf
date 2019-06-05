@@ -1079,15 +1079,14 @@ process merge_featureCounts {
 if (params.transcriptome){
     process salmon_quant {
         tag "$sample"
-        publishDir "${params.outdir}/salmon/", mode: 'copy'
+        publishDir "${params.outdir}/salmon", mode: 'copy'
 
         input:
+        set sample, file(reads) from trimmed_reads_salmon
         file index from index_ch.collect()
         file gtf from gtf_salmon_quant
-        set sample, file(reads) from trimmed_reads_salmon
 
         output:
-        file(sample) into quant_ch
         file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
         file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
 
@@ -1098,34 +1097,38 @@ if (params.transcriptome){
             salmon quant --validateMappings \\
                          --seqBias --useVBOpt --gcBias \\
                          --geneMap ${gtf} \\
-                         --threads $task.cpus \\
-                         --libType=$strandedness \\
-                         --index $index \\
+                         --threads ${task.cpus} \\
+                         --libType=${strandedness} \\
+                         --index ${index} \\
                          -r ${reads[0]} \\
-                         -o $sample
+                         -o ${sample}
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
-              | sed "s:TPM:$sample:" \\
+              | sed "s:TPM:${sample}:" \\
               > ${sample}/${sample}.quant.ids-only.txt
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
-              | sed "s:TPM:$sample:" \\
+              | sed "s:TPM:${sample}:" \\
               > ${sample}/${sample}.quant.genes.ids-only.txt
             """
-        }else{
+        } else {
             """
             salmon quant --validateMappings \\
                          --seqBias --useVBOpt --gcBias \\
                          --geneMap ${gtf} \\
-                         --threads $task.cpus \\
-                         --libType=$strandedness \\
-                         --index $index \\
+                         --threads ${task.cpus} \\
+                         --libType=${strandedness} \\
+                         --index ${index} \\
                          -1 ${reads[0]} \\
                          -2 ${reads[1]} \\
-                         -o $sample
+                         -o ${sample}
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
-              | sed "s:TPM:$sample:" \\
+              | sed "s:TPM:${sample}:" \\
               > ${sample}/${sample}.quant.ids-only.txt
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
-              | sed "s:TPM:$sample:" \\
+              | sed "s:TPM:${sample}:" \\
               > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }
@@ -1144,7 +1147,7 @@ if (params.transcriptome){
       file gtf from gtf_merge_salmon_quant
 
       output:
-      file 'salmon_merged_transcript_counts.txt'
+      file 'salmon_merged_transcript_tpm.txt'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1159,10 +1162,10 @@ if (params.transcriptome){
       $merge $transcript_quants \\
         | tail -n +2 \\
         | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
-        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
-        | cut  -f '1,3-' \\
-        > merged_transcript_counts.txt
+        > salmon_merged_transcript_tpm.txt
       """
+      // | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+      // | cut  -f '1,3-' \\
     }
 
     process merge_salmon_gene_quant {
@@ -1175,7 +1178,7 @@ if (params.transcriptome){
       file featurecounts_merged from featurecounts_merged
 
       output:
-      file 'salmon_merged_gene_counts.txt'
+      file 'salmon_merged_gene_tpm.txt'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1188,11 +1191,10 @@ if (params.transcriptome){
       $merge $gene_quants \\
         | tail -n +2 \\
         | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
-        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
-        | cut  -f '1,3-' \\
-        > merged_gene_counts.txt
-
+        > salmon_merged_gene_tpm.txt
       """
+      // | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+      // | cut  -f '1,3-' \\
     }
 }
 

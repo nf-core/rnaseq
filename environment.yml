@@ -28,3 +28,4 @@ dependencies:
   - multiqc=1.7
   - salmon=0.14.0
   - matplotlib=3.0.3
+  - r-base=3.5.1

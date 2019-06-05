@@ -556,7 +556,7 @@ process trim_galore {
     file wherearemyfiles from ch_where_trim_galore.collect()
 
     output:
-    file "*fq.gz" into trimmed_reads
+    set val(name), file("*fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
     file "*trimming_report.txt" into trimgalore_results
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
     file "where_are_my_files.txt"
@@ -606,7 +606,7 @@ if(params.aligner == 'star'){
     hisat_stdout = Channel.from(false)
     process star {
         label 'high_memory'
-        tag "$prefix"
+        tag "$name"
         publishDir "${params.outdir}/STAR", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".bam") == -1) "logs/$filename"
@@ -616,7 +616,7 @@ if(params.aligner == 'star'){
             }
 
         input:
-        file reads from trimmed_reads
+        set val(name), file(reads) from trimmed_reads_alignment
         file index from star_index.collect()
         file gtf from gtf_star.collect()
         file wherearemyfiles from ch_where_star.collect()
@@ -664,7 +664,7 @@ if(params.aligner == 'hisat2'){
     star_log = Channel.from(false)
     process hisat2Align {
         label 'high_memory'
-        tag "$prefix"
+        tag "$name"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
@@ -674,7 +674,7 @@ if(params.aligner == 'hisat2'){
             }
 
         input:
-        file reads from trimmed_reads
+        set val(name), file(reads) from trimmed_reads_alignment
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
         file wherearemyfiles from ch_where_hisat2.collect()
@@ -1084,7 +1084,7 @@ if (params.transcriptome){
         input:
         file index from index_ch.collect()
         file gtf from gtf_salmon_quant
-        set sample, file(reads) from raw_salmon
+        set sample, file(reads) from trimmed_reads_salmon
 
         output:
         file(sample) into quant_ch

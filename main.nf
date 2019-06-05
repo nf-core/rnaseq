@@ -1147,7 +1147,7 @@ if (params.transcriptome){
       file gtf from gtf_merge_salmon_quant
 
       output:
-      file 'salmon_merged_transcript_tpm.txt'
+      file 'salmon_merged_transcript_tpm.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1160,12 +1160,12 @@ if (params.transcriptome){
       awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > transcript_gene_names.txt
       paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
       $merge $transcript_quants \\
-        | tail -n +2 \\
-        | csvtk join -t -f 1 - transcript_ids__to__gene_names.txt \\
-        > salmon_merged_transcript_tpm.txt
+        | csvtk join -t -f 1 transcript_ids__to__gene_names.txt - \\
+        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | cut  -f '1,3-' \\
+        | csvtk tab2csv |
+        > salmon_merged_transcript_tpm.csv
       """
-      // | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
-      // | cut  -f '1,3-' \\
     }
 
     process merge_salmon_gene_quant {
@@ -1178,7 +1178,7 @@ if (params.transcriptome){
       file featurecounts_merged from featurecounts_merged
 
       output:
-      file 'salmon_merged_gene_tpm.txt'
+      file 'salmon_merged_gene_tpm.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1189,12 +1189,12 @@ if (params.transcriptome){
       csvtk cut -t -f 1,2 $featurecounts_merged > gene_id__to__gene_name.txt
       ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
       $merge $gene_quants \\
-        | tail -n +2 \\
         | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
-        > salmon_merged_gene_tpm.txt
+        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | cut  -f '1,3-' \\
+        | csvtk tab2csv |
+        > salmon_merged_gene_tpm.csv
       """
-      // | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
-      // | cut  -f '1,3-' \\
     }
 }
 

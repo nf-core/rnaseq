@@ -1314,7 +1314,7 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
     multiqc . -f $rtitle $rfilename --config $multiqc_config \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap -m salmon
     """
 }
 

@@ -524,11 +524,11 @@ process trim_galore {
     nextseq = trim_nextseq > 0 ? "--nextseq ${trim_nextseq}" : ''
     if (params.singleEnd) {
         """
-        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $q_nextseq $reads
+        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
         """
     } else {
         """
-        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $q_nextseq $reads
+        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
         """
     }
 }

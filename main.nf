@@ -451,6 +451,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
  */
 if(params.transcriptome){
   process makeSalmonIndex {
+      label 'salmon'
       tag "$transcriptome.simpleName"
       publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
                          saveAs: { params.saveReference ? it : null }, mode: 'copy'
@@ -1078,6 +1079,7 @@ process merge_featureCounts {
  */
 if (params.transcriptome){
     process salmon_quant {
+        label 'salmon'
         tag "$sample"
         publishDir "${params.outdir}/salmon", mode: 'copy'
 

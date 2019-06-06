@@ -48,7 +48,7 @@ def helpMessage() {
       --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
       --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
       --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq-trim=X option, to trim based on quality after removing poly-G tails
+      --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
 
     Presets:
       --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
@@ -521,7 +521,7 @@ process trim_galore {
     c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
     tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
     tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
-    q_nextseq = trim_nextseq > 0 ? "--nextseq-trim ${trim_nextseq}" : ''
+    nextseq = trim_nextseq > 0 ? "--nextseq ${trim_nextseq}" : ''
     if (params.singleEnd) {
         """
         trim_galore --fastqc --gzip $c_r1 $tpc_r1 $q_nextseq $reads

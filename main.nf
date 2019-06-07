@@ -1094,7 +1094,7 @@ if (params.transcriptome){
         output:
         file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
         file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
-        set file("${sample}/*.json"), file("${sample}/aux_info/*.json") into salmon_multiqc_logs
+        file("${sample}/aux_info/*.json") into salmon_multiqc_logs
 
         script:
         def strandedness = params.unstranded ? 'U' : 'SR'
@@ -1304,7 +1304,7 @@ process multiqc {
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
-    file ('salmon/*') from salmon_multiqc_logs.collect().ifEmpty([])
+    file ('salmon/**') from salmon_multiqc_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)

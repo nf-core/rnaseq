@@ -36,6 +36,7 @@ def helpMessage() {
       --star_index                  Path to STAR index
       --hisat2_index                Path to HiSAT2 index
       --fasta                       Path to Fasta reference
+      --transcriptome               Path to Fasta transcriptome
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
@@ -160,13 +161,23 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM }
+              gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM;
+              gtf_salmon_quant; gtf_merge_salmon_quant }
 } else if( params.gff ){
   gffFile = Channel.fromPath(params.gff)
                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 } else {
     exit 1, "No GTF or GFF3 annotation specified!"
 }
+
+if (params.transcriptome){
+  Channel
+      .fromPath(params.transcriptome)
+      .ifEmpty { exit 1, "Transcript fasta file is unreachable: ${params.transcriptome}"  }
+      .set { tx_fasta_ch  }
+}
+
+
 
 if( params.bed12 ){
     bed12 = Channel
@@ -214,19 +225,19 @@ if(params.readPaths){
             .from(params.readPaths)
             .map { row -> [ row[0], [file(row[1][0])]] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore }
+            .into { raw_reads_fastqc; raw_reads_trimgalore; raw_salmon }
     } else {
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore }
+            .into { raw_reads_fastqc; raw_reads_trimgalore; raw_salmon }
     }
 } else {
     Channel
         .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
-        .into { raw_reads_fastqc; raw_reads_trimgalore }
+        .into { raw_reads_fastqc; raw_reads_trimgalore; raw_salmon }
 }
 
 
@@ -251,6 +262,7 @@ if(params.aligner == 'star'){
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
 }
+if(params.transcriptome)       summary['Transcriptome']  = params.transcriptome
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
@@ -326,6 +338,7 @@ process get_software_versions {
     read_duplication.py --version &> v_rseqc.txt
     echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
     featureCounts -v &> v_featurecounts.txt
+    salmon --version &> v_salmon.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt
     multiqc --version &> v_multiqc.txt
@@ -431,6 +444,32 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
         """
     }
 }
+
+
+/*
+ * PREPROCESSING - Create Salmon transcriptome index
+ */
+if(params.transcriptome){
+  process makeSalmonIndex {
+      label 'salmon'
+      tag "$transcriptome.simpleName"
+      publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                         saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+      input:
+      file transcriptome from tx_fasta_ch
+
+      output:
+      file 'salmon_index' into salmon_index_ch
+
+      script:
+      """
+      salmon index --threads $task.cpus -t $transcriptome -i salmon_index
+      """
+  }
+}
+
+
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
@@ -443,7 +482,7 @@ if(params.gff){
 
       output:
       file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
-            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM
+            gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon_quant, gtf_merge_salmon_quant
 
       script:
       """
@@ -518,7 +557,7 @@ process trim_galore {
     file wherearemyfiles from ch_where_trim_galore.collect()
 
     output:
-    file "*fq.gz" into trimmed_reads
+    set val(name), file("*fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
     file "*trimming_report.txt" into trimgalore_results
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
     file "where_are_my_files.txt"
@@ -568,7 +607,7 @@ if(params.aligner == 'star'){
     hisat_stdout = Channel.from(false)
     process star {
         label 'high_memory'
-        tag "$prefix"
+        tag "$name"
         publishDir "${params.outdir}/STAR", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".bam") == -1) "logs/$filename"
@@ -578,7 +617,7 @@ if(params.aligner == 'star'){
             }
 
         input:
-        file reads from trimmed_reads
+        set val(name), file(reads) from trimmed_reads_alignment
         file index from star_index.collect()
         file gtf from gtf_star.collect()
         file wherearemyfiles from ch_where_star.collect()
@@ -626,7 +665,7 @@ if(params.aligner == 'hisat2'){
     star_log = Channel.from(false)
     process hisat2Align {
         label 'high_memory'
-        tag "$prefix"
+        tag "$name"
         publishDir "${params.outdir}/HISAT2", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
@@ -636,7 +675,7 @@ if(params.aligner == 'hisat2'){
             }
 
         input:
-        file reads from trimmed_reads
+        set val(name), file(reads) from trimmed_reads_alignment
         file hs2_indices from hs2_indices.collect()
         file alignment_splicesites from alignment_splicesites.collect()
         file wherearemyfiles from ch_where_hisat2.collect()
@@ -969,6 +1008,7 @@ process dupradar {
 }
 
 
+
 /*
  * STEP 9 - Feature counts
  */
@@ -1022,7 +1062,7 @@ process merge_featureCounts {
     file input_files from featureCounts_to_merge.collect()
 
     output:
-    file 'merged_gene_counts.txt'
+    file 'merged_gene_counts.txt' into featurecounts_merged
 
     script:
     //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1035,7 +1075,134 @@ process merge_featureCounts {
 
 
 /*
- * STEP 11 - stringtie FPKM
+ * STEP 11 - Salmon on transcriptome
+ */
+if (params.transcriptome){
+    process salmon_quant {
+        label 'salmon'
+        tag "$sample"
+        publishDir "${params.outdir}/salmon", mode: 'copy'
+
+        input:
+        set sample, file(reads) from trimmed_reads_salmon
+        file index from salmon_index_ch.collect()
+        file gtf from gtf_salmon_quant.collect()
+
+        output:
+        file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
+        file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
+
+        script:
+        def strandedness = params.unstranded ? 'U' : 'SR'
+        if (params.singleEnd){
+            """
+            salmon quant --validateMappings \\
+                         --seqBias --useVBOpt --gcBias \\
+                         --geneMap ${gtf} \\
+                         --threads ${task.cpus} \\
+                         --libType=${strandedness} \\
+                         --index ${index} \\
+                         -r ${reads[0]} \\
+                         -o ${sample}
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
+              | sed "s:TPM:${sample}:" \\
+              > ${sample}/${sample}.quant.ids-only.txt
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
+              | sed "s:TPM:${sample}:" \\
+              > ${sample}/${sample}.quant.genes.ids-only.txt
+            """
+        } else {
+            """
+            salmon quant --validateMappings \\
+                         --seqBias --useVBOpt --gcBias \\
+                         --geneMap ${gtf} \\
+                         --threads ${task.cpus} \\
+                         --libType=${strandedness} \\
+                         --index ${index} \\
+                         -1 ${reads[0]} \\
+                         -2 ${reads[1]} \\
+                         -o ${sample}
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
+              | sed "s:TPM:${sample}:" \\
+              > ${sample}/${sample}.quant.ids-only.txt
+            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
+            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
+              | sed "s:TPM:${sample}:" \\
+              > ${sample}/${sample}.quant.genes.ids-only.txt
+            """
+        }
+    }
+}
+
+
+
+if (params.transcriptome){
+    process merge_salmon_transcript_quant {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      file transcript_quants from salmon_transcript_quant.collect()
+      file gtf from gtf_merge_salmon_quant
+
+      output:
+      file 'salmon_merged_transcript_tpm.csv'
+
+      script:
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = transcript_quants instanceof Path ? 1 : transcript_quants.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      """
+      ## Merge transcript counts
+      ## Gene transcript_id <--> gene_name mapping
+      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=transcript_id ")(\\w+)' > transcript_ids.txt
+      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > transcript_gene_names.txt
+      paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
+      $merge $transcript_quants \\
+        | csvtk join -t -f 1 transcript_ids__to__gene_names.txt - \\
+        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | cut  -f '1,3-' \\
+        | csvtk tab2csv \\
+        > salmon_merged_transcript_tpm.csv
+      """
+    }
+
+    process merge_salmon_gene_quant {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      file gene_quants from salmon_gene_quant.collect()
+      // Use gene_id, gene_name mapping from featurecounts to make sure it matches
+      file featurecounts_merged from featurecounts_merged
+
+      output:
+      file 'salmon_merged_gene_tpm.csv'
+
+      script:
+      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
+      def single = gene_quants instanceof Path ? 1 : gene_quants.size()
+      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      """
+      ## Merge gene counts
+      csvtk cut -t -f 1,2 $featurecounts_merged > gene_id__to__gene_name.txt
+      ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
+      $merge $gene_quants \\
+        | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
+        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
+        | cut  -f '1,3-' \\
+        | csvtk tab2csv \\
+        > salmon_merged_gene_tpm.csv
+      """
+    }
+}
+
+
+/*
+ * STEP 12 - stringtie FPKM
  */
 process stringtieFPKM {
     tag "${bam_stringtieFPKM.baseName - '.sorted'}"
@@ -1079,7 +1246,7 @@ process stringtieFPKM {
 }
 
 /*
- * STEP 12 - edgeR MDS and heatmap
+ * STEP 13 - edgeR MDS and heatmap
  */
 process sample_correlation {
     label 'low_memory'
@@ -1112,7 +1279,7 @@ process sample_correlation {
 }
 
 /*
- * STEP 13 - MultiQC
+ * STEP 14 - MultiQC
  */
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
@@ -1147,12 +1314,12 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
     multiqc . -f $rtitle $rfilename --config $multiqc_config \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap -m salmon
     """
 }
 
 /*
- * STEP 14 - Output Description HTML
+ * STEP 15 - Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'

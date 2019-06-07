@@ -2,6 +2,10 @@
 
 ## Version 1.4dev
 
+#### Pipeline updates
+
+* Add Salmon index for transcriptome
+
 #### Dependency Updates
 * Force matplotlib=3.0.3
 * Added salmon=0.14.0

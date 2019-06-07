@@ -134,8 +134,8 @@ if (params.pico){
 }
 
 // Validate inputs
-if (params.aligner != 'star' && params.aligner != 'hisat2'){
-    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
+if (params.aligner != 'star' && params.aligner != 'hisat2' && params.aligner != 'salmon'){
+    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2', 'salmon'"
 }
 if( params.star_index && params.aligner == 'star' ){
     star_index = Channel
@@ -261,9 +261,9 @@ if(params.aligner == 'star'){
     if(params.hisat2_index)        summary['HISAT2 Index'] = params.hisat2_index
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
-} else if(params.aligner == 'salmon') {
-    summary['Aligner'] = 'Salmon'
-    if(params.transcriptome)          summary['Transcriptome']   = params.transcriptome
+} else if(params.transcriptome) {
+    summary['Quantification Method'] = 'Salmon'
+    summary['Transcriptome']   = params.transcriptome
 }
 if(params.transcriptome)       summary['Transcriptome']  = params.transcriptome
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
@@ -1094,6 +1094,7 @@ if (params.transcriptome){
         output:
         file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
         file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
+        set file("${sample}/*.json"), file("${sample}/aux_info/*.json") into salmon_multiqc_logs
 
         script:
         def strandedness = params.unstranded ? 'U' : 'SR'
@@ -1303,6 +1304,7 @@ process multiqc {
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
+    file ('salmon/*') from salmon_multiqc_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)

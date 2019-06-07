@@ -19,9 +19,11 @@ and processes data using the following steps:
   * [Gene body coverage](#gene-body-coverage)
   * [Read distribution](#read-distribution)
   * [Junction annotation](#junction-annotation)
+* [Qualimap](#qualimap) - RNA quality control metrics
 * [dupRadar](#dupradar) - technical / biological read duplication
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
+* [Salmon](#salmon) - gene counts, biotype counts, rRNA estimation.
 * [StringTie](#stringtie) - FPKMs for genes and transcripts
 * [Sample_correlation](#Sample_correlation) - create MDS plot and sample pairwise distance heatmap / dendrogram
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
@@ -247,6 +249,19 @@ Junction annotation compares detected splice junctions to a reference gene model
 
 RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
 
+## Qualimap
+[Qualimap](http://qualimap.bioinfo.cipf.es/) is a standalone package written in java. It calculates read alignment assignment, transcript coverage, read genomic origin, junction analysis and 3'-5' bias.
+
+**Output directory: `results/qualimap`**
+
+* `rnaseq_qc_results.txt`
+* `qualimapReport.html`
+* `css`
+* `raw_data_qualimapReport`
+* `images_qualimapReport`
+
+Qualimap RNAseq documentation: [Qualimap docs](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#rna-seq-qc).
+
 ## dupRadar
 [dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library for R. It plots the duplication rate against expression (RPKM) for every gene. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
 
@@ -286,6 +301,32 @@ We also use featureCounts to count overlaps with different classes of features. 
 ![biotypes](images/featureCounts_biotype_plot.png)
 
 **Output directory: `results/featureCounts`**
+
+* `Sample.bam_biotype_counts.txt`
+  * Read counts for the different gene biotypes that featureCounts distinguishes.
+* `Sample.featureCounts.txt`
+  * Read the counts for each gene provided in the reference `gtf` file
+* `Sample.featureCounts.txt.summary`
+  * Summary file, containing statistics about the counts
+
+## Salmon
+[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps reads to a transcriptome and counts gene expression per transcript.
+
+### Salmon Index
+
+**Output directory: `results/reference_transcriptome`**
+
+* `Sample.bam_biotype_counts.txt`
+  * Read counts for the different gene biotypes that featureCounts distinguishes.
+* `Sample.featureCounts.txt`
+  * Read the counts for each gene provided in the reference `gtf` file
+* `Sample.featureCounts.txt.summary`
+  * Summary file, containing statistics about the counts
+
+
+### Salmon quant
+
+**Output directory: `results/salmon`**
 
 * `Sample.bam_biotype_counts.txt`
   * Read counts for the different gene biotypes that featureCounts distinguishes.

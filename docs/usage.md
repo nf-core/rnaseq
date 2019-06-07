@@ -17,6 +17,8 @@
 * [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
   * [Default Attribute Type](#default-attribute-type)
   * [Extra Gene Names](#extra-gene-names)
+* [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
+  * [Indexing the transcriptome](#indexing-the-transcriptome)
 * [Alignment tool](#alignment-tool)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
@@ -167,17 +169,19 @@ params {
 
 If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
-These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
+These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
 
 * `--forward_stranded`
   * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
   * featureCounts: `-s 1`
   * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
+  * Qualimap: `-pe strand-specific-forward`
   * StringTie: `--fr`
 * `--reverse_stranded`
   * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
   * featureCounts: `-s 2`
   * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
+  * Qualimap: `-pe strand-specific-reverse`
   * StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
@@ -192,6 +196,15 @@ This behaviour can be modified by specifying `--fcExtraAttributes` when running 
 See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
 Note that you can also specify more than one desired value, separated by a comma:
 ``--fcExtraAttributes gene_id,...``
+
+
+## Transcriptome mapping with Salmon
+
+If the option `--transcriptome` is provided to a fasta file of cDNA sequences, the pipeline will also run transcriptome quantification using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html).
+
+### Indexing the transcriptome
+
+The transcriptome is indexed using the default parameters of Salmon, using the default k-mer size of 31. As [discussed](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode), the a k-mer size off 31 works well with reads that are length 75bp or longer.
 
 
 ## Alignment tool
@@ -303,6 +316,7 @@ The following options make this easy:
 * `--skip_qc` -                Skip **all QC steps**, apart from MultiQC
 * `--skip_fastqc` -            Skip FastQC
 * `--skip_rseqc` -             Skip RSeQC
+* `--skip_qualimap` -          Skip Qualimap
 * `--skip_genebody_coverage` - Skip calculating the genebody coverage
 * `--skip_preseq` -            Skip Preseq
 * `--skip_dupradar` -          Skip dupRadar (and Picard MarkDups)

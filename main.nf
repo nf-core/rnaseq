@@ -261,9 +261,6 @@ if(params.aligner == 'star'){
     if(params.hisat2_index)        summary['HISAT2 Index'] = params.hisat2_index
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
-} else if(params.transcriptome) {
-    summary['Quantification Method'] = 'Salmon'
-    summary['Transcriptome']   = params.transcriptome
 }
 if(params.transcriptome)       summary['Transcriptome']  = params.transcriptome
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
@@ -1094,56 +1091,31 @@ if (params.transcriptome){
         output:
         file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
         file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
-        file("${sample}/aux_info/*.json") into salmon_multiqc_logs
+        file("${sample}") into salmon_multiqc_logs //MultiQC needs the sample folder to have proper names for samples
 
         script:
         def strandedness = params.unstranded ? 'U' : 'SR'
-        if (params.singleEnd){
-            """
-            salmon quant --validateMappings \\
-                         --seqBias --useVBOpt --gcBias \\
-                         --geneMap ${gtf} \\
-                         --threads ${task.cpus} \\
-                         --libType=${strandedness} \\
-                         --index ${index} \\
-                         -r ${reads[0]} \\
-                         -o ${sample}
-            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
-              | sed "s:TPM:${sample}:" \\
-              > ${sample}/${sample}.quant.ids-only.txt
-            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
-              | sed "s:TPM:${sample}:" \\
-              > ${sample}/${sample}.quant.genes.ids-only.txt
-            """
-        } else {
-            """
-            salmon quant --validateMappings \\
-                         --seqBias --useVBOpt --gcBias \\
-                         --geneMap ${gtf} \\
-                         --threads ${task.cpus} \\
-                         --libType=${strandedness} \\
-                         --index ${index} \\
-                         -1 ${reads[0]} \\
-                         -2 ${reads[1]} \\
-                         -o ${sample}
-            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
-              | sed "s:TPM:${sample}:" \\
-              > ${sample}/${sample}.quant.ids-only.txt
-            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
-              | sed "s:TPM:${sample}:" \\
-              > ${sample}/${sample}.quant.genes.ids-only.txt
-            """
+        def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+        """
+        salmon quant --validateMappings \\
+                        --seqBias --useVBOpt --gcBias \\
+                        --geneMap ${gtf} \\
+                        --threads ${task.cpus} \\
+                        --libType=${strandedness} \\
+                        --index ${index} \\
+                        $endedness \\
+                        -o ${sample}
+        # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
+        csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
+            | sed "s:TPM:${sample}:" \\
+            > ${sample}/${sample}.quant.ids-only.txt
+        # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
+        csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
+            | sed "s:TPM:${sample}:" \\
+            > ${sample}/${sample}.quant.genes.ids-only.txt
+        """
         }
-    }
-}
-
-
-
-if (params.transcriptome){
+    
     process merge_salmon_transcript_quant {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
@@ -1173,7 +1145,6 @@ if (params.transcriptome){
         > salmon_merged_transcript_tpm.csv
       """
     }
-
     process merge_salmon_gene_quant {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
@@ -1304,7 +1275,7 @@ process multiqc {
     file ('featureCounts/*') from featureCounts_logs.collect()
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('stringtie/stringtie_log*') from stringtie_log.collect()
-    file ('salmon/**') from salmon_multiqc_logs.collect().ifEmpty([])
+    file ('salmon/*') from salmon_multiqc_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)

@@ -1094,7 +1094,7 @@ if (params.transcriptome){
 
         script:
         def strandedness = params.unstranded ? 'U' : 'SR'
-        if (params.singleEnd){
+        def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
             """
             salmon quant --validateMappings \\
                          --seqBias --useVBOpt --gcBias \\
@@ -1102,27 +1102,7 @@ if (params.transcriptome){
                          --threads ${task.cpus} \\
                          --libType=${strandedness} \\
                          --index ${index} \\
-                         -r ${reads[0]} \\
-                         -o ${sample}
-            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
-              | sed "s:TPM:${sample}:" \\
-              > ${sample}/${sample}.quant.ids-only.txt
-            # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-            csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
-              | sed "s:TPM:${sample}:" \\
-              > ${sample}/${sample}.quant.genes.ids-only.txt
-            """
-        } else {
-            """
-            salmon quant --validateMappings \\
-                         --seqBias --useVBOpt --gcBias \\
-                         --geneMap ${gtf} \\
-                         --threads ${task.cpus} \\
-                         --libType=${strandedness} \\
-                         --index ${index} \\
-                         -1 ${reads[0]} \\
-                         -2 ${reads[1]} \\
+                         $endedness \\
                          -o ${sample}
             # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
             csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
@@ -1134,12 +1114,7 @@ if (params.transcriptome){
               > ${sample}/${sample}.quant.genes.ids-only.txt
             """
         }
-    }
-}
-
-
-
-if (params.transcriptome){
+    
     process merge_salmon_transcript_quant {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'

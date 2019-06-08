@@ -9,6 +9,7 @@
 * Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
 * Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
 * Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
+* Add option for Trimming NextSeq data properly ([@jburos work](https://github.com/jburos))
 
 #### Bug fixes
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)

@@ -2,7 +2,7 @@
 
 ## Version 1.4dev
 
-#### Pipeline updates
+### Pipeline updates
 
 * Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
@@ -11,9 +11,22 @@
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
 
+### Dependency Updates
+
+* Picard 2.20.0 -> 2.20.2
+* bioconductor-dupradar 1.12.1 -> 1.14.0
+* bioconductor-edger 3.24.3 -> 3.26.0
+* csvtk 0.17.0 -> 0.18.2
+* gffread 0.9.12 -> 0.11.4
+* qualimap 2.2.2b -> 2.2.2c
+* trim-galore 0.6.1 -> 0.6.2
+* gffread 0.9.12 -> 0.11.4
+* Added Salmon 0.14.0
+* Added RSEM 1.3.2
+
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 
-#### Pipeline Updates
+### Pipeline Updates
 
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
@@ -22,14 +35,13 @@
 * Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
 * Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
 
-#### Bug fixes
+### Bug fixes
 
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)
 * Fixing HISAT2 BAM sorting using more memory than available on the system
 * Fixing MarkDuplicates memory consumption issues following [#179](https://github.com/nf-core/rnaseq/pull/179)
 
-
-#### Dependency Updates
+### Dependency Updates
 
 * RSeQC 2.6.4 -> 3.0.0
 * Picard 2.18.15 -> 2.20.0
@@ -47,7 +59,8 @@
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
-#### Pipeline updates
+### Pipeline updates
+
 * Removed some outdated documentation about non-existent features
 * Config refactoring and code cleaning
 * Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
@@ -57,26 +70,27 @@
   * Added documentation about the `--hisatBuildMemory` option.
 * BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
 
-#### Bug Fixes
+### Bug Fixes
+
 * Fixed conda bug which caused problems with environment resolution due to changes in bioconda [#113](https://github.com/nf-core/rnaseq/issues/113)
 * Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
 * Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
 
-
 ## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 
-#### Pipeline updates
+### Pipeline updates
+
 * Wrote docs and made minor tweaks to the `--skip_qc` and associated options
 * Removed the depreciated `uppmax-modules` config profile
 * Updated the `hebbe` config profile to use the new `withName` syntax too
 * Use new `workflow.manifest` variables in the pipeline script
 * Updated minimum nextflow version to `0.32.0`
 
-#### Bug Fixes
+### Bug Fixes
+
 * [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
 * [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
 * [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
-
 
 ## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
 

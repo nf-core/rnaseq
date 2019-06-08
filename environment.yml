@@ -7,11 +7,11 @@ channels:
   - defaults
 dependencies:
   - fastqc=0.11.8
-  - trim-galore=0.6.1
+  - trim-galore=0.6.2
   - star=2.6.1d # don't upgrade me - 2.7X indices incompatible with iGenomes.
   - hisat2=2.1.0
   - picard=2.20.0
-  - bioconductor-dupradar=1.12.1
+  - bioconductor-dupradar=1.14.0
   - conda-forge::r-data.table=1.12.2
   - conda-forge::r-gplots=3.0.1.1
   - bioconductor-edger=3.24.3
@@ -20,12 +20,13 @@ dependencies:
   - qualimap=2.2.2b
   - preseq=2.0.3
   - rseqc=3.0.0
+  - rsem=1.3.2
   - samtools=1.9
+  - salmon=0.14.0
   - stringtie=1.3.6
   - subread=1.6.4
   - gffread=0.9.12
   - deeptools=3.2.1
   - multiqc=1.7
-  - salmon=0.14.0
   - matplotlib=3.0.3
   - r-base=3.5.1

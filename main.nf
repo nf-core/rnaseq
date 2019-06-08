@@ -261,10 +261,6 @@ if(params.aligner == 'star'){
     if(params.hisat2_index)        summary['HISAT2 Index'] = params.hisat2_index
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
-} else if(params.transcriptome) {
-    summary['Quantification Method'] = 'Salmon'
-    summary['Transcriptome']   = params.transcriptome
-}
 if(params.transcriptome)       summary['Transcriptome']  = params.transcriptome
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff

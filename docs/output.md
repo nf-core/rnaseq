@@ -310,7 +310,7 @@ We also use featureCounts to count overlaps with different classes of features. 
   * Summary file, containing statistics about the counts
 
 ## Salmon
-[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps reads to a transcriptome and counts gene expression per transcript.
+[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.
 
 ### Salmon Index
 

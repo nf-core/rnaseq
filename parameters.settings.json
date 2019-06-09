@@ -184,6 +184,16 @@
             "default_value": ""
         },
         {
+            "name": "transcriptome",
+            "label": "Transcriptome Fasta",
+            "usage": "Path to Transcriptome Fasta file",
+            "group": "Alignment",
+            "render": "file",
+            "type": "string",
+            "pattern": ".*",
+            "default_value": ""
+        },
+        {
             "name": "gff",
             "label": "GFF",
             "usage": "Path to GFF3 file",

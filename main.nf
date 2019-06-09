@@ -1091,7 +1091,7 @@ if (params.transcriptome){
         output:
         file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
         file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
-        file("${sample}") into salmon_multiqc_logs //MultiQC needs the sample folder to have proper names for samples
+        file "${sample}" into salmon_multiqc_logs //MultiQC needs the sample folder to have proper names for samples
 
         script:
         def strandedness = params.unstranded ? 'U' : 'SR'

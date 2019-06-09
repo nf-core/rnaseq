@@ -36,7 +36,7 @@ def helpMessage() {
       --star_index                  Path to STAR index
       --hisat2_index                Path to HiSAT2 index
       --fasta                       Path to Fasta reference
-      --transcriptome               Path to Fasta transcriptome
+      --transcriptome               Path to Transcriptome fasta file
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file

@@ -173,7 +173,7 @@ if( params.gtf ){
 if (params.transcriptome){
   Channel
       .fromPath(params.transcriptome)
-      .ifEmpty { exit 1, "Transcript fasta file is unreachable: ${params.transcriptome}"  }
+      .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcriptome}"  }
       .set { tx_fasta_ch  }
 }
 

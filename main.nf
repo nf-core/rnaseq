@@ -35,7 +35,7 @@ def helpMessage() {
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --star_index                  Path to STAR index
       --hisat2_index                Path to HiSAT2 index
-      --fasta                       Path to Fasta reference
+      --fasta                       Path to Genome fasta file
       --transcriptome               Path to Transcriptome fasta file
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file

@@ -231,7 +231,7 @@ if(params.readPaths){
             .from(params.readPaths)
             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore; raw_salmon }
+            .into { raw_reads_fastqc; raw_reads_trimgalore; raw_reads_salmon }
     }
 } else {
     Channel

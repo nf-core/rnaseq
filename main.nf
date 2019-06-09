@@ -27,6 +27,7 @@ def helpMessage() {
     Options:
       --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
+      --aligner                     Specifies the aligner to use for mapping (hisat2, star are valid options)
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
@@ -47,8 +48,9 @@ def helpMessage() {
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
       --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
       --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2 [int]   Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-
+      --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+      --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails  
+    
     Presets:
       --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
       --fcExtraAttributes           Define which extra parameters should also be included in featureCounts (default: gene_names)
@@ -240,7 +242,7 @@ summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
 if(params.genome) summary['Genome'] = params.genome
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
-summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2"
+summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
     if(params.star_index)          summary['STAR Index']   = params.star_index
@@ -529,13 +531,14 @@ process trim_galore {
     c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
     tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
     tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
+    nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : '' 
     if (params.singleEnd) {
         """
-        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $reads
+        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
         """
     } else {
         """
-        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $reads
+        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
         """
     }
 }

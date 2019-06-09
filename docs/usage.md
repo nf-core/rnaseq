@@ -31,6 +31,7 @@
   * [`--clip_r2 [int]`](#--clip_r2-int)
   * [`--three_prime_clip_r1 [int]`](#--three_prime_clip_r1-int)
   * [`--three_prime_clip_r2 [int]`](#--three_prime_clip_r2-int)
+  * [`--trim_nextseq [int]`](#--trim_nextseq)
 * [Library Prep Presets](#library-prep-presets)
   * [`--pico`](#--pico)
 * [Skipping QC steps](#skipping-qc-steps)
@@ -293,8 +294,10 @@ Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads o
 Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
 
 ### `--three_prime_clip_r2 [int]`
-Instructs Trim Galore to re move bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
+Instructs Trim Galore to remove bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
 
+### `--trim_nextseq [int]`
+This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.
 
 ## Library Prep Presets
 Some command line options are available to automatically set parameters for common RNA-seq library preparation kits.

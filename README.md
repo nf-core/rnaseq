@@ -38,4 +38,5 @@ Many thanks to other who have helped out along the way too, including (but not l
 [@apeltzer](https://github.com/apeltzer),
 [@colindaven](https://github.com/colindaven),
 [@lpantano](https://github.com/lpantano),
-[@olgabot](https://github.com/olgabot).
+[@olgabot](https://github.com/olgabot),
+[@jburos](https://github.com/jburos).

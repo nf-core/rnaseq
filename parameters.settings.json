@@ -89,7 +89,17 @@
         {
             "name": "three_prime_clip_r2",
             "label": "Read Clipping: 3' R2",
-            "usage": "Instructs Trim Galore to re move bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
+            "usage": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
+            "group": "Read trimming",
+            "render": "textfield",
+            "pattern": "\\d*",
+            "type": "integer",
+            "default_value": 0
+        },
+        {
+            "name": "trim_nextseq",
+            "label": "NextSeq Trimming",
+            "usage": "This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.",
             "group": "Read trimming",
             "render": "textfield",
             "pattern": "\\d*",

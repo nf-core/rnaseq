@@ -152,11 +152,6 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .fromPath("${params.hisat2_index}*", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
-else if ( params.transcriptome && params.aligner == 'salmon' ){
-    tx_fasta = Channel
-        .fromPath(params.transcriptome, checkIfExists: true)
-        .ifEmpty { exit 1, "Transcriptome fasta file not found: ${params.transcriptome}" }
-}
 else if ( params.fasta ){
     Channel.fromPath(params.fasta, checkIfExists: true)
            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
@@ -164,6 +159,14 @@ else if ( params.fasta ){
 }
 else {
     exit 1, "No reference genome files specified!"
+}
+
+if ( params.transcriptome ) {
+    tx_fasta = Channel
+        .fromPath(params.transcriptome, checkIfExists: true)
+        .ifEmpty { exit 1, "Transcriptome fasta file not found: ${params.transcriptome}" }
+} else if ( !params.transcriptome && params.aligner == 'salmon' ) {
+    exit 1, "Transcriptome fasta file required to run Salmon not specified!"
 }
 
 if( params.gtf ){
@@ -1075,7 +1078,7 @@ process merge_featureCounts {
  * STEP 11 - Transcriptome quantification with Salmon
  */
 if (params.transcriptome){
-    process salmon_quant {
+    process salmon {
         label 'salmon'
         tag "$sample"
         publishDir "${params.outdir}/salmon", mode: 'copy'
@@ -1115,7 +1118,7 @@ if (params.transcriptome){
         """
         }
 
-    process merge_salmon_transcript_quant {
+    process salmon_merge_transcript {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
@@ -1124,7 +1127,7 @@ if (params.transcriptome){
       file gtf from gtf_merge_salmon_quant.collect()
 
       output:
-      file 'salmon_merged_transcript_tpm.csv'
+      file 'salmon_merge_transcript_tpm.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1141,10 +1144,10 @@ if (params.transcriptome){
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         | csvtk tab2csv \\
-        > salmon_merged_transcript_tpm.csv
+        > salmon_merge_transcript_tpm.csv
       """
     }
-    process merge_salmon_gene_quant {
+    process salmon_merge_gene {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
@@ -1154,7 +1157,7 @@ if (params.transcriptome){
       file featurecounts_merged from featurecounts_merged.collect()
 
       output:
-      file 'salmon_merged_gene_tpm.csv'
+      file 'salmon_merge_gene_tpm.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1169,7 +1172,7 @@ if (params.transcriptome){
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         | csvtk tab2csv \\
-        > salmon_merged_gene_tpm.csv
+        > salmon_merge_gene_tpm.csv
       """
     }
 }

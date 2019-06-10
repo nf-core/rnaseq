@@ -312,28 +312,49 @@ We also use featureCounts to count overlaps with different classes of features. 
 ## Salmon
 [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.
 
-### Salmon Index
+### Index files
 
-**Output directory: `results/reference_transcriptome`**
+**Output directory: `results/reference_genome/salmon_index`**
 
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
-  * Read the counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
+* `duplicate_clusters.tsv`
+  * Stores which transcripts are duplicates of one another
+* `hash.bin`
+* `header.json`
+  * Information about k-mer size, uniquely identifying hashes for the reference
+* `indexing.log`
+  * Time log for creating transcriptome index
+* `quasi_index.log`
+  * Step-by-step log for making transcriptome index
+* `refInfo.json`
+  * Information about file used for the reference
+* `rsd.bin`
+* `sa.bin`
+* `txpInfo.bin`
+* `versionInfo.json`
+  * Salmon and indexing version sed to make the index
 
-
-### Salmon quant
+### Quantification output
 
 **Output directory: `results/salmon`**
 
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
-  * Read the counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
+* `aux_info/`
+  * Auxiliary info e.g. versions and number of mapped reads
+* `cmd_info.json`
+  * Information about the Salmon quantification command, version, and options
+* `lib_format_counts.json`
+  * Number of fragments assigned, unassigned and incompatible
+* `libParams/`
+  * Contains the file `flenDist.txt` for the fragment length distribution
+* `logs/`
+  * Contains the file `salmon_quant.log` giving a record of Salmon's quantification
+* `quant.genes.sf`
+  * *Gene*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `quant.sf`
+  * *Transcript*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `Sample.quant.genes.ids-only.txt`
+  * Subset of `quant.genes.sf`, only containing the gene id and TPM
+* `Sample.quant.ids-only.txt`
+  * Subset of `quant.sf`, only containing the transcript id and TPM
 
 ## StringTie
 [StringTie](https://ccb.jhu.edu/software/stringtie/) assembles RNA-Seq alignments into potential transcripts. It assembles and quantitates full-length transcripts representing multiple splice variants for each gene locus.

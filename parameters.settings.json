@@ -39,7 +39,7 @@
             "type": "boolean"
         },
         {
-            "name": "forward_stranded",
+            "name": "forwardStranded",
             "label": "Forward stranded",
             "usage": "Samples are made using a forward-stranded library type.",
             "group": "Main options",
@@ -48,7 +48,7 @@
             "type": "boolean"
         },
         {
-            "name": "reverse_stranded",
+            "name": "reverseStranded",
             "label": "Reverse stranded",
             "usage": "Samples are made using a reverse-stranded library type.",
             "group": "Main options",
@@ -244,9 +244,9 @@
             "default_value": ""
         },
         {
-            "name": "fcGroupFeatures",
+            "name": "fc_group_features",
             "label": "FeatureCounts Group Features",
-            "usage": "By default, the pipeline uses `gene_name` as the default gene identifier group. Specifying `--fcGroupFeatures` uses a different category present in your provided GTF file.",
+            "usage": "By default, the pipeline uses `gene_name` as the default gene identifier group. Specifying `--fc_group_features` uses a different category present in your provided GTF file.",
             "default_value": "gene_id",
             "render": "textfield",
             "pattern": ".*",
@@ -254,7 +254,7 @@
             "group": "FeatureCount settings"
         },
         {
-            "name": "fcGroupFeaturesType",
+            "name": "fc_group_features_type",
             "label": "FeatureCounts Group Features Biotype",
             "usage": "GTF attribute name that gives the biotype of a feature.",
             "group": "FeatureCount settings",
@@ -264,9 +264,9 @@
             "type": "string"
         },
         {
-            "name": "fcExtraAttributes",
+            "name": "fc_extra_attributes",
             "label": "FeatureCounts Extra Gene Names",
-            "usage": "By default the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers. --fcExtraAttributes is passed to featureCounts as an --extraAttributes parameter",
+            "usage": "By default the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers. --fc_extra_attributes is passed to featureCounts as an --extraAttributes parameter",
             "render": "textfield",
             "pattern": ".*",
             "type": "string",
@@ -352,7 +352,16 @@
         {
             "name": "saveTrimmed",
             "label": "Save Trimmed FastQ files",
-            "usage": "Save the trimmed FastQ files the the results directory.",
+            "usage": "Save the trimmed FastQ files to the results directory.",
+            "group": "Pipeline defaults",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
+            "name": "skipSalmon",
+            "label": "Skip Salmon quantification step",
+            "usage": "Skip Salmon quantification step.",
             "group": "Pipeline defaults",
             "render": "check-box",
             "default_value": false,
@@ -361,7 +370,7 @@
         {
             "name": "saveAlignedIntermediates",
             "label": "Save Aligned Intermediate BAM files",
-            "usage": "Save intermediate BAM files the the results directory.",
+            "usage": "Save intermediate BAM files to the results directory.",
             "group": "Pipeline defaults",
             "render": "check-box",
             "default_value": false,
@@ -370,7 +379,7 @@
         {
             "name": "saveReference",
             "label": "Save reference genome index",
-            "usage": "Save the generated reference files the the results directory.",
+            "usage": "Save the generated reference files to the results directory.",
             "group": "Pipeline defaults",
             "render": "check-box",
             "default_value": false,
@@ -387,7 +396,7 @@
             "type": "string"
         },
         {
-            "name": "skip_qc",
+            "name": "skipQC",
             "label": "Skip all QC steps, apart from MultiQC",
             "render": "check-box",
             "default_value": false,
@@ -395,7 +404,7 @@
             "group": "Skip pipeline steps"
         },
         {
-            "name": "skip_multiqc",
+            "name": "skipMultiQC",
             "label": "Skip MultiQC",
             "render": "check-box",
             "default_value": false,
@@ -403,15 +412,7 @@
             "group": "Skip pipeline steps"
         },
         {
-            "name": "skip_genebody_coverage",
-            "label": "Skip RSeQC gene body coverage",
-            "render": "check-box",
-            "default_value": false,
-            "type": "boolean",
-            "group": "Skip pipeline steps"
-        },
-        {
-            "name": "skip_edger",
+            "name": "skipEdgeR",
             "label": "Skip edgeR QC analysis",
             "render": "check-box",
             "default_value": false,
@@ -419,7 +420,7 @@
             "group": "Skip pipeline steps"
         },
         {
-            "name": "skip_dupradar",
+            "name": "skipDupRadar",
             "label": "Skip DupRadar QC",
             "render": "check-box",
             "default_value": false,
@@ -427,15 +428,31 @@
             "group": "Skip pipeline steps"
         },
         {
-            "name": "skip_rseqc",
-            "label": "Skip RSeQC steps, apart from Gene body coverage",
+            "name": "skipRseQC",
+            "label": "Skip RSeQC steps, apart from genebody coverage",
             "render": "check-box",
             "default_value": false,
             "type": "boolean",
             "group": "Skip pipeline steps"
         },
         {
-            "name": "skip_preseq",
+            "name": "skipQualimap",
+            "label": "Skip Qualimap step",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skipGenebodyCoverage",
+            "label": "Skip RSeQC genebody coverage",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean",
+            "group": "Skip pipeline steps"
+        },
+        {
+            "name": "skipPreseq",
             "label": "Skip Preseq analysis",
             "render": "check-box",
             "default_value": false,
@@ -443,7 +460,7 @@
             "group": "Skip pipeline steps"
         },
         {
-            "name": "skip_fastqc",
+            "name": "skipFastQC",
             "label": "Skip FastQC",
             "render": "check-box",
             "default_value": false,
@@ -491,7 +508,7 @@
             "type": "string"
         },
         {
-            "name": "subsampFilesizeThreshold",
+            "name": "subsamp_filesize_thresh",
             "label": "Subsample file-size threshold",
             "usage": "Defines the threshold in BAM file size (in bytes) at which data subsampling is used prior to the RSeQC `gene_body_coverage` step.",
             "group": "Advanced",
@@ -511,7 +528,7 @@
             "default_value": ""
         },
         {
-            "name": "hisatBuildMemory",
+            "name": "hisat_build_memory",
             "label": "HISAT2 indexing: required memory for splice sites in GB",
             "usage": "HISAT2 needs a very large amount of memory to build an index with splice sites. If the available memory is below this threshold, the index build will proceed without splicing information.",
             "group": "Advanced",
@@ -520,7 +537,7 @@
             "type": "integer"
         },
         {
-            "name": "seqCenter",
+            "name": "seq_center",
             "label": "Sequencing center",
             "usage": "Add sequencing center in @RG line of output BAM header",
             "group": "Advanced",
@@ -550,7 +567,7 @@
             "type": "string"
         },
         {
-            "name": "unstranded",
+            "name": "unStranded",
             "label": "Unstranded",
             "usage": "Force the library strandedness to be unstranded",
             "render": "none",

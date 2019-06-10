@@ -501,7 +501,6 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
 /*
  * PREPROCESSING - Create Salmon transcriptome index
  */
-println(params.transcriptome)
 if(params.transcriptome){
     process makeSalmonIndex {
         label 'salmon'
@@ -1096,20 +1095,19 @@ if (params.transcriptome){
         file "${sample}" into salmon_multiqc_logs //MultiQC needs the sample folder to have proper names for samples
 
         script:
-        def strandedness = 'U'
-        if (forwardStranded) {
-            strandedness = 'SF'
-        } else if (reverseStranded) {
-            strandedness = 'SR'
+        def rnastrandness = params.singleEnd ? 'U' : 'IU'
+        if (forwardStranded && !unStranded){
+            rnastrandness = params.singleEnd ? 'SF' : 'ISF'
+        } else if (reverseStranded && !unStranded){
+            rnastrandness = params.singleEnd ? 'SR' : 'ISR'
         }
-        def end_strandedness = params.singleEnd ? strandedness : "I${strandedness}"
         def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
         """
         salmon quant --validateMappings \\
                         --seqBias --useVBOpt --gcBias \\
                         --geneMap ${gtf} \\
                         --threads ${task.cpus} \\
-                        --libType=${end_strandedness} \\
+                        --libType=${rnastrandness} \\
                         --index ${index} \\
                         $endedness \\
                         -o ${sample}
@@ -1131,7 +1129,7 @@ if (params.transcriptome){
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file transcript_quants from salmon_transcript_quant
+      file transcript_quants from salmon_transcript_quant.collect()
       file gtf from gtf_merge_salmon_quant.collect()
 
       output:
@@ -1160,7 +1158,7 @@ if (params.transcriptome){
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file gene_quants from salmon_gene_quant
+      file gene_quants from salmon_gene_quant.collect()
       file featurecounts_merged from featurecounts_merged.collect() // Use gene_id > gene_name mapping from featurecounts to make sure it matches
 
       output:

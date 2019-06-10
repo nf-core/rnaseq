@@ -57,7 +57,7 @@ To specify singularity usage in your pipeline config file, add the following:
 
 ```nextflow
 singularity.enabled = true
-process.container = "nf-core/rnaseq"
+process.container = "docker://nfcore/rnaseq"
 ```
 
 If you intend to run the pipeline offline, nextflow will not be able to automatically download the singularity image for you.
@@ -66,7 +66,7 @@ Instead, you'll have to do this yourself manually first, transfer the image file
 First, pull the image file where you have an internet connection:
 
 ```bash
-singularity pull --name nf-core-rnaseq.simg nf-core/rnaseq
+singularity pull --name nf-core-rnaseq.simg docker://nfcore/rnaseq
 ```
 
 Then transfer this file and point the config file to the image:

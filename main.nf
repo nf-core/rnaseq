@@ -24,6 +24,9 @@ def helpMessage() {
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
+    Generic:
+      --singleEnd                   Specifies that the input is single-end reads
+
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --genome                      Name of iGenomes reference
       --star_index                  Path to STAR index
@@ -34,9 +37,8 @@ def helpMessage() {
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
-      --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
 
-    Trimming options:
+    Trimming:
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
       --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
       --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
@@ -44,24 +46,25 @@ def helpMessage() {
       --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
       --saveTrimmed                 Save trimmed FastQ file intermediates
 
-    Alignment:
-      --singleEnd                   Specifies that the input is single-end reads
-      --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star', 'salmon')
-      --seq_center                  Add sequencing center in @RG line of output BAM header
-      --skipSalmon                  Skip Salmon quantification step
-      
     Strandedness:
       --forwardStranded             The library is forward stranded
       --reverseStranded             The library is reverse stranded
       --unStranded                  The default behaviour
-
-    Presets:
       --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
+
+    Alignment:
+      --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star', 'salmon')
+      --seq_center                  Add sequencing center in @RG line of output BAM header
+      --skipSalmon                  Skip Salmon quantification step
+      --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
+
+    Read Counting:
       --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
       --fc_group_features           Define the attribute type used to group features. (default: 'gene_id')
       --fc_group_features_type      Define the type attribute used to group features based on the group attribute (default: 'gene_biotype')
+      --sampleLevel                 Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
 
-    QC options:
+    QC:
       --skipQC                      Skip all QC steps apart from MultiQC
       --skipFastQC                  Skip FastQC
       --skipRseQC                   Skip RSeQC
@@ -72,8 +75,7 @@ def helpMessage() {
       --skipEdgeR                   Skip edgeR MDS plot and heatmap
       --skipMultiQC                 Skip MultiQC
 
-    Other options:
-      --sampleLevel                 Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
+    Other options
       --outdir                      The output directory where the results will be saved
       -w/--work-dir                 The temporary directory where intermediate data will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
@@ -157,11 +159,11 @@ else if ( params.transcriptome && params.aligner == 'salmon' ){
 }
 else if ( params.fasta ){
     Channel.fromPath(params.fasta, checkIfExists: true)
-           .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
+           .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
            .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
 }
 else {
-    exit 1, "No reference genome specified!"
+    exit 1, "No reference genome files specified!"
 }
 
 if( params.gtf ){
@@ -494,6 +496,7 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
 /*
  * PREPROCESSING - Create Salmon transcriptome index
  */
+println(params.transcriptome)
 if(params.transcriptome){
     process makeSalmonIndex {
         label 'salmon'

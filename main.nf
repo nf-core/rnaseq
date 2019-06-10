@@ -161,6 +161,13 @@ else {
     exit 1, "No reference genome files specified!"
 }
 
+if( params.aligner == 'hisat2' && params.splicesites ){
+    Channel
+        .fromPath(params.bed12, checkIfExists: true)
+        .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
+        .into { indexing_splicesites; alignment_splicesites }
+}
+
 if ( params.transcriptome ) {
     tx_fasta = Channel
         .fromPath(params.transcriptome, checkIfExists: true)
@@ -189,12 +196,7 @@ if( params.bed12 ){
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
         .into { bed_rseqc; bed_genebody_coverage }
 }
-if( params.aligner == 'hisat2' && params.splicesites ){
-    Channel
-        .fromPath(params.bed12, checkIfExists: true)
-        .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
-        .into { indexing_splicesites; alignment_splicesites }
-}
+
 if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
     if ( !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 }

@@ -1094,14 +1094,20 @@ if (params.transcriptome){
         file "${sample}" into salmon_multiqc_logs //MultiQC needs the sample folder to have proper names for samples
 
         script:
-        def strandedness = params.unStranded ? 'U' : 'SR'
+        def strandedness = 'U'
+        if (forwardStranded) {
+            strandedness = 'SF'
+        } else if (reverseStranded) {
+            strandedness = 'SR'
+        }
+        def end_strandedness = params.singleEnd ? strandedness : "I${strandedness}"
         def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
         """
         salmon quant --validateMappings \\
                         --seqBias --useVBOpt --gcBias \\
                         --geneMap ${gtf} \\
                         --threads ${task.cpus} \\
-                        --libType=${strandedness} \\
+                        --libType=${end_strandedness} \\
                         --index ${index} \\
                         $endedness \\
                         -o ${sample}
@@ -1127,7 +1133,7 @@ if (params.transcriptome){
       file gtf from gtf_merge_salmon_quant.collect()
 
       output:
-      file 'salmon_merge_transcript_tpm.csv'
+      file 'salmon_merged_transcript_tpm.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1144,7 +1150,7 @@ if (params.transcriptome){
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         | csvtk tab2csv \\
-        > salmon_merge_transcript_tpm.csv
+        > salmon_merged_transcript_tpm.csv
       """
     }
     process salmon_merge_gene {
@@ -1153,11 +1159,10 @@ if (params.transcriptome){
 
       input:
       file gene_quants from salmon_gene_quant
-      // Use gene_id, gene_name mapping from featurecounts to make sure it matches
-      file featurecounts_merged from featurecounts_merged.collect()
+      file featurecounts_merged from featurecounts_merged.collect() // Use gene_id > gene_name mapping from featurecounts to make sure it matches
 
       output:
-      file 'salmon_merge_gene_tpm.csv'
+      file 'salmon_merged_gene_tpm.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
@@ -1166,13 +1171,14 @@ if (params.transcriptome){
       """
       ## Merge gene counts
       csvtk cut -t -f 1,2 $featurecounts_merged > gene_id__to__gene_name.txt
+
       ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
       $merge $gene_quants \\
         | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         | csvtk tab2csv \\
-        > salmon_merge_gene_tpm.csv
+        > salmon_merged_gene_tpm.csv
       """
     }
 }

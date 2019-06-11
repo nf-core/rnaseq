@@ -174,6 +174,8 @@ if ( params.transcriptome ) {
         .ifEmpty { exit 1, "Transcriptome fasta file not found: ${params.transcriptome}" }
 } else if ( !params.transcriptome && params.aligner == 'salmon' ) {
     exit 1, "Transcriptome fasta file required to run Salmon not specified!"
+} else {
+  salmon_multiqc_logs = Channel.create()
 }
 
 if( params.gtf ){

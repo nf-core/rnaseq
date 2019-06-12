@@ -5,6 +5,7 @@
 ### Pipeline updates
 
 * Added Salmon as an alternative method to STAR and HiSAT2
+* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
 * Obtain edgeR + dupRadar version information [#198](https://github.com/nf-core/rnaseq/issues/198) and [#112](https://github.com/nf-core/rnaseq/issues/112)
@@ -27,6 +28,8 @@
 * Force matplotlib=3.0.3
 * Added Salmon 0.14.0
 * Added RSEM 1.3.2
+* Added tximport 1.0.3
+* Added SummarizedExperiment 1.12.0
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 

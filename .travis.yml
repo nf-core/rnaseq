@@ -42,3 +42,6 @@ script:
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
   # Run, build reference genome with HISAT2
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2
+  # Run, no transcriptome
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --transcriptome false
+

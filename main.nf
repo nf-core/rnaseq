@@ -1275,7 +1275,7 @@ workflow.onComplete {
 
     if(skipped_poor_alignment.size() > 0){
         log.info "${c_purple}[nf-core/rnaseq]${c_red} WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!${c_reset}"
-
+    }
     if (workflow.stats.ignoredCount > 0 && workflow.success) {
       log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
       log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"

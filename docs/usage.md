@@ -199,9 +199,9 @@ Note that you can also specify more than one desired value, separated by a comma
 
 ## Transcriptome mapping with Salmon
 
-If a fasta file of cDNA sequences is provided via the `--transcriptome` parameter then the pipeline will run an additional transcriptome quantification using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). You can use the `--skipSalmon` parameter if you wish to skip this step.
+Use the `--pseudo aligner salmon` option to perform additional quantification at the transcript- and gene-level using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). This will be run in addition to either STAR or HiSat2 and cannot be run in isolation, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. By default, the pipeline will use the genome fasta and gtf file to generate the transcript fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index`, respectively.
 
-The default Salmon parameters and a k-mer size of 31 are used to index the transcriptome. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
+The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
 
 ## Alignment tool
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads to the reference genome. STAR is fast and common, but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome.

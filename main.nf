@@ -31,12 +31,19 @@ def helpMessage() {
       --genome                      Name of iGenomes reference
       --star_index                  Path to STAR index
       --hisat2_index                Path to HiSAT2 index
+      --salmon_index                Path to Salmon index
       --fasta                       Path to genome fasta file
-      --transcriptome               Path to transcript fasta file required for `salmon`
+      --transcript_fasta            Path to transcript fasta file
+      --splicesites                 Path to splice sites file for building HiSat2 index
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
+
+    Strandedness:
+      --forwardStranded             The library is forward stranded
+      --reverseStranded             The library is reverse stranded
+      --unStranded                  The default behaviour
 
     Trimming:
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
@@ -44,38 +51,33 @@ def helpMessage() {
       --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
       --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
       --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
+      --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
       --saveTrimmed                 Save trimmed FastQ file intermediates
 
-    Strandedness:
-      --forwardStranded             The library is forward stranded
-      --reverseStranded             The library is reverse stranded
-      --unStranded                  The default behaviour
-      --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
-
     Alignment:
-      --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star', 'salmon')
+      --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star')
+      --pseudo_aligner              Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
       --seq_center                  Add sequencing center in @RG line of output BAM header
-      --skipSalmon                  Skip Salmon quantification step
       --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
 
     Read Counting:
       --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
       --fc_group_features           Define the attribute type used to group features. (default: 'gene_id')
       --fc_group_features_type      Define the type attribute used to group features based on the group attribute (default: 'gene_biotype')
-      --sampleLevel                 Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
 
     QC:
       --skipQC                      Skip all QC steps apart from MultiQC
       --skipFastQC                  Skip FastQC
-      --skipRseQC                   Skip RSeQC
-      --skipQualimap                Skip Qualimap
-      --skipGenebodyCoverage        Skip calculating genebody coverage
       --skipPreseq                  Skip Preseq
       --skipDupRadar                Skip dupRadar (and Picard MarkDuplicates)
+      --skipQualimap                Skip Qualimap
+      --skipRseQC                   Skip RSeQC
+      --skipGenebodyCoverage        Skip calculating genebody coverage
       --skipEdgeR                   Skip edgeR MDS plot and heatmap
       --skipMultiQC                 Skip MultiQC
 
     Other options
+      --sampleLevel                 Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
       --outdir                      The output directory where the results will be saved
       -w/--work-dir                 The temporary directory where intermediate data will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
@@ -92,7 +94,7 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Show help emssage
+// Show help message
 if (params.help){
     helpMessage()
     exit 0
@@ -139,8 +141,11 @@ if (params.pico){
 }
 
 // Validate inputs
-if (params.aligner != 'star' && params.aligner != 'hisat2' && params.aligner != 'salmon'){
-    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2', 'salmon'"
+if (params.aligner != 'star' && params.aligner != 'hisat2'){
+    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
+}
+if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
+    exit 1, "Invalid pseudo aligner option: ${params.pseaudo_aligner}. Valid options: 'salmon'"
 }
 if( params.star_index && params.aligner == 'star' ){
     star_index = Channel
@@ -154,8 +159,8 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
 }
 else if ( params.fasta ){
     Channel.fromPath(params.fasta, checkIfExists: true)
-           .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
+        .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+        .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index; ch_fasta_for_salmon_transcripts }
 }
 else {
     exit 1, "No reference genome files specified!"
@@ -168,26 +173,27 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .into { indexing_splicesites; alignment_splicesites }
 }
 
-if ( params.transcriptome ) {
-    tx_fasta = Channel
-        .fromPath(params.transcriptome, checkIfExists: true)
-        .ifEmpty { exit 1, "Transcriptome fasta file not found: ${params.transcriptome}" }
-} else if ( !params.transcriptome && params.aligner == 'salmon' ) {
-    exit 1, "Transcriptome fasta file required to run Salmon not specified!"
-} else {
-  salmon_multiqc_logs = Channel.create()
+if ( params.pseudo_aligner == 'salmon' ) {
+    if ( params.salmon_index ) {
+        salmon_index = Channel
+            .fromPath(params.salmon_index, checkIfExists: true)
+            .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+    } else if ( params.transcript_fasta ) {
+        ch_fasta_for_salmon_index = Channel
+            .fromPath(params.transcript_fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
+    }
 }
 
 if( params.gtf ){
     Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeBED12;
-                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM;
-                gtf_salmon_quant; gtf_merge_salmon_quant }
-} else if( params.gff ){
-  gffFile = Channel.fromPath(params.gff, checkIfExists: true)
-                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
+        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
+                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
+} else if ( params.gff ){
+    gffFile = Channel.fromPath(params.gff, checkIfExists: true)
+                  .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 } else {
     exit 1, "No GTF or GFF3 annotation specified!"
 }
@@ -269,9 +275,10 @@ if(params.aligner == 'star'){
     if(params.hisat2_index)        summary['HISAT2 Index'] = params.hisat2_index
     else if(params.fasta)          summary['Fasta Ref']    = params.fasta
     if(params.splicesites)         summary['Splice Sites'] = params.splicesites
-} else if(params.aligner == 'salmon') {
-    summary['Aligner'] = "Salmon"
-    summary['Transcriptome'] = params.transcriptome
+}
+if(params.pseudo_aligner == 'salmon') {
+    summary['Pseudo Aligner'] = "Salmon"
+    if(params.transcript_fasta)    summary['Transcript Fasta']   = params.transcript_fasta
 }
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
@@ -370,9 +377,8 @@ if(params.gff){
         file gff from gffFile
 
         output:
-        file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12,
-                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon_quant,
-                                        gtf_merge_salmon_quant
+        file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
+                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge
 
         script:
         """
@@ -482,14 +488,14 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
             log.info "[HISAT2 index build] Available memory: ${task.memory}"
             avail_mem = task.memory.toGiga()
         }
-        if( avail_mem > params.hisatBuildMemory ){
-            log.info "[HISAT2 index build] Over ${params.hisatBuildMemory} GB available, so using splice sites and exons in HISAT2 index"
+        if( avail_mem > params.hisat_build_memory ){
+            log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
             extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
             ss = "--ss $indexing_splicesites"
             exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
         } else {
-            log.info "[HISAT2 index build] Less than ${params.hisatBuildMemory} GB available, so NOT using splice sites and exons in HISAT2 index."
-            log.info "[HISAT2 index build] Use --hisatBuildMemory [small number] to skip this check."
+            log.info "[HISAT2 index build] Less than ${params.hisat_build_memory} GB available, so NOT using splice sites and exons in HISAT2 index."
+            log.info "[HISAT2 index build] Use --hisat_build_memory [small number] to skip this check."
             extract_exons = ''
             ss = ''
             exon = ''
@@ -504,22 +510,41 @@ if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
 /*
  * PREPROCESSING - Create Salmon transcriptome index
  */
-if(params.transcriptome){
+if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
+    if(!params.transcript_fasta) {
+        process transcriptsToFasta {
+            tag "$fasta"
+            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+            input:
+            file fasta from ch_fasta_for_salmon_transcripts
+            file gtf from gtf_makeSalmonIndex
+
+            output:
+            file "*.fa" into ch_fasta_for_salmon_index
+
+            script:
+            """
+            gffread -w transcripts.fa -g $fasta $gtf
+            """
+        }
+    }
     process makeSalmonIndex {
-        label 'salmon'
-        tag "$transcriptome.simpleName"
+        label "salmon"
+        tag "$fasta"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                            saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
-        file transcriptome from tx_fasta
+        file fasta from ch_fasta_for_salmon_index
 
         output:
-        file 'salmon_index' into salmon_index_ch
+        file 'salmon_index' into salmon_index
 
         script:
         """
-        salmon index --threads $task.cpus -t $transcriptome -i salmon_index
+        salmon index --threads $task.cpus -t $fasta -i salmon_index
         """
     }
 }
@@ -1081,7 +1106,7 @@ process merge_featureCounts {
 /*
  * STEP 11 - Transcriptome quantification with Salmon
  */
-if (params.transcriptome){
+if (params.pseudo_aligner == 'salmon'){
     process salmon {
         label 'salmon'
         tag "$sample"
@@ -1089,13 +1114,13 @@ if (params.transcriptome){
 
         input:
         set sample, file(reads) from trimmed_reads_salmon
-        file index from salmon_index_ch.collect()
-        file gtf from gtf_salmon_quant.collect()
+        file index from salmon_index.collect()
+        file gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/${sample}.quant.ids-only.txt" into salmon_transcript_quant
-        file "${sample}/${sample}.quant.genes.ids-only.txt" into salmon_gene_quant
-        file "${sample}" into salmon_multiqc_logs //MultiQC needs the sample folder to have proper names for samples
+        file "${sample}/*transcript.tpm.txt" into salmon_transcript_tpm
+        file "${sample}/*gene.tpm.txt" into salmon_gene_tpm
+        file "${sample}/" into salmon_logs
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1115,15 +1140,8 @@ if (params.transcriptome){
                         $endedness \\
                         -o ${sample}
 
-        # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-        csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.sf \\
-            | sed "s:TPM:${sample}:" \\
-            > ${sample}/${sample}.quant.ids-only.txt
-
-        # Replace first occurence of "TPM" from output .sf file with sample ID for easy merging
-        csvtk cut -t -f "-Length,-EffectiveLength,-NumReads" ${sample}/quant.genes.sf \\
-            | sed "s:TPM:${sample}:" \\
-            > ${sample}/${sample}.quant.genes.ids-only.txt
+        cut -f 1,4 ${sample}/quant.sf | sed '1s/TPM/${sample}/g' > ${sample}/${sample}.transcript.tpm.txt
+        cut -f 1,4 ${sample}/quant.genes.sf | sed '1s/TPM/${sample}/g' > ${sample}/${sample}.gene.tpm.txt
         """
         }
 
@@ -1132,28 +1150,26 @@ if (params.transcriptome){
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file transcript_quants from salmon_transcript_quant.collect()
-      file gtf from gtf_merge_salmon_quant.collect()
+      file tpms from salmon_transcript_tpm.collect()
+      file gtf from gtf_salmon_merge.collect()
 
       output:
-      file 'salmon_merged_transcript_tpm.csv'
+      file 'salmon_transcript_tpm_merged.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def single = transcript_quants instanceof Path ? 1 : transcript_quants.size()
-      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      def merge =  tpms instanceof Path ? 'cat' : 'csvtk join -t -f "Name"'
       """
-      ## Merge transcript counts
-      ## Gene transcript_id <--> gene_name mapping
       awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=transcript_id ")(\\w+)' > transcript_ids.txt
-      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > transcript_gene_names.txt
-      paste transcript_ids.txt transcript_gene_names.txt > transcript_ids__to__gene_names.txt
-      $merge $transcript_quants \\
-        | csvtk join -t -f 1 transcript_ids__to__gene_names.txt - \\
+      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > gene_ids.txt
+      paste transcript_ids.txt gene_ids.txt > transcript_to_gene_mapping.txt
+
+      $merge $tpms \\
+        | csvtk join -t -f 1 transcript_to_gene_mapping.txt - \\
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         | csvtk tab2csv \\
-        > salmon_merged_transcript_tpm.csv
+        > salmon_transcript_tpm_merged.csv
       """
     }
     process salmon_merge_gene {
@@ -1161,29 +1177,30 @@ if (params.transcriptome){
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file gene_quants from salmon_gene_quant.collect()
-      file featurecounts_merged from featurecounts_merged.collect() // Use gene_id > gene_name mapping from featurecounts to make sure it matches
+      file tpms from salmon_gene_tpm.collect()
+      file featurecounts from featurecounts_merged.collect() // Use gene_id > gene_name mapping from featurecounts to make sure it matches
 
       output:
-      file 'salmon_merged_gene_tpm.csv'
+      file 'salmon_gene_tpm_merged.csv'
 
       script:
       //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def single = gene_quants instanceof Path ? 1 : gene_quants.size()
-      def merge = (single == 1) ? 'cat' : 'csvtk join -t -f "Name"'
+      def merge = tpms instanceof Path ? 'cat' : 'csvtk join -t -f "Name"'
       """
       ## Merge gene counts
-      csvtk cut -t -f 1,2 $featurecounts_merged > gene_id__to__gene_name.txt
+      csvtk cut -t -f 1,2 $featurecounts > gene_id_to_gene_name.txt
 
       ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
-      $merge $gene_quants \\
-        | csvtk join -t -f 1 gene_id__to__gene_name.txt - \\
+      $merge $tpms \\
+        | csvtk join -t -f 1 gene_id_to_gene_name.txt - \\
         | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
         | cut  -f '1,3-' \\
         | csvtk tab2csv \\
-        > salmon_merged_gene_tpm.csv
+        > salmon_gene_tpm_merged.csv
       """
     }
+} else {
+    salmon_logs = Channel.empty()
 }
 
 /*
@@ -1276,16 +1293,16 @@ process multiqc {
     file multiqc_config from ch_multiqc_config.collect()
     file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('trimgalore/*') from trimgalore_results.collect()
-    file ('alignment/*') from alignment_logs.collect()
+    file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
     file ('rseqc/*') from genebody_coverage_results.collect().ifEmpty([])
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-    file ('featureCounts/*') from featureCounts_logs.collect()
+    file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
-    file ('stringtie/stringtie_log*') from stringtie_log.collect()
-    file ('salmon/*') from salmon_multiqc_logs.collect().ifEmpty([])
+    file ('stringtie/stringtie_log*') from stringtie_log.collect().ifEmpty([])
+    file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)

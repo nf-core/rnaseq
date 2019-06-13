@@ -347,14 +347,14 @@ We also use featureCounts to count overlaps with different classes of features. 
   * Contains the file `flenDist.txt` for the fragment length distribution
 * `logs/`
   * Contains the file `salmon_quant.log` giving a record of Salmon's quantification
-* `quant.genes.sf`
-  * *Gene*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
 * `quant.sf`
   * *Transcript*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
-* `Sample.quant.genes.ids-only.txt`
-  * Subset of `quant.genes.sf`, only containing the gene id and TPM
-* `Sample.quant.ids-only.txt`
-  * Subset of `quant.sf`, only containing the transcript id and TPM
+* `quant.genes.sf`
+  * *Gene*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `Sample.transcript.tpm.txt`
+  * Subset of `quant.sf`, only containing the transcript id and TPM values
+* `Sample.gene.tpm.txt`
+  * Subset of `quant.genes.sf`, only containing the gene id and TPM values
 
 ## StringTie
 [StringTie](https://ccb.jhu.edu/software/stringtie/) assembles RNA-Seq alignments into potential transcripts. It assembles and quantitates full-length transcripts representing multiple splice variants for each gene locus.

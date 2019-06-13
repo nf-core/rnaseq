@@ -23,7 +23,8 @@ and processes data using the following steps:
 * [dupRadar](#dupradar) - technical / biological read duplication
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
-* [Salmon](#salmon) - gene counts, biotype counts, rRNA estimation.
+* [Salmon](#salmon) - gene counts, transcripts counts.
+* [tximport](#tximport) - gene counts, transcripts counts, SummarizedExperimment object.
 * [StringTie](#stringtie) - FPKMs for genes and transcripts
 * [Sample_correlation](#Sample_correlation) - create MDS plot and sample pairwise distance heatmap / dendrogram
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
@@ -311,6 +312,36 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 ## Salmon
 [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.
+
+**Output directory: `results/salmon`**
+
+* `Sample/quant.sf`
+  * Read counts for the different transcripts.
+* `Sample/quant.genes.sf`
+  * Read the counts for each gene provided in the reference `gtf` file
+* `Sample/logs`
+  * Summary file with information about the process
+
+## tximport
+[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts.
+
+**Output directory: `results/salmon`**
+
+* `merged_salmon_tx_tpm.csv`
+  * TPM counts for the different transcripts.
+* `merged_salmon_gene_tpm.csv`
+  * TPM counts for the different genes.
+* `merged_salmon_tx_reads.csv`
+  * estimated counts for the different transcripts.
+* `merged_salmon_gene_reads.csv`
+  * estimated counts for the different genes.
+* `tx2gene.csv`
+  * CSV file with transcript and genes (`params.fc_group_features`) and extra name (`params.fc_extra_attributes`) in each column.
+* `se.rds`
+  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+* `gse.rds`
+  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+
 
 ### Index files
 

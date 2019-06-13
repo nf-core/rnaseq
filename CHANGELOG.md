@@ -4,6 +4,7 @@
 
 ### Pipeline updates
 
+* Added tximport to merge salmon output
 * Added Salmon as an supplementary method to STAR and HiSAT2
 * Added `--psuedo_aligner`, `--transcript_fasta` and `--salmon_index` parameters
 * Add `Citation` and `Quick Start` section to `README.md`

@@ -1118,9 +1118,7 @@ if (params.pseudo_aligner == 'salmon'){
         file gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/*transcript.tpm.txt" into salmon_transcript_tpm
-        file "${sample}/*gene.tpm.txt" into salmon_gene_tpm
-        file "${sample}/" into salmon_logs
+        file "${sample}/" into salmon_logs, salmon_quant
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1139,64 +1137,26 @@ if (params.pseudo_aligner == 'salmon'){
                         --index ${index} \\
                         $endedness \\
                         -o ${sample}
-
-        cut -f 1,4 ${sample}/quant.sf | sed '1s/TPM/${sample}/g' > ${sample}/${sample}.transcript.tpm.txt
-        cut -f 1,4 ${sample}/quant.genes.sf | sed '1s/TPM/${sample}/g' > ${sample}/${sample}.gene.tpm.txt
         """
         }
 
-    process salmon_merge_transcript {
+    process salmon_merge {
       label 'low_memory'
+      tag "$sample"
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file tpms from salmon_transcript_tpm.collect()
-      file gtf from gtf_salmon_merge.collect()
+      file gtf from gtf_salmon_merge
+      file ("salmon/*") from salmon_quant.collect()
 
       output:
-      file 'salmon_transcript_tpm_merged.csv'
+      file "*se.rds" into rse_ch
+      file "*.csv" into salmon_counts_ch
 
       script:
-      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def merge =  tpms instanceof Path ? 'cat' : 'csvtk join -t -f "Name"'
       """
-      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=transcript_id ")(\\w+)' > transcript_ids.txt
-      awk -F "\\t" '\$3 == "transcript" { print \$9 }' $gtf | grep -oP '(?<=gene_name ")(\\w+)' > gene_ids.txt
-      paste transcript_ids.txt gene_ids.txt > transcript_to_gene_mapping.txt
-
-      $merge $tpms \\
-        | csvtk join -t -f 1 transcript_to_gene_mapping.txt - \\
-        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
-        | cut  -f '1,3-' \\
-        | csvtk tab2csv \\
-        > salmon_transcript_tpm_merged.csv
-      """
-    }
-    process salmon_merge_gene {
-      label 'low_memory'
-      publishDir "${params.outdir}/salmon", mode: 'copy'
-
-      input:
-      file tpms from salmon_gene_tpm.collect()
-      file featurecounts from featurecounts_merged.collect() // Use gene_id > gene_name mapping from featurecounts to make sure it matches
-
-      output:
-      file 'salmon_gene_tpm_merged.csv'
-
-      script:
-      //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-      def merge = tpms instanceof Path ? 'cat' : 'csvtk join -t -f "Name"'
-      """
-      ## Merge gene counts
-      csvtk cut -t -f 1,2 $featurecounts > gene_id_to_gene_name.txt
-
-      ## Merge gene counts using gene_id to gene_name mapping from featurecounts, as
-      $merge $tpms \\
-        | csvtk join -t -f 1 gene_id_to_gene_name.txt - \\
-        | awk '{FS="\\t"; OFS="\\t"} { if (length(\$2) == 0) {\$1=\$1} else {\$1=\$2 " ("\$1")"}; \$2="" ; print \$0 }' \\
-        | cut  -f '1,3-' \\
-        | csvtk tab2csv \\
-        > salmon_gene_tpm_merged.csv
+      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
+      tximport.r NULL salmon
       """
     }
 } else {

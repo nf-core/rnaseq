@@ -21,10 +21,7 @@ if (info$size == 0){
 fns = list.files(path, pattern = "quant.sf", recursive = T, full.names = T)
 names = basename(dirname(fns))
 names(fns) = names
-coldata = list.files(coldata, full.names = TRUE)
-if (length(coldata)==0){
-  coldata = "NULL"
-}
+
 if (file.exists(coldata)){
     coldata = read.csv(coldata)
     coldata = coldata[match(names, coldata[,1]),]
@@ -35,8 +32,6 @@ if (file.exists(coldata)){
 }
 
 library(SummarizedExperiment)
-
-# if not genome version is giving
 library(tximport)
 
 txi = tximport(fns, type = "salmon", txOut = TRUE)

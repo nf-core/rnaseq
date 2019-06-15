@@ -29,7 +29,7 @@ def read_top_transcript(salmon):
 def tx2gene(gtf, salmon, gene_id, extra, out):
     txs = read_top_transcript(salmon)
     votes = Counter()
-    gene_dict = defaultdict(dict)
+    gene_dict = defaultdict(list)
     with open(gtf) as inh:
         for line in inh:
             if line.startswith("#"):
@@ -44,7 +44,7 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
                         votes[item_pair[0].strip()] += 1
 
                     attr_dict[item_pair[0].strip()] = value
-            gene_dict[attr_dict[gene_id]] = attr_dict
+            gene_dict[attr_dict[gene_id]].append(attr_dict)
 
     if not votes:
         logger.warning("No attribute in GTF matching transcripts")
@@ -52,9 +52,15 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
 
     txid = votes.most_common(1)[0][0]
     logger.info("Attributed found to be transcript: %s" % txid)
+    seen = set()
     with open(out, 'w') as outh:
         for gene in gene_dict:
-            print("%s,%s,%s" % (gene_dict[gene][txid], gene, gene_dict[gene][extra]), file=outh)
+            for row in gene_dict[gene]:
+                if txid not in row:
+                    continue
+                if (gene, row[txid]) not in seen:
+                    seen.add((gene, row[txid]))
+                    print("%s,%s,%s" % (row[txid], gene, row[extra]), file=outh)
 
 
 if __name__ == "__main__":

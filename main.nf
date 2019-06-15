@@ -852,11 +852,11 @@ process rseqc {
  * Step 4.1 Subsample the BAM files if necessary
  */
 bam_forSubsamp
-    .filter { it.size() > params.subsampFilesizeThreshold }
-    .map { [it, params.subsampFilesizeThreshold / it.size() ] }
+    .filter { it.size() > params.subsamp_filesize_thresh }
+    .map { [it, params.subsamp_filesize_thresh / it.size() ] }
     .set{ bam_forSubsampFiltered }
 bam_skipSubsamp
-    .filter { it.size() <= params.subsampFilesizeThreshold }
+    .filter { it.size() <= params.subsamp_filesize_thresh }
     .set{ bam_skipSubsampFiltered }
 
 process bam_subsample {

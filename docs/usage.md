@@ -52,7 +52,6 @@
   * [`--max_time`](#--max_time)
   * [`--max_cpus`](#--max_cpus)
   * [`--hisat_build_memory`](#--hisat_build_memory)
-  * [`--subsamp_filesize_thresh`](#--subsamp_filesize_thresh)
   * [`--sampleLevel`](#--samplelevel)
   * [`--plaintext_email`](#--plaintext_email)
   * [`--monochrome_logs`](#--monochrome_logs)
@@ -416,11 +415,6 @@ If this memory is not available, the index build will proceed without splicing i
 The `--hisat_build_memory` option changes this threshold. By default it is `200GB` - if your system
 `--max_memory` is set to `128GB` but your genome is small enough to build using this, then you can
 allow the exon build to proceed by supplying `--hisat_build_memory 100GB`
-
-### `--subsamp_filesize_thresh`
-This parameter defines the threshold in BAM file size (in bytes) at which data subsampling is used prior to the RSeQC `gene_body_coverage` step. This step is done to speed up and reduce compute resources for the gene body coverage analysis .
-For very large files this means, that the BAM file will be subsampled to compute the `gene_body_coverage`, for small files there will not be a subsampling step.
-By default this parameter is set to `10000000000` - ten gigabytes.
 
 ### `--sampleLevel`
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.

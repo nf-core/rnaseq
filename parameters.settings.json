@@ -462,16 +462,6 @@
             "default_value": ""
         },
         {
-            "name": "subsamp_filesize_thresh",
-            "label": "Subsample file-size threshold",
-            "usage": "Defines the threshold in BAM file size (in bytes) at which data subsampling is used prior to the RSeQC `gene_body_coverage` step.",
-            "group": "Advanced",
-            "default_value": 10000000000,
-            "render": "textfield",
-            "pattern": "\\d*",
-            "type": "integer"
-        },
-        {
             "name": "hisat_build_memory",
             "label": "HISAT2 indexing: required memory for splice sites in GB",
             "usage": "HISAT2 needs a very large amount of memory to build an index with splice sites. If the available memory is below this threshold, the index build will proceed without splicing information.",

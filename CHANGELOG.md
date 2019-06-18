@@ -4,11 +4,17 @@
 
 ### Pipeline updates
 
+* Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
+* Implemented Pearsons correlation instead of euclidean distance [146](https://github.com/nf-core/rnaseq/issues/146)
+* Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
+* Resolved link to guidelines is broken [#203](https://github.com/nf-core/rnaseq/issues/203)
+* Removed unnecessary `stringtie` channels for `MultiQC`
 * Added tximport to merge salmon output
 * Added Salmon as an supplementary method to STAR and HiSAT2
 * Added `--psuedo_aligner`, `--transcript_fasta` and `--salmon_index` parameters
 * Add `Citation` and `Quick Start` section to `README.md`
-* Integrate changes in `nf-core/tools v1.6` template
+* Closed missing multiqc_plots in dev branch output [#200](https://github.com/nf-core/rnaseq/issues/200)
+* Integrate changes in `nf-core/tools v1.6` template which resolved [#90](https://github.com/nf-core/rnaseq/issues/90)
 * Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Change all boolean parameters from snake_case to camelCase and vice versa for value parameters
 * Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)

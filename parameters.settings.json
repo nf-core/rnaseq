@@ -271,6 +271,15 @@
             "group": "Alignment"
         },
         {
+            "name": "stringTieIgnoreGTF",
+            "label": "Alignment options",
+            "usage": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
+            "group": "Alignment",
+            "render": "check-box",
+            "default_value": false,
+            "type": "boolean"
+        },
+        {
             "name": "seq_center",
             "label": "Sequencing center",
             "usage": "Add sequencing center in @RG line of output BAM header",
@@ -362,14 +371,6 @@
         {
             "name": "skipRseQC",
             "label": "Skip RSeQC steps, apart from genebody coverage",
-            "render": "check-box",
-            "default_value": false,
-            "type": "boolean",
-            "group": "Skip pipeline steps"
-        },
-        {
-            "name": "skipGenebodyCoverage",
-            "label": "Skip RSeQC genebody coverage",
             "render": "check-box",
             "default_value": false,
             "type": "boolean",

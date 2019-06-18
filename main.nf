@@ -57,6 +57,7 @@ def helpMessage() {
     Alignment:
       --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star')
       --pseudo_aligner              Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
+      --stringTieIgnoreGTF          Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
       --seq_center                  Add sequencing center in @RG line of output BAM header
       --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
 
@@ -72,7 +73,6 @@ def helpMessage() {
       --skipDupRadar                Skip dupRadar (and Picard MarkDuplicates)
       --skipQualimap                Skip Qualimap
       --skipRseQC                   Skip RSeQC
-      --skipGenebodyCoverage        Skip calculating genebody coverage
       --skipEdgeR                   Skip edgeR MDS plot and heatmap
       --skipMultiQC                 Skip MultiQC
 
@@ -202,7 +202,7 @@ if( params.bed12 ){
     bed12 = Channel
         .fromPath(params.bed12, checkIfExists: true)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
-        .into { bed_rseqc; bed_genebody_coverage }
+        .into { bed_rseqc }
 }
 
 if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
@@ -283,6 +283,7 @@ if(params.pseudo_aligner == 'salmon') {
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
+if(params.stringTieIgnoreGTF)  summary['StringTie Ignore GTF']  = params.stringTieIgnoreGTF
 summary['Save prefs']     = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
@@ -400,7 +401,7 @@ if(!params.bed12){
         file gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed_rseqc, bed_genebody_coverage
+        file "${gtf.baseName}.bed" into bed_rseqc
 
         script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
         """
@@ -849,68 +850,6 @@ process rseqc {
 }
 
 /*
- * Step 4.1 Subsample the BAM files if necessary
- */
-bam_forSubsamp
-    .filter { it.size() > params.subsamp_filesize_thresh }
-    .map { [it, params.subsamp_filesize_thresh / it.size() ] }
-    .set{ bam_forSubsampFiltered }
-bam_skipSubsamp
-    .filter { it.size() <= params.subsamp_filesize_thresh }
-    .set{ bam_skipSubsampFiltered }
-
-process bam_subsample {
-    tag "${bam.baseName - '.sorted'}"
-
-    input:
-    set file(bam), val(fraction) from bam_forSubsampFiltered
-
-    output:
-    file "*_subsamp.bam" into bam_subsampled
-
-    script:
-    """
-    samtools view -s $fraction -b $bam | samtools sort -o ${bam.baseName}_subsamp.bam
-    """
-}
-
-/*
- * Step 4.2 Rseqc genebody_coverage
- */
-process genebody_coverage {
-    label 'mid_memory'
-    tag "${bam.baseName - '.sorted'}"
-       publishDir "${params.outdir}/rseqc" , mode: 'copy',
-        saveAs: {filename ->
-            if (filename.indexOf("geneBodyCoverage.curves.pdf") > 0)       "geneBodyCoverage/$filename"
-            else if (filename.indexOf("geneBodyCoverage.r") > 0)           "geneBodyCoverage/rscripts/$filename"
-            else if (filename.indexOf("geneBodyCoverage.txt") > 0)         "geneBodyCoverage/data/$filename"
-            else if (filename.indexOf("log.txt") > -1) false
-            else filename
-        }
-
-    when:
-    !params.skipQC && !params.skipGenebodyCoverage
-
-    input:
-    file bam from bam_subsampled.concat(bam_skipSubsampFiltered)
-    file bed12 from bed_genebody_coverage.collect()
-
-    output:
-    file "*.{txt,pdf,r}" into genebody_coverage_results
-
-    script:
-    """
-    samtools index $bam
-    geneBody_coverage.py \\
-        -i $bam \\
-        -o ${bam.baseName}.rseqc \\
-        -r $bed12
-    mv log.txt ${bam.baseName}.rseqc.log.txt
-    """
-}
-
-/*
  * STEP 5 - preseq analysis
  */
 process preseq {
@@ -1118,7 +1057,7 @@ if (params.pseudo_aligner == 'salmon'){
         file gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/" into salmon_logs, salmon_quant
+        file "${sample}/" into salmon_merge, salmon_logs
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1142,15 +1081,14 @@ if (params.pseudo_aligner == 'salmon'){
 
     process salmon_merge {
       label 'low_memory'
-      tag "$sample"
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
+      file ("salmon/*") from salmon_merge.collect()
       file gtf from gtf_salmon_merge
-      file ("salmon/*") from salmon_quant.collect()
 
       output:
-      file "*se.rds" into rse_ch
+      file "*se.rds" into salmon_rds_ch
       file "*.csv" into salmon_counts_ch
 
       script:
@@ -1184,7 +1122,6 @@ process stringtieFPKM {
     file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
     file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
     file "${bam_stringtieFPKM}.cov_refs.gtf"
-    file ".command.log" into stringtie_log
     file "${bam_stringtieFPKM.baseName}_ballgown"
 
     script:
@@ -1194,6 +1131,7 @@ process stringtieFPKM {
     } else if (reverseStranded && !unStranded){
         st_direction = "--rf"
     }
+    def ignore_gtf = params.stringTieIgnoreGTF ? "" : "-e"
     """
     stringtie $bam_stringtieFPKM \\
         $st_direction \\
@@ -1202,8 +1140,8 @@ process stringtieFPKM {
         -G $gtf \\
         -A ${bam_stringtieFPKM.baseName}.gene_abund.txt \\
         -C ${bam_stringtieFPKM}.cov_refs.gtf \\
-        -e \\
-        -b ${bam_stringtieFPKM.baseName}_ballgown
+        -b ${bam_stringtieFPKM.baseName}_ballgown \\
+        $ignore_gtf
     """
 }
 
@@ -1235,8 +1173,8 @@ process sample_correlation {
     edgeR_heatmap_MDS.r $input_files
     cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
     mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv
-    cat $heatmap_header log2CPM_sample_distances_mqc.csv >> tmp_file
-    mv tmp_file log2CPM_sample_distances_mqc.csv
+    cat $heatmap_header log2CPM_sample_correlation_mqc.csv >> tmp_file
+    mv tmp_file log2CPM_sample_correlation_mqc.csv
     """
 }
 
@@ -1255,13 +1193,11 @@ process multiqc {
     file ('trimgalore/*') from trimgalore_results.collect()
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
-    file ('rseqc/*') from genebody_coverage_results.collect().ifEmpty([])
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
-    file ('stringtie/stringtie_log*') from stringtie_log.collect().ifEmpty([])
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('software_versions/*') from software_versions_yaml.collect()

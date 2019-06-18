@@ -60,8 +60,6 @@
 * [Stand-alone scripts](#stand-alone-scripts)
 <!-- TOC END -->
 
-
-
 ## Introduction
 Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs. Thus the Nextflow process must run until the pipeline is finished. We recommend that you put the process running in the background through `screen` / `tmux` or similar tool. Alternatively you can run nextflow within a cluster job submitted your job scheduler.
 
@@ -315,7 +313,6 @@ The following options make this easy:
 * `--skipFastQC` -            Skip FastQC
 * `--skipRseQC` -             Skip RSeQC
 * `--skipQualimap` -          Skip Qualimap
-* `--skipGenebodyCoverage` -  Skip calculating the genebody coverage
 * `--skipPreseq` -            Skip Preseq
 * `--skipDupRadar` -          Skip dupRadar (and Picard MarkDuplicates)
 * `--skipEdgeR` -             Skip edgeR MDS plot and heatmap

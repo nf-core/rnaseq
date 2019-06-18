@@ -16,7 +16,6 @@ and processes data using the following steps:
   * [RPKM saturation](#rpkm-saturation)
   * [Read duplication](#read-duplication)
   * [Inner distance](#inner-distance)
-  * [Gene body coverage](#gene-body-coverage)
   * [Read distribution](#read-distribution)
   * [Junction annotation](#junction-annotation)
 * [Qualimap](#qualimap) - RNA quality control metrics
@@ -207,24 +206,6 @@ This plot will not be generated for single-end data. Very short inner distances 
 
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
-### Gene body coverage
-**NB:** In nfcore/rnaseq we subsample this to 1 Million reads. This speeds up this task significantly and has no to little effect on the results.
-
-**Output:**
-
-* `Sample_rseqc.geneBodyCoverage.curves.pdf`
-* `Sample_rseqc.geneBodyCoverage.r`
-* `Sample_rseqc.geneBodyCoverage.txt`
-
-This script calculates the reads coverage across gene bodies. This makes it easy to identify 3' or 5' skew in libraries. A skew towards increased 3' coverage can happen in degraded samples prepared with poly-A selection.
-
-A typical set of libraries with little or no bias will look as follows:
-
-![Gene body coverage](images/rseqc_gene_body_coverage_plot.png)
-
-RSeQC documentation: [gene\_body_coverage.py](http://rseqc.sourceforge.net/#genebody-coverage-py)
-
-
 ### Read distribution
 **Output: `Sample_read_distribution.txt`**
 
@@ -327,13 +308,13 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 **Output directory: `results/salmon`**
 
-* `merged_salmon_tx_tpm.csv`
+* `salmon_merged_transcript_tpm.csv`
   * TPM counts for the different transcripts.
-* `merged_salmon_gene_tpm.csv`
+* `salmon_merged_gene_tpm.csv`
   * TPM counts for the different genes.
-* `merged_salmon_tx_reads.csv`
+* `salmon_merged_transcript_counts.csv`
   * estimated counts for the different transcripts.
-* `merged_salmon_gene_reads.csv`
+* `salmon_merged_gene_counts.csv`
   * estimated counts for the different genes.
 * `tx2gene.csv`
   * CSV file with transcript and genes (`params.fc_group_features`) and extra name (`params.fc_extra_attributes`) in each column.
@@ -402,7 +383,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
   * This `.gtf` file contains the transcripts that are fully covered by reads.
 
 ## Sample Correlation
-[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap / dendrogram showing pairwise euclidean distance (sample similarity). It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
+[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap showing Pearsons correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
 
 **Heatmap:**
 
@@ -415,17 +396,17 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 **Output directory: `results/sample_correlation`**
 
 * `edgeR_MDS_plot.pdf`
-  * MDS scatter plot, showing sample similarity
-* `edgeR_MDS_distance_matrix.txt`
+  * MDS scatter plot showing sample similarity
+* `edgeR_MDS_distance_matrix.csv`
   * Distance matrix containing raw data from MDS analysis
-* `edgeR_MDS_plot_coordinates.txt`
+* `edgeR_MDS_Aplot_coordinates_mqc.csv`
   * Scatter plot coordinates from MDS plot, used for MultiQC report
 * `log2CPM_sample_distances_dendrogram.pdf`
-  * Dendrogram plot showing the euclidian distance between your samples
-* `log2CPM_sample_distances_heatmap.pdf`
-  * Heatmap plot showing the euclidian distance between your samples
-* `log2CPM_sample_distances.txt`
-  * Raw data used for heatmap and dendrogram plots.
+  * Dendrogram showing the Euclidean distance between your samples
+* `log2CPM_sample_correlation_heatmap.pdf`
+  * Heatmap showing the Pearsons correlation between your samples
+* `log2CPM_sample_correlation_mqc.csv`
+  * Raw data from Pearsons correlation heatmap, used for MultiQC report
 
 ## MultiQC
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.

@@ -32,7 +32,7 @@ Typically, pull-requests are only fully reviewed when these tests are passing, t
 There are typically two types of tests that run:
 
 ### Lint Tests
-The nf-core has a [set of guidelines](http://nf-co.re/guidelines) which all pipelines must adhere to.
+The nf-core has a [set of guidelines](https://nf-co.re/developers/guidelines) which all pipelines must adhere to.
 To enforce these and ensure that all pipelines stay in sync, we have developed a helper tool which runs checks on the pipeline code. This is in the [nf-core/tools repository](https://github.com/nf-core/tools) and once installed can be run locally with the `nf-core lint <pipeline-directory>` command.
 
 If any failures or warnings are encountered, please follow the listed URL for more documentation.

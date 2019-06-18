@@ -55,13 +55,13 @@ if (!is.null(tx2gene)){
 
 if(exists("gse")){
   saveRDS(gse, file = "gse.rds")
-  write.csv(assays(se)[["abundance"]], "merged_salmon_gene_tpm.csv")
-  write.csv(assays(se)[["counts"]], "merged_salmon_gene_reads.csv")
+  write.csv(assays(se)[["abundance"]], "salmon_merged_gene_tpm.csv")
+  write.csv(assays(se)[["counts"]], "salmon_merged_gene_counts.csv")
 }
 
 saveRDS(se, file = "se.rds")
-write.csv(assays(se)[["abundance"]], "merged_salmon_tx_tpm.csv")
-write.csv(assays(se)[["counts"]], "merged_salmon_tx_reads.csv")
+write.csv(assays(se)[["abundance"]], "salmon_merged_transcript_tpm.csv")
+write.csv(assays(se)[["counts"]], "salmon_merged_transcript_counts.csv")
 
 # Print sessioninfo to standard out
 citation("tximeta")

@@ -5,7 +5,7 @@
 ### Pipeline updates
 
 * Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
-* Implemented Pearsons correlation instead of euclidean distance [146](https://github.com/nf-core/rnaseq/issues/146)
+* Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
 * Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
 * Resolved link to guidelines is broken [#203](https://github.com/nf-core/rnaseq/issues/203)
 * Removed unnecessary `stringtie` channels for `MultiQC`

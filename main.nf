@@ -146,8 +146,9 @@ if (params.aligner != 'star' && params.aligner != 'hisat2'){
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
 if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
-    exit 1, "Invalid pseudo aligner option: ${params.pseaudo_aligner}. Valid options: 'salmon'"
+    exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
 }
+
 if( params.star_index && params.aligner == 'star' ){
     star_index = Channel
         .fromPath(params.star_index, checkIfExists: true)

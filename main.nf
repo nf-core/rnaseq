@@ -167,7 +167,7 @@ else if ( params.pseudo_aligner == 'salmon' && params.fasta) {
 else if ( params.fasta ){
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-        .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index; ch_fasta_for_salmon_transcripts }
+        .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
 }
 else {
     exit 1, "No reference genome files specified!"

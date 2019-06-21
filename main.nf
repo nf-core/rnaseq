@@ -149,6 +149,7 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
     exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
 }
 
+
 if( params.star_index && params.aligner == 'star' ){
     star_index = Channel
         .fromPath(params.star_index, checkIfExists: true)
@@ -158,6 +159,10 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
     hs2_indices = Channel
         .fromPath("${params.hisat2_index}*", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
+}
+else if ( params.pseudo_aligner == 'salmon' && params.fasta) {
+  ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
+      .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
 }
 else if ( params.fasta ){
     Channel.fromPath(params.fasta, checkIfExists: true)

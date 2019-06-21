@@ -55,8 +55,8 @@ if (!is.null(tx2gene)){
 
 if(exists("gse")){
   saveRDS(gse, file = "gse.rds")
-  write.csv(assays(se)[["abundance"]], "salmon_merged_gene_tpm.csv")
-  write.csv(assays(se)[["counts"]], "salmon_merged_gene_counts.csv")
+  write.csv(assays(gse)[["abundance"]], "salmon_merged_gene_tpm.csv")
+  write.csv(assays(gse)[["counts"]], "salmon_merged_gene_counts.csv")
 }
 
 saveRDS(se, file = "se.rds")

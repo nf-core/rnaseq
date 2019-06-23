@@ -751,7 +751,7 @@ if(params.aligner == 'hisat2'){
                    -p ${task.cpus} \\
                    --met-stderr \\
                    --new-summary \\
-                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
             """
         } else {
@@ -766,7 +766,7 @@ if(params.aligner == 'hisat2'){
                    -p ${task.cpus} \\
                    --met-stderr \\
                    --new-summary \\
-                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
             """
         }

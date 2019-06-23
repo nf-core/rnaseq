@@ -692,7 +692,7 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-             --outFileNamePrefix $prefix $seq_center
+             --outFileNamePrefix $prefix $seqCenter
 
         samtools index ${prefix}Aligned.sortedByCoord.out.bam
         """

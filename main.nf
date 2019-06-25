@@ -1007,7 +1007,7 @@ process featureCounts {
     file biotypes_header from ch_biotypes_header.collect()
 
     output:
-    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_clean
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
 
@@ -1029,10 +1029,32 @@ process featureCounts {
     """
 }
 
+
+/*
+ * STEP 10 - Clean featurecounts
+ */
+process clean_featureCounts {
+    tag "${input_files[0].baseName - '.sorted'}"
+
+    input:
+    file input_files from featureCounts_to_clean.collect()
+
+    output:
+    file featureCounts_to_merge
+
+    script:
+    """
+    csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" \\
+        | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \\
+        > $featureCounts_to_merge
+    """
+}
+
 /*
  * STEP 10 - Merge featurecounts
  */
 process merge_featureCounts {
+    label "mid_memory"
     tag "${input_files[0].baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
@@ -1046,7 +1068,7 @@ process merge_featureCounts {
     //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
     def merge = input_files instanceof Path ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
     """
-    $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
+    $merge $input_files > merged_gene_counts.txt
     """
 }
 

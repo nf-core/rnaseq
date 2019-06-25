@@ -36,21 +36,30 @@ library(tximport)
 
 txi = tximport(fns, type = "salmon", txOut = TRUE)
 rownames(coldata) = coldata[["names"]]
-rowdata = rowdata[match(rownames(txi[[1]]), rowdata[["tx"]]),]
+extra = setdiff(rownames(txi[[1]]),  as.character(rowdata[["tx"]]))
+if (length(extra) > 0){
+    rowdata = rbind(rowdata,
+                    data.frame(tx=extra,
+                               gene_id=extra,
+                               gene_name=extra))
+}
+rowdata = rowdata[match(rownames(txi[[1]]), as.character(rowdata[["tx"]])),]
+rownames(rowdata) = rowdata[["tx"]]
 se = SummarizedExperiment(assays = list(counts = txi[["counts"]],
                                         abundance = txi[["abundance"]],
                                         length = txi[["length"]]),
                           colData = DataFrame(coldata),
                           rowData = rowdata)
 if (!is.null(tx2gene)){
-  gi = summarizeToGene(txi, tx2gene = tx2gene)
-  growdata = unique(rowdata[,2:3])
-  growdata = growdata[match(rownames(gi[[1]]), growdata[["gene_id"]]),]
-  gse = SummarizedExperiment(assays = list(counts = gi[["counts"]],
-                                          abundance = gi[["abundance"]],
-                                          length = gi[["length"]]),
-                            colData = DataFrame(coldata),
-                            rowData = growdata)
+    gi = summarizeToGene(txi, tx2gene = tx2gene)
+    growdata = unique(rowdata[,2:3])
+    growdata = growdata[match(rownames(gi[[1]]), growdata[["gene_id"]]),]
+    rownames(growdata) = growdata[["tx"]]
+    gse = SummarizedExperiment(assays = list(counts = gi[["counts"]],
+                                             abundance = gi[["abundance"]],
+                                             length = gi[["length"]]),
+                               colData = DataFrame(coldata),
+                               rowData = growdata)
 }
 
 if(exists("gse")){

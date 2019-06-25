@@ -557,7 +557,7 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
 
         script:
         """
-        salmon index --threads $task.cpus -t $fasta -i salmon_index
+        salmon index --threads $task.cpus -t $fasta --gencode -i salmon_index
         """
     }
 }

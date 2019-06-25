@@ -1068,7 +1068,8 @@ if (params.pseudo_aligner == 'salmon'){
         file gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/" into salmon_merge, salmon_logs
+        file "${sample}/quant*.sf" into salmon_merge
+        file "${sample}/" salmon_logs
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'

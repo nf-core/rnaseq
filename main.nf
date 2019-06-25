@@ -1069,7 +1069,7 @@ if (params.pseudo_aligner == 'salmon'){
 
         output:
         file "${sample}/quant*.sf" into salmon_merge
-        file "${sample}/" salmon_logs
+        file "${sample}/" into salmon_logs
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'

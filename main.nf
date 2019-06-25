@@ -1068,12 +1068,7 @@ if (params.pseudo_aligner == 'salmon'){
         file gtf from gtf_salmon.collect()
 
         output:
-<<<<<<< HEAD
-        file "${sample}/quant*.sf" into salmon_merge
-        file "${sample}/" into salmon_logs
-=======
         file "${sample}/" into salmon_merge, salmon_logs
->>>>>>> parent of 44b7686... Only transfer quant.sf files for salon_merge"
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'

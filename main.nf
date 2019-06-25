@@ -109,7 +109,6 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 // Define these here - after the profiles are loaded with the iGenomes paths
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-params.transcript_fasta = params.genome ? params.genomes[ params.genome ].transcript_fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false

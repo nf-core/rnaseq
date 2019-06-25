@@ -1040,14 +1040,19 @@ process clean_featureCounts {
     file input_file from featureCounts_to_clean
 
     output:
-    file output into featureCounts_to_merge
+    file counts into featureCounts_to_merge
+    file gene_ids into featureCounts_to_merge_ids
 
     script:
-    output = "${input_file}_cleaned.txt"
+    intermediate = 'intermediate.txt'
+    counts = "${input_file}_counts_only.txt"
+    gene_ids = "${input_file}_gene_ids.txt"
     """
     csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" $input_file \\
         | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \\
-        > $output
+        > $intermediate
+    cut -f 3 $intermediate > $counts
+    cut -f 1,2 $intermediate > $gene_ids
     """
 }
 
@@ -1061,15 +1066,16 @@ process merge_featureCounts {
 
     input:
     file input_files from featureCounts_to_merge.collect()
+    file gene_ids from featureCounts_to_merge_ids.collect()
 
     output:
     file 'merged_gene_counts.txt' into featurecounts_merged
 
     script:
     //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-    def merge = input_files instanceof Path ? 'cat' : 'csvtk join -t -f "Geneid,gene_name"'
+    gene_ids_single = gene_ids[0]
     """
-    $merge $input_files > merged_gene_counts.txt
+    paste $gene_ids_single $input_files > merged_gene_counts.txt
     """
 }
 

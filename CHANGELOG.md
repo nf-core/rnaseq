@@ -23,6 +23,7 @@
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
+* Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations [#242](https://github.com/nf-core/rnaseq/pull/242)
 
 ### Dependency Updates
 

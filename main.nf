@@ -120,6 +120,10 @@ ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt", che
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
        .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
+if (params.gencode) {
+  params.fc_group_features_type = 'gene_type'
+}
+
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
 clip_r2 = params.clip_r2

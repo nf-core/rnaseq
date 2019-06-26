@@ -556,6 +556,7 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
         file 'salmon_index' into salmon_index
 
         script:
+        def gencode = params.gencode  ? "--gencode" : ""
         """
         salmon index --threads $task.cpus -t $fasta --gencode -i salmon_index
         """

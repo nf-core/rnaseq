@@ -280,7 +280,7 @@ If your `--gtf` file is in GENCODE format and you would like to run Salmon (`--p
 
 #### "Type" of gene
 
-First, the gene "biotype" field, e.g. `protein_coding` or `lincRNA` or `rRNA`, in the GTF file is called `gene_type`, rather than `gene_biotype` as in iGenomes.
+The `gene_biotype` field which is typically found in Ensembl GTF files contains a key word description regarding the type of gene e.g. `protein_coding`, `lincRNA`, `rRNA`. In GENCODE GTF files this field has been renamed to `gene_type`.
 
 ENSEMBL version:
 

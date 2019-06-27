@@ -1049,7 +1049,7 @@ process clean_featureCounts {
     gene_ids = "${input_file}_gene_ids.txt"
     """
     csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" $input_file \\
-        | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' \\
+        | sed 's/Aligned.sortedByCoord.out.bam//g' \\
         > $intermediate
     cut -f 3 $intermediate > $counts
     cut -f 1,2 $intermediate > $gene_ids

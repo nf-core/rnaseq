@@ -295,11 +295,11 @@ chr8    HAVANA  transcript      70635318        70669174        .       -       
 ```
 
 
-Therefore, for `featureCounts` to correctly count the different biotypes, when GENCODE annotations are specified, the `fc_group_features_type` must be set to `gene_type`, and adding the `--gencode` flag accomplishes this.
+Therefore, for `featureCounts` to correctly count the different biotypes when using a GENCODE annotation the `fc_group_features_type` is automatically set to `gene_type` when the `--gencode` flag is specified.
 
 #### Transcript IDs in FASTA files
 
-Second, the transcript FASTA file contains IDs separated by vertical pipes (`|`) rather than spaces, so programs that expect to separate the IDs by spaces cannot.
+The transcript IDs in GENCODE fasta files are separated by vertical pipes (`|`) rather than spaces.
 
 ENSEMBL version:
 ```
@@ -311,7 +311,7 @@ GENCODE version:
 >ENST00000522447.5|ENSG00000147592.9|OTTHUMG00000164430.2|OTTHUMT00000378747.1|LACTB2-203|LACTB2|1034|protein_coding|
 ```
 
-Thankfully, the Salmon pseudo-aligner has [already](https://github.com/COMBINE-lab/salmon/issues/15) taken care of this issue and simply needs a `--gencode` flag, which gets added when one specifies `--gencode` for the `nf-core/rnaseq` workflow.
+This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
 
 
 ## Adapter Trimming

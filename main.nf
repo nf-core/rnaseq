@@ -1046,6 +1046,7 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt' into featurecounts_merged
 
     script:
+    // Redirection (the `<()`) for the win!
     gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,2 )"
     counts = input_files.collect{filename ->
       // Remove first line and take third column

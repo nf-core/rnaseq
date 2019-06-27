@@ -120,10 +120,6 @@ ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt", che
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
        .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
 
-if (params.gencode) {
-  params.fc_group_features_type = 'gene_type'
-}
-
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
 clip_r2 = params.clip_r2
@@ -1021,6 +1017,7 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
+    def biotype = params.gencode ? 'gene_type' : params.fc_group_features_type
     def extraAttributes = params.fc_extra_attributes ? "--extraAttributes ${params.fc_extra_attributes}" : ''
     if (forwardStranded && !unStranded) {
         featureCounts_direction = 1
@@ -1031,7 +1028,7 @@ process featureCounts {
     sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
     """
     featureCounts -a $gtf -g ${params.fc_group_features} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
-    featureCounts -a $gtf -g ${params.fc_group_features_type} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+    featureCounts -a $gtf -g ${biotype} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
     """

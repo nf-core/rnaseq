@@ -1101,11 +1101,10 @@ if (params.pseudo_aligner == 'salmon'){
 
     process salmon_tximport {
       label 'low_memory'
-      publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       set val(name), file ("salmon/*") from salmon_tximport
-      file gtf from gtf_salmon_merge
+      file gtf from gtf_salmon_merge.collect()
 
       output:
       file "*se.rds" into salmon_rds_ch
@@ -1132,15 +1131,18 @@ if (params.pseudo_aligner == 'salmon'){
       file transcript_count_files from salmon_transcript_counts.collect()
 
       output:
-      file "*.csv" into salmon_merged_ch
+      file "salmon_merged*.csv" into salmon_merged_ch
 
       script:
-      gene_ids = "<(cut -f1,2 -d, ${gene_tpm_files[0]})"
-      transcript_ids = "<(cut -f1,2 -d, ${transcript_tpm_files[0]})"
-      gene_tpm = gene_tpm_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
-      gene_counts = gene_count_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
-      transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
-      transcript_counts = transcript_count_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
+      // First field is the gene/transcript ID
+      gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]})"
+      transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]})"
+
+      // Second field is counts/TPM
+      gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+      gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+      transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+      transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
       """
       paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
       paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv

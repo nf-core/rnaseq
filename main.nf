@@ -1007,7 +1007,7 @@ process featureCounts {
     file biotypes_header from ch_biotypes_header.collect()
 
     output:
-    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_clean
+    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
     file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
     file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
 
@@ -1030,31 +1030,6 @@ process featureCounts {
 }
 
 
-/*
- * STEP 10 - Clean featurecounts
- */
-process clean_featureCounts {
-    tag "${input_file[0].baseName - '.sorted'}"
-
-    input:
-    file input_file from featureCounts_to_clean
-
-    output:
-    file counts into featureCounts_to_merge
-    file gene_ids into featureCounts_to_merge_ids
-
-    script:
-    intermediate = 'intermediate.txt'
-    counts = "${input_file}_counts_only.txt"
-    gene_ids = "${input_file}_gene_ids.txt"
-    """
-    csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" $input_file \\
-        | sed 's/Aligned.sortedByCoord.out.bam//g' \\
-        > $intermediate
-    cut -f 3 $intermediate > $counts
-    cut -f 1,2 $intermediate > $gene_ids
-    """
-}
 
 /*
  * STEP 10 - Merge featurecounts
@@ -1066,16 +1041,15 @@ process merge_featureCounts {
 
     input:
     file input_files from featureCounts_to_merge.collect()
-    file gene_ids from featureCounts_to_merge_ids.collect()
 
     output:
     file 'merged_gene_counts.txt' into featurecounts_merged
 
     script:
-    //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-    gene_ids_single = gene_ids[0]
+    gene_ids = "<(cut -f1,2 ${input_files[0]})"
+    counts = input_files.collect{filename -> "<(cut -f3 ${filename})"}.join(" ")
     """
-    paste $gene_ids_single $input_files > merged_gene_counts.txt
+    paste $gene_ids $counts > merged_gene_counts.txt
     """
 }
 

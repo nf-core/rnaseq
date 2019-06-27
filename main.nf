@@ -1076,7 +1076,8 @@ if (params.pseudo_aligner == 'salmon'){
         file gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/" into salmon_merge, salmon_logs
+        file "${sample}/" into salmon_logs
+        set val(sample), file("${sample}/") into salmon_tximport
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1098,22 +1099,53 @@ if (params.pseudo_aligner == 'salmon'){
         """
         }
 
+    process salmon_tximport {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      set val(name), file ("salmon/*") from salmon_tximport
+      file gtf from gtf_salmon_merge
+
+      output:
+      file "*se.rds" into salmon_rds_ch
+      file "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
+      file "${name}_salmon_gene_counts.csv" into salmon_gene_counts
+      file "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
+      file "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
+
+      script:
+      """
+      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
+      tximport.r NULL salmon ${name}
+      """
+    }
+
     process salmon_merge {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file ("salmon/*") from salmon_merge.collect()
-      file gtf from gtf_salmon_merge
+      file gene_tpm_files from salmon_gene_tpm.collect()
+      file gene_count_files from salmon_gene_counts.collect()
+      file transcript_tpm_files from salmon_transcript_tpm.collect()
+      file transcript_count_files from salmon_transcript_counts.collect()
 
       output:
-      file "*se.rds" into salmon_rds_ch
-      file "*.csv" into salmon_counts_ch
+      file "*.csv" into salmon_merged_ch
 
       script:
+      gene_ids = "<(cut -f1,2 -d, ${gene_tpm_files[0]})"
+      transcript_ids = "<(cut -f1,2 -d, ${transcript_tpm_files[0]})"
+      gene_tpm = gene_tpm_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
+      gene_counts = gene_count_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
+      transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
+      transcript_counts = transcript_count_files.collect{f -> "<(cut -f3 ${f})"}.join(" ")
       """
-      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
-      tximport.r NULL salmon
+      paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
+      paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
+      paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
+      paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
       """
     }
 } else {

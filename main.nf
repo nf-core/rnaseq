@@ -1047,7 +1047,8 @@ process merge_featureCounts {
 
     script:
     // Redirection (the `<()`) for the win!
-    gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,2 )"
+    // Geneid in 1st column and gene_name in 7th
+    gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,7 )"
     counts = input_files.collect{filename ->
       // Remove first line and take third column
       "<(tail -n +2 ${filename} | cut -f3)"}.join(" ")

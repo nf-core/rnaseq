@@ -214,6 +214,12 @@ if( params.bed12 ){
         .into { bed_rseqc }
 }
 
+if (params.gencode){
+  biotype = "gene_type"
+} else {
+  biotype = params.fc_group_features_type
+}
+
 if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
     if ( !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
 }
@@ -293,6 +299,7 @@ if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
 if(params.stringTieIgnoreGTF)  summary['StringTie Ignore GTF']  = params.stringTieIgnoreGTF
+if(params.fc_group_features_type)  summary['Biotype field in GTF']  = biotype
 summary['Save prefs']     = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
@@ -1017,7 +1024,6 @@ process featureCounts {
 
     script:
     def featureCounts_direction = 0
-    def biotype = params.gencode ? 'gene_type' : params.fc_group_features_type
     def extraAttributes = params.fc_extra_attributes ? "--extraAttributes ${params.fc_extra_attributes}" : ''
     if (forwardStranded && !unStranded) {
         featureCounts_direction = 1

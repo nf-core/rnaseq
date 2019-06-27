@@ -274,7 +274,6 @@ As above, by default intermediate BAM files from the alignment will not be saved
 
 ### `--gencode`
 
-tl;dr version:
 If specified, then `params.fc_group_features_type` is set to `gene_type` and the `--gencode` flag is added to `salmon index` (if `--pseudo_aligner salmon` is specified).
 
 [GENCODE](gencodegenes.org/) gene annotations are slightly different from ENSEMBL or iGenome annotations in two ways.

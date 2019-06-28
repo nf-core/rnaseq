@@ -1109,7 +1109,6 @@ if (params.pseudo_aligner == 'salmon'){
       file gtf from gtf_salmon_merge.collect()
 
       output:
-      file "*se.rds" into salmon_rds_ch
       file "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
       file "${name}_salmon_gene_counts.csv" into salmon_gene_counts
       file "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm

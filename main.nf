@@ -1051,7 +1051,7 @@ process merge_featureCounts {
     gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,7 )"
     counts = input_files.collect{filename ->
       // Remove first line and take third column
-      "<(tail -n +2 ${filename} | cut -f3)"}.join(" ")
+      "<(tail -n +2 ${filename} | sed 's:.sorted.bam::' | cut -f8)"}.join(" ")
     """
     paste $gene_ids $counts > merged_gene_counts.txt
     """

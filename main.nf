@@ -1135,8 +1135,8 @@ if (params.pseudo_aligner == 'salmon'){
 
       script:
       // First field is the gene/transcript ID
-      gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]})"
-      transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]})"
+      gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
+      transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
 
       // Second field is counts/TPM
       gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")

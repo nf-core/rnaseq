@@ -39,6 +39,7 @@ def helpMessage() {
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
+      --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
 
     Strandedness:
       --forwardStranded             The library is forward stranded
@@ -298,6 +299,7 @@ if(params.pseudo_aligner == 'salmon') {
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
+if(params.gencode)             summary['GENCODE'] = params.gencode
 if(params.stringTieIgnoreGTF)  summary['StringTie Ignore GTF']  = params.stringTieIgnoreGTF
 if(params.fc_group_features_type)  summary['Biotype GTF field']  = biotype
 summary['Save prefs']     = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')

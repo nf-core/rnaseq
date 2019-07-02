@@ -25,6 +25,7 @@
   * [`--saveReference`](#--savereference)
   * [`--saveTrimmed`](#--savetrimmed)
   * [`--saveAlignedIntermediates`](#--savealignedintermediates)
+  * [`--gencode`](#--gencode)
 * [Adapter Trimming](#adapter-trimming)
   * [`--clip_r1 [int]`](#--clip_r1-int)
   * [`--clip_r2 [int]`](#--clip_r2-int)
@@ -270,6 +271,51 @@ flag (or set to true in your config file) to copy these files when complete.
 
 ### `--saveAlignedIntermediates`
 As above, by default intermediate BAM files from the alignment will not be saved. The final BAM files created after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM files from STAR / HISAT2 and sorting steps.
+
+### `--gencode`
+
+If your `--gtf` file is in GENCODE format and you would like to run Salmon (`--pseudo_aligner salmon`) you will need to provide this parameter in order to build the Salmon index appropriately. The `params.fc_group_features_type=gene_type` will also be set as explained below.
+
+[GENCODE](gencodegenes.org/) gene annotations are slightly different from ENSEMBL or iGenome annotations in two ways.
+
+#### "Type" of gene
+
+The `gene_biotype` field which is typically found in Ensembl GTF files contains a key word description regarding the type of gene e.g. `protein_coding`, `lincRNA`, `rRNA`. In GENCODE GTF files this field has been renamed to `gene_type`.
+
+ENSEMBL version:
+
+```bash
+8       havana  transcript      70635318        70669174        .       -       .       gene_id "ENSG00000147592"; gene_version "9"; transcript_id "ENST00000522447"; transcript_version "5"; gene_name "LACTB2"; gene_source "ensembl_havana"; gene_biotype "protein_coding"; transcript_name "LACTB2-203"; transcript_source "havana"; transcript_biotype "protein_coding"; tag "CCDS"; ccds_id "CCDS6208"; tag "basic"; transcript_support_level "2";
+```
+
+
+GENCODE version:
+
+```bash
+chr8    HAVANA  transcript      70635318        70669174        .       -       .       gene_id "ENSG00000147592.9"; transcript_id "ENST00000522447.5"; gene_type "protein_coding"; gene_name "LACTB2"; transcript_type "protein_coding"; transcript_name "LACTB2-203"; level 2; protein_id "ENSP00000428801.1"; transcript_support_level "2"; tag "alternative_3_UTR"; tag "basic"; tag "appris_principal_1"; tag "CCDS"; ccdsid "CCDS6208.1"; havana_gene "OTTHUMG00000164430.2"; havana_transcript "OTTHUMT00000378747.1";
+```
+
+
+Therefore, for `featureCounts` to correctly count the different biotypes when using a GENCODE annotation the `fc_group_features_type` is automatically set to `gene_type` when the `--gencode` flag is specified.
+
+#### Transcript IDs in FASTA files
+
+The transcript IDs in GENCODE fasta files are separated by vertical pipes (`|`) rather than spaces.
+
+ENSEMBL version:
+
+```bash
+>ENST00000522447.5 cds chromosome:GRCh38:8:70635318:70669174:-1 gene:ENSG00000147592.9 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:LACTB2 description:lactamase beta 2 [Source:HGNC Symbol;Acc:HGNC:18512]
+```
+
+GENCODE version:
+
+```bash
+>ENST00000522447.5|ENSG00000147592.9|OTTHUMG00000164430.2|OTTHUMT00000378747.1|LACTB2-203|LACTB2|1034|protein_coding|
+```
+
+This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
+
 
 ## Adapter Trimming
 If specific additional trimming is required (for example, from additional tags),

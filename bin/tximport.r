@@ -8,6 +8,10 @@ if (length(args) < 2) {
 path = args[2]
 coldata = args[1]
 
+sample_name = args[3]
+
+prefix = paste(c(sample_name, "salmon"), sep="_")
+
 tx2gene = "tx2gene.csv"
 info = file.info(tx2gene)
 if (info$size == 0){
@@ -55,13 +59,13 @@ if (!is.null(tx2gene)){
 
 if(exists("gse")){
   saveRDS(gse, file = "gse.rds")
-  write.csv(assays(gse)[["abundance"]], "salmon_merged_gene_tpm.csv")
-  write.csv(assays(gse)[["counts"]], "salmon_merged_gene_counts.csv")
+  write.csv(assays(gse)[["abundance"]], paste(c(prefix, "gene_tpm.csv"), collapse="_"), quote=FALSE)
+  write.csv(assays(gse)[["counts"]], paste(c(prefix, "gene_counts.csv"), collapse="_"), quote=FALSE)
 }
 
 saveRDS(se, file = "se.rds")
-write.csv(assays(se)[["abundance"]], "salmon_merged_transcript_tpm.csv")
-write.csv(assays(se)[["counts"]], "salmon_merged_transcript_counts.csv")
+write.csv(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.csv"), collapse="_"), quote=FALSE)
+write.csv(assays(se)[["counts"]], paste(c(prefix, "transcript_counts.csv"), collapse="_"), quote=FALSE)
 
 # Print sessioninfo to standard out
 citation("tximeta")

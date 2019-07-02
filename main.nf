@@ -39,6 +39,7 @@ def helpMessage() {
       --gff                         Path to GFF3 file
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
+      --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
 
     Strandedness:
       --forwardStranded             The library is forward stranded
@@ -159,10 +160,6 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .fromPath("${params.hisat2_index}*", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
-else if ( params.pseudo_aligner == 'salmon' && params.fasta) {
-  ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
-      .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-}
 else if ( params.fasta ){
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
@@ -179,6 +176,8 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .into { indexing_splicesites; alignment_splicesites }
 }
 
+// Separately check for whether salmon needs a genome fasta to extract
+// transcripts from, or can use a transcript fasta directly
 if ( params.pseudo_aligner == 'salmon' ) {
     if ( params.salmon_index ) {
         salmon_index = Channel
@@ -188,6 +187,11 @@ if ( params.pseudo_aligner == 'salmon' ) {
         ch_fasta_for_salmon_index = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
+    } else if (params.fasta && params.gtf) {
+      ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
+          .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+    } else {
+      exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }
 }
 
@@ -209,6 +213,12 @@ if( params.bed12 ){
         .fromPath(params.bed12, checkIfExists: true)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
         .into { bed_rseqc }
+}
+
+if (params.gencode){
+  biotype = "gene_type"
+} else {
+  biotype = params.fc_group_features_type
 }
 
 if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
@@ -289,7 +299,9 @@ if(params.pseudo_aligner == 'salmon') {
 if(params.gtf)                 summary['GTF Annotation']  = params.gtf
 if(params.gff)                 summary['GFF3 Annotation']  = params.gff
 if(params.bed12)               summary['BED Annotation']  = params.bed12
+if(params.gencode)             summary['GENCODE'] = params.gencode
 if(params.stringTieIgnoreGTF)  summary['StringTie Ignore GTF']  = params.stringTieIgnoreGTF
+if(params.fc_group_features_type)  summary['Biotype GTF field']  = biotype
 summary['Save prefs']     = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
@@ -553,8 +565,9 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
         file 'salmon_index' into salmon_index
 
         script:
+        def gencode = params.gencode  ? "--gencode" : ""
         """
-        salmon index --threads $task.cpus -t $fasta -i salmon_index
+        salmon index --threads $task.cpus -t $fasta $gencode -i salmon_index
         """
     }
 }
@@ -1023,7 +1036,7 @@ process featureCounts {
     sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
     """
     featureCounts -a $gtf -g ${params.fc_group_features} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
-    featureCounts -a $gtf -g ${params.fc_group_features_type} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+    featureCounts -a $gtf -g $biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
     cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
     mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
     """
@@ -1065,7 +1078,8 @@ if (params.pseudo_aligner == 'salmon'){
         file gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/" into salmon_merge, salmon_logs
+        file "${sample}/" into salmon_logs
+        set val(sample), file("${sample}/") into salmon_tximport
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1087,22 +1101,54 @@ if (params.pseudo_aligner == 'salmon'){
         """
         }
 
+    process salmon_tximport {
+      label 'low_memory'
+
+      input:
+      set val(name), file ("salmon/*") from salmon_tximport
+      file gtf from gtf_salmon_merge.collect()
+
+      output:
+      file "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
+      file "${name}_salmon_gene_counts.csv" into salmon_gene_counts
+      file "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
+      file "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
+
+      script:
+      """
+      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
+      tximport.r NULL salmon ${name}
+      """
+    }
+
     process salmon_merge {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      file ("salmon/*") from salmon_merge.collect()
-      file gtf from gtf_salmon_merge
+      file gene_tpm_files from salmon_gene_tpm.collect()
+      file gene_count_files from salmon_gene_counts.collect()
+      file transcript_tpm_files from salmon_transcript_tpm.collect()
+      file transcript_count_files from salmon_transcript_counts.collect()
 
       output:
-      file "*se.rds" into salmon_rds_ch
-      file "*.csv" into salmon_counts_ch
+      file "salmon_merged*.csv" into salmon_merged_ch
 
       script:
+      // First field is the gene/transcript ID
+      gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
+      transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
+
+      // Second field is counts/TPM
+      gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+      gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+      transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+      transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
       """
-      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
-      tximport.r NULL salmon
+      paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
+      paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
+      paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
+      paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
       """
     }
 } else {

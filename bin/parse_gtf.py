@@ -14,7 +14,7 @@ logger.setLevel(logging.INFO)
 
 def read_top_transcript(salmon):
     txs = set()
-    fn = glob.glob(os.path.join(salmon, "*", "quant.sf"))[1]
+    fn = glob.glob(os.path.join(salmon, "*", "quant.sf"))[0]
     with open(fn) as inh:
         for line in inh:
             if line.startswith("Name"):

@@ -11,6 +11,7 @@
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
+* Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
 
 ### Dependency Updates
 

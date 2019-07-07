@@ -1042,10 +1042,13 @@ process featureCounts {
     """
 }
 
+
+
 /*
  * STEP 10 - Merge featurecounts
  */
 process merge_featureCounts {
+    label "mid_memory"
     tag "${input_files[0].baseName - '.sorted'}"
     publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
@@ -1056,10 +1059,14 @@ process merge_featureCounts {
     file 'merged_gene_counts.txt' into featurecounts_merged
 
     script:
-    //if we only have 1 file, just use cat and pipe output to csvtk. Else join all files first, and then remove unwanted column names.
-    def merge = input_files instanceof Path ? 'cat' : 'csvtk join -t -f "Geneid,Start,Length,End,Chr,Strand,gene_name"'
+    // Redirection (the `<()`) for the win!
+    // Geneid in 1st column and gene_name in 7th
+    gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,7 )"
+    counts = input_files.collect{filename ->
+      // Remove first line and take third column
+      "<(tail -n +2 ${filename} | sed 's:.sorted.bam::' | cut -f8)"}.join(" ")
     """
-    $merge $input_files | csvtk cut -t -f "-Start,-Chr,-End,-Length,-Strand" | sed 's/Aligned.sortedByCoord.out.markDups.bam//g' > merged_gene_counts.txt
+    paste $gene_ids $counts > merged_gene_counts.txt
     """
 }
 
@@ -1122,7 +1129,7 @@ if (params.pseudo_aligner == 'salmon'){
     }
 
     process salmon_merge {
-      label 'low_memory'
+      label 'mid_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:

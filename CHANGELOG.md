@@ -15,6 +15,7 @@
 * Add `Citation` and `Quick Start` section to `README.md`
 * Closed missing multiqc_plots in dev branch output [#200](https://github.com/nf-core/rnaseq/issues/200)
 * Integrate changes in `nf-core/tools v1.6` template which resolved [#90](https://github.com/nf-core/rnaseq/issues/90)
+* Moved process "convertGFFtoGTF" before "makeSTARindex" [#215](https://github.com/nf-core/rnaseq/issues/215)
 * Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Change all boolean parameters from snake_case to camelCase and vice versa for value parameters
 * Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)

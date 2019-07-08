@@ -31,21 +31,25 @@
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 
-#### Pipeline Updates
+### Pipeline Updates
+
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
 * Added a `parameters.settings.json` file for use with the new `nf-core launch` helper tool.
 * Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
 * Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
 * Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
+* Add option for Trimming NextSeq data properly ([@jburos work](https://github.com/jburos))
 
-#### Bug fixes
+### Bug fixes
+
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)
 * Fixing HISAT2 BAM sorting using more memory than available on the system
 * Fixing MarkDuplicates memory consumption issues following [#179](https://github.com/nf-core/rnaseq/pull/179)
+* Use `file` instead of `new File` to create the `pipeline_report.{html,txt}` files to avoid creating local directories when outputting to AWS S3 folders
 
+### Dependency Updates
 
-#### Dependency Updates
 * RSeQC 2.6.4 -> 3.0.0
 * Picard 2.18.15 -> 2.20.0
 * r-data.table 1.11.4 -> 1.12.2
@@ -62,7 +66,8 @@
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
-#### Pipeline updates
+### Pipeline updates
+
 * Removed some outdated documentation about non-existent features
 * Config refactoring and code cleaning
 * Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
@@ -72,26 +77,27 @@
   * Added documentation about the `--hisatBuildMemory` option.
 * BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
 
-#### Bug Fixes
+### Bug Fixes
+
 * Fixed conda bug which caused problems with environment resolution due to changes in bioconda [#113](https://github.com/nf-core/rnaseq/issues/113)
 * Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
 * Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
 
-
 ## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 
-#### Pipeline updates
+### Pipeline updates
+
 * Wrote docs and made minor tweaks to the `--skip_qc` and associated options
 * Removed the depreciated `uppmax-modules` config profile
 * Updated the `hebbe` config profile to use the new `withName` syntax too
 * Use new `workflow.manifest` variables in the pipeline script
 * Updated minimum nextflow version to `0.32.0`
 
-#### Bug Fixes
+### Bug Fixes
+
 * [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
 * [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
 * [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
-
 
 ## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
 

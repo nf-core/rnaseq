@@ -16,14 +16,14 @@ and processes data using the following steps:
   * [RPKM saturation](#rpkm-saturation)
   * [Read duplication](#read-duplication)
   * [Inner distance](#inner-distance)
-  * [Gene body coverage](#gene-body-coverage)
   * [Read distribution](#read-distribution)
   * [Junction annotation](#junction-annotation)
 * [Qualimap](#qualimap) - RNA quality control metrics
 * [dupRadar](#dupradar) - technical / biological read duplication
 * [Preseq](#preseq) - library complexity
 * [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
-* [Salmon](#salmon) - gene counts, biotype counts, rRNA estimation.
+* [Salmon](#salmon) - gene counts, transcripts counts.
+* [tximport](#tximport) - gene counts, transcripts counts, SummarizedExperimment object.
 * [StringTie](#stringtie) - FPKMs for genes and transcripts
 * [Sample_correlation](#Sample_correlation) - create MDS plot and sample pairwise distance heatmap / dendrogram
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
@@ -206,24 +206,6 @@ This plot will not be generated for single-end data. Very short inner distances 
 
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
-### Gene body coverage
-**NB:** In nfcore/rnaseq we subsample this to 1 Million reads. This speeds up this task significantly and has no to little effect on the results.
-
-**Output:**
-
-* `Sample_rseqc.geneBodyCoverage.curves.pdf`
-* `Sample_rseqc.geneBodyCoverage.r`
-* `Sample_rseqc.geneBodyCoverage.txt`
-
-This script calculates the reads coverage across gene bodies. This makes it easy to identify 3' or 5' skew in libraries. A skew towards increased 3' coverage can happen in degraded samples prepared with poly-A selection.
-
-A typical set of libraries with little or no bias will look as follows:
-
-![Gene body coverage](images/rseqc_gene_body_coverage_plot.png)
-
-RSeQC documentation: [gene\_body_coverage.py](http://rseqc.sourceforge.net/#genebody-coverage-py)
-
-
 ### Read distribution
 **Output: `Sample_read_distribution.txt`**
 
@@ -312,28 +294,79 @@ We also use featureCounts to count overlaps with different classes of features. 
 ## Salmon
 [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.
 
-### Salmon Index
+**Output directory: `results/salmon`**
 
-**Output directory: `results/reference_transcriptome`**
-
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
+* `Sample/quant.sf`
+  * Read counts for the different transcripts.
+* `Sample/quant.genes.sf`
   * Read the counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
+* `Sample/logs`
+  * Summary file with information about the process
 
-
-### Salmon quant
+## tximport
+[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts.
 
 **Output directory: `results/salmon`**
 
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
-  * Read the counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
+* `salmon_merged_transcript_tpm.csv`
+  * TPM counts for the different transcripts.
+* `salmon_merged_gene_tpm.csv`
+  * TPM counts for the different genes.
+* `salmon_merged_transcript_counts.csv`
+  * estimated counts for the different transcripts.
+* `salmon_merged_gene_counts.csv`
+  * estimated counts for the different genes.
+* `tx2gene.csv`
+  * CSV file with transcript and genes (`params.fc_group_features`) and extra name (`params.fc_extra_attributes`) in each column.
+* `se.rds`
+  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+* `gse.rds`
+  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+
+
+### Index files
+
+**Output directory: `results/reference_genome/salmon_index`**
+
+* `duplicate_clusters.tsv`
+  * Stores which transcripts are duplicates of one another
+* `hash.bin`
+* `header.json`
+  * Information about k-mer size, uniquely identifying hashes for the reference
+* `indexing.log`
+  * Time log for creating transcriptome index
+* `quasi_index.log`
+  * Step-by-step log for making transcriptome index
+* `refInfo.json`
+  * Information about file used for the reference
+* `rsd.bin`
+* `sa.bin`
+* `txpInfo.bin`
+* `versionInfo.json`
+  * Salmon and indexing version sed to make the index
+
+### Quantification output
+
+**Output directory: `results/salmon`**
+
+* `aux_info/`
+  * Auxiliary info e.g. versions and number of mapped reads
+* `cmd_info.json`
+  * Information about the Salmon quantification command, version, and options
+* `lib_format_counts.json`
+  * Number of fragments assigned, unassigned and incompatible
+* `libParams/`
+  * Contains the file `flenDist.txt` for the fragment length distribution
+* `logs/`
+  * Contains the file `salmon_quant.log` giving a record of Salmon's quantification
+* `quant.sf`
+  * *Transcript*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `quant.genes.sf`
+  * *Gene*-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `Sample.transcript.tpm.txt`
+  * Subset of `quant.sf`, only containing the transcript id and TPM values
+* `Sample.gene.tpm.txt`
+  * Subset of `quant.genes.sf`, only containing the gene id and TPM values
 
 ## StringTie
 [StringTie](https://ccb.jhu.edu/software/stringtie/) assembles RNA-Seq alignments into potential transcripts. It assembles and quantitates full-length transcripts representing multiple splice variants for each gene locus.
@@ -350,7 +383,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
   * This `.gtf` file contains the transcripts that are fully covered by reads.
 
 ## Sample Correlation
-[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap / dendrogram showing pairwise euclidean distance (sample similarity). It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
+[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap showing Pearsons correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
 
 **Heatmap:**
 
@@ -363,17 +396,17 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 **Output directory: `results/sample_correlation`**
 
 * `edgeR_MDS_plot.pdf`
-  * MDS scatter plot, showing sample similarity
-* `edgeR_MDS_distance_matrix.txt`
+  * MDS scatter plot showing sample similarity
+* `edgeR_MDS_distance_matrix.csv`
   * Distance matrix containing raw data from MDS analysis
-* `edgeR_MDS_plot_coordinates.txt`
+* `edgeR_MDS_Aplot_coordinates_mqc.csv`
   * Scatter plot coordinates from MDS plot, used for MultiQC report
 * `log2CPM_sample_distances_dendrogram.pdf`
-  * Dendrogram plot showing the euclidian distance between your samples
-* `log2CPM_sample_distances_heatmap.pdf`
-  * Heatmap plot showing the euclidian distance between your samples
-* `log2CPM_sample_distances.txt`
-  * Raw data used for heatmap and dendrogram plots.
+  * Dendrogram showing the Euclidean distance between your samples
+* `log2CPM_sample_correlation_heatmap.pdf`
+  * Heatmap showing the Pearsons correlation between your samples
+* `log2CPM_sample_correlation_mqc.csv`
+  * Raw data from Pearsons correlation heatmap, used for MultiQC report
 
 ## MultiQC
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.

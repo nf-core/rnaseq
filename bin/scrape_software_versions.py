@@ -18,6 +18,7 @@ regexes = {
     'StringTie': ['v_stringtie.txt', r"(\S+)"],
     'Preseq': ['v_preseq.txt', r"Version: (\S+)"],
     'RSeQC': ['v_rseqc.txt', r"read_duplication.py ([\d\.]+)"],
+    'Qualimap': ['v_qualimap.txt', r"QualiMap v(\S+)"],
     'dupRadar': ['v_dupRadar.txt', r"(\S+)"],
     'edgeR': ['v_edgeR.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
@@ -39,6 +40,7 @@ results['deepTools'] = '<span style="color:#999999;\">N/A</span>'
 results['RSeQC'] = '<span style="color:#999999;\">N/A</span>'
 results['dupRadar'] = '<span style="color:#999999;\">N/A</span>'
 results['edgeR'] = '<span style="color:#999999;\">N/A</span>'
+results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex

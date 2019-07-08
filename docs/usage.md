@@ -29,6 +29,7 @@
   * [`--clip_r2 [int]`](#--clip_r2-int)
   * [`--three_prime_clip_r1 [int]`](#--three_prime_clip_r1-int)
   * [`--three_prime_clip_r2 [int]`](#--three_prime_clip_r2-int)
+  * [`--trim_nextseq [int]`](#--trim_nextseq)
 * [Library Prep Presets](#library-prep-presets)
   * [`--pico`](#--pico)
 * [Skipping QC steps](#skipping-qc-steps)
@@ -119,7 +120,7 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * Pulls software from dockerhub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
 * `singularity`
   * A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
-  * Pulls software from DockerHub
+  * Pulls software from DockerHub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
 * `test`
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
@@ -167,17 +168,19 @@ params {
 
 If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
-These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`) and StringTie:
+These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
 
 * `--forward_stranded`
   * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
   * featureCounts: `-s 1`
   * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
+  * Qualimap: `-pe strand-specific-forward`
   * StringTie: `--fr`
 * `--reverse_stranded`
   * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
   * featureCounts: `-s 2`
   * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
+  * Qualimap: `-pe strand-specific-reverse`
   * StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
@@ -280,8 +283,10 @@ Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads o
 Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
 
 ### `--three_prime_clip_r2 [int]`
-Instructs Trim Galore to re move bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
+Instructs Trim Galore to remove bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
 
+### `--trim_nextseq [int]`
+This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.
 
 ## Library Prep Presets
 Some command line options are available to automatically set parameters for common RNA-seq library preparation kits.
@@ -303,6 +308,7 @@ The following options make this easy:
 * `--skip_qc` -                Skip **all QC steps**, apart from MultiQC
 * `--skip_fastqc` -            Skip FastQC
 * `--skip_rseqc` -             Skip RSeQC
+* `--skip_qualimap` -          Skip Qualimap
 * `--skip_genebody_coverage` - Skip calculating the genebody coverage
 * `--skip_preseq` -            Skip Preseq
 * `--skip_dupradar` -          Skip dupRadar (and Picard MarkDups)
@@ -318,7 +324,7 @@ Wherever process-specific requirements are set in the pipeline, the default valu
 
 If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
-If you have any questions or issues please send us a message on [`Slack`](https://nf-core-invite.herokuapp.com/).
+If you have any questions or issues please send us a message on [Slack](https://nf-core-invite.herokuapp.com/).
 
 ## AWS Batch specific parameters
 Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use the `-awsbatch` profile and then specify all of the following parameters.

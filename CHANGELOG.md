@@ -4,6 +4,7 @@
 
 ### Pipeline updates
 
+* Moved process "convertGFFtoGTF" before "makeSTARindex" [#215](https://github.com/nf-core/rnaseq/issues/215)
 * Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)

@@ -397,7 +397,7 @@ if(params.gff){
 
         output:
         file "${gff.baseName}.gtf" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
-                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge
+                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap
 
         script:
         """
@@ -693,7 +693,7 @@ if(params.aligner == 'star'){
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         def star_mem = task.memory ?: params.star_memory ?: false
         def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-        seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center'" : ''
+        seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
         """
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
@@ -704,7 +704,7 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-             --outFileNamePrefix $prefix $seq_center
+             --outFileNamePrefix $prefix $seqCenter
 
         samtools index ${prefix}Aligned.sortedByCoord.out.bam
         """
@@ -747,7 +747,7 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')}" : ''
+        seqCenter = params.seqCenter ? "--rg-id ${prefix} --rg CN:${params.seqCenter.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"        
         def rnastrandness = ''
         if (forwardStranded && !unStranded){
             rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
@@ -763,7 +763,7 @@ if(params.aligner == 'hisat2'){
                    -p ${task.cpus} \\
                    --met-stderr \\
                    --new-summary \\
-                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
             """
         } else {
@@ -778,7 +778,7 @@ if(params.aligner == 'hisat2'){
                    -p ${task.cpus} \\
                    --met-stderr \\
                    --new-summary \\
-                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
             """
         }

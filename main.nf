@@ -151,20 +151,22 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
 }
 
 
-if( params.star_index && params.aligner == 'star' ){
+if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
     star_index = Channel
         .fromPath(params.star_index, checkIfExists: true)
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
 }
-else if ( params.hisat2_index && params.aligner == 'hisat2' ){
+else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment ){
     hs2_indices = Channel
         .fromPath("${params.hisat2_index}*", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
-else if ( params.fasta ){
+else if ( params.fasta && !params.skipAlignment ){
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
         .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
+} else if (params.skipAlignment){
+  println "Skipping alignment ..."
 }
 else {
     exit 1, "No reference genome files specified!"
@@ -220,6 +222,10 @@ if (params.gencode){
   biotype = "gene_type"
 } else {
   biotype = params.fc_group_features_type
+}
+
+if (params.skipAlignment && !params.pseudo_aligner){
+  exit 1, "--skipAlignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
 }
 
 if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
@@ -1157,6 +1163,14 @@ if (!params.skipAlignment){
 } else {
   star_log = Channel.from(false)
   hisat_stdout = Channel.from(false)
+  alignment_logs = Channel.from(false)
+  rseqc_results = Channel.from(false)
+  qualimap_results = Channel.from(false)
+  sample_correlation_results = Channel.from(false)
+  featureCounts_logs = Channel.from(false)
+  dupradar_results = Channel.from(false)
+  preseq_results = Channel.from(false)
+  featureCounts_biotype = Channel.from(false)
 }
 
 

@@ -693,7 +693,7 @@ if(params.aligner == 'star'){
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
         def star_mem = task.memory ?: params.star_memory ?: false
         def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-        seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+        seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
         """
         STAR --genomeDir $index \\
             --sjdbGTFfile $gtf \\
@@ -704,7 +704,7 @@ if(params.aligner == 'star'){
             --outSAMtype BAM SortedByCoordinate $avail_mem \\
             --readFilesCommand zcat \\
             --runDirPerm All_RWX \\
-             --outFileNamePrefix $prefix $seqCenter
+             --outFileNamePrefix $prefix $seq_center
 
         samtools index ${prefix}Aligned.sortedByCoord.out.bam
         """
@@ -747,7 +747,7 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        seqCenter = params.seqCenter ? "--rg-id ${prefix} --rg CN:${params.seqCenter.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"        
+        seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"        
         def rnastrandness = ''
         if (forwardStranded && !unStranded){
             rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
@@ -763,7 +763,7 @@ if(params.aligner == 'hisat2'){
                    -p ${task.cpus} \\
                    --met-stderr \\
                    --new-summary \\
-                   --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
             """
         } else {
@@ -778,7 +778,7 @@ if(params.aligner == 'hisat2'){
                    -p ${task.cpus} \\
                    --met-stderr \\
                    --new-summary \\
-                   --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
             """
         }
@@ -1020,9 +1020,9 @@ process featureCounts {
     file biotypes_header from ch_biotypes_header.collect()
 
     output:
-    file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
-    file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-    file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
+    file "${bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+    file "${bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'}_gene.featureCounts.txt.summary" into featureCounts_logs
+    file "${bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
 
     script:
     def featureCounts_direction = 0
@@ -1033,15 +1033,15 @@ process featureCounts {
         featureCounts_direction = 2
     }
     // Try to get real sample name
-    sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
+    sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'
     """
-    featureCounts -a $gtf -g ${params.fc_group_features} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
-    featureCounts -a $gtf -g $biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
-    mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
+    ln -s $bam_featurecounts ${sample_name}.bam
+    featureCounts -a $gtf -g ${params.fc_group_features} -o ${sample_name}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction ${sample_name}.bam
+    featureCounts -a $gtf -g ${params.fc_group_features_type} -o ${sample_name}_biotype.featureCounts.txt -p -s $featureCounts_direction ${sample_name}.bam
+    cut -f 1,7 ${sample_name}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${sample_name}_biotype_counts_mqc.txt
+    mqc_features_stat.py ${sample_name}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${sample_name}_biotype_counts_gs_mqc.tsv
     """
 }
-
 
 
 /*
@@ -1064,7 +1064,7 @@ process merge_featureCounts {
     gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,7 )"
     counts = input_files.collect{filename ->
       // Remove first line and take third column
-      "<(tail -n +2 ${filename} | sed 's:.sorted.bam::' | cut -f8)"}.join(" ")
+      "<(tail -n +2 ${filename} | sed 's:.bam::' | cut -f8)"}.join(" ")
     """
     paste $gene_ids $counts > merged_gene_counts.txt
     """

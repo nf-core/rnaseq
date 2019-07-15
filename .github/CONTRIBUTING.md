@@ -6,7 +6,9 @@ We try to manage the required tasks for nf-core/rnaseq using GitHub issues, you 
 
 However, don't be put off by this template - other more general issues and suggestions are welcome! Contributions to the code are even more welcome ;)
 
-> If you need help using or modifying nf-core/rnaseq then the best place to go is the Gitter chatroom where you can ask us questions directly: https://gitter.im/nf-core/Lobby
+> If you need help using or modifying nf-core/rnaseq then the best place to ask is on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).
+
+
 
 ## Contribution workflow
 If you'd like to write some code for nf-core/rnaseq, the standard workflow
@@ -30,7 +32,7 @@ Typically, pull-requests are only fully reviewed when these tests are passing, t
 There are typically two types of tests that run:
 
 ### Lint Tests
-The nf-core has a [set of guidelines](http://nf-co.re/guidelines) which all pipelines must adhere to.
+The nf-core has a [set of guidelines](https://nf-co.re/developers/guidelines) which all pipelines must adhere to.
 To enforce these and ensure that all pipelines stay in sync, we have developed a helper tool which runs checks on the pipeline code. This is in the [nf-core/tools repository](https://github.com/nf-core/tools) and once installed can be run locally with the `nf-core lint <pipeline-directory>` command.
 
 If any failures or warnings are encountered, please follow the listed URL for more documentation.
@@ -42,4 +44,4 @@ If there are any failures then the automated tests fail.
 These tests are run both with the latest available version of Nextflow and also the minimum required version that is stated in the pipeline code.
 
 ## Getting help
-For further information/help, please consult the [nf-core/rnaseq documentation](https://github.com/nf-core/rnaseq#documentation) and don't hesitate to get in touch on [Gitter](https://gitter.im/nf-core/Lobby)
+For further information/help, please consult the [nf-core/rnaseq documentation](https://github.com/nf-core/rnaseq#documentation) and don't hesitate to get in touch on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).

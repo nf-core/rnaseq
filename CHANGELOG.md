@@ -2,19 +2,52 @@
 
 ## Version 1.4dev
 
-#### Pipeline updates
+### Pipeline updates
 
+* Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
+* Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
+* Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
+* Resolved link to guidelines is broken [#203](https://github.com/nf-core/rnaseq/issues/203)
+* Removed unnecessary `stringtie` channels for `MultiQC`
+* Added tximport to merge salmon output
+* Added Salmon as an supplementary method to STAR and HiSAT2
+* Added `--psuedo_aligner`, `--transcript_fasta` and `--salmon_index` parameters
+* Add `Citation` and `Quick Start` section to `README.md`
+* Closed missing multiqc_plots in dev branch output [#200](https://github.com/nf-core/rnaseq/issues/200)
+* Integrate changes in `nf-core/tools v1.6` template which resolved [#90](https://github.com/nf-core/rnaseq/issues/90)
+* Moved process "convertGFFtoGTF" before "makeSTARindex" [#215](https://github.com/nf-core/rnaseq/issues/215)
+* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
+* Change all boolean parameters from snake_case to camelCase and vice versa for value parameters
 * Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
+* Add SM ReadGroup info for QualiMap compatibility[#238](https://github.com/nf-core/rnaseq/issues/238)
 * Obtain edgeR + dupRadar version information [#198](https://github.com/nf-core/rnaseq/issues/198) and [#112](https://github.com/nf-core/rnaseq/issues/112)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
 * Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
+* Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
+* Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to
+
+### Dependency Updates
+
+* Picard 2.20.0 -> 2.20.2
+* bioconductor-dupradar 1.12.1 -> 1.14.0
+* bioconductor-edger 3.24.3 -> 3.26.0
+* csvtk 0.17.0 -> 0.18.2
+* gffread 0.9.12 -> 0.11.4
+* qualimap 2.2.2b -> 2.2.2c
+* trim-galore 0.6.1 -> 0.6.2
+* gffread 0.9.12 -> 0.11.4
+* Force matplotlib=3.0.3
+* Added Salmon 0.14.0
+* Added RSEM 1.3.2
+* Added tximport 1.0.3
+* Added SummarizedExperiment 1.12.0
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 
-#### Pipeline Updates
+### Pipeline Updates
 
 * Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
 * Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
@@ -22,15 +55,16 @@
 * Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
 * Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
 * Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
+* Add option for Trimming NextSeq data properly ([@jburos work](https://github.com/jburos))
 
-#### Bug fixes
+### Bug fixes
 
 * Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)
 * Fixing HISAT2 BAM sorting using more memory than available on the system
 * Fixing MarkDuplicates memory consumption issues following [#179](https://github.com/nf-core/rnaseq/pull/179)
+* Use `file` instead of `new File` to create the `pipeline_report.{html,txt}` files to avoid creating local directories when outputting to AWS S3 folders
 
-
-#### Dependency Updates
+### Dependency Updates
 
 * RSeQC 2.6.4 -> 3.0.0
 * Picard 2.18.15 -> 2.20.0
@@ -45,10 +79,13 @@
 * deeptools 3.2.0 -> 3.2.1
 * trim-galore 0.5.0 -> 0.6.1
 * qualimap 2.2.2b
+* matplotlib 3.0.3
+* r-base 3.5.1
 
 ## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
-#### Pipeline updates
+### Pipeline updates
+
 * Removed some outdated documentation about non-existent features
 * Config refactoring and code cleaning
 * Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
@@ -58,26 +95,27 @@
   * Added documentation about the `--hisatBuildMemory` option.
 * BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
 
-#### Bug Fixes
+### Bug Fixes
+
 * Fixed conda bug which caused problems with environment resolution due to changes in bioconda [#113](https://github.com/nf-core/rnaseq/issues/113)
 * Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
 * Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
 
-
 ## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 
-#### Pipeline updates
+### Pipeline updates
+
 * Wrote docs and made minor tweaks to the `--skip_qc` and associated options
 * Removed the depreciated `uppmax-modules` config profile
 * Updated the `hebbe` config profile to use the new `withName` syntax too
 * Use new `workflow.manifest` variables in the pipeline script
 * Updated minimum nextflow version to `0.32.0`
 
-#### Bug Fixes
+### Bug Fixes
+
 * [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
 * [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
 * [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
-
 
 ## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
 

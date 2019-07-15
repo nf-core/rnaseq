@@ -14,6 +14,7 @@ regexes = {
     'Picard MarkDuplicates': ['v_markduplicates.txt', r"([\d\.]+)-SNAPSHOT"],
     'Samtools': ['v_samtools.txt', r"samtools (\S+)"],
     'featureCounts': ['v_featurecounts.txt', r"featureCounts v(\S+)"],
+    'Salmon': ['v_salmon.txt', r"salmon (\S+)"],
     'deepTools': ['v_deeptools.txt', r"bamCoverage (\S+)"],
     'StringTie': ['v_stringtie.txt', r"(\S+)"],
     'Preseq': ['v_preseq.txt', r"Version: (\S+)"],
@@ -34,6 +35,7 @@ results['HISAT2'] = False
 results['Picard MarkDuplicates'] = '<span style="color:#999999;\">N/A</span>'
 results['Samtools'] = '<span style="color:#999999;\">N/A</span>'
 results['featureCounts'] = '<span style="color:#999999;\">N/A</span>'
+results['Salmon'] = '<span style="color:#999999;\">N/A</span>'
 results['StringTie'] = '<span style="color:#999999;\">N/A</span>'
 results['Preseq'] = '<span style="color:#999999;\">N/A</span>'
 results['deepTools'] = '<span style="color:#999999;\">N/A</span>'

@@ -1,8 +1,8 @@
 extra_fn_clean_exts:
-    - _R1
-    - _R2
-    - .hisat
-    - '.sorted.markDups'
+    - '_R1'
+    - '_R2'
+    - '.hisat'
+    - '_subsamp'
     - '.sorted'
 
 report_comment: >

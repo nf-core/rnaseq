@@ -221,18 +221,20 @@ if( params.gtf ){
         .fromPath(params.gtf)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .set { ch_genome_gtf }
-
   } else {
     Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
-                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
+        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex;
+                gtf_makeSalmonIndex; gtf_makeBED12; gtf_star; gtf_dupradar;
+                gtf_qualimap; gtf_featureCounts; gtf_stringtieFPKM;
+                gtf_salmon; gtf_salmon_merge }
+  }
 } else if ( params.gff ){
-    gffFile = Channel.fromPath(params.gff, checkIfExists: true)
-                  .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
-} else {
-    exit 1, "No GTF or GFF3 annotation specified!"
+      gffFile = Channel.fromPath(params.gff, checkIfExists: true)
+                    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
+  } else {
+      exit 1, "No GTF or GFF3 annotation specified!"
 }
 
 if( params.bed12 ){
@@ -444,7 +446,7 @@ if ( params.additional_fasta ){
 
     output:
     file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index)
-    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM)
+    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge)
 
     script:
     main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()

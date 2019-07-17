@@ -44,3 +44,5 @@ script:
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2
   # Run with STAR and Salmon
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon
+  # Run with Salmon and no alignment
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon --skipAlignment

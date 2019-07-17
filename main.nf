@@ -672,6 +672,7 @@ def check_log(logs) {
         return true
     }
 }
+<<<<<<< HEAD
 if (!params.skipAlignment){
   if(params.aligner == 'star'){
       hisat_stdout = Channel.from(false)
@@ -862,6 +863,61 @@ if (!params.skipAlignment){
 
       when:
       !params.skipQC && !params.skipRseQC
+=======
+if(params.aligner == 'star'){
+    hisat_stdout = Channel.from(false)
+    process star {
+        label 'high_memory'
+        tag "$name"
+        publishDir "${params.outdir}/STAR", mode: 'copy',
+            saveAs: {filename ->
+                if (filename.indexOf(".bam") == -1) "logs/$filename"
+                else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
+                else null
+            }
+
+        input:
+        set val(name), file(reads) from trimmed_reads_alignment
+        file index from star_index.collect()
+        file gtf from gtf_star.collect()
+        file wherearemyfiles from ch_where_star.collect()
+
+        output:
+        set file("*Log.final.out"), file ('*.bam') into star_aligned
+        file "*.out" into alignment_logs
+        file "*SJ.out.tab"
+        file "*Log.out" into star_log
+        file "where_are_my_files.txt"
+        file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
+
+        script:
+        prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+        def star_mem = task.memory ?: params.star_memory ?: false
+        def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
+        seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+        """
+        STAR --genomeDir $index \\
+            --sjdbGTFfile $gtf \\
+            --readFilesIn $reads  \\
+            --runThreadN ${task.cpus} \\
+            --twopassMode Basic \\
+            --outWigType bedGraph \\
+            --outSAMtype BAM SortedByCoordinate $avail_mem \\
+            --readFilesCommand zcat \\
+            --runDirPerm All_RWX \\
+             --outFileNamePrefix $prefix $seq_center
+
+        samtools index ${prefix}Aligned.sortedByCoord.out.bam
+        """
+    }
+    // Filter removes all 'aligned' channels that fail the check
+    star_aligned
+        .filter { logs, bams -> check_log(logs) }
+        .flatMap {  logs, bams -> bams }
+    .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+}
+>>>>>>> dev
 
       input:
       file bam_rseqc
@@ -890,8 +946,60 @@ if (!params.skipAlignment){
       tag "${bam_preseq.baseName - '.sorted'}"
       publishDir "${params.outdir}/preseq", mode: 'copy'
 
+<<<<<<< HEAD
       when:
       !params.skipQC && !params.skipPreseq
+=======
+        script:
+        index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
+        prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+        seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"        
+        def rnastrandness = ''
+        if (forwardStranded && !unStranded){
+            rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
+        } else if (reverseStranded && !unStranded){
+            rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
+        }
+        if (params.singleEnd) {
+            """
+            hisat2 -x $index_base \\
+                   -U $reads \\
+                   $rnastrandness \\
+                   --known-splicesite-infile $alignment_splicesites \\
+                   -p ${task.cpus} \\
+                   --met-stderr \\
+                   --new-summary \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                   | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
+            """
+        } else {
+            """
+            hisat2 -x $index_base \\
+                   -1 ${reads[0]} \\
+                   -2 ${reads[1]} \\
+                   $rnastrandness \\
+                   --known-splicesite-infile $alignment_splicesites \\
+                   --no-mixed \\
+                   --no-discordant \\
+                   -p ${task.cpus} \\
+                   --met-stderr \\
+                   --new-summary \\
+                   --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                   | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
+            """
+        }
+    }
+
+    process hisat2_sortOutput {
+        label 'mid_memory'
+        tag "${hisat2_bam.baseName}"
+        publishDir "${params.outdir}/HISAT2", mode: 'copy',
+            saveAs: { filename ->
+                if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
+                else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
+                else null
+            }
+>>>>>>> dev
 
       input:
       file bam_preseq
@@ -1126,6 +1234,7 @@ if (!params.skipAlignment){
       """
   }
 
+<<<<<<< HEAD
   /*
    * STEP 13 - edgeR MDS and heatmap
    */
@@ -1136,6 +1245,31 @@ if (!params.skipAlignment){
 
       when:
       !params.skipQC && !params.skipEdgeR
+=======
+    output:
+    file "${bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+    file "${bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'}_gene.featureCounts.txt.summary" into featureCounts_logs
+    file "${bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
+
+    script:
+    def featureCounts_direction = 0
+    def extraAttributes = params.fc_extra_attributes ? "--extraAttributes ${params.fc_extra_attributes}" : ''
+    if (forwardStranded && !unStranded) {
+        featureCounts_direction = 1
+    } else if (reverseStranded && !unStranded){
+        featureCounts_direction = 2
+    }
+    // Try to get real sample name
+    sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '.sorted' - '_subsamp'
+    """
+    ln -s $bam_featurecounts ${sample_name}.bam
+    featureCounts -a $gtf -g ${params.fc_group_features} -o ${sample_name}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction ${sample_name}.bam
+    featureCounts -a $gtf -g ${params.fc_group_features_type} -o ${sample_name}_biotype.featureCounts.txt -p -s $featureCounts_direction ${sample_name}.bam
+    cut -f 1,7 ${sample_name}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${sample_name}_biotype_counts_mqc.txt
+    mqc_features_stat.py ${sample_name}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${sample_name}_biotype_counts_gs_mqc.tsv
+    """
+}
+>>>>>>> dev
 
       input:
       file input_files from geneCounts.collect()
@@ -1143,11 +1277,21 @@ if (!params.skipAlignment){
       file mdsplot_header from ch_mdsplot_header
       file heatmap_header from ch_heatmap_header
 
+<<<<<<< HEAD
       output:
       file "*.{txt,pdf,csv}" into sample_correlation_results
 
       when:
       num_bams > 2 && (!params.sampleLevel)
+=======
+/*
+ * STEP 10 - Merge featurecounts
+ */
+process merge_featureCounts {
+    label "mid_memory"
+    tag "${input_files[0].baseName - '.sorted'}"
+    publishDir "${params.outdir}/featureCounts", mode: 'copy'
+>>>>>>> dev
 
       script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
       """
@@ -1160,6 +1304,7 @@ if (!params.skipAlignment){
   }
 
 
+<<<<<<< HEAD
 } else {
   star_log = Channel.from(false)
   hisat_stdout = Channel.from(false)
@@ -1171,6 +1316,18 @@ if (!params.skipAlignment){
   dupradar_results = Channel.from(false)
   preseq_results = Channel.from(false)
   featureCounts_biotype = Channel.from(false)
+=======
+    script:
+    // Redirection (the `<()`) for the win!
+    // Geneid in 1st column and gene_name in 7th
+    gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,7 )"
+    counts = input_files.collect{filename ->
+      // Remove first line and take third column
+      "<(tail -n +2 ${filename} | sed 's:.bam::' | cut -f8)"}.join(" ")
+    """
+    paste $gene_ids $counts > merged_gene_counts.txt
+    """
+>>>>>>> dev
 }
 
 

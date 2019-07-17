@@ -20,6 +20,9 @@ if(is.na(threads) || (threads<=0)) stop("Fifth argument <nbThreads> must be a st
 
 # Remove bam file extension to generate basename
 input_bam_basename <- gsub(bamRegex, "\\1", input_bam)
+input_bam_basename <- gsub("_subsamp.*", "", input_bam_basename)
+input_bam_basename <- gsub("\\.sorted.*", "", input_bam_basename)
+input_bam_basename <- gsub("Aligned.*", "", input_bam_basename)
 
 # Debug messages (stderr)
 message("Input bam      (Arg 1): ", input_bam)

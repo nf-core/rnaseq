@@ -27,6 +27,7 @@
 * Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
 * Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
 * Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
+* Add `--skipAlignment` option to only use pseudo-alignment and no alignment with STAR or HiSat2
 
 ### Dependency Updates
 

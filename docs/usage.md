@@ -26,6 +26,7 @@
   * [`--saveTrimmed`](#--savetrimmed)
   * [`--saveAlignedIntermediates`](#--savealignedintermediates)
   * [`--gencode`](#--gencode)
+  * [`--skipAlignment`](#--skipAlignment)
 * [Adapter Trimming](#adapter-trimming)
   * [`--clip_r1 [int]`](#--clip_r1-int)
   * [`--clip_r2 [int]`](#--clip_r2-int)
@@ -277,6 +278,10 @@ As above, by default intermediate BAM files from the alignment will not be saved
 If your `--gtf` file is in GENCODE format and you would like to run Salmon (`--pseudo_aligner salmon`) you will need to provide this parameter in order to build the Salmon index appropriately. The `params.fc_group_features_type=gene_type` will also be set as explained below.
 
 [GENCODE](gencodegenes.org/) gene annotations are slightly different from ENSEMBL or iGenome annotations in two ways.
+
+### `--skipAlignment`
+By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogehter and only get transcript/gene expression counts with pseudoalignment, use this flag. Note that you will also need to specify `--psuedo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
+
 
 #### "Type" of gene
 

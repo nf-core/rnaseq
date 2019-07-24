@@ -24,14 +24,29 @@ def helpMessage() {
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
+<<<<<<< HEAD
     Options:
       --genome                      Name of iGenomes reference
       --singleEnd                   Specifies that the input is single end reads
       --additional_fasta            Additional fasta files containing e.g. ERCCs spike-ins, transgene sequences to map to
+=======
+<<<<<<< HEAD
+    Generic:
+      --singleEnd                   Specifies that the input is single-end reads
+=======
+    Options:
+      --genome                      Name of iGenomes reference
+      --singleEnd                   Specifies that the input is single end reads
+      --transgene_fastas            Additional fasta files containing transgene sequences to map to, comma-separated
+>>>>>>> Deal with either single genome fasta or adding transgene fasta
     Strandedness:
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
       --unstranded                  The default behaviour
+<<<<<<< HEAD
+=======
+>>>>>>> 8eede35... Add process to combine_genome_annotations
+>>>>>>> Deal with either single genome fasta or adding transgene fasta
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --genome                      Name of iGenomes reference

@@ -24,6 +24,7 @@ def helpMessage() {
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
+<<<<<<< HEAD
     Options:
       --singleEnd                   Specifies that the input is single end reads
 
@@ -31,6 +32,10 @@ def helpMessage() {
       --forward_stranded            The library is forward stranded
       --reverse_stranded            The library is reverse stranded
       --unstranded                  The default behaviour
+=======
+    Generic:
+      --singleEnd                   Specifies that the input is single-end reads
+>>>>>>> Fix leftover issues from rebase
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --genome                      Name of iGenomes reference
@@ -39,7 +44,11 @@ def helpMessage() {
       --salmon_index                Path to Salmon index
       --fasta                       Path to genome fasta file
       --transcript_fasta            Path to transcript fasta file
+<<<<<<< HEAD
       --additional_fasta            Additional fasta file(s) containing e.g. ERCCs spike-ins, transgene sequences to map to
+=======
+      --additional_fasta            Additional fasta file(s) containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
+>>>>>>> Fix leftover issues from rebase
       --splicesites                 Path to splice sites file for building HiSat2 index
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
@@ -309,10 +318,7 @@ if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - 
 summary['Strandedness']     = ( unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
 if (params.additional_fasta){
-  summary["Transgenes"] = params.additional_fasta
-if (params.transgene_fasta){
-  summary["Transgenes"] = params.transgene_fasta
->>>>>>> Fix summary output .. again
+  summary["Additional Fasta"] = params.additional_fasta
 }
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
@@ -421,12 +427,12 @@ if ( params.additional_fasta ){
   process make_additional_gtf {
     publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                saveAs: { params.saveReference ? it : null }, mode: 'copy'
-    input:
-      file fasta from ch_additional_fasta_for_gtf
 
     output:
       file "${fasta.baseName}.gtf" into ch_additional_gtf
 
+    input:
+      file fasta from ch_additional_fasta_for_gtf
 
     """
     fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
@@ -452,7 +458,7 @@ if ( params.additional_fasta ){
     main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
 
     transgenomes = additional_fasta.collect{ it.getBaseName() }.sort().join("+")
-    genome_name = "${main_genome_name}_plus"
+    genome_name = "${main_genome_name}__${transgenomes}"
     """
     cat $genome_fasta $additional_fasta > ${genome_name}.fa
     cat $genome_gtf $additional_gtf > ${genome_name}.gtf

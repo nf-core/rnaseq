@@ -40,6 +40,7 @@ def helpMessage() {
       --salmon_index                Path to Salmon index
       --fasta                       Path to genome fasta file
       --transcript_fasta            Path to transcript fasta file
+      --transgene_fasta             Additional fasta file(s) containing transgene sequences to map to
       --splicesites                 Path to splice sites file for building HiSat2 index
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
@@ -168,9 +169,6 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
 }
 else if ( params.fasta ){
   if ( params.additional_fasta ){
-      // transgene_paths = params.additional_fasta?.toString()?.tokenize(",")
-      // transgene_names = transgene_paths.each{ it -> it.getBaseName() }
-
       Channel.fromPath(params.additional_fasta)
              .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
              .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
@@ -825,7 +823,7 @@ if(params.aligner == 'hisat2'){
         script:
         index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
         prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-        seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"        
+        seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
         def rnastrandness = ''
         if (forwardStranded && !unStranded){
             rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'

@@ -167,24 +167,12 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' ){
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta ){
-<<<<<<< HEAD
   if ( params.additional_fasta ){
       Channel.fromPath(params.additional_fasta)
              .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
              .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
      Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-=======
-  if ( params.transgene_fastas ){
-      // transgene_paths = params.transgene_fastas?.toString()?.tokenize(",")
-      // transgene_names = transgene_paths.each{ it -> it.getBaseName() }
-
-      Channel.fromPath(params.transgene_fastas)
-             .ifEmpty { exit 1, "Fasta file not found: ${params.transgene_fastas}" }
-             .into { ch_transgene_fastas_for_gtf; ch_transgene_fastas_to_concat }
-     Channel.fromPath(params.fasta)
-            .ifEmpty { exit 1, "Fasta file not found: ${params.fasta}" }
->>>>>>> Fix summary output
             .set { ch_genome_fasta }
   } else {
     Channel.fromPath(params.fasta)
@@ -234,7 +222,6 @@ if( params.gtf ){
     Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-<<<<<<< HEAD
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex;
                 gtf_makeSalmonIndex; gtf_makeBED12; gtf_star; gtf_dupradar;
                 gtf_qualimap; gtf_featureCounts; gtf_stringtieFPKM;
@@ -245,15 +232,6 @@ if( params.gtf ){
                     .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
   } else {
       exit 1, "No GTF or GFF3 annotation specified!"
-=======
-        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
-                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
-} else if ( params.gff ){
-    gffFile = Channel.fromPath(params.gff, checkIfExists: true)
-                  .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
-} else {
-    exit 1, "No GTF or GFF3 annotation specified!"
->>>>>>> Fix summary output
 }
 
 if( params.bed12 ){
@@ -330,13 +308,11 @@ if(params.genome) summary['Genome'] = params.genome
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
-<<<<<<< HEAD
 if (params.additional_fasta){
   summary["Transgenes"] = params.additional_fasta
-=======
-if (params.transgene_fastas){
-  summary["Transgenes"] = params.transgene_fastas
->>>>>>> Fix summary output
+if (params.transgene_fasta){
+  summary["Transgenes"] = params.transgene_fasta
+>>>>>>> Fix summary output .. again
 }
 if(params.aligner == 'star'){
     summary['Aligner'] = "STAR"
@@ -451,11 +427,6 @@ if ( params.additional_fasta ){
     output:
       file "${fasta.baseName}.gtf" into ch_additional_gtf
 
-<<<<<<< HEAD
-=======
-  input:
-    file fasta from ch_transgene_fasta
->>>>>>> Fix summary output
 
     """
     fasta2gtf.py -o ${fasta.baseName}.gtf $fasta

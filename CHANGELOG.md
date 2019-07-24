@@ -29,6 +29,7 @@
 * Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
 * Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to
+* Add `--skipAlignment` option to only use pseudo-alignment and no alignment with STAR or HiSat2
 
 ### Dependency Updates
 

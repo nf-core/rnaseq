@@ -46,3 +46,5 @@ script:
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon
   # Run with Salmon and no alignment
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon --skipAlignment
+  # Run with GFF input and STAR + Salmon
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gff,docker --pseudo_aligner salmon

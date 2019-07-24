@@ -24,18 +24,8 @@ def helpMessage() {
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
-<<<<<<< HEAD
-    Options:
-      --singleEnd                   Specifies that the input is single end reads
-
-    Strandedness:
-      --forward_stranded            The library is forward stranded
-      --reverse_stranded            The library is reverse stranded
-      --unstranded                  The default behaviour
-=======
     Generic:
       --singleEnd                   Specifies that the input is single-end reads
->>>>>>> Fix leftover issues from rebase
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --genome                      Name of iGenomes reference
@@ -44,11 +34,7 @@ def helpMessage() {
       --salmon_index                Path to Salmon index
       --fasta                       Path to genome fasta file
       --transcript_fasta            Path to transcript fasta file
-<<<<<<< HEAD
-      --additional_fasta            Additional fasta file(s) containing e.g. ERCCs spike-ins, transgene sequences to map to
-=======
       --additional_fasta            Additional fasta file(s) containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
->>>>>>> Fix leftover issues from rebase
       --splicesites                 Path to splice sites file for building HiSat2 index
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
@@ -447,8 +433,8 @@ if ( params.additional_fasta ){
     input:
     file genome_fasta from ch_genome_fasta
     file genome_gtf from ch_genome_gtf
-    file additional_fasta from ch_additional_fasta_to_concat
-    file additional_gtf from ch_additional_gtf
+    file additional_fasta from ch_additional_fasta_to_concat.collect()
+    file additional_gtf from ch_additional_gtf.collect()
 
     output:
     file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index)

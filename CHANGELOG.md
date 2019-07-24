@@ -46,6 +46,7 @@
 * Added tximport 1.0.3
 * Added SummarizedExperiment 1.12.0
 
+
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 
 ### Pipeline Updates

@@ -190,7 +190,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
         ch_fasta_for_salmon_index = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
-    } else if (params.fasta && params.gtf) {
+    } else if (params.fasta && (params.gtf || params.gff)) {
       ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
           .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
     } else if (!params.gff){

@@ -27,6 +27,7 @@
   * [`--saveAlignedIntermediates`](#--savealignedintermediates)
   * [`--additional_fasta`](#--additional_fasta)
   * [`--gencode`](#--gencode)
+  * [`--additional_fasta`](#--additional_fasta)
 * [Adapter Trimming](#adapter-trimming)
   * [`--clip_r1 [int]`](#--clip_r1-int)
   * [`--clip_r2 [int]`](#--clip_r2-int)
@@ -319,6 +320,8 @@ GENCODE version:
 
 This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
 
+### `--additional_fasta`
+If provided, any genes here will get concatenated to the existing genome fasta, a GTF will be automatically created using the entire sequence as the "gene," "transcript," and "exon," and the alignment index will get created off of the combined fasta and GTF. It is recommended to save the reference so you do not need to create it again.
 
 ## Adapter Trimming
 If specific additional trimming is required (for example, from additional tags),

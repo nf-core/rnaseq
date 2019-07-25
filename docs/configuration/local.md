@@ -37,7 +37,7 @@ First, pull the image file where you have an internet connection:
 > Make sure that this tag corresponds to the version of the pipeline that you're using
 
 ```bash
-singularity pull --name nf-core-rnaseq-1.3.img docker://nf-core/rnaseq:1.3
+singularity pull --name nf-core-rnaseq-1.3.img docker://nfcore/rnaseq:1.3
 ```
 
 Then transfer this file and run the pipeline with this path:

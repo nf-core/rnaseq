@@ -910,9 +910,10 @@ if (!params.skipAlignment){
    */
   process markDuplicates {
       tag "${bam.baseName - '.sorted'}"
+      container "quay.io/biocontainers/adam:0.28.0--0"
       publishDir "${params.outdir}/markDuplicates", mode: 'copy',
           saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
-
+    
       when:
       !params.skipQC && !params.skipDupRadar
 
@@ -920,22 +921,46 @@ if (!params.skipAlignment){
       file bam from bam_markduplicates
 
       output:
-      file "${bam.baseName}.markDups.bam" into bam_md
+      file "${bam.baseName}.markDups.bam" into bam_md_need_index
       file "${bam.baseName}.markDups_metrics.txt" into picard_results
-      file "${bam.baseName}.markDups.bam.bai"
 
-      script:
-      markdup_java_options = (task.memory.toGiga() > 8) ? ${params.markdup_java_options} : "\"-Xms" +  (task.memory.toGiga() / 2 )+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
       """
-      picard ${markdup_java_options} MarkDuplicates \\
-          INPUT=$bam \\
-          OUTPUT=${bam.baseName}.markDups.bam \\
-          METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
-          REMOVE_DUPLICATES=false \\
-          ASSUME_SORTED=true \\
-          PROGRAM_RECORD_ID='null' \\
-          VALIDATION_STRINGENCY=LENIENT
-      samtools index ${bam.baseName}.markDups.bam
+      adam-submit \
+        ${params.spark_options} \
+        -- \
+        transformAlignments \
+        -single \
+        -mark_duplicate_reads \
+        -sort_by_reference_position_and_index \
+        ${bam} \
+        ${bam.baseName}.markDups.bam
+
+      touch ${bam.baseName}.markDups_metrics.txt
+      """
+      // samtools isn't in the adam docker image
+      //samtools index ${bam.baseName}.markDups.bam
+  }
+
+  /*
+   * STEP 6.1 - Index MarkDuplicate BAMs
+   */
+  process indexBm {
+      tag "${bam.baseName - '.sorted'}"
+      publishDir "${params.outdir}/markDuplicates", mode: 'copy',
+          saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
+    
+      when:
+      !params.skipQC && !params.skipDupRadar
+
+      input:
+      file bam from bam_md_need_index     
+
+      output:
+      file bam into bam_md
+      file "${bam}.bai"
+
+      """
+      samtools index $bam
       """
   }
 
@@ -1081,6 +1106,7 @@ if (!params.skipAlignment){
       paste $gene_ids $counts > merged_gene_counts.txt
       """
   }
+
 
   /*
    * STEP 12 - stringtie FPKM

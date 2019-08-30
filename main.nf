@@ -408,7 +408,7 @@ if(params.gff){
 
         script:
         """
-        gffread $gff -T -o ${gff.baseName}.gtf
+        gffread $gff -F -T -o ${gff.baseName}.gtf
         """
     }
 }
@@ -557,6 +557,7 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
             file "*.fa" into ch_fasta_for_salmon_index
 
             script:
+	    // filter_gtf_for_genes_in_genome.py is bundled in this package, in in rnaseq/bin
             """
 filter_gtf_for_genes_in_genome.py $gtf $fasta ${gtf.baseName}__in__${genome.baseName}.gtf
             gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}__in__${genome.baseName}.gtf

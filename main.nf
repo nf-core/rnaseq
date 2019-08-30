@@ -1046,7 +1046,7 @@ if (!params.skipAlignment){
           featureCounts_direction = 2
       }
       // Try to get real sample name
-      sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
+      sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '_subsamp.sorted'
       """
       featureCounts -a $gtf -g ${params.fc_group_features} -t ${params.fc_count_type} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
       featureCounts -a $gtf -g $biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts

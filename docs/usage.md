@@ -17,6 +17,7 @@
 * [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
   * [Default Attribute Type](#default-attribute-type)
   * [Extra Gene Names](#extra-gene-names)
+  * [Default Attribute](#default-type)
 * [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
 * [Alignment tool](#alignment-tool)
 * [Reference genomes](#reference-genomes)
@@ -186,7 +187,6 @@ These flags affect the commands used for several steps in the pipeline - namely 
 ## FeatureCounts Extra Gene Names
 
 ### Default Attribute Type
-
 By default, the pipeline uses `gene_name` as the default gene identifier group. In case you need to adjust this, specify using the option `--fc_group_features` to use a different category present in your provided GTF file. Please also take care to use a suitable attribute to categorize the `biotype` of the selected features in your GTF then, using the option `--fc_group_features_type` (default: `gene_biotype`).
 
 ### Extra Gene Names
@@ -195,6 +195,9 @@ This behaviour can be modified by specifying `--fc_extra_attributes` when runnin
 See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
 Note that you can also specify more than one desired value, separated by a comma:
 ``--fc_extra_attributes gene_id,...``
+
+### Default Type
+By default, the pipeline uses `exon` as the default to assign reads. In case you need to adjust this, specify using the option `--fc_count_type` to use a different category present in your provided GTF file (3rd column).
 
 ## Transcriptome mapping with Salmon
 

@@ -66,6 +66,7 @@ def helpMessage() {
     Read Counting:
       --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
       --fc_group_features           Define the attribute type used to group features. (default: 'gene_id')
+      --fc_count_type               Define the type used to assign reads. (default: 'exon')
       --fc_group_features_type      Define the type attribute used to group features based on the group attribute (default: 'gene_biotype')
 
     QC:
@@ -704,7 +705,7 @@ if (!params.skipAlignment){
           prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           def star_mem = task.memory ?: params.star_memory ?: false
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-          seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+          seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
           """
           STAR --genomeDir $index \\
               --sjdbGTFfile $gtf \\
@@ -715,7 +716,7 @@ if (!params.skipAlignment){
               --outSAMtype BAM SortedByCoordinate $avail_mem \\
               --readFilesCommand zcat \\
               --runDirPerm All_RWX \\
-               --outFileNamePrefix $prefix $seqCenter
+               --outFileNamePrefix $prefix $seq_center
 
           samtools index ${prefix}Aligned.sortedByCoord.out.bam
           """
@@ -758,7 +759,7 @@ if (!params.skipAlignment){
           script:
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
           prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-          seqCenter = params.seqCenter ? "--rg-id ${prefix} --rg CN:${params.seqCenter.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
+          seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
           def rnastrandness = ''
           if (forwardStranded && !unStranded){
               rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
@@ -774,7 +775,7 @@ if (!params.skipAlignment){
                      -p ${task.cpus} \\
                      --met-stderr \\
                      --new-summary \\
-                     --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
+                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                      | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
               """
           } else {
@@ -789,7 +790,7 @@ if (!params.skipAlignment){
                      -p ${task.cpus} \\
                      --met-stderr \\
                      --new-summary \\
-                     --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
+                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                      | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
               """
           }
@@ -1047,7 +1048,7 @@ if (!params.skipAlignment){
       // Try to get real sample name
       sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out'
       """
-      featureCounts -a $gtf -g ${params.fc_group_features} -t ${params.fc_group_features_count} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
+      featureCounts -a $gtf -g ${params.fc_group_features} -t ${params.fc_count_type} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
       featureCounts -a $gtf -g $biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
       cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
       mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv

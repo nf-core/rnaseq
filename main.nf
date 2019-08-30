@@ -558,7 +558,8 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
 
             script:
             """
-            gffread -w transcripts.fa -g $fasta $gtf
+filter_gtf_for_genes_in_genome.py $gtf $fasta ${gtf.baseName}__in__${genome.baseName}.gtf
+            gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}__in__${genome.baseName}.gtf
             """
         }
     }

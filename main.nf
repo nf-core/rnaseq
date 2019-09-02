@@ -163,18 +163,9 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlign
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta && !params.skipAlignment  ){
-  if ( params.additional_fasta ){
-      Channel.fromPath(params.additional_fasta)
-             .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-             .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
-     Channel.fromPath(params.fasta, checkIfExists: true)
-            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-            .set { ch_genome_fasta }
-  } else {
     Channel.fromPath(params.fasta)
            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
            .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
-  }
 } else if (params.skipAlignment){
   println "Skipping alignment ..."
 }
@@ -189,9 +180,19 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .into { indexing_splicesites; alignment_splicesites }
 }
 
+if (params.additional_fasta){
+  Channel.fromPath(params.additional_fasta)
+         .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+         .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
+  Channel.fromPath(params.fasta, checkIfExists: true)
+        .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+        .set { ch_genome_fasta }
+}
+
 // Separately check for whether salmon needs a genome fasta to extract
 // transcripts from, or can use a transcript fasta directly
 if ( params.pseudo_aligner == 'salmon' ) {
+  println("In params.pseudo_aligner == 'salmon'")
     if ( params.salmon_index ) {
         salmon_index = Channel
             .fromPath(params.salmon_index, checkIfExists: true)
@@ -200,7 +201,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
         ch_fasta_for_salmon_index = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
-    } else if (params.fasta && params.gtf) {
+    } else if (params.fasta) {
       ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
           .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
     } else {
@@ -428,7 +429,7 @@ if ( params.additional_fasta ){
       file fasta from ch_additional_fasta_for_gtf
 
     """
-    fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
+    fasta2gtf.py -o ${fasta.baseName}.gtf ${fasta}
     """
   }
 
@@ -444,8 +445,8 @@ if ( params.additional_fasta ){
     file additional_gtf from ch_additional_gtf.collect()
 
     output:
-    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index)
-    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge)
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
+    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_makeSalmonIndex)
 
     script:
     main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()

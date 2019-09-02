@@ -46,3 +46,7 @@ script:
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon
   # Run with Salmon and no alignment
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon --skipAlignment
+  # Test that making the transcript fasta from scratch works
+  - nextflow run -profile test,docker . --pseudo_aligner salmon --transcript_fasta false
+  # Test that it works without specifying additional fasta
+  - nextflow run -profile test,docker . --pseudo_aligner salmon --additional_fasta false

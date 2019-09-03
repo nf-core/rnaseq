@@ -4,7 +4,7 @@
 
 ### Pipeline updates
 
-* Add option to modify `featureCounts -t` option to assign reads to a different type than `exon`. This makes it compatible with nuclearRNAseq.
+* Add option to modify `featureCounts -t` option to assign reads to a different type than `exon`. This makes it compatible with nuclearRNAseq. For instance, it would count reads in introns and exons if `gene` is used instead. Nuclear RNA has un-spliced RNA, and introns need to be counted.
 * Fix sample names in feature counts and dupRadar to remove suffixes added in other processes
 * Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
 * Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)

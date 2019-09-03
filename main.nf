@@ -398,6 +398,8 @@ process get_software_versions {
 if(params.gff){
     process convertGFFtoGTF {
         tag "$gff"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gff from gffFile

@@ -163,9 +163,16 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlign
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta && !params.skipAlignment ){
+  if (params.compressedReference) {
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-        .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
+        .set { genome_fasta_gz }
+  } else {
+    Channel.fromPath(params.fasta, checkIfExists: true)
+        .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+        .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index; ch_fasta_for_salmon_transcripts }
+  }
+
 } else if (params.skipAlignment){
   println "Skipping alignment ..."
 }
@@ -191,20 +198,28 @@ if ( params.pseudo_aligner == 'salmon' ) {
         ch_fasta_for_salmon_index = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
-    } else if (params.fasta && params.gtf) {
-      ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
-          .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+    } else if ( params.fasta && (params.gff || params.gtf)){
+      log.info "Extracting transcript fastas from genome fasta + gtf/gff"
     } else {
       exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }
 }
 
 if( params.gtf ){
+  if (params.compressedReference){
+    Channel
+        .fromPath(params.gtf, checkIfExists: true)
+        .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
+        .set { gtf_gz }
+
+  } else {
     Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
                 gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
+
+  }
 } else if ( params.gff ){
     gffFile = Channel.fromPath(params.gff, checkIfExists: true)
                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -394,7 +409,62 @@ process get_software_versions {
 }
 
 if (params.compressedReference){
-  
+  if (params.fasta){
+    process gunzip_genome_fasta {
+        tag "$fasta_gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from genome_fasta_gz
+
+        output:
+        file "${gz.baseName}" into ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts
+
+        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        """
+        gunzip -v --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  if (params.gtf){
+    process gunzip_gtf {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from gtf_gz
+
+        output:
+        file "${gz.baseName}" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
+                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap
+
+        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        """
+        gunzip -v --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  // if (params.gff){
+  //   process gunzip_gff {
+  //       tag "$gtf_gz"
+  //       publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+  //                  saveAs: { params.saveReference ? it : null }, mode: 'copy'
+  //
+  //       input:
+  //       file gtf from gtf_gz
+  //
+  //       output:
+  //       file "${gtf_gz.baseName}" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
+  //                                       gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap
+  //
+  //       script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+  //       """
+  //       gunzip -v --force ${gtf_gz} > ${gtf_gz.baseName}
+  //       """
+  //   }
+  // }
 }
 
 /*

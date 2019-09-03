@@ -29,9 +29,10 @@
 * Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
 * Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
 * Add `--skipAlignment` option to only use pseudo-alignment and no alignment with STAR or HiSat2
-* Check that gtf features are on chromosomes that exist in the genome fasta file [#274](https://github.com/nf-core/rnaseq/pull/274) 
+* Check that gtf features are on chromosomes that exist in the genome fasta file [#274](https://github.com/nf-core/rnaseq/pull/274)
 * Maintain all gff features upon gtf conversion (keeps gene_biotype)
-	
+
+
 ### Dependency Updates
 
 * Picard 2.20.0 -> 2.20.2

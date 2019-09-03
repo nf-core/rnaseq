@@ -40,6 +40,7 @@ def helpMessage() {
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
       --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
+      --compressedReference         If provided, all reference files are assumed to be gzipped and will be unzipped before using
 
     Strandedness:
       --forwardStranded             The library is forward stranded
@@ -390,6 +391,10 @@ process get_software_versions {
     unset DISPLAY && qualimap rnaseq  > v_qualimap.txt 2>&1 || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
+}
+
+if (params.compressedReference){
+  
 }
 
 /*

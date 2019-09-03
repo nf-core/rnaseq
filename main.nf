@@ -163,9 +163,19 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlign
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
 }
 else if ( params.fasta && !params.skipAlignment  ){
-    Channel.fromPath(params.fasta)
-           .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
+    if (params.additional_fasta){
+      Channel.fromPath(params.additional_fasta)
+             .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+             .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
+      Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+            .set { ch_genome_fasta }
+    }
+    else {
+      Channel.fromPath(params.fasta)
+             .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+             .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
+    }
 } else if (params.skipAlignment){
   println "Skipping alignment ..."
 }
@@ -180,14 +190,6 @@ if( params.aligner == 'hisat2' && params.splicesites ){
         .into { indexing_splicesites; alignment_splicesites }
 }
 
-if (params.additional_fasta){
-  Channel.fromPath(params.additional_fasta)
-         .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-         .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
-  Channel.fromPath(params.fasta, checkIfExists: true)
-        .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-        .set { ch_genome_fasta }
-}
 
 // Separately check for whether salmon needs a genome fasta to extract
 // transcripts from, or can use a transcript fasta directly
@@ -198,12 +200,29 @@ if ( params.pseudo_aligner == 'salmon' ) {
             .fromPath(params.salmon_index, checkIfExists: true)
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
     } else if ( params.transcript_fasta ) {
+      if (params.additional_fasta){
+        Channel.fromPath(params.additional_fasta)
+               .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+               .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
+        Channel.fromPath(params.fasta, checkIfExists: true)
+              .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+              .set { ch_genome_fasta }
+        }
         ch_fasta_for_salmon_index = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
     } else if (params.fasta) {
-      ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
-          .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+      if (params.additional_fasta){
+        Channel.fromPath(params.additional_fasta)
+               .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+               .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
+        Channel.fromPath(params.fasta, checkIfExists: true)
+              .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+              .set { ch_genome_fasta }
+      } else {
+        ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+      }
     } else {
       exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }

@@ -46,3 +46,13 @@ script:
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon
   # Run with Salmon and no alignment
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --pseudo_aligner salmon --skipAlignment
+  # Run with gzipped references
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gz,docker
+  # Run without STAR indices
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gz,docker --star_index false
+  # Run with HiSat2 + gzipped reference
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gz,docker --aligner hisat2
+  # Run with HiSat2 + do-it-yourself reference
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gz,docker --aligner hisat2 --hisat2_index false
+  # Run with Salmon + pre-build gzipped indices
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gz,docker --pseudo_aligner salmon

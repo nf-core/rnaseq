@@ -2,18 +2,17 @@ sudo: required
 language: python
 services: docker
 cache: pip
+jdk: openjdk8
+
 matrix:
   fast_finish: true
   include:
   - name: "Minimum Nextflow version, regular test suite"
     env: NXF_VER='0.32.0' SUITE=test
-    jdk: openjdk8
   - name: "Latest Nextflow version, regular test suite"
     env: NXF_VER='' SUITE=test_gz
-    jdk: openjdk8
   - name: "Latest Nextflow version, gzipped references"
     env: NXF_VER='' SUITE=test_gz
-    jdk: openjdk8
   - name: "Lint the pipeline code"
     script: nf-core lint ${TRAVIS_BUILD_DIR}
     python: '3.6'

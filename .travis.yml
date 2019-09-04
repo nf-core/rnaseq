@@ -17,6 +17,7 @@ matrix:
   - name: "Lint the pipeline code"
     script: nf-core lint ${TRAVIS_BUILD_DIR}
     python: '3.6'
+    env: NXF_VER='0.32.0'
   - name: "Lint the documentation"
     script: markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
     python: '3.6'

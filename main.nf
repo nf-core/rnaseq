@@ -395,7 +395,9 @@ process get_software_versions {
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
-if(params.gff){
+// Prefer gtf over gff
+log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
+if(params.gff && !params.gtf){
     process convertGFFtoGTF {
         tag "$gff"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },

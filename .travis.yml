@@ -9,6 +9,7 @@ matrix:
   include:
   - name: "Minimum Nextflow version, regular test suite"
     env: NXF_VER='0.32.0' SUITE=test
+    jdk: openjdk8
   - name: "Latest Nextflow version, regular test suite"
     env: NXF_VER='' SUITE=test_gz
   - name: "Latest Nextflow version, gzipped references"
@@ -17,6 +18,7 @@ matrix:
     script: nf-core lint ${TRAVIS_BUILD_DIR}
     python: '3.6'
     env: NXF_VER='0.32.0'
+    jdk: openjdk8
   - name: "Lint the documentation"
     script: markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
     python: '3.6'

@@ -29,6 +29,7 @@
 * Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
 * Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
 * Add `--skipAlignment` option to only use pseudo-alignment and no alignment with STAR or HiSat2
+* Add `--compressedReference` option to use gzipped genome fasta and gene annotation files, and tar.gz'd STAR, HiSat2 and Salmon indices
 
 ### Dependency Updates
 

@@ -34,6 +34,7 @@ def extract_fasta_seq_names(fasta_name):
 def extract_genes_in_genome(fasta, gtf_in, gtf_out):
     seq_names_in_genome = set(extract_fasta_seq_names(fasta))
     logger.info("Extracted chromosome sequence names from : %s" % fasta)
+    logger.info("\n".join(seq_names_in_genome))
 
     n_total_lines = 0
     n_lines_in_genome = 0

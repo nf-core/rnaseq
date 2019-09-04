@@ -166,7 +166,7 @@ if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
 else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment ){
   if (params.compressedReference){
     hs2_indices_gz = Channel
-        .fromPath("${params.hisat2_index}*", checkIfExists: true)
+        .fromPath("${params.hisat2_index}", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
   } else {
     hs2_indices = Channel
@@ -203,9 +203,15 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 // transcripts from, or can use a transcript fasta directly
 if ( params.pseudo_aligner == 'salmon' ) {
     if ( params.salmon_index ) {
+      if (params.compressedReference) {
+        salmon_index_gz = Channel
+            .fromPath(params.salmon_index, checkIfExists: true)
+            .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+      } else {
         salmon_index = Channel
             .fromPath(params.salmon_index, checkIfExists: true)
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+      }
     } else if ( params.transcript_fasta ) {
       if (params.compressedReference){
         transcript_fasta_gz = Channel
@@ -448,7 +454,7 @@ if (params.compressedReference){
   // need to be extracted.
   if (params.fasta && ((!params.skipAlignment &&
                             !(params.star_index || params.hisat2_index))
-                        || (params.psuedo_aligner == "salmon"
+                        || (params.pseudo_aligner == "salmon"
                               && !(params.transcript_fasta || params.salmon_index)))){
     process gunzip_genome_fasta {
         tag "$gz"
@@ -504,7 +510,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.transcript_fasta && params.pseudo_aligner == 'salmon'){
+  if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index){
     process gunzip_transcript_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
@@ -540,7 +546,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.star_index){
+  if (params.star_index && params.aligner == "star"){
     process gunzip_star_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/star" : params.outdir },
@@ -550,7 +556,7 @@ if (params.compressedReference){
         file gz from star_index_gz
 
         output:
-        file "${gz.baseName}" into star_index
+        file "${gz.simpleName}" into star_index
 
         script:
         // Use tar as the star indices are a folder, not a file
@@ -559,7 +565,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.hisat2_index){
+  if (params.hisat2_index && params.aligner == 'hisat2'){
     process gunzip_hisat_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
@@ -570,6 +576,25 @@ if (params.compressedReference){
 
         output:
         file "*.ht2*" into hs2_indices
+
+        script:
+        // Use tar as the hisat2 indices are a folder, not a file
+        """
+        tar -xzvf ${gz}
+        """
+    }
+  }
+  if (params.salmon_index && params.pseudo_aligner == 'salmon'){
+    process gunzip_salmon_index {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from salmon_index_gz
+
+        output:
+        file "${gz.simpleName}" into salmon_index
 
         script:
         // Use tar as the hisat2 indices are a folder, not a file

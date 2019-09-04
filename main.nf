@@ -504,7 +504,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.transcript_fasta){
+  if (params.transcript_fasta && params.pseudo_aligner == 'salmon'){
     process gunzip_transcript_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },

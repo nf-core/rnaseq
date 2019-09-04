@@ -565,7 +565,7 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
             script:
 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
             """
-            filter_gtf_for_genes_in_genome.py $gtf $fasta ${gtf.baseName}__in__${fasta.baseName}.gtf
+            filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta ${gtf.baseName}__in__${fasta.baseName}.gtf
             gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}__in__${fasta.baseName}.gtf
             """
         }

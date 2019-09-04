@@ -50,12 +50,12 @@ script:
   # Lint the documentation
   - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
   # Run with STAR
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile $SUITE,docker
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker
   # Run with HISAT2
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile $SUITE,docker --aligner hisat2
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker --aligner hisat2
   # Run with STAR and Salmon
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile $SUITE,docker --pseudo_aligner salmon
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker --pseudo_aligner salmon
   # Run with Salmon and no alignment
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile $SUITE,docker --pseudo_aligner salmon --skipAlignment
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker --pseudo_aligner salmon --skipAlignment
   # Additional gzipped-only things that are only invoked if $SUITE=test_gz
   - ./test-gzipped-star-hisat2-indices.sh

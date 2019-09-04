@@ -415,6 +415,8 @@ if(params.gff && !params.gtf){
         gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
         """
     }
+} else {
+  log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
 }
 
 /*

@@ -26,7 +26,7 @@ def extract_fasta_seq_names(fasta_name):
 
     for header in faiter:
         # drop the ">"
-        headerStr = header.__next__()[1:].strip()
+        headerStr = header.__next__()[1:].strip().split()[0]
 
         yield headerStr
 

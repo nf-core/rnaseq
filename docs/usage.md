@@ -26,7 +26,13 @@
   * [`--saveTrimmed`](#--savetrimmed)
   * [`--saveAlignedIntermediates`](#--savealignedintermediates)
   * [`--gencode`](#--gencode)
+    * ["Type" of gene](#type-of-gene)
+    * [Transcript IDs in FASTA files](#transcript-ids-in-fasta-files)
   * [`--skipAlignment`](#--skipAlignment)
+  * [`--compressedReference`](#--compressedReference)
+    * [Create compressed (tar.gz) STAR indices](#create-compressed-tar-gz-star-indices)
+    * [Create compressed (tar.gz) HiSat2 indices](#create-compressed-tar-gz-hisat2-indices)
+    * [Create compressed (tar.gz) Salmon indices](#create-compressed-tar-gz-salmon-indices)
 * [Adapter Trimming](#adapter-trimming)
   * [`--clip_r1 [int]`](#--clip_r1-int)
   * [`--clip_r2 [int]`](#--clip_r2-int)
@@ -279,10 +285,6 @@ If your `--gtf` file is in GENCODE format and you would like to run Salmon (`--p
 
 [GENCODE](gencodegenes.org/) gene annotations are slightly different from ENSEMBL or iGenome annotations in two ways.
 
-### `--skipAlignment`
-By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogehter and only get transcript/gene expression counts with pseudoalignment, use this flag. Note that you will also need to specify `--psuedo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
-
-
 #### "Type" of gene
 
 The `gene_biotype` field which is typically found in Ensembl GTF files contains a key word description regarding the type of gene e.g. `protein_coding`, `lincRNA`, `rRNA`. In GENCODE GTF files this field has been renamed to `gene_type`.
@@ -320,6 +322,51 @@ GENCODE version:
 ```
 
 This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
+
+
+### `--skipAlignment`
+By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogehter and only get transcript/gene expression counts with pseudoalignment, use this flag. Note that you will also need to specify `--psuedo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
+
+
+### `--compressedReference`
+
+By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL
+
+```
+nextflow run --reads 'data/{R1,R2}*.fastq.gz' --compressedReference \
+    --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
+    --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz \
+```
+
+
+This assumes that ALL of the reference files are compressed,
+
+#### Create compressed (tar.gz) STAR indices
+
+STAR indices can be created by using `--saveReference`, and then using `tar` on them:
+
+```
+cd results/reference_genome
+tar -zcvf star.tar.gz star
+```
+
+#### HISAT2 indices
+
+HiSAT2 indices can be created by using `--saveReference`, and then using `tar` on them:
+
+```
+cd results/reference_genome
+tar -zcvf hisat2.tar.gz *.hisat2_*
+```
+
+#### Salmon index
+
+Salmon indices can be created by using `--saveReference`, and then using `tar` on them:
+
+```
+cd results/reference_genome
+tar -zcvf salmon_index.tar.gz salmon_index
+```
 
 
 ## Adapter Trimming

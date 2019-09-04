@@ -469,7 +469,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip -v --force ${gz} > ${gz.baseName}
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }
@@ -488,7 +488,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip -v --force ${gz} > ${gz.baseName}
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }
@@ -506,7 +506,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip -v --force ${gz} > ${gz.baseName}
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }
@@ -524,7 +524,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip -v --force ${gz} > ${gz.baseName}
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }
@@ -542,7 +542,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip -v --force ${gz} > ${gz.baseName}
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }

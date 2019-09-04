@@ -44,10 +44,6 @@ install:
   - sudo apt-get install npm && npm install -g markdownlint-cli
 
 script:
-  # Lint the pipeline code
-  - nf-core lint ${TRAVIS_BUILD_DIR}
-  # Lint the documentation
-  - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
   # Run with STAR
   - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker
   # Run with HISAT2

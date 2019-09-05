@@ -7,13 +7,25 @@ jdk: openjdk8
 matrix:
   fast_finish: true
   include:
-  - name: "Minimum Nextflow version, regular test suite"
-    env: NXF_VER='0.32.0' SUITE=test
+  - name: "Minimum Nextflow version, regular test suite with STAR aligner"
+    env: NXF_VER='0.32.0' SUITE=test FLAGS=
     jdk: openjdk8
-  - name: "Latest Nextflow version, regular test suite"
-    env: NXF_VER='' SUITE=test_gz
-  - name: "Latest Nextflow version, gzipped references"
-    env: NXF_VER='' SUITE=test_gz
+  - name: "Latest Nextflow version, regular test suite with STAR aligner"
+    env: NXF_VER='' SUITE=test FLAGS=
+  - name: "Latest Nextflow version, with HiSat2 aligner"
+    env: NXF_VER='' SUITE=test FLAGS='--aligner hisat2 --skipQC'
+  - name: "Latest Nextflow version, with Salmon pseudo-aligner"
+    env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
+  - name: "Latest Nextflow version, with Salmon pseudo-aligner and skipping alignment"
+    env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
+  - name: "Latest Nextflow version, gzipped references with STAR aligner"
+    env: NXF_VER='' SUITE=test_gz FLAGS=
+  - name: "Latest Nextflow version, gzipped references with HiSat2 aligner"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--aligner hisat2 --skipQC'
+  - name: "Latest Nextflow version, gzipped references with Salmon pseudo-aligner"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC'
+  - name: "Latest Nextflow version, gzipped references with Salmon pseudo-aligner and skipping alignment"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC'
   - name: "Lint the pipeline code"
     script: nf-core lint ${TRAVIS_BUILD_DIR}
     python: '3.6'
@@ -47,12 +59,6 @@ install:
 
 script:
   # Run with STAR
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker
-  # Run with HISAT2
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker --aligner hisat2
-  # Run with STAR and Salmon
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker --pseudo_aligner salmon
-  # Run with Salmon and no alignment
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker --pseudo_aligner salmon --skipAlignment
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker ${FLAGS}
   # Additional gzipped-only things that are only invoked if $SUITE=test_gz
   - ./test-gzipped-star-hisat2-indices.sh

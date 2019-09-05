@@ -9,6 +9,9 @@ logging.basicConfig(format='%(name)s - %(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
+def is_header(line):
+    return line[0] == '>'
+
 
 def extract_fasta_seq_names(fasta_name):
     """
@@ -22,19 +25,20 @@ def extract_fasta_seq_names(fasta_name):
 
     # ditch the boolean (x[0]) and just keep the header or sequence since
     # we know they alternate.
-    faiter = (x[1] for x in groupby(fh, lambda line: line[0] == ">"))
+    faiter = (x[1] for x in groupby(fh, is_header))
 
-    for header in faiter:
-        # drop the ">"
-        headerStr = header.__next__()[1:].strip().split()[0]
-
+    for i, header in enumerate(faiter):
+        line = next(header)
+        if is_header(line):
+            # drop the ">"
+            headerStr = line[1:].strip().split()[0]
         yield headerStr
 
 
 def extract_genes_in_genome(fasta, gtf_in, gtf_out):
     seq_names_in_genome = set(extract_fasta_seq_names(fasta))
     logger.info("Extracted chromosome sequence names from : %s" % fasta)
-    logger.info("\n".join(sorted(x for x in seq_names_in_genome)))
+    logger.info("All chromosome names: " + ", ".join(sorted(x for x in seq_names_in_genome)))
     seq_names_in_gtf = set([])
 
     n_total_lines = 0
@@ -51,8 +55,7 @@ def extract_genes_in_genome(fasta, gtf_in, gtf_out):
                     f.write(line)
     logger.info("Extracted %d / %d lines from %s matching sequences in %s" %
                 (n_lines_in_genome, n_total_lines, gtf_in, fasta))
-    logger.info("All sequence IDs from GTF")
-    logger.info("\n".join(sorted(x for x in seq_name_gtf)))
+    logger.info("All sequence IDs from GTF: " + ", ".join(sorted(x for x in seq_name_gtf)))
 
     logger.info("Wrote matching lines to %s" % gtf_out)
 
@@ -66,4 +69,4 @@ if __name__ == "__main__":
                         type=str, help="GTF features on fasta genome sequences")
 
     args = parser.parse_args()
-    extract_genes_in_genome(args.gtf, args.fasta, args.output)
+    extract_genes_in_genome(args.fasta, args.gtf, args.output)

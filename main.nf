@@ -395,9 +395,13 @@ process get_software_versions {
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
-if(params.gff){
+// Prefer gtf over gff
+log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
+if(params.gff && !params.gtf){
     process convertGFFtoGTF {
         tag "$gff"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gff from gffFile
@@ -408,9 +412,11 @@ if(params.gff){
 
         script:
         """
-        gffread $gff -T -o ${gff.baseName}.gtf
+        gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
         """
     }
+} else {
+  log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
 }
 
 /*
@@ -557,8 +563,10 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
             file "*.fa" into ch_fasta_for_salmon_index
 
             script:
+	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
             """
-            gffread -w transcripts.fa -g $fasta $gtf
+            filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}__in__${fasta.baseName}.gtf
+            gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}__in__${fasta.baseName}.gtf
             """
         }
     }

@@ -28,6 +28,10 @@ matrix:
   - name: "Latest Nextflow version, gzipped references with Salmon pseudo-aligner and skipping alignment"
     env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC'
   - name: "Lint the pipeline code"
+    install:
+      # Install nf-core/tools
+      - pip install --upgrade pip
+      - pip install nf-core
     script: nf-core lint ${TRAVIS_BUILD_DIR}
     python: '3.6'
     env: NXF_VER='0.32.0'
@@ -50,9 +54,6 @@ install:
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # Install nf-core/tools
-  - pip install --upgrade pip
-  - pip install nf-core
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
   # Install markdownlint-cli
@@ -62,4 +63,4 @@ script:
   # Run with STAR
   - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker ${FLAGS}
   # Additional gzipped-only things that are only invoked if $SUITE=test_gz
-  - ./test-gzipped-star-hisat2-indices.sh
+  - ../test-gzipped-star-hisat2-indices.sh

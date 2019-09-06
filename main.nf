@@ -488,7 +488,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }

@@ -332,7 +332,7 @@ By default, the pipeline aligns the input reads to the genome using either HISAT
 
 By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL:
 
-```
+```bash
 nextflow run --reads 'data/{R1,R2}*.fastq.gz' --compressedReference \
     --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
     --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz
@@ -344,7 +344,7 @@ This assumes that ALL of the reference files are compressed, including the refer
 
 STAR indices can be created by using `--saveReference`, and then using `tar` on them:
 
-```
+```bash
 cd results/reference_genome
 tar -zcvf star.tar.gz star
 ```
@@ -353,7 +353,7 @@ tar -zcvf star.tar.gz star
 
 HiSAT2 indices can be created by using `--saveReference`, and then using `tar` on them:
 
-```
+```bash
 cd results/reference_genome
 tar -zcvf hisat2.tar.gz *.hisat2_*
 ```
@@ -362,7 +362,7 @@ tar -zcvf hisat2.tar.gz *.hisat2_*
 
 Salmon indices can be created by using `--saveReference`, and then using `tar` on them:
 
-```
+```bash
 cd results/reference_genome
 tar -zcvf salmon_index.tar.gz salmon_index
 ```

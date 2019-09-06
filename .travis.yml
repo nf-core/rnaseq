@@ -63,4 +63,4 @@ script:
   # Run with STAR
   - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker ${FLAGS}
   # Additional gzipped-only things that are only invoked if $SUITE=test_gz
-  - ../test-gzipped-star-hisat2-indices.sh
+  - bash ../test-gzipped-star-hisat2-indices.sh

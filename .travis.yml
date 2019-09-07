@@ -13,20 +13,25 @@ matrix:
     jdk: openjdk8
   - name: "Latest Nextflow version, regular test suite with STAR aligner"
     env: NXF_VER='' SUITE=test FLAGS=
-  - name: "Latest Nextflow version, with HiSat2 aligner"
+  - name: "Latest Nextflow version, skipQC, with HiSat2 aligner"
     env: NXF_VER='' SUITE=test FLAGS='--aligner hisat2 --skipQC'
-  - name: "Latest Nextflow version, with Salmon pseudo-aligner"
+  - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner"
     env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
-  - name: "Latest Nextflow version, with Salmon pseudo-aligner and skipping alignment"
+  - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner and skipping alignment"
     env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
-  - name: "Latest Nextflow version, gzipped references with STAR aligner"
+  - name: "Latest Nextflow version, skipQC, gzipped references with STAR aligner"
     env: NXF_VER='' SUITE=test_gz FLAGS=
-  - name: "Latest Nextflow version, gzipped references with HiSat2 aligner"
+  - name: "Latest Nextflow version, skipQC, gzipped references with HiSat2 aligner + premade indices"
     env: NXF_VER='' SUITE=test_gz FLAGS='--aligner hisat2 --skipQC'
-  - name: "Latest Nextflow version, gzipped references with Salmon pseudo-aligner"
+  - name: "Latest Nextflow version, skipQC, gzipped references with Salmon pseudo-aligner + premade indices"
     env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC'
-  - name: "Latest Nextflow version, gzipped references with Salmon pseudo-aligner and skipping alignment"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC'
+  - name: "Latest Nextflow version, skipQC, gzipped references with Salmon pseudo-aligner + premade indices and skipping alignment"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC --skipAlignment'
+  - name: "Latest Nextflow version, skipQC, gzipped references, STAR aligner, make STAR index"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC'
+  - name: "Latest Nextflow version, skipQC, gzipped references, HiSat2 aligner, make HiSat2 index"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
+
   - name: "Lint the pipeline code"
     install:
       # Install nf-core/tools

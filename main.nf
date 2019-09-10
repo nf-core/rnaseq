@@ -469,7 +469,7 @@ if (params.compressedReference){
 
         script:
         """
-        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        star_index_gz --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }
@@ -546,7 +546,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.star_index && params.aligner == "star"){
+  if (!params.skipAlignment && params.star_index && params.aligner == "star"){
     process gunzip_star_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/star" : params.outdir },
@@ -565,7 +565,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.hisat2_index && params.aligner == 'hisat2'){
+  if (!params.skipAlignment && params.hisat2_index && params.aligner == 'hisat2'){
     process gunzip_hisat_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },

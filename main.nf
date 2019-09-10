@@ -452,10 +452,12 @@ if (params.compressedReference){
   // necessary indices for STAR, HiSAT2, Salmon already exist, or if
   // params.transcript_fasta is provided as then the transcript sequences don't
   // need to be extracted.
-  if (params.fasta && ((!params.skipAlignment &&
-                            !(params.star_index || params.hisat2_index))
-                        || (params.pseudo_aligner == "salmon"
-                              && !(params.transcript_fasta || params.salmon_index)))){
+  need_star_index = params.aligner == 'star' && !params.star_index
+  need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
+  need_aligner_index = need_hisat2_index || need_star_index
+  alignment_no_indices = !params.skipAlignment && need_aligner_index
+  psuedoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
+  if (params.fasta && (alignment_no_indices || psuedoalignment_no_indices)){
     process gunzip_genome_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },

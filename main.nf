@@ -471,7 +471,7 @@ if (params.compressedReference){
 
         script:
         """
-        star_index_gz --verbose --stdout --force ${gz} > ${gz.baseName}
+        gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }

@@ -11,14 +11,18 @@ matrix:
     env: NXF_VER='0.32.0' SUITE=test FLAGS=
     language: java
     jdk: openjdk8
-  - name: "Latest Nextflow version, regular test suite with STAR aligner"
+  - name: "Latest Nextflow version, regular test suite with STAR aligner + GFF"
     env: NXF_VER='' SUITE=test FLAGS=
+  - name: "Latest Nextflow version, regular test suite with STAR aligner, force GTF usage"
+    env: NXF_VER='' SUITE=test FLAGS=--gff false
   - name: "Latest Nextflow version, skipQC, with HiSat2 aligner"
     env: NXF_VER='' SUITE=test FLAGS='--aligner hisat2 --skipQC'
   - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner"
     env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
   - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner and skipping alignment"
     env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
+  - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner, skipping alignment, force GTF usage"
+    env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC --gff false'
   - name: "Latest Nextflow version, skipQC, gzipped references with STAR aligner"
     env: NXF_VER='' SUITE=test_gz FLAGS=
   - name: "Latest Nextflow version, skipQC, gzipped references with HiSat2 aligner + premade indices"
@@ -29,6 +33,8 @@ matrix:
     env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC --skipAlignment'
   - name: "Latest Nextflow version, skipQC, gzipped references, STAR aligner, make STAR index"
     env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC'
+  - name: "Latest Nextflow version, skipQC, gzipped references, STAR aligner, make STAR index, force GTF usage"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC --gff false'
   - name: "Latest Nextflow version, skipQC, gzipped references, HiSat2 aligner, make HiSat2 index"
     env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
   - name: "Lint the pipeline code"

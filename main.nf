@@ -239,6 +239,10 @@ if ( params.pseudo_aligner == 'salmon' ) {
 }
 
 if( params.gtf ){
+  if ( params.gff ){
+    // Prefer gtf over gff
+    log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
+  }
   if (params.compressedReference){
     gtf_gz = Channel
         .fromPath(params.gtf, checkIfExists: true)
@@ -610,8 +614,6 @@ if (params.compressedReference){
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
-// Prefer gtf over gff
-log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
 if(params.gff && !params.gtf){
     process convertGFFtoGTF {
         tag "$gff"

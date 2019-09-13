@@ -14,7 +14,7 @@ matrix:
   - name: "Latest Nextflow version, regular test suite with STAR aligner"
     env: NXF_VER='' SUITE=test FLAGS=
   - name: "Latest Nextflow version, regular test suite with STAR aligner, force GFF"
-    env: NXF_VER='' SUITE=test FLAGS=--gtf false
+    env: NXF_VER='' SUITE=test FLAGS='--gtf false'
   - name: "Latest Nextflow version, skipQC, with HiSat2 aligner"
     env: NXF_VER='' SUITE=test FLAGS='--aligner hisat2 --skipQC'
   - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner"

@@ -498,7 +498,7 @@ if (params.compressedReference){
         """
     }
   }
-  if (params.gff){
+  if (params.gff && !params.gtf){
     process gunzip_gff {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },

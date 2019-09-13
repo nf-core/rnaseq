@@ -325,7 +325,7 @@ This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by
 
 
 ### `--skipAlignment`
-By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogehter and only get transcript/gene expression counts with pseudoalignment, use this flag. Note that you will also need to specify `--psuedo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
+By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogether and only get transcript/gene expression counts with pseudo alignment, use this flag. Note that you will also need to specify `--pseudo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
 
 
 ### `--compressedReference`

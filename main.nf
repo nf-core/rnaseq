@@ -40,6 +40,7 @@ def helpMessage() {
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
       --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
+      --compressedReference         If provided, all reference files are assumed to be gzipped and will be unzipped before using
 
     Strandedness:
       --forwardStranded             The library is forward stranded
@@ -152,19 +153,38 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
 
 
 if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
+  if (params.compressedReference){
+    star_index_gz = Channel
+        .fromPath(params.star_index, checkIfExists: true)
+        .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
+  } else{
     star_index = Channel
         .fromPath(params.star_index, checkIfExists: true)
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
+  }
 }
 else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment ){
+  if (params.compressedReference){
+    hs2_indices_gz = Channel
+        .fromPath("${params.hisat2_index}", checkIfExists: true)
+        .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
+  } else {
     hs2_indices = Channel
         .fromPath("${params.hisat2_index}*", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
+  }
 }
-else if ( params.fasta && !params.skipAlignment ){
+else if ( params.fasta && !params.skipAlignment){
+  if (params.compressedReference) {
+    Channel.fromPath(params.fasta, checkIfExists: true)
+        .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+        .set { genome_fasta_gz }
+  } else {
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
         .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
+  }
+
 } else if (params.skipAlignment){
   println "Skipping alignment ..."
 }
@@ -183,30 +203,68 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 // transcripts from, or can use a transcript fasta directly
 if ( params.pseudo_aligner == 'salmon' ) {
     if ( params.salmon_index ) {
+      if (params.compressedReference) {
+        salmon_index_gz = Channel
+            .fromPath(params.salmon_index, checkIfExists: true)
+            .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+      } else {
         salmon_index = Channel
             .fromPath(params.salmon_index, checkIfExists: true)
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+      }
     } else if ( params.transcript_fasta ) {
+      if (params.compressedReference){
+        transcript_fasta_gz = Channel
+            .fromPath(params.transcript_fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
+      } else {
         ch_fasta_for_salmon_index = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
-    } else if (params.fasta && params.gtf) {
-      ch_fasta_for_salmon_transcripts = Channel.fromPath(params.fasta, checkIfExists: true)
-          .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+      }
+    } else if ( params.fasta && (params.gff || params.gtf)){
+      log.info "Extracting transcript fastas from genome fasta + gtf/gff"
+      if (params.compressedReference) {
+        Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+            .set { genome_fasta_gz }
+      } else {
+        Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+            .set { ch_fasta_for_salmon_transcripts }
+      }
     } else {
       exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }
 }
 
 if( params.gtf ){
+  if ( params.gff ){
+    // Prefer gtf over gff
+    log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
+  }
+  if (params.compressedReference){
+    gtf_gz = Channel
+        .fromPath(params.gtf, checkIfExists: true)
+        .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
+  } else {
     Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
                 gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
+
+  }
 } else if ( params.gff ){
+  if (params.compressedReference){
+    gff_gz = Channel.fromPath(params.gff, checkIfExists: true)
+                  .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
+
+  } else {
     gffFile = Channel.fromPath(params.gff, checkIfExists: true)
                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
+
+  }
 } else {
     exit 1, "No GTF or GFF3 annotation specified!"
 }
@@ -286,6 +344,7 @@ summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Reads']            = params.reads
 summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
 if(params.genome) summary['Genome'] = params.genome
+summary['Gzipped Refs?'] = params.compressedReference
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
@@ -392,11 +451,169 @@ process get_software_versions {
     """
 }
 
+if (params.compressedReference){
+  // This complex logic is to prevent accessing the genome_fasta_gz variable if
+  // necessary indices for STAR, HiSAT2, Salmon already exist, or if
+  // params.transcript_fasta is provided as then the transcript sequences don't
+  // need to be extracted.
+  need_star_index = params.aligner == 'star' && !params.star_index
+  need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
+  need_aligner_index = need_hisat2_index || need_star_index
+  alignment_no_indices = !params.skipAlignment && need_aligner_index
+  psuedoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
+  if (params.fasta && (alignment_no_indices || psuedoalignment_no_indices)){
+    process gunzip_genome_fasta {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from genome_fasta_gz
+
+        output:
+        file "${gz.baseName}" into ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts
+
+        script:
+        """
+        gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  if (params.gtf){
+    process gunzip_gtf {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from gtf_gz
+
+        output:
+        file "${gz.baseName}" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
+                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap
+
+        script:
+        """
+        gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  if (params.gff && !params.gtf){
+    process gunzip_gff {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from gff_gz
+
+        output:
+        file "${gz.baseName}" into gffFile
+
+        script:
+        """
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index){
+    process gunzip_transcript_fasta {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from transcript_fasta_gz
+
+        output:
+        file "${gz.baseName}" into ch_fasta_for_salmon_index
+
+        script:
+        """
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  if (params.bed12){
+    process gunzip_bed12 {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from bed12_gz
+
+        output:
+        file "${gz.baseName}" into bed_rseqc
+
+        script:
+        """
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
+  if (!params.skipAlignment && params.star_index && params.aligner == "star"){
+    process gunzip_star_index {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/star" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from star_index_gz
+
+        output:
+        file "${gz.simpleName}" into star_index
+
+        script:
+        // Use tar as the star indices are a folder, not a file
+        """
+        tar -xzvf ${gz}
+        """
+    }
+  }
+  if (!params.skipAlignment && params.hisat2_index && params.aligner == 'hisat2'){
+    process gunzip_hisat_index {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from hs2_indices_gz
+
+        output:
+        file "*.ht2*" into hs2_indices
+
+        script:
+        // Use tar as the hisat2 indices are a folder, not a file
+        """
+        tar -xzvf ${gz}
+        """
+    }
+  }
+  if (params.salmon_index && params.pseudo_aligner == 'salmon'){
+    process gunzip_salmon_index {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from salmon_index_gz
+
+        output:
+        file "${gz.simpleName}" into salmon_index
+
+        script:
+        // Use tar as the hisat2 indices are a folder, not a file
+        """
+        tar -xzvf ${gz}
+        """
+    }
+  }
+}
+
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
-// Prefer gtf over gff
-log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
 if(params.gff && !params.gtf){
     process convertGFFtoGTF {
         tag "$gff"

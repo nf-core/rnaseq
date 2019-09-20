@@ -14,6 +14,7 @@ dependencies:
   - matplotlib=3.0.3        # Current 3.1.0 build incompatible with multiqc=1.7
 
   ## bioconda packages
+  - sortmerna=2.1b # for metatranscriptomics
   - fastqc=0.11.8
   - trim-galore=0.6.2
   - star=2.6.1d             # Don't upgrade me - 2.7X indices incompatible with iGenomes.

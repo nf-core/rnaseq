@@ -937,7 +937,7 @@ if (!params.remove_rRNA){
         publishDir "${params.outdir}/SortMeRNA", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
-                else if (params.save_nonrRNA_reads) "SortMeRNA/$filename"
+                else if (params.save_nonrRNA_reads) "reads/$filename"
                 else null
             }
 

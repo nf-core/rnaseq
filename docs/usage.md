@@ -397,7 +397,7 @@ If rRNA removal is desired (for example, metatranscriptomics),
 add the following command line parameters.
 
 ### `--remove_rRNA`
-Instructs to use SortMeRNA to remove reads related to ribosomal RNA.
+Instructs to use SortMeRNA to remove reads related to ribosomal RNA (or any patterns found in the sequences defined by `--rRNA_database_manifest`).
 
 ### `--save_nonrRNA_reads`
 By default, non-rRNA FastQ files will not be saved to the results directory. Specify this

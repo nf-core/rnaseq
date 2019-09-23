@@ -4,6 +4,7 @@
 
 ### Pipeline updates
 
+* Added [possibility to output unmapped reads](https://github.com/nf-core/rnaseq/issues/277) to pipeline
 * Fix sample names in feature counts and dupRadar to remove suffixes added in other processes
 * Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
 * Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)

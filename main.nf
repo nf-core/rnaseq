@@ -149,11 +149,17 @@ if (params.pico){
 }
 
 // Get rRNA databases
+def returnFile(it) {
+    inputFile = file(it)
+    if (!file(inputFile).exists()) exit 1, "File ${inputFile} does not exist!"
+    return inputFile
+}
 if(params.rRNA_database_manifest){
-    rRNA_database = file(params.rRNA_database_manifest)
+    rRNA_database = returnFile(params.rRNA_database_manifest)
+    if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
     Channel
         .from( rRNA_database.readLines() )
-        .map { row -> file(row) }
+        .map { row -> returnFile(row) }
         .set { sortmerna_fasta }
 } else {
     Channel.fromPath([

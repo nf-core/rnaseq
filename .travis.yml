@@ -76,5 +76,4 @@ install:
   - sudo apt-get install npm && npm install -g markdownlint-cli
 
 script:
-  # Run with STAR
   - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker ${FLAGS}

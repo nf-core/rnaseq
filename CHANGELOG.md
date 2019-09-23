@@ -5,6 +5,7 @@
 ### Pipeline updates
 
 * Added [possibility to output unmapped reads](https://github.com/nf-core/rnaseq/issues/277) to pipeline
+* Add option to modify `featureCounts -t` option to assign reads to a different type than `exon`. This makes it compatible with nuclearRNAseq. For instance, it would count reads in introns and exons if `gene` is used instead. Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, need to be counted, e.g. by specifying `--fc_count_type transcript`.
 * Fix sample names in feature counts and dupRadar to remove suffixes added in other processes
 * Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
 * Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
@@ -33,7 +34,6 @@
 * Add `--compressedReference` option to use gzipped genome fasta and gene annotation files, and tar.gz'd STAR, HiSat2 and Salmon indices
 * Check that gtf features are on chromosomes that exist in the genome fasta file [#274](https://github.com/nf-core/rnaseq/pull/274)
 * Maintain all gff features upon gtf conversion (keeps `gene_biotype` or `gene_type` to make `featureCounts` happy)
-
 
 ### Dependency Updates
 

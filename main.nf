@@ -1425,7 +1425,6 @@ if (params.pseudo_aligner == 'salmon'){
         output:
         file "${sample}/" into salmon_logs
         set val(sample), file("${sample}/") into salmon_tximport
-        file "${sample}/aux_info/unmapped_names.txt"
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'

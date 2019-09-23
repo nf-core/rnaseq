@@ -965,7 +965,7 @@ if (!params.remove_rRNA){
             sortmerna --ref ${Refs} \
                 --reads all-reads.fastq \
                 --num_alignments 1 \
-                -m 4096 -a 2 \
+                -a ${task.cpus} \
                 --fastx \
                 --aligned rRNA-reads \
                 --other non-rRNA-reads \

@@ -984,6 +984,7 @@ if (!params.skipAlignment){
           file "${prefix}.bam" into hisat2_bam
           file "${prefix}.hisat2_summary.txt" into alignment_logs
           file "where_are_my_files.txt"
+          file "unmapped.hisat2*"
 
           script:
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
@@ -995,19 +996,23 @@ if (!params.skipAlignment){
           } else if (reverseStranded && !unStranded){
               rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
           }
+          
           if (params.singleEnd) {
+              unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz \\" : ''
               """
               hisat2 -x $index_base \\
                      -U $reads \\
                      $rnastrandness \\
                      --known-splicesite-infile $alignment_splicesites \\
                      -p ${task.cpus} \\
+                     $unaligned
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
                      | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
               """
           } else {
+              unaligned = params.saveUnaligned ? "--un-conc-gz unmapped.hisat2.gz \\" : ''
               """
               hisat2 -x $index_base \\
                      -1 ${reads[0]} \\
@@ -1017,6 +1022,7 @@ if (!params.skipAlignment){
                      --no-mixed \\
                      --no-discordant \\
                      -p ${task.cpus} \\
+                     $unaligned
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\

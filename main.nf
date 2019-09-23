@@ -926,7 +926,7 @@ if (!params.skipAlignment){
           file "*SJ.out.tab"
           file "*Log.out" into star_log
           file "where_are_my_files.txt"
-          file "*Unmapped*"
+          file "*Unmapped*" optional true 
           file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
           script:
@@ -935,7 +935,6 @@ if (!params.skipAlignment){
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
           seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
           unaligned = params.saveUnaligned ? "--outReadsUnmapped Fastx" : ''
-
           """
           STAR --genomeDir $index \\
               --sjdbGTFfile $gtf \\
@@ -945,7 +944,6 @@ if (!params.skipAlignment){
               --outWigType bedGraph \\
               --outSAMtype BAM SortedByCoordinate $avail_mem \\
               --readFilesCommand zcat \\
-
               --runDirPerm All_RWX $unaligned \\
               --outFileNamePrefix $prefix $seqCenter
 
@@ -986,7 +984,7 @@ if (!params.skipAlignment){
           file "${prefix}.bam" into hisat2_bam
           file "${prefix}.hisat2_summary.txt" into alignment_logs
           file "where_are_my_files.txt"
-          file "unmapped.hisat2*"
+          file "unmapped.hisat2*" optional true
 
           script:
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/

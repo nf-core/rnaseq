@@ -62,6 +62,7 @@ def helpMessage() {
       --stringTieIgnoreGTF          Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
       --seq_center                  Add sequencing center in @RG line of output BAM header
       --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
+      --saveUnaligned               Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
       --skipAlignment               Skip alignment altogether (usually in favor of pseudoalignment)
 
     Read Counting:
@@ -906,7 +907,7 @@ if (!params.skipAlignment){
           publishDir "${params.outdir}/STAR", mode: 'copy',
               saveAs: {filename ->
                   if (filename.indexOf(".bam") == -1) "logs/$filename"
-                  else if (params.saveUnaliged && filename != "where_are_my_files.txt") unmapped/filename
+                  else if (params.saveUnaligned && filename != "where_are_my_files.txt") unmapped/filename
                   else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
                   else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
                   else null
@@ -1410,7 +1411,11 @@ if (params.pseudo_aligner == 'salmon'){
     process salmon {
         label 'salmon'
         tag "$sample"
-        publishDir "${params.outdir}/salmon", mode: 'copy'
+        publishDir "${params.outdir}/salmon", mode: 'copy',
+        saveAs: {filename ->
+                  if (filename == "salmon_unaligned.txt") "unmapped/$filename"
+                  else filename
+              }
 
         input:
         set sample, file(reads) from trimmed_reads_salmon
@@ -1420,6 +1425,7 @@ if (params.pseudo_aligner == 'salmon'){
         output:
         file "${sample}/" into salmon_logs
         set val(sample), file("${sample}/") into salmon_tximport
+        file "salmon_unaligned.txt"
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1429,6 +1435,7 @@ if (params.pseudo_aligner == 'salmon'){
             rnastrandness = params.singleEnd ? 'SR' : 'ISR'
         }
         def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+        unmapped = params.saveUnaligned ? "--writeUnmappedNames -o salmon_unaligned.txt \\" : ''
         """
         salmon quant --validateMappings \\
                         --seqBias --useVBOpt --gcBias \\
@@ -1437,6 +1444,7 @@ if (params.pseudo_aligner == 'salmon'){
                         --libType=${rnastrandness} \\
                         --index ${index} \\
                         $endedness \\
+                        $unmapped
                         -o ${sample}
         """
         }

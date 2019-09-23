@@ -907,7 +907,7 @@ if (!params.skipAlignment){
           publishDir "${params.outdir}/STAR", mode: 'copy',
               saveAs: {filename ->
                   if (filename.indexOf(".bam") == -1) "logs/$filename"
-                  else if (params.saveUnaligned && filename != "where_are_my_files.txt") unmapped/filename
+                  else if (params.saveUnaligned && filename != "where_are_my_files.txt" && 'Unmapped' in filename) unmapped/filename
                   else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
                   else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
                   else null
@@ -925,7 +925,7 @@ if (!params.skipAlignment){
           file "*SJ.out.tab"
           file "*Log.out" into star_log
           file "where_are_my_files.txt"
-          file "Unmapped.out.*"
+          file "*Unmapped*"
           file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
           script:
@@ -933,7 +933,7 @@ if (!params.skipAlignment){
           def star_mem = task.memory ?: params.star_memory ?: false
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
           seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
-          unaligned = params.saveUnaligned ? "--outReadsUnmapped Fastx \\" : ''
+          unaligned = params.saveUnaligned ? "--outReadsUnmapped Fastx" : ''
           """
           STAR --genomeDir $index \\
               --sjdbGTFfile $gtf \\
@@ -943,10 +943,8 @@ if (!params.skipAlignment){
               --outWigType bedGraph \\
               --outSAMtype BAM SortedByCoordinate $avail_mem \\
               --readFilesCommand zcat \\
-              --runDirPerm All_RWX \\
-              $unaligned
+              --runDirPerm All_RWX $unaligned \\
               --outFileNamePrefix $prefix $seqCenter
-
           samtools index ${prefix}Aligned.sortedByCoord.out.bam
           """
       }
@@ -998,21 +996,20 @@ if (!params.skipAlignment){
           }
           
           if (params.singleEnd) {
-              unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz \\" : ''
+              unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz" : ''
               """
               hisat2 -x $index_base \\
                      -U $reads \\
                      $rnastrandness \\
                      --known-splicesite-infile $alignment_splicesites \\
-                     -p ${task.cpus} \\
-                     $unaligned
+                     -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
                      | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
               """
           } else {
-              unaligned = params.saveUnaligned ? "--un-conc-gz unmapped.hisat2.gz \\" : ''
+              unaligned = params.saveUnaligned ? "--un-conc-gz unmapped.hisat2.gz" : ''
               """
               hisat2 -x $index_base \\
                      -1 ${reads[0]} \\
@@ -1021,8 +1018,7 @@ if (!params.skipAlignment){
                      --known-splicesite-infile $alignment_splicesites \\
                      --no-mixed \\
                      --no-discordant \\
-                     -p ${task.cpus} \\
-                     $unaligned
+                     -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seqCenter \\
@@ -1417,11 +1413,7 @@ if (params.pseudo_aligner == 'salmon'){
     process salmon {
         label 'salmon'
         tag "$sample"
-        publishDir "${params.outdir}/salmon", mode: 'copy',
-        saveAs: {filename ->
-                  if (filename == "salmon_unaligned.txt") "unmapped/$filename"
-                  else filename
-              }
+        publishDir "${params.outdir}/salmon", mode: 'copy'
 
         input:
         set sample, file(reads) from trimmed_reads_salmon
@@ -1431,7 +1423,7 @@ if (params.pseudo_aligner == 'salmon'){
         output:
         file "${sample}/" into salmon_logs
         set val(sample), file("${sample}/") into salmon_tximport
-        file "salmon_unaligned.txt"
+        file "${sample}/aux_info/unmapped_names.txt"
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1441,7 +1433,7 @@ if (params.pseudo_aligner == 'salmon'){
             rnastrandness = params.singleEnd ? 'SR' : 'ISR'
         }
         def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
-        unmapped = params.saveUnaligned ? "--writeUnmappedNames -o salmon_unaligned.txt \\" : ''
+        unmapped = params.saveUnaligned ? "--writeUnmappedNames" : ''
         """
         salmon quant --validateMappings \\
                         --seqBias --useVBOpt --gcBias \\
@@ -1449,8 +1441,7 @@ if (params.pseudo_aligner == 'salmon'){
                         --threads ${task.cpus} \\
                         --libType=${rnastrandness} \\
                         --index ${index} \\
-                        $endedness \\
-                        $unmapped
+                        $endedness $unmapped\\
                         -o ${sample}
         """
         }

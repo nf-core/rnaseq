@@ -59,6 +59,7 @@ def helpMessage() {
     Ribosomal RNA removal:
       --remove_rRNA                 Removes rRNA using SortMeRNA
       --save_nonrRNA_reads          Save FastQ file intermediates after removing rRNA
+      --rRNA_database_manifest      Contains file paths for rRNA databases, optional
 
     Alignment:
       --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star')
@@ -145,6 +146,26 @@ if (params.pico){
     forwardStranded = true
     reverseStranded = false
     unStranded = false
+}
+
+// Get rRNA databases
+if(params.rRNA_database_manifest){
+    rRNA_database = file(params.rRNA_database_manifest)
+    Channel
+        .from( rRNA_database.readLines() )
+        .map { row -> file(row) }
+        .set { sortmerna_fasta }
+} else {
+    Channel.fromPath([
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5.8s-database-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5s-database-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-16s-id95.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-23s-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-16s-id90.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-23s-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-18s-id95.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-28s-id98.fasta'])
+        .set { sortmerna_fasta }
 }
 
 // Validate inputs
@@ -886,16 +907,6 @@ if (!params.remove_rRNA){
     trimgalore_reads
         .into { trimmed_reads_alignment; trimmed_reads_salmon }
 } else {
-    sortmerna_fasta = Channel.fromPath([
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5.8s-database-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5s-database-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-16s-id95.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-23s-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-16s-id90.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-23s-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-18s-id95.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-28s-id98.fasta'])
-
     process sortmerna_index {
         label 'low_memory'
         tag "${fasta.baseName}"

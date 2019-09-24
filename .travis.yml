@@ -39,6 +39,8 @@ matrix:
     env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
   - name: "Latest Nextflow version, nuclear RNA"
     env: NXF_VER='' SUITE=test FLAGS='--fc_count_type transcript'
+  - name: "Latest Nextflow version, STAR aligner, skipBiotypeQC"
+    env: NXF_VER='' SUITE=test FLAGS='--skipBiotypeQC'
   - name: "Lint the pipeline code"
     install:
       # Install nf-core/tools

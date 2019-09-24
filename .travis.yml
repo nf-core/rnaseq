@@ -38,7 +38,7 @@ matrix:
   - name: "Latest Nextflow version, skipQC, gzipped references, HiSat2 aligner, make HiSat2 index"
     env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
   - name: "Latest Nextflow version, skipQC, output unmapped STAR"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --aligner STAR --saveUnaligned'
+    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --saveUnaligned'
   - name: "Latest Nextflow version, skipQC, output unmapped HISAT2"
     env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --aligner hisat2 --saveUnaligned'
   - name: "Latest Nextflow version, skipQC, output unmapped Salmon"

@@ -340,6 +340,10 @@ GENCODE version:
 
 This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
 
+### `--skipBiotypeQC`
+
+This skips the BiotypeQC step in the `featureCounts` process, explicitly useful when there is no available GTF/GFF with any `biotype` or similar information that could be used before.
+
 ### `--skipAlignment`
 
 By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogether and only get transcript/gene expression counts with pseudo alignment, use this flag. Note that you will also need to specify `--pseudo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.

@@ -17,6 +17,7 @@
 * [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
   * [Default Attribute Type](#default-attribute-type)
   * [Extra Gene Names](#extra-gene-names)
+  * [Default Attribute](#default-type)
 * [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
 * [Alignment tool](#alignment-tool)
 * [Reference genomes](#reference-genomes)
@@ -26,8 +27,14 @@
   * [`--saveTrimmed`](#--savetrimmed)
   * [`--saveAlignedIntermediates`](#--savealignedintermediates)
   * [`--gencode`](#--gencode)
+    * ["Type" of gene](#type-of-gene)
+    * [Transcript IDs in FASTA files](#transcript-ids-in-fasta-files)
   * [`--additional_fasta`](#--additional_fasta)
   * [`--skipAlignment`](#--skipAlignment)
+  * [`--compressedReference`](#--compressedReference)
+    * [Create compressed (tar.gz) STAR indices](#create-compressed-tar-gz-star-indices)
+    * [Create compressed (tar.gz) HiSat2 indices](#create-compressed-tar-gz-hisat2-indices)
+    * [Create compressed (tar.gz) Salmon indices](#create-compressed-tar-gz-salmon-indices)
 * [Adapter Trimming](#adapter-trimming)
   * [`--clip_r1 [int]`](#--clip_r1-int)
   * [`--clip_r2 [int]`](#--clip_r2-int)
@@ -63,6 +70,7 @@
 <!-- TOC END -->
 
 ## Introduction
+
 Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs. Thus the Nextflow process must run until the pipeline is finished. We recommend that you put the process running in the background through `screen` / `tmux` or similar tool. Alternatively you can run nextflow within a cluster job submitted your job scheduler.
 
 It is recommended to limit the Nextflow Java virtual machines memory. We recommend adding the following line to your environment (typically in `~/.bashrc` or `~./bash_profile`):
@@ -72,6 +80,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
 ## Running the pipeline
+
 The typical command for running the pipeline is as follows:
 
 ```bash
@@ -90,6 +99,7 @@ results         # Finished results (configurable, see below)
 ```
 
 ### Updating the pipeline
+
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
@@ -97,16 +107,17 @@ nextflow pull nf-core/rnaseq
 ```
 
 ### Reproducibility
+
 It's a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
 First, go to the [nf-core/rnaseq releases page](https://github.com/nf-core/rnaseq/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
-
 ## Main arguments
 
 ### `-profile`
+
 Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments. Note that multiple profiles can be loaded, for example: `-profile docker` - the order of arguments is important!
 
 If `-profile` is not specified at all the pipeline will be run locally and expects all software to be installed and available on the `PATH`.
@@ -127,6 +138,7 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * Includes links to test data so needs no other parameters
 
 ### `--reads`
+
 Use this to specify the location of your input FastQ files. For example:
 
 ```bash
@@ -142,6 +154,7 @@ Please note the following requirements:
 If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
 
 ### `--singleEnd`
+
 By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
 
 ```bash
@@ -151,6 +164,7 @@ By default, the pipeline expects paired-end data. If you have single-end data, y
 It is not possible to run a mixture of single-end and paired-end files in one run.
 
 ### Library strandedness
+
 Three command line flags / config parameters set the library strandedness for a run:
 
 * `--forwardStranded`
@@ -191,11 +205,16 @@ These flags affect the commands used for several steps in the pipeline - namely 
 By default, the pipeline uses `gene_name` as the default gene identifier group. In case you need to adjust this, specify using the option `--fc_group_features` to use a different category present in your provided GTF file. Please also take care to use a suitable attribute to categorize the `biotype` of the selected features in your GTF then, using the option `--fc_group_features_type` (default: `gene_biotype`).
 
 ### Extra Gene Names
+
 By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline.
 This behaviour can be modified by specifying `--fc_extra_attributes` when running the pipeline, which is passed on to featureCounts as an `--extraAttributes` parameter.
 See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
 Note that you can also specify more than one desired value, separated by a comma:
-``--fc_extra_attributes gene_id,...``
+`--fc_extra_attributes gene_id,...`
+
+### Default Type
+
+By default, the pipeline uses `exon` as the default to assign reads. In case you need to adjust this, specify using the option `--fc_count_type` to use a different category present in your provided GTF file (3rd column). For example, for nuclear RNA-seq, one could count reads in introns in addition to exons using `--fc_count_type transcript`.
 
 ## Transcriptome mapping with Salmon
 
@@ -204,6 +223,7 @@ Use the `--pseudo aligner salmon` option to perform additional quantification at
 The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
 
 ## Alignment tool
+
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads to the reference genome. STAR is fast and common, but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome.
 
 If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the alignment tool instead. Developed by the same group behind the popular Tophat aligner, HISAT2 has a much smaller memory footprint.
@@ -215,6 +235,7 @@ To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hi
 The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
 ### `--genome` (using iGenomes)
+
 There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
 
 You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
@@ -249,6 +270,7 @@ params {
 ```
 
 ### `--star_index`, `--hisat2_index`, `--fasta`, `--gtf`, `--bed12`
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
@@ -264,14 +286,17 @@ Note that only one of `--star_index` / `--hisat2_index` are needed depending on 
 The minimum requirements are a Fasta and GTF file. If these are provided and no others, then all other reference files will be automatically generated by the pipeline.
 
 ### `--saveReference`
+
 Supply this parameter to save any generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
 ### `--saveTrimmed`
+
 By default, trimmed FastQ files will not be saved to the results directory. Specify this
 flag (or set to true in your config file) to copy these files when complete.
 
 ### `--saveAlignedIntermediates`
+
 As above, by default intermediate BAM files from the alignment will not be saved. The final BAM files created after the Picard MarkDuplicates step are always saved. Set to true to also copy out BAM files from STAR / HISAT2 and sorting steps.
 
 ### `--gencode`
@@ -279,13 +304,6 @@ As above, by default intermediate BAM files from the alignment will not be saved
 If your `--gtf` file is in GENCODE format and you would like to run Salmon (`--pseudo_aligner salmon`) you will need to provide this parameter in order to build the Salmon index appropriately. The `params.fc_group_features_type=gene_type` will also be set as explained below.
 
 [GENCODE](gencodegenes.org/) gene annotations are slightly different from ENSEMBL or iGenome annotations in two ways.
-
-### `--additional_fasta`
-If provided, any genes here will get concatenated to the existing genome fasta, a GTF will be automatically created using the entire sequence as the `gene`, `transcript`, and `exon` features, and the alignment index will get created off of the combined fasta and GTF. It is recommended to save the reference with `--saveReference` so you do not need to create it again.
-
-### `--skipAlignment`
-By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogehter and only get transcript/gene expression counts with pseudoalignment, use this flag. Note that you will also need to specify `--psuedo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
-
 
 #### "Type" of gene
 
@@ -297,13 +315,11 @@ ENSEMBL version:
 8       havana  transcript      70635318        70669174        .       -       .       gene_id "ENSG00000147592"; gene_version "9"; transcript_id "ENST00000522447"; transcript_version "5"; gene_name "LACTB2"; gene_source "ensembl_havana"; gene_biotype "protein_coding"; transcript_name "LACTB2-203"; transcript_source "havana"; transcript_biotype "protein_coding"; tag "CCDS"; ccds_id "CCDS6208"; tag "basic"; transcript_support_level "2";
 ```
 
-
 GENCODE version:
 
 ```bash
 chr8    HAVANA  transcript      70635318        70669174        .       -       .       gene_id "ENSG00000147592.9"; transcript_id "ENST00000522447.5"; gene_type "protein_coding"; gene_name "LACTB2"; transcript_type "protein_coding"; transcript_name "LACTB2-203"; level 2; protein_id "ENSP00000428801.1"; transcript_support_level "2"; tag "alternative_3_UTR"; tag "basic"; tag "appris_principal_1"; tag "CCDS"; ccdsid "CCDS6208.1"; havana_gene "OTTHUMG00000164430.2"; havana_transcript "OTTHUMT00000378747.1";
 ```
-
 
 Therefore, for `featureCounts` to correctly count the different biotypes when using a GENCODE annotation the `fc_group_features_type` is automatically set to `gene_type` when the `--gencode` flag is specified.
 
@@ -325,27 +341,80 @@ GENCODE version:
 
 This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
 
+### `--additional_fasta`
+If provided, any genes here will get concatenated to the existing genome fasta, a GTF will be automatically created using the entire sequence as the `gene`, `transcript`, and `exon` features, and the alignment index will get created off of the combined fasta and GTF. It is recommended to save the reference with `--saveReference` so you do not need to create it again.
+
+### `--skipAlignment`
+
+By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogether and only get transcript/gene expression counts with pseudo alignment, use this flag. Note that you will also need to specify `--pseudo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
+
+### `--compressedReference`
+
+By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL:
+
+```bash
+nextflow run --reads 'data/{R1,R2}*.fastq.gz' --compressedReference \
+    --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
+    --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz
+```
+
+This assumes that ALL of the reference files are compressed, including the reference indices, e.g. for STAR, HiSat2 or Salmon. For instructions on how to create your own compressed reference files, see the instructions below. This also includes any files specified with `--additional_fasta`, which are assumed to be compressed as well when the `--compressedReference` flag is used.
+
+#### Create compressed (tar.gz) STAR indices
+
+STAR indices can be created by using `--saveReference`, and then using `tar` on them:
+
+```bash
+cd results/reference_genome
+tar -zcvf star.tar.gz star
+```
+
+#### HISAT2 indices
+
+HiSAT2 indices can be created by using `--saveReference`, and then using `tar` on them:
+
+```bash
+cd results/reference_genome
+tar -zcvf hisat2.tar.gz *.hisat2_*
+```
+
+#### Salmon index
+
+Salmon indices can be created by using `--saveReference`, and then using `tar` on them:
+
+```bash
+cd results/reference_genome
+tar -zcvf salmon_index.tar.gz salmon_index
+```
+
 ## Adapter Trimming
+
 If specific additional trimming is required (for example, from additional tags),
 you can use any of the following command line parameters. These affect the command
 used to launch TrimGalore!
 
 ### `--clip_r1 [int]`
+
 Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).
 
 ### `--clip_r2 [int]`
+
 Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).
 
 ### `--three_prime_clip_r1 [int]`
+
 Instructs Trim Galore to remove bp from the 3' end of read 1 _AFTER_ adapter/quality trimming has been performed.
 
 ### `--three_prime_clip_r2 [int]`
+
 Instructs Trim Galore to remove bp from the 3' end of read 2 _AFTER_ adapter/quality trimming has been performed.
 
 ### `--trim_nextseq [int]`
+
 This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.
 
 ## Library Prep Presets
+
 Some command line options are available to automatically set parameters for common RNA-seq library preparation kits.
 
 > Note that these presets override other command line arguments. So if you specify `--pico --clip_r1 0`, the `--clip_r1` bit will be ignored.
@@ -353,12 +422,13 @@ Some command line options are available to automatically set parameters for comm
 If you have a kit that you'd like a preset added for, please let us know!
 
 ### `--pico`
+
 Sets trimming and standedness settings for the _SMARTer Stranded Total RNA-Seq Kit - Pico Input_ kit.
 
 Equivalent to: `--forwardStranded` `--clip_r1 3` `--three_prime_clip_r2 3`
 
-
 ## Skipping QC steps
+
 The pipeline contains a large number of quality control steps. Sometimes, it may not be desirable to run all of them if time and compute resources are limited.
 The following options make this easy:
 
@@ -372,10 +442,13 @@ The following options make this easy:
 * `--skipMultiQC` -           Skip MultiQC
 
 ## Job resources
+
 ### Automatic resubmission
+
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
 
 ### Custom resource requests
+
 Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file. See the files hosted at [`nf-core/configs`](https://github.com/nf-core/configs/tree/master/conf) for examples.
 
 If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
@@ -383,24 +456,31 @@ If you are likely to be running `nf-core` pipelines regularly it may be a good i
 If you have any questions or issues please send us a message on [Slack](https://nf-core-invite.herokuapp.com/).
 
 ## AWS Batch specific parameters
+
 Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use the `-awsbatch` profile and then specify all of the following parameters.
+
 ### `--awsqueue`
+
 The JobQueue that you intend to use on AWS Batch.
+
 ### `--awsregion`
+
 The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
-
 ## Other command line parameters
 
 ### `--outdir`
+
 The output directory where the results will be saved.
 
 ### `--email`
+
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.
 
 ### `-name`
+
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
 This is used in the MultiQC report (if not default) and in the summary HTML / e-mail (always).
@@ -408,6 +488,7 @@ This is used in the MultiQC report (if not default) and in the summary HTML / e-
 **NB:** Single hyphen (core Nextflow option)
 
 ### `-resume`
+
 Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
@@ -415,6 +496,7 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 **NB:** Single hyphen (core Nextflow option)
 
 ### `-c`
+
 Specify the path to a specific config file (this is a core NextFlow command).
 
 **NB:** Single hyphen (core Nextflow option)
@@ -422,6 +504,7 @@ Specify the path to a specific config file (this is a core NextFlow command).
 Note - you can use this to override pipeline defaults.
 
 ### `--custom_config_version`
+
 Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default is set to `master`.
 
 ```bash
@@ -430,6 +513,7 @@ Provide git commit id for custom Institutional configs hosted at `nf-core/config
 ```
 
 ### `--custom_config_base`
+
 If you're running offline, nextflow will not be able to fetch the institutional config files
 from the internet. If you don't need them, then this is not a problem. If you do need them,
 you should download the files from the repo and tell nextflow where to find them with the
@@ -450,18 +534,22 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 > files + singularity containers + institutional configs in one go for you, to make this process easier.
 
 ### `--max_memory`
+
 Use to set a top-limit for the default memory requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_memory '8.GB'`
 
 ### `--max_time`
+
 Use to set a top-limit for the default time requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_time '2.h'`
 
 ### `--max_cpus`
+
 Use to set a top-limit for the default CPU requirement for each process.
 Should be a string in the format integer-unit. eg. `--max_cpus 1`
 
 ### `--hisat_build_memory`
+
 Required amount of memory in GB to build HISAT2 index with splice sites.
 The HiSAT2 index build can proceed with or without exon / splice junction information.
 To work with this, a very large amount of memory is required.
@@ -471,18 +559,23 @@ The `--hisat_build_memory` option changes this threshold. By default it is `200G
 allow the exon build to proceed by supplying `--hisat_build_memory 100GB`
 
 ### `--sampleLevel`
+
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
 ### `--plaintext_email`
+
 Set to receive plain-text e-mails instead of HTML formatted.
 
 ### `--monochrome_logs`
+
 Set to disable colourful command line output and live life in monochrome.
 
 ### `--multiqc_config`
+
 Specify a path to a custom MultiQC configuration file.
 
 ## Stand-alone scripts
+
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:
 
 * `gtf2bed`

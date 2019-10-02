@@ -37,6 +37,8 @@ matrix:
     env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC --gtf false'
   - name: "Latest Nextflow version, skipQC, gzipped references, HiSat2 aligner, make HiSat2 index"
     env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
+  - name: "Latest Nextflow version, regular test suite but with rRNA removel"
+    env: NXF_VER='' SUITE=test FLAGS='--remove_rRNA'
   - name: "Latest Nextflow version, nuclear RNA"
     env: NXF_VER='' SUITE=test FLAGS='--fc_count_type transcript'
   - name: "Latest Nextflow version, STAR aligner, skipBiotypeQC"

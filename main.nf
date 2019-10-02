@@ -56,6 +56,11 @@ def helpMessage() {
       --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
       --saveTrimmed                 Save trimmed FastQ file intermediates
 
+    Ribosomal RNA removal:
+      --remove_rRNA                 Removes rRNA using SortMeRNA
+      --save_nonrRNA_reads          Save FastQ file intermediates after removing rRNA
+      --rRNA_database_manifest      Path to file that contains file paths for rRNA databases, optional
+
     Alignment:
       --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star')
       --pseudo_aligner              Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
@@ -144,6 +149,32 @@ if (params.pico){
     forwardStranded = true
     reverseStranded = false
     unStranded = false
+}
+
+// Get rRNA databases
+def returnFile(it) {
+    inputFile = file(it)
+    if (!file(inputFile).exists()) exit 1, "File ${inputFile} does not exist!"
+    return inputFile
+}
+if(params.rRNA_database_manifest){
+    rRNA_database = returnFile(params.rRNA_database_manifest)
+    if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
+    Channel
+        .from( rRNA_database.readLines() )
+        .map { row -> returnFile(row) }
+        .set { sortmerna_fasta }
+} else {
+    Channel.fromPath([
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5.8s-database-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5s-database-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-16s-id95.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-23s-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-16s-id90.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-23s-id98.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-18s-id95.fasta',
+        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-28s-id98.fasta'])
+        .set { sortmerna_fasta }
 }
 
 // Validate inputs
@@ -436,6 +467,7 @@ process get_software_versions {
     fastqc --version &> v_fastqc.txt
     cutadapt --version &> v_cutadapt.txt
     trim_galore --version &> v_trim_galore.txt
+    sortmerna --version &> v_sortmerna.txt
     STAR --version &> v_star.txt
     hisat2 --version &> v_hisat2.txt
     stringtie --version &> v_stringtie.txt
@@ -854,7 +886,7 @@ process trim_galore {
     file wherearemyfiles from ch_where_trim_galore.collect()
 
     output:
-    set val(name), file("*fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
+    set val(name), file("*fq.gz") into trimgalore_reads
     file "*trimming_report.txt" into trimgalore_results
     file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
     file "where_are_my_files.txt"
@@ -874,6 +906,100 @@ process trim_galore {
         """
         trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
         """
+    }
+}
+
+/*
+ * STEP 2+ - SortMeRNA - remove rRNA sequences on request
+ */
+if (!params.remove_rRNA){
+    trimgalore_reads
+        .into { trimmed_reads_alignment; trimmed_reads_salmon }
+} else {
+    process sortmerna_index {
+        label 'low_memory'
+        tag "${fasta.baseName}"
+
+        input:
+        file(fasta) from sortmerna_fasta
+
+        output:
+        val("${fasta.baseName}") into sortmerna_db_name
+        file("$fasta") into sortmerna_db_fasta
+        file("${fasta.baseName}*") into sortmerna_db
+
+        script:
+        """
+        indexdb_rna --ref $fasta,${fasta.baseName} -m 3072 -v
+        """
+    }
+
+    process sortmerna {
+        label 'low_memory'
+        tag "$name"
+        publishDir "${params.outdir}/SortMeRNA", mode: 'copy',
+            saveAs: {filename ->
+                if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
+                else if (params.save_nonrRNA_reads) "reads/$filename"
+                else null
+            }
+
+        input:
+        set val(name), file(reads) from trimgalore_reads
+        val(db_name) from sortmerna_db_name.collect()
+        file(db_fasta) from sortmerna_db_fasta.collect()
+        file(db) from sortmerna_db.collect()
+
+        output:
+        set val(name), file("*.fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
+        file "*_rRNA_report.txt"
+
+
+        script:
+        //concatenate reference files: ${db_fasta},${db_name}:${db_fasta},${db_name}:...
+        def Refs = ''
+        for (i=0; i<db_fasta.size(); i++) { Refs+= ":${db_fasta[i]},${db_name[i]}" }
+        Refs = Refs.substring(1)
+
+        if (params.singleEnd) {
+            """
+            gzip -d --force < ${reads} > all-reads.fastq 
+
+            sortmerna --ref ${Refs} \
+                --reads all-reads.fastq \
+                --num_alignments 1 \
+                -a ${task.cpus} \
+                --fastx \
+                --aligned rRNA-reads \
+                --other non-rRNA-reads \
+                --log -v
+
+            gzip --force < non-rRNA-reads.fastq > ${name}.fq.gz
+
+            mv rRNA-reads.log ${name}_rRNA_report.txt
+            """
+        } else {
+            """
+            gzip -d --force < ${reads[0]} > reads-fw.fq
+            gzip -d --force < ${reads[1]} > reads-rv.fq
+            merge-paired-reads.sh reads-fw.fq reads-rv.fq all-reads.fastq
+
+            sortmerna --ref ${Refs} \
+                --reads all-reads.fastq \
+                --num_alignments 1 \
+                -m 4096 -a 2 \
+                --fastx --paired_in \
+                --aligned rRNA-reads \
+                --other non-rRNA-reads \
+                --log -v
+
+            unmerge-paired-reads.sh non-rRNA-reads.fastq non-rRNA-reads-fw.fq non-rRNA-reads-rv.fq
+            gzip < non-rRNA-reads-fw.fq > ${name}-fw.fq.gz
+            gzip < non-rRNA-reads-rv.fq > ${name}-rv.fq.gz
+
+            mv rRNA-reads.log ${name}_rRNA_report.txt
+            """
+        }
     }
 }
 

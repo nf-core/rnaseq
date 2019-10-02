@@ -8,6 +8,7 @@ and processes data using the following steps:
 
 * [FastQC](#fastqc) - read quality control
 * [TrimGalore](#trimgalore) - adapter trimming
+* [SortMeRNA](#sortmerna) - rRNA removal
 * [STAR](#star) - alignment
 * [RSeQC](#rseqc) - RNA quality control metrics
   * [BAM stat](#bam-stat)
@@ -60,6 +61,23 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
   * FastQC report for trimmed reads
 
 Single-end data will have slightly different file names and only one FastQ file per sample.
+
+## SortMeRNA
+When `--remove_rRNA` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
+
+MultiQC reports currently do not contain statistics of the rRNA removal.
+
+**Output directory: `results/SortMeRNA`**
+
+Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
+
+* `reads/sample-fw.fq.gz`, `reads/sample-rv.fq.gz`
+  * Trimmed and rRNA depleted FastQ data, reads forward and reverse.
+  * NB: Only saved if `--save_nonrRNA_reads` has been specified.
+* `logs/sample_rRNA_report.txt`
+  * Report how many reads where removed due to matches to reference database(s).
+
+Single-end data will have slightly different file names (`reads/sample.fq.gz`) and only one FastQ file per sample.
 
 ## STAR
 STAR is a read aligner designed for RNA sequencing.  STAR stands for Spliced Transcripts Alignment to a Reference, it produces results comparable to TopHat (the aligned previously used by NGI for RNA alignments) but is much faster.

@@ -78,9 +78,11 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
   * STAR log files, containing a lot of detailed information about the run. Typically only useful for debugging purposes.
 * `Sample_SJ.out.tab`
   * Filtered splice junctions detected in the mapping
-
+* `unaligned/...`
+  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen.
 
 ## RSeQC
+
 RSeQC is a package of scripts designed to evaluate the quality of RNA seq data. You can find out more about the package at the [RSeQC website](http://rseqc.sourceforge.net/).
 
 This pipeline runs several, but not all RSeQC scripts. All of these results are summarised within the MultiQC report and described below.
@@ -302,6 +304,8 @@ We also use featureCounts to count overlaps with different classes of features. 
   * Read the counts for each gene provided in the reference `gtf` file
 * `Sample/logs`
   * Summary file with information about the process
+* `unaligned/`
+  * Contains a list of unmapped reads that can be used to generate a FastQ of unmapped reads for downstream analysis.
 
 ## tximport
 [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts.

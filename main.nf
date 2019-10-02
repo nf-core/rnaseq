@@ -77,6 +77,7 @@ def helpMessage() {
       --skipPreseq                  Skip Preseq
       --skipDupRadar                Skip dupRadar (and Picard MarkDuplicates)
       --skipQualimap                Skip Qualimap
+      --skipBiotypeQC               Skip Biotype QC
       --skipRseQC                   Skip RSeQC
       --skipEdgeR                   Skip edgeR MDS plot and heatmap
       --skipMultiQC                 Skip MultiQC
@@ -1268,7 +1269,7 @@ if (!params.skipAlignment){
       output:
       file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
       file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-      file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" into featureCounts_biotype
+      file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
 
       script:
       def featureCounts_direction = 0
@@ -1280,11 +1281,12 @@ if (!params.skipAlignment){
       }
       // Try to get real sample name
       sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '_subsamp.sorted'
+      biotype_qc = params.skipBiotypeQC ? '' : "featureCounts -a $gtf -g $biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts"
+      mod_biotype = params.skipBiotypeQC ? '' : "cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv"
       """
       featureCounts -a $gtf -g ${params.fc_group_features} -t ${params.fc_count_type} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
-      featureCounts -a $gtf -g $biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-      cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
-      mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv
+      $biotype_qc
+      $mod_biotype
       """
   }
 

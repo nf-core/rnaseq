@@ -1786,7 +1786,7 @@ workflow.onComplete {
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
     if(skipped_poor_alignment.size() > 0){
-        log.info "${c_purple}[nf-core/rnaseq]${c_red} WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor alignment scores!${c_reset}"
+        log.info "${c_purple}[nf-core/rnaseq]${c_red} WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor mapping percentages!${c_reset}"
     }
     if (workflow.stats.ignoredCount > 0 && workflow.success) {
       log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"

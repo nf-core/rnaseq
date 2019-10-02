@@ -37,8 +37,12 @@ matrix:
     env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC --gtf false'
   - name: "Latest Nextflow version, skipQC, gzipped references, HiSat2 aligner, make HiSat2 index"
     env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
-  - name: "Latest Nextflow version, nuclear RNA"
-    env: NXF_VER='' SUITE=test FLAGS='--fc_count_type transcript'
+  - name: "Latest Nextflow version, skipQC, output unmapped STAR"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --saveUnaligned'
+  - name: "Latest Nextflow version, skipQC, output unmapped HISAT2"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --aligner hisat2 --saveUnaligned'
+  - name: "Latest Nextflow version, skipQC, output unmapped Salmon"
+    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --pseudo_aligner salmon --saveUnaligned'
   - name: "Lint the pipeline code"
     install:
       # Install nf-core/tools

@@ -62,6 +62,7 @@ def helpMessage() {
       --stringTieIgnoreGTF          Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
       --seq_center                  Add sequencing center in @RG line of output BAM header
       --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
+      --saveUnaligned               Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
       --skipAlignment               Skip alignment altogether (usually in favor of pseudoalignment)
 
     Read Counting:
@@ -907,6 +908,7 @@ if (!params.skipAlignment){
           publishDir "${params.outdir}/STAR", mode: 'copy',
               saveAs: {filename ->
                   if (filename.indexOf(".bam") == -1) "logs/$filename"
+                  else if (params.saveUnaligned && filename != "where_are_my_files.txt" && 'Unmapped' in filename) unmapped/filename
                   else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
                   else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") filename
                   else null
@@ -924,13 +926,15 @@ if (!params.skipAlignment){
           file "*SJ.out.tab"
           file "*Log.out" into star_log
           file "where_are_my_files.txt"
+          file "*Unmapped*" optional true 
           file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
           script:
           prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           def star_mem = task.memory ?: params.star_memory ?: false
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-          seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+          seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+          unaligned = params.saveUnaligned ? "--outReadsUnmapped Fastx" : ''
           """
           STAR --genomeDir $index \\
               --sjdbGTFfile $gtf \\
@@ -940,8 +944,8 @@ if (!params.skipAlignment){
               --outWigType bedGraph \\
               --outSAMtype BAM SortedByCoordinate $avail_mem \\
               --readFilesCommand zcat \\
-              --runDirPerm All_RWX \\
-               --outFileNamePrefix $prefix $seq_center
+              --runDirPerm All_RWX $unaligned \\
+              --outFileNamePrefix $prefix $seqCenter
 
           samtools index ${prefix}Aligned.sortedByCoord.out.bam
           """
@@ -980,6 +984,7 @@ if (!params.skipAlignment){
           file "${prefix}.bam" into hisat2_bam
           file "${prefix}.hisat2_summary.txt" into alignment_logs
           file "where_are_my_files.txt"
+          file "unmapped.hisat2*" optional true
 
           script:
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
@@ -991,19 +996,22 @@ if (!params.skipAlignment){
           } else if (reverseStranded && !unStranded){
               rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
           }
+          
           if (params.singleEnd) {
+              unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz" : ''
               """
               hisat2 -x $index_base \\
                      -U $reads \\
                      $rnastrandness \\
                      --known-splicesite-infile $alignment_splicesites \\
-                     -p ${task.cpus} \\
+                     -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                      | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
               """
           } else {
+              unaligned = params.saveUnaligned ? "--un-conc-gz unmapped.hisat2.gz" : ''
               """
               hisat2 -x $index_base \\
                      -1 ${reads[0]} \\
@@ -1012,7 +1020,7 @@ if (!params.skipAlignment){
                      --known-splicesite-infile $alignment_splicesites \\
                      --no-mixed \\
                      --no-discordant \\
-                     -p ${task.cpus} \\
+                     -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
@@ -1426,6 +1434,7 @@ if (params.pseudo_aligner == 'salmon'){
             rnastrandness = params.singleEnd ? 'SR' : 'ISR'
         }
         def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+        unmapped = params.saveUnaligned ? "--writeUnmappedNames" : ''
         """
         salmon quant --validateMappings \\
                         --seqBias --useVBOpt --gcBias \\
@@ -1433,7 +1442,7 @@ if (params.pseudo_aligner == 'salmon'){
                         --threads ${task.cpus} \\
                         --libType=${rnastrandness} \\
                         --index ${index} \\
-                        $endedness \\
+                        $endedness $unmapped\\
                         -o ${sample}
         """
         }

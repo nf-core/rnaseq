@@ -911,9 +911,9 @@ if (!params.skipTrimming){
         }
     }
 }else{
-   trimgalore_reads
-       .set {raw_reads_trimgalore}
-   trimgalore_results = Channel.Empty()
+   raw_reads_trimgalore
+       .set {trimgalore_reads}
+   trimgalore_results = Channel.empty()
 }
 
 
@@ -1652,7 +1652,7 @@ if (params.pseudo_aligner == 'salmon'){
       paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
       paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
       paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
-      
+
       se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
       se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
       """
@@ -1674,7 +1674,7 @@ process multiqc {
     input:
     file multiqc_config from ch_multiqc_config.collect()
     file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file ('trimgalore/*') from trimgalore_results.collect()
+    file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])

@@ -1561,7 +1561,7 @@ if (params.pseudo_aligner == 'salmon'){
 
         output:
         file "${sample}/" into salmon_logs
-        set val(sample), file("${sample}/") into salmon_tximport
+        set val(sample), file("${sample}/") into salmon_tximport, salmon_parsegtf
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1584,12 +1584,31 @@ if (params.pseudo_aligner == 'salmon'){
         """
         }
 
+    
+    process salmon_tx2gene {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      set val(name), file ("salmon/*") from salmon_parsegtf.collect()
+      file gtf from gtf_salmon_merge
+
+      output:
+      file "tx2gene.csv" into salmon_tx2gene, salmon_merge_tx2gene
+
+      script:
+      """
+      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
+      """
+    }
+
     process salmon_tximport {
       label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       set val(name), file ("salmon/*") from salmon_tximport
-      file gtf from gtf_salmon_merge.collect()
+      file tx2gene from salmon_tx2gene.collect()
 
       output:
       file "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
@@ -1599,7 +1618,6 @@ if (params.pseudo_aligner == 'salmon'){
 
       script:
       """
-      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
       tximport.r NULL salmon ${name}
       """
     }
@@ -1613,9 +1631,11 @@ if (params.pseudo_aligner == 'salmon'){
       file gene_count_files from salmon_gene_counts.collect()
       file transcript_tpm_files from salmon_transcript_tpm.collect()
       file transcript_count_files from salmon_transcript_counts.collect()
+      file tx2gene from salmon_merge_tx2gene
 
       output:
       file "salmon_merged*.csv" into salmon_merged_ch
+      file "*.rds"
 
       script:
       // First field is the gene/transcript ID
@@ -1632,6 +1652,9 @@ if (params.pseudo_aligner == 'salmon'){
       paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
       paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
       paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
+      
+      se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
+      se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
       """
     }
 } else {

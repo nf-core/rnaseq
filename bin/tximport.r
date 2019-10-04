@@ -67,12 +67,10 @@ if (!is.null(tx2gene)){
 }
 
 if(exists("gse")){
-  saveRDS(gse, file = "gse.rds")
   write.csv(assays(gse)[["abundance"]], paste(c(prefix, "gene_tpm.csv"), collapse="_"), quote=FALSE)
   write.csv(assays(gse)[["counts"]], paste(c(prefix, "gene_counts.csv"), collapse="_"), quote=FALSE)
 }
 
-saveRDS(se, file = "se.rds")
 write.csv(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.csv"), collapse="_"), quote=FALSE)
 write.csv(assays(se)[["counts"]], paste(c(prefix, "transcript_counts.csv"), collapse="_"), quote=FALSE)
 

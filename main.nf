@@ -48,6 +48,7 @@ def helpMessage() {
       --unStranded                  The default behaviour
 
     Trimming:
+      --skipTrimming                Skip Trim Galore step
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
       --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
       --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
@@ -869,45 +870,52 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-process trim_galore {
-    label 'low_memory'
-    tag "$name"
-    publishDir "${params.outdir}/trim_galore", mode: 'copy',
-        saveAs: {filename ->
-            if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
-            else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-            else if (!params.saveTrimmed && filename == "where_are_my_files.txt") filename
-            else if (params.saveTrimmed && filename != "where_are_my_files.txt") filename
-            else null
+if (!params.skipTrimming){
+    process trim_galore {
+        label 'low_memory'
+        tag "$name"
+        publishDir "${params.outdir}/trim_galore", mode: 'copy',
+            saveAs: {filename ->
+                if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
+                else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
+                else if (!params.saveTrimmed && filename == "where_are_my_files.txt") filename
+                else if (params.saveTrimmed && filename != "where_are_my_files.txt") filename
+                else null
+            }
+
+        input:
+        set val(name), file(reads) from raw_reads_trimgalore
+        file wherearemyfiles from ch_where_trim_galore.collect()
+
+        output:
+        set val(name), file("*fq.gz") into trimgalore_reads
+        file "*trimming_report.txt" into trimgalore_results
+        file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+        file "where_are_my_files.txt"
+
+
+        script:
+        c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
+        c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
+        tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
+        tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
+        nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
+        if (params.singleEnd) {
+            """
+            trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
+            """
+        } else {
+            """
+            trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
+            """
         }
-
-    input:
-    set val(name), file(reads) from raw_reads_trimgalore
-    file wherearemyfiles from ch_where_trim_galore.collect()
-
-    output:
-    set val(name), file("*fq.gz") into trimgalore_reads
-    file "*trimming_report.txt" into trimgalore_results
-    file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
-    file "where_are_my_files.txt"
-
-
-    script:
-    c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
-    c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
-    tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
-    tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
-    nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-    if (params.singleEnd) {
-        """
-        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
-        """
-    } else {
-        """
-        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
-        """
     }
+}else{
+   trimgalore_reads
+       .set {raw_reads_trimgalore}
+   trimgalore_results = Channel.Empty()
 }
+
 
 /*
  * STEP 2+ - SortMeRNA - remove rRNA sequences on request
@@ -1134,6 +1142,7 @@ if (!params.skipAlignment){
                      -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
+                     --dta \\
                      --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                      | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
               """

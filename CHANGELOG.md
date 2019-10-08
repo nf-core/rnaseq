@@ -4,7 +4,9 @@
 
 ### Pipeline updates
 
-* Add option to `--skipBiotypeQC` to be able to skip BiotypeQC in `featureCounts` if e.g. the utilized GTF/GFF doesn't contain the required information
+* Add option `--skipTrimming` to be able to run from previous processed data since this step take quite long.
+* Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increaasing memory with sampe size.
+* Add option `--skipBiotypeQC` to be able to skip BiotypeQC in `featureCounts` if e.g. the utilized GTF/GFF doesn't contain the required information
 * Adjust wording of skipped samples [in pipeline output](https://github.com/nf-core/rnaseq/issues/290)
 * Added [possibility to output unmapped reads](https://github.com/nf-core/rnaseq/issues/277) to pipeline
 * Add option to modify `featureCounts -t` option to assign reads to a different type than `exon`. This makes it compatible with nuclearRNAseq. For instance, it would count reads in introns and exons if `gene` is used instead. Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, need to be counted, e.g. by specifying `--fc_count_type transcript`.

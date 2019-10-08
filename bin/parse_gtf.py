@@ -60,7 +60,11 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
                     continue
                 if (gene, row[txid]) not in seen:
                     seen.add((gene, row[txid]))
-                    print("%s,%s,%s" % (row[txid], gene, row[extra]), file=outh)
+                    if not extra in row:
+                        extra_id = gene
+                    else:
+                        extra_id = row[extra]
+                    print("%s,%s,%s" % (row[txid], gene, extra_id), file=outh)
 
 
 if __name__ == "__main__":

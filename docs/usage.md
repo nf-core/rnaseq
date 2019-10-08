@@ -40,6 +40,7 @@
   * [`--three_prime_clip_r1 [int]`](#--three_prime_clip_r1-int)
   * [`--three_prime_clip_r2 [int]`](#--three_prime_clip_r2-int)
   * [`--trim_nextseq [int]`](#--trim_nextseq)
+  * [`--skipTrimming`](#--skipTrimming)
 * [Ribosomal RNA removal](#ribosomal-rna-removal)
   * [`--remove_rRNA`](#--remove_rrna)
   * [`--save_nonrRNA_reads`](#--save_nonrrna_reads)
@@ -420,6 +421,10 @@ Instructs Trim Galore to remove bp from the 3' end of read 2 _AFTER_ adapter/qua
 ### `--trim_nextseq [int]`
 
 This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.
+
+### `--skipTrimming`
+
+This allows to skip the trimming process to save time when re-analyzing data that has been trimmed already.
 
 ## Ribosomal RNA removal
 If rRNA removal is desired (for example, metatranscriptomics),

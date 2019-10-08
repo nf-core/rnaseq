@@ -48,6 +48,7 @@ def helpMessage() {
       --unStranded                  The default behaviour
 
     Trimming:
+      --skipTrimming                Skip Trim Galore step
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
       --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
       --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
@@ -869,45 +870,52 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-process trim_galore {
-    label 'low_memory'
-    tag "$name"
-    publishDir "${params.outdir}/trim_galore", mode: 'copy',
-        saveAs: {filename ->
-            if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
-            else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-            else if (!params.saveTrimmed && filename == "where_are_my_files.txt") filename
-            else if (params.saveTrimmed && filename != "where_are_my_files.txt") filename
-            else null
+if (!params.skipTrimming){
+    process trim_galore {
+        label 'low_memory'
+        tag "$name"
+        publishDir "${params.outdir}/trim_galore", mode: 'copy',
+            saveAs: {filename ->
+                if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
+                else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
+                else if (!params.saveTrimmed && filename == "where_are_my_files.txt") filename
+                else if (params.saveTrimmed && filename != "where_are_my_files.txt") filename
+                else null
+            }
+
+        input:
+        set val(name), file(reads) from raw_reads_trimgalore
+        file wherearemyfiles from ch_where_trim_galore.collect()
+
+        output:
+        set val(name), file("*fq.gz") into trimgalore_reads
+        file "*trimming_report.txt" into trimgalore_results
+        file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+        file "where_are_my_files.txt"
+
+
+        script:
+        c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
+        c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
+        tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
+        tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
+        nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
+        if (params.singleEnd) {
+            """
+            trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
+            """
+        } else {
+            """
+            trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
+            """
         }
-
-    input:
-    set val(name), file(reads) from raw_reads_trimgalore
-    file wherearemyfiles from ch_where_trim_galore.collect()
-
-    output:
-    set val(name), file("*fq.gz") into trimgalore_reads
-    file "*trimming_report.txt" into trimgalore_results
-    file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
-    file "where_are_my_files.txt"
-
-
-    script:
-    c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
-    c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
-    tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
-    tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
-    nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-    if (params.singleEnd) {
-        """
-        trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
-        """
-    } else {
-        """
-        trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
-        """
     }
+}else{
+   raw_reads_trimgalore
+       .set {trimgalore_reads}
+   trimgalore_results = Channel.empty()
 }
+
 
 /*
  * STEP 2+ - SortMeRNA - remove rRNA sequences on request
@@ -1134,6 +1142,7 @@ if (!params.skipAlignment){
                      -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
+                     --dta \\
                      --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                      | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
               """
@@ -1552,7 +1561,7 @@ if (params.pseudo_aligner == 'salmon'){
 
         output:
         file "${sample}/" into salmon_logs
-        set val(sample), file("${sample}/") into salmon_tximport
+        set val(sample), file("${sample}/") into salmon_tximport, salmon_parsegtf
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
@@ -1575,12 +1584,31 @@ if (params.pseudo_aligner == 'salmon'){
         """
         }
 
+    
+    process salmon_tx2gene {
+      label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
+
+      input:
+      set val(name), file ("salmon/*") from salmon_parsegtf.collect()
+      file gtf from gtf_salmon_merge
+
+      output:
+      file "tx2gene.csv" into salmon_tx2gene, salmon_merge_tx2gene
+
+      script:
+      """
+      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
+      """
+    }
+
     process salmon_tximport {
       label 'low_memory'
+      publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       set val(name), file ("salmon/*") from salmon_tximport
-      file gtf from gtf_salmon_merge.collect()
+      file tx2gene from salmon_tx2gene.collect()
 
       output:
       file "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
@@ -1590,7 +1618,6 @@ if (params.pseudo_aligner == 'salmon'){
 
       script:
       """
-      parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
       tximport.r NULL salmon ${name}
       """
     }
@@ -1604,9 +1631,11 @@ if (params.pseudo_aligner == 'salmon'){
       file gene_count_files from salmon_gene_counts.collect()
       file transcript_tpm_files from salmon_transcript_tpm.collect()
       file transcript_count_files from salmon_transcript_counts.collect()
+      file tx2gene from salmon_merge_tx2gene
 
       output:
       file "salmon_merged*.csv" into salmon_merged_ch
+      file "*.rds"
 
       script:
       // First field is the gene/transcript ID
@@ -1623,6 +1652,9 @@ if (params.pseudo_aligner == 'salmon'){
       paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
       paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
       paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
+
+      se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
+      se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
       """
     }
 } else {
@@ -1642,7 +1674,7 @@ process multiqc {
     input:
     file multiqc_config from ch_multiqc_config.collect()
     file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file ('trimgalore/*') from trimgalore_results.collect()
+    file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])

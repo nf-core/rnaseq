@@ -805,8 +805,6 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
             publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                                saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
-            when:
-            !params.transcript_fasta
 
             input:
             file fasta from ch_fasta_for_salmon_transcripts

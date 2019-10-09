@@ -44,4 +44,4 @@ If there are any failures then the automated tests fail.
 These tests are run both with the latest available version of Nextflow and also the minimum required version that is stated in the pipeline code.
 
 ## Getting help
-For further information/help, please consult the [nf-core/rnaseq documentation](https://github.com/nf-core/rnaseq#documentation) and don't hesitate to get in touch on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).
+For further information/help, please consult the [nf-core/rnaseq documentation](https://github.com/nf-core/rnaseq#documentation) and don't hesitate to get in touch on the pipeline channel on [Slack](https://nfcore.slack.com/channels/rnaseq).

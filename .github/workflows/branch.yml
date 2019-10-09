@@ -13,4 +13,4 @@ jobs:
       - uses: actions/checkout@v1
       - name: Check PRs
         run: |
-          [[ $(git remote get-url origin) == *nf-core/rnaseq ]] && [ ${GITHUB_BASE_REF} = "master" ] && [[ ${GITHUB_HEAD_REF} = "dev" ] || [ ${GITHUB_BASE_REF} = "patch" ]]
+          [[ $(git remote get-url origin) == *nf-core/rnaseq ]] && [[ ${GITHUB_BASE_REF} = "master" ]] && { [[ ${GITHUB_HEAD_REF} = "dev" ]] || [[ ${GITHUB_BASE_REF} = "patch" ]]; }

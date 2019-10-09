@@ -1,0 +1,30 @@
+name: nf-core/rnaseq CI
+# This workflow is triggered on pushes and PRs to the repository.
+on: [push, pull_request]  
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nxf_ver: ['0.32.0', '']
+        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
+        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          export NXF_VER=${{ matrix.nxf_ver }}
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Download image
+        run: |
+          docker pull nfcore/rnaseq:dev && docker tag nfcore/rnaseq:dev nfcore/rnaseq:1.4
+      
+      - name: Basic workflow tests 
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+      - name: Basic workflow, gzipped input
+        run: | 
+          nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
+     

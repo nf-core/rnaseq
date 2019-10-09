@@ -15,7 +15,7 @@
 * Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
 * Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
 * Resolved link to guidelines is broken [#203](https://github.com/nf-core/rnaseq/issues/203)
-* Removed unnecessary `stringtie` channels for `MultiQC`
+* Removed unused `stringtie` channels for `MultiQC`
 * Added tximport to merge salmon output
 * Added Salmon as an supplementary method to STAR and HiSAT2
 * Added `--psuedo_aligner`, `--transcript_fasta` and `--salmon_index` parameters

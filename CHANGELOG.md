@@ -4,7 +4,7 @@
 
 ### Pipeline updates
 
-* Add option `--skipTrimming` to be able to run from previous processed data since this step take quite long.
+* Add option `--skipTrimming` to be able to run from previously processed data.
 * Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increaasing memory with sampe size.
 * Add option `--skipBiotypeQC` to be able to skip BiotypeQC in `featureCounts` if e.g. the utilized GTF/GFF doesn't contain the required information
 * Adjust wording of skipped samples [in pipeline output](https://github.com/nf-core/rnaseq/issues/290)

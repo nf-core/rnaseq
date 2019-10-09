@@ -20,7 +20,7 @@ def extract_fasta_seq_names(fasta_name):
     given a fasta file. yield tuples of header, sequence
     from https://www.biostars.org/p/710/
     """
-    "first open the file outside "
+    # first open the file outside
     fh = open(fasta_name)
 
     # ditch the boolean (x[0]) and just keep the header or sequence since

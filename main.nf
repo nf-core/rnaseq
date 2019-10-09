@@ -958,7 +958,7 @@ if (!params.remove_rRNA){
 
         output:
         set val(name), file("*.fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
-        file "*_rRNA_report.txt"
+        file "*_rRNA_report.txt" into sortmerna_logs
 
 
         script:
@@ -1682,6 +1682,7 @@ process multiqc {
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
+    file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)
 

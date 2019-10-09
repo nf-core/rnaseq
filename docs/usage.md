@@ -428,18 +428,22 @@ This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, 
 This allows to skip the trimming process to save time when re-analyzing data that has been trimmed already.
 
 ## Ribosomal RNA removal
+
 If rRNA removal is desired (for example, metatranscriptomics),
 add the following command line parameters.
 
 ### `--remove_rRNA`
+
 Instructs to use SortMeRNA to remove reads related to ribosomal RNA (or any patterns found in the sequences defined by `--rRNA_database_manifest`).
 
 ### `--save_nonrRNA_reads`
+
 By default, non-rRNA FastQ files will not be saved to the results directory. Specify this
 flag (or set to true in your config file) to copy these files when complete.
 
 ### `--rRNA_database_manifest`
-By default, rRNA databases in github [`biocore/sortmerna/rRNA_databases`](https://github.com/biocore/sortmerna/tree/master/rRNA_databases) are used. Here the path to a text file can be provided that contains paths to fasta files (one per line) that will be used for database creation for SortMeRNA instead of the default ones. Consequently, similar reads to these sequences will be removed.
+
+By default, rRNA databases in github [`biocore/sortmerna/rRNA_databases`](https://github.com/biocore/sortmerna/tree/master/rRNA_databases) are used. Here the path to a text file can be provided that contains paths to fasta files (one per line, no ' or " for file names) that will be used for database creation for SortMeRNA instead of the default ones. You can see an example in the directory `assets/rrna-default-dbs.txt`. Consequently, similar reads to these sequences will be removed.
 
 ## Library Prep Presets
 

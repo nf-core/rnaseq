@@ -8,6 +8,8 @@ jobs:
     strategy:
       matrix:
         nxf_ver: ['0.32.0', '']
+        aligner: ['--aligner hisat2', '--aligner star', '--pseudo_aligner salmon']
+        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
@@ -15,10 +17,10 @@ jobs:
           export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Download and tag image
+      - name: Basic workflow tests 
         run: |
-          docker pull nfcore/rnaseq:dev
-          docker tag nfcore/rnaseq:dev nfcore/rnaseq:2.5
-      - name: Run test
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+      - name: Basic workflow, gzipped input
+        run: | 
+          nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
+     

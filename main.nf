@@ -1572,7 +1572,7 @@ if (params.pseudo_aligner == 'salmon'){
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      set val(name), file ("salmon/*") from salmon_parsegtf.collect()
+      file ("salmon/*") from salmon_parsegtf.collect()
       file gtf from gtf_salmon_merge
 
       output:

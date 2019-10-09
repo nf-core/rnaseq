@@ -9,7 +9,6 @@ However, don't be put off by this template - other more general issues and sugge
 > If you need help using or modifying nf-core/rnaseq then the best place to ask is on the pipeline channel on [Slack](https://nfcore.slack.com/channels/rnaseq).
 
 
-
 ## Contribution workflow
 If you'd like to write some code for nf-core/rnaseq, the standard workflow
 is as follows:

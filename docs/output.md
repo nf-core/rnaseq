@@ -97,7 +97,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 * `Sample_SJ.out.tab`
   * Filtered splice junctions detected in the mapping
 * `unaligned/...`
-  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen.
+  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--saveUnaligned` output.
 
 ## RSeQC
 

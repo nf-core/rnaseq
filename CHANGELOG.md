@@ -4,7 +4,7 @@
 
 ### Pipeline updates
 
-* Add option `--skipTrimming` to be able to run from previous processed data since this step take quite long.
+* Add option `--skipTrimming` to be able to run from previously processed data.
 * Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increaasing memory with sampe size.
 * Add option `--skipBiotypeQC` to be able to skip BiotypeQC in `featureCounts` if e.g. the utilized GTF/GFF doesn't contain the required information
 * Adjust wording of skipped samples [in pipeline output](https://github.com/nf-core/rnaseq/issues/290)
@@ -15,7 +15,7 @@
 * Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
 * Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
 * Resolved link to guidelines is broken [#203](https://github.com/nf-core/rnaseq/issues/203)
-* Removed unnecessary `stringtie` channels for `MultiQC`
+* Removed unused `stringtie` channels for `MultiQC`
 * Added tximport to merge salmon output
 * Added Salmon as an supplementary method to STAR and HiSAT2
 * Added `--psuedo_aligner`, `--transcript_fasta` and `--salmon_index` parameters

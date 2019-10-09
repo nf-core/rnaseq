@@ -1,73 +1,15 @@
 sudo: required
 language: python
-services: docker
-cache: pip
 jdk: openjdk8
-
+services: docker
+python: '3.6'
+cache: pip
 matrix:
   fast_finish: true
-  include:
-  - name: "Minimum Nextflow version, regular test suite with STAR aligner"
-    env: NXF_VER='0.32.0' SUITE=test FLAGS=
-    language: java
-    jdk: openjdk8
-  - name: "Latest Nextflow version, regular test suite with STAR aligner"
-    env: NXF_VER='' SUITE=test FLAGS=
-  - name: "Latest Nextflow version, regular test suite with STAR aligner, force GFF"
-    env: NXF_VER='' SUITE=test FLAGS='--gtf false'
-  - name: "Latest Nextflow version, skipQC, with HiSat2 aligner"
-    env: NXF_VER='' SUITE=test FLAGS='--aligner hisat2 --skipQC'
-  - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner"
-    env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
-  - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner and skipping alignment"
-    env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC'
-  - name: "Latest Nextflow version, skipQC, with Salmon pseudo-aligner, skipping alignment, force GFF usage"
-    env: NXF_VER='' SUITE=test FLAGS='--pseudo_aligner salmon --skipQC --gtf false'
-  - name: "Latest Nextflow version, skipQC, gzipped references with STAR aligner"
-    env: NXF_VER='' SUITE=test_gz FLAGS=
-  - name: "Latest Nextflow version, skipQC, gzipped references with HiSat2 aligner + premade indices"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--aligner hisat2 --skipQC'
-  - name: "Latest Nextflow version, skipQC, gzipped references with Salmon pseudo-aligner + premade indices"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC'
-  - name: "Latest Nextflow version, skipQC, gzipped references with Salmon pseudo-aligner + premade indices and skipping alignment"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--pseudo_aligner salmon --skipQC --skipAlignment'
-  - name: "Latest Nextflow version, skipQC, gzipped references, STAR aligner, make STAR index"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC'
-  - name: "Latest Nextflow version, skipQC, gzipped references, STAR aligner, make STAR index, force GFF usage"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--star_index false --skipQC --gtf false'
-  - name: "Latest Nextflow version, skipQC, gzipped references, HiSat2 aligner, make HiSat2 index"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--hisat2_index false --skipQC --aligner hisat2'
-  - name: "Latest Nextflow version, regular test suite but with rRNA removel"
-    env: NXF_VER='' SUITE=test FLAGS='--remove_rRNA'
-  - name: "Latest Nextflow version, nuclear RNA"
-    env: NXF_VER='' SUITE=test FLAGS='--fc_count_type transcript'
-  - name: "Latest Nextflow version, STAR aligner, skipBiotypeQC"
-    env: NXF_VER='' SUITE=test FLAGS='--skipBiotypeQC'
-  - name: "Latest Nextflow version, skipQC, output unmapped STAR"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --saveUnaligned'
-  - name: "Latest Nextflow version, skipQC, output unmapped HISAT2"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --aligner hisat2 --saveUnaligned'
-  - name: "Latest Nextflow version, skipQC, output unmapped Salmon"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--skipQC --pseudo_aligner salmon --saveUnaligned'
-  - name: "Latest Nextflow version, skipTrimming"
-    env: NXF_VER='' SUITE=test_gz FLAGS='--skipTrimming'
-
-  - name: "Lint the pipeline code"
-    install:
-      # Install nf-core/tools
-      - pip install --upgrade pip
-      - pip install nf-core
-    script: nf-core lint ${TRAVIS_BUILD_DIR}
-    python: '3.6'
-    env: NXF_VER='0.32.0'
-    jdk: openjdk8
-  - name: "Lint the documentation"
-    script: markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
-    python: '3.6'
 
 before_install:
   # PRs to master are only ok if coming from dev branch
-  - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
+  - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && ([ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ] || [ $TRAVIS_PULL_REQUEST_BRANCH = "patch" ]))'
   # Pull the docker image first so the test doesn't wait for this
   - docker pull nfcore/rnaseq:dev
   # Fake the tag locally so that the pipeline runs properly
@@ -79,10 +21,24 @@ install:
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
+  # Install nf-core/tools
+  - pip install --upgrade pip
+  - pip install nf-core
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
   # Install markdownlint-cli
   - sudo apt-get install npm && npm install -g markdownlint-cli
 
+env:
+  - NXF_VER='0.32.0' # Specify a minimum NF version that should be tested and work
+  - NXF_VER='' # Plus: get the latest NF version and check that it works
+
 script:
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile ${SUITE},docker ${FLAGS}
+  # Lint the pipeline code
+  - nf-core lint ${TRAVIS_BUILD_DIR}
+  # Lint the documentation
+  - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
+  # Run, build reference genome with STAR
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  # Run, build reference genome with HISAT2
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2

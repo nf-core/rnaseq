@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         nxf_ver: ['0.32.0', '']
-        aligner: ['--aligner hisat2', '--aligner star', '--pseudo_aligner salmon']
+        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:
       - uses: actions/checkout@v1

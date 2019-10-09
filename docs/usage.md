@@ -15,9 +15,9 @@
   * [`--singleEnd`](#--singleend)
   * [Library strandedness](#library-strandedness)
 * [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
-  * [Default Attribute Type](#default-attribute-type)
+  * [Default "`gene_name`" Attribute Type](#default-attribute-type)
   * [Extra Gene Names](#extra-gene-names)
-  * [Default Attribute](#default-type)
+  * [Default "`exon`" Attribute](#default-exon-type)
 * [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
 * [Alignment tool](#alignment-tool)
 * [Reference genomes](#reference-genomes)
@@ -204,7 +204,7 @@ These flags affect the commands used for several steps in the pipeline - namely 
 
 ## FeatureCounts Extra Gene Names
 
-### Default Attribute Type
+### Default "`gene_name`" Attribute Type
 
 By default, the pipeline uses `gene_name` as the default gene identifier group. In case you need to adjust this, specify using the option `--fc_group_features` to use a different category present in your provided GTF file. Please also take care to use a suitable attribute to categorize the `biotype` of the selected features in your GTF then, using the option `--fc_group_features_type` (default: `gene_biotype`).
 
@@ -216,7 +216,7 @@ See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subre
 Note that you can also specify more than one desired value, separated by a comma:
 `--fc_extra_attributes gene_id,...`
 
-### Default Type
+### Default "`exon`" Type
 
 By default, the pipeline uses `exon` as the default to assign reads. In case you need to adjust this, specify using the option `--fc_count_type` to use a different category present in your provided GTF file (3rd column). For example, for nuclear RNA-seq, one could count reads in introns in addition to exons using `--fc_count_type transcript`.
 
@@ -232,7 +232,7 @@ By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align
 
 If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the alignment tool instead. Developed by the same group behind the popular Tophat aligner, HISAT2 has a much smaller memory footprint.
 
-To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file. Alternatively, you can also use `--aligner salmon` if you want to just perform a fast mapping to the transcriptome with Salmon (you will also have to supply the `--transcriptome` parameter).
+To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file. Alternatively, you can also use `--aligner salmon` if you want to just perform a fast mapping to the transcriptome with Salmon (you will also have to supply the `--transcriptome` parameter or both a `--fasta` and `--gtf`/`--gff`).
 
 ## Reference genomes
 

@@ -1,0 +1,53 @@
+name: nf-core/rnaseq linting
+# This workflow is triggered on pushes and PRs to the repository.
+on: [push, pull_request]  
+
+jobs:
+  Markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10'
+      - name: Install markdownlint
+        run: |
+          npm install -g markdownlint-cli
+      - name: Run Markdownlint
+        run: |
+          markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
+  YAML:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10'
+      - name: Install yamllint
+        run: |
+          npm install -g yaml-lint
+      - name: Run yamllint
+        run: |
+          yamllint $(find ${GITHUB_WORKSPACE} -type f -name "*.yml")
+  nf-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.6'
+          architecture: 'x64'
+      - name: Install pip
+        run: |
+          sudo apt install python3-pip
+          pip install --upgrade pip
+      - name: Install nf-core tools
+        run: |
+          pip install nf-core
+      - name: Run nf-core lint
+        run: |
+          nf-core lint ${GITHUB_WORKSPACE}

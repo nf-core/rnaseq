@@ -902,6 +902,7 @@ if (!params.skipTrimming){
 if (!params.remove_rRNA){
     trimgalore_reads
         .into { trimmed_reads_alignment; trimmed_reads_salmon }
+    sortmerna_logs = Channel.empty()
 } else {
     process sortmerna_index {
         label 'low_memory'

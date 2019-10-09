@@ -43,16 +43,18 @@
 
 ### Dependency Updates
 
+* Dependency list is now sorted appropriately
 * Picard 2.20.0 -> 2.21.1
 * bioconductor-dupradar 1.12.1 -> 1.14.0
 * bioconductor-edger 3.24.3 -> 3.26.0
-* csvtk 0.17.0 -> 0.18.2
+* Dropped CSVtk
 * gffread 0.9.12 -> 0.11.4
 * qualimap 2.2.2b -> 2.2.2c
 * trim-galore 0.6.1 -> 0.6.4
 * gffread 0.9.12 -> 0.11.4
+* rseqc 3.0.0 -> 3.0.1
 * Force matplotlib=3.0.3
-* Added Salmon 0.14.0
+* Added Salmon 0.14.2
 * Added RSEM 1.3.2
 * Added tximport 1.0.3
 * Added SummarizedExperiment 1.12.0

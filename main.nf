@@ -152,30 +152,14 @@ if (params.pico){
 }
 
 // Get rRNA databases
-def returnFile(it) {
-    inputFile = file(it)
-    if (!file(inputFile).exists()) exit 1, "File ${inputFile} does not exist!"
-    return inputFile
-}
-if(params.rRNA_database_manifest){
-    rRNA_database = returnFile(params.rRNA_database_manifest)
-    if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
-    Channel
-        .from( rRNA_database.readLines() )
-        .map { row -> returnFile(row) }
-        .set { sortmerna_fasta }
-} else {
-    Channel.fromPath([
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5.8s-database-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5s-database-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-16s-id95.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-23s-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-16s-id90.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-23s-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-18s-id95.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-28s-id98.fasta'])
-        .set { sortmerna_fasta }
-}
+// Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
+
+rRNA_database = file(params.rRNA_database_manifest)
+if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
+Channel
+    .from( rRNA_database.readLines() )
+    .map { row -> file(row) }
+    .set { sortmerna_fasta }
 
 // Validate inputs
 if (params.aligner != 'star' && params.aligner != 'hisat2'){
@@ -184,7 +168,6 @@ if (params.aligner != 'star' && params.aligner != 'hisat2'){
 if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
     exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
 }
-
 
 if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
   if (hasExtension(params.star_index, 'gz')){

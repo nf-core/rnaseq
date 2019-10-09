@@ -1,0 +1,24 @@
+name: nf-core/rnaseq CI
+# This workflow is triggered on pushes and PRs to the repository.
+on: [push, pull_request]  
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nxf_ver: ['0.32.0', '']
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          export NXF_VER=${{ matrix.nxf_ver }}
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Download and tag image
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:2.5
+      - name: Run test
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker

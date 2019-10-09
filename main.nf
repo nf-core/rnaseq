@@ -40,7 +40,6 @@ def helpMessage() {
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
       --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
-      --compressedReference         If provided, all reference files are assumed to be gzipped and will be unzipped before using
 
     Strandedness:
       --forwardStranded             The library is forward stranded
@@ -188,7 +187,7 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
 
 
 if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
-  if (params.compressedReference){
+  if (hasExtension(params.star_index, 'gz')){
     star_index_gz = Channel
         .fromPath(params.star_index, checkIfExists: true)
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
@@ -199,7 +198,7 @@ if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
   }
 }
 else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment ){
-  if (params.compressedReference){
+  if (hasExtension(params.hisat2_index, 'gz')){
     hs2_indices_gz = Channel
         .fromPath("${params.hisat2_index}", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
@@ -210,7 +209,7 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlign
   }
 }
 else if ( params.fasta && !params.skipAlignment){
-  if (params.compressedReference) {
+  if (hasExtension(params.fasta, 'gz')) {
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
         .set { genome_fasta_gz }
@@ -238,7 +237,7 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 // transcripts from, or can use a transcript fasta directly
 if ( params.pseudo_aligner == 'salmon' ) {
     if ( params.salmon_index ) {
-      if (params.compressedReference) {
+      if (hasExtension(params.salmon_index, 'gz')) {
         salmon_index_gz = Channel
             .fromPath(params.salmon_index, checkIfExists: true)
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
@@ -248,7 +247,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
       }
     } else if ( params.transcript_fasta ) {
-      if (params.compressedReference){
+      if (hasExtension(params.transcript_fasta, 'gz')){
         transcript_fasta_gz = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
@@ -259,7 +258,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
       }
     } else if ( params.fasta && (params.gff || params.gtf)){
       log.info "Extracting transcript fastas from genome fasta + gtf/gff"
-      if (params.compressedReference) {
+      if (hasExtension(params.fasta, 'gz')) {
         Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
@@ -278,7 +277,7 @@ if( params.gtf ){
     // Prefer gtf over gff
     log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
   }
-  if (params.compressedReference){
+  if (hasExtension(params.gtf, 'gz')){
     gtf_gz = Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
@@ -291,7 +290,7 @@ if( params.gtf ){
 
   }
 } else if ( params.gff ){
-  if (params.compressedReference){
+  if (hasExtension(params.gff, 'gz')){
     gff_gz = Channel.fromPath(params.gff, checkIfExists: true)
                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 
@@ -379,7 +378,6 @@ summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Reads']            = params.reads
 summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
 if(params.genome) summary['Genome'] = params.genome
-summary['Gzipped Refs?'] = params.compressedReference
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
@@ -487,7 +485,7 @@ process get_software_versions {
     """
 }
 
-if (params.compressedReference){
+if(hasExtension(params.fasta, 'gz')){
   // This complex logic is to prevent accessing the genome_fasta_gz variable if
   // necessary indices for STAR, HiSAT2, Salmon already exist, or if
   // params.transcript_fasta is provided as then the transcript sequences don't
@@ -496,8 +494,8 @@ if (params.compressedReference){
   need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
   need_aligner_index = need_hisat2_index || need_star_index
   alignment_no_indices = !params.skipAlignment && need_aligner_index
-  psuedoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
-  if (params.fasta && (alignment_no_indices || psuedoalignment_no_indices)){
+  pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
+  if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)){
     process gunzip_genome_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -1832,6 +1830,11 @@ workflow.onComplete {
         log.info "${c_purple}[nf-core/rnaseq]${c_red} Pipeline completed with errors${c_reset}"
     }
 
+}
+
+// Check file extension
+def hasExtension(it, extension) {
+    it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
 
 def nfcoreHeader(){

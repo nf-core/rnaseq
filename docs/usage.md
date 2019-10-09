@@ -358,17 +358,17 @@ This skips the BiotypeQC step in the `featureCounts` process, explicitly useful 
 
 By default, the pipeline aligns the input reads to the genome using either HISAT2 or STAR and counts gene expression using featureCounts. If you prefer to skip alignment altogether and only get transcript/gene expression counts with pseudo alignment, use this flag. Note that you will also need to specify `--pseudo_aligner salmon`. If you have a custom transcriptome, supply that with `--transcript_fasta`.
 
-### `--compressedReference`
+### Compressed Reference File Input
 
 By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL:
 
 ```bash
-nextflow run --reads 'data/{R1,R2}*.fastq.gz' --compressedReference \
+nextflow run --reads 'data/{R1,R2}*.fastq.gz' \
     --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
     --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz
 ```
 
-This assumes that ALL of the reference files are compressed, including the reference indices, e.g. for STAR, HiSat2 or Salmon. For instructions on how to create your own compressed reference files, see the instructions below. This also includes any files specified with `--additional_fasta`, which are assumed to be compressed as well when the `--compressedReference` flag is used.
+This assumes that ALL of the reference files are compressed, including the reference indices, e.g. for STAR, HiSat2 or Salmon. For instructions on how to create your own compressed reference files, see the instructions below. This also includes any files specified with `--additional_fasta`, which are assumed to be compressed as well when the `--fasta` file is compressed. The pipeline auto-detects `gz` input for reference files. Mixing of `gz` and non-compressed input is not possible!
 
 #### Create compressed (tar.gz) STAR indices
 

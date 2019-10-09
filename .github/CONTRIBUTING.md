@@ -6,7 +6,7 @@ We try to manage the required tasks for nf-core/rnaseq using GitHub issues, you 
 
 However, don't be put off by this template - other more general issues and suggestions are welcome! Contributions to the code are even more welcome ;)
 
-> If you need help using or modifying nf-core/rnaseq then the best place to ask is on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).
+> If you need help using or modifying nf-core/rnaseq then the best place to ask is on the pipeline channel on [Slack](https://nfcore.slack.com/channels/rnaseq).
 
 
 

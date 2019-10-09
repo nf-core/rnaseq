@@ -63,7 +63,6 @@ Many thanks to other who have helped out along the way too, including (but not l
 
 ## Citation
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi. -->
 If you use nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.1400710](https://doi.org/10.5281/zenodo.1400710)
 
 You can cite the `nf-core` pre-print as follows:  

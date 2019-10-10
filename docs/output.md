@@ -65,8 +65,6 @@ Single-end data will have slightly different file names and only one FastQ file 
 ## SortMeRNA
 When `--remove_rRNA` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
 
-MultiQC reports currently do not contain statistics of the rRNA removal.
-
 **Output directory: `results/SortMeRNA`**
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.

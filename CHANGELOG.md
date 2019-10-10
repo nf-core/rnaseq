@@ -1,55 +1,61 @@
 # nf-core/rnaseq: Changelog
 
-## Version 1.4dev
+## Version 1.4
 
-### Pipeline updates
+Major novel changes include:
 
-* Add option `--skipTrimming` to be able to run from previous processed data since this step take quite long.
-* Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increaasing memory with sampe size.
-* Add option `--skipBiotypeQC` to be able to skip BiotypeQC in `featureCounts` if e.g. the utilized GTF/GFF doesn't contain the required information
+* Support for Salmon as an alternative method to STAR and HISAT2
+* Several improvements in `featureCounts` handling of types other than `exon`. It is possible now to handle nuclearRNAseq data, Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, need to be counted, e.g. by specifying `--fc_count_type transcript`.
+* Support for [outputting unaligned data](https://github.com/nf-core/rnaseq/issues/277) to results folders.
+* Added options to skip several steps
+
+  * Skip trimming using `--skipTrimming`
+  * Skip BiotypeQC using `--skipBiotypeQC`
+  * Skip Alignment using `-skipAlignment` to only use pseudo-alignment using Salmon
+
+### Documentation updates
+
 * Adjust wording of skipped samples [in pipeline output](https://github.com/nf-core/rnaseq/issues/290)
-* Added [possibility to output unmapped reads](https://github.com/nf-core/rnaseq/issues/277) to pipeline
-* Add option to modify `featureCounts -t` option to assign reads to a different type than `exon`. This makes it compatible with nuclearRNAseq. For instance, it would count reads in introns and exons if `gene` is used instead. Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, need to be counted, e.g. by specifying `--fc_count_type transcript`.
+* Fixed link to guidelines [#203](https://github.com/nf-core/rnaseq/issues/203)
+* Add `Citation` and `Quick Start` section to `README.md`
+* Add in Documentation of the `--gff` parameter
+
+### Reporting Updates
+
+* Generate MultiQC plots in the results directory [#200](https://github.com/nf-core/rnaseq/issues/200)
+* Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
+* Get MultiQC to write out the software versions in a `.csv` file [#185](https://github.com/nf-core/rnaseq/issues/185)
+* Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
+
+### Pipeline enhancements & fixes
+
+* Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increaasing memory with sample size.
 * Fix sample names in feature counts and dupRadar to remove suffixes added in other processes
 * Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
 * Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
 * Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
-* Resolved link to guidelines is broken [#203](https://github.com/nf-core/rnaseq/issues/203)
-* Removed unnecessary `stringtie` channels for `MultiQC`
-* Added tximport to merge salmon output
-* Added Salmon as an supplementary method to STAR and HiSAT2
-* Added `--psuedo_aligner`, `--transcript_fasta` and `--salmon_index` parameters
-* Add `Citation` and `Quick Start` section to `README.md`
-* Closed missing multiqc_plots in dev branch output [#200](https://github.com/nf-core/rnaseq/issues/200)
+* Removed unused `stringtie` channels for `MultiQC`
 * Integrate changes in `nf-core/tools v1.6` template which resolved [#90](https://github.com/nf-core/rnaseq/issues/90)
-* Moved process "convertGFFtoGTF" before "makeSTARindex" [#215](https://github.com/nf-core/rnaseq/issues/215)
-* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
-* Change all boolean parameters from snake_case to camelCase and vice versa for value parameters
-* Appointed changes because of missing output of the multiqc_plots folder [#200](https://github.com/nf-core/rnaseq/issues/200)
-* Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
+* Moved process `convertGFFtoGTF` before `makeSTARindex` [#215](https://github.com/nf-core/rnaseq/issues/215)
+* Change all boolean parameters from `snake_case` to `camelCase` and vice versa for value parameters
 * Add SM ReadGroup info for QualiMap compatibility[#238](https://github.com/nf-core/rnaseq/issues/238)
 * Obtain edgeR + dupRadar version information [#198](https://github.com/nf-core/rnaseq/issues/198) and [#112](https://github.com/nf-core/rnaseq/issues/112)
-* Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
-* Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183): added the folder "multiqc_plots" to the output.
-* Get MultiQC to write out the software versions in a .csv file [#185](https://github.com/nf-core/rnaseq/issues/185)
 * Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
-* Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
-* Add `--skipAlignment` option to only use pseudo-alignment and no alignment with STAR or HiSat2
-* Add `--compressedReference` option to use gzipped genome fasta and gene annotation files, and tar.gz'd STAR, HiSat2 and Salmon indices
+* Added functionality to accept compressed reference data in the pipeline
 * Check that gtf features are on chromosomes that exist in the genome fasta file [#274](https://github.com/nf-core/rnaseq/pull/274)
 * Maintain all gff features upon gtf conversion (keeps `gene_biotype` or `gene_type` to make `featureCounts` happy)
 * Add SortMeRNA as an optional step to allow rRNA removal [#280](https://github.com/nf-core/rnaseq/issues/280)
-* Add in Documentation of the `--gff` parameter
 
 ### Dependency Updates
 
+* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
+* Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
 * Dependency list is now sorted appropriately
 * Picard 2.20.0 -> 2.21.1
 * bioconductor-dupradar 1.12.1 -> 1.14.0
 * bioconductor-edger 3.24.3 -> 3.26.0
 * Dropped CSVtk
 * gffread 0.9.12 -> 0.11.4
-* qualimap 2.2.2b -> 2.2.2c
 * trim-galore 0.6.1 -> 0.6.4
 * gffread 0.9.12 -> 0.11.4
 * rseqc 3.0.0 -> 3.0.1

@@ -42,3 +42,5 @@ script:
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
   # Run, build reference genome with HISAT2
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker --aligner hisat2
+  # Mini Test for gzipped stuff with STAR
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_gz,docker --fasta false --pseudo_aligner 'salmon' --skipAlignment

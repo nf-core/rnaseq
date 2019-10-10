@@ -40,7 +40,6 @@ def helpMessage() {
       --bed12                       Path to bed12 file
       --saveReference               Save the generated reference files to the results directory
       --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
-      --compressedReference         If provided, all reference files are assumed to be gzipped and will be unzipped before using
 
     Strandedness:
       --forwardStranded             The library is forward stranded
@@ -153,30 +152,14 @@ if (params.pico){
 }
 
 // Get rRNA databases
-def returnFile(it) {
-    inputFile = file(it)
-    if (!file(inputFile).exists()) exit 1, "File ${inputFile} does not exist!"
-    return inputFile
-}
-if(params.rRNA_database_manifest){
-    rRNA_database = returnFile(params.rRNA_database_manifest)
-    if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
-    Channel
-        .from( rRNA_database.readLines() )
-        .map { row -> returnFile(row) }
-        .set { sortmerna_fasta }
-} else {
-    Channel.fromPath([
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5.8s-database-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/rfam-5s-database-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-16s-id95.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-arc-23s-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-16s-id90.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-bac-23s-id98.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-18s-id95.fasta',
-        'https://raw.githubusercontent.com/biocore/sortmerna/master/rRNA_databases/silva-euk-28s-id98.fasta'])
-        .set { sortmerna_fasta }
-}
+// Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
+
+rRNA_database = file(params.rRNA_database_manifest)
+if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
+Channel
+    .from( rRNA_database.readLines() )
+    .map { row -> file(row) }
+    .set { sortmerna_fasta }
 
 // Validate inputs
 if (params.aligner != 'star' && params.aligner != 'hisat2'){
@@ -186,9 +169,8 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
     exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
 }
 
-
 if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
-  if (params.compressedReference){
+  if (hasExtension(params.star_index, 'gz')){
     star_index_gz = Channel
         .fromPath(params.star_index, checkIfExists: true)
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
@@ -199,7 +181,7 @@ if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
   }
 }
 else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment ){
-  if (params.compressedReference){
+  if (hasExtension(params.hisat2_index, 'gz')){
     hs2_indices_gz = Channel
         .fromPath("${params.hisat2_index}", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
@@ -210,7 +192,7 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlign
   }
 }
 else if ( params.fasta && !params.skipAlignment){
-  if (params.compressedReference) {
+  if (hasExtension(params.fasta, 'gz')) {
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
         .set { genome_fasta_gz }
@@ -238,7 +220,7 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 // transcripts from, or can use a transcript fasta directly
 if ( params.pseudo_aligner == 'salmon' ) {
     if ( params.salmon_index ) {
-      if (params.compressedReference) {
+      if (hasExtension(params.salmon_index, 'gz')) {
         salmon_index_gz = Channel
             .fromPath(params.salmon_index, checkIfExists: true)
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
@@ -248,7 +230,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
       }
     } else if ( params.transcript_fasta ) {
-      if (params.compressedReference){
+      if (hasExtension(params.transcript_fasta, 'gz')){
         transcript_fasta_gz = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
@@ -259,7 +241,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
       }
     } else if ( params.fasta && (params.gff || params.gtf)){
       log.info "Extracting transcript fastas from genome fasta + gtf/gff"
-      if (params.compressedReference) {
+      if (hasExtension(params.fasta, 'gz')) {
         Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
@@ -278,7 +260,7 @@ if( params.gtf ){
     // Prefer gtf over gff
     log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
   }
-  if (params.compressedReference){
+  if (hasExtension(params.gtf, 'gz')){
     gtf_gz = Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
@@ -291,7 +273,7 @@ if( params.gtf ){
 
   }
 } else if ( params.gff ){
-  if (params.compressedReference){
+  if (hasExtension(params.gff, 'gz')){
     gff_gz = Channel.fromPath(params.gff, checkIfExists: true)
                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 
@@ -379,7 +361,6 @@ summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Reads']            = params.reads
 summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
 if(params.genome) summary['Genome'] = params.genome
-summary['Gzipped Refs?'] = params.compressedReference
 if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness']     = ( unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None' )
 summary['Trimming']         = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
@@ -487,7 +468,9 @@ process get_software_versions {
     """
 }
 
-if (params.compressedReference){
+compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz') 
+
+if(compressedReference){
   // This complex logic is to prevent accessing the genome_fasta_gz variable if
   // necessary indices for STAR, HiSAT2, Salmon already exist, or if
   // params.transcript_fasta is provided as then the transcript sequences don't
@@ -496,8 +479,8 @@ if (params.compressedReference){
   need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
   need_aligner_index = need_hisat2_index || need_star_index
   alignment_no_indices = !params.skipAlignment && need_aligner_index
-  psuedoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
-  if (params.fasta && (alignment_no_indices || psuedoalignment_no_indices)){
+  pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
+  if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)){
     process gunzip_genome_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -805,8 +788,6 @@ if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
             publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
                                saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
-            when:
-            !params.transcript_fasta
 
             input:
             file fasta from ch_fasta_for_salmon_transcripts
@@ -923,6 +904,7 @@ if (!params.skipTrimming){
 if (!params.remove_rRNA){
     trimgalore_reads
         .into { trimmed_reads_alignment; trimmed_reads_salmon }
+    sortmerna_logs = Channel.empty()
 } else {
     process sortmerna_index {
         label 'low_memory'
@@ -960,7 +942,7 @@ if (!params.remove_rRNA){
 
         output:
         set val(name), file("*.fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
-        file "*_rRNA_report.txt"
+        file "*_rRNA_report.txt" into sortmerna_logs
 
 
         script:
@@ -1590,7 +1572,7 @@ if (params.pseudo_aligner == 'salmon'){
       publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
-      set val(name), file ("salmon/*") from salmon_parsegtf.collect()
+      file ("salmon/*") from salmon_parsegtf.collect()
       file gtf from gtf_salmon_merge
 
       output:
@@ -1684,6 +1666,7 @@ process multiqc {
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
+    file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml.collect()
     file workflow_summary from create_workflow_summary(summary)
 
@@ -1697,7 +1680,7 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
     multiqc . -f $rtitle $rfilename --config $multiqc_config \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m fastqc -m qualimap -m salmon
+        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m sortmerna -m fastqc -m qualimap -m salmon
     """
 }
 
@@ -1833,6 +1816,11 @@ workflow.onComplete {
         log.info "${c_purple}[nf-core/rnaseq]${c_red} Pipeline completed with errors${c_reset}"
     }
 
+}
+
+// Check file extension
+def hasExtension(it, extension) {
+    it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
 
 def nfcoreHeader(){

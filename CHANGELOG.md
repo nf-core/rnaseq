@@ -5,7 +5,7 @@
 Major novel changes include:
 
 * Support for Salmon as an alternative method to STAR and HISAT2
-* Several improvements in `featureCounts` handling of types other than `exon`. It is possible now to handle nuclearRNAseq data, Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, need to be counted, e.g. by specifying `--fc_count_type transcript`.
+* Several improvements in `featureCounts` handling of types other than `exon`. It is possible now to handle nuclearRNAseq data. Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, needs to be counted, e.g. by specifying `--fc_count_type transcript`.
 * Support for [outputting unaligned data](https://github.com/nf-core/rnaseq/issues/277) to results folders.
 * Added options to skip several steps
 
@@ -48,23 +48,29 @@ Major novel changes include:
 
 ### Dependency Updates
 
-* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
-* Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
 * Dependency list is now sorted appropriately
+* Force matplotlib=3.0.3
+
+#### Updated Packages
+
 * Picard 2.20.0 -> 2.21.1
 * bioconductor-dupradar 1.12.1 -> 1.14.0
 * bioconductor-edger 3.24.3 -> 3.26.0
-* Dropped CSVtk
 * gffread 0.9.12 -> 0.11.4
 * trim-galore 0.6.1 -> 0.6.4
 * gffread 0.9.12 -> 0.11.4
 * rseqc 3.0.0 -> 3.0.1
-* Force matplotlib=3.0.3
+
+#### Added / Removed Packages
+
+* Dropped CSVtk
 * Added Salmon 0.14.2
 * Added RSEM 1.3.2
 * Added tximport 1.0.3
 * Added SummarizedExperiment 1.12.0
 * Added SortMeRNA 2.1b
+* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
+* Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
 
 ## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 

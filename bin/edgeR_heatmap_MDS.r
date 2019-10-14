@@ -71,7 +71,7 @@ logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)
 # Plot a heatmap of correlations
 pdf('log2CPM_sample_correlation_heatmap.pdf')
 hmap <- heatmap.2(as.matrix(cor(logcpm, method="pearson")),
-  key.title="Pearsons Correlation", trace="none",
+  key.title="Pearson's Correlation", trace="none",
   dendrogram="row", margin=c(9, 9)
 )
 dev.off()
@@ -82,7 +82,7 @@ write.csv(hmap$carpet, 'log2CPM_sample_correlation_mqc.csv', quote=FALSE, append
 # Plot the heatmap dendrogram
 pdf('log2CPM_sample_distances_dendrogram.pdf')
 hmap <- heatmap.2(as.matrix(dist(t(logcpm))))
-plot(hmap$rowDendrogram, main="Sample Euclidean Distance Clustering")
+plot(hmap$rowDendrogram, main="Sample Pearson's Correlation Clustering")
 dev.off()
 
 file.create("corr.done")

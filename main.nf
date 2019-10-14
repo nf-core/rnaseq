@@ -259,7 +259,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
 if( params.gtf ){
   if ( params.gff ){
     // Prefer gtf over gff
-    log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
+    log.info "nf-core/rnaseq prefers a GTF over GFF, so ignoring a provided GFF in favor of GTF"
   }
   if (hasExtension(params.gtf, 'gz')){
     gtf_gz = Channel
@@ -1655,7 +1655,7 @@ process multiqc {
     !params.skipMultiQC
 
     input:
-    file multiqc_config from ch_multiqc_config.collect()
+    file multiqc_config from ch_multiqc_config
     file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])

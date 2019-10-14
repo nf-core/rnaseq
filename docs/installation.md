@@ -88,7 +88,7 @@ The process is very similar: running the pipeline with the option `-profile sing
 If running offline with Singularity, you'll need to download and transfer the Singularity image first:
 
 ```bash
-singularity pull --name nf-core-rnaseq-1.3.img docker://nf-core/rnaseq:1.3
+singularity pull --name nfcore-rnaseq-1.3.img docker://nfcore/rnaseq:1.3
 ```
 
 > NB: The "tag" at the end of this command corresponds to the pipeline version.
@@ -98,7 +98,7 @@ singularity pull --name nf-core-rnaseq-1.3.img docker://nf-core/rnaseq:1.3
 Once transferred, use `-with-singularity` and specify the path to the image file:
 
 ```bash
-nextflow run /path/to/nf-core-rnaseq -with-singularity /path/to/nf-core-rnaseq-1.3.img
+nextflow run /path/to/nf-core-rnaseq -with-singularity /path/to/nfcore-rnaseq-1.3.img
 ```
 
 Remember to pull updated versions of the singularity image if you update the pipeline.

@@ -46,4 +46,4 @@ These tests are run both with the latest available version of Nextflow and also 
 
 ## Getting help
 
-For further information/help, please consult the [nf-core/rnaseq documentation](https://github.com/nf-core/rnaseq#documentation) and don't hesitate to get in touch on the [nf-core/rnaseq pipeline channel](https://nfcore.slack.com/channels/nf-core/rnaseq) on [Slack](https://nf-co.re/join/slack/).
+For further information/help, please consult the [nf-core/rnaseq documentation](https://github.com/nf-core/rnaseq#documentation) and don't hesitate to get in touch on the [nf-core/rnaseq pipeline channel](https://nfcore.slack.com/channels/rnaseq) on [Slack](https://nf-co.re/join/slack/).

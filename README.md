@@ -52,6 +52,7 @@ nextflow run nf-core/rnaseq -profile <docker/singularity/conda> --reads '*_R{1,2
 See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
 
 ### Documentation
+
 The nf-core/rnaseq pipeline comes with documentation about the pipeline, found in the `docs/` directory:
 
 1. [Installation](https://nf-co.re/usage/installation)
@@ -64,6 +65,7 @@ The nf-core/rnaseq pipeline comes with documentation about the pipeline, found i
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
 ### Credits
+
 These scripts were originally written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
@@ -76,6 +78,12 @@ Many thanks to other who have helped out along the way too, including (but not l
 [@olgabot](https://github.com/olgabot),
 [@jburos](https://github.com/jburos),
 [@drpatelh](https://github.com/drpatelh).
+
+## Contributions and Support
+
+If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+
+For further information or help, don't hesitate to get in touch on [Slack](https://nfcore.slack.com/channels/nf-core/rnaseq) (you can join with [this invite](https://nf-co.re/join/slack)).
 
 ## Citation
 

@@ -403,7 +403,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
   * This `.gtf` file contains the transcripts that are fully covered by reads.
 
 ## Sample Correlation
-[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap showing Pearsons correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
+[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap showing Pearson's correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
 
 **Heatmap:**
 

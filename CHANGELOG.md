@@ -11,7 +11,7 @@ Major novel changes include:
 
   * Skip trimming using `--skipTrimming`
   * Skip BiotypeQC using `--skipBiotypeQC`
-  * Skip Alignment using `-skipAlignment` to only use pseudo-alignment using Salmon
+  * Skip Alignment using `--skipAlignment` to only use pseudo-alignment using Salmon
 
 ### Documentation updates
 
@@ -29,10 +29,10 @@ Major novel changes include:
 
 ### Pipeline enhancements & fixes
 
-* Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increaasing memory with sample size.
+* Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increasing memory with sample size.
 * Fix sample names in feature counts and dupRadar to remove suffixes added in other processes
 * Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
-* Implemented Pearsons correlation instead of euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
+* Implemented Pearsons correlation instead of Euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
 * Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
 * Removed unused `stringtie` channels for `MultiQC`
 * Integrate changes in `nf-core/tools v1.6` template which resolved [#90](https://github.com/nf-core/rnaseq/issues/90)
@@ -63,7 +63,7 @@ Major novel changes include:
 
 #### Added / Removed Packages
 
-* Dropped CSVtk
+* Dropped CSVtk in favor of Unix's simple `cut` and `paste` utilities
 * Added Salmon 0.14.2
 * Added RSEM 1.3.2
 * Added tximport 1.0.3

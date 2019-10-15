@@ -67,7 +67,6 @@ Major novel changes include:
 
 * Dropped CSVtk in favor of Unix's simple `cut` and `paste` utilities
 * Added Salmon 0.14.2
-* Added RSEM 1.3.2
 * Added TXIMeta 1.2.2
 * Added SummarizedExperiment 1.14.0
 * Added SortMeRNA 2.1b

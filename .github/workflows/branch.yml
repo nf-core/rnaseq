@@ -1,0 +1,16 @@
+name: nf-core/rnaseq branch protection
+# This workflow is triggered on PRs to master branch on the repository
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # PRs are only ok if coming from an nf-core dev branch
+      - uses: actions/checkout@v1
+      - name: Check PRs
+        run: |
+          [[ $(git remote get-url origin) == *nf-core/rnaseq ]] && [[ ${GITHUB_BASE_REF} = "master" ]] && { [[ ${GITHUB_HEAD_REF} = "dev" ]] || [[ ${GITHUB_BASE_REF} = "patch" ]]; }

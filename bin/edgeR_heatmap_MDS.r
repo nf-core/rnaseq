@@ -67,24 +67,23 @@ write.csv(MDSxy, 'edgeR_MDS_Aplot_coordinates_mqc.csv', quote=FALSE, append=TRUE
 # Get the log counts per million values
 logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)
 
-# Calculate the euclidean distances between samples
-dists = dist(t(logcpm))
-
+# Calculate the Pearsons correlation between samples
 # Plot a heatmap of correlations
-pdf('log2CPM_sample_distances_heatmap.pdf')
-hmap <- heatmap.2(as.matrix(dists),
-  main="Sample Correlations", key.title="Distance", trace="none",
+pdf('log2CPM_sample_correlation_heatmap.pdf')
+hmap <- heatmap.2(as.matrix(cor(logcpm, method="pearson")),
+  key.title="Pearson's Correlation", trace="none",
   dendrogram="row", margin=c(9, 9)
 )
 dev.off()
 
+# Write correlation values to file
+write.csv(hmap$carpet, 'log2CPM_sample_correlation_mqc.csv', quote=FALSE, append=TRUE)
+
 # Plot the heatmap dendrogram
 pdf('log2CPM_sample_distances_dendrogram.pdf')
-plot(hmap$rowDendrogram, main="Sample Dendrogram")
+hmap <- heatmap.2(as.matrix(dist(t(logcpm))))
+plot(hmap$rowDendrogram, main="Sample Pearson's Correlation Clustering")
 dev.off()
-
-# Write clustered distance values to file
-write.csv(hmap$carpet, 'log2CPM_sample_distances_mqc.csv', quote=FALSE, append=TRUE)
 
 file.create("corr.done")
 

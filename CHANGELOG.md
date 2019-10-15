@@ -56,19 +56,19 @@ Major novel changes include:
 
 * Picard 2.20.0 -> 2.21.1
 * bioconductor-dupradar 1.12.1 -> 1.14.0
-* bioconductor-edger 3.24.3 -> 3.26.0
+* bioconductor-edger 3.24.3 -> 3.26.5
 * gffread 0.9.12 -> 0.11.4
 * trim-galore 0.6.1 -> 0.6.4
 * gffread 0.9.12 -> 0.11.4
 * rseqc 3.0.0 -> 3.0.1
+* R-Base 3.5 -> 3.6.1
 
 #### Added / Removed Packages
 
 * Dropped CSVtk in favor of Unix's simple `cut` and `paste` utilities
 * Added Salmon 0.14.2
-* Added RSEM 1.3.2
-* Added tximport 1.0.3
-* Added SummarizedExperiment 1.12.0
+* Added TXIMeta 1.2.2
+* Added SummarizedExperiment 1.14.0
 * Added SortMeRNA 2.1b
 * Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)

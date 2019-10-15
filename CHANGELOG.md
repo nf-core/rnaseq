@@ -45,6 +45,7 @@ Major novel changes include:
 * Check that gtf features are on chromosomes that exist in the genome fasta file [#274](https://github.com/nf-core/rnaseq/pull/274)
 * Maintain all gff features upon gtf conversion (keeps `gene_biotype` or `gene_type` to make `featureCounts` happy)
 * Add SortMeRNA as an optional step to allow rRNA removal [#280](https://github.com/nf-core/rnaseq/issues/280)
+* Minimal adjustment of memory and CPU constraints for clusters with locked memory / CPU relation
 
 ### Dependency Updates
 

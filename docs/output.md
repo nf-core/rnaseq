@@ -8,7 +8,7 @@ and processes data using the following steps:
 
 * [FastQC](#fastqc) - read quality control
 * [TrimGalore](#trimgalore) - adapter trimming
-* [SortMeRNA](#sortmerna) - rRNA removal
+* [SortMeRNA](#sortmerna) - ribosomal RNA removal
 * [STAR](#star) - alignment
 * [RSeQC](#rseqc) - RNA quality control metrics
   * [BAM stat](#bam-stat)
@@ -63,7 +63,8 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 Single-end data will have slightly different file names and only one FastQ file per sample.
 
 ## SortMeRNA
-When `--remove_rRNA` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
+
+When `--removeRiboRNA` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
 
 **Output directory: `results/SortMeRNA`**
 

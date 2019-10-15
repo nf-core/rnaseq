@@ -42,7 +42,7 @@
   * [`--trim_nextseq [int]`](#--trim_nextseq)
   * [`--skipTrimming`](#--skipTrimming)
 * [Ribosomal RNA removal](#ribosomal-rna-removal)
-  * [`--remove_rRNA`](#--remove_rrna)
+  * [`--removeRiboRNA`](#--removeRiboRNA)
   * [`--save_nonrRNA_reads`](#--save_nonrrna_reads)
   * [`--rRNA_database_manifest`](#--rrna_database_manifest)
 * [Library Prep Presets](#library-prep-presets)
@@ -433,11 +433,11 @@ This allows to skip the trimming process to save time when re-analyzing data tha
 If rRNA removal is desired (for example, metatranscriptomics),
 add the following command line parameters.
 
-### `--remove_rRNA`
+### `--removeRiboRNA`
 
 Instructs to use SortMeRNA to remove reads related to ribosomal RNA (or any patterns found in the sequences defined by `--rRNA_database_manifest`).
 
-### `--save_nonrRNA_reads`
+### `--saveNonRiboRNAReads`
 
 By default, non-rRNA FastQ files will not be saved to the results directory. Specify this
 flag (or set to true in your config file) to copy these files when complete.

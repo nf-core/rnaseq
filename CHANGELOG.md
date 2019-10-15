@@ -46,6 +46,7 @@ Major novel changes include:
 * Maintain all gff features upon gtf conversion (keeps `gene_biotype` or `gene_type` to make `featureCounts` happy)
 * Add SortMeRNA as an optional step to allow rRNA removal [#280](https://github.com/nf-core/rnaseq/issues/280)
 * Minimal adjustment of memory and CPU constraints for clusters with locked memory / CPU relation
+* Cleaned up usage, `parameters.settings.json` and the `nextflow.config`
 
 ### Dependency Updates
 

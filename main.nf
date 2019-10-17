@@ -258,11 +258,11 @@ if (params.pseudo_aligner == 'salmon') {
 
 if (params.gtf) {
   if (params.gff) {
-    // Prefer gtf over gff
-    log.info "nf-core/rnaseq prefers a GTF over GFF, so ignoring a provided GFF in favor of GTF"
+      // Prefer gtf over gff
+      log.info "Both GTF and GFF have been provided: Using GTF as priority."
   }
   if (hasExtension(params.gtf, 'gz')) {
-    gtf_gz = Channel
+  gtf_gz = Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
   } else {
@@ -273,7 +273,7 @@ if (params.gtf) {
                 gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
 
   }
-} else if (params.gff) {
+  } else if (params.gff) {
   if (hasExtension(params.gff, 'gz')) {
     gff_gz = Channel.fromPath(params.gff, checkIfExists: true)
                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
@@ -652,8 +652,6 @@ if (params.gff && !params.gtf) {
         gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
         """
     }
-} else {
-  log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
 }
 
 /*

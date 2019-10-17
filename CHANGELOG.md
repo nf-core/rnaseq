@@ -5,6 +5,7 @@
 Major novel changes include:
 
 * Update `igenomes.config` with NCBI `GRCh38` and most recent UCSC genomes
+* Set `autoMounts = true` by default for `singularity` profile
 
 ### Pipeline enhancements & fixes
 

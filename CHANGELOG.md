@@ -1,6 +1,6 @@
 # nf-core/rnaseq: Changelog
 
-## [Unpublished Version / DEV]
+## Version 1.4.1
 
 Major novel changes include:
 

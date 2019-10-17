@@ -142,7 +142,7 @@ reverseStranded = params.reverseStranded
 unStranded = params.unStranded
 
 // Preset trimming options
-if (params.pico){
+if (params.pico) {
     clip_r1 = 3
     clip_r2 = 0
     three_prime_clip_r1 = 0
@@ -163,15 +163,15 @@ Channel
     .set { sortmerna_fasta }
 
 // Validate inputs
-if (params.aligner != 'star' && params.aligner != 'hisat2'){
+if (params.aligner != 'star' && params.aligner != 'hisat2') {
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
-if (params.pseudo_aligner && params.pseudo_aligner != 'salmon'){
+if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
     exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
 }
 
-if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
-  if (hasExtension(params.star_index, 'gz')){
+if (params.star_index && params.aligner == 'star' && !params.skipAlignment) {
+  if (hasExtension(params.star_index, 'gz')) {
     star_index_gz = Channel
         .fromPath(params.star_index, checkIfExists: true)
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
@@ -181,8 +181,8 @@ if( params.star_index && params.aligner == 'star' && !params.skipAlignment ){
         .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
   }
 }
-else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment ){
-  if (hasExtension(params.hisat2_index, 'gz')){
+else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignment) {
+  if (hasExtension(params.hisat2_index, 'gz')) {
     hs2_indices_gz = Channel
         .fromPath("${params.hisat2_index}", checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
@@ -192,7 +192,7 @@ else if ( params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlign
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
   }
 }
-else if ( params.fasta && !params.skipAlignment){
+else if (params.fasta && !params.skipAlignment) {
   if (hasExtension(params.fasta, 'gz')) {
     Channel.fromPath(params.fasta, checkIfExists: true)
         .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
@@ -203,14 +203,14 @@ else if ( params.fasta && !params.skipAlignment){
         .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
   }
 
-} else if (params.skipAlignment){
+} else if (params.skipAlignment) {
   println "Skipping alignment ..."
 }
 else {
     exit 1, "No reference genome files specified!"
 }
 
-if( params.aligner == 'hisat2' && params.splicesites ){
+if (params.aligner == 'hisat2' && params.splicesites) {
     Channel
         .fromPath(params.bed12, checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
@@ -219,8 +219,8 @@ if( params.aligner == 'hisat2' && params.splicesites ){
 
 // Separately check for whether salmon needs a genome fasta to extract
 // transcripts from, or can use a transcript fasta directly
-if ( params.pseudo_aligner == 'salmon' ) {
-    if ( params.salmon_index ) {
+if (params.pseudo_aligner == 'salmon') {
+    if (params.salmon_index) {
       if (hasExtension(params.salmon_index, 'gz')) {
         salmon_index_gz = Channel
             .fromPath(params.salmon_index, checkIfExists: true)
@@ -230,8 +230,8 @@ if ( params.pseudo_aligner == 'salmon' ) {
             .fromPath(params.salmon_index, checkIfExists: true)
             .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
       }
-    } else if ( params.transcript_fasta ) {
-      if (hasExtension(params.transcript_fasta, 'gz')){
+    } else if (params.transcript_fasta) {
+      if (hasExtension(params.transcript_fasta, 'gz')) {
         transcript_fasta_gz = Channel
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
@@ -240,7 +240,7 @@ if ( params.pseudo_aligner == 'salmon' ) {
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
       }
-    } else if ( params.fasta && (params.gff || params.gtf)){
+    } else if (params.fasta && (params.gff || params.gtf)) {
       log.info "Extracting transcript fastas from genome fasta + gtf/gff"
       if (hasExtension(params.fasta, 'gz')) {
         Channel.fromPath(params.fasta, checkIfExists: true)
@@ -256,13 +256,13 @@ if ( params.pseudo_aligner == 'salmon' ) {
     }
 }
 
-if( params.gtf ){
-  if ( params.gff ){
-    // Prefer gtf over gff
-    log.info "nf-core/rnaseq prefers a GTF over GFF, so ignoring a provided GFF in favor of GTF"
+if (params.gtf) {
+  if (params.gff) {
+      // Prefer gtf over gff
+      log.info "Both GTF and GFF have been provided: Using GTF as priority."
   }
-  if (hasExtension(params.gtf, 'gz')){
-    gtf_gz = Channel
+  if (hasExtension(params.gtf, 'gz')) {
+  gtf_gz = Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
   } else {
@@ -273,8 +273,8 @@ if( params.gtf ){
                 gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
 
   }
-} else if ( params.gff ){
-  if (hasExtension(params.gff, 'gz')){
+  } else if (params.gff) {
+  if (hasExtension(params.gff, 'gz')) {
     gff_gz = Channel.fromPath(params.gff, checkIfExists: true)
                   .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
 
@@ -287,25 +287,25 @@ if( params.gtf ){
     exit 1, "No GTF or GFF3 annotation specified!"
 }
 
-if( params.bed12 ){
+if (params.bed12) {
     bed12 = Channel
         .fromPath(params.bed12, checkIfExists: true)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
-        .into { bed_rseqc }
+        .set { bed_rseqc }
 }
 
-if (params.gencode){
+if (params.gencode) {
   biotype = "gene_type"
 } else {
   biotype = params.fc_group_features_type
 }
 
-if (params.skipAlignment && !params.pseudo_aligner){
+if (params.skipAlignment && !params.pseudo_aligner) {
   exit 1, "--skipAlignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
 }
 
-if( workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel' ){
-    if ( !params.project ) exit 1, "No UPPMAX project ID found! Use --project"
+if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
+    if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
 }
 
 // Has the run name been specified by the user?
@@ -315,7 +315,7 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
   custom_runName = workflow.runName
 }
 
-if ( workflow.profile == 'awsbatch') {
+if (workflow.profile == 'awsbatch') {
   // AWSBatch sanity checking
   if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
   // Check outdir paths to be S3 buckets if running on AWSBatch
@@ -360,31 +360,31 @@ if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name'] = custom_runName ?: workflow.runName
 summary['Reads'] = params.reads
 summary['Data Type'] = params.singleEnd ? 'Single-End' : 'Paired-End'
-if(params.genome) summary['Genome'] = params.genome
-if(params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
+if (params.genome) summary['Genome'] = params.genome
+if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
 summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
-if(params.aligner == 'star'){
+if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
-    if(params.star_index)summary['STAR Index'] = params.star_index
-    else if(params.fasta)summary['Fasta Ref'] = params.fasta
-} else if(params.aligner == 'hisat2') {
+    if (params.star_index)summary['STAR Index'] = params.star_index
+    else if (params.fasta)summary['Fasta Ref'] = params.fasta
+} else if (params.aligner == 'hisat2') {
     summary['Aligner'] = "HISAT2"
-    if(params.hisat2_index)summary['HISAT2 Index'] = params.hisat2_index
-    else if(params.fasta)summary['Fasta Ref'] = params.fasta
-    if(params.splicesites)summary['Splice Sites'] = params.splicesites
+    if (params.hisat2_index)summary['HISAT2 Index'] = params.hisat2_index
+    else if (params.fasta)summary['Fasta Ref'] = params.fasta
+    if (params.splicesites)summary['Splice Sites'] = params.splicesites
 }
-if(params.pseudo_aligner == 'salmon') {
+if (params.pseudo_aligner == 'salmon') {
     summary['Pseudo Aligner'] = "Salmon"
-    if(params.transcript_fasta)summary['Transcript Fasta'] = params.transcript_fasta
+    if (params.transcript_fasta)summary['Transcript Fasta'] = params.transcript_fasta
 }
-if(params.gtf) summary['GTF Annotation'] = params.gtf
-if(params.gff) summary['GFF3 Annotation'] = params.gff
-if(params.bed12) summary['BED Annotation'] = params.bed12
-if(params.gencode) summary['GENCODE'] = params.gencode
-if(params.stringTieIgnoreGTF) summary['StringTie Ignore GTF'] = params.stringTieIgnoreGTF
+if (params.gtf) summary['GTF Annotation'] = params.gtf
+if (params.gff) summary['GFF3 Annotation'] = params.gff
+if (params.bed12) summary['BED Annotation'] = params.bed12
+if (params.gencode) summary['GENCODE'] = params.gencode
+if (params.stringTieIgnoreGTF) summary['StringTie Ignore GTF'] = params.stringTieIgnoreGTF
 summary['Remove Ribosomal RNA'] = params.removeRiboRNA
-if(params.fc_group_features_type) summary['Biotype GTF field'] = biotype
+if (params.fc_group_features_type) summary['Biotype GTF field'] = biotype
 summary['Save prefs'] = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
 summary['Max Resources'] = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
@@ -404,7 +404,7 @@ if (params.config_profile_url)         summary['Config URL']         = params.co
 if (params.email || params.email_on_fail) {
   summary['E-mail Address']    = params.email
   summary['E-mail on failure'] = params.email_on_fail
-  summary['MultiQC maxsize']   = params.maxMultiqcEmailFileSize
+  summary['MultiQC maxsize']   = params.max_multiqc_email_size
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
 log.info "-\033[2m--------------------------------------------------\033[0m-"
@@ -469,9 +469,9 @@ process get_software_versions {
     """
 }
 
-compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz') 
+compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz')
 
-if(compressedReference){
+if (compressedReference) {
   // This complex logic is to prevent accessing the genome_fasta_gz variable if
   // necessary indices for STAR, HiSAT2, Salmon already exist, or if
   // params.transcript_fasta is provided as then the transcript sequences don't
@@ -481,7 +481,7 @@ if(compressedReference){
   need_aligner_index = need_hisat2_index || need_star_index
   alignment_no_indices = !params.skipAlignment && need_aligner_index
   pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
-  if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)){
+  if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {
     process gunzip_genome_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -499,7 +499,7 @@ if(compressedReference){
         """
     }
   }
-  if (params.gtf){
+  if (params.gtf) {
     process gunzip_gtf {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -518,7 +518,7 @@ if(compressedReference){
         """
     }
   }
-  if (params.gff && !params.gtf){
+  if (params.gff && !params.gtf) {
     process gunzip_gff {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -536,7 +536,7 @@ if(compressedReference){
         """
     }
   }
-  if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index){
+  if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index) {
     process gunzip_transcript_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
@@ -554,7 +554,7 @@ if(compressedReference){
         """
     }
   }
-  if (params.bed12){
+  if (params.bed12) {
     process gunzip_bed12 {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -572,7 +572,7 @@ if(compressedReference){
         """
     }
   }
-  if (!params.skipAlignment && params.star_index && params.aligner == "star"){
+  if (!params.skipAlignment && params.star_index && params.aligner == "star") {
     process gunzip_star_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/star" : params.outdir },
@@ -591,7 +591,7 @@ if(compressedReference){
         """
     }
   }
-  if (!params.skipAlignment && params.hisat2_index && params.aligner == 'hisat2'){
+  if (!params.skipAlignment && params.hisat2_index && params.aligner == 'hisat2') {
     process gunzip_hisat_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
@@ -610,7 +610,7 @@ if(compressedReference){
         """
     }
   }
-  if (params.salmon_index && params.pseudo_aligner == 'salmon'){
+  if (params.salmon_index && params.pseudo_aligner == 'salmon') {
     process gunzip_salmon_index {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
@@ -634,7 +634,7 @@ if(compressedReference){
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
-if(params.gff && !params.gtf){
+if (params.gff && !params.gtf) {
     process convertGFFtoGTF {
         tag "$gff"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -652,14 +652,12 @@ if(params.gff && !params.gtf){
         gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
         """
     }
-} else {
-  log.info "Prefer GTF over GFF, so ignoring provided GFF in favor of GTF"
 }
 
 /*
  * PREPROCESSING - Build BED12 file
  */
-if(!params.bed12){
+if (!params.bed12) {
     process makeBED12 {
         tag "$gtf"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -681,8 +679,8 @@ if(!params.bed12){
 /*
  * PREPROCESSING - Build STAR index
  */
-if (!params.skipAlignment){
-  if(params.aligner == 'star' && !params.star_index && params.fasta){
+if (!params.skipAlignment) {
+  if (params.aligner == 'star' && !params.star_index && params.fasta) {
       process makeSTARindex {
           label 'high_memory'
           tag "$fasta"
@@ -714,7 +712,7 @@ if (!params.skipAlignment){
   /*
    * PREPROCESSING - Build HISAT2 splice sites file
    */
-  if(params.aligner == 'hisat2' && !params.splicesites){
+  if (params.aligner == 'hisat2' && !params.splicesites) {
       process makeHisatSplicesites {
           tag "$gtf"
           publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -736,7 +734,7 @@ if (!params.skipAlignment){
   /*
    * PREPROCESSING - Build HISAT2 index
    */
-  if(params.aligner == 'hisat2' && !params.hisat2_index && params.fasta){
+  if (params.aligner == 'hisat2' && !params.hisat2_index && params.fasta) {
       process makeHISATindex {
           tag "$fasta"
           publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -751,14 +749,14 @@ if (!params.skipAlignment){
           file "${fasta.baseName}.*.ht2*" into hs2_indices
 
           script:
-          if( !task.memory ){
+          if (!task.memory) {
               log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
               avail_mem = 0
           } else {
               log.info "[HISAT2 index build] Available memory: ${task.memory}"
               avail_mem = task.memory.toGiga()
           }
-          if( avail_mem > params.hisat_build_memory ){
+          if (avail_mem > params.hisat_build_memory) {
               log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
               extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
               ss = "--ss $indexing_splicesites"
@@ -782,8 +780,8 @@ if (!params.skipAlignment){
 /*
  * PREPROCESSING - Create Salmon transcriptome index
  */
-if(params.pseudo_aligner == 'salmon' && !params.salmon_index){
-    if(!params.transcript_fasta) {
+if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
+    if (!params.transcript_fasta) {
         process transcriptsToFasta {
             tag "$fasta"
             publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
@@ -853,7 +851,7 @@ process fastqc {
 /*
  * STEP 2 - Trim Galore!
  */
-if (!params.skipTrimming){
+if (!params.skipTrimming) {
     process trim_galore {
         label 'low_memory'
         tag "$name"
@@ -903,7 +901,7 @@ if (!params.skipTrimming){
 /*
  * STEP 2+ - SortMeRNA - remove rRNA sequences on request
  */
-if (!params.removeRiboRNA){
+if (!params.removeRiboRNA) {
     trimgalore_reads
         .into { trimmed_reads_alignment; trimmed_reads_salmon }
     sortmerna_logs = Channel.empty()
@@ -946,6 +944,54 @@ if (!params.removeRiboRNA){
         set val(name), file("*.fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
         file "*_rRNA_report.txt" into sortmerna_logs
 
+
+        script:
+        //concatenate reference files: ${db_fasta},${db_name}:${db_fasta},${db_name}:...
+        def Refs = ''
+        for (i=0; i<db_fasta.size(); i++) { Refs+= ":${db_fasta[i]},${db_name[i]}" }
+        Refs = Refs.substring(1)
+
+        if (params.singleEnd) {
+            """
+            gzip -d --force < ${reads} > all-reads.fastq
+
+            sortmerna --ref ${Refs} \
+                --reads all-reads.fastq \
+                --num_alignments 1 \
+                -a ${task.cpus} \
+                --fastx \
+                --aligned rRNA-reads \
+                --other non-rRNA-reads \
+                --log -v
+
+            gzip --force < non-rRNA-reads.fastq > ${name}.fq.gz
+
+            mv rRNA-reads.log ${name}_rRNA_report.txt
+            """
+        } else {
+            """
+            gzip -d --force < ${reads[0]} > reads-fw.fq
+            gzip -d --force < ${reads[1]} > reads-rv.fq
+            merge-paired-reads.sh reads-fw.fq reads-rv.fq all-reads.fastq
+
+            sortmerna --ref ${Refs} \
+                --reads all-reads.fastq \
+                --num_alignments 1 \
+                -a ${task.cpus} \
+                --fastx --paired_in \
+                --aligned rRNA-reads \
+                --other non-rRNA-reads \
+                --log -v
+
+            unmerge-paired-reads.sh non-rRNA-reads.fastq non-rRNA-reads-fw.fq non-rRNA-reads-rv.fq
+            gzip < non-rRNA-reads-fw.fq > ${name}-fw.fq.gz
+            gzip < non-rRNA-reads-rv.fq > ${name}-rv.fq.gz
+
+            mv rRNA-reads.log ${name}_rRNA_report.txt
+            """
+        }
+    }
+}
 
         script:
         //concatenate reference files: ${db_fasta},${db_name}:${db_fasta},${db_name}:...
@@ -1009,7 +1055,7 @@ def check_log(logs) {
         }
     }
     logname = logs.getBaseName() - 'Log.final'
-    if(percent_aligned.toFloat() <= '5'.toFloat() ){
+    if (percent_aligned.toFloat() <= '5'.toFloat()) {
         log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
         skipped_poor_alignment << logname
         return false
@@ -1018,8 +1064,8 @@ def check_log(logs) {
         return true
     }
 }
-if (!params.skipAlignment){
-  if(params.aligner == 'star'){
+if (!params.skipAlignment) {
+  if (params.aligner == 'star') {
       hisat_stdout = Channel.from(false)
       process star {
           label 'high_memory'
@@ -1045,14 +1091,14 @@ if (!params.skipAlignment){
           file "*SJ.out.tab"
           file "*Log.out" into star_log
           file "where_are_my_files.txt"
-          file "*Unmapped*" optional true 
+          file "*Unmapped*" optional true
           file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
           script:
           prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           def star_mem = task.memory ?: params.star_memory ?: false
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-          seqCenter = params.seqCenter ? "--outSAMattrRGline ID:$prefix 'CN:$params.seqCenter' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+          seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
           unaligned = params.saveUnaligned ? "--outReadsUnmapped Fastx" : ''
           """
           STAR --genomeDir $index \\
@@ -1064,7 +1110,7 @@ if (!params.skipAlignment){
               --outSAMtype BAM SortedByCoordinate $avail_mem \\
               --readFilesCommand zcat \\
               --runDirPerm All_RWX $unaligned \\
-              --outFileNamePrefix $prefix $seqCenter
+              --outFileNamePrefix $prefix $seq_center
 
           samtools index ${prefix}Aligned.sortedByCoord.out.bam
           """
@@ -1080,7 +1126,7 @@ if (!params.skipAlignment){
   /*
    * STEP 3 - align with HISAT2
    */
-  if(params.aligner == 'hisat2'){
+  if (params.aligner == 'hisat2') {
       star_log = Channel.from(false)
       process hisat2Align {
           label 'high_memory'
@@ -1110,12 +1156,12 @@ if (!params.skipAlignment){
           prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
           def rnastrandness = ''
-          if (forwardStranded && !unStranded){
+          if (forwardStranded && !unStranded) {
               rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
-          } else if (reverseStranded && !unStranded){
+          } else if (reverseStranded && !unStranded) {
               rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
           }
-          
+
           if (params.singleEnd) {
               unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz" : ''
               """
@@ -1313,9 +1359,9 @@ if (!params.skipAlignment){
 
       script:
       def qualimap_direction = 'non-strand-specific'
-      if (forwardStranded){
+      if (forwardStranded) {
           qualimap_direction = 'strand-specific-forward'
-      }else if (reverseStranded){
+      }else if (reverseStranded) {
           qualimap_direction = 'strand-specific-reverse'
       }
       def paired = params.singleEnd ? '' : '-pe'
@@ -1357,7 +1403,7 @@ if (!params.skipAlignment){
       def dupradar_direction = 0
       if (forwardStranded && !unStranded) {
           dupradar_direction = 1
-      } else if (reverseStranded && !unStranded){
+      } else if (reverseStranded && !unStranded) {
           dupradar_direction = 2
       }
       def paired = params.singleEnd ? 'single' :  'paired'
@@ -1395,7 +1441,7 @@ if (!params.skipAlignment){
       def extraAttributes = params.fc_extra_attributes ? "--extraAttributes ${params.fc_extra_attributes}" : ''
       if (forwardStranded && !unStranded) {
           featureCounts_direction = 1
-      } else if (reverseStranded && !unStranded){
+      } else if (reverseStranded && !unStranded) {
           featureCounts_direction = 2
       }
       // Try to get real sample name
@@ -1462,9 +1508,9 @@ if (!params.skipAlignment){
 
       script:
       def st_direction = ''
-      if (forwardStranded && !unStranded){
+      if (forwardStranded && !unStranded) {
           st_direction = "--fr"
-      } else if (reverseStranded && !unStranded){
+      } else if (reverseStranded && !unStranded) {
           st_direction = "--rf"
       }
       def ignore_gtf = params.stringTieIgnoreGTF ? "" : "-e"
@@ -1532,7 +1578,7 @@ if (!params.skipAlignment){
 /*
  * STEP 11 - Transcriptome quantification with Salmon
  */
-if (params.pseudo_aligner == 'salmon'){
+if (params.pseudo_aligner == 'salmon') {
     process salmon {
         label 'salmon'
         tag "$sample"
@@ -1549,9 +1595,9 @@ if (params.pseudo_aligner == 'salmon'){
 
         script:
         def rnastrandness = params.singleEnd ? 'U' : 'IU'
-        if (forwardStranded && !unStranded){
+        if (forwardStranded && !unStranded) {
             rnastrandness = params.singleEnd ? 'SF' : 'ISF'
-        } else if (reverseStranded && !unStranded){
+        } else if (reverseStranded && !unStranded) {
             rnastrandness = params.singleEnd ? 'SR' : 'ISR'
         }
         def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
@@ -1568,7 +1614,7 @@ if (params.pseudo_aligner == 'salmon'){
         """
         }
 
-    
+
     process salmon_tx2gene {
       label 'low_memory'
       publishDir "${params.outdir}/salmon", mode: 'copy'
@@ -1711,10 +1757,10 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
-    if(skipped_poor_alignment.size() > 0){
+    if (skipped_poor_alignment.size() > 0) {
         subject = "[nf-core/rnaseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
     }
-    if(!workflow.success){
+    if (!workflow.success) {
       subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
@@ -1737,6 +1783,7 @@ workflow.onComplete {
     if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
     if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
+    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
@@ -1773,7 +1820,7 @@ workflow.onComplete {
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
+    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
     def sf = new File("$baseDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
@@ -1781,7 +1828,7 @@ workflow.onComplete {
     // Send the HTML e-mail
     if (email_address) {
         try {
-          if ( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
+          if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
           log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (sendmail)"
@@ -1793,13 +1840,13 @@ workflow.onComplete {
     }
 
     // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/pipeline_info/" )
+    def output_d = new File("${params.outdir}/pipeline_info/")
     if (!output_d.exists()) {
-      output_d.mkdirs()
+        output_d.mkdirs()
     }
-    def output_hf = file( "${output_d}/pipeline_report.html" )
+    def output_hf = file("${output_d}/pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
-    def output_tf = file( "${output_d}/pipeline_report.txt" )
+    def output_tf = file("${output_d}/pipeline_report.txt")
     output_tf.withWriter { w -> w << email_txt }
 
     c_reset = params.monochrome_logs ? '' : "\033[0m";
@@ -1807,13 +1854,13 @@ workflow.onComplete {
     c_green = params.monochrome_logs ? '' : "\033[0;32m";
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
-    if(skipped_poor_alignment.size() > 0){
+    if (skipped_poor_alignment.size() > 0) {
         log.info "${c_purple}[nf-core/rnaseq]${c_red} WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor mapping percentages!${c_reset}"
     }
     if (workflow.stats.ignoredCount > 0 && workflow.success) {
-      log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
-      log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
-      log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
+        log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
+        log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
+        log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
     }
 
     if (workflow.success) {
@@ -1830,7 +1877,7 @@ def hasExtension(it, extension) {
     it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
 
-def nfcoreHeader(){
+def nfcoreHeader() {
     // Log colors ANSI codes
     c_reset = params.monochrome_logs ? '' : "\033[0m";
     c_dim = params.monochrome_logs ? '' : "\033[2m";
@@ -1853,7 +1900,7 @@ def nfcoreHeader(){
     """.stripIndent()
 }
 
-def checkHostname(){
+def checkHostname() {
     def c_reset = params.monochrome_logs ? '' : "\033[0m"
     def c_white = params.monochrome_logs ? '' : "\033[0;37m"
     def c_red = params.monochrome_logs ? '' : "\033[1;91m"

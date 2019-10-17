@@ -1,4 +1,4 @@
-seq_center#!/usr/bin/env nextflow
+#!/usr/bin/env nextflow
 /*
 ========================================================================================
                          nf-core/rnaseq

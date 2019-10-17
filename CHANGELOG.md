@@ -1,5 +1,16 @@
 # nf-core/rnaseq: Changelog
 
+## [Unpublished Version / DEV]
+
+Major novel changes include:
+
+* Update `igenomes.config` with NCBI `GRCh38` and most recent UCSC genomes
+
+### Pipeline enhancements & fixes
+
+* Fixed parameter warnings [#316](https://github.com/nf-core/rnaseq/issues/316) and [318](https://github.com/nf-core/rnaseq/issues/318)
+* Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) - Confusing Info Printout about GFF and GTF
+
 ## Version 1.4
 
 Major novel changes include:
@@ -18,7 +29,7 @@ Major novel changes include:
 * Adjust wording of skipped samples [in pipeline output](https://github.com/nf-core/rnaseq/issues/290)
 * Fixed link to guidelines [#203](https://github.com/nf-core/rnaseq/issues/203)
 * Add `Citation` and `Quick Start` section to `README.md`
-* Add in Documentation of the `--gff` parameter
+* Add in documentation of the `--gff` parameter
 
 ### Reporting Updates
 

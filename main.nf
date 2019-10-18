@@ -991,7 +991,7 @@ if (!params.removeRiboRNA) {
             """
         }
     }
-}
+}    
 
 /*
  * STEP 3 - align with STAR

@@ -1,5 +1,10 @@
 # nf-core/rnaseq: Changelog
 
+## Version 1.4.2
+
+* Minor version release for keeping Git History in sync
+* No changes with respect to 1.4.1 on pipeline level
+
 ## Version 1.4.1
 
 Major novel changes include:

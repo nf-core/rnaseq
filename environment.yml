@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-rnaseq-1.4
+name: nf-core-rnaseq-1.4.2
 channels:
   - conda-forge
   - bioconda
@@ -34,5 +34,3 @@ dependencies:
   - stringtie=2.0
   - subread=1.6.4
   - trim-galore=0.6.4
-  
-  

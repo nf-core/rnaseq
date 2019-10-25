@@ -456,7 +456,7 @@ process get_software_versions {
     stringtie --version &> v_stringtie.txt
     preseq &> v_preseq.txt
     read_duplication.py --version &> v_rseqc.txt
-    echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
+    bamCoverage --version &> v_deeptools.txt || true
     featureCounts -v &> v_featurecounts.txt
     salmon --version &> v_salmon.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
@@ -464,7 +464,7 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
-    unset DISPLAY && qualimap rnaseq  > v_qualimap.txt 2>&1 || true
+    unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
@@ -991,7 +991,7 @@ if (!params.removeRiboRNA) {
             """
         }
     }
-}    
+}
 
 /*
  * STEP 3 - align with STAR

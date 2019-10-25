@@ -1,5 +1,11 @@
 # nf-core/rnaseq: Changelog
 
+## Version 1.4.3dev
+
+### Pipeline enhancements & fixes
+
+* Minor tweaks to software version commands
+
 ## Version 1.4.2
 
 * Minor version release for keeping Git History in sync

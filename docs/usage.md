@@ -301,7 +301,7 @@ These can then be used for future pipeline runs, reducing processing times.
 By default, trimmed FastQ files will not be saved to the results directory. Specify this
 flag (or set to true in your config file) to copy these files when complete.
 
-### `--saveUnaligned``
+### `--saveUnaligned`
 
 By default, the pipeline doesn't export unaligned/unmapped reads to a separate file. Using this option, STAR / HISAT2 and Salmon will produce a separate BAM file or a list of reads that were not aligned in a separate output directory.
 

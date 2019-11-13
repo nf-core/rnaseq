@@ -29,7 +29,7 @@
     out << """
     <div style="color: #856404; background-color: #fff3cd; border-color: #ffeeba; padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px;">
         <h4 style="margin-top:0; color: inherit;">nf-core/rnaseq execution completed with warnings!</h4>
-        <p>The pipeline finished successfully, but the following samples were skipped due to very low alignment (&lt; 5%):</p>
+        <p>The pipeline finished successfully, but the following samples were skipped due to very low alignment (&lt; ${percent_aln_skip}%):</p>
         <ul>
             <li><code>${skipped_poor_alignment.join('</code></li><li><code>')}</code></li>
         </ul>

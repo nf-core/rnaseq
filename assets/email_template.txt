@@ -37,7 +37,7 @@ ${errorReport}
 ## nf-core/rnaseq execution completed with warnings ##
 ##################################################
 The pipeline finished successfully, but the following samples were skipped,
-due to very low alignment (less than 5%):
+due to very low alignment (less than ${percent_aln_skip}%):
 
   - ${skipped_poor_alignment.join("\n  - ")}
 """

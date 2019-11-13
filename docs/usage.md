@@ -600,6 +600,12 @@ allow the exon build to proceed by supplying `--hisat_build_memory 100GB`
 
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
 
+### `--percent_aln_skip`
+
+The pipeline will remove any samples from further processing that receive a percentage alignment below this.
+This is because downstream steps typically fail otherwise, halting the execution of the pipeline for all samples.
+Default: `5` (percent reads aligned).
+
 ### `--plaintext_email`
 
 Set to receive plain-text e-mails instead of HTML formatted.

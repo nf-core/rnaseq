@@ -8,6 +8,11 @@
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
 
+
+#### Updated Packages
+
+* Salmon 0.14.2 -> 1.0.0
+
 ## Version 1.4.2
 
 * Minor version release for keeping Git History in sync

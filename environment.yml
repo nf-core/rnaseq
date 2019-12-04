@@ -34,3 +34,4 @@ dependencies:
   - stringtie=2.0
   - subread=1.6.4
   - trim-galore=0.6.4
+  - pigz=2.3.4

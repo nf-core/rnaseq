@@ -69,6 +69,7 @@ def helpMessage() {
       --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
       --saveUnaligned               Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
       --skipAlignment               Skip alignment altogether (usually in favor of pseudoalignment)
+      --percent_aln_skip            Percentage alignment below which samples are removed from further processing. Default: 5%
 
     Read Counting:
       --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
@@ -456,7 +457,7 @@ process get_software_versions {
     stringtie --version &> v_stringtie.txt
     preseq &> v_preseq.txt
     read_duplication.py --version &> v_rseqc.txt
-    echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
+    bamCoverage --version &> v_deeptools.txt || true
     featureCounts -v &> v_featurecounts.txt
     salmon --version &> v_salmon.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
@@ -464,7 +465,7 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
-    unset DISPLAY && qualimap rnaseq  > v_qualimap.txt 2>&1 || true
+    unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
@@ -991,14 +992,15 @@ if (!params.removeRiboRNA) {
             """
         }
     }
-}    
+}
 
 /*
  * STEP 3 - align with STAR
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
-skipped_poor_alignment = []
+good_alignment_scores = [:]
+poor_alignment_scores = [:]
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->
@@ -1007,12 +1009,16 @@ def check_log(logs) {
         }
     }
     logname = logs.getBaseName() - 'Log.final'
-    if (percent_aligned.toFloat() <= '5'.toFloat()) {
-        log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
-        skipped_poor_alignment << logname
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_red = params.monochrome_logs ? '' : "\033[0;31m";
+    if (percent_aligned.toFloat() <= params.percent_aln_skip.toFloat()) {
+        log.info "#${c_red}################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<${c_reset}"
+        poor_alignment_scores[logname] = percent_aligned
         return false
     } else {
-        log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
+        log.info "-${c_green}           Passed alignment > star ($logname)   >> ${percent_aligned}% <<${c_reset}"
+        good_alignment_scores[logname] = percent_aligned
         return true
     }
 }
@@ -1207,6 +1213,7 @@ if (!params.skipAlignment) {
               else if (filename.indexOf("junction.xls") > 0)                      "junction_annotation/data/$filename"
               else if (filename.indexOf("splice_events.pdf") > 0)                 "junction_annotation/events/$filename"
               else if (filename.indexOf("splice_junction.pdf") > 0)               "junction_annotation/junctions/$filename"
+              else if (filename.indexOf("junction_annotation_log.txt") > 0)       "junction_annotation/$filename"
               else if (filename.indexOf("junctionSaturation_plot.pdf") > 0)       "junction_saturation/$filename"
               else if (filename.indexOf("junctionSaturation_plot.r") > 0)         "junction_saturation/rscripts/$filename"
               else filename
@@ -1226,9 +1233,9 @@ if (!params.skipAlignment) {
       script:
       """
       infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
-      bam_stat.py -i $bam_rseqc > ${bam_rseqc.baseName}.bam_stat.txt
-      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
+      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
+      bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
+      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
       inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
       read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
       read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
@@ -1709,8 +1716,8 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
-    if (skipped_poor_alignment.size() > 0) {
-        subject = "[nf-core/rnaseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+    if (poor_alignment_scores.size() > 0) {
+        subject = "[nf-core/rnaseq] Partially Successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
     }
     if (!workflow.success) {
       subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
@@ -1735,7 +1742,8 @@ workflow.onComplete {
     if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
     if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
-    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
+    email_fields['skipped_poor_alignment'] = poor_alignment_scores.keySet()
+    email_fields['percent_aln_skip'] = params.percent_aln_skip
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
@@ -1791,11 +1799,16 @@ workflow.onComplete {
         }
     }
 
-    // Write summary e-mail HTML to a file
+    // Write summaries to a file
+    // Make directory first if needed
     def output_d = new File("${params.outdir}/pipeline_info/")
     if (!output_d.exists()) {
         output_d.mkdirs()
     }
+    // Replace the email logo cid with a base64 encoded image
+    def logo_b64 = new File("$baseDir/assets/nf-core-rnaseq_logo.png").bytes.encodeBase64().toString()
+    email_html = email_html.replace('<img src="cid:nfcorepipelinelogo">', "<img src=\"data:image/png;base64, ${logo_b64}\">")
+    // Print to file
     def output_hf = file("${output_d}/pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
     def output_tf = file("${output_d}/pipeline_report.txt")
@@ -1806,20 +1819,40 @@ workflow.onComplete {
     c_green = params.monochrome_logs ? '' : "\033[0;32m";
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
-    if (skipped_poor_alignment.size() > 0) {
-        log.info "${c_purple}[nf-core/rnaseq]${c_red} WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor mapping percentages!${c_reset}"
+    if (good_alignment_scores.size() > 0){
+        total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
+        idx = 0;
+        samp_aln = ''
+        for ( samp in good_alignment_scores ) {
+            samp_aln += "    ${samp.key}: ${samp.value}%\n"
+            idx += 1
+            if(idx > 5){
+                samp_aln += "    ..see pipeline reports for full list\n"
+                break;
+            }
+        }
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green}${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${c_reset}"
     }
+    if (poor_alignment_scores.size() > 0){
+        samp_aln = ''
+        poor_alignment_scores.each { samp, value ->
+            samp_aln += "    ${samp}: ${value}%\n"
+        }
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} WARNING - ${poor_alignment_scores.size()} samples skipped due to poor mapping percentages!\n${samp_aln}${c_reset}"
+    }
+
+
     if (workflow.stats.ignoredCount > 0 && workflow.success) {
-        log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
-        log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
-        log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
+        log.info "- ${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
+        log.info "- ${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
+        log.info "- ${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
     }
 
     if (workflow.success) {
-        log.info "${c_purple}[nf-core/rnaseq]${c_green} Pipeline completed successfully${c_reset}"
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green} Pipeline completed successfully${c_reset}"
     } else {
         checkHostname()
-        log.info "${c_purple}[nf-core/rnaseq]${c_red} Pipeline completed with errors${c_reset}"
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} Pipeline completed with errors${c_reset}"
     }
 
 }

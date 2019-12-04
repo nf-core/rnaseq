@@ -301,7 +301,7 @@ These can then be used for future pipeline runs, reducing processing times.
 By default, trimmed FastQ files will not be saved to the results directory. Specify this
 flag (or set to true in your config file) to copy these files when complete.
 
-### `--saveUnaligned``
+### `--saveUnaligned`
 
 By default, the pipeline doesn't export unaligned/unmapped reads to a separate file. Using this option, STAR / HISAT2 and Salmon will produce a separate BAM file or a list of reads that were not aligned in a separate output directory.
 
@@ -432,6 +432,7 @@ This allows to skip the trimming process to save time when re-analyzing data tha
 
 If rRNA removal is desired (for example, metatranscriptomics),
 add the following command line parameters.
+Please be adviced that by default these steps make use of the SILVA v119 database that requires [`licencing for commercial/non-academic entities`](https://www.arb-silva.de/silva-license-information).
 
 ### `--removeRiboRNA`
 
@@ -445,6 +446,7 @@ flag (or set to true in your config file) to copy these files when complete.
 ### `--rRNA_database_manifest`
 
 By default, rRNA databases in github [`biocore/sortmerna/rRNA_databases`](https://github.com/biocore/sortmerna/tree/master/rRNA_databases) are used. Here the path to a text file can be provided that contains paths to fasta files (one per line, no ' or " for file names) that will be used for database creation for SortMeRNA instead of the default ones. You can see an example in the directory `assets/rrna-default-dbs.txt`. Consequently, similar reads to these sequences will be removed.
+Be aware that commercial/non-academic entities require [`licensing for SILVA`](https://www.arb-silva.de/silva-license-information) with these default databases.
 
 ## Library Prep Presets
 
@@ -597,6 +599,12 @@ allow the exon build to proceed by supplying `--hisat_build_memory 100GB`
 ### `--sampleLevel`
 
 Used to turn of the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples.
+
+### `--percent_aln_skip`
+
+The pipeline will remove any samples from further processing that receive a percentage alignment below this.
+This is because downstream steps typically fail otherwise, halting the execution of the pipeline for all samples.
+Default: `5` (percent reads aligned).
 
 ### `--plaintext_email`
 

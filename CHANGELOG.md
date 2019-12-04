@@ -13,6 +13,11 @@
 
 * Salmon 0.14.2 -> 1.0.0
 
+#### Added / Removed Packages
+
+* Added pigz 2.3.4 for parallelized trim-galore support
+
+
 ## Version 1.4.2
 
 * Minor version release for keeping Git History in sync

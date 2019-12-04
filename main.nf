@@ -1213,6 +1213,7 @@ if (!params.skipAlignment) {
               else if (filename.indexOf("junction.xls") > 0)                      "junction_annotation/data/$filename"
               else if (filename.indexOf("splice_events.pdf") > 0)                 "junction_annotation/events/$filename"
               else if (filename.indexOf("splice_junction.pdf") > 0)               "junction_annotation/junctions/$filename"
+              else if (filename.indexOf("junction_annotation_log.txt") > 0)       "junction_annotation/$filename"
               else if (filename.indexOf("junctionSaturation_plot.pdf") > 0)       "junction_saturation/$filename"
               else if (filename.indexOf("junctionSaturation_plot.r") > 0)         "junction_saturation/rscripts/$filename"
               else filename
@@ -1232,9 +1233,9 @@ if (!params.skipAlignment) {
       script:
       """
       infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
+      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
       bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
-      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
+      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
       inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
       read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
       read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication

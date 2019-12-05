@@ -1670,7 +1670,7 @@ process multiqc {
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
-    file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])

@@ -9,6 +9,8 @@
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
 * Fixes an issue where multiqc fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
 * Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
+* Fixes label name in fastQC process, Issue #345
+
 
 #### Updated Packages
 

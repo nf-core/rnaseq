@@ -829,7 +829,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
  */
 process fastqc {
     tag "$name"
-    label 'process_medium'
+    label 'mid_memory'
     publishDir "${params.outdir}/fastqc", mode: 'copy',
         saveAs: { filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename" }
 

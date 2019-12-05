@@ -8,7 +8,7 @@
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
 * Fixes an issue where multiqc fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
-* Fixes broken [#357] (https://github.com/nf-core/rnaseq/issues/357)
+* Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 
 #### Updated Packages
 

@@ -1327,7 +1327,7 @@ if (!params.skipAlignment) {
       memory = task.memory.toGiga() + "G"
       """
       unset DISPLAY
-      qualimap --java-mem-size=${memory} rnaseq -p $qualimap_direction $paired -s -bam $bam -gtf $gtf -outdir ${bam.baseName}
+      qualimap --java-mem-size=${memory} rnaseq -p $qualimap_direction $paired -bam $bam -gtf $gtf -outdir ${bam.baseName}
       """
   }
 

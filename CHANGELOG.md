@@ -11,7 +11,6 @@
 * Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes label name in fastQC process, Issue #345
 
-
 #### Updated Packages
 
 * Salmon 0.14.2 -> 1.0.0

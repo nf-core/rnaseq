@@ -364,7 +364,7 @@ By default, the pipeline aligns the input reads to the genome using either HISAT
 By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL:
 
 ```bash
-nextflow run --reads 'data/{R1,R2}*.fastq.gz' \
+nextflow run nf-core/rnaseq --reads 'data/{R1,R2}*.fastq.gz' \
     --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
     --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz
 ```

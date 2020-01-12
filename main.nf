@@ -88,7 +88,7 @@ def helpMessage() {
       --skipEdgeR                   Skip edgeR MDS plot and heatmap
       --skipMultiQC                 Skip MultiQC
 
-    Other options
+    Other options:
       --sampleLevel                 Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
       --outdir                      The output directory where the results will be saved
       -w/--work-dir                 The temporary directory where intermediate data will be saved

@@ -238,7 +238,7 @@ To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hi
 
 ### HISAT2
 
-To change the `--mp` parameter of HISAT2, we have added 2 params `hisat2_mp_min` and `hisat2_mp_max`. If you scpecified only of of those, the fefault value will be used for the other (6 for max, 2 for min). 
+ To change the `--mp` parameter of HISAT2, we have added 2 params `hisat2_mp_min` and `hisat2_mp_max`. If you specified only one of those, the default value will be used for the other (6 for max, 2 for min). 
 
 ## Reference genomes
 

@@ -20,6 +20,7 @@
   * [Default "`exon`" Attribute](#default-exon-type)
 * [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
 * [Alignment tool](#alignment-tool)
+  * [HISAT2](#hisat)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
   * [`--star_index`, `--hisat2_index`, `--fasta`, `--gtf`, `--bed12`](#--star_index---hisat2_index---fasta---gtf---bed12)
@@ -234,6 +235,10 @@ By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align
 If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the alignment tool instead. Developed by the same group behind the popular Tophat aligner, HISAT2 has a much smaller memory footprint.
 
 To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file. Alternatively, you can also use `--aligner salmon` if you want to just perform a fast mapping to the transcriptome with Salmon (you will also have to supply the `--transcriptome` parameter or both a `--fasta` and `--gtf`/`--gff`).
+
+### HISAT2
+
+To change the `--mp` parameter of HISAT2, we have added 2 params `hisat2_mp_min` and `hisat2_mp_max`. If you scpecified only of of those, the fefault value will be used for the other (6 for max, 2 for min). 
 
 ## Reference genomes
 

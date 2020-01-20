@@ -1113,12 +1113,12 @@ if (!params.skipAlignment) {
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
           prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
-	  mp_min = params.hisat2_mp_min ? params.hisat2_mp_min : false
-	  mp_max = params.hisat2_mp_max ? params.hisat2_mp_max : false
-	  if (mp_min == false && mp_max) mp_min = 2
-	  if (mp_max == false && mp_min) mp_max = 6
-	  hisat2_mp = mp_min && mp_max ? "--mp $mp_max,$mp_min" : "" 
-	  def rnastrandness = ''
+	    mp_min = params.hisat2_mp_min ? params.hisat2_mp_min : false
+	    mp_max = params.hisat2_mp_max ? params.hisat2_mp_max : false
+	    if (mp_min == false && mp_max) mp_min = 2
+	    if (mp_max == false && mp_min) mp_max = 6
+	    hisat2_mp = mp_min && mp_max ? "--mp $mp_max,$mp_min" : "" 
+	    def rnastrandness = ''
           if (forwardStranded && !unStranded) {
               rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
           } else if (reverseStranded && !unStranded) {
@@ -1132,7 +1132,7 @@ if (!params.skipAlignment) {
                      -U $reads \\
                      $rnastrandness \\
                      --known-splicesite-infile $alignment_splicesites \\
-		     $hisat2_mp \\
+		       $hisat2_mp \\
                      -p ${task.cpus} $unaligned\\
                      --met-stderr \\
                      --new-summary \\
@@ -1148,7 +1148,7 @@ if (!params.skipAlignment) {
                      -2 ${reads[1]} \\
                      $rnastrandness \\
                      --known-splicesite-infile $alignment_splicesites \\
-		     $hisat2_mp \\
+		       $hisat2_mp \\
                      --no-mixed \\
                      --no-discordant \\
                      -p ${task.cpus} $unaligned\\

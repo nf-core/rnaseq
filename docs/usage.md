@@ -444,7 +444,7 @@ flag (or set to true in your config file) to copy these files when complete.
 
 ### `--rRNA_database_manifest`
 
-By default, rRNA databases in github [`biocore/sortmerna/rRNA_databases`](https://github.com/biocore/sortmerna/tree/master/rRNA_databases) are used. Here the path to a text file can be provided that contains paths to fasta files (one per line, no ' or " for file names) that will be used for database creation for SortMeRNA instead of the default ones. You can see an example in the directory `assets/rrna-default-dbs.txt`. Consequently, similar reads to these sequences will be removed.
+By default, rRNA databases in github [`https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases`](https://github.com/biocore/sortmerna/tree/master/rRNA_databases) are used. Here the path to a text file can be provided that contains paths to fasta files (one per line, no ' or " for file names) that will be used for database creation for SortMeRNA instead of the default ones. You can see an example in the directory `assets/rrna-default-dbs.txt`. Consequently, similar reads to these sequences will be removed.
 
 ## Library Prep Presets
 

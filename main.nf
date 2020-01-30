@@ -991,7 +991,7 @@ if (!params.removeRiboRNA) {
             """
         }
     }
-}    
+}
 
 /*
  * STEP 3 - align with STAR
@@ -1122,6 +1122,7 @@ if (!params.skipAlignment) {
                      $rnastrandness \\
                      --known-splicesite-infile $alignment_splicesites \\
                      -p ${task.cpus} $unaligned\\
+                     -k ${int.align} \\
                      --met-stderr \\
                      --new-summary \\
                      --dta \\
@@ -1139,6 +1140,7 @@ if (!params.skipAlignment) {
                      --no-mixed \\
                      --no-discordant \\
                      -p ${task.cpus} $unaligned\\
+                     -k ${int.align} \\
                      --met-stderr \\
                      --new-summary \\
                      --summary-file ${prefix}.hisat2_summary.txt $seq_center \\

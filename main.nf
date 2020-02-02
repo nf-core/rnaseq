@@ -1246,6 +1246,7 @@ if (!params.skipAlignment) {
    * STEP 5 - preseq analysis
    */
   process preseq {
+      label 'highTime'
       tag "${bam_preseq.baseName - '.sorted'}"
       publishDir "${params.outdir}/preseq", mode: 'copy'
 
@@ -1335,7 +1336,7 @@ if (!params.skipAlignment) {
    * STEP 8 - dupRadar
    */
   process dupradar {
-      label 'low_memory'
+      label 'highTime'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       publishDir "${params.outdir}/dupradar", mode: 'copy',
           saveAs: {filename ->
@@ -1539,7 +1540,6 @@ if (!params.skipAlignment) {
  */
 if (params.pseudo_aligner == 'salmon') {
     process salmon {
-        label 'salmon'
         tag "$sample"
         publishDir "${params.outdir}/salmon", mode: 'copy'
 

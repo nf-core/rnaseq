@@ -11,6 +11,7 @@
 * Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 * Fixes label name in fastQC process, Issue [#345]
+* Fixed [issues](https://github.com/nf-core/rnaseq/issues/369) with long running preseq and dupradar tasks
 
 #### Updated Packages
 

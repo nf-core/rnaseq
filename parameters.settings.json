@@ -11,7 +11,7 @@
             "type": "string"
         },
         {
-            "name": "singleEnd",
+            "name": "single_end",
             "label": "Single-end sequencing input",
             "usage": "Use single-end sequencing inputs instead of paired-end.",
             "group": "Main options",

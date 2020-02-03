@@ -3,7 +3,7 @@ name: nf-core/rnaseq branch protection
 on:
   pull_request:
     branches:
-    - dev
+    - master
 
 jobs:
   test:

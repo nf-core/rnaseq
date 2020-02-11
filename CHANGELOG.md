@@ -12,6 +12,7 @@
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 * Fixes label name in fastQC process, Issue [#345]
 * Fixed [issues](https://github.com/nf-core/rnaseq/issues/369) with long running preseq and dupradar tasks
+* MultiQC now properly trims `-fw` from sample names if `--removeRiboRNA` is used
 
 #### Updated Packages
 

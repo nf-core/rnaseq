@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-rnaseq-1.4.2
+name: nf-core-rnaseq-1.4.3dev
 channels:
   - conda-forge
   - bioconda
@@ -27,10 +27,11 @@ dependencies:
   - preseq=2.0.3
   - qualimap=2.2.2c
   - rseqc=3.0.1
-  - salmon=0.14.2
+  - salmon=1.0.0
   - samtools=1.9
   - sortmerna=2.1b # for metatranscriptomics
   - star=2.6.1d             # Don't upgrade me - 2.7X indices incompatible with iGenomes.
   - stringtie=2.0
   - subread=1.6.4
   - trim-galore=0.6.4
+  - pigz=2.3.4

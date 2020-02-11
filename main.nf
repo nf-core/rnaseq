@@ -25,7 +25,7 @@ def helpMessage() {
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
     Generic:
-      --singleEnd                   Specifies that the input is single-end reads
+      --single_end                   Specifies that the input is single-end reads
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --genome                      Name of iGenomes reference
@@ -69,6 +69,7 @@ def helpMessage() {
       --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
       --saveUnaligned               Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
       --skipAlignment               Skip alignment altogether (usually in favor of pseudoalignment)
+      --percent_aln_skip            Percentage alignment below which samples are removed from further processing. Default: 5%
 
     Read Counting:
       --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
@@ -87,7 +88,7 @@ def helpMessage() {
       --skipEdgeR                   Skip edgeR MDS plot and heatmap
       --skipMultiQC                 Skip MultiQC
 
-    Other options
+    Other options:
       --sampleLevel                 Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
       --outdir                      The output directory where the results will be saved
       -w/--work-dir                 The temporary directory where intermediate data will be saved
@@ -333,7 +334,7 @@ ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
  * Create a channel for input read files
  */
 if (params.readPaths) {
-    if (params.singleEnd) {
+    if (params.single_end) {
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
@@ -348,8 +349,8 @@ if (params.readPaths) {
     }
 } else {
     Channel
-        .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
+        .fromFilePairs( params.reads, size: params.single_end ? 1 : 2 )
+        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --single_end on the command line." }
         .into { raw_reads_fastqc; raw_reads_trimgalore }
 }
 
@@ -359,7 +360,7 @@ def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name'] = custom_runName ?: workflow.runName
 summary['Reads'] = params.reads
-summary['Data Type'] = params.singleEnd ? 'Single-End' : 'Paired-End'
+summary['Data Type'] = params.single_end ? 'Single-End' : 'Paired-End'
 if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
@@ -456,7 +457,7 @@ process get_software_versions {
     stringtie --version &> v_stringtie.txt
     preseq &> v_preseq.txt
     read_duplication.py --version &> v_rseqc.txt
-    echo \$(bamCoverage --version 2>&1) > v_deeptools.txt
+    bamCoverage --version &> v_deeptools.txt || true
     featureCounts -v &> v_featurecounts.txt
     salmon --version &> v_salmon.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
@@ -464,7 +465,7 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
-    unset DISPLAY && qualimap rnaseq  > v_qualimap.txt 2>&1 || true
+    unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
@@ -828,7 +829,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
  */
 process fastqc {
     tag "$name"
-    label 'process_medium'
+    label 'mid_memory'
     publishDir "${params.outdir}/fastqc", mode: 'copy',
         saveAs: { filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename" }
 
@@ -881,7 +882,7 @@ if (!params.skipTrimming) {
         tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
         tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
         nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-        if (params.singleEnd) {
+        if (params.single_end) {
             """
             trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
             """
@@ -951,7 +952,7 @@ if (!params.removeRiboRNA) {
         for (i=0; i<db_fasta.size(); i++) { Refs+= ":${db_fasta[i]},${db_name[i]}" }
         Refs = Refs.substring(1)
 
-        if (params.singleEnd) {
+        if (params.single_end) {
             """
             gzip -d --force < ${reads} > all-reads.fastq
 
@@ -991,14 +992,15 @@ if (!params.removeRiboRNA) {
             """
         }
     }
-}    
+}
 
 /*
  * STEP 3 - align with STAR
  */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
-skipped_poor_alignment = []
+good_alignment_scores = [:]
+poor_alignment_scores = [:]
 def check_log(logs) {
     def percent_aligned = 0;
     logs.eachLine { line ->
@@ -1007,12 +1009,16 @@ def check_log(logs) {
         }
     }
     logname = logs.getBaseName() - 'Log.final'
-    if (percent_aligned.toFloat() <= '5'.toFloat()) {
-        log.info "#################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<"
-        skipped_poor_alignment << logname
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_red = params.monochrome_logs ? '' : "\033[0;31m";
+    if (percent_aligned.toFloat() <= params.percent_aln_skip.toFloat()) {
+        log.info "#${c_red}################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<${c_reset}"
+        poor_alignment_scores[logname] = percent_aligned
         return false
     } else {
-        log.info "          Passed alignment > star ($logname)   >> ${percent_aligned}% <<"
+        log.info "-${c_green}           Passed alignment > star ($logname)   >> ${percent_aligned}% <<${c_reset}"
+        good_alignment_scores[logname] = percent_aligned
         return true
     }
 }
@@ -1047,7 +1053,7 @@ if (!params.skipAlignment) {
           file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
           script:
-          prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+          prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           def star_mem = task.memory ?: params.star_memory ?: false
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
           seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
@@ -1105,16 +1111,16 @@ if (!params.skipAlignment) {
 
           script:
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
-          prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+          prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
           def rnastrandness = ''
           if (forwardStranded && !unStranded) {
-              rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
+              rnastrandness = params.single_end ? '--rna-strandness F' : '--rna-strandness FR'
           } else if (reverseStranded && !unStranded) {
-              rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
+              rnastrandness = params.single_end ? '--rna-strandness R' : '--rna-strandness RF'
           }
 
-          if (params.singleEnd) {
+          if (params.single_end) {
               unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz" : ''
               """
               hisat2 -x $index_base \\
@@ -1207,6 +1213,7 @@ if (!params.skipAlignment) {
               else if (filename.indexOf("junction.xls") > 0)                      "junction_annotation/data/$filename"
               else if (filename.indexOf("splice_events.pdf") > 0)                 "junction_annotation/events/$filename"
               else if (filename.indexOf("splice_junction.pdf") > 0)               "junction_annotation/junctions/$filename"
+              else if (filename.indexOf("junction_annotation_log.txt") > 0)       "junction_annotation/$filename"
               else if (filename.indexOf("junctionSaturation_plot.pdf") > 0)       "junction_saturation/$filename"
               else if (filename.indexOf("junctionSaturation_plot.r") > 0)         "junction_saturation/rscripts/$filename"
               else filename
@@ -1226,9 +1233,9 @@ if (!params.skipAlignment) {
       script:
       """
       infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
+      junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
       bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
-      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
+      junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
       inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
       read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
       read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
@@ -1239,6 +1246,7 @@ if (!params.skipAlignment) {
    * STEP 5 - preseq analysis
    */
   process preseq {
+      label 'highTime'
       tag "${bam_preseq.baseName - '.sorted'}"
       publishDir "${params.outdir}/preseq", mode: 'copy'
 
@@ -1316,11 +1324,11 @@ if (!params.skipAlignment) {
       }else if (reverseStranded) {
           qualimap_direction = 'strand-specific-reverse'
       }
-      def paired = params.singleEnd ? '' : '-pe'
+      def paired = params.single_end ? '' : '-pe'
       memory = task.memory.toGiga() + "G"
       """
       unset DISPLAY
-      qualimap --java-mem-size=${memory} rnaseq $qualimap_direction $paired -s -bam $bam -gtf $gtf -outdir ${bam.baseName}
+      qualimap --java-mem-size=${memory} rnaseq -p $qualimap_direction $paired -bam $bam -gtf $gtf -outdir ${bam.baseName}
       """
   }
 
@@ -1328,7 +1336,7 @@ if (!params.skipAlignment) {
    * STEP 8 - dupRadar
    */
   process dupradar {
-      label 'low_memory'
+      label 'highTime'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       publishDir "${params.outdir}/dupradar", mode: 'copy',
           saveAs: {filename ->
@@ -1358,7 +1366,7 @@ if (!params.skipAlignment) {
       } else if (reverseStranded && !unStranded) {
           dupradar_direction = 2
       }
-      def paired = params.singleEnd ? 'single' :  'paired'
+      def paired = params.single_end ? 'single' :  'paired'
       """
       dupRadar.r $bam_md $gtf $dupradar_direction $paired ${task.cpus}
       """
@@ -1532,7 +1540,6 @@ if (!params.skipAlignment) {
  */
 if (params.pseudo_aligner == 'salmon') {
     process salmon {
-        label 'salmon'
         tag "$sample"
         publishDir "${params.outdir}/salmon", mode: 'copy'
 
@@ -1546,13 +1553,13 @@ if (params.pseudo_aligner == 'salmon') {
         set val(sample), file("${sample}/") into salmon_tximport, salmon_parsegtf
 
         script:
-        def rnastrandness = params.singleEnd ? 'U' : 'IU'
+        def rnastrandness = params.single_end ? 'U' : 'IU'
         if (forwardStranded && !unStranded) {
-            rnastrandness = params.singleEnd ? 'SF' : 'ISF'
+            rnastrandness = params.single_end ? 'SF' : 'ISF'
         } else if (reverseStranded && !unStranded) {
-            rnastrandness = params.singleEnd ? 'SR' : 'ISR'
+            rnastrandness = params.single_end ? 'SR' : 'ISR'
         }
-        def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+        def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
         unmapped = params.saveUnaligned ? "--writeUnmappedNames" : ''
         """
         salmon quant --validateMappings \\
@@ -1663,7 +1670,7 @@ process multiqc {
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
-    file ('featureCounts_biotype/*') from featureCounts_biotype.collect()
+    file ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
@@ -1709,8 +1716,8 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
-    if (skipped_poor_alignment.size() > 0) {
-        subject = "[nf-core/rnaseq] Partially Successful (${skipped_poor_alignment.size()} skipped): $workflow.runName"
+    if (poor_alignment_scores.size() > 0) {
+        subject = "[nf-core/rnaseq] Partially Successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
     }
     if (!workflow.success) {
       subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
@@ -1735,7 +1742,8 @@ workflow.onComplete {
     if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
     if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
-    email_fields['skipped_poor_alignment'] = skipped_poor_alignment
+    email_fields['skipped_poor_alignment'] = poor_alignment_scores.keySet()
+    email_fields['percent_aln_skip'] = params.percent_aln_skip
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
@@ -1791,11 +1799,16 @@ workflow.onComplete {
         }
     }
 
-    // Write summary e-mail HTML to a file
+    // Write summaries to a file
+    // Make directory first if needed
     def output_d = new File("${params.outdir}/pipeline_info/")
     if (!output_d.exists()) {
         output_d.mkdirs()
     }
+    // Replace the email logo cid with a base64 encoded image
+    def logo_b64 = new File("$baseDir/assets/nf-core-rnaseq_logo.png").bytes.encodeBase64().toString()
+    email_html = email_html.replace('<img src="cid:nfcorepipelinelogo">', "<img src=\"data:image/png;base64, ${logo_b64}\">")
+    // Print to file
     def output_hf = file("${output_d}/pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
     def output_tf = file("${output_d}/pipeline_report.txt")
@@ -1806,20 +1819,40 @@ workflow.onComplete {
     c_green = params.monochrome_logs ? '' : "\033[0;32m";
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
-    if (skipped_poor_alignment.size() > 0) {
-        log.info "${c_purple}[nf-core/rnaseq]${c_red} WARNING - ${skipped_poor_alignment.size()} samples skipped due to poor mapping percentages!${c_reset}"
+    if (good_alignment_scores.size() > 0){
+        total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
+        idx = 0;
+        samp_aln = ''
+        for ( samp in good_alignment_scores ) {
+            samp_aln += "    ${samp.key}: ${samp.value}%\n"
+            idx += 1
+            if(idx > 5){
+                samp_aln += "    ..see pipeline reports for full list\n"
+                break;
+            }
+        }
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green}${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${c_reset}"
     }
+    if (poor_alignment_scores.size() > 0){
+        samp_aln = ''
+        poor_alignment_scores.each { samp, value ->
+            samp_aln += "    ${samp}: ${value}%\n"
+        }
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} WARNING - ${poor_alignment_scores.size()} samples skipped due to poor mapping percentages!\n${samp_aln}${c_reset}"
+    }
+
+
     if (workflow.stats.ignoredCount > 0 && workflow.success) {
-        log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
-        log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
-        log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
+        log.info "- ${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
+        log.info "- ${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
+        log.info "- ${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
     }
 
     if (workflow.success) {
-        log.info "${c_purple}[nf-core/rnaseq]${c_green} Pipeline completed successfully${c_reset}"
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green} Pipeline completed successfully${c_reset}"
     } else {
         checkHostname()
-        log.info "${c_purple}[nf-core/rnaseq]${c_red} Pipeline completed with errors${c_reset}"
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} Pipeline completed with errors${c_reset}"
     }
 
 }

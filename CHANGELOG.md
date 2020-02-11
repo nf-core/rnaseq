@@ -1,5 +1,29 @@
 # nf-core/rnaseq: Changelog
 
+## Version 1.4.3dev
+
+### Pipeline enhancements & fixes
+
+* Minor tweaks to software version commands
+* Add information about SILVA licensing when removing rRNA to `usage.md`
+* Fixed ansi colours for pipeline summary, added summary logs of alignment results
+* Fixes an issue where multiqc fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
+* Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
+* Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
+* Fixes label name in fastQC process, Issue [#345]
+* Enhances file name parsing for STAR/HISAT2 mapping [#372](https://github.com/nf-core/rnaseq/issues/372)
+* Fixed [issues](https://github.com/nf-core/rnaseq/issues/369) with long running preseq and dupradar tasks
+* MultiQC now properly trims `-fw` from sample names if `--removeRiboRNA` is used
+
+#### Updated Packages
+
+* Salmon 0.14.2 -> 1.0.0
+
+#### Added / Removed Packages
+
+* Added pigz 2.3.4 for parallelized trim-galore support
+
+
 ## Version 1.4.2
 
 * Minor version release for keeping Git History in sync

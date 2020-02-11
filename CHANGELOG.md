@@ -11,6 +11,7 @@
 * Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 * Fixes label name in fastQC process, Issue [#345]
+* MultiQC now properly trims `-fw` from sample names if `--removeRiboRNA` is used
 
 #### Updated Packages
 

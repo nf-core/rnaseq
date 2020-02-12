@@ -10,7 +10,7 @@
 * Fixes an issue where multiqc fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
 * Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
-* Fixes label name in fastQC process, Issue [#345]
+* Fixes label name in FastQC processes, as described in issue [#345]
 * Enhances file name parsing for STAR/HISAT2 mapping [#372](https://github.com/nf-core/rnaseq/issues/372)
 * Fixed [issues](https://github.com/nf-core/rnaseq/issues/369) with long running preseq and dupradar tasks
 * MultiQC now properly trims `-fw` from sample names if `--removeRiboRNA` is used

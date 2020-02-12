@@ -19,7 +19,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Download image
         run: |
-          docker pull nfcore/rnaseq:dev && docker tag nfcore/rnaseq:dev nfcore/rnaseq:1.4.2
+          docker pull nfcore/rnaseq:dev && docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
       - name: Basic workflow tests
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}

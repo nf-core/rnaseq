@@ -1518,7 +1518,8 @@ if (!params.skipAlignment) {
                 file "rsem" from rsem_reference.collect()
 
             output:
-                file("*.genes.results") into rsem_results
+                file("*.genes.results") into rsem_results_genes
+                file("*.isoforms.results") into rsem_results_isoforms
                 file("*.stat") into rsem_logs
 
             script:
@@ -1542,31 +1543,36 @@ if (!params.skipAlignment) {
     /**
     * Step 12 - merge RSEM TPM
     */
-    process merge_rsem {
-        tag "${rsem_res[0].baseName}"
+    process merge_rsem_genes {
+        tag "${rsem_res_gene[0].baseName}"
         label "low_memory"
         publishDir "${params.outdir}/RSEM", mode: 'copy'
 
         input:
-            file rsem_res from rsem_results.collect()
+            file rsem_res_gene from rsem_results_genes.collect()
+            file rsem_res_isoform from rsem_results_isoforms.collect() 
 
         output:
-            file("rsem_tpm_merged.txt") into rsem_merged
+            file("rsem_tpm_gene.txt") 
+            file("rsem_tpm_isoform.txt") 
 
         script:
         """
-        echo "ensemble_id\tgene_id" > gene_ids.txt
-        cut -f 1 ${rsem_res.get(0)} | grep -v "^#" | tail -n+2 | sed "s/_/\t/" >> gene_ids.txt
-        for fileid in $rsem_res
-        do
-            name=`basename \${fileid} .genes.results`
-            echo \${name} > \${name}_tpm.txt
-            grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> \${name}_tpm.txt
+        echo "gene_id\tgene_symbol" > gene_ids.txt
+        echo "transcript_id\tgene_symbol" > transcript_ids.txt
+        cut -f 1 ${rsem_res_gene.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_|\$)/\\t/" >> gene_ids.txt
+        cut -f 1 ${rsem_res_isoform.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_|\$)/\\t/" >> transcript_ids.txt
+        mkdir tmp_genes tmp_isoforms
+        for fileid in $rsem_res_gene; do
+            grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
         done
-        paste gene_ids.txt *_tpm.txt > rsem_tpm_merged.txt 
+        for fileid in $rsem_res_isoform; do
+            grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
+        done
+        paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_tpm_gene.txt 
+        paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_tpm_isoform.txt 
         """
     }
-    
   } else {
       rsem_logs = Channel.from(false)
   }

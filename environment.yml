@@ -7,7 +7,7 @@ channels:
   - defaults
 dependencies:
   ## conda-forge packages, sorting now alphabetically, without the channel prefix!
-  - matplotlib=3.0.3        # Current 3.1.0 build incompatible with multiqc=1.7
+  - matplotlib=3.0.3 # Current 3.1.0 build incompatible with multiqc=1.7
   - r-base=3.6.1
   - conda-forge::r-data.table=1.12.4
   - conda-forge::r-gplots=3.0.1.1
@@ -30,8 +30,9 @@ dependencies:
   - salmon=1.0.0
   - samtools=1.9
   - sortmerna=2.1b # for metatranscriptomics
-  - star=2.6.1d             # Don't upgrade me - 2.7X indices incompatible with iGenomes.
+  - star=2.6.1d # Don't upgrade me - 2.7X indices incompatible with iGenomes.
   - stringtie=2.0
   - subread=1.6.4
   - trim-galore=0.6.4
   - pigz=2.3.4
+  - rsem=1.3.3

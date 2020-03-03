@@ -19,6 +19,7 @@
 #### Added / Removed Packages
 
 * Added pigz 2.3.4 for parallelized trim-galore support
+* Added rsem 1.3.3 for gene/transcript quantification
 
 
 ## Version 1.4.2

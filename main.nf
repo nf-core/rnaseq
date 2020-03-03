@@ -260,9 +260,10 @@ if (params.pseudo_aligner == 'salmon') {
     }
 }
 
-
+skip_rsem = params.skip_rsem
 if (!params.skipAlignment && !params.skip_rsem && params.aligner != "star") {
-    exit 1, "RSEM is only compatible with STAR aligner. "
+    skip_rsem = true
+    println "RSEM only works with STAR. Disabling RSEM."
 }
 if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
     rsem_reference = Channel
@@ -1503,9 +1504,9 @@ if (!params.skipAlignment) {
       """
   }
 
-  if (!params.skip_rsem) {
+  if (!skip_rsem) {
     /**
-     * Step XX - RSEM
+     * Step 11 - RSEM
      */
     process rsem {
             tag "${bam_file.baseName - '.sorted'}"
@@ -1539,7 +1540,7 @@ if (!params.skipAlignment) {
 
 
     /**
-    * Step XX - merge RSEM TPM
+    * Step 12 - merge RSEM TPM
     */
     process merge_rsem {
         tag "${rsem_res[0].baseName}"
@@ -1571,7 +1572,7 @@ if (!params.skipAlignment) {
   }
 
   /*
-   * STEP 12 - stringtie FPKM
+   * STEP 13 - stringtie FPKM
    */
   process stringtieFPKM {
       tag "${bam_stringtieFPKM.baseName - '.sorted'}"
@@ -1615,7 +1616,7 @@ if (!params.skipAlignment) {
   }
 
   /*
-   * STEP 13 - edgeR MDS and heatmap
+   * STEP 14 - edgeR MDS and heatmap
    */
   process sample_correlation {
       label 'low_memory'
@@ -1664,7 +1665,7 @@ if (!params.skipAlignment) {
 
 
 /*
- * STEP 11 - Transcriptome quantification with Salmon
+ * STEP 15 - Transcriptome quantification with Salmon
  */
 if (params.pseudo_aligner == 'salmon') {
     process salmon {
@@ -1781,7 +1782,7 @@ if (params.pseudo_aligner == 'salmon') {
 
 
 /*
- * STEP 14 - MultiQC
+ * STEP 16 - MultiQC
  */
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: "${params.publish_dir_mode}"
@@ -1824,7 +1825,7 @@ process multiqc {
 }
 
 /*
- * STEP 15 - Output Description HTML
+ * STEP 17 - Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: "${params.publish_dir_mode}"

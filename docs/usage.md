@@ -540,7 +540,7 @@ Threshold size for MultiQC report to be attached in notification email. If file 
 
 ### `--publish_dir_mode`
 
-Choose the publishDir mode. Default is `copy`. See https://www.nextflow.io/docs/latest/process.html#publishdir for more details. 
+Choose the publishDir mode. Default is `copy`. See [nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for more details.
 
 ### `-name`
 

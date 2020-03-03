@@ -14,7 +14,9 @@
 
 #### Updated Packages
 
-* Salmon 0.14.2 -> 1.0.0
+* Salmon 0.14.2 -> 1.1.0
+* multiqc 1.7 -> 1.8
+* remove pinning of matplotlib version
 
 #### Added / Removed Packages
 

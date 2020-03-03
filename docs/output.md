@@ -330,6 +330,23 @@ We also use featureCounts to count overlaps with different classes of features. 
 - `Sample.featureCounts.txt.summary`
   - Summary file, containing statistics about the counts
 
+## RSEM
+
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
+
+**Output directory: `results/RSEM`**
+
+- `rsem_tpm_gene.txt`
+  - Main gene-level TPM matrix including all genes
+- `rsem_tpm_isoform.txt`
+  - Main isoform-level TPM matrix
+- `*.stat`
+  - RSEM statistics for each sample
+- `*.genes.results`
+  - RSEM gene-level output for each sample
+- `*.isoforms.results`
+  - RSEM isoform-level output for each sample
+
 ## Salmon
 
 [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.

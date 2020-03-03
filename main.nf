@@ -72,6 +72,7 @@ def helpMessage() {
       --percent_aln_skip            Percentage alignment below which samples are removed from further processing. Default: 5%
 
     Read Counting:
+      --skip_rsem                   Skip the RSEM step for read quantification
       --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
       --fc_group_features           Define the attribute type used to group features. (default: 'gene_id')
       --fc_count_type               Define the type used to assign reads. (default: 'exon')
@@ -259,6 +260,30 @@ if (params.pseudo_aligner == 'salmon') {
     }
 }
 
+
+if (!params.skipAlignment && !params.skip_rsem && params.aligner != "star") {
+    exit 1, "RSEM is only compatible with STAR aligner. "
+}
+if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
+    rsem_reference = Channel
+        .fromPath(params.rsem_reference, checkIfExists: true)
+        .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
+} else if (params.fasta && !params.skip_rsem && !params.skipAlignment) {
+    if (hasExtension(params.fasta, 'gz')) {
+        Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+            .set { genome_fasta_gz }
+    } else {
+        Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+            .into { ch_fasta_for_rsem_reference }
+    }
+} else if (params.skip_rsem || params.skipAlignment) {
+    println "Skipping RSEM ..."
+} else {
+    exit 1, "No reference genome files specified! "
+}
+
 if (params.gtf) {
   if (params.gff) {
       // Prefer gtf over gff
@@ -273,7 +298,8 @@ if (params.gtf) {
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
         .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
-                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge }
+                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge ;
+                gtf_makeRSEMReference}
 
   }
   } else if (params.gff) {
@@ -461,6 +487,7 @@ process get_software_versions {
     read_duplication.py --version &> v_rseqc.txt
     bamCoverage --version &> v_deeptools.txt || true
     featureCounts -v &> v_featurecounts.txt
+    rsem-calculate-expression --version &> v_rsem.txt
     salmon --version &> v_salmon.txt
     picard MarkDuplicates --version &> v_markduplicates.txt  || true
     samtools --version &> v_samtools.txt
@@ -494,7 +521,8 @@ if (compressedReference) {
         file gz from genome_fasta_gz
 
         output:
-        file "${gz.baseName}" into ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts
+        file "${gz.baseName}" into ch_fasta_for_star_index, ch_fasta_for_hisat_index, 
+            ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference
 
         script:
         """
@@ -513,7 +541,8 @@ if (compressedReference) {
 
         output:
         file "${gz.baseName}" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
-                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap
+                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge,
+                                        gtf_qualimap, gtf_makeRSEMReference
 
         script:
         """
@@ -774,6 +803,30 @@ if (!params.skipAlignment) {
           """
           $extract_exons
           hisat2-build -p ${task.cpus} $ss $exon $fasta ${fasta.baseName}.hisat2_index
+          """
+      }
+  }
+
+  /**
+   * PREPROCESSING - Build RSEM reference
+   */
+  if (!params.skip_rsem && !params.rsem_reference && params.fasta) {
+      process makeRSEMReference {
+          tag "$fasta"
+          publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+                     saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+          input:
+          file fasta from ch_fasta_for_rsem_reference
+          file gtf from gtf_makeRSEMReference
+
+          output:
+          file "rsem" into rsem_reference
+
+          script:
+          """
+          mkdir rsem
+          rsem-prepare-reference -p ${task.cpus} --gtf $gtf $fasta rsem/ref 
           """
       }
   }
@@ -1046,7 +1099,8 @@ if (!params.skipAlignment) {
           file wherearemyfiles from ch_where_star.collect()
 
           output:
-          set file("*Log.final.out"), file ('*.bam') into star_aligned
+          set file("*Log.final.out"), file ('*.sortedByCoord.out.bam') into star_aligned
+          set file("*Log.final.out"), file ('*.toTranscriptome.out.bam') into star_aligned_to_transcriptome
           file "*.out" into alignment_logs
           file "*SJ.out.tab"
           file "*Log.out" into star_log
@@ -1070,6 +1124,7 @@ if (!params.skipAlignment) {
               --outSAMtype BAM SortedByCoordinate $avail_mem \\
               --readFilesCommand zcat \\
               --runDirPerm All_RWX $unaligned \\
+              --quantMode TranscriptomeSAM \\
               --outFileNamePrefix $prefix $seq_center
 
           samtools index ${prefix}Aligned.sortedByCoord.out.bam
@@ -1079,7 +1134,11 @@ if (!params.skipAlignment) {
       star_aligned
           .filter { logs, bams -> check_log(logs) }
           .flatMap {  logs, bams -> bams }
-      .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+      .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates ; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+       star_aligned_to_transcriptome
+          .filter { logs, bams -> check_log(logs) }
+          .flatMap {  logs, bams -> bams }
+      .set { bam_rsem  }
   }
 
 
@@ -1444,6 +1503,73 @@ if (!params.skipAlignment) {
       """
   }
 
+  if (!params.skip_rsem) {
+    /**
+     * Step XX - RSEM
+     */
+    process rsem {
+            tag "${bam_file.baseName - '.sorted'}"
+            label "mid_memory"
+            publishDir "${params.outdir}/RSEM", mode: 'copy'
+
+            input:
+                file bam_file from bam_rsem
+                file "rsem" from rsem_reference.collect()
+
+            output:
+                file("*.genes.results") into rsem_results
+                file("*.stat") into rsem_logs
+
+            script:
+            sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
+            paired_end_flag = params.singleEnd ? "" : "--paired-end"
+            """
+            REF_FILENAME=\$(basename rsem/*.grp)
+            REF_NAME="\${REF_FILENAME%.*}"
+            rsem-calculate-expression -p ${task.cpus} ${paired_end_flag} \
+            --bam \
+            --estimate-rspd \
+            --append-names \
+            --output-genome-bam \
+            ${bam_file} \
+            rsem/\$REF_NAME \
+            ${sample_name}
+            """
+    }
+
+
+    /**
+    * Step XX - merge RSEM TPM
+    */
+    process merge_rsem {
+        tag "${rsem_res[0].baseName}"
+        label "low_memory"
+        publishDir "${params.outdir}/RSEM", mode: 'copy'
+
+        input:
+            file rsem_res from rsem_results.collect()
+
+        output:
+            file("rsem_tpm_merged.txt") into rsem_merged
+
+        script:
+        """
+        echo "ensemble_id\tgene_id" > gene_ids.txt
+        cut -f 1 ${rsem_res.get(0)} | grep -v "^#" | tail -n+2 | sed "s/_/\t/" >> gene_ids.txt
+        for fileid in $rsem_res
+        do
+            name=`basename \${fileid} .genes.results`
+            echo \${name} > \${name}_tpm.txt
+            grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> \${name}_tpm.txt
+        done
+        paste gene_ids.txt *_tpm.txt > rsem_tpm_merged.txt 
+        """
+    }
+    
+  } else {
+      rsem_logs = Channel.from(false)
+  }
+
   /*
    * STEP 12 - stringtie FPKM
    */
@@ -1533,6 +1659,7 @@ if (!params.skipAlignment) {
   dupradar_results = Channel.from(false)
   preseq_results = Channel.from(false)
   featureCounts_biotype = Channel.from(false)
+  rsem_logs = Channel.from(false)
 }
 
 
@@ -1674,6 +1801,7 @@ process multiqc {
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
     file ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
+    file ('rsem/*') from rsem_logs.collect().ifEmpty([])
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])

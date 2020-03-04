@@ -14,11 +14,14 @@
 
 #### Updated Packages
 
-* Salmon 0.14.2 -> 1.0.0
+* Salmon 0.14.2 -> 1.1.0
+* multiqc 1.7 -> 1.8
+* remove pinning of matplotlib version
 
 #### Added / Removed Packages
 
 * Added pigz 2.3.4 for parallelized trim-galore support
+* Added rsem 1.3.3 for gene/transcript quantification
 
 
 ## Version 1.4.2

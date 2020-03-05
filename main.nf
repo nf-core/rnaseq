@@ -20,9 +20,9 @@ def helpMessage() {
     nextflow run nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 
     Mandatory arguments:
-      --reads                       Path to input data (must be surrounded with quotes)
-      -profile                      Configuration profile to use. Can use multiple (comma separated)
-                                    Available: conda, docker, singularity, awsbatch, test and more.
+      --reads [file]                Path to input data (must be surrounded with quotes)
+      -profile [str]                Configuration profile to use. Can use multiple (comma separated)
+                                    Available: conda, docker, singularity, test, awsbatch, <institute> and more
 
     Generic:
       --singleEnd                   Specifies that the input is single-end reads
@@ -98,8 +98,9 @@ def helpMessage() {
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
 
     AWSBatch options:
-      --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   The AWS Region for your AWS Batch job to run on
+      --awsqueue [str]                The AWSBatch JobQueue that needs to be set when running on AWSBatch
+      --awsregion [str]               The AWS Region for your AWS Batch job to run on
+      --awscli [str]                  Path to the AWS CLI tool
     """.stripIndent()
 }
 
@@ -327,7 +328,8 @@ if (workflow.profile == 'awsbatch') {
 }
 
 // Stage config files
-ch_multiqc_config = file(params.multiqc_config, checkIfExists: true)
+ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 
 /*
@@ -413,9 +415,10 @@ log.info "-\033[2m--------------------------------------------------\033[0m-"
 // Check the hostnames against configured profiles
 checkHostname()
 
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
+Channel.from(summary.collect{ [it.key, it.value] })
+    .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
+    .reduce { a, b -> return [a, b].join("\n            ") }
+    .map { x -> """
     id: 'nf-core-rnaseq-summary'
     description: " - this information is collected when the pipeline is started."
     section_name: 'nf-core/rnaseq Workflow Summary'
@@ -423,12 +426,10 @@ def create_workflow_summary(summary) {
     plot_type: 'html'
     data: |
         <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+            $x
         </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
+    """.stripIndent() }
+    .set { ch_workflow_summary }
 
 /*
  * Parse software version numbers
@@ -441,7 +442,7 @@ process get_software_versions {
         }
 
     output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
+    file 'software_versions_mqc.yaml' into ch_software_versions_yaml
     file "software_versions.csv"
 
     script:
@@ -840,7 +841,7 @@ process fastqc {
     set val(name), file(reads) from raw_reads_fastqc
 
     output:
-    file "*_fastqc.{zip,html}" into fastqc_results
+    file "*_fastqc.{zip,html}" into ch_fastqc_results
 
     script:
     """
@@ -1662,7 +1663,8 @@ process multiqc {
 
     input:
     file multiqc_config from ch_multiqc_config
-    file (fastqc:'fastqc/*') from fastqc_results.collect().ifEmpty([])
+    file (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
+    file (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
     file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
@@ -1674,19 +1676,20 @@ process multiqc {
     file ('salmon/*') from salmon_logs.collect().ifEmpty([])
     file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
     file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
-    file ('software_versions/*') from software_versions_yaml.collect()
-    file workflow_summary from create_workflow_summary(summary)
+    file ('software_versions/*') from ch_software_versions_yaml.collect()
+    file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
 
     output:
-    file "*multiqc_report.html" into multiqc_report
+    file "*multiqc_report.html" into ch_multiqc_report
     file "*_data"
     file "multiqc_plots"
 
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
-    multiqc . -f $rtitle $rfilename --config $multiqc_config \\
+    multiqc . -f $rtitle $rfilename --config $custom_config_file \\
         -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m sortmerna -m fastqc -m qualimap -m salmon
     """
 }
@@ -1705,7 +1708,7 @@ process output_documentation {
 
     script:
     """
-    markdown_to_html.r $output_docs results_description.html
+    markdown_to_html.py $output_docs -o results_description.html
     """
 }
 
@@ -1788,36 +1791,31 @@ workflow.onComplete {
     // Send the HTML e-mail
     if (email_address) {
         try {
-          if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
-          // Try to send HTML e-mail using sendmail
-          [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (sendmail)"
+            if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
+            // Try to send HTML e-mail using sendmail
+            [ 'sendmail', '-t' ].execute() << sendmail_html
+            log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (sendmail)"
         } catch (all) {
-          // Catch failures and try with plaintext
-          [ 'mail', '-s', subject, email_address ].execute() << email_txt
-          log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (mail)"
+            // Catch failures and try with plaintext
+            [ 'mail', '-s', subject, email_address ].execute() << email_txt
+            log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (mail)"
         }
     }
 
-    // Write summaries to a file
-    // Make directory first if needed
+    // Write summary e-mail HTML to a file
     def output_d = new File("${params.outdir}/pipeline_info/")
     if (!output_d.exists()) {
         output_d.mkdirs()
     }
-    // Replace the email logo cid with a base64 encoded image
-    def logo_b64 = new File("$baseDir/assets/nf-core-rnaseq_logo.png").bytes.encodeBase64().toString()
-    email_html = email_html.replace('<img src="cid:nfcorepipelinelogo">', "<img src=\"data:image/png;base64, ${logo_b64}\">")
-    // Print to file
-    def output_hf = file("${output_d}/pipeline_report.html")
+    def output_hf = new File(output_d, "pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
-    def output_tf = file("${output_d}/pipeline_report.txt")
+    def output_tf = new File(output_d, "pipeline_report.txt")
     output_tf.withWriter { w -> w << email_txt }
 
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
     c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
 
     if (good_alignment_scores.size() > 0){
         total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
@@ -1864,15 +1862,15 @@ def hasExtension(it, extension) {
 
 def nfcoreHeader() {
     // Log colors ANSI codes
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-    c_dim = params.monochrome_logs ? '' : "\033[2m";
     c_black = params.monochrome_logs ? '' : "\033[0;30m";
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
     c_blue = params.monochrome_logs ? '' : "\033[0;34m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
     c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
+    c_dim = params.monochrome_logs ? '' : "\033[2m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
     c_white = params.monochrome_logs ? '' : "\033[0;37m";
+    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
 
     return """    -${c_dim}--------------------------------------------------${c_reset}-
                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}

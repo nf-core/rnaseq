@@ -3,33 +3,39 @@
 This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
 ## Pipeline overview
+
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-* [FastQC](#fastqc) - read quality control
-* [TrimGalore](#trimgalore) - adapter trimming
-* [SortMeRNA](#sortmerna) - ribosomal RNA removal
-* [STAR](#star) - alignment
-* [RSeQC](#rseqc) - RNA quality control metrics
-  * [BAM stat](#bam-stat)
-  * [Infer experiment](#infer-experiment)
-  * [Junction saturation](#junction-saturation)
-  * [RPKM saturation](#rpkm-saturation)
-  * [Read duplication](#read-duplication)
-  * [Inner distance](#inner-distance)
-  * [Read distribution](#read-distribution)
-  * [Junction annotation](#junction-annotation)
-* [Qualimap](#qualimap) - RNA quality control metrics
-* [dupRadar](#dupradar) - technical / biological read duplication
-* [Preseq](#preseq) - library complexity
-* [featureCounts](#featurecounts) - gene counts, biotype counts, rRNA estimation.
-* [Salmon](#salmon) - gene counts, transcripts counts.
-* [tximport](#tximport) - gene counts, transcripts counts, SummarizedExperimment object.
-* [StringTie](#stringtie) - FPKMs for genes and transcripts
-* [Sample_correlation](#Sample_correlation) - create MDS plot and sample pairwise distance heatmap / dendrogram
-* [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+- [nf-core/rnaseq: Output](#nf-corernaseq-output)
+  - [Pipeline overview](#pipeline-overview)
+  - [FastQC](#fastqc)
+  - [TrimGalore](#trimgalore)
+  - [SortMeRNA](#sortmerna)
+  - [STAR](#star)
+  - [RSeQC](#rseqc)
+    - [BAM stat](#bam-stat)
+    - [Infer experiment](#infer-experiment)
+    - [Junction saturation](#junction-saturation)
+    - [RPKM saturation](#rpkm-saturation)
+    - [Read duplication](#read-duplication)
+    - [Inner distance](#inner-distance)
+    - [Read distribution](#read-distribution)
+    - [Junction annotation](#junction-annotation)
+  - [Qualimap](#qualimap)
+  - [dupRadar](#dupradar)
+  - [Preseq](#preseq)
+  - [featureCounts](#featurecounts)
+  - [Salmon](#salmon)
+  - [tximport](#tximport)
+    - [Index files](#index-files)
+    - [Quantification output](#quantification-output)
+  - [StringTie](#stringtie)
+  - [Sample Correlation](#sample-correlation)
+  - [MultiQC](#multiqc)
 
 ## FastQC
+
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
 
 For further reading and documentation see the [FastQC help](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
@@ -44,6 +50,7 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
 ## TrimGalore
+
 The nfcore/rnaseq pipeline uses [TrimGalore](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for removal of adapter contamination and trimming of low quality regions. TrimGalore uses [Cutadapt](https://github.com/marcelm/cutadapt) for adapter trimming and runs FastQC after it finishes.
 
 MultiQC reports the percentage of bases removed by TrimGalore in the _General Statistics_ table, along with a line plot showing where reads were trimmed.
@@ -430,6 +437,7 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
   * Raw data from Pearsons correlation heatmap, used for MultiQC report
 
 ## MultiQC
+
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
 
 The pipeline has special steps which allow the software versions used to be reported in the MultiQC output for future traceability.

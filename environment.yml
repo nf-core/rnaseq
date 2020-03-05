@@ -10,7 +10,10 @@ dependencies:
   - r-base=3.6.1
   - conda-forge::r-data.table=1.12.4
   - conda-forge::r-gplots=3.0.1.1
-  - conda-forge::r-markdown=1.1
+  - conda-forge::python=3.7.3
+  - conda-forge::markdown=3.1.1
+  - conda-forge::pymdown-extensions=6.0
+  - conda-forge::pygments=2.5.2
 
   ## bioconda packages, see above
   - bioconductor-dupradar=1.14.0

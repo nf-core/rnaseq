@@ -1,5 +1,6 @@
-name: nf-core/rnaseq branch protection
+name: nf-core branch protection
 # This workflow is triggered on PRs to master branch on the repository
+# It fails when someone tries to make a PR against the nf-core `master` branch instead of `dev`
 on:
   pull_request:
     branches:
@@ -7,10 +8,9 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
-      # PRs are only ok if coming from an nf-core dev branch
-      - uses: actions/checkout@v1
+      # PRs are only ok if coming from an nf-core `dev` branch or a fork `patch` branch
       - name: Check PRs
         run: |
-          [[ $(git remote get-url origin) == *nf-core/rnaseq ]] && [[ ${GITHUB_BASE_REF} = "master" ]] && { [[ ${GITHUB_HEAD_REF} = "dev" ]] || [[ ${GITHUB_BASE_REF} = "patch" ]]; }
+          { [[ $(git remote get-url origin) == *nf-core/rnaseq ]] && [[ ${GITHUB_HEAD_REF} = "dev" ]]; } || [[ ${GITHUB_HEAD_REF} == "patch" ]]

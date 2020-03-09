@@ -76,7 +76,7 @@
     - [`--monochrome_logs`](#monochromelogs)
     - [`--multiqc_config`](#multiqcconfig)
   - [Stand-alone scripts](#stand-alone-scripts)
-<!-- TOC END -->
+    <!-- TOC END -->
 
 ## Introduction
 
@@ -140,19 +140,19 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
 
-* `docker`
-  * A generic configuration profile to be used with [Docker](http://docker.com/)
-  * Pulls software from dockerhub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
-* `singularity`
-  * A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
-  * Pulls software from DockerHub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
-* `conda`
-  * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
-  * A generic configuration profile to be used with [Conda](https://conda.io/docs/)
-  * Pulls most software from [Bioconda](https://bioconda.github.io/)
-* `test`
-  * A profile with a complete configuration for automated testing
-  * Includes links to test data so needs no other parameters
+- `docker`
+  - A generic configuration profile to be used with [Docker](http://docker.com/)
+  - Pulls software from dockerhub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
+- `singularity`
+  - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
+  - Pulls software from DockerHub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
+- `conda`
+  - Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
+  - A generic configuration profile to be used with [Conda](https://conda.io/docs/)
+  - Pulls most software from [Bioconda](https://bioconda.github.io/)
+- `test`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
 ### `--reads`
 
@@ -184,9 +184,9 @@ It is not possible to run a mixture of single-end and paired-end files in one ru
 
 Three command line flags / config parameters set the library strandedness for a run:
 
-* `--forwardStranded`
-* `--reverseStranded`
-* `--unStranded`
+- `--forwardStranded`
+- `--reverseStranded`
+- `--unStranded`
 
 If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forwardStranded` mode.
 
@@ -202,18 +202,18 @@ If you have a default strandedness set in your personal config file you can use 
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
 
-* `--forwardStranded`
-  * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
-  * featureCounts: `-s 1`
-  * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
-  * Qualimap: `-pe strand-specific-forward`
-  * StringTie: `--fr`
-* `--reverseStranded`
-  * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
-  * featureCounts: `-s 2`
-  * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
-  * Qualimap: `-pe strand-specific-reverse`
-  * StringTie: `--rf`
+- `--forwardStranded`
+  - HISAT2: `--rna-strandness F` / `--rna-strandness FR`
+  - featureCounts: `-s 1`
+  - RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
+  - Qualimap: `-pe strand-specific-forward`
+  - StringTie: `--fr`
+- `--reverseStranded`
+  - HISAT2: `--rna-strandness R` / `--rna-strandness RF`
+  - featureCounts: `-s 2`
+  - RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
+  - Qualimap: `-pe strand-specific-reverse`
+  - StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
 
@@ -257,14 +257,14 @@ There are 31 different species supported in the iGenomes references. To run the 
 
 You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
 
-* Human
-  * `--genome GRCh37`
-* Mouse
-  * `--genome GRCm38`
-* _Drosophila_
-  * `--genome BDGP6`
-* _S. cerevisiae_
-  * `--genome 'R64-1-1'`
+- Human
+  - `--genome GRCh37`
+- Mouse
+  - `--genome GRCm38`
+- _Drosophila_
+  - `--genome BDGP6`
+- _S. cerevisiae_
+  - `--genome 'R64-1-1'`
 
 > There are numerous others - check the config file for more.
 
@@ -479,14 +479,14 @@ Equivalent to: `--forwardStranded` `--clip_r1 3` `--three_prime_clip_r2 3`
 The pipeline contains a large number of quality control steps. Sometimes, it may not be desirable to run all of them if time and compute resources are limited.
 The following options make this easy:
 
-* `--skipQC` -                Skip **all QC steps**, apart from MultiQC
-* `--skipFastQC` -            Skip FastQC
-* `--skipRseQC` -             Skip RSeQC
-* `--skipQualimap` -          Skip Qualimap
-* `--skipPreseq` -            Skip Preseq
-* `--skipDupRadar` -          Skip dupRadar (and Picard MarkDuplicates)
-* `--skipEdgeR` -             Skip edgeR MDS plot and heatmap
-* `--skipMultiQC` -           Skip MultiQC
+- `--skipQC` - Skip **all QC steps**, apart from MultiQC
+- `--skipFastQC` - Skip FastQC
+- `--skipRseQC` - Skip RSeQC
+- `--skipQualimap` - Skip Qualimap
+- `--skipPreseq` - Skip Preseq
+- `--skipDupRadar` - Skip dupRadar (and Picard MarkDuplicates)
+- `--skipEdgeR` - Skip edgeR MDS plot and heatmap
+- `--skipMultiQC` - Skip MultiQC
 
 ## Job resources
 
@@ -643,9 +643,9 @@ Specify a path to a custom MultiQC configuration file.
 
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:
 
-* `gtf2bed`
-  * Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
-* `dupRadar.r`
-  * dupRadar script used in the _dupRadar_ pipeline process.
-* `edgeR_heatmap_MDS.r`
-  * edgeR script used in the _Sample Correlation_ process
+- `gtf2bed`
+  - Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
+- `dupRadar.r`
+  - dupRadar script used in the _dupRadar_ pipeline process.
+- `edgeR_heatmap_MDS.r`
+  - edgeR script used in the _Sample Correlation_ process

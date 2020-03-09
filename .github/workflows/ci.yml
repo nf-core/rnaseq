@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        nxf_ver: ['19.04.0', '']
+        nxf_ver: ['19.10.0', '']
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:

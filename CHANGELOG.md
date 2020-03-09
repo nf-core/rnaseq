@@ -11,6 +11,7 @@
 - Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 - Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 - Fixes label name in fastQC process, Issue [#345]
+- Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 
 #### Updated Packages
 

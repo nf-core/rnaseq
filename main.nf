@@ -25,7 +25,7 @@ def helpMessage() {
                                     Available: conda, docker, singularity, test, awsbatch, <institute> and more
 
     Generic:
-      --singleEnd                   Specifies that the input is single-end reads
+      --single_end                   Specifies that the input is single-end reads
 
     References:                     If not specified in the configuration file or you wish to overwrite any of the references.
       --genome                      Name of iGenomes reference
@@ -336,7 +336,7 @@ ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
  * Create a channel for input read files
  */
 if (params.readPaths) {
-    if (params.singleEnd) {
+    if (params.single_end) {
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
@@ -351,8 +351,8 @@ if (params.readPaths) {
     }
 } else {
     Channel
-        .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
+        .fromFilePairs( params.reads, size: params.single_end ? 1 : 2 )
+        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --single_end on the command line." }
         .into { raw_reads_fastqc; raw_reads_trimgalore }
 }
 
@@ -362,7 +362,7 @@ def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name'] = custom_runName ?: workflow.runName
 summary['Reads'] = params.reads
-summary['Data Type'] = params.singleEnd ? 'Single-End' : 'Paired-End'
+summary['Data Type'] = params.single_end ? 'Single-End' : 'Paired-End'
 if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
@@ -883,7 +883,7 @@ if (!params.skipTrimming) {
         tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
         tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
         nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-        if (params.singleEnd) {
+        if (params.single_end) {
             """
             trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
             """
@@ -953,7 +953,7 @@ if (!params.removeRiboRNA) {
         for (i=0; i<db_fasta.size(); i++) { Refs+= ":${db_fasta[i]},${db_name[i]}" }
         Refs = Refs.substring(1)
 
-        if (params.singleEnd) {
+        if (params.single_end) {
             """
             gzip -d --force < ${reads} > all-reads.fastq
 
@@ -1116,12 +1116,12 @@ if (!params.skipAlignment) {
           seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
           def rnastrandness = ''
           if (forwardStranded && !unStranded) {
-              rnastrandness = params.singleEnd ? '--rna-strandness F' : '--rna-strandness FR'
+              rnastrandness = params.single_end ? '--rna-strandness F' : '--rna-strandness FR'
           } else if (reverseStranded && !unStranded) {
-              rnastrandness = params.singleEnd ? '--rna-strandness R' : '--rna-strandness RF'
+              rnastrandness = params.single_end ? '--rna-strandness R' : '--rna-strandness RF'
           }
 
-          if (params.singleEnd) {
+          if (params.single_end) {
               unaligned = params.saveUnaligned ? "--un-gz unmapped.hisat2.gz" : ''
               """
               hisat2 -x $index_base \\
@@ -1324,7 +1324,7 @@ if (!params.skipAlignment) {
       }else if (reverseStranded) {
           qualimap_direction = 'strand-specific-reverse'
       }
-      def paired = params.singleEnd ? '' : '-pe'
+      def paired = params.single_end ? '' : '-pe'
       memory = task.memory.toGiga() + "G"
       """
       unset DISPLAY
@@ -1366,7 +1366,7 @@ if (!params.skipAlignment) {
       } else if (reverseStranded && !unStranded) {
           dupradar_direction = 2
       }
-      def paired = params.singleEnd ? 'single' :  'paired'
+      def paired = params.single_end ? 'single' :  'paired'
       """
       dupRadar.r $bam_md $gtf $dupradar_direction $paired ${task.cpus}
       """
@@ -1554,13 +1554,13 @@ if (params.pseudo_aligner == 'salmon') {
         set val(sample), file("${sample}/") into salmon_tximport, salmon_parsegtf
 
         script:
-        def rnastrandness = params.singleEnd ? 'U' : 'IU'
+        def rnastrandness = params.single_end ? 'U' : 'IU'
         if (forwardStranded && !unStranded) {
-            rnastrandness = params.singleEnd ? 'SF' : 'ISF'
+            rnastrandness = params.single_end ? 'SF' : 'ISF'
         } else if (reverseStranded && !unStranded) {
-            rnastrandness = params.singleEnd ? 'SR' : 'ISR'
+            rnastrandness = params.single_end ? 'SR' : 'ISR'
         }
-        def endedness = params.singleEnd ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+        def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
         unmapped = params.saveUnaligned ? "--writeUnmappedNames" : ''
         """
         salmon quant --validateMappings \\

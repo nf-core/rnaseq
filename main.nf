@@ -509,7 +509,8 @@ if (compressedReference) {
   // need to be extracted.
   need_star_index = params.aligner == 'star' && !params.star_index
   need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
-  need_aligner_index = need_hisat2_index || need_star_index
+  need_rsem_ref = !params.skip_rsem && !params.rsem_reference
+  need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref
   alignment_no_indices = !params.skipAlignment && need_aligner_index
   pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
   if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {

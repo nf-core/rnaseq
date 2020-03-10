@@ -1525,7 +1525,7 @@ if (!params.skipAlignment) {
 
             script:
             sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
-            paired_end_flag = params.singleEnd ? "" : "--paired-end"
+            paired_end_flag = params.single_end ? "" : "--paired-end"
             """
             REF_FILENAME=\$(basename rsem/*.grp)
             REF_NAME="\${REF_FILENAME%.*}"

@@ -1565,9 +1565,11 @@ if (!params.skipAlignment) {
         cut -f 1 ${rsem_res_isoform.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_|\$)/\\t/" >> transcript_ids.txt
         mkdir tmp_genes tmp_isoforms
         for fileid in $rsem_res_gene; do
+            basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt
             grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
         done
         for fileid in $rsem_res_isoform; do
+            basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.tpm.txt
             grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
         done
         paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_tpm_gene.txt 

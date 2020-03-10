@@ -1101,8 +1101,7 @@ if (!params.skipAlignment) {
           file wherearemyfiles from ch_where_star.collect()
 
           output:
-          set file("*Log.final.out"), file ('*.sortedByCoord.out.bam') into star_aligned
-          set file("*Log.final.out"), file ('*.toTranscriptome.out.bam') into star_aligned_to_transcriptome
+          set file("*Log.final.out"), file ('*.sortedByCoord.out.bam'), file ('*.toTranscriptome.out.bam') into star_aligned
           file "*.out" into alignment_logs
           file "*SJ.out.tab"
           file "*Log.out" into star_log
@@ -1133,14 +1132,17 @@ if (!params.skipAlignment) {
           """
       }
       // Filter removes all 'aligned' channels that fail the check
+      star_bams = Channel.create()
       star_aligned
-          .filter { logs, bams -> check_log(logs) }
-          .flatMap {  logs, bams -> bams }
-      .into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates ; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
-       star_aligned_to_transcriptome
-          .filter { logs, bams -> check_log(logs) }
-          .flatMap {  logs, bams -> bams }
-      .set { bam_rsem  }
+          .filter { logs, bams, bams_transcriptome -> check_log(logs) }
+          .multiMap { logs, bams, bams_transcriptome -> 
+              bam: bams
+              bam_transcriptome: bams_transcriptome
+          }
+          .set { star_bams }
+
+      star_bams.bam.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates ; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+      star_bams.bam_transcriptome.set {bam_rsem}
   }
 
 

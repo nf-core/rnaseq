@@ -1512,7 +1512,7 @@ if (!params.skipAlignment) {
     process rsem {
             tag "${bam_file.baseName - '.sorted'}"
             label "mid_memory"
-            publishDir "${params.outdir}/RSEM", mode: 'copy'
+            publishDir "${params.outdir}/RSEM", mode: "${params.publish_dir_mode}"
 
             input:
                 file bam_file from bam_rsem
@@ -1547,7 +1547,7 @@ if (!params.skipAlignment) {
     process merge_rsem_genes {
         tag "${rsem_res_gene[0].baseName}"
         label "low_memory"
-        publishDir "${params.outdir}/RSEM", mode: 'copy'
+        publishDir "${params.outdir}/RSEM", mode: "${params.publish_dir_mode}"
 
         input:
             file rsem_res_gene from rsem_results_genes.collect()

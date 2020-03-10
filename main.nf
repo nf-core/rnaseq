@@ -1133,16 +1133,15 @@ if (!params.skipAlignment) {
       }
       // Filter removes all 'aligned' channels that fail the check
       star_bams = Channel.create()
+      star_bams_transcriptome = Channel.create()
       star_aligned
           .filter { logs, bams, bams_transcriptome -> check_log(logs) }
-          .multiMap { logs, bams, bams_transcriptome -> 
-              bam: bams
-              bam_transcriptome: bams_transcriptome
+          .separate (star_bams, star_bams_transcriptome) {
+              bam_set -> [bam_set[1], bam_set[2]]
           }
-          .set { star_bams }
 
-      star_bams.bam.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates ; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
-      star_bams.bam_transcriptome.set {bam_rsem}
+      star_bams.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates ; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp  }
+      star_bams_transcriptome.set { bam_rsem }
   }
 
 

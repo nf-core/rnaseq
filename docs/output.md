@@ -326,9 +326,11 @@ We also use featureCounts to count overlaps with different classes of features. 
 - `Sample.bam_biotype_counts.txt`
   - Read counts for the different gene biotypes that featureCounts distinguishes.
 - `Sample.featureCounts.txt`
-  - Read the counts for each gene provided in the reference `gtf` file
+  - Read counts for each gene provided in the reference `gtf` file
 - `Sample.featureCounts.txt.summary`
   - Summary file, containing statistics about the counts
+- `merged_gene_counts.txt`
+  - Read count table for all samples
 
 ## Salmon
 
@@ -361,9 +363,9 @@ We also use featureCounts to count overlaps with different classes of features. 
   - estimated counts for the different genes.
 - `tx2gene.csv`
   - CSV file with transcript and genes (`params.fc_group_features`) and extra name (`params.fc_extra_attributes`) in each column.
-- `se.rds`
+- `salmon_merged_transcript_counts.rds`
   - RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
-- `gse.rds`
+- `salmon_merged_gene_counts.rds`
   - RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
 
 ### Index files

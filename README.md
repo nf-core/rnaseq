@@ -24,7 +24,8 @@ generates counts relative to genes
 ([featureCounts](http://bioinf.wehi.edu.au/featureCounts/),
 [StringTie](https://ccb.jhu.edu/software/stringtie/)) or transcripts
 ([Salmon](https://combine-lab.github.io/salmon/),
-[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html)) and performs extensive quality-control on the results
+[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) or
+[RSEM](https://github.com/deweylab/RSEM)) and performs extensive quality-control on the results
 ([RSeQC](http://rseqc.sourceforge.net/),
 [Qualimap](http://qualimap.bioinfo.cipf.es/),
 [dupRadar](https://bioconductor.org/packages/release/bioc/html/dupRadar.html),

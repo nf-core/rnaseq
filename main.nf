@@ -1507,7 +1507,6 @@ if (!params.skipAlignment) {
       """
   }
 
-  if (!skip_rsem) {
     /**
      * Step 11 - RSEM
      */
@@ -1524,6 +1523,8 @@ if (!params.skipAlignment) {
                 file("*.genes.results") into rsem_results_genes
                 file("*.isoforms.results") into rsem_results_isoforms
                 file("*.stat") into rsem_logs
+            
+            when: !params.skip_rsem
 
             script:
             sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
@@ -1539,7 +1540,7 @@ if (!params.skipAlignment) {
             rsem/\$REF_NAME \
             ${sample_name}
             """
-    }
+    
 
 
     /**

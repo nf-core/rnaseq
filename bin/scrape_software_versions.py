@@ -15,6 +15,7 @@ regexes = {
     'Picard MarkDuplicates': ['v_markduplicates.txt', r"([\d\.]+)-SNAPSHOT"],
     'Samtools': ['v_samtools.txt', r"samtools (\S+)"],
     'featureCounts': ['v_featurecounts.txt', r"featureCounts v(\S+)"],
+    'RSEM': ['v_rsem.txt', r"RSEM v(\S+)"],
     'Salmon': ['v_salmon.txt', r"salmon (\S+)"],
     'deepTools': ['v_deeptools.txt', r"bamCoverage (\S+)"],
     'StringTie': ['v_stringtie.txt', r"(\S+)"],
@@ -26,26 +27,26 @@ regexes = {
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
 }
 results = OrderedDict()
-results['nf-core/rnaseq'] = '<span style="color:#999999;\">N/A</span>'
-results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
-results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
-results['Cutadapt'] = '<span style="color:#999999;\">N/A</span>'
-results['Trim Galore!'] = '<span style="color:#999999;\">N/A</span>'
-results['SortMeRNA'] = '<span style="color:#999999;\">N/A</span>'
+results['nf-core/rnaseq'] = '<span style="color:#999999;">N/A</span>'
+results['Nextflow'] = '<span style="color:#999999;">N/A</span>'
+results['FastQC'] = '<span style="color:#999999;">N/A</span>'
+results['Cutadapt'] = '<span style="color:#999999;">N/A</span>'
+results['Trim Galore!'] = '<span style="color:#999999;">N/A</span>'
+results['SortMeRNA'] = '<span style="color:#999999;">N/A</span>'
 results['STAR'] = False
 results['HISAT2'] = False
-results['Picard MarkDuplicates'] = '<span style="color:#999999;\">N/A</span>'
-results['Samtools'] = '<span style="color:#999999;\">N/A</span>'
-results['featureCounts'] = '<span style="color:#999999;\">N/A</span>'
-results['Salmon'] = '<span style="color:#999999;\">N/A</span>'
-results['StringTie'] = '<span style="color:#999999;\">N/A</span>'
-results['Preseq'] = '<span style="color:#999999;\">N/A</span>'
-results['deepTools'] = '<span style="color:#999999;\">N/A</span>'
-results['RSeQC'] = '<span style="color:#999999;\">N/A</span>'
-results['dupRadar'] = '<span style="color:#999999;\">N/A</span>'
-results['edgeR'] = '<span style="color:#999999;\">N/A</span>'
-results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
-results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
+results['Picard MarkDuplicates'] = '<span style="color:#999999;">N/A</span>'
+results['Samtools'] = '<span style="color:#999999;">N/A</span>'
+results['featureCounts'] = '<span style="color:#999999;">N/A</span>'
+results['Salmon'] = '<span style="color:#999999;">N/A</span>'
+results['StringTie'] = '<span style="color:#999999;">N/A</span>'
+results['Preseq'] = '<span style="color:#999999;">N/A</span>'
+results['deepTools'] = '<span style="color:#999999;">N/A</span>'
+results['RSeQC'] = '<span style="color:#999999;">N/A</span>'
+results['dupRadar'] = '<span style="color:#999999;">N/A</span>'
+results['edgeR'] = '<span style="color:#999999;">N/A</span>'
+results['Qualimap'] = '<span style="color:#999999;">N/A</span>'
+results['MultiQC'] = '<span style="color:#999999;">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():

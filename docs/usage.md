@@ -2,87 +2,99 @@
 
 ## Table of contents
 
-<!-- Install Atom plugin markdown-toc-auto for this ToC to auto-update on save -->
-<!-- TOC START min:2 max:3 link:true asterisk:true update:true -->
-* [Table of contents](#table-of-contents)
-* [Introduction](#introduction)
-* [Running the pipeline](#running-the-pipeline)
-  * [Updating the pipeline](#updating-the-pipeline)
-  * [Reproducibility](#reproducibility)
-* [Main arguments](#main-arguments)
-  * [`-profile`](#-profile)
-  * [`--reads`](#--reads)
-  * [`--single_end`](#--singleend)
-  * [Library strandedness](#library-strandedness)
-* [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
-  * [Default "`gene_name`" Attribute Type](#default-attribute-type)
-  * [Extra Gene Names or IDs](#extra-gene-names-or-ids)
-  * [Default "`exon`" Attribute](#default-exon-type)
-* [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
-* [Alignment tool](#alignment-tool)
-* [Reference genomes](#reference-genomes)
-  * [`--genome` (using iGenomes)](#--genome-using-igenomes)
-  * [`--star_index`, `--hisat2_index`, `--fasta`, `--gtf`, `--bed12`](#--star_index---hisat2_index---fasta---gtf---bed12)
-  * [`--saveReference`](#--savereference)
-  * [`--saveTrimmed`](#--savetrimmed)
-  * [`--saveAlignedIntermediates`](#--savealignedintermediates)
-  * [`--gencode`](#--gencode)
-    * ["Type" of gene](#type-of-gene)
-    * [Transcript IDs in FASTA files](#transcript-ids-in-fasta-files)
-  * [`--skipAlignment`](#--skipAlignment)
-  * [`--compressedReference`](#--compressedReference)
-    * [Create compressed (tar.gz) STAR indices](#create-compressed-tar-gz-star-indices)
-    * [Create compressed (tar.gz) HiSat2 indices](#create-compressed-tar-gz-hisat2-indices)
-    * [Create compressed (tar.gz) Salmon indices](#create-compressed-tar-gz-salmon-indices)
-* [Adapter Trimming](#adapter-trimming)
-  * [`--clip_r1 [int]`](#--clip_r1-int)
-  * [`--clip_r2 [int]`](#--clip_r2-int)
-  * [`--three_prime_clip_r1 [int]`](#--three_prime_clip_r1-int)
-  * [`--three_prime_clip_r2 [int]`](#--three_prime_clip_r2-int)
-  * [`--trim_nextseq [int]`](#--trim_nextseq)
-  * [`--skipTrimming`](#--skipTrimming)
-* [Ribosomal RNA removal](#ribosomal-rna-removal)
-  * [`--removeRiboRNA`](#--removeRiboRNA)
-  * [`--save_nonrRNA_reads`](#--save_nonrrna_reads)
-  * [`--rRNA_database_manifest`](#--rrna_database_manifest)
-* [Library Prep Presets](#library-prep-presets)
-  * [`--pico`](#--pico)
-* [Skipping QC steps](#skipping-qc-steps)
-* [Job resources](#job-resources)
-  * [Automatic resubmission](#automatic-resubmission)
-  * [Custom resource requests](#custom-resource-requests)
-* [AWS Batch specific parameters](#aws-batch-specific-parameters)
-  * [`--awsqueue`](#--awsqueue)
-  * [`--awsregion`](#--awsregion)
-* [Other command line parameters](#other-command-line-parameters)
-  * [`--outdir`](#--outdir)
-  * [`--email`](#--email)
-  * [`--email_on_fail`](#--email_on_fail)
-  * [`-name`](#-name)
-  * [`-resume`](#-resume)
-  * [`-c`](#-c)
-  * [`--custom_config_version`](#--custom_config_version)
-  * [`--custom_config_base`](#--custom_config_base)
-  * [`--max_memory`](#--max_memory)
-  * [`--max_time`](#--max_time)
-  * [`--max_cpus`](#--max_cpus)
-  * [`--hisat_build_memory`](#--hisat_build_memory)
-  * [`--sampleLevel`](#--samplelevel)
-  * [`--plaintext_email`](#--plaintext_email)
-  * [`--monochrome_logs`](#--monochrome_logs)
-  * [`--multiqc_config`](#--multiqc_config)
-* [Stand-alone scripts](#stand-alone-scripts)
-<!-- TOC END -->
+- [nf-core/rnaseq: Usage](#nf-corernaseq-usage)
+  - [Table of contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Running the pipeline](#running-the-pipeline)
+    - [Updating the pipeline](#updating-the-pipeline)
+    - [Reproducibility](#reproducibility)
+  - [Main arguments](#main-arguments)
+    - [`-profile`](#profile)
+    - [`--reads`](#reads)
+    - [`--single_end`](#singleend)
+    - [Library strandedness](#library-strandedness)
+  - [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)
+    - [Default "`gene_name`" Attribute Type](#default-%22genename%22-attribute-type)
+    - [Extra Gene Names or IDs](#extra-gene-names-or-ids)
+    - [Default "`exon`" Type](#default-%22exon%22-type)
+  - [Transcriptome mapping with Salmon](#transcriptome-mapping-with-salmon)
+  - [Alignment tool](#alignment-tool)
+  - [Reference genomes](#reference-genomes)
+    - [`--genome` (using iGenomes)](#genome-using-igenomes)
+    - [`--star_index`, `--hisat2_index`, `--fasta`, `--gtf`, `--bed12`](#starindex---hisat2index---fasta---gtf---bed12)
+    - [`--saveReference`](#savereference)
+    - [`--saveTrimmed`](#savetrimmed)
+    - [`--saveUnaligned`](#saveunaligned)
+    - [`--saveAlignedIntermediates`](#savealignedintermediates)
+    - [`--gencode`](#gencode)
+      - ["Type" of gene](#%22type%22-of-gene)
+      - [Transcript IDs in FASTA files](#transcript-ids-in-fasta-files)
+    - [`--skipBiotypeQC`](#skipbiotypeqc)
+    - [`--skipAlignment`](#skipalignment)
+    - [Compressed Reference File Input](#compressed-reference-file-input)
+      - [Create compressed (tar.gz) STAR indices](#create-compressed-targz-star-indices)
+      - [HISAT2 indices](#hisat2-indices)
+      - [Salmon index](#salmon-index)
+  - [Adapter Trimming](#adapter-trimming)
+    - [`--clip_r1 [int]`](#clipr1-int)
+    - [`--clip_r2 [int]`](#clipr2-int)
+    - [`--three_prime_clip_r1 [int]`](#threeprimeclipr1-int)
+    - [`--three_prime_clip_r2 [int]`](#threeprimeclipr2-int)
+    - [`--trim_nextseq [int]`](#trimnextseq-int)
+    - [`--skipTrimming`](#skiptrimming)
+  - [Ribosomal RNA removal](#ribosomal-rna-removal)
+    - [`--removeRiboRNA`](#removeriborna)
+    - [`--saveNonRiboRNAReads`](#savenonribornareads)
+    - [`--rRNA_database_manifest`](#rrnadatabasemanifest)
+  - [Library Prep Presets](#library-prep-presets)
+    - [`--pico`](#pico)
+  - [Skipping QC steps](#skipping-qc-steps)
+  - [Job resources](#job-resources)
+    - [Automatic resubmission](#automatic-resubmission)
+    - [Custom resource requests](#custom-resource-requests)
+  - [AWS Batch specific parameters](#aws-batch-specific-parameters)
+    - [`--awsqueue`](#awsqueue)
+    - [`--awsregion`](#awsregion)
+    - [`--awscli`](#awscli)
+  - [Other command line parameters](#other-command-line-parameters)
+    - [`--outdir`](#outdir)
+    - [`--email`](#email)
+    - [`--email_on_fail`](#emailonfail)
+    - [`--max_multiqc_email_size`](#maxmultiqcemailsize)
+    - [`-name`](#name)
+    - [`-resume`](#resume)
+    - [`-c`](#c)
+    - [`--custom_config_version`](#customconfigversion)
+    - [`--custom_config_base`](#customconfigbase)
+    - [`--max_memory`](#maxmemory)
+    - [`--max_time`](#maxtime)
+    - [`--max_cpus`](#maxcpus)
+    - [`--hisat_build_memory`](#hisatbuildmemory)
+    - [`--sampleLevel`](#samplelevel)
+    - [`--percent_aln_skip`](#percentalnskip)
+    - [`--plaintext_email`](#plaintextemail)
+    - [`--monochrome_logs`](#monochromelogs)
+    - [`--multiqc_config`](#multiqcconfig)
+  - [Stand-alone scripts](#stand-alone-scripts)
+    <!-- TOC END -->
 
 ## Introduction
 
 Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs. Thus the Nextflow process must run until the pipeline is finished. We recommend that you put the process running in the background through `screen` / `tmux` or similar tool. Alternatively you can run nextflow within a cluster job submitted your job scheduler.
 
-It is recommended to limit the Nextflow Java virtual machines memory. We recommend adding the following line to your environment (typically in `~/.bashrc` or `~./bash_profile`):
+It is recommended to limit the Nextflow Java virtual machines memory. We recommend adding the following line to your environment (typically in `~/.bashrc` or `~/.bash_profile`):
 
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
+
+This could be added by either editing those files with `nano`, e.g. `nano ~/.bashrc`, or by appending those options to your `~/.bashrc` file with:
+
+```bash
+echo "export NXF_OPTS='-Xms1g -Xmx4g'" >> ~/.bashrc
+```
+
+Then, re-running the file with `source ~/.bashrc`. If you are on a Mac, replace `~/.bashrc` in all previous examples with `~/.bash_profile`.
 
 ## Running the pipeline
 
@@ -123,24 +135,32 @@ This version number will be logged in reports when you run the pipeline, so that
 
 ### `-profile`
 
-Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments. Note that multiple profiles can be loaded, for example: `-profile docker` - the order of arguments is important!
+Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-If `-profile` is not specified at all the pipeline will be run locally and expects all software to be installed and available on the `PATH`.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Conda) - see below.
 
-* `awsbatch`
-  * A generic configuration profile to be used with AWS Batch.
-* `conda`
-  * A generic configuration profile to be used with [conda](https://conda.io/docs/)
-  * Pulls most software from [Bioconda](https://bioconda.github.io/)
-* `docker`
-  * A generic configuration profile to be used with [Docker](http://docker.com/)
-  * Pulls software from dockerhub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
-* `singularity`
-  * A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
-  * Pulls software from DockerHub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
-* `test`
-  * A profile with a complete configuration for automated testing
-  * Includes links to test data so needs no other parameters
+> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+
+The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+
+Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
+They are loaded in sequence, so later profiles can overwrite earlier profiles.
+
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
+
+- `docker`
+  - A generic configuration profile to be used with [Docker](http://docker.com/)
+  - Pulls software from dockerhub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
+- `singularity`
+  - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
+  - Pulls software from DockerHub: [`nfcore/rnaseq`](http://hub.docker.com/r/nfcore/rnaseq/)
+- `conda`
+  - Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
+  - A generic configuration profile to be used with [Conda](https://conda.io/docs/)
+  - Pulls most software from [Bioconda](https://bioconda.github.io/)
+- `test`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
 ### `--reads`
 
@@ -172,9 +192,9 @@ It is not possible to run a mixture of single-end and paired-end files in one ru
 
 Three command line flags / config parameters set the library strandedness for a run:
 
-* `--forwardStranded`
-* `--reverseStranded`
-* `--unStranded`
+- `--forwardStranded`
+- `--reverseStranded`
+- `--unStranded`
 
 If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forwardStranded` mode.
 
@@ -190,18 +210,18 @@ If you have a default strandedness set in your personal config file you can use 
 
 These flags affect the commands used for several steps in the pipeline - namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
 
-* `--forwardStranded`
-  * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
-  * featureCounts: `-s 1`
-  * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
-  * Qualimap: `-pe strand-specific-forward`
-  * StringTie: `--fr`
-* `--reverseStranded`
-  * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
-  * featureCounts: `-s 2`
-  * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
-  * Qualimap: `-pe strand-specific-reverse`
-  * StringTie: `--rf`
+- `--forwardStranded`
+  - HISAT2: `--rna-strandness F` / `--rna-strandness FR`
+  - featureCounts: `-s 1`
+  - RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
+  - Qualimap: `-pe strand-specific-forward`
+  - StringTie: `--fr`
+- `--reverseStranded`
+  - HISAT2: `--rna-strandness R` / `--rna-strandness RF`
+  - featureCounts: `-s 2`
+  - RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
+  - Qualimap: `-pe strand-specific-reverse`
+  - StringTie: `--rf`
 
 ## FeatureCounts Extra Gene Names
 
@@ -223,7 +243,7 @@ By default, the pipeline uses `exon` as the default to assign reads. In case you
 
 ## Transcriptome mapping with Salmon
 
-Use the `--pseudo aligner salmon` option to perform additional quantification at the transcript- and gene-level using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). This will be run in addition to either STAR or HiSat2 and cannot be run in isolation, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. By default, the pipeline will use the genome fasta and gtf file to generate the transcript fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index`, respectively.
+Use the `--pseudo_aligner salmon` option to perform additional quantification at the transcript- and gene-level using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). This will be run in addition to either STAR or HiSat2 and cannot be run in isolation, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. By default, the pipeline will use the genome fasta and gtf file to generate the transcript fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index`, respectively.
 
 The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
 
@@ -245,14 +265,14 @@ There are 31 different species supported in the iGenomes references. To run the 
 
 You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
 
-* Human
-  * `--genome GRCh37`
-* Mouse
-  * `--genome GRCm38`
-* _Drosophila_
-  * `--genome BDGP6`
-* _S. cerevisiae_
-  * `--genome 'R64-1-1'`
+- Human
+  - `--genome GRCh37`
+- Mouse
+  - `--genome GRCm38`
+- _Drosophila_
+  - `--genome BDGP6`
+- _S. cerevisiae_
+  - `--genome 'R64-1-1'`
 
 > There are numerous others - check the config file for more.
 
@@ -467,14 +487,14 @@ Equivalent to: `--forwardStranded` `--clip_r1 3` `--three_prime_clip_r2 3`
 The pipeline contains a large number of quality control steps. Sometimes, it may not be desirable to run all of them if time and compute resources are limited.
 The following options make this easy:
 
-* `--skipQC` -                Skip **all QC steps**, apart from MultiQC
-* `--skipFastQC` -            Skip FastQC
-* `--skipRseQC` -             Skip RSeQC
-* `--skipQualimap` -          Skip Qualimap
-* `--skipPreseq` -            Skip Preseq
-* `--skipDupRadar` -          Skip dupRadar (and Picard MarkDuplicates)
-* `--skipEdgeR` -             Skip edgeR MDS plot and heatmap
-* `--skipMultiQC` -           Skip MultiQC
+- `--skipQC` - Skip **all QC steps**, apart from MultiQC
+- `--skipFastQC` - Skip FastQC
+- `--skipRseQC` - Skip RSeQC
+- `--skipQualimap` - Skip Qualimap
+- `--skipPreseq` - Skip Preseq
+- `--skipDupRadar` - Skip dupRadar (and Picard MarkDuplicates)
+- `--skipEdgeR` - Skip edgeR MDS plot and heatmap
+- `--skipMultiQC` - Skip MultiQC
 
 ## Job resources
 
@@ -488,11 +508,11 @@ Wherever process-specific requirements are set in the pipeline, the default valu
 
 If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
-If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack/).
+If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
 ## AWS Batch specific parameters
 
-Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use the `-awsbatch` profile and then specify all of the following parameters.
+Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use [`-profile awsbatch`](https://github.com/nf-core/configs/blob/master/conf/awsbatch.config) and then specify all of the following parameters.
 
 ### `--awsqueue`
 
@@ -500,7 +520,11 @@ The JobQueue that you intend to use on AWS Batch.
 
 ### `--awsregion`
 
-The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs.
+The AWS region in which to run your job. Default is set to `eu-west-1` but can be adjusted to your needs.
+
+### `--awscli`
+
+The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI. Default: `/home/ec2-user/miniconda/bin/aws`.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
@@ -515,7 +539,16 @@ The output directory where the results will be saved.
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.
 
 ### `--email_on_fail`
+
 This works exactly as with `--email`, except emails are only sent if the workflow is not successful.
+
+### `--max_multiqc_email_size`
+
+Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB).
+
+### `--publish_dir_mode`
+
+Choose the publishDir mode. Default is `copy`. See [nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for more details.
 
 ### `-name`
 
@@ -543,7 +576,7 @@ Note - you can use this to override pipeline defaults.
 
 ### `--custom_config_version`
 
-Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default is set to `master`.
+Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.
 
 ```bash
 ## Download and use config file with following git commid id
@@ -622,9 +655,9 @@ Specify a path to a custom MultiQC configuration file.
 
 The `bin` directory contains some scripts used by the pipeline which may also be run manually:
 
-* `gtf2bed`
-  * Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
-* `dupRadar.r`
-  * dupRadar script used in the _dupRadar_ pipeline process.
-* `edgeR_heatmap_MDS.r`
-  * edgeR script used in the _Sample Correlation_ process
+- `gtf2bed`
+  - Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
+- `dupRadar.r`
+  - dupRadar script used in the _dupRadar_ pipeline process.
+- `edgeR_heatmap_MDS.r`
+  - edgeR script used in the _Sample Correlation_ process

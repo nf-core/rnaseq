@@ -243,7 +243,7 @@ By default, the pipeline uses `exon` as the default to assign reads. In case you
 
 ## Transcriptome mapping with Salmon
 
-Use the `--pseudo aligner salmon` option to perform additional quantification at the transcript- and gene-level using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). This will be run in addition to either STAR or HiSat2 and cannot be run in isolation, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. By default, the pipeline will use the genome fasta and gtf file to generate the transcript fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index`, respectively.
+Use the `--pseudo_aligner salmon` option to perform additional quantification at the transcript- and gene-level using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). This will be run in addition to either STAR or HiSat2 and cannot be run in isolation, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. By default, the pipeline will use the genome fasta and gtf file to generate the transcript fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index`, respectively.
 
 The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
 

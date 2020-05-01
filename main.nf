@@ -1506,7 +1506,6 @@ if (!params.skipAlignment) {
       """
   }
 
-  if (!skip_rsem) {
     /**
      * Step 11 - RSEM
      */
@@ -1524,6 +1523,8 @@ if (!params.skipAlignment) {
                 file("*.isoforms.results") into rsem_results_isoforms
                 file("*.stat") into rsem_logs
 
+            when: !params.skip_rsem
+
             script:
             sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
             paired_end_flag = params.single_end ? "" : "--paired-end"
@@ -1538,7 +1539,7 @@ if (!params.skipAlignment) {
             rsem/\$REF_NAME \
             ${sample_name}
             """
-    }
+    
 
 
     /**
@@ -1561,8 +1562,8 @@ if (!params.skipAlignment) {
         """
         echo "gene_id\tgene_symbol" > gene_ids.txt
         echo "transcript_id\tgene_symbol" > transcript_ids.txt
-        cut -f 1 ${rsem_res_gene.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
-        cut -f 1 ${rsem_res_isoform.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
+        cut -f 1 ${rsem_res_gene[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
+        cut -f 1 ${rsem_res_isoform[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
         mkdir tmp_genes tmp_isoforms
         for fileid in $rsem_res_gene; do
             basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt

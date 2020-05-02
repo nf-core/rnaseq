@@ -1539,7 +1539,7 @@ if (!params.skipAlignment) {
             rsem/\$REF_NAME \
             ${sample_name}
             """
-    
+    }
 
 
     /**
@@ -1577,9 +1577,6 @@ if (!params.skipAlignment) {
         paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_tpm_isoform.txt
         """
     }
-  } else {
-      rsem_logs = Channel.from(false)
-  }
 
   /*
    * STEP 13 - stringtie FPKM

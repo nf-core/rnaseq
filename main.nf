@@ -332,9 +332,7 @@ if( params.gtf ){
     Channel
         .fromPath(params.gtf, checkIfExists: true)
         .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-        .into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
-                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge ;
-                gtf_makeRSEMReference}
+        .into { ch_genome_gtf}
 
   }
   } else if (params.gff) {
@@ -537,49 +535,6 @@ process get_software_versions {
     """
 }
 
-if ( params.additional_fasta ){
-  process make_additional_gtf {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-               saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-    output:
-      file "${fasta.baseName}.gtf" into ch_additional_gtf
-
-    input:
-      file fasta from ch_additional_fasta_for_gtf
-
-    """
-    fasta2gtf.py -o ${fasta.baseName}.gtf ${fasta}
-    """
-  }
-
-  process combine_genome_annotations {
-    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-               saveAs: { params.saveReference ? it : null }, mode: 'copy'
-    tag "${genome_name}"
-
-    input:
-    file genome_fasta from ch_genome_fasta
-    file genome_gtf from ch_genome_gtf
-    file additional_fasta from ch_additional_fasta_to_concat.collect()
-    file additional_gtf from ch_additional_gtf.collect()
-
-    output:
-    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
-    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_makeSalmonIndex)
-
-    script:
-    main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
-
-    transgenomes = additional_fasta.collect{ it.getBaseName() }.sort().join("+")
-    genome_name = "${main_genome_name}__${transgenomes}"
-    """
-    cat $genome_fasta $additional_fasta > ${genome_name}.fa
-    cat $genome_gtf $additional_gtf > ${genome_name}.gtf
-    """
-  }
-}
-
 
 compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz')
 
@@ -745,7 +700,7 @@ if (compressedReference) {
     }
   }
 }
-  if (params.additional_fasta){
+  if ( hasExtension(params.additional_fasta, "gz" )) {
     process gunzip_additional_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
@@ -763,6 +718,49 @@ if (compressedReference) {
         """
     }
   }
+
+if ( params.additional_fasta ){
+  process make_additional_gtf {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+    output:
+      file "${fasta.baseName}.gtf" into ch_additional_gtf
+
+    input:
+      file fasta from ch_additional_fasta_for_gtf
+
+    """
+    fasta2gtf.py -o ${fasta.baseName}.gtf ${fasta}
+    """
+  }
+
+  process combine_genome_annotations {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+    tag "${genome_name}"
+
+    input:
+    file genome_fasta from ch_genome_fasta
+    file genome_gtf from ch_genome_gtf
+    file additional_fasta from ch_additional_fasta_to_concat.collect()
+    file additional_gtf from ch_additional_gtf.collect()
+
+    output:
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
+    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_makeSalmonIndex, gtf_makeRSEMReference)
+
+    script:
+    main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
+
+    transgenomes = additional_fasta.collect{ it.getBaseName() }.sort().join("+")
+    genome_name = "${main_genome_name}__${transgenomes}"
+    """
+    cat $genome_fasta $additional_fasta > ${genome_name}.fa
+    cat $genome_gtf $additional_gtf > ${genome_name}.gtf
+    """
+  }
+}
 
 /*
  * PREPROCESSING - Convert GFF3 to GTF

@@ -377,6 +377,7 @@ This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by
 This skips the BiotypeQC step in the `featureCounts` process, explicitly useful when there is no available GTF/GFF with any `biotype` or similar information that could be used before.
 
 ### `--additional_fasta`
+
 If provided, any genes here will get concatenated to the existing genome fasta, a GTF will be automatically created using the entire sequence as the `gene`, `transcript`, and `exon` features, and the alignment index will get created off of the combined fasta and GTF. It is recommended to save the reference with `--saveReference` so you do not need to create it again.
 
 ### `--skipAlignment`

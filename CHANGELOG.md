@@ -1,9 +1,9 @@
 # nf-core/rnaseq: Changelog
 
-<<<<<<< HEAD
 ## Version 1.4.3dev
 
 ### Pipeline enhancements & fixes
+
 - Minor tweaks to software version commands
 - Add information about SILVA licensing when removing rRNA to `usage.md`
 - Fixed ansi colours for pipeline summary, added summary logs of alignment results

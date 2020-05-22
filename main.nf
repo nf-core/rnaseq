@@ -270,7 +270,7 @@ if (params.pseudo_aligner == 'salmon') {
              .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
       Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-            .set { ch_genome_fasta }
+            .set { ch_genome_fasta_to_concat }
       } else if ( params.fasta && (params.gff || params.gtf)){
         // Need to extract transcripts out of genome fasta + gtf to get
         // transcript fasta

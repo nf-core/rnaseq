@@ -282,8 +282,8 @@ if (params.pseudo_aligner == 'salmon') {
           } else {
           Channel.fromPath(params.fasta, checkIfExists: true)
               .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-              .set { ch_fasta_for_salmon_transcripts }
-    } else {
+              .set { ch_fasta_for_salmon_transcripts }}}
+  } else {
       exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }
 }

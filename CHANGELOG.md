@@ -1,9 +1,9 @@
 # nf-core/rnaseq: Changelog
 
+<<<<<<< HEAD
 ## Version 1.4.3dev
 
 ### Pipeline enhancements & fixes
-
 - Minor tweaks to software version commands
 - Add information about SILVA licensing when removing rRNA to `usage.md`
 - Fixed ansi colours for pipeline summary, added summary logs of alignment results
@@ -13,6 +13,7 @@
 - Fixes label name in fastQC process, Issue [#345]
 - Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 - Add AWS tests github actions workflow for small tests
+- Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 
 #### Updated Packages
 
@@ -24,6 +25,7 @@
 
 - Added pigz 2.3.4 for parallelized trim-galore support
 - Added rsem 1.3.3 for gene/transcript quantification
+
 
 ## Version 1.4.2
 

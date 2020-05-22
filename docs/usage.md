@@ -30,6 +30,7 @@
       - ["Type" of gene](#%22type%22-of-gene)
       - [Transcript IDs in FASTA files](#transcript-ids-in-fasta-files)
     - [`--skipBiotypeQC`](#skipbiotypeqc)
+    - [`--additional_fasta`](#--additional_fasta)
     - [`--skipAlignment`](#skipalignment)
     - [Compressed Reference File Input](#compressed-reference-file-input)
       - [Create compressed (tar.gz) STAR indices](#create-compressed-targz-star-indices)
@@ -374,6 +375,9 @@ This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by
 ### `--skipBiotypeQC`
 
 This skips the BiotypeQC step in the `featureCounts` process, explicitly useful when there is no available GTF/GFF with any `biotype` or similar information that could be used before.
+
+### `--additional_fasta`
+If provided, any genes here will get concatenated to the existing genome fasta, a GTF will be automatically created using the entire sequence as the `gene`, `transcript`, and `exon` features, and the alignment index will get created off of the combined fasta and GTF. It is recommended to save the reference with `--saveReference` so you do not need to create it again.
 
 ### `--skipAlignment`
 

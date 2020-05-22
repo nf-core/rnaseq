@@ -34,6 +34,7 @@ def helpMessage() {
       --salmon_index                Path to Salmon index
       --fasta                       Path to genome fasta file
       --transcript_fasta            Path to transcript fasta file
+      --additional_fasta            Additional fasta file(s) containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
       --splicesites                 Path to splice sites file for building HiSat2 index
       --gtf                         Path to GTF file
       --gff                         Path to GFF3 file
@@ -196,15 +197,33 @@ else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignm
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
   }
 }
-else if (params.fasta && !params.skipAlignment) {
-  if (hasExtension(params.fasta, 'gz')) {
-    Channel.fromPath(params.fasta, checkIfExists: true)
-        .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-        .set { genome_fasta_gz }
-  } else {
-    Channel.fromPath(params.fasta, checkIfExists: true)
-        .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-        .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index }
+else if ( params.fasta && !params.skipAlignment  ){
+  if (params.additional_fasta){
+    if (hasExtension(params.fasta, "gz")){
+      Channel.fromPath(params.additional_fasta)
+             .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+             .into { additional_fasta_gz }
+      Channel.fromPath(params.fasta, checkIfExists: true)
+          .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+          .set { genome_fasta_gz }
+    } else {
+      Channel.fromPath(params.additional_fasta)
+             .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+             .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
+      Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+            .set { ch_genome_fasta }
+    }
+  }
+  else {
+    if (hasExtension(params.fasta, "gz")){
+      Channel.fromPath(params.fasta, checkIfExists: true)
+          .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+          .set { genome_fasta_gz }
+    } else {
+      Channel.fromPath(params.fasta)
+           .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
   }
 
 } else if (params.skipAlignment) {
@@ -244,17 +263,26 @@ if (params.pseudo_aligner == 'salmon') {
             .fromPath(params.transcript_fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
       }
-    } else if (params.fasta && (params.gff || params.gtf)) {
-      log.info "Extracting transcript fastas from genome fasta + gtf/gff"
-      if (hasExtension(params.fasta, 'gz')) {
-        Channel.fromPath(params.fasta, checkIfExists: true)
-            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-            .set { genome_fasta_gz }
-      } else {
-        Channel.fromPath(params.fasta, checkIfExists: true)
-            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-            .set { ch_fasta_for_salmon_transcripts }
-      }
+  } else if (params.fasta) {
+      if (params.additional_fasta){
+      Channel.fromPath(params.additional_fasta)
+             .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
+             .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
+      Channel.fromPath(params.fasta, checkIfExists: true)
+            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
+            .set { ch_genome_fasta }
+      } else if ( params.fasta && (params.gff || params.gtf)){
+        // Need to extract transcripts out of genome fasta + gtf to get
+        // transcript fasta
+        log.info "Extracting transcript fastas from genome fasta + gtf/gff"
+        if (params.compressedReference) {
+          Channel.fromPath(params.fasta, checkIfExists: true)
+              .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+              .set { genome_fasta_gz }
+          } else {
+          Channel.fromPath(params.fasta, checkIfExists: true)
+              .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
+              .set { ch_fasta_for_salmon_transcripts }
     } else {
       exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }
@@ -395,6 +423,9 @@ if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
 summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
+if (params.additional_fasta){
+  summary["Additional Fasta"] = params.additional_fasta
+}
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
     if (params.star_index)summary['STAR Index'] = params.star_index
@@ -499,6 +530,50 @@ process get_software_versions {
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
+
+if ( params.additional_fasta ){
+  process make_additional_gtf {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+    output:
+      file "${fasta.baseName}.gtf" into ch_additional_gtf
+
+    input:
+      file fasta from ch_additional_fasta_for_gtf
+
+    """
+    fasta2gtf.py -o ${fasta.baseName}.gtf ${fasta}
+    """
+  }
+
+  process combine_genome_annotations {
+    publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
+               saveAs: { params.saveReference ? it : null }, mode: 'copy'
+    tag "${genome_name}"
+
+    input:
+    file genome_fasta from ch_genome_fasta
+    file genome_gtf from ch_genome_gtf
+    file additional_fasta from ch_additional_fasta_to_concat.collect()
+    file additional_gtf from ch_additional_gtf.collect()
+
+    output:
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
+    file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_makeSalmonIndex)
+
+    script:
+    main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
+
+    transgenomes = additional_fasta.collect{ it.getBaseName() }.sort().join("+")
+    genome_name = "${main_genome_name}__${transgenomes}"
+    """
+    cat $genome_fasta $additional_fasta > ${genome_name}.fa
+    cat $genome_gtf $additional_gtf > ${genome_name}.gtf
+    """
+  }
+}
+
 
 compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz')
 
@@ -664,6 +739,24 @@ if (compressedReference) {
     }
   }
 }
+  if (params.additional_fasta){
+    process gunzip_additional_fasta {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from additional_fasta_gz
+
+        output:
+        file "${gz.baseName}" into ch_additional_fasta_for_gtf, ch_additional_fasta_to_concat
+
+        script:
+        """
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
+  }
 
 /*
  * PREPROCESSING - Convert GFF3 to GTF

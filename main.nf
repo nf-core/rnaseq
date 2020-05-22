@@ -223,10 +223,10 @@ else if ( params.fasta && !params.skipAlignment  ){
     } else {
       Channel.fromPath(params.fasta)
            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}
-  }
-
-} else if (params.skipAlignment) {
+           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}}
+} 
+} 
+else if (params.skipAlignment) {
   println "Skipping alignment ..."
 }
 else {

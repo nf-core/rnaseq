@@ -10,7 +10,7 @@ jobs:
       matrix:
         nxf_ver: ['19.10.0', '']
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
-        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false', '--additional_fasta' '--additional_fasta false']
+        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false', '--additional_fasta', '--additional_fasta false']
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow

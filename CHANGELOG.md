@@ -1,5 +1,9 @@
 # nf-core/rnaseq: Changelog
 
+## Version 1.5
+
+* Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to
+
 ## Version 1.4.2
 
 * Minor version release for keeping Git History in sync

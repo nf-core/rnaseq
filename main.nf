@@ -313,8 +313,14 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
     exit 1, "No reference genome files specified! "
 }
 
-if (params.gtf) {
-  if (params.gff) {
+if( params.gtf ){
+  if ( params.additional_fasta ){
+    Channel
+        .fromPath(params.gtf)
+        .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
+        .set { ch_genome_gtf }
+  }
+  if ( params.gff ){
       // Prefer gtf over gff
       log.info "Both GTF and GFF have been provided: Using GTF as priority."
   }

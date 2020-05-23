@@ -699,7 +699,6 @@ if (compressedReference) {
         """
     }
   }
-}
   if ( hasExtension(params.additional_fasta, "gz" )) {
     process gunzip_additional_fasta {
         tag "$gz"
@@ -718,6 +717,7 @@ if (compressedReference) {
         """
     }
   }
+}
 
 if ( params.additional_fasta ){
   process make_additional_gtf {
@@ -761,6 +761,11 @@ if ( params.additional_fasta ){
     """
   }
 }
+  else {
+      ch_genome_gtf.into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
+                gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge ;
+                gtf_makeRSEMReference}
+  }
 
 /*
  * PREPROCESSING - Convert GFF3 to GTF

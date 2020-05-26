@@ -199,7 +199,7 @@ else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignm
 }
 else if ( params.fasta && !params.skipAlignment  ){
   if (params.additional_fasta){
-    if (hasExtension(params.fasta, "gz")){
+    if (hasExtension(params.additional_fasta, "gz")){
       Channel.fromPath(params.additional_fasta)
              .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
              .into { additional_fasta_gz }

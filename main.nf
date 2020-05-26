@@ -199,7 +199,7 @@ else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignm
 }
 else if ( params.fasta && !params.skipAlignment  ){
   if (params.additional_fasta){
-    if (hasExtension(params.additional_fasta, "gz")){
+    if ( hasExtension(params.additional_fasta, "gz" )){
       Channel.fromPath(params.additional_fasta)
              .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
              .into { additional_fasta_gz }
@@ -536,7 +536,7 @@ process get_software_versions {
 }
 
 
-compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz')
+compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz') hasExtension(params.additional_fasta, "gz" )
 
 if (compressedReference) {
   // This complex logic is to prevent accessing the genome_fasta_gz variable if
@@ -566,6 +566,24 @@ if (compressedReference) {
         """
         gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
         """
+    }
+    if ( params.additional_fasta ) {
+      process gunzip_additional_fasta {
+        tag "$gz"
+        publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
+
+        input:
+        file gz from additional_fasta_gz
+
+        output:
+        file "${gz.baseName}" into ch_additional_fasta_for_gtf, ch_additional_fasta_to_concat
+
+        script:
+        """
+        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
+        """
+    }
     }
   }
   if (params.gtf) {
@@ -696,24 +714,6 @@ if (compressedReference) {
         // Use tar as the hisat2 indices are a folder, not a file
         """
         tar -xzvf ${gz}
-        """
-    }
-  }
-  if ( hasExtension(params.additional_fasta, "gz" )) {
-    process gunzip_additional_fasta {
-        tag "$gz"
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
-
-        input:
-        file gz from additional_fasta_gz
-
-        output:
-        file "${gz.baseName}" into ch_additional_fasta_for_gtf, ch_additional_fasta_to_concat
-
-        script:
-        """
-        gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
   }

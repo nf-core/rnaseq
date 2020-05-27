@@ -38,18 +38,20 @@ def fasta2gtf(fasta, output):
     fiter = fasta_iter(fasta)
     # GTF output lines
     lines = []
-    # Use first ID as separated by spaces as the "sequence name" (equivalent to "chromosome" in other cases)
-    seqname = name.split()[0]
-    # Remove all spaces
-    name_sanitized = name.replace(' ', '_')
-    attributes = 'gene_id "{name_sanitized}"; gene_name "{name_sanitized}"; transcript_id "{name_sanitized}"; gene_biotype "{name_sanitized}"; gene_type "{name_sanitized}"\n'
+    attributes = \
+        'gene_id "{name_sanitized}"; gene_name "{name_sanitized}";transcript_id "{name_sanitized}"; gene_biotype "{name_sanitized}"; gene_type "{name_sanitized}"\n'
     line_template = \
         "{seqname}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
 
     for ff in fiter:
         name, seq = ff
+        # Use first ID as separated by spaces as the "sequence name"
+        # (equivalent to "chromosome" in other cases)
+        seqname = name.split()[0]
+        # Remove all spaces
+        seqname = seqname.replace(' ', '_')
         length = len(seq)
-        line = line_template.format(name=name, length=length)
+        line = line_template.format(seqname=seqname, length=length)
         lines.append(line)
 
     with open(output, 'w') as f:

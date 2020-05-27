@@ -741,7 +741,7 @@ if ( params.additional_fasta ){
     tag "${genome_name}"
 
     input:
-    file genome_fasta from ch_genome_fasta
+    file genome_fasta from ch_genome_fasta_to_concat
     file genome_gtf from ch_genome_gtf
     file additional_fasta from ch_additional_fasta_to_concat.collect()
     file additional_gtf from ch_additional_gtf.collect()

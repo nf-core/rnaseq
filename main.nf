@@ -197,7 +197,7 @@ else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skipAlignm
         .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
   }
 }
-else if ( params.fasta && !params.skipAlignment  ){
+if ( params.fasta && !params.skipAlignment  ){
   if (params.additional_fasta){
     if ( hasExtension(params.additional_fasta, "gz" )){
       Channel.fromPath(params.additional_fasta)
@@ -567,7 +567,7 @@ if (compressedReference) {
         gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
         """
     }
-    if ( params.additional_fasta ) {
+  if ( params.additional_fasta ) {
       process gunzip_additional_fasta {
         tag "$gz"
         publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },

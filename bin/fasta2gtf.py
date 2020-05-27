@@ -49,9 +49,10 @@ def fasta2gtf(fasta, output):
         # (equivalent to "chromosome" in other cases)
         seqname = name.split()[0]
         # Remove all spaces
-        seqname = seqname.replace(' ', '_')
+        name_sanitized = seqname.replace(' ', '_')
         length = len(seq)
-        line = line_template.format(seqname=seqname, length=length)
+        line = line_template.format(
+            name_sanitized=name_sanitized, length=length)
         lines.append(line)
 
     with open(output, 'w') as f:

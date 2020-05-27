@@ -41,7 +41,7 @@ def fasta2gtf(fasta, output):
     attributes = \
         'gene_id "{name_sanitized}"; gene_name "{name_sanitized}";transcript_id "{name_sanitized}"; gene_biotype "{name_sanitized}"; gene_type "{name_sanitized}"\n'
     line_template = \
-        "{seqname}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
+        "{name_sanitized}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
 
     for ff in fiter:
         name, seq = ff

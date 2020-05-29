@@ -559,8 +559,7 @@ if (compressedReference) {
         file gz from genome_fasta_gz
 
         output:
-        file "${gz.baseName}" into ch_genome_fasta, ch_fasta_for_star_index, ch_fasta_for_hisat_index,
-            ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference
+        file "${gz.baseName}" into ch_genome_fasta
 
         script:
         """
@@ -747,7 +746,7 @@ if ( params.additional_fasta ){
     file additional_gtf from ch_additional_gtf.collect()
 
     output:
-    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference)
     file "${genome_name}.gtf" into (gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_qualimap,  gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_makeSalmonIndex, gtf_makeRSEMReference)
 
     script:
@@ -762,11 +761,12 @@ if ( params.additional_fasta ){
   }
 }
   else {
+      ch_genome_fasta.into { ch_fasta_for_star_index, ch_fasta_for_hisat_index,
+            ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference}
       ch_genome_gtf.into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
                 gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge ;
                 gtf_makeRSEMReference}
   }
-
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */

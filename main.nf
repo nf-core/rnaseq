@@ -559,7 +559,7 @@ if (compressedReference) {
         file gz from genome_fasta_gz
 
         output:
-        file "${gz.baseName}" into ch_fasta_for_star_index, ch_fasta_for_hisat_index,
+        file "${gz.baseName}" into ch_genome_fasta, ch_fasta_for_star_index, ch_fasta_for_hisat_index,
             ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference
 
         script:

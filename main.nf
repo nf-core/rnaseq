@@ -761,8 +761,7 @@ if ( params.additional_fasta ){
   }
 }
   else {
-      ch_genome_fasta.into { ch_fasta_for_star_index, ch_fasta_for_hisat_index,
-            ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference}
+      ch_genome_fasta.into { ch_fasta_for_star_index; ch_fasta_for_hisat_index; ch_fasta_for_salmon_transcripts; ch_fasta_for_rsem_reference}
       ch_genome_gtf.into { gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
                 gtf_star; gtf_dupradar; gtf_qualimap;  gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge ;
                 gtf_makeRSEMReference}

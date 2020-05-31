@@ -314,12 +314,6 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
 }
 
 if( params.gtf ){
-  if ( params.additional_fasta ){
-    Channel
-        .fromPath(params.gtf)
-        .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-        .set { ch_genome_gtf }
-  }
   if ( params.gff ){
       // Prefer gtf over gff
       log.info "Both GTF and GFF have been provided: Using GTF as priority."
@@ -739,7 +733,7 @@ if ( params.additional_fasta ){
 
     input:
     file genome_fasta from ch_genome_fasta
-    file genome_gtf from ch_genome_gtf
+    file genome_gtf from gtfFile
     file additional_fasta from ch_additional_fasta_to_concat.collect()
     file additional_gtf from ch_additional_gtf.collect()
 

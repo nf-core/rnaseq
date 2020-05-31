@@ -595,8 +595,7 @@ if (compressedReference) {
         file gz from gtf_gz
 
         output:
-        file "${gz.baseName}" into gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
-                                        gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap
+        file "${gz.baseName}" into gtfFile
 
         script:
         """
@@ -758,10 +757,14 @@ if ( params.additional_fasta ){
     cat $genome_gtf $additional_gtf > ${genome_name}.gtf
     """
   }
-}
   else {
-      ch_genome_fasta.into { ch_fasta_for_star_index; ch_fasta_for_hisat_index; ch_fasta_for_salmon_transcripts}s
+  gtfFile.into{
+    gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
+    gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge; gtf_qualimap
   }
+  }
+}
+
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */

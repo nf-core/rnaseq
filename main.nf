@@ -763,7 +763,7 @@ if ( params.additional_fasta ){
   else {
   gtfFile.into{
     gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
-    gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge; gtf_qualimap}
+    gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge; gtf_qualimap; gtf_makeRSEMReference}
   }
 
 /*

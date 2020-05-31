@@ -745,7 +745,9 @@ if ( params.additional_fasta ){
 
     output:
     file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
-    file "${genome_name}.gtf" into gtfFile
+    file "${genome_name}.gtf" into (
+      gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
+      gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap)
 
     script:
     main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
@@ -758,10 +760,11 @@ if ( params.additional_fasta ){
     """
   }
   }
-
+  else {
   gtfFile.into{
     gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex; gtf_makeSalmonIndex; gtf_makeBED12;
     gtf_star; gtf_dupradar; gtf_featureCounts; gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge; gtf_qualimap}
+  }
 
 /*
  * PREPROCESSING - Convert GFF3 to GTF

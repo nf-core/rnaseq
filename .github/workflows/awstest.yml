@@ -12,6 +12,7 @@ on:
 
 jobs:
   run-awstest:
+    if: ${{ github.repository }} == 'nf-core/rnaseq'
     name: Run AWS test
     runs-on: ubuntu-latest
     steps:
@@ -28,4 +29,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_KEY_SECRET}}
           TOWER_ACCESS_TOKEN: ${{secrets.TOWER_ACCESS_TOKEN}}
         run: |
-          aws batch submit-job --region eu-west-1 --job-name nf-core-rnaseq --job-queue 'default-8b3836e0-5eda-11ea-96e5-0a2c3f6a2a32' --job-definition nextflow --container-overrides '{"command": ["nf-core/rnaseq", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://nf-core-awsmegatests/rnaseq/results-'"${GITHUB_SHA}"' -w s3://nf-core-awsmegatests/rnaseq/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}' 
+          aws batch submit-job \
+            --region eu-west-1 \
+            --job-name nf-core-rnaseq \
+            --job-queue 'default-8b3836e0-5eda-11ea-96e5-0a2c3f6a2a32' \
+            --job-definition nextflow \
+            --container-overrides '{"command": ["nf-core/rnaseq", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://nf-core-awsmegatests/rnaseq/results-'"${GITHUB_SHA}"' -w s3://nf-core-awsmegatests/rnaseq/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'

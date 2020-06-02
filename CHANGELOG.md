@@ -13,6 +13,7 @@
 - Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 - Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 - Add AWS tests GitHub actions workflow for small tests
+- Build Docker image using GitHub Actions
 
 #### Updated Packages
 

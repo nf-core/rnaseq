@@ -12,19 +12,36 @@ jobs:
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v2
+
       - name: Install Nextflow
         run: |
           export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+
+      - name: Has Docker / Conda changed?
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build . -t nfcore/rnaseq:dev
+
       - name: Pull docker image
+        if: !env.GIT_DIFF
         run: |
           docker pull nfcore/rnaseq:dev
           docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+
       - name: Basic workflow tests
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+
       - name: Basic workflow, gzipped input
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}

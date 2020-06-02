@@ -4,10 +4,14 @@ name: nf-core CI
 on: [push, pull_request]
 
 jobs:
-
-  setup:
-    name: Set up environment & Docker
+  test:
+    name: Run workflow tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nxf_ver: ['19.10.0', '']
+        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
+        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -29,16 +33,6 @@ jobs:
           docker pull nfcore/rnaseq:dev
           docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
 
-  test:
-    name: Run workflow tests
-    needs: setup
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        nxf_ver: ['19.10.0', '']
-        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
-        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
-    steps:
       - name: Install Nextflow
         run: |
           export NXF_VER=${{ matrix.nxf_ver }}

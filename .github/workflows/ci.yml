@@ -24,7 +24,7 @@ jobs:
         run: docker build . -t nfcore/rnaseq:dev
 
       - name: Pull docker image
-        if: ! env.GIT_DIFF
+        if: ${{ !env.GIT_DIFF }}
         run: |
           docker pull nfcore/rnaseq:dev
           docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev

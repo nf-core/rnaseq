@@ -12,7 +12,7 @@ on:
 
 jobs:
   run-awstest:
-    if: ${{ github.repository }} == 'nf-core/rnaseq'
+    if: github.repository == 'nf-core/rnaseq'
     name: Run AWS test
     runs-on: ubuntu-latest
     steps:

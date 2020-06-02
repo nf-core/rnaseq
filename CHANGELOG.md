@@ -7,30 +7,30 @@
 - Minor tweaks to software version commands
 - Add information about SILVA licensing when removing rRNA to `usage.md`
 - Fixed ansi colours for pipeline summary, added summary logs of alignment results
-- Fixes an issue where multiqc fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
-- Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
+- Fixes an issue where MultiQC fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
+- Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 - Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
-- Fixes label name in fastQC process, Issue [#345]
+- Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 - Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
-- Add AWS tests github actions workflow for small tests
+- Add AWS tests GitHub actions workflow for small tests
 
 #### Updated Packages
 
-- Salmon 0.14.2 -> 1.1.0
-- multiqc 1.7 -> 1.8
-- remove pinning of matplotlib version
+- Salmon `0.14.2` -> `1.1.0`
+- MultiQC `1.7` -> `1.8`
+- Remove pinning of MatPlotLib version
 
 #### Added / Removed Packages
 
-- Added pigz 2.3.4 for parallelized trim-galore support
-- Added rsem 1.3.3 for gene/transcript quantification
+- Added `pigz` `2.3.4` for parallelized trim-galore support
+- Added `rsem` `1.3.3` for gene/transcript quantification
 
-## Version 1.4.2
+## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 
-- Minor version release for keeping Git History in sync
+- Minor version release for keeping git history in sync
 - No changes with respect to 1.4.1 on pipeline level
 
-## Version 1.4.1
+## [Version 1.4.1](https://github.com/nf-core/rnaseq/releases/tag/1.4.1) - 2019-10-17
 
 Major novel changes include:
 
@@ -42,7 +42,7 @@ Major novel changes include:
 - Fixed parameter warnings [#316](https://github.com/nf-core/rnaseq/issues/316) and [318](https://github.com/nf-core/rnaseq/issues/318)
 - Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) - Confusing Info Printout about GFF and GTF
 
-## Version 1.4
+## [Version 1.4](https://github.com/nf-core/rnaseq/releases/tag/1.4) - 2019-10-15
 
 Major novel changes include:
 

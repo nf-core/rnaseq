@@ -6,27 +6,31 @@ on: [push, pull_request]
 jobs:
 
   setup:
-    - name: Check out code
-      uses: actions/checkout@v2
+    name: Set up environment & Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
 
-    - name: Has Docker / Conda changed?
-      uses: technote-space/get-diff-action@v1
-      with:
-        PREFIX_FILTER: |
-          Dockerfile
-          environment.yml
+      - name: Check if Docker / Conda changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
 
-    - name: Build new docker image
-      if: env.GIT_DIFF
-      run: docker build . -t nfcore/rnaseq:dev
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build . -t nfcore/rnaseq:dev
 
-    - name: Pull docker image
-      if: ! env.GIT_DIFF
-      run: |
-        docker pull nfcore/rnaseq:dev
-        docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+      - name: Pull docker image
+        if: ! env.GIT_DIFF
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
 
   test:
+    name: Run workflow tests
     needs: setup
     runs-on: ubuntu-latest
     strategy:
@@ -35,7 +39,6 @@ jobs:
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:
-
       - name: Install Nextflow
         run: |
           export NXF_VER=${{ matrix.nxf_ver }}

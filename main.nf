@@ -224,8 +224,8 @@ if ( params.fasta && !params.skipAlignment  ){
       Channel.fromPath(params.fasta)
            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
            .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}}
-} 
-} 
+}
+}
 else if (params.skipAlignment) {
   println "Skipping alignment ..."
 }
@@ -302,10 +302,6 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
         Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
-    } else {
-        Channel.fromPath(params.fasta, checkIfExists: true)
-            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-            .into { ch_fasta_for_rsem_reference }
     }
 } else if (params.skip_rsem || params.skipAlignment) {
     println "Skipping RSEM ..."
@@ -553,7 +549,7 @@ if (compressedReference) {
         file gz from genome_fasta_gz
 
         output:
-        file "${gz.baseName}" into ch_genome_fasta, ch_fasta_for_rsem_reference
+        file "${gz.baseName}" into ch_genome_fasta
 
         script:
         """
@@ -738,7 +734,7 @@ if ( params.additional_fasta ){
     file additional_gtf from ch_additional_gtf.collect()
 
     output:
-    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference)
     file "${genome_name}.gtf" into (
       gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
       gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap, gtf_makeRSEMReference)

@@ -224,8 +224,8 @@ if ( params.fasta && !params.skipAlignment  ){
       Channel.fromPath(params.fasta)
            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
            .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}}
-} 
-} 
+}
+}
 else if (params.skipAlignment) {
   println "Skipping alignment ..."
 }
@@ -302,10 +302,6 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
         Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
-    } else {
-        Channel.fromPath(params.fasta, checkIfExists: true)
-            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-            .into { ch_fasta_for_rsem_reference }
     }
 } else if (params.skip_rsem || params.skipAlignment) {
     println "Skipping RSEM ..."
@@ -1755,6 +1751,7 @@ if (!params.skipAlignment) {
   hisat_stdout = Channel.from(false)
   alignment_logs = Channel.from(false)
   rseqc_results = Channel.from(false)
+  picard_results = Channel.from(false)
   qualimap_results = Channel.from(false)
   sample_correlation_results = Channel.from(false)
   featureCounts_logs = Channel.from(false)
@@ -1898,6 +1895,7 @@ process multiqc {
     file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
+    file ('picard/*') from picard_results.collect().ifEmpty([])
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
@@ -1920,8 +1918,7 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
-    multiqc . -f $rtitle $rfilename $custom_config_file \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m sortmerna -m fastqc -m qualimap -m salmon
+    multiqc . -f $rtitle $rfilename $custom_config_file
     """
 }
 

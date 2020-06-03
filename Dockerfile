@@ -11,4 +11,3 @@ ENV PATH /opt/conda/envs/nf-core-rnaseq-1.4.3dev/bin:$PATH
 
 # Dump the details of the installed packages to a file for posterity
 RUN conda env export --name nf-core-rnaseq-1.4.3dev > nf-core-rnaseq-1.4.3dev.yml
-COPY assets/sysctl.conf /etc/sysctl.conf

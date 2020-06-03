@@ -421,9 +421,7 @@ if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
 summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
-if (params.additional_fasta){
-  summary["Additional Fasta"] = params.additional_fasta
-}
+if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
     if (params.star_index)summary['STAR Index'] = params.star_index
@@ -553,7 +551,7 @@ if (compressedReference) {
         file gz from genome_fasta_gz
 
         output:
-        file "${gz.baseName}" into ch_genome_fasta, ch_fasta_for_rsem_reference
+        file "${gz.baseName}" into ch_genome_fasta
 
         script:
         """
@@ -738,7 +736,7 @@ if ( params.additional_fasta ){
     file additional_gtf from ch_additional_gtf.collect()
 
     output:
-    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts)
+    file "${genome_name}.fa" into (ch_fasta_for_star_index, ch_fasta_for_hisat_index, ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference)
     file "${genome_name}.gtf" into (
       gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, gtf_makeSalmonIndex, gtf_makeBED12,
       gtf_star, gtf_dupradar, gtf_featureCounts, gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap, gtf_makeRSEMReference)

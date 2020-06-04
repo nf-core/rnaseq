@@ -1,5 +1,5 @@
 name: nf-core CI
-# This workflow is triggered on pushes and PRs to the repository.
+# This workflow is triggered on releases and pull-requests.
 # It runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
@@ -11,6 +11,8 @@ jobs:
   test:
     name: Run workflow tests
     runs-on: ubuntu-latest
+    # Only run on PRs / release / push to nf-core dev branch
+    if: ${{ github.event == 'pull_request' || github.event == 'release' || (github.event == 'push' && github.repository == 'nf-core/rnaseq' && github.branch == 'dev') }}
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
@@ -23,9 +25,22 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
-      # Tag name needs to match process.container in pipeline code
+      - name: Check if Docker / Conda changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+
       - name: Build new docker image
+        if: env.GIT_DIFF
         run: docker build . -t nfcore/rnaseq:dev
+
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
 
       - name: Install Nextflow
         run: |
@@ -40,13 +55,13 @@ jobs:
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
 
       - name: Push Docker image to DockerHub (dev)
-        if: ${{ success() && github.repository == 'nf-core/rnaseq' && github.event == 'push' && github.branch == 'dev' }}
+        if: ${{ success() && github.event == 'push' && github.repository == 'nf-core/rnaseq' && github.branch == 'dev' }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           docker push nfcore/rnaseq:dev
 
       - name: Push Docker image to DockerHub (release)
-        if: ${{ success() && github.repository == 'nf-core/rnaseq' && github.event == 'release' }}
+        if: ${{ success() && github.event == 'release' && github.repository == 'nf-core/rnaseq'  }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           docker push nfcore/rnaseq:${{ github.ref }}

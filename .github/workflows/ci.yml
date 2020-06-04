@@ -3,6 +3,8 @@ name: nf-core CI
 # It runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
+    branches:
+      - dev
   pull_request:
   release:
     types: [published]
@@ -12,7 +14,7 @@ jobs:
     name: Run workflow tests
     runs-on: ubuntu-latest
     # Only run on PRs / release / push to nf-core dev branch
-    if: ${{ github.event == 'pull_request' || github.event == 'release' || (github.event == 'push' && github.repository == 'nf-core/rnaseq' && github.branch == 'dev') }}
+    if: ${{ github.event == 'pull_request' || github.event == 'release' || (github.event == 'push' && github.repository == 'nf-core/rnaseq') }}
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
@@ -55,7 +57,7 @@ jobs:
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
 
       - name: Push Docker image to DockerHub (dev)
-        if: ${{ success() && github.event == 'push' && github.repository == 'nf-core/rnaseq' && github.branch == 'dev' }}
+        if: ${{ success() && github.event == 'push' && github.repository == 'nf-core/rnaseq' }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           docker push nfcore/rnaseq:dev

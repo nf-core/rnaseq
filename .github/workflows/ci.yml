@@ -13,8 +13,8 @@ jobs:
   test:
     name: Run workflow tests
     runs-on: ubuntu-latest
-    # Only run on PRs / release / push to nf-core dev branch
-    if: ${{ github.event == 'pull_request' || github.event == 'release' || (github.event == 'push' && github.repository == 'nf-core/rnaseq') }}
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event != 'push' || (github.event == 'push' && github.repository == 'nf-core/rnaseq') }}
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}

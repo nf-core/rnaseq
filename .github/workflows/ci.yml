@@ -80,6 +80,7 @@ jobs:
         if: ${{ github.event == 'release' }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:${{ github.ref }}
           docker push nfcore/rnaseq:${{ github.ref }}
           docker tag nfcore/rnaseq:${{ github.ref }} nfcore/rnaseq:latest
           docker push nfcore/rnaseq:latest

@@ -13,6 +13,7 @@
 * Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 * Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 * Add AWS tests GitHub actions workflow for small tests
+* Optimise MultiQC configuration for faster run-time on huge sample numbers
 * Build Docker image using GitHub Actions
   * Pull-requests now rebuild the image if the software environment has been changed (so tests should pass)
   * Builds are done on GitHub Actions and pushed to Docker Hub, which is much faster than waiting for Docker Hub to build

@@ -15,8 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event != 'push' || (github.event == 'push' && github.repository == 'nf-core/rnaseq') }}
+    env:
+      NXF_VER: ${{ matrix.nxf_ver }}
+      NXF_ANSI_LOG: false
     strategy:
       matrix:
+        # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['19.10.0', '']
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
@@ -43,7 +47,6 @@ jobs:
 
       - name: Install Nextflow
         run: |
-          export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
@@ -68,19 +71,19 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build new docker image
-        run: docker build --no-cache . -t nfcore/rnaseq:dev
+        run: docker build --no-cache . -t nfcore/rnaseq:latest
 
       - name: Push Docker image to DockerHub (dev)
         if: ${{ github.event == 'push' }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker tag nfcore/rnaseq:latest nfcore/rnaseq:dev
           docker push nfcore/rnaseq:dev
 
       - name: Push Docker image to DockerHub (release)
         if: ${{ github.event == 'release' }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          docker tag nfcore/rnaseq:dev nfcore/rnaseq:${{ github.ref }}
-          docker push nfcore/rnaseq:${{ github.ref }}
-          docker tag nfcore/rnaseq:${{ github.ref }} nfcore/rnaseq:latest
           docker push nfcore/rnaseq:latest
+          docker tag nfcore/rnaseq:latest nfcore/rnaseq:${{ github.ref }}
+          docker push nfcore/rnaseq:${{ github.ref }}

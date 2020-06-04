@@ -21,7 +21,7 @@
 #### Updated Packages
 
 * Salmon `0.14.2` -> `1.1.0`
-* MultiQC `1.7` -> `1.8`
+* MultiQC `1.7` -> `1.9`
 * Remove pinning of MatPlotLib version
 
 #### Added / Removed Packages

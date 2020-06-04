@@ -33,7 +33,7 @@ jobs:
 
       - name: Build new docker image
         if: env.GIT_DIFF
-        run: docker build . -t nfcore/rnaseq:dev
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
 
       - name: Pull docker image
         if: ${{ !env.GIT_DIFF }}
@@ -68,7 +68,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build new docker image
-        run: docker build . -t nfcore/rnaseq:dev
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
 
       - name: Push Docker image to DockerHub (dev)
         if: ${{ github.event == 'push' }}

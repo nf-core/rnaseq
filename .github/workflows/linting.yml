@@ -36,37 +36,28 @@ jobs:
   nf-core:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+
       - uses: actions/setup-python@v1
         with:
           python-version: '3.6'
           architecture: 'x64'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install nf-core
 
       - name: Run nf-core lint
+        env:
+          GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
         run: nf-core lint ${GITHUB_WORKSPACE}
-
-      # If linting failed or gave warnings, post a comment on the PR with the results
-      - name: Post PR comment
-        if: failure()
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            Hi @${{ github.event.pull_request.user.login }},
-
-            It looks like this pull-request is has been made against the ${{github.event.pull_request.head.repo.full_name}} `master` branch.
-            The `master` branch on nf-core repositories should always contain code from the latest release.
-            Beacuse of this, PRs to `master` are only allowed if they come from the ${{github.event.pull_request.head.repo.full_name}} `dev` branch.
-
-            You do not need to close this PR, you can change the target branch to `dev` by clicking the _"Edit"_ button at the top of this page.
-
-            Thanks again for your contribution!
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          allow-repeats: false

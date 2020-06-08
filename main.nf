@@ -1310,7 +1310,7 @@ if (!params.skipAlignment) {
    * STEP 5 - preseq analysis
    */
   process preseq {
-      label 'highTime'
+      label 'high_time'
       tag "${bam_preseq.baseName - '.sorted'}"
       publishDir "${params.outdir}/preseq", mode: "${params.publish_dir_mode}"
 
@@ -1400,7 +1400,7 @@ if (!params.skipAlignment) {
    * STEP 8 - dupRadar
    */
   process dupradar {
-      label 'highTime'
+      label 'high_time'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       publishDir "${params.outdir}/dupradar", mode: "${params.publish_dir_mode}",
           saveAs: {filename ->

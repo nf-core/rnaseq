@@ -1198,7 +1198,7 @@ if (!params.skipAlignment) {
           file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
 
           script:
-          prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+          prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           def star_mem = task.memory ?: params.star_memory ?: false
           def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
           seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
@@ -1263,7 +1263,7 @@ if (!params.skipAlignment) {
 
           script:
           index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
-          prefix = reads[0].toString() - ~/(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+          prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
           seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
           def rnastrandness = ''
           if (forwardStranded && !unStranded) {
@@ -1398,6 +1398,7 @@ if (!params.skipAlignment) {
    * STEP 5 - preseq analysis
    */
   process preseq {
+      label 'high_time'
       tag "${bam_preseq.baseName - '.sorted'}"
       publishDir "${params.outdir}/preseq", mode: "${params.publish_dir_mode}"
 
@@ -1487,7 +1488,7 @@ if (!params.skipAlignment) {
    * STEP 8 - dupRadar
    */
   process dupradar {
-      label 'low_memory'
+      label 'high_time'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       publishDir "${params.outdir}/dupradar", mode: "${params.publish_dir_mode}",
           saveAs: {filename ->
@@ -1767,7 +1768,6 @@ if (!params.skipAlignment) {
  */
 if (params.pseudo_aligner == 'salmon') {
     process salmon {
-        label 'salmon'
         tag "$sample"
         publishDir "${params.outdir}/salmon", mode: "${params.publish_dir_mode}"
 

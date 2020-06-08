@@ -30,12 +30,12 @@
 * Added `pigz` `2.3.4` for parallelized trim-galore support
 * Added `rsem` `1.3.3` for gene/transcript quantification
 
-## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) * 2019-10-18
+## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 
-* Minor version release for keeping git history in sync
+* Minor version release for keeping Git History in sync
 * No changes with respect to 1.4.1 on pipeline level
 
-## [Version 1.4.1](https://github.com/nf-core/rnaseq/releases/tag/1.4.1) * 2019-10-17
+## [Version 1.4.1](https://github.com/nf-core/rnaseq/releases/tag/1.4.1) - 2019-10-17
 
 Major novel changes include:
 
@@ -45,9 +45,9 @@ Major novel changes include:
 ### Pipeline enhancements & fixes
 
 * Fixed parameter warnings [#316](https://github.com/nf-core/rnaseq/issues/316) and [318](https://github.com/nf-core/rnaseq/issues/318)
-* Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) * Confusing Info Printout about GFF and GTF
+* Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) - Confusing Info Printout about GFF and GTF
 
-## [Version 1.4](https://github.com/nf-core/rnaseq/releases/tag/1.4) * 2019-10-15
+## [Version 1.4](https://github.com/nf-core/rnaseq/releases/tag/1.4) - 2019-10-15
 
 Major novel changes include:
 
@@ -120,7 +120,7 @@ Major novel changes include:
 * Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
 
-## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) * 2019-03-26
+## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
 
 ### Pipeline Updates
 
@@ -138,6 +138,7 @@ Major novel changes include:
 * Fixing HISAT2 BAM sorting using more memory than available on the system
 * Fixing MarkDuplicates memory consumption issues following [#179](https://github.com/nf-core/rnaseq/pull/179)
 * Use `file` instead of `new File` to create the `pipeline_report.{html,txt}` files to avoid creating local directories when outputting to AWS S3 folders
+* Fix SortMeRNA default rRNA db paths specified in assets/rrna-db-defaults.txt
 
 ### Dependency Updates
 
@@ -157,7 +158,7 @@ Major novel changes include:
 * matplotlib 3.0.3
 * r-base 3.5.1
 
-## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) * 2018-12-12
+## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
 
 ### Pipeline updates
 
@@ -176,7 +177,7 @@ Major novel changes include:
 * Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
 * Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
 
-## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) * 2018-10-05
+## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
 
 ### Pipeline updates
 
@@ -192,7 +193,7 @@ Major novel changes include:
 * [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
 * [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
 
-## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) * 2018-08-20
+## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
 
 This release marks the point where the pipeline was moved from [SciLifeLab/NGI-RNAseq](https://github.com/SciLifeLab/NGI-RNAseq)
 over to the new [nf-core](http://nf-co.re/) community, at [nf-core/rnaseq](https://github.com/nf-core/rnaseq).
@@ -210,7 +211,7 @@ In summary, the main changes are:
   * Just use `--gff` instead of `--gtf` when specifying a file path
 * New command line options to skip various quality control steps
 * More safety checks when launching a pipeline
-  * Several new sanity checks * for example, that the specified reference genome exists
+  * Several new sanity checks - for example, that the specified reference genome exists
 * Improved performance with memory usage (especially STAR and Picard)
 * New BigWig file outputs for plotting coverage across the genome
 * Refactored gene body coverage calculation, now much faster and using much less memory

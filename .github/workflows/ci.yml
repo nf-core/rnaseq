@@ -1,30 +1,89 @@
 name: nf-core CI
-# This workflow is triggered on pushes and PRs to the repository.
+# This workflow is triggered on releases and pull-requests.
 # It runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
 
 jobs:
   test:
+    name: Run workflow tests
     runs-on: ubuntu-latest
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    env:
+      NXF_VER: ${{ matrix.nxf_ver }}
+      NXF_ANSI_LOG: false
     strategy:
       matrix:
+        # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['19.10.0', '']
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          export NXF_VER=${{ matrix.nxf_ver }}
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
+
       - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
         run: |
           docker pull nfcore/rnaseq:dev
           docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
       - name: Basic workflow tests
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+
       - name: Basic workflow, gzipped input
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
+
+  push_dockerhub:
+    name: Push new Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    # Only run if the tests passed
+    needs: test
+    # Only run for the nf-core repo, for releases and merged PRs
+    if: ${{ github.repository == 'nf-core/rnaseq' && (github.event_name == 'release' || github.event_name == 'push') }}
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Build new docker image
+        run: docker build --no-cache . -t nfcore/rnaseq:latest
+
+      - name: Push Docker image to DockerHub (dev)
+        if: ${{ github.event_name == 'push' }}
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker tag nfcore/rnaseq:latest nfcore/rnaseq:dev
+          docker push nfcore/rnaseq:dev
+
+      - name: Push Docker image to DockerHub (release)
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push nfcore/rnaseq:latest
+          docker tag nfcore/rnaseq:latest nfcore/rnaseq:${{ github.ref }}
+          docker push nfcore/rnaseq:${{ github.ref }}

@@ -7,33 +7,34 @@
 * Minor tweaks to software version commands
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
-* Fixes an issue where multiqc fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
-* Fixes missing parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
+* Fixes an issue where MultiQC fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
+* Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
-* Fixes label name in FastQC processes, as described in issue [#345]
-* Enhances file name parsing for STAR/HISAT2 mapping [#372](https://github.com/nf-core/rnaseq/issues/372)
-* Fixed [issues](https://github.com/nf-core/rnaseq/issues/369) with long running preseq and dupradar tasks
-* MultiQC now properly trims `-fw` from sample names if `--removeRiboRNA` is used
+* Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 * Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
-* Add AWS tests github actions workflow for small tests
+* Add AWS tests GitHub actions workflow for small tests
+* Optimise MultiQC configuration for faster run-time on huge sample numbers
+* Build Docker image using GitHub Actions
+  * Pull-requests now rebuild the image if the software environment has been changed (so tests should pass)
+  * Builds are done on GitHub Actions and pushed to Docker Hub, which is much faster than waiting for Docker Hub to build
 
 #### Updated Packages
 
-* Salmon 0.14.2 -> 1.1.0
-* multiqc 1.7 -> 1.8
-* remove pinning of matplotlib version
+* Salmon `0.14.2` -> `1.1.0`
+* MultiQC `1.7` -> `1.9`
+* Remove pinning of MatPlotLib version
 
 #### Added / Removed Packages
 
-* Added pigz 2.3.4 for parallelized trim-galore support
-* Added rsem 1.3.3 for gene/transcript quantification
+* Added `pigz` `2.3.4` for parallelized trim-galore support
+* Added `rsem` `1.3.3` for gene/transcript quantification
 
-## Version 1.4.2
+## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 
 * Minor version release for keeping Git History in sync
 * No changes with respect to 1.4.1 on pipeline level
 
-## Version 1.4.1
+## [Version 1.4.1](https://github.com/nf-core/rnaseq/releases/tag/1.4.1) - 2019-10-17
 
 Major novel changes include:
 
@@ -45,7 +46,7 @@ Major novel changes include:
 * Fixed parameter warnings [#316](https://github.com/nf-core/rnaseq/issues/316) and [318](https://github.com/nf-core/rnaseq/issues/318)
 * Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) - Confusing Info Printout about GFF and GTF
 
-## Version 1.4
+## [Version 1.4](https://github.com/nf-core/rnaseq/releases/tag/1.4) - 2019-10-15
 
 Major novel changes include:
 
@@ -53,7 +54,6 @@ Major novel changes include:
 * Several improvements in `featureCounts` handling of types other than `exon`. It is possible now to handle nuclearRNAseq data. Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, needs to be counted, e.g. by specifying `--fc_count_type transcript`.
 * Support for [outputting unaligned data](https://github.com/nf-core/rnaseq/issues/277) to results folders.
 * Added options to skip several steps
-
   * Skip trimming using `--skipTrimming`
   * Skip BiotypeQC using `--skipBiotypeQC`
   * Skip Alignment using `--skipAlignment` to only use pseudo-alignment using Salmon

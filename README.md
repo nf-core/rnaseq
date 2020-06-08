@@ -9,6 +9,7 @@
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/rnaseq.svg)](https://hub.docker.com/r/nfcore/rnaseq/)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23rnaseq-4A154B?logo=slack)](https://nfcore.slack.com/channels/rnaseq)
 
 ## Introduction
 

@@ -1664,6 +1664,7 @@ if (!params.skipAlignment) {
   hisat_stdout = Channel.from(false)
   alignment_logs = Channel.from(false)
   rseqc_results = Channel.from(false)
+  picard_results = Channel.from(false)
   qualimap_results = Channel.from(false)
   sample_correlation_results = Channel.from(false)
   featureCounts_logs = Channel.from(false)
@@ -1806,6 +1807,7 @@ process multiqc {
     file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     file ('alignment/*') from alignment_logs.collect().ifEmpty([])
     file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
+    file ('picard/*') from picard_results.collect().ifEmpty([])
     file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     file ('preseq/*') from preseq_results.collect().ifEmpty([])
     file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
@@ -1828,8 +1830,7 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
-    multiqc . -f $rtitle $rfilename $custom_config_file \\
-        -m custom_content -m picard -m preseq -m rseqc -m featureCounts -m hisat2 -m star -m cutadapt -m sortmerna -m fastqc -m qualimap -m salmon
+    multiqc . -f $rtitle $rfilename $custom_config_file
     """
 }
 

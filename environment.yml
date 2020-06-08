@@ -24,7 +24,7 @@ dependencies:
   - fastqc=0.11.8
   - gffread=0.11.4
   - hisat2=2.1.0
-  - multiqc=1.8
+  - multiqc=1.9
   - picard=2.21.1
   - preseq=2.0.3
   - qualimap=2.2.2c

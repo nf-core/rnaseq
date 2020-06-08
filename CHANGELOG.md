@@ -17,8 +17,7 @@
 * Build Docker image using GitHub Actions
   * Pull-requests now rebuild the image if the software environment has been changed (so tests should pass)
   * Builds are done on GitHub Actions and pushed to Docker Hub, which is much faster than waiting for Docker Hub to build
-- Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
-
+* Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 
 #### Updated Packages
 

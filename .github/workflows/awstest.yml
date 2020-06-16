@@ -25,9 +25,9 @@ jobs:
         run: conda install -c conda-forge awscli
       - name: Start AWS batch job
         env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_KEY_SECRET}}
-          TOWER_ACCESS_TOKEN: ${{secrets.TOWER_ACCESS_TOKEN}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWSTEST_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWSTEST_KEY_SECRET}}
+          TOWER_ACCESS_TOKEN: ${{secrets.AWSTEST_TOWER_TOKEN}}
           AWS_JOB_DEFINITION: ${{secrets.AWS_JOB_DEFINITION}}
           AWS_JOB_QUEUE: ${{secrets.AWS_JOB_QUEUE}}
           AWS_S3_BUCKET: ${{secrets.AWS_S3_BUCKET}}

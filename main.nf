@@ -47,6 +47,13 @@ def helpMessage() {
       --reverseStranded             The library is reverse stranded
       --unStranded                  The default behaviour
 
+    UMI handling:
+      --with_umi                    Enable UMI-tools processing steps
+      --umitools_extract_method     The "extract method" used in the UMI tools extract step
+      --umitools_bc_pattern         Pattern for barcodes on read1
+      --umitools_extract_extra      Extra argument string which is literally passed to `umitools extract`
+      --umitools_dedup_extra        Extra argument string which is literally passed to `umitools dedup`
+
     Trimming:
       --skipTrimming                Skip Trim Galore step
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
@@ -386,19 +393,19 @@ if (params.readPaths) {
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore }
+            .into { raw_reads_fastqc;  raw_reads_umitools }
     } else {
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore }
+            .into { raw_reads_fastqc; raw_reads_umitools }
     }
 } else {
     Channel
         .fromFilePairs( params.reads, size: params.single_end ? 1 : 2 )
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { raw_reads_fastqc; raw_reads_trimgalore }
+    .into { raw_reads_fastqc; raw_reads_umitools }
 }
 
 // Header log info
@@ -412,6 +419,13 @@ if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
 summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
+if (params.with_umi) {
+    summary["With UMI"] = params.with_umi
+    summary["umi_tools extract-method"] = params.umitools_extract_method
+    summary["umi_tools bc-pattern"] = params.umitools_bc_pattern
+    summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
+    summary["umi_tools dedup extra parameters"] = params.umitools_dedup_extra
+}
 if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
@@ -513,6 +527,7 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
+    umi_tools --version &> v_umi_tools.txt
     unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
@@ -995,6 +1010,50 @@ process fastqc {
     """
     fastqc --quiet --threads $task.cpus $reads
     """
+}
+
+/*
+ * STEP 1+ - UMItools
+ */
+if (params.with_umi) {
+    process umi_tools_extract {
+        tag "$name"
+        label "low_memory"
+        publishDir "${params.outdir}/umitools/extract", mode: "${params.publish_dir_mode}",
+
+        when: params.with_umi
+
+        input: 
+        set val(name), file(reads) from raw_reads_umitools
+
+        output:
+        set val(name), file("*fq.gz") into raw_reads_trimgalore
+
+        if (params.single_end) {
+            """
+            umi_tools extract \
+                -I $reads \
+                -S umi_extracted.fq.gz \
+                --extract-method=${params.umitools_extract_method} \
+                --bc-pattern=${params.umitools_bc_pattern} \
+                ${params.umitools_extract_extra}
+            """
+        }  else {
+            """
+            umi_tools extract \
+                -I ${reads[0]} \
+                --read2-in=${reads[1]} \
+                -S umi_extracted_R1.fq.gz \
+                --read2-out=umi_extracted_R2.fq.gz \
+                --extract-method=${params.umitools_extract_method} \
+                --bc-pattern=${params.umitools_bc_pattern} \
+                ${params.umitools_extract_extra}
+            """
+        }
+    }
+} else {
+    raw_reads_umitools.set(raw_reads_trimgalore)
+    umi_tools_extract_results = Channel.empty()
 }
 
 

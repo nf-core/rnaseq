@@ -536,8 +536,10 @@ process get_software_versions {
 }
 
 
-compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" )
-
+compressedReference = (hasExtension(params.fasta, 'gz') || 
+    hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || 
+    hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" ))
+     
 if (compressedReference) {
     // This complex logic is to prevent accessing the genome_fasta_gz variable if
     // necessary indices for STAR, HiSAT2, Salmon already exist, or if

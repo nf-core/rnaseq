@@ -53,6 +53,7 @@ def helpMessage() {
       --umitools_bc_pattern         Pattern for barcodes on read1
       --umitools_extract_extra      Extra argument string which is literally passed to `umitools extract`
       --umitools_dedup_extra        Extra argument string which is literally passed to `umitools dedup`
+      --save_umi_intermediates      Save FastQ files with UMIs added to the read name and deduplicated BAM filesl to the results directory
 
     Trimming:
       --skipTrimming                Skip Trim Galore step
@@ -142,7 +143,8 @@ ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt", check
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt", checkIfExists: true)
 ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt", checkIfExists: true)
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
-       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
+       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort
+             ch_where_umi_extract; ch_where_umi_dedup}
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -1020,39 +1022,47 @@ if (params.with_umi) {
         tag "$name"
         label "low_memory"
         publishDir "${params.outdir}/umitools/extract", mode: "${params.publish_dir_mode}",
-
-        when: params.with_umi
+            saveAs: {filename ->
+                if (filename.endsWith('.log')) filename
+                else if (!params.save_umi_intermediates && filename == "where_are_my_files.txt") filename
+                else if (params.save_umi_intermediates && filename != "where_are_my_files.txt") filename
+                else null
+            }
 
         input: 
         set val(name), file(reads) from raw_reads_umitools
+        file wherearemyfiles from ch_where_umi_extract.collect()
 
         output:
         set val(name), file("*fq.gz") into raw_reads_trimgalore
+        file "*.log"
+        file "where_are_my_files.txt"
 
+        script:
         if (params.single_end) {
             """
             umi_tools extract \
                 -I $reads \
-                -S umi_extracted.fq.gz \
+                -S ${name}_umi_extracted.fq.gz \
                 --extract-method=${params.umitools_extract_method} \
                 --bc-pattern=${params.umitools_bc_pattern} \
-                ${params.umitools_extract_extra}
+                ${params.umitools_extract_extra} > ${name}_umi_extract.log
             """
         }  else {
             """
             umi_tools extract \
                 -I ${reads[0]} \
                 --read2-in=${reads[1]} \
-                -S umi_extracted_R1.fq.gz \
-                --read2-out=umi_extracted_R2.fq.gz \
+                -S ${name}_umi_extracted_R1.fq.gz \
+                --read2-out=${name}_umi_extracted_R2.fq.gz \
                 --extract-method=${params.umitools_extract_method} \
                 --bc-pattern=${params.umitools_bc_pattern} \
-                ${params.umitools_extract_extra}
+                ${params.umitools_extract_extra} > ${name}_umi_extract.log
             """
         }
     }
 } else {
-    raw_reads_umitools.set(raw_reads_trimgalore)
+    raw_reads_umitools.set{raw_reads_trimgalore}
     umi_tools_extract_results = Channel.empty()
 }
 

@@ -1497,8 +1497,10 @@ if (!params.skipAlignment) {
   } else {
       bam.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates;
                  bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp}
-      bam_transcriptome.set{bam_rsem}
       bam_index.into {bam_index_rseqc; bam_index_genebody}
+      if (!skip_rsem) {
+        bam_transcriptome.set{bam_rsem}
+      }
   }
 
 

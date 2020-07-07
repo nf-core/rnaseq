@@ -546,7 +546,7 @@ if (compressedReference) {
 
             script:
             """
-            gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
+            gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
             """
         }
         if ( params.additional_fasta ) {
@@ -582,7 +582,7 @@ if (compressedReference) {
 
             script:
             """
-            gunzip -k --verbose --stdout --force ${gz} > ${gz.baseName}
+            gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
             """
         }
     }

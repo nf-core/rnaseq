@@ -539,7 +539,7 @@ process get_software_versions {
 compressedReference = (hasExtension(params.fasta, 'gz') || 
     hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || 
     hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" ))
-     
+
 if (compressedReference) {
     // This complex logic is to prevent accessing the genome_fasta_gz variable if
     // necessary indices for STAR, HiSAT2, Salmon already exist, or if
@@ -1023,6 +1023,7 @@ if (params.with_umi) {
     process umi_tools_extract {
         tag "$name"
         label "low_memory"
+        cpus 1
         publishDir "${params.outdir}/umitools/extract", mode: "${params.publish_dir_mode}",
             saveAs: {filename ->
                 if (filename.endsWith('.log')) filename
@@ -1047,7 +1048,7 @@ if (params.with_umi) {
                 -I $reads \
                 -S ${name}_umi_extracted.fq.gz \
                 --extract-method=${params.umitools_extract_method} \
-                --bc-pattern=${params.umitools_bc_pattern} \
+                --bc-pattern="${params.umitools_bc_pattern}" \
                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
             """
         }  else {
@@ -1058,7 +1059,7 @@ if (params.with_umi) {
                 -S ${name}_umi_extracted_R1.fq.gz \
                 --read2-out=${name}_umi_extracted_R2.fq.gz \
                 --extract-method=${params.umitools_extract_method} \
-                --bc-pattern=${params.umitools_bc_pattern} \
+                --bc-pattern="${params.umitools_bc_pattern}" \
                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
             """
         }

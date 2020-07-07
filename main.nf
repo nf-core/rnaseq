@@ -223,7 +223,8 @@ if ( params.fasta && !params.skipAlignment  ){
     } else {
       Channel.fromPath(params.fasta)
            .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index}}
+           .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index;
+                   ch_fasta_for_rsem_reference}}
 }
 }
 else if (params.skipAlignment) {

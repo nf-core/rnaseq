@@ -30,7 +30,7 @@ jobs:
           - '--skipTrimming'
           - '--star_index false'
           - '--with_umi'
-          - '--with_umi --skipTrimming --save_umi_intermediates'
+          - '--with_umi --skipTrimming --save_umi_intermediates --skip_rsem'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

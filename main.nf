@@ -1451,7 +1451,7 @@ if (!params.skipAlignment) {
       }
 
       // RSEM transcriptome BAM file treated separately...
-      if (!params.skip_rsem) {
+      if (!skip_rsem) {
             process umi_tools_dedup_transcriptome {
                 tag "${bam_file.baseName}"
                 label "mid_memory"

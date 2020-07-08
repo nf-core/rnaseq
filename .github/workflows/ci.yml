@@ -29,6 +29,7 @@ jobs:
           - '--saveUnaligned'
           - '--skipTrimming'
           - '--star_index false'
+          - '--skip_rsem'
           - '--with_umi'
           - '--with_umi --skipTrimming --save_umi_intermediates --skip_rsem'
     steps:

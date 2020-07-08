@@ -304,14 +304,15 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
     rsem_reference = Channel
         .fromPath(params.rsem_reference, checkIfExists: true)
         .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
-} else if (params.fasta && !params.skip_rsem && !params.skipAlignment) {
+} 
+if (params.fasta && !params.skipAlignment) {
     if (hasExtension(params.fasta, 'gz')) {
         Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
     }
-} else if (params.skip_rsem || params.skipAlignment) {
-    println "Skipping RSEM ..."
+} else if (params.skipAlignment) {
+    println "Skipping Alignment ..."
 } else {
     exit 1, "No reference genome files specified! "
 }
@@ -548,7 +549,9 @@ if (compressedReference) {
     need_star_index = params.aligner == 'star' && !params.star_index
     need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
     need_rsem_ref = !params.skip_rsem && !params.rsem_reference
-    need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref
+    //when an additional fasta is provided, the fasta and gtf file need
+    //to be unzipeed to be merged in a later stage. --> Execute the following code block. 
+    need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref || params.additional_fasta
     alignment_no_indices = !params.skipAlignment && need_aligner_index
     pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
     if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {

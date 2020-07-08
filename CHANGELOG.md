@@ -19,6 +19,7 @@
   * Builds are done on GitHub Actions and pushed to Docker Hub, which is much faster than waiting for Docker Hub to build
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
+* Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
 
 #### Updated Packages
 

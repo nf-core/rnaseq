@@ -25,6 +25,7 @@ regexes = {
     'dupRadar': ['v_dupRadar.txt', r"(\S+)"],
     'edgeR': ['v_edgeR.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
+    'umi_tools': ['v_umi_tools.txt', r"UMI-tools version: (\S+)"]
 }
 results = OrderedDict()
 results['nf-core/rnaseq'] = '<span style="color:#999999;">N/A</span>'

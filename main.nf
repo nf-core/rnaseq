@@ -1800,7 +1800,7 @@ if (!params.skipAlignment) {
 
 
         /**
-        * Step 12 - merge RSEM TPM
+        * Step 12 - merge RSEM transcript counts
         */
         process merge_rsem_genes {
             tag "${rsem_res_gene[0].baseName}"
@@ -1812,15 +1812,15 @@ if (!params.skipAlignment) {
                 file rsem_res_isoform from rsem_results_isoforms.collect()
 
             output:
-                file("rsem_tpm_gene.txt")
-                file("rsem_tpm_isoform.txt")
+                file("rsem_transcript_counts_gene.txt")
+                file("rsem_transcript_counts_isoform.txt")
 
             script:
             """
             echo "gene_id\tgene_symbol" > gene_ids.txt
             echo "transcript_id\tgene_symbol" > transcript_ids.txt
-            cut -f 1 ${rsem_res_gene.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
-            cut -f 1 ${rsem_res_isoform.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
+            cut -f 1 ${rsem_res_gene[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
+            cut -f 1 ${rsem_res_isoform[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
             mkdir tmp_genes tmp_isoforms
             for fileid in $rsem_res_gene; do
                 basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt
@@ -1830,8 +1830,8 @@ if (!params.skipAlignment) {
                 basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.tpm.txt
                 grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
             done
-            paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_tpm_gene.txt
-            paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_tpm_isoform.txt
+            paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_transcript_counts_gene.txt
+            paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_transcript_counts_isoform.txt
             """
         }
     } else {

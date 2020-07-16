@@ -20,7 +20,8 @@
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
-* Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)  
+* Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
+
 #### Updated Packages
 
 * Salmon `0.14.2` -> `1.1.0`

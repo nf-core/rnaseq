@@ -27,6 +27,28 @@
 * Salmon `0.14.2` -> `1.1.0`
 * MultiQC `1.7` -> `1.9`
 * Remove pinning of MatPlotLib version
+* R-Base updated to 4.0.2
+* R-Data.table updated to 1.12.8
+* R-Gplots updated to 3.0.4
+* Markdown updated to 3.2.2
+* Pymdown-extensions updated to 7.1
+* Pygments updated to 2.6.1
+* Dupradar updated to 1.18.0
+* EdgeR updated to 3.30.0
+* Tximeta updated to 1.6.2
+* SummarizedExperiment updated to 1.18.1
+* Deeptools updated to 3.4.3
+* FastQC updated to 0.11.9
+* GFFRead updated to 0.11.7
+* HISAT2 updated to 2.2.0
+* Picard updated to 2.23.2
+* Qualimap updated to 2.2.2d
+* Salmon updated to 1.3.0
+* Samtools updated to 1.10
+* Sortmerna updated to 4.2.0
+* Stringtie updated to 2.1.2
+* Subread updated to 2.0.1
+* trim-galore updated to 0.6.5
 
 #### Added / Removed Packages
 

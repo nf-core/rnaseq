@@ -21,6 +21,7 @@
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
 * Fix QualiMap not being passed on correct strand-specificity parameter [#412](https://github.com/nf-core/rnaseq/issues/412)
+* Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
 
 #### Updated Packages
 

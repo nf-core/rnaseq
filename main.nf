@@ -1800,7 +1800,7 @@ if (!params.skipAlignment) {
 
 
         /**
-        * Step 12 - merge RSEM transcript counts
+        * Step 12 - merge RSEM TPM and counts
         */
         process merge_rsem_genes {
             tag "${rsem_res_gene[0].baseName}"
@@ -1812,6 +1812,8 @@ if (!params.skipAlignment) {
                 file rsem_res_isoform from rsem_results_isoforms.collect()
 
             output:
+                file("rsem_tpm_gene.txt")
+                file("rsem_tpm_isoform.txt")
                 file("rsem_transcript_counts_gene.txt")
                 file("rsem_transcript_counts_isoform.txt")
 
@@ -1824,14 +1826,20 @@ if (!params.skipAlignment) {
             mkdir tmp_genes tmp_isoforms
             for fileid in $rsem_res_gene; do
                 basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt
-                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
+                grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
+                basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.counts.txt
+                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.counts.txt
             done
             for fileid in $rsem_res_isoform; do
                 basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.tpm.txt
-                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
+                grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
+                basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.counts.txt
+                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.counts.txt
             done
-            paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_transcript_counts_gene.txt
-            paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_transcript_counts_isoform.txt
+            paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_tpm_gene.txt
+            paste gene_ids.txt tmp_genes/*.counts.txt > rsem_transcript_counts_gene.txt
+            paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_tpm_isoform.txt
+            paste transcript_ids.txt tmp_isoforms/*.counts.txt > rsem_transcript_counts_isoform.txt
             """
         }
     } else {

@@ -374,7 +374,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 - `rsem_tpm_isoform.txt`
   - Main isoform-level TPM matrix
 - `rsem_transcript_counts_gene.txt`
-  - Main gene-level counts matrix including all genes
+  - Main gene-level count matrix including all genes
 - `rsem_transcript_counts_isoform.txt`
   - Main isoform-level count matrix
 - `*.stat`

@@ -22,6 +22,8 @@
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
 * Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Fix a bug where gzipped references were not extracted when `--additional_fasta` was not specified [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Fix a bug where merging of RSEM output would fail if only one fastq provided as input [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled) [#435](https://github.com/nf-core/rnaseq/pull/435)
 
 #### Updated Packages
 

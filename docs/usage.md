@@ -43,6 +43,13 @@
     - [`--three_prime_clip_r2 [int]`](#threeprimeclipr2-int)
     - [`--trim_nextseq [int]`](#trimnextseq-int)
     - [`--skipTrimming`](#skiptrimming)
+  - [UMI handling](#umi-handling)
+    - [`--with_umi`](#withumi)
+    - [`--umitools_extract_method](#umitoolsextractmethod-str)
+    - [`--umitools_bc_pattern](#umitoolsbcpattern-str)
+    - [`--umitools_extract_extra](#umitoolsextractextra-str)
+    - [`--umitools_dedup_extra](#umitoolsdedupextra-str)
+    - [`--save_umi_intermediates](#saveumiintermediates)
   - [Ribosomal RNA removal](#ribosomal-rna-removal)
     - [`--removeRiboRNA`](#removeriborna)
     - [`--saveNonRiboRNAReads`](#savenonribornareads)
@@ -452,6 +459,37 @@ This enables the option --nextseq-trim=3'CUTOFF within Cutadapt in Trim Galore, 
 ### `--skipTrimming`
 
 This allows to skip the trimming process to save time when re-analyzing data that has been trimmed already.
+
+## UMI handling
+
+### `--with-umi`
+
+Enable UMI-based read deduplication
+
+### `--umitools_extract_method [str]`
+
+UMI pattern to use. Can be either `string` (default) or `regex`.
+More details in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method)
+
+### `--umitools_bc_pattern [str]`
+
+The UMI barcode pattern to use. See the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method)
+for more details.
+
+Example `NNNNNN` = "First 6 nucleotides of read are the UMI".
+
+### `--umitools_extract_extra [str]`
+
+Extra arguments which are literally passed to the `umitools extract` step.
+
+### `--umitools_dedup_extra [str]`
+
+Extra arguments which are literally passed to the `umitools dedup` step.
+
+### `--save_umi_itermediates`
+
+If this option is specified, intermediate FastQ and BAM files produced
+by UMI-tools are stored to the output directory.
 
 ## Ribosomal RNA removal
 

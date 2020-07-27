@@ -13,6 +13,7 @@ and processes data using the following steps:
   - [TrimGalore](#trimgalore)
   - [SortMeRNA](#sortmerna)
   - [STAR](#star)
+  - [UMI tools](#umi-tools)
   - [RSeQC](#rseqc)
     - [BAM stat](#bam-stat)
     - [Infer experiment](#infer-experiment)
@@ -26,6 +27,7 @@ and processes data using the following steps:
   - [dupRadar](#dupradar)
   - [Preseq](#preseq)
   - [featureCounts](#featurecounts)
+  - [RSEM](#RSEM)
   - [Salmon](#salmon)
   - [tximport](#tximport)
     - [Index files](#index-files)
@@ -105,6 +107,35 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
   - Filtered splice junctions detected in the mapping
 - `unaligned/...`
   - Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--saveUnaligned` output.
+
+## UMI tools
+
+UMI-tools deduplicates reads based on unique molecular identifiers (UMIs) to
+address PCR-bias. UMI-tools performs two independent steps:
+
+ 1. From the raw FastQ files, remove the UMIs and add them to the read name (`extract`)
+ 2. Deduplicate the aligned BAM files, based on the UMIs. (`dedup`)
+
+**Output directory: `results/umitools/extract`**
+
+For each sample, this directory contains a log file.
+If `--save_umi_intermediates` is specified, this directory additionally contains the
+FastQ files with the extracted UMI.
+
+**Output directory: `results/umitools/dedup`**
+
+For each sample, this directory contains summary statistics on the UMI duplication:
+
+```console
+<SAMPLE>_edit_distance.tsv
+<SAMPLE>_per_umi_per_position.tsv
+<SAMPLE>_per_umi.tsv
+```
+
+The content of these files is explained [in the UMI tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/dedup.html#dedup-specific-options).
+
+If `--save_umi_intermediates` is specified, this directory additionally contains
+the deduplicated BAM file and its associated index.
 
 ## RSeQC
 
@@ -342,6 +373,10 @@ We also use featureCounts to count overlaps with different classes of features. 
   - Main gene-level TPM matrix including all genes
 - `rsem_tpm_isoform.txt`
   - Main isoform-level TPM matrix
+- `rsem_transcript_counts_gene.txt`
+  - Main gene-level count matrix including all genes
+- `rsem_transcript_counts_isoform.txt`
+  - Main isoform-level count matrix
 - `*.stat`
   - RSEM statistics for each sample
 - `*.genes.results`

@@ -32,6 +32,7 @@ generates counts relative to genes
 [dupRadar](https://bioconductor.org/packages/release/bioc/html/dupRadar.html),
 [Preseq](http://smithlabresearch.org/software/preseq/),
 [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html),
+[umi_tools](https://github.com/CGATOxford/UMI-tools),
 [MultiQC](http://multiqc.info/)). See the [output documentation](docs/output.md) for more details of the results.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.

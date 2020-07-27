@@ -20,6 +20,10 @@
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
+* Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Fix a bug where gzipped references were not extracted when `--additional_fasta` was not specified [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Fix a bug where merging of RSEM output would fail if only one fastq provided as input [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled) [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
 
 #### Updated Packages
@@ -32,6 +36,7 @@
 
 * Added `pigz` `2.3.4` for parallelized trim-galore support
 * Added `rsem` `1.3.3` for gene/transcript quantification
+* Added `umi_tools` `1.0.1` for UMI extraction and deduplication
 
 ## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 

@@ -24,6 +24,7 @@
 * Fix a bug where gzipped references were not extracted when `--additional_fasta` was not specified [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Fix a bug where merging of RSEM output would fail if only one fastq provided as input [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled) [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
 
 #### Updated Packages
 

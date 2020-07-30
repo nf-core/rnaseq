@@ -4,32 +4,22 @@ import argparse
 import markdown
 import os
 import sys
+import io
+
 
 def convert_markdown(in_fn):
-    input_md = open(in_fn, mode="r", encoding="utf-8").read()
+    input_md = io.open(in_fn, mode="r", encoding="utf-8").read()
     html = markdown.markdown(
         "[TOC]\n" + input_md,
-        extensions = [
-            'pymdownx.extra',
-            'pymdownx.b64',
-            'pymdownx.highlight',
-            'pymdownx.emoji',
-            'pymdownx.tilde',
-            'toc'
-        ],
-        extension_configs = {
-            'pymdownx.b64': {
-                'base_path': os.path.dirname(in_fn)
-            },
-            'pymdownx.highlight': {
-                'noclasses': True
-            },
-            'toc': {
-                'title': 'Table of Contents'
-            }
-        }
+        extensions=["pymdownx.extra", "pymdownx.b64", "pymdownx.highlight", "pymdownx.emoji", "pymdownx.tilde", "toc"],
+        extension_configs={
+            "pymdownx.b64": {"base_path": os.path.dirname(in_fn)},
+            "pymdownx.highlight": {"noclasses": True},
+            "toc": {"title": "Table of Contents"},
+        },
     )
     return html
+
 
 def wrap_html(contents):
     header = """<!DOCTYPE html><html>
@@ -83,12 +73,12 @@ def wrap_html(contents):
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('mdfile', type=argparse.FileType('r'), nargs='?',
-                        help='File to convert. Defaults to stdin.')
-    parser.add_argument('-o', '--out', type=argparse.FileType('w'),
-                        default=sys.stdout,
-                        help='Output file name. Defaults to stdout.')
+    parser.add_argument("mdfile", type=argparse.FileType("r"), nargs="?", help="File to convert. Defaults to stdin.")
+    parser.add_argument(
+        "-o", "--out", type=argparse.FileType("w"), default=sys.stdout, help="Output file name. Defaults to stdout."
+    )
     return parser.parse_args(args)
+
 
 def main(args=None):
     args = parse_args(args)
@@ -96,5 +86,6 @@ def main(args=None):
     html = wrap_html(converted_md)
     args.out.write(html)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())

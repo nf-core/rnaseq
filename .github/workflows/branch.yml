@@ -3,14 +3,34 @@ name: nf-core branch protection
 # It fails when someone tries to make a PR against the nf-core `master` branch instead of `dev`
 on:
   pull_request:
-    branches:
-    - master
+    branches: [master]
 
 jobs:
   test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      # PRs are only ok if coming from an nf-core `dev` branch or a fork `patch` branch
+      # PRs to the nf-core repo master branch are only ok if coming from the nf-core repo `dev` or any `patch` branches
       - name: Check PRs
+        if: github.repository == 'nf-core/rnaseq'
         run: |
-          { [[ $(git remote get-url origin) == *nf-core/rnaseq ]] && [[ ${GITHUB_HEAD_REF} = "dev" ]]; } || [[ ${GITHUB_HEAD_REF} == "patch" ]]
+          { [[ ${{github.event.pull_request.head.repo.full_name}} == nf-core/rnaseq ]] && [[ $GITHUB_HEAD_REF = "dev" ]]; } || [[ $GITHUB_HEAD_REF == "patch" ]]
+
+
+      # If the above check failed, post a comment on the PR explaining the failure
+      - name: Post PR comment
+        if: failure()
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            Hi @${{ github.event.pull_request.user.login }},
+
+            It looks like this pull-request is has been made against the ${{github.event.pull_request.head.repo.full_name}} `master` branch.
+            The `master` branch on nf-core repositories should always contain code from the latest release.
+            Because of this, PRs to `master` are only allowed if they come from the ${{github.event.pull_request.head.repo.full_name}} `dev` branch.
+
+            You do not need to close this PR, you can change the target branch to `dev` by clicking the _"Edit"_ button at the top of this page.
+
+            Thanks again for your contribution!
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-repeats: false
+

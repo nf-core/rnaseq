@@ -57,5 +57,12 @@ jobs:
           GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
-        run: nf-core lint ${GITHUB_WORKSPACE}
+        run: nf-core -l lint_log.txt lint ${GITHUB_WORKSPACE}
+
+      - name: Upload linting log file artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: linting-log-file
+          path: lint_log.txt
 

@@ -1,0 +1,432 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/nextflow_schema.json",
+    "title": "nf-core/rnaseq pipeline parameters",
+    "description": "Nextflow RNA-Seq analysis pipeline, part of the nf-core community.",
+    "type": "object",
+    "properties": {
+        "Input/output options": {
+            "type": "object",
+            "properties": {
+                "reads": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Input FastQ files.",
+                    "help_text": "A glob pattern for input FastQ files. Should include at least one asterisk (*). For paired-end data, should contain curly brackets with two patterns differentiating the paired reads e.g. `*_R{1,2}.fastq.gz`"
+                },
+                "single_end": {
+                    "type": "boolean",
+                    "description": "Specifies that the input is single-end reads.",
+                    "fa_icon": "fas fa-align-center",
+                    "default": false,
+                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, specify this parameter on the command line when you launch the pipeline. It is not possible to run a mixture of single-end and paired-end files in one run."
+                },
+                "outdir": {
+                    "type": "string",
+                    "description": "The output directory where the results will be saved.",
+                    "default": "./results",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "An email address to send a summary email to when the pipeline is completed.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            },
+            "required": [
+                "reads"
+            ],
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data."
+        },
+        "Reference genome options": {
+            "type": "object",
+            "properties": {
+                "genome": {
+                    "type": "string",
+                    "description": "Name of iGenomes reference.",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`."
+                },
+                "fasta": {
+                    "type": "string",
+                    "fa_icon": "fas fa-font",
+                    "description": "Path to FASTA genome file.",
+                    "help_text": "If you have no genome reference available, the pipeline can build one using a FASTA file. This requires additional time and resources, so it's better to use a pre-build index if possible."
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "s3://ngi-igenomes/igenomes/",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true,
+                    "help_text": ""
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "default": false,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                }
+            },
+            "fa_icon": "fas fa-dna",
+            "description": "Options for the reference genome indices used to align reads."
+        },
+        "Generic options": {
+            "type": "object",
+            "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-question-circle",
+                    "default": false
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "hidden": true,
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "mov"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Workflow name.",
+                    "fa_icon": "fas fa-fingerprint",
+                    "hidden": true,
+                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                },
+                "email_on_fail": {
+                    "type": "string",
+                    "description": "Email address for completion summary, only when pipeline fails.",
+                    "fa_icon": "fas fa-exclamation-triangle",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "hidden": true,
+                    "help_text": "An email address to send a summary email to when the pipeline is completed - ONLY sent if the pipeline does not exit successfully."
+                },
+                "plaintext_email": {
+                    "type": "boolean",
+                    "description": "Send plain-text email instead of HTML.",
+                    "fa_icon": "fas fa-remove-format",
+                    "hidden": true,
+                    "default": false,
+                    "help_text": ""
+                },
+                "max_multiqc_email_size": {
+                    "type": "string",
+                    "description": "File size limit when attaching MultiQC reports to summary emails.",
+                    "default": "25.MB",
+                    "fa_icon": "fas fa-file-upload",
+                    "hidden": true,
+                    "help_text": ""
+                },
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true,
+                    "default": false,
+                    "help_text": ""
+                },
+                "multiqc_config": {
+                    "type": "string",
+                    "description": "Custom config file to supply to MultiQC.",
+                    "fa_icon": "fas fa-cog",
+                    "hidden": true,
+                    "help_text": ""
+                },
+                "tracedir": {
+                    "type": "string",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true,
+                    "help_text": ""
+                }
+            },
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`."
+        },
+        "Max job request options": {
+            "type": "object",
+            "properties": {
+                "max_cpus": {
+                    "type": "integer",
+                    "description": "Maximum number of CPUs that can be requested  for any single job.",
+                    "default": 16,
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
+                },
+                "max_memory": {
+                    "type": "string",
+                    "description": "Maximum amount of memory that can be requested for any single job.",
+                    "default": "128.GB",
+                    "fa_icon": "fas fa-memory",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
+                },
+                "max_time": {
+                    "type": "string",
+                    "description": "Maximum amount of time that can be requested for any single job.",
+                    "default": "240.h",
+                    "fa_icon": "far fa-clock",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
+                }
+            },
+            "fa_icon": "fab fa-acquisitions-incorporated",
+            "description": "Set the top limit for requested resources for any single job.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details."
+        },
+        "Institutional config options": {
+            "type": "object",
+            "properties": {
+                "custom_config_version": {
+                    "type": "string",
+                    "description": "Git commit id for Institutional configs.",
+                    "default": "master",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": ""
+                },
+                "custom_config_base": {
+                    "type": "string",
+                    "description": "Base directory for Institutional configs.",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "hidden": true,
+                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "hostnames": {
+                    "type": "string",
+                    "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": ""
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": ""
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": ""
+                },
+                "config_profile_url": {
+                    "type": "string",
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": ""
+                }
+            },
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline."
+        },
+        "salmon_index": {
+            "type": "string"
+        },
+        "transcript_fasta": {
+            "type": "string"
+        },
+        "additional_fasta": {
+            "type": "string"
+        },
+        "splicesites": {
+            "type": "string"
+        },
+        "saveReference": {
+            "type": "string"
+        },
+        "gencode": {
+            "type": "string"
+        },
+        "compressedReference": {
+            "type": "string"
+        },
+        "rsem_reference": {
+            "type": "string"
+        },
+        "forwardStranded": {
+            "type": "string"
+        },
+        "reverseStranded": {
+            "type": "string"
+        },
+        "unStranded": {
+            "type": "string"
+        },
+        "skipTrimming": {
+            "type": "string"
+        },
+        "clip_r1": {
+            "type": "integer",
+            "default": 0
+        },
+        "clip_r2": {
+            "type": "integer",
+            "default": 0
+        },
+        "three_prime_clip_r1": {
+            "type": "integer",
+            "default": 0
+        },
+        "three_prime_clip_r2": {
+            "type": "integer",
+            "default": 0
+        },
+        "trim_nextseq": {
+            "type": "integer",
+            "default": 0
+        },
+        "pico": {
+            "type": "string"
+        },
+        "saveTrimmed": {
+            "type": "string"
+        },
+        "removeRiboRNA": {
+            "type": "string"
+        },
+        "save_nonrRNA_reads": {
+            "type": "string"
+        },
+        "rRNA_database_manifest": {
+            "type": "string",
+            "default": "/Users/alexanderpeltzer/IDEA/nf-core/rnaseq/assets/rrna-db-defaults.txt"
+        },
+        "aligner": {
+            "type": "string",
+            "default": "star"
+        },
+        "pseudo_aligner": {
+            "type": "string"
+        },
+        "stringTieIgnoreGTF": {
+            "type": "string"
+        },
+        "seq_center": {
+            "type": "string"
+        },
+        "saveAlignedIntermediates": {
+            "type": "string"
+        },
+        "skipAlignment": {
+            "type": "string"
+        },
+        "saveUnaligned": {
+            "type": "string"
+        },
+        "percent_aln_skip": {
+            "type": "integer",
+            "default": 5
+        },
+        "skip_rsem": {
+            "type": "string"
+        },
+        "fc_extra_attributes": {
+            "type": "string",
+            "default": "gene_name"
+        },
+        "fc_group_features": {
+            "type": "string",
+            "default": "gene_id"
+        },
+        "fc_count_type": {
+            "type": "string",
+            "default": "exon"
+        },
+        "fc_group_features_type": {
+            "type": "string",
+            "default": "gene_biotype"
+        },
+        "sampleLevel": {
+            "type": "string"
+        },
+        "skipBiotypeQC": {
+            "type": "string"
+        },
+        "skipQC": {
+            "type": "string"
+        },
+        "skipFastQC": {
+            "type": "string"
+        },
+        "skipPreseq": {
+            "type": "string"
+        },
+        "skipDupRadar": {
+            "type": "string"
+        },
+        "skipQualimap": {
+            "type": "string"
+        },
+        "skipRseQC": {
+            "type": "string"
+        },
+        "skipEdgeR": {
+            "type": "string"
+        },
+        "skipMultiQC": {
+            "type": "string"
+        },
+        "project": {
+            "type": "string"
+        },
+        "markdup_java_options": {
+            "type": "string",
+            "default": "-Xms4000m -Xmx7g"
+        },
+        "hisat_build_memory": {
+            "type": "integer",
+            "default": 200
+        },
+        "readPaths": {
+            "type": "string",
+            "default": "null"
+        },
+        "star_memory": {
+            "type": "string"
+        },
+        "clusterOptions": {
+            "type": "string"
+        },
+        "star_index": {
+            "type": "string"
+        },
+        "gtf": {
+            "type": "string"
+        },
+        "gff": {
+            "type": "string"
+        },
+        "bed12": {
+            "type": "string"
+        },
+        "hisat2_index": {
+            "type": "string"
+        }
+    }
+}

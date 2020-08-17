@@ -10,7 +10,7 @@
     * [Reproducibility](#reproducibility)
   * [Core Nextflow arguments](#core-nextflow-arguments)
     * [`-profile`](#-profile)
-    * [`--reads`](#--reads)
+    * [`--input`](#--input)
     * [`--single_end`](#--single_end)
     * [Library strandedness](#library-strandedness)
   * [FeatureCounts Extra Gene Names](#featurecounts-extra-gene-names)

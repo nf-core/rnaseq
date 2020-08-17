@@ -303,7 +303,7 @@
         "ribosomal_removal": {
             "title": "Ribosomal Removal",
             "type": "object",
-            "description": "",
+            "description": "Options to configure rRNA removal",
             "default": "",
             "properties": {
                 "removeRiboRNA": {
@@ -352,7 +352,7 @@
         "skipping_options": {
             "title": "Skipping Options",
             "type": "object",
-            "description": "",
+            "description": "Options to skip certain steps in the pipeline",
             "default": "",
             "fa_icon": "fas fa-forward",
             "properties": {
@@ -495,6 +495,28 @@
                     "default": "gene_biotype"
                 }
             }
+        },
+        "other_options": {
+            "title": "Other Options",
+            "type": "object",
+            "description": "Other options that don't fit to other groups.",
+            "default": "",
+            "fa_icon": "fas fa-bong",
+            "properties": {
+                "project": {
+                    "type": "string"
+                },
+                "sampleLevel": {
+                    "type": "string"
+                },
+                "markdup_java_options": {
+                    "type": "string",
+                    "default": "-Xms4000m -Xmx7g"
+                },
+                "clusterOptions": {
+                    "type": "string"
+                }
+            }
         }
     },
     "allOf": [
@@ -536,21 +558,9 @@
         },
         {
             "$ref": "#/definitions/featurecounts"
+        },
+        {
+            "$ref": "#/definitions/other_options"
         }
-    ],
-    "properties": {
-        "project": {
-            "type": "string"
-        },
-        "sampleLevel": {
-            "type": "string"
-        },
-        "markdup_java_options": {
-            "type": "string",
-            "default": "-Xms4000m -Xmx7g"
-        },
-        "clusterOptions": {
-            "type": "string"
-        }
-    }
+    ]
 }

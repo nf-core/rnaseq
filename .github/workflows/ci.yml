@@ -23,7 +23,15 @@ jobs:
         # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['19.10.0', '']
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
-        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
+        options: 
+          - '--skipQC' 
+          - '--remove_rRNA'
+          - '--saveUnaligned'
+          - '--skipTrimming'
+          - '--star_index false'
+          - '--skip_rsem'
+          - '--with_umi'
+          - '--with_umi --skipTrimming --save_umi_intermediates --skip_rsem'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

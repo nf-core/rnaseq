@@ -47,6 +47,14 @@ def helpMessage() {
       --reverseStranded             The library is reverse stranded
       --unStranded                  The default behaviour
 
+    UMI handling:
+      --with_umi                    Enable UMI-tools processing steps
+      --umitools_extract_method     The "extract method" used in the UMI tools extract step
+      --umitools_bc_pattern         Pattern for barcodes on read1
+      --umitools_extract_extra      Extra argument string which is literally passed to `umitools extract`
+      --umitools_dedup_extra        Extra argument string which is literally passed to `umitools dedup`
+      --save_umi_intermediates      Save FastQ files with UMIs added to the read name and deduplicated BAM filesl to the results directory
+
     Trimming:
       --skipTrimming                Skip Trim Galore step
       --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
@@ -135,7 +143,8 @@ ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt", check
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt", checkIfExists: true)
 ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt", checkIfExists: true)
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
-       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort}
+       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort
+             ch_where_umi_extract; ch_where_umi_dedup}
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -226,7 +235,7 @@ if ( params.fasta && !params.skipAlignment) {
         }
     }
 } else if (params.skipAlignment) {
-  println "Skipping alignment ..."
+    println "Skipping alignment ..."
 } else {
     exit 1, "No reference genome files specified!"
 }
@@ -295,14 +304,15 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
     rsem_reference = Channel
         .fromPath(params.rsem_reference, checkIfExists: true)
         .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
-} else if (params.fasta && !params.skip_rsem && !params.skipAlignment) {
+} 
+if (params.fasta && !params.skipAlignment) {
     if (hasExtension(params.fasta, 'gz')) {
         Channel.fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
     }
-} else if (params.skip_rsem || params.skipAlignment) {
-    println "Skipping RSEM ..."
+} else if (params.skipAlignment) {
+    println "Skipping Alignment ..."
 } else {
     exit 1, "No reference genome files specified! "
 }
@@ -386,19 +396,19 @@ if (params.readPaths) {
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore }
+            .into { raw_reads_fastqc;  raw_reads_umitools }
     } else {
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { raw_reads_fastqc; raw_reads_trimgalore }
+            .into { raw_reads_fastqc; raw_reads_umitools }
     }
 } else {
     Channel
         .fromFilePairs( params.reads, size: params.single_end ? 1 : 2 )
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { raw_reads_fastqc; raw_reads_trimgalore }
+    .into { raw_reads_fastqc; raw_reads_umitools }
 }
 
 // Header log info
@@ -412,6 +422,13 @@ if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
 summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
+if (params.with_umi) {
+    summary["With UMI"] = params.with_umi
+    summary["umi_tools extract-method"] = params.umitools_extract_method
+    summary["umi_tools bc-pattern"] = params.umitools_bc_pattern
+    summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
+    summary["umi_tools dedup extra parameters"] = params.umitools_dedup_extra
+}
 if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
@@ -513,13 +530,16 @@ process get_software_versions {
     multiqc --version &> v_multiqc.txt
     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
+    umi_tools --version &> v_umi_tools.txt
     unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
 
 
-compressedReference = hasExtension(params.fasta, 'gz') || hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" )
+compressedReference = (hasExtension(params.fasta, 'gz') || 
+    hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || 
+    hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" ))
 
 if (compressedReference) {
     // This complex logic is to prevent accessing the genome_fasta_gz variable if
@@ -529,7 +549,9 @@ if (compressedReference) {
     need_star_index = params.aligner == 'star' && !params.star_index
     need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
     need_rsem_ref = !params.skip_rsem && !params.rsem_reference
-    need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref
+    //when an additional fasta is provided, the fasta and gtf file need
+    //to be unzipeed to be merged in a later stage. --> Execute the following code block. 
+    need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref || params.additional_fasta
     alignment_no_indices = !params.skipAlignment && need_aligner_index
     pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
     if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {
@@ -997,6 +1019,59 @@ process fastqc {
     """
 }
 
+/*
+ * STEP 1+ - UMItools
+ */
+if (params.with_umi) {
+    process umi_tools_extract {
+        tag "$name"
+        label "low_memory"
+        cpus 1
+        publishDir "${params.outdir}/umitools/extract", mode: "${params.publish_dir_mode}",
+            saveAs: {filename ->
+                if (filename.endsWith('.log')) filename
+                else if (!params.save_umi_intermediates && filename == "where_are_my_files.txt") filename
+                else if (params.save_umi_intermediates && filename != "where_are_my_files.txt") filename
+                else null
+            }
+
+        input: 
+        set val(name), file(reads) from raw_reads_umitools
+        file wherearemyfiles from ch_where_umi_extract.collect()
+
+        output:
+        set val(name), file("*fq.gz") into raw_reads_trimgalore
+        file "*.log"
+        file "where_are_my_files.txt"
+
+        script:
+        if (params.single_end) {
+            """
+            umi_tools extract \
+                -I $reads \
+                -S ${name}_umi_extracted.fq.gz \
+                --extract-method=${params.umitools_extract_method} \
+                --bc-pattern="${params.umitools_bc_pattern}" \
+                ${params.umitools_extract_extra} > ${name}_umi_extract.log
+            """
+        }  else {
+            """
+            umi_tools extract \
+                -I ${reads[0]} \
+                --read2-in=${reads[1]} \
+                -S ${name}_umi_extracted_R1.fq.gz \
+                --read2-out=${name}_umi_extracted_R2.fq.gz \
+                --extract-method=${params.umitools_extract_method} \
+                --bc-pattern="${params.umitools_bc_pattern}" \
+                ${params.umitools_extract_extra} > ${name}_umi_extract.log
+            """
+        }
+    }
+} else {
+    raw_reads_umitools.set{raw_reads_trimgalore}
+    umi_tools_extract_results = Channel.empty()
+}
+
 
 /*
  * STEP 2 - Trim Galore!
@@ -1199,7 +1274,7 @@ if (!params.skipAlignment) {
             file "*Log.out" into star_log
             file "where_are_my_files.txt"
             file "*Unmapped*" optional true
-            file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index_rseqc, bam_index_genebody
+            file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index
 
             script:
             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -1232,10 +1307,8 @@ if (!params.skipAlignment) {
                 bam_set -> [bam_set[1], bam_set[2]]
             }
 
-        star_bams.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; 
-            bam_markduplicates ; bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp;
-            bam_skipSubsamp  }
-        star_bams_transcriptome.set { bam_rsem }
+        star_bams.set{bam}
+        star_bams_transcriptome.set{bam_transcriptome}
     }
 
 
@@ -1326,8 +1399,8 @@ if (!params.skipAlignment) {
             file wherearemyfiles from ch_where_hisat2_sort.collect()
 
             output:
-            file "${hisat2_bam.baseName}.sorted.bam" into bam_count, bam_rseqc, bam_qualimap, bam_preseq, bam_markduplicates, bam_featurecounts, bam_stringtieFPKM,bam_forSubsamp, bam_skipSubsamp
-            file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index_rseqc, bam_index_genebody
+            file "${hisat2_bam.baseName}.sorted.bam" into bam 
+            file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index 
             file "where_are_my_files.txt"
 
             script:
@@ -1340,6 +1413,98 @@ if (!params.skipAlignment) {
                 -o ${hisat2_bam.baseName}.sorted.bam
             samtools index ${hisat2_bam.baseName}.sorted.bam
             """
+        }
+    }
+
+    /*
+    * Step 3+ - Deduplicate bam files based on UMIs
+    */
+    if(params.with_umi) {
+        // preseq does not work on deduplicated BAM file. Pass it the raw BAM file. 
+        bam.into {bam_umitools_dedup; bam_preseq}
+        bam_index.set{bam_index_umitools_dedup}
+
+        process umi_tools_dedup {
+            tag "${bam_file.baseName}"
+            label "mid_memory"
+            publishDir "${params.outdir}/umitools/dedup", mode: "${params.publish_dir_mode}",
+                saveAs: {filename ->
+                    if (filename.endsWith('.tsv')) filename
+                    else if (!params.save_umi_intermediates && filename == "where_are_my_files.txt") filename
+                    else if (params.save_umi_intermediates && filename != "where_are_my_files.txt") filename
+                    else null
+                }
+            
+            input:
+            file bam_file from bam_umitools_dedup
+            file bam_file_index from bam_index_umitools_dedup
+            file wherearemyfiles from ch_where_umi_dedup.collect()
+
+            output:
+            file "*.bam" into bam_dedup
+            file "*.bai" into bam_dedup_index
+            file "where_are_my_files.txt"
+            file "*.tsv"
+
+            script:  
+            """
+            umi_tools dedup -I ${bam_file} \
+                -S ${bam_file.baseName}_deduplicated.bam \
+                --output-stats=${bam_file.baseName} \
+                ${params.umitools_dedup_extra}
+            samtools index ${bam_file.baseName}_deduplicated.bam
+            """
+        }
+
+        // RSEM transcriptome BAM file treated separately...
+        if (!skip_rsem) {
+            process umi_tools_dedup_transcriptome {
+                tag "${bam_file.baseName}"
+                label "mid_memory"
+                publishDir "${params.outdir}/umitools/dedup/transcriptome", mode: "${params.publish_dir_mode}",
+                    saveAs: {filename ->
+                        if (filename.endsWith('.tsv')) filename
+                        else if (params.save_umi_intermediates) filename
+                        else null
+                    }
+                
+                input:
+                file bam_file from bam_transcriptome
+
+                output:
+                file "*_deduplicated.bam" into bam_rsem
+                file "*.tsv"
+
+                script:  
+                // the transcriptome BAM file is not sorted or indexed by STAR
+                // since this is the only process consuming this BAM file,
+                // sorting and indexing happens right here. 
+                def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
+                def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
+                """
+                samtools sort \
+                    ${bam_file} \
+                    -@ ${task.cpus} ${avail_mem} \
+                    -o ${bam_file.baseName}.sorted.bam
+                samtools index ${bam_file.baseName}.sorted.bam
+
+                umi_tools dedup -I ${bam_file.baseName}.sorted.bam \
+                    -S ${bam_file.baseName}_deduplicated.bam \
+                    --output-stats=${bam_file.baseName} \
+                    ${params.umitools_dedup_extra}
+                """
+            }
+        }
+
+        bam_dedup.into{ bam_count; bam_rseqc; bam_qualimap; bam_markduplicates;
+                        bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp }
+        bam_dedup_index.into {bam_index_rseqc; bam_index_genebody}
+    } else {
+        bam.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates;
+                    bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp}
+        bam_index.into {bam_index_rseqc; bam_index_genebody}
+        if (!skip_rsem) {
+            bam_transcriptome.set{bam_rsem}
         }
     }
 
@@ -1573,8 +1738,6 @@ if (!params.skipAlignment) {
         """
     }
 
-
-
     /*
     * STEP 10 - Merge featurecounts
     */
@@ -1606,38 +1769,38 @@ if (!params.skipAlignment) {
         * Step 11 - RSEM
         */
         process rsem {
-                tag "${bam_file.baseName - '.sorted'}"
-                label "mid_memory"
-                publishDir "${params.outdir}/RSEM", mode: "${params.publish_dir_mode}"
+            tag "${bam_file.baseName - '.sorted'}"
+            label "mid_memory"
+            publishDir "${params.outdir}/RSEM", mode: "${params.publish_dir_mode}"
 
-                input:
-                    file bam_file from bam_rsem
-                    file "rsem" from rsem_reference.collect()
+            input:
+                file bam_file from bam_rsem
+                file "rsem" from rsem_reference.collect()
 
-                output:
-                    file("*.genes.results") into rsem_results_genes
-                    file("*.isoforms.results") into rsem_results_isoforms
-                    file("*.stat") into rsem_logs
+            output:
+                file("*.genes.results") into rsem_results_genes
+                file("*.isoforms.results") into rsem_results_isoforms
+                file("*.stat") into rsem_logs
 
-                script:
-                sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
-                paired_end_flag = params.single_end ? "" : "--paired-end"
-                """
-                REF_FILENAME=\$(basename rsem/*.grp)
-                REF_NAME="\${REF_FILENAME%.*}"
-                rsem-calculate-expression -p ${task.cpus} ${paired_end_flag} \
-                --bam \
-                --estimate-rspd \
-                --append-names \
-                ${bam_file} \
-                rsem/\$REF_NAME \
-                ${sample_name}
-                """
+            script:
+            sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
+            paired_end_flag = params.single_end ? "" : "--paired-end"
+            """
+            REF_FILENAME=\$(basename rsem/*.grp)
+            REF_NAME="\${REF_FILENAME%.*}"
+            rsem-calculate-expression -p ${task.cpus} ${paired_end_flag} \
+            --bam \
+            --estimate-rspd \
+            --append-names \
+            ${bam_file} \
+            rsem/\$REF_NAME \
+            ${sample_name}
+            """
         }
 
 
         /**
-        * Step 12 - merge RSEM TPM
+        * Step 12 - merge RSEM TPM and counts
         */
         process merge_rsem_genes {
             tag "${rsem_res_gene[0].baseName}"
@@ -1651,24 +1814,32 @@ if (!params.skipAlignment) {
             output:
                 file("rsem_tpm_gene.txt")
                 file("rsem_tpm_isoform.txt")
+                file("rsem_transcript_counts_gene.txt")
+                file("rsem_transcript_counts_isoform.txt")
 
             script:
             """
             echo "gene_id\tgene_symbol" > gene_ids.txt
             echo "transcript_id\tgene_symbol" > transcript_ids.txt
-            cut -f 1 ${rsem_res_gene.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
-            cut -f 1 ${rsem_res_isoform.get(0)} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
+            cut -f 1 ${rsem_res_gene[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
+            cut -f 1 ${rsem_res_isoform[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
             mkdir tmp_genes tmp_isoforms
             for fileid in $rsem_res_gene; do
                 basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt
-                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
+                grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
+                basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.counts.txt
+                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.counts.txt
             done
             for fileid in $rsem_res_isoform; do
                 basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.tpm.txt
-                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
+                grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
+                basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.counts.txt
+                grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.counts.txt
             done
             paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_tpm_gene.txt
+            paste gene_ids.txt tmp_genes/*.counts.txt > rsem_transcript_counts_gene.txt
             paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_tpm_isoform.txt
+            paste transcript_ids.txt tmp_isoforms/*.counts.txt > rsem_transcript_counts_isoform.txt
             """
         }
     } else {

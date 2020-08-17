@@ -21,6 +21,12 @@ Specify to save trimmed FastQ files to the results directory.
 Save any downloaded or generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
+`--save_umi_intermediates`
+UMI extraction and deduplication generates intermediate FastQ filese with the UMIs 
+removed from the read and added to the FastQ header, and deduplicated BAM files. 
+Enabling this option saves these files to the `umitools` folder in the 
+results directory. 
+
 -----------------------------------
  Setting defaults in a config file
 -----------------------------------
@@ -31,6 +37,7 @@ the command line, you can save the following to your personal configuration file
 params.saveReference = true
 params.saveTrimmed = true
 params.saveAlignedIntermediates = true
+params.save_umi_intermediates = true
 
 For more help, see the following documentation:
 

@@ -60,16 +60,24 @@
                     "help_text": "If you have no genome reference available, the pipeline can build one using a FASTA file. This requires additional time and resources, so it's better to use a pre-build index if possible."
                 },
                 "transcript_fasta": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fab fa-adn"
                 },
                 "star_index": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-certificate"
                 },
                 "salmon_index": {
                     "type": "string",
                     "fa_icon": "fas fa-fish"
                 },
                 "gff": {
+                    "type": "string"
+                },
+                "gtf": {
+                    "type": "string"
+                },
+                "bed12": {
                     "type": "string"
                 },
                 "igenomes_base": {
@@ -86,22 +94,13 @@
                     "type": "string"
                 },
                 "saveReference": {
-                    "type": "string"
-                },
-                "readPaths": {
                     "type": "string",
-                    "default": "null"
+                    "fa_icon": "fas fa-download"
                 },
                 "gencode": {
                     "type": "string"
                 },
                 "compressedReference": {
-                    "type": "string"
-                },
-                "stringTieIgnoreGTF": {
-                    "type": "string"
-                },
-                "bed12": {
                     "type": "string"
                 },
                 "rsem_reference": {
@@ -116,6 +115,13 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "stringTieIgnoreGTF": {
+                    "type": "string"
+                },
+                "readPaths": {
+                    "type": "string",
+                    "default": "null"
                 }
             }
         },
@@ -290,13 +296,16 @@
             "fa_icon": "fas fa-share-alt",
             "properties": {
                 "forwardStranded": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-angle-double-right"
                 },
                 "reverseStranded": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-angle-double-left"
                 },
                 "unStranded": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-arrows-alt"
                 }
             }
         },
@@ -307,14 +316,17 @@
             "default": "",
             "properties": {
                 "removeRiboRNA": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fab fa-envira"
                 },
                 "save_nonrRNA_reads": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 },
                 "rRNA_database_manifest": {
                     "type": "string",
-                    "default": "/Users/alexanderpeltzer/IDEA/nf-core/rnaseq/assets/rrna-db-defaults.txt"
+                    "default": "/Users/alexanderpeltzer/IDEA/nf-core/rnaseq/assets/rrna-db-defaults.txt",
+                    "fa_icon": "far fa-file-alt"
                 }
             },
             "fa_icon": "fab fa-envira"
@@ -338,14 +350,16 @@
                 "three_prime_clip_r2": {
                     "type": "integer"
                 },
+                "saveTrimmed": {
+                    "type": "string",
+                    "fa_icon": "fas fa-hdd"
+                },
                 "trim_nextseq": {
                     "type": "integer"
                 },
                 "pico": {
-                    "type": "string"
-                },
-                "saveTrimmed": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-compress-alt"
                 }
             }
         },
@@ -391,12 +405,6 @@
                 },
                 "skipRseQC": {
                     "type": "string"
-                },
-                "gtf": {
-                    "type": "string"
-                },
-                "seq_center": {
-                    "type": "string"
                 }
             }
         },
@@ -413,19 +421,23 @@
                 },
                 "umitools_extract_method": {
                     "type": "string",
-                    "default": "string"
+                    "default": "string",
+                    "fa_icon": "fas fa-bullseye"
                 },
                 "umitools_bc_pattern": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-drum-steelpan"
                 },
                 "umitools_extract_extra": {
                     "type": "string"
                 },
                 "umitools_dedup_extra": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "far fa-copy"
                 },
                 "save_umi_intermediates": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 }
             }
         },
@@ -437,24 +449,30 @@
             "properties": {
                 "aligner": {
                     "type": "string",
-                    "default": "star"
+                    "default": "star",
+                    "fa_icon": "fas fa-align-justify"
                 },
                 "saveAlignedIntermediates": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 },
                 "saveUnaligned": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 },
                 "percent_aln_skip": {
                     "type": "integer",
-                    "default": 5
+                    "default": 5,
+                    "fa_icon": "fas fa-forward"
                 },
                 "hisat_build_memory": {
                     "type": "integer",
-                    "default": 200
+                    "default": 200,
+                    "fa_icon": "fas fa-database"
                 },
                 "star_memory": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-database"
                 }
             },
             "fa_icon": "fas fa-align-justify"
@@ -466,7 +484,8 @@
             "default": "",
             "properties": {
                 "pseudo_aligner": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-align-left"
                 }
             },
             "fa_icon": "fas fa-align-right"
@@ -480,7 +499,8 @@
             "properties": {
                 "fc_count_type": {
                     "type": "string",
-                    "default": "exon"
+                    "default": "exon",
+                    "fa_icon": "fas fa-keyboard"
                 },
                 "fc_extra_attributes": {
                     "type": "string",
@@ -488,7 +508,8 @@
                 },
                 "fc_group_features": {
                     "type": "string",
-                    "default": "gene_id"
+                    "default": "gene_id",
+                    "fa_icon": "fas fa-object-ungroup"
                 },
                 "fc_group_features_type": {
                     "type": "string",
@@ -504,7 +525,12 @@
             "fa_icon": "fas fa-bong",
             "properties": {
                 "project": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fas fa-tasks"
+                },
+                "seq_center": {
+                    "type": "string",
+                    "fa_icon": "fas fa-hospital-alt"
                 },
                 "sampleLevel": {
                     "type": "string"
@@ -514,7 +540,8 @@
                     "default": "-Xms4000m -Xmx7g"
                 },
                 "clusterOptions": {
-                    "type": "string"
+                    "type": "string",
+                    "fa_icon": "fab fa-cc-diners-club"
                 }
             }
         }

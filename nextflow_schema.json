@@ -1,0 +1,593 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/nextflow_schema.json",
+    "title": "nf-core/rnaseq pipeline parameters",
+    "description": "Nextflow RNA-Seq analysis pipeline, part of the nf-core community.",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": [
+                "input"
+            ],
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Input FastQ files.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nPlease note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`"
+                },
+                "single_end": {
+                    "type": "boolean",
+                    "description": "Specifies that the input is single-end reads.",
+                    "fa_icon": "fas fa-align-center",
+                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                },
+                "outdir": {
+                    "type": "string",
+                    "description": "The output directory where the results will be saved.",
+                    "default": "./results",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            }
+        },
+        "reference_genome_options": {
+            "title": "Reference genome options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Options for the reference genome indices used to align reads.",
+            "properties": {
+                "genome": {
+                    "type": "string",
+                    "description": "Name of iGenomes reference.",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                },
+                "fasta": {
+                    "type": "string",
+                    "fa_icon": "fas fa-font",
+                    "description": "Path to FASTA genome file.",
+                    "help_text": "If you have no genome reference available, the pipeline can build one using a FASTA file. This requires additional time and resources, so it's better to use a pre-build index if possible."
+                },
+                "transcript_fasta": {
+                    "type": "string",
+                    "fa_icon": "fab fa-adn"
+                },
+                "star_index": {
+                    "type": "string",
+                    "fa_icon": "fas fa-certificate"
+                },
+                "salmon_index": {
+                    "type": "string",
+                    "fa_icon": "fas fa-fish"
+                },
+                "gff": {
+                    "type": "string"
+                },
+                "gtf": {
+                    "type": "string"
+                },
+                "bed12": {
+                    "type": "string"
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "s3://ngi-igenomes/igenomes/",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true
+                },
+                "splicesites": {
+                    "type": "string"
+                },
+                "additional_fasta": {
+                    "type": "string"
+                },
+                "saveReference": {
+                    "type": "string",
+                    "fa_icon": "fas fa-download"
+                },
+                "gencode": {
+                    "type": "string"
+                },
+                "compressedReference": {
+                    "type": "string"
+                },
+                "rsem_reference": {
+                    "type": "string"
+                },
+                "hisat2_index": {
+                    "type": "string"
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "stringTieIgnoreGTF": {
+                    "type": "string"
+                },
+                "readPaths": {
+                    "type": "string",
+                    "default": "null"
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-question-circle"
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "hidden": true,
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "mov"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Workflow name.",
+                    "fa_icon": "fas fa-fingerprint",
+                    "hidden": true,
+                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                },
+                "email_on_fail": {
+                    "type": "string",
+                    "description": "Email address for completion summary, only when pipeline fails.",
+                    "fa_icon": "fas fa-exclamation-triangle",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "hidden": true,
+                    "help_text": "This works exactly as with `--email`, except emails are only sent if the workflow is not successful."
+                },
+                "plaintext_email": {
+                    "type": "boolean",
+                    "description": "Send plain-text email instead of HTML.",
+                    "fa_icon": "fas fa-remove-format",
+                    "hidden": true,
+                    "help_text": "Set to receive plain-text e-mails instead of HTML formatted."
+                },
+                "max_multiqc_email_size": {
+                    "type": "string",
+                    "description": "File size limit when attaching MultiQC reports to summary emails.",
+                    "default": "25.MB",
+                    "fa_icon": "fas fa-file-upload",
+                    "hidden": true,
+                    "help_text": "If file generated by pipeline exceeds the threshold, it will not be attached."
+                },
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true,
+                    "help_text": "Set to disable colourful command line output and live life in monochrome."
+                },
+                "multiqc_config": {
+                    "type": "string",
+                    "description": "Custom config file to supply to MultiQC.",
+                    "fa_icon": "fas fa-cog",
+                    "hidden": true
+                },
+                "tracedir": {
+                    "type": "string",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true
+                }
+            }
+        },
+        "max_job_request_options": {
+            "title": "Max job request options",
+            "type": "object",
+            "fa_icon": "fab fa-acquisitions-incorporated",
+            "description": "Set the top limit for requested resources for any single job.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
+            "properties": {
+                "max_cpus": {
+                    "type": "integer",
+                    "description": "Maximum number of CPUs that can be requested    for any single job.",
+                    "default": 16,
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
+                },
+                "max_memory": {
+                    "type": "string",
+                    "description": "Maximum amount of memory that can be requested for any single job.",
+                    "default": "128.GB",
+                    "fa_icon": "fas fa-memory",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
+                },
+                "max_time": {
+                    "type": "string",
+                    "description": "Maximum amount of time that can be requested for any single job.",
+                    "default": "240.h",
+                    "fa_icon": "far fa-clock",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
+                }
+            }
+        },
+        "institutional_config_options": {
+            "title": "Institutional config options",
+            "type": "object",
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "properties": {
+                "custom_config_version": {
+                    "type": "string",
+                    "description": "Git commit id for Institutional configs.",
+                    "default": "master",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": "Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.\n\n```bash\n## Download and use config file with following git commit id\n--custom_config_version d52db660777c4bf36546ddb188ec530c3ada1b96\n```"
+                },
+                "custom_config_base": {
+                    "type": "string",
+                    "description": "Base directory for Institutional configs.",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "hidden": true,
+                    "help_text": "If you're running offline, nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option. For example:\n\n```bash\n## Download and unzip the config files\ncd /path/to/my/configs\nwget https://github.com/nf-core/configs/archive/master.zip\nunzip master.zip\n\n## Run the pipeline\ncd /path/to/my/data\nnextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/\n```\n\n> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "hostnames": {
+                    "type": "string",
+                    "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_url": {
+                    "type": "string",
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
+            }
+        },
+        "strandedness_settings": {
+            "title": "Strandedness Settings",
+            "type": "object",
+            "description": "Options for handling various RNAseq strandedness protocols",
+            "default": "",
+            "fa_icon": "fas fa-share-alt",
+            "properties": {
+                "forwardStranded": {
+                    "type": "string",
+                    "fa_icon": "fas fa-angle-double-right"
+                },
+                "reverseStranded": {
+                    "type": "string",
+                    "fa_icon": "fas fa-angle-double-left"
+                },
+                "unStranded": {
+                    "type": "string",
+                    "fa_icon": "fas fa-arrows-alt"
+                }
+            }
+        },
+        "ribosomal_removal": {
+            "title": "Ribosomal Removal",
+            "type": "object",
+            "description": "Options to configure rRNA removal",
+            "default": "",
+            "properties": {
+                "removeRiboRNA": {
+                    "type": "string",
+                    "fa_icon": "fab fa-envira"
+                },
+                "save_nonrRNA_reads": {
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
+                },
+                "rRNA_database_manifest": {
+                    "type": "string",
+                    "default": "/Users/alexanderpeltzer/IDEA/nf-core/rnaseq/assets/rrna-db-defaults.txt",
+                    "fa_icon": "far fa-file-alt"
+                }
+            },
+            "fa_icon": "fab fa-envira"
+        },
+        "read_trimming_and_clipping": {
+            "title": "Read trimming and clipping",
+            "type": "object",
+            "description": "Options for read clipping and trimming",
+            "default": "",
+            "fa_icon": "fas fa-cut",
+            "properties": {
+                "clip_r1": {
+                    "type": "integer"
+                },
+                "clip_r2": {
+                    "type": "integer"
+                },
+                "three_prime_clip_r1": {
+                    "type": "integer"
+                },
+                "three_prime_clip_r2": {
+                    "type": "integer"
+                },
+                "saveTrimmed": {
+                    "type": "string",
+                    "fa_icon": "fas fa-hdd"
+                },
+                "trim_nextseq": {
+                    "type": "integer"
+                },
+                "pico": {
+                    "type": "string",
+                    "fa_icon": "fas fa-compress-alt"
+                }
+            }
+        },
+        "skipping_options": {
+            "title": "Skipping Options",
+            "type": "object",
+            "description": "Options to skip certain steps in the pipeline",
+            "default": "",
+            "fa_icon": "fas fa-forward",
+            "properties": {
+                "skipFastQC": {
+                    "type": "string"
+                },
+                "skipQC": {
+                    "type": "string"
+                },
+                "skipEdgeR": {
+                    "type": "string"
+                },
+                "skipTrimming": {
+                    "type": "string"
+                },
+                "skipAlignment": {
+                    "type": "string"
+                },
+                "skipMultiQC": {
+                    "type": "string"
+                },
+                "skip_rsem": {
+                    "type": "string"
+                },
+                "skipQualimap": {
+                    "type": "string"
+                },
+                "skipDupRadar": {
+                    "type": "string"
+                },
+                "skipPreseq": {
+                    "type": "string"
+                },
+                "skipBiotypeQC": {
+                    "type": "string"
+                },
+                "skipRseQC": {
+                    "type": "string"
+                }
+            }
+        },
+        "umi": {
+            "title": "UMI",
+            "type": "object",
+            "description": "Options for UMI barcoded data",
+            "default": "",
+            "fa_icon": "far fa-address-card",
+            "properties": {
+                "with_umi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-glass-cheers"
+                },
+                "umitools_extract_method": {
+                    "type": "string",
+                    "default": "string",
+                    "fa_icon": "fas fa-bullseye"
+                },
+                "umitools_bc_pattern": {
+                    "type": "string",
+                    "fa_icon": "fas fa-drum-steelpan"
+                },
+                "umitools_extract_extra": {
+                    "type": "string"
+                },
+                "umitools_dedup_extra": {
+                    "type": "string",
+                    "fa_icon": "far fa-copy"
+                },
+                "save_umi_intermediates": {
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
+                }
+            }
+        },
+        "alignment_settings": {
+            "title": "Alignment Settings",
+            "type": "object",
+            "description": "Settings to configure alignment methods.",
+            "default": "",
+            "properties": {
+                "aligner": {
+                    "type": "string",
+                    "default": "star",
+                    "fa_icon": "fas fa-align-justify"
+                },
+                "saveAlignedIntermediates": {
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
+                },
+                "saveUnaligned": {
+                    "type": "string",
+                    "fa_icon": "fas fa-cloud-download-alt"
+                },
+                "percent_aln_skip": {
+                    "type": "integer",
+                    "default": 5,
+                    "fa_icon": "fas fa-forward"
+                },
+                "hisat_build_memory": {
+                    "type": "integer",
+                    "default": 200,
+                    "fa_icon": "fas fa-database"
+                },
+                "star_memory": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database"
+                }
+            },
+            "fa_icon": "fas fa-align-justify"
+        },
+        "pseudoalignment_settings": {
+            "title": "Pseudoalignment Settings",
+            "type": "object",
+            "description": "Settings to configure pseudoalignment methods.",
+            "default": "",
+            "properties": {
+                "pseudo_aligner": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-left"
+                }
+            },
+            "fa_icon": "fas fa-align-right"
+        },
+        "featurecounts": {
+            "title": "FeatureCounts",
+            "type": "object",
+            "description": "Options to configure featureCounts metrics.",
+            "default": "",
+            "fa_icon": "fas fa-calculator",
+            "properties": {
+                "fc_count_type": {
+                    "type": "string",
+                    "default": "exon",
+                    "fa_icon": "fas fa-keyboard"
+                },
+                "fc_extra_attributes": {
+                    "type": "string",
+                    "default": "gene_name"
+                },
+                "fc_group_features": {
+                    "type": "string",
+                    "default": "gene_id",
+                    "fa_icon": "fas fa-object-ungroup"
+                },
+                "fc_group_features_type": {
+                    "type": "string",
+                    "default": "gene_biotype"
+                }
+            }
+        },
+        "other_options": {
+            "title": "Other Options",
+            "type": "object",
+            "description": "Other options that don't fit to other groups.",
+            "default": "",
+            "fa_icon": "fas fa-bong",
+            "properties": {
+                "project": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tasks"
+                },
+                "seq_center": {
+                    "type": "string",
+                    "fa_icon": "fas fa-hospital-alt"
+                },
+                "sampleLevel": {
+                    "type": "string"
+                },
+                "markdup_java_options": {
+                    "type": "string",
+                    "default": "-Xms4000m -Xmx7g"
+                },
+                "clusterOptions": {
+                    "type": "string",
+                    "fa_icon": "fab fa-cc-diners-club"
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/strandedness_settings"
+        },
+        {
+            "$ref": "#/definitions/ribosomal_removal"
+        },
+        {
+            "$ref": "#/definitions/read_trimming_and_clipping"
+        },
+        {
+            "$ref": "#/definitions/skipping_options"
+        },
+        {
+            "$ref": "#/definitions/umi"
+        },
+        {
+            "$ref": "#/definitions/alignment_settings"
+        },
+        {
+            "$ref": "#/definitions/pseudoalignment_settings"
+        },
+        {
+            "$ref": "#/definitions/featurecounts"
+        },
+        {
+            "$ref": "#/definitions/other_options"
+        }
+    ]
+}

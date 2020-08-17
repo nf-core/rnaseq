@@ -1,0 +1,40 @@
+name: nf-core AWS full size tests
+# This workflow is triggered on push to the master branch.
+# It runs the -profile 'test_full' on AWS batch
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  run-awstest:
+    name: Run AWS full tests
+    if: github.repository == 'nf-core/rnaseq'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Miniconda
+        uses: goanpeca/setup-miniconda@v1.0.2
+        with:
+          auto-update-conda: true
+          python-version: 3.7
+      - name: Install awscli
+        run: conda install -c conda-forge awscli
+      - name: Start AWS batch job
+        # TODO nf-core: You can customise AWS full pipeline tests as required
+        # Add full size test data (but still relatively small datasets for few samples)
+        # on the `test_full.config` test runs with only one set of parameters
+        # Then specify `-profile test_full` instead of `-profile test` on the AWS batch command
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TOWER_ACCESS_TOKEN: ${{ secrets.AWS_TOWER_TOKEN }}
+          AWS_JOB_DEFINITION: ${{ secrets.AWS_JOB_DEFINITION }}
+          AWS_JOB_QUEUE: ${{ secrets.AWS_JOB_QUEUE }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        run: |
+          aws batch submit-job \
+            --region eu-west-1 \
+            --job-name nf-core-rnaseq \
+            --job-queue $AWS_JOB_QUEUE \
+            --job-definition $AWS_JOB_DEFINITION \
+            --container-overrides '{"command": ["nf-core/rnaseq", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/rnaseq/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/rnaseq/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'

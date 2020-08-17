@@ -21,7 +21,7 @@ jobs:
         run: conda install -c conda-forge awscli
       - name: Start AWS batch job
         # TODO nf-core: You can customise AWS full pipeline tests as required
-        # Add full size test data (but still relatively small datasets for few samples) 
+        # Add full size test data (but still relatively small datasets for few samples)
         # on the `test_full.config` test runs with only one set of parameters
         # Then specify `-profile test_full` instead of `-profile test` on the AWS batch command
         env:

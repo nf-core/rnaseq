@@ -1016,8 +1016,10 @@ process fastqc {
     file "*_fastqc.{zip,html}" into ch_fastqc_results
 
     script:
+    def threads = params.single_end ? 1 : 2
+
     """
-    fastqc --quiet --threads $task.cpus $reads
+    fastqc --quiet --threads $threads $reads
     """
 }
 

@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled) [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
 * Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0) [#384](https://github.com/nf-core/rnaseq/issues/384)
+* FastQC uses correct number of threads now [#437](https://github.com/nf-core/rnaseq/issues/434)
 
 #### Updated Packages
 

@@ -398,19 +398,19 @@ if (params.input_paths) {
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_read_files_fastqc; raw_reads_trimgalore; raw_reads_umitools}
+            .into { ch_read_files_fastqc; raw_reads_umitools}
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_read_files_fastqc; raw_reads_trimgalore; raw_reads_umitools }
+            .into { ch_read_files_fastqc; raw_reads_umitools }
     }
 } else {
     Channel
         .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { ch_read_files_fastqc; raw_reads_trimgalore; raw_reads_umitools }
+        .into { ch_read_files_fastqc; raw_reads_umitools }
 }
 
 // Header log info

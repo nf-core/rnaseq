@@ -1383,7 +1383,7 @@ if (!params.skip_alignment) {
         }
 
         process HISAT2_SORT_BAM {
-            tag "${hisat2_bam.baseName}"
+            tag "${bam.baseName}"
             label 'mid_memory'
             publishDir "${params.outdir}/HISAT2", mode: params.publish_dir_mode,
                 saveAs: { filename ->
@@ -1393,12 +1393,12 @@ if (!params.skip_alignment) {
                 }
 
             input:
-            path hisat2_bam
+            path bam from hisat2_bam
             path wherearemyfiles from ch_where_hisat2_sort.collect()
 
             output:
-            path "${hisat2_bam.baseName}.sorted.bam" into bam
-            path "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index
+            path "${bam.baseName}.sorted.bam" into bam
+            path "${bam.baseName}.sorted.bam.bai" into bam_index
             path "where_are_my_files.txt"
 
             script:
@@ -1406,10 +1406,10 @@ if (!params.skip_alignment) {
             def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
             """
             samtools sort \\
-                $hisat2_bam \\
+                $bam \\
                 -@ $task.cpus $avail_mem \\
-                -o ${hisat2_bam.baseName}.sorted.bam
-            samtools index ${hisat2_bam.baseName}.sorted.bam
+                -o ${bam.baseName}.sorted.bam
+            samtools index ${bam.baseName}.sorted.bam
             """
         }
     }
@@ -1425,7 +1425,7 @@ if (!params.skip_alignment) {
         bam_index_umitools_dedup = bam_index
 
         process UMITOOLS_DEDUP {
-            tag "${bam_file.baseName}"
+            tag "${bam.baseName}"
             label "mid_memory"
             publishDir "${params.outdir}/umitools/dedup", mode: params.publish_dir_mode,
                 saveAs: { filename ->
@@ -1436,8 +1436,8 @@ if (!params.skip_alignment) {
                 }
 
             input:
-            path bam_file from bam_umitools_dedup
-            path bam_file_index from bam_index_umitools_dedup
+            path bam from bam_umitools_dedup
+            path bai from bam_index_umitools_dedup
             path wherearemyfiles from ch_where_umi_dedup.collect()
 
             output:
@@ -1449,18 +1449,18 @@ if (!params.skip_alignment) {
             script:
             """
             umi_tools dedup \\
-                -I $bam_file \\
-                -S ${bam_file.baseName}_deduplicated.bam \\
-                --output-stats=${bam_file.baseName} \\
+                -I $bam \\
+                -S ${bam.baseName}_deduplicated.bam \\
+                --output-stats=${bam.baseName} \\
                 $params.umitools_dedup_extra
-            samtools index ${bam_file.baseName}_deduplicated.bam
+            samtools index ${bam.baseName}_deduplicated.bam
             """
         }
 
         // RSEM transcriptome BAM file treated separately...
         if (!skip_rsem) {
             process UMITOOLS_DEDUP_TRANSCRIPTOME {
-                tag "${bam_file.baseName}"
+                tag "${bam.baseName}"
                 label "mid_memory"
                 publishDir "${params.outdir}/umitools/dedup/transcriptome", mode: params.publish_dir_mode,
                     saveAs: { filename ->
@@ -1470,7 +1470,7 @@ if (!params.skip_alignment) {
                     }
 
                 input:
-                path bam_file from bam_transcriptome
+                path bam from bam_transcriptome
 
                 output:
                 path "*_deduplicated.bam" into bam_rsem
@@ -1484,15 +1484,15 @@ if (!params.skip_alignment) {
                 def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
                 """
                 samtools sort \\
-                    $bam_file \\
+                    $bam \\
                     -@ $task.cpus $avail_mem \\
-                    -o ${bam_file.baseName}.sorted.bam
-                samtools index ${bam_file.baseName}.sorted.bam
+                    -o ${bam.baseName}.sorted.bam
+                samtools index ${bam.baseName}.sorted.bam
 
                 umi_tools dedup \\
-                    -I ${bam_file.baseName}.sorted.bam \\
-                    -S ${bam_file.baseName}_deduplicated.bam \\
-                    --output-stats=${bam_file.baseName} \\
+                    -I ${bam.baseName}.sorted.bam \\
+                    -S ${bam.baseName}_deduplicated.bam \\
+                    --output-stats=${bam.baseName} \\
                     $params.umitools_dedup_extra
                 """
             }
@@ -1799,12 +1799,12 @@ if (!params.skip_alignment) {
         * Step 11 - RSEM
         */
         process RSEM_CALCULATEEXPRESSION {
-            tag "${bam_file.baseName - '.sorted'}"
+            tag "${bam.baseName - '.sorted'}"
             label "mid_memory"
             publishDir "${params.outdir}/RSEM", mode: params.publish_dir_mode
 
             input:
-            path bam_file from bam_rsem
+            path bam from bam_rsem
             path "rsem" from rsem_reference.collect()
 
             output:
@@ -1813,7 +1813,7 @@ if (!params.skip_alignment) {
             path "*.stat" into rsem_logs
 
             script:
-            def sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
+            def sample_name = bam.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
             def paired_end_flag = params.single_end ? "" : "--paired-end"
             """
             REF_FILENAME=\$(basename rsem/*.grp)
@@ -1824,7 +1824,7 @@ if (!params.skip_alignment) {
                 --bam \\
                 --estimate-rspd \\
                 --append-names \\
-                $bam_file \\
+                $bam \\
                 rsem/\$REF_NAME \\
                 $sample_name
             """

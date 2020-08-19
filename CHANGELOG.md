@@ -73,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-* `--star_options` parameter to pass additional options to the `STAR` alignment process. Fixes [276](https://github.com/nf-core/rnaseq/issues/276) and [363](https://github.com/nf-core/rnaseq/issues/363)
+* `--star_options` parameter to pass additional options to the `STAR` alignment process. Fixes [363](https://github.com/nf-core/rnaseq/issues/363)
 
 #### Deprecated
 

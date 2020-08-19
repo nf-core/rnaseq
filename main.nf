@@ -175,7 +175,7 @@ if (params.pico) {
 rRNA_database = file(params.rrna_database_manifest)
 if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
 Channel
-    .from( rRNA_database.readLines() )
+    .from(rRNA_database.readLines())
     .map { row -> file(row) }
     .set { sortmerna_fasta }
 
@@ -212,9 +212,9 @@ if (params.star_index && params.aligner == 'star' && !params.skip_alignment) {
             .set { hs2_indices }
     }
 }
-if ( params.fasta && !params.skip_alignment) {
+if (params.fasta && !params.skip_alignment) {
     if (params.additional_fasta) {
-        if ( hasExtension(params.additional_fasta, "gz" )){
+        if (hasExtension(params.additional_fasta, "gz")) {
             Channel
                 .fromPath(params.additional_fasta)
                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
@@ -235,7 +235,7 @@ if ( params.fasta && !params.skip_alignment) {
                 .set { ch_genome_fasta }
         }
     } else {
-        if (hasExtension(params.fasta, "gz")){
+        if (hasExtension(params.fasta, "gz")) {
             Channel
                 .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
@@ -286,7 +286,7 @@ if (params.pseudo_aligner == 'salmon') {
                 .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
         }
     } else if (params.fasta) {
-        if (params.additional_fasta){
+        if (params.additional_fasta) {
             Channel
                 .fromPath(params.additional_fasta)
                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
@@ -296,7 +296,7 @@ if (params.pseudo_aligner == 'salmon') {
                 .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
                 .set { ch_genome_fasta }
-    } else if ( params.fasta && (params.gff || params.gtf)) {
+    } else if (params.fasta && (params.gff || params.gtf)) {
         // Need to extract transcripts out of genome fasta + gtf to get
         // transcript fasta
         log.info "Extracting transcript fastas from genome fasta + gtf/gff"
@@ -340,8 +340,8 @@ if (params.fasta && !params.skip_alignment) {
     exit 1, "No reference genome files specified! "
 }
 
-if( params.gtf ) {
-    if ( params.gff ) {
+if (params.gtf) {
+    if (params.gff) {
         // Prefer gtf over gff
         log.info "Both GTF and GFF have been provided: Using GTF as priority."
     }
@@ -569,7 +569,7 @@ process GET_SOFTWARE_VERSIONS {
 
 compressed_reference = (hasExtension(params.fasta, 'gz') ||
     hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') ||
-    hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" ))
+    hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz"))
 
 if (compressed_reference) {
     // This complex logic is to prevent accessing the genome_fasta_gz variable if
@@ -601,7 +601,7 @@ if (compressed_reference) {
             gunzip --verbose --stdout --force ${gz} > ${gz.baseName}
             """
         }
-        if ( params.additional_fasta ) {
+        if (params.additional_fasta) {
             process GUNZIP_ADDITIONAL_FASTA {
                 tag "$gz"
                 publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome" : params.outdir },
@@ -751,7 +751,7 @@ if (compressed_reference) {
     }
 }
 
-if ( params.additional_fasta ) {
+if (params.additional_fasta) {
     process MAKE_ADDITIONAL_GTF {
         publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
@@ -1451,7 +1451,7 @@ if (!params.skip_alignment) {
     /*
     * Step 3+ - Deduplicate bam files based on UMIs
     */
-    if(params.with_umi) {
+    if (params.with_umi) {
         // preseq does not work on deduplicated BAM file. Pass it the raw BAM file.
         bam.into {bam_umitools_dedup; bam_preseq}
         bam_index.set{bam_index_umitools_dedup}
@@ -1640,7 +1640,7 @@ if (!params.skip_alignment) {
         file "${bam.baseName}.markDups.bam.bai"
 
         script:
-        markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2 )+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
+        markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2)+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
         """
         picard ${markdup_java_options} MarkDuplicates \\
             INPUT=$bam \\
@@ -2233,7 +2233,7 @@ workflow.onComplete {
         } catch (all) {
             // Catch failures and try with plaintext
             def mail_cmd = [ 'mail', '-s', subject, '--content-type=text/html', email_address ]
-            if ( mqc_report.size() <= params.max_multiqc_email_size.toBytes() ) {
+            if (mqc_report.size() <= params.max_multiqc_email_size.toBytes()) {
               mail_cmd += [ '-A', mqc_report ]
             }
             mail_cmd.execute() << email_html
@@ -2256,21 +2256,21 @@ workflow.onComplete {
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
     c_reset = params.monochrome_logs ? '' : "\033[0m";
 
-    if (good_alignment_scores.size() > 0){
+    if (good_alignment_scores.size() > 0) {
         total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
         idx = 0;
         samp_aln = ''
-        for ( samp in good_alignment_scores ) {
+        for (samp in good_alignment_scores) {
             samp_aln += "    ${samp.key}: ${samp.value}%\n"
             idx += 1
-            if(idx > 5){
+            if (idx > 5) {
                 samp_aln += "    ..see pipeline reports for full list\n"
                 break;
             }
         }
         log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green}${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${c_reset}"
     }
-    if (poor_alignment_scores.size() > 0){
+    if (poor_alignment_scores.size() > 0) {
         samp_aln = ''
         poor_alignment_scores.each { samp, value ->
             samp_aln += "    ${samp}: ${value}%\n"

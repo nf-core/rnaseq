@@ -62,7 +62,7 @@ def helpMessage() {
       --three_prime_clip_r1 [int]     Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
       --three_prime_clip_r2 [int]     Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
       --trim_nextseq [int]            Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --pico [bool]                   Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
+      --pico [bool]                   Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
       --skip_trimming [bool]          Skip Trim Galore step
       --save_trimmed [bool]           Save trimmed FastQ file intermediates
 
@@ -150,9 +150,9 @@ clip_r1 = params.clip_r1
 clip_r2 = params.clip_r2
 three_prime_clip_r1 = params.three_prime_clip_r1
 three_prime_clip_r2 = params.three_prime_clip_r2
-forwardStranded = params.forwardStranded
-reverseStranded = params.reverseStranded
-unStranded = params.unStranded
+forward_stranded = params.forward_stranded
+reverse_stranded = params.reverse_stranded
+unstranded = params.unstranded
 
 // Preset trimming options
 if (params.pico) {
@@ -160,9 +160,9 @@ if (params.pico) {
     clip_r2 = 0
     three_prime_clip_r1 = 0
     three_prime_clip_r2 = 3
-    forwardStranded = true
-    reverseStranded = false
-    unStranded = false
+    forward_stranded = true
+    reverse_stranded = false
+    unstranded = false
 }
 
 // Get rRNA databases
@@ -281,7 +281,7 @@ if (params.pseudo_aligner == 'salmon') {
         // Need to extract transcripts out of genome fasta + gtf to get
         // transcript fasta
         log.info "Extracting transcript fastas from genome fasta + gtf/gff"
-        if (params.compressedReference) {
+        if (params.compressed_reference) {
             Channel.fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
                 .set { genome_fasta_gz }
@@ -421,7 +421,7 @@ summary['Input'] = params.input
 summary['Data Type'] = params.single_end ? 'Single-End' : 'Paired-End'
 if (params.genome) summary['Genome'] = params.genome
 if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
-summary['Strandedness'] = (unStranded ? 'None' : forwardStranded ? 'Forward' : reverseStranded ? 'Reverse' : 'None')
+summary['Strandedness'] = (unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None')
 summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
 if (params.with_umi) {
     summary["With UMI"] = params.with_umi
@@ -452,7 +452,7 @@ if (params.gencode) summary['GENCODE'] = params.gencode
 if (params.stringTieIgnoreGTF) summary['StringTie Ignore GTF'] = params.stringTieIgnoreGTF
 summary['Remove Ribosomal RNA'] = params.removeRiboRNA
 if (params.fc_group_features_type) summary['Biotype GTF field'] = biotype
-summary['Save prefs'] = "Ref Genome: "+(params.saveReference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
+summary['Save prefs'] = "Ref Genome: "+(params.save_reference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.saveTrimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.saveAlignedIntermediates ? 'Yes' : 'No')
 summary['Max Resources'] = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 summary['Output dir'] = params.outdir
@@ -539,11 +539,11 @@ process get_software_versions {
 }
 
 
-compressedReference = (hasExtension(params.fasta, 'gz') ||
+compressed_reference = (hasExtension(params.fasta, 'gz') ||
     hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') ||
     hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" ))
 
-if (compressedReference) {
+if (compressed_reference) {
     // This complex logic is to prevent accessing the genome_fasta_gz variable if
     // necessary indices for STAR, HiSAT2, Salmon already exist, or if
     // params.transcript_fasta is provided as then the transcript sequences don't
@@ -559,8 +559,8 @@ if (compressedReference) {
     if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {
         process gunzip_genome_fasta {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from genome_fasta_gz
@@ -576,8 +576,8 @@ if (compressedReference) {
         if ( params.additional_fasta ) {
             process gunzip_additional_fasta {
                 tag "$gz"
-                publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
-                        saveAs: { params.saveReference ? it : null }, mode: 'copy'
+                publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                        saveAs: { params.save_reference ? it : null }, mode: 'copy'
 
                 input:
                 file gz from additional_fasta_gz
@@ -595,8 +595,8 @@ if (compressedReference) {
     if (params.gtf) {
         process gunzip_gtf {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from gtf_gz
@@ -613,8 +613,8 @@ if (compressedReference) {
     if (params.gff && !params.gtf) {
         process gunzip_gff {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from gff_gz
@@ -631,8 +631,8 @@ if (compressedReference) {
     if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index) {
         process gunzip_transcript_fasta {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from transcript_fasta_gz
@@ -649,8 +649,8 @@ if (compressedReference) {
     if (params.bed12) {
         process gunzip_bed12 {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from bed12_gz
@@ -667,8 +667,8 @@ if (compressedReference) {
     if (!params.skipAlignment && params.star_index && params.aligner == "star") {
         process gunzip_star_index {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/star" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome/star" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from star_index_gz
@@ -686,8 +686,8 @@ if (compressedReference) {
     if (!params.skipAlignment && params.hisat2_index && params.aligner == 'hisat2') {
         process gunzip_hisat_index {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from hs2_indices_gz
@@ -705,8 +705,8 @@ if (compressedReference) {
     if (params.salmon_index && params.pseudo_aligner == 'salmon') {
         process gunzip_salmon_index {
             tag "$gz"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
-                    saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gz from salmon_index_gz
@@ -725,8 +725,8 @@ if (compressedReference) {
 
 if ( params.additional_fasta ) {
     process make_additional_gtf {
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                saveAs: { params.saveReference ? it : null }, mode: 'copy'
+        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: 'copy'
 
         output:
         file "${fasta.baseName}.gtf" into ch_additional_gtf
@@ -740,8 +740,8 @@ if ( params.additional_fasta ) {
     }
 
     process combine_genome_annotations {
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                saveAs: { params.saveReference ? it : null }, mode: 'copy'
+        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: 'copy'
         tag "${genome_name}"
 
         input:
@@ -785,8 +785,8 @@ if ( params.additional_fasta ) {
 if (params.gff && !params.gtf) {
     process convertGFFtoGTF {
         tag "$gff"
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
         input:
         file gff from gffFile
@@ -810,8 +810,8 @@ if (params.gff && !params.gtf) {
 if (!params.bed12) {
     process makeBED12 {
         tag "$gtf"
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                   saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
         input:
         file gtf from gtf_makeBED12
@@ -834,8 +834,8 @@ if (!params.skipAlignment) {
         process makeSTARindex {
             label 'high_memory'
             tag "$fasta"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                        saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                        saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file fasta from ch_fasta_for_star_index
@@ -865,8 +865,8 @@ if (!params.skipAlignment) {
     if (params.aligner == 'hisat2' && !params.splicesites) {
         process makeHisatSplicesites {
             tag "$gtf"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                        saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                        saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file gtf from gtf_makeHisatSplicesites
@@ -887,8 +887,8 @@ if (!params.skipAlignment) {
     if (params.aligner == 'hisat2' && !params.hisat2_index && params.fasta) {
         process makeHISATindex {
             tag "$fasta"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                        saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                        saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
             input:
             file fasta from ch_fasta_for_hisat_index
@@ -931,8 +931,8 @@ if (!params.skipAlignment) {
     if (!params.skip_rsem && !params.rsem_reference && params.fasta) {
         process makeRSEMReference {
             tag "$fasta"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                        saveAs: { params.saveReference ? it : null }, mode: 'copy'
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                        saveAs: { params.save_reference ? it : null }, mode: 'copy'
 
             input:
             file fasta from ch_fasta_for_rsem_reference
@@ -958,8 +958,8 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
     if (!params.transcript_fasta) {
         process transcriptsToFasta {
             tag "$fasta"
-            publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                               saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                               saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
 
             input:
@@ -980,8 +980,8 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
     process makeSalmonIndex {
         label "salmon"
         tag "$fasta"
-        publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                           saveAs: { params.saveReference ? it : null }, mode: "${params.publish_dir_mode}"
+        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+                           saveAs: { params.save_reference ? it : null }, mode: "${params.publish_dir_mode}"
 
         input:
         file fasta from ch_fasta_for_salmon_index
@@ -1079,7 +1079,7 @@ if (params.with_umi) {
 /*
  * STEP 2 - Trim Galore!
  */
-if (!params.skipTrimming) {
+if (!params.skip_trimming) {
     process trim_galore {
         label 'low_memory'
         tag "$name"
@@ -1348,9 +1348,9 @@ if (!params.skipAlignment) {
             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
             seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
             def rnastrandness = ''
-            if (forwardStranded && !unStranded) {
+            if (forward_stranded && !unstranded) {
                 rnastrandness = params.single_end ? '--rna-strandness F' : '--rna-strandness FR'
-            } else if (reverseStranded && !unStranded) {
+            } else if (reverse_stranded && !unstranded) {
                 rnastrandness = params.single_end ? '--rna-strandness R' : '--rna-strandness RF'
             }
 
@@ -1645,9 +1645,9 @@ if (!params.skipAlignment) {
 
         script:
         def qualimap_direction = 'non-strand-specific'
-        if (forwardStranded) {
+        if (forward_stranded) {
             qualimap_direction = 'strand-specific-forward'
-        }else if (reverseStranded) {
+        }else if (reverse_stranded) {
             qualimap_direction = 'strand-specific-reverse'
         }
         def paired = params.single_end ? '' : '-pe'
@@ -1687,9 +1687,9 @@ if (!params.skipAlignment) {
 
         script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
         def dupradar_direction = 0
-        if (forwardStranded && !unStranded) {
+        if (forward_stranded && !unstranded) {
             dupradar_direction = 1
-        } else if (reverseStranded && !unStranded) {
+        } else if (reverse_stranded && !unstranded) {
             dupradar_direction = 2
         }
         def paired = params.single_end ? 'single' :  'paired'
@@ -1725,9 +1725,9 @@ if (!params.skipAlignment) {
         script:
         def featureCounts_direction = 0
         def extraAttributes = params.fc_extra_attributes ? "--extraAttributes ${params.fc_extra_attributes}" : ''
-        if (forwardStranded && !unStranded) {
+        if (forward_stranded && !unstranded) {
             featureCounts_direction = 1
-        } else if (reverseStranded && !unStranded) {
+        } else if (reverse_stranded && !unstranded) {
             featureCounts_direction = 2
         }
         // Try to get real sample name
@@ -1874,9 +1874,9 @@ if (!params.skipAlignment) {
 
         script:
         def st_direction = ''
-        if (forwardStranded && !unStranded) {
+        if (forward_stranded && !unstranded) {
             st_direction = "--fr"
-        } else if (reverseStranded && !unStranded) {
+        } else if (reverse_stranded && !unstranded) {
             st_direction = "--rf"
         }
         def ignore_gtf = params.stringTieIgnoreGTF ? "" : "-e"
@@ -1960,9 +1960,9 @@ if (params.pseudo_aligner == 'salmon') {
 
         script:
         def rnastrandness = params.single_end ? 'U' : 'IU'
-        if (forwardStranded && !unStranded) {
+        if (forward_stranded && !unstranded) {
             rnastrandness = params.single_end ? 'SF' : 'ISF'
-        } else if (reverseStranded && !unStranded) {
+        } else if (reverse_stranded && !unstranded) {
             rnastrandness = params.single_end ? 'SR' : 'ISR'
         }
         def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"

@@ -259,7 +259,8 @@ if (params.aligner == 'hisat2' && params.splicesites) {
     Channel
         .fromPath(params.bed12, checkIfExists: true)
         .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
-        .into { indexing_splicesites; alignment_splicesites }
+        .into { indexing_splicesites
+                alignment_splicesites }
 }
 
 // Separately check for whether salmon needs a genome fasta to extract
@@ -267,23 +268,27 @@ if (params.aligner == 'hisat2' && params.splicesites) {
 if (params.pseudo_aligner == 'salmon') {
     if (params.salmon_index) {
         if (hasExtension(params.salmon_index, 'gz')) {
-            salmon_index_gz = Channel
+            Channel
                 .fromPath(params.salmon_index, checkIfExists: true)
                 .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+                .set { salmon_index_gz }
         } else {
-            salmon_index = Channel
+            Channel
                 .fromPath(params.salmon_index, checkIfExists: true)
                 .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
+                .set { salmon_index }
         }
     } else if (params.transcript_fasta) {
         if (hasExtension(params.transcript_fasta, 'gz')) {
-            transcript_fasta_gz = Channel
+            Channel
                 .fromPath(params.transcript_fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
+                .set { transcript_fasta_gz }
         } else {
-            ch_fasta_for_salmon_index = Channel
+            Channel
                 .fromPath(params.transcript_fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
+                .set { ch_fasta_for_salmon_index }
         }
     } else if (params.fasta) {
         if (params.additional_fasta) {
@@ -323,9 +328,10 @@ if (!params.skip_alignment && !params.skip_rsem && params.aligner != "star") {
     println "RSEM only works with STAR. Disabling RSEM."
 }
 if (params.rsem_reference && !params.skip_rsem && !params.skip_alignment) {
-    rsem_reference = Channel
+    Channel
         .fromPath(params.rsem_reference, checkIfExists: true)
         .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
+        .set { rsem_reference }
 }
 if (params.fasta && !params.skip_alignment) {
     if (hasExtension(params.fasta, 'gz')) {
@@ -346,14 +352,15 @@ if (params.gtf) {
         log.info "Both GTF and GFF have been provided: Using GTF as priority."
     }
     if (hasExtension(params.gtf, 'gz')) {
-        gtf_gz = Channel
+        Channel
             .fromPath(params.gtf, checkIfExists: true)
             .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
+            .set { gtf_gz }
     } else {
         Channel
             .fromPath(params.gtf, checkIfExists: true)
             .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-            .into { gtfFile }
+            .set { gtfFile }
     }
 } else if (params.gff) {
     if (hasExtension(params.gff, 'gz')) {
@@ -372,7 +379,7 @@ if (params.gtf) {
 }
 
 if (params.bed12) {
-    bed12 = Channel
+    Channel
         .fromPath(params.bed12, checkIfExists: true)
         .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
         .set { bed_rseqc }
@@ -425,69 +432,72 @@ if (params.input_paths) {
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_read_files_fastqc; raw_reads_umitools}
+            .into { ch_read_files_fastqc
+                    raw_reads_umitools }
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_read_files_fastqc; raw_reads_umitools }
+            .into { ch_read_files_fastqc
+                    raw_reads_umitools }
     }
 } else {
     Channel
         .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { ch_read_files_fastqc; raw_reads_umitools }
+        .into { ch_read_files_fastqc
+                raw_reads_umitools }
 }
 
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-if (workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Run Name'] = custom_runName ?: workflow.runName
-summary['Input'] = params.input
-summary['Data Type'] = params.single_end ? 'Single-End' : 'Paired-End'
-if (params.genome) summary['Genome'] = params.genome
-if (params.pico) summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
+if (workflow.revision)  summary['Pipeline Release'] = workflow.revision
+summary['Run Name']     = custom_runName ?: workflow.runName
+summary['Input']        = params.input
+summary['Data Type']    = params.single_end ? 'Single-End' : 'Paired-End'
+if (params.genome)      summary['Genome'] = params.genome
+if (params.pico)        summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
 summary['Strandedness'] = (unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None')
-summary['Trimming'] = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
+summary['Trimming']     = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
 if (params.with_umi) {
-    summary["With UMI"] = params.with_umi
-    summary["umi_tools extract-method"] = params.umitools_extract_method
-    summary["umi_tools bc-pattern"] = params.umitools_bc_pattern
+    summary["With UMI"]                           = params.with_umi
+    summary["umi_tools extract-method"]           = params.umitools_extract_method
+    summary["umi_tools bc-pattern"]               = params.umitools_bc_pattern
     summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
-    summary["umi_tools dedup extra parameters"] = params.umitools_dedup_extra
+    summary["umi_tools dedup extra parameters"]   = params.umitools_dedup_extra
 }
 if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
-    if (params.star_index)summary['STAR Index'] = params.star_index
-    else if (params.fasta)summary['Fasta Ref'] = params.fasta
+    if (params.star_index) summary['STAR Index'] = params.star_index
+    else if (params.fasta) summary['Fasta Ref']  = params.fasta
 } else if (params.aligner == 'hisat2') {
     summary['Aligner'] = "HISAT2"
-    if (params.hisat2_index)summary['HISAT2 Index'] = params.hisat2_index
-    else if (params.fasta)summary['Fasta Ref'] = params.fasta
-    if (params.splicesites)summary['Splice Sites'] = params.splicesites
+    if (params.hisat2_index) summary['HISAT2 Index'] = params.hisat2_index
+    else if (params.fasta)   summary['Fasta Ref']    = params.fasta
+    if (params.splicesites)  summary['Splice Sites'] = params.splicesites
 }
 if (params.pseudo_aligner == 'salmon') {
     summary['Pseudo Aligner'] = "Salmon"
-    if (params.transcript_fasta)summary['Transcript Fasta'] = params.transcript_fasta
+    if (params.transcript_fasta) summary['Transcript Fasta'] = params.transcript_fasta
 }
-if (params.gtf) summary['GTF Annotation'] = params.gtf
-if (params.gff) summary['GFF3 Annotation'] = params.gff
-if (params.bed12) summary['BED Annotation'] = params.bed12
-if (params.gencode) summary['GENCODE'] = params.gencode
-if (params.stringtie_ignore_gtf) summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
-summary['Remove Ribosomal RNA'] = params.remove_ribo_rna
+if (params.gtf)                    summary['GTF Annotation'] = params.gtf
+if (params.gff)                    summary['GFF3 Annotation'] = params.gff
+if (params.bed12)                  summary['BED Annotation'] = params.bed12
+if (params.gencode)                summary['GENCODE'] = params.gencode
+if (params.stringtie_ignore_gtf)   summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
+summary['Remove Ribosomal RNA']    = params.remove_ribo_rna
 if (params.fc_group_features_type) summary['Biotype GTF field'] = biotype
 summary['Save prefs'] = "Ref Genome: "+(params.save_reference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.save_trimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.save_align_intermeds ? 'Yes' : 'No')
 summary['Max Resources'] = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-summary['Output dir'] = params.outdir
-summary['Launch dir'] = workflow.launchDir
+summary['Output dir']  = params.outdir
+summary['Launch dir']  = workflow.launchDir
 summary['Working dir'] = workflow.workDir
-summary['Script dir'] = workflow.projectDir
-summary['User'] = workflow.userName
+summary['Script dir']  = workflow.projectDir
+summary['User']        = workflow.userName
 if (workflow.profile == 'awsbatch') {
     summary['AWS Region']     = params.awsregion
     summary['AWS Queue']      = params.awsqueue
@@ -1676,7 +1686,7 @@ if (!params.skip_alignment) {
         def qualimap_direction = 'non-strand-specific'
         if (forward_stranded) {
             qualimap_direction = 'strand-specific-forward'
-        }else if (reverse_stranded) {
+        } else if (reverse_stranded) {
             qualimap_direction = 'strand-specific-reverse'
         }
         def paired = params.single_end ? '' : '-pe'

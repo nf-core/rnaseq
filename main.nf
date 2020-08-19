@@ -2136,7 +2136,7 @@ process MULTIQC {
     input:
     path multiqc_config from ch_multiqc_config
     path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
-    path (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
+    file (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
     path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     path ('alignment/*') from alignment_logs.collect().ifEmpty([])
     path ('rseqc/*') from rseqc_results.collect().ifEmpty([])

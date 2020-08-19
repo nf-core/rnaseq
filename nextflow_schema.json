@@ -469,6 +469,10 @@
                 "star_memory": {
                     "type": "string",
                     "fa_icon": "fas fa-database"
+                },
+                "star_options": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database"
                 }
             },
             "fa_icon": "fas fa-align-justify"

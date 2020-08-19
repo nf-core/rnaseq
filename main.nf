@@ -74,6 +74,7 @@ def helpMessage() {
     Alignment:
       --aligner [str]                 Specifies the aligner to use (available are: 'hisat2', 'star')
       --pseudo_aligner [str]          Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
+      --star_options [str]            Additional options that will be appended to the STAR alignment command
       --stringtie_ignore_gtf [bool]   Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
       --seq_center [str]              Add sequencing center in @RG line of output BAM header
       --save_align_intermeds  [bool]  Save the BAM files from the aligment step - not done by default
@@ -471,8 +472,9 @@ if (params.with_umi) {
 if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
-    if (params.star_index) summary['STAR Index'] = params.star_index
-    else if (params.fasta) summary['Fasta Ref']  = params.fasta
+    if (params.star_options) summary['STAR Extra Options'] = params.star_options
+    if (params.star_index)   summary['STAR Index'] = params.star_index
+    else if (params.fasta)   summary['Fasta Ref']  = params.fasta
 } else if (params.aligner == 'hisat2') {
     summary['Aligner'] = "HISAT2"
     if (params.hisat2_index) summary['HISAT2 Index'] = params.hisat2_index
@@ -1312,7 +1314,8 @@ if (!params.skip_alignment) {
                 --readFilesCommand zcat \\
                 --runDirPerm All_RWX $unaligned \\
                 --quantMode TranscriptomeSAM \\
-                --outFileNamePrefix $prefix $seq_center
+                --outFileNamePrefix $prefix $seq_center \\
+                $params.star_options
 
             samtools index ${prefix}Aligned.sortedByCoord.out.bam
             """

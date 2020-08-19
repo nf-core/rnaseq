@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Updated template to nf-core/tools `v1.10.2`
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
-* Fixes an issue where MultiQC fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
+* Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option [#353](https://github.com/nf-core/rnaseq/issues/353)
 * Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 * Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
@@ -69,6 +69,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Remove `r-markdown`
 
 ### Parameters
+
+#### Added
+
+* `--star_options` parameter to pass additional options to the `STAR` alignment process. Fixes [276](https://github.com/nf-core/rnaseq/issues/276) and [363](https://github.com/nf-core/rnaseq/issues/363)
+
+#### Deprecated
 
 | Deprecated                   | Replacement                |
 |------------------------------|----------------------------|

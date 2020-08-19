@@ -37,7 +37,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 1. Install [`nextflow`](https://nf-co.re/usage/installation)
 
-2. Install either [`Docker`](https://docs.docker.com/engine/installation/) or [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles). Note: This pipeline does not currently support running with Conda on macOS because the latest `sortmerna` package is not available for this platform.)_
+2. Install either [`Docker`](https://docs.docker.com/engine/installation/) or [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles). Note: This pipeline does not currently support running with Conda on macOS because the latest version of the `sortmerna` package is not available for this platform.)_
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 

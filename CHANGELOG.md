@@ -65,6 +65,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Remove `matplotlib`
 * Remove `r-markdown`
 
+### Parameters
+
+| Deprecated                   | Replacement                |
+|------------------------------|----------------------------|
+| `--reads`                    | `--input`                  |
+| `--readPaths`                | `--input_paths`            |
+| `--singleEnd`                | `--single_end`             |
+| `--saveReference`            | `--save_reference`         |
+| `--forwardStranded`          | `--forward_stranded`       |
+| `--reverseStranded`          | `--reverse_stranded`       |
+| `--unStranded`               | `--unstranded`             |
+| `--skipTrimming`             | `--skip_trimming`          |
+| `--saveTrimmed`              | `--save_trimmed`           |
+| `--removeRiboRNA`            | `--remove_ribo_rna`        |
+| `--save_nonrRNA_reads`       | `--save_nonrrna_reads`     |
+| `--rRNA_database_manifest`   | `--rrna_database_manifest` |
+| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
+| `--sampleLevel`              | `--sample_level`           |
+| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
+| `--saveUnaligned`            | `--save_unaligned`         |
+| `--skipAlignment`            | `--skip_alignment`         |
+| `--skipQC`                   | `--skip_qc`                |
+| `--skipFastQC`               | `--skip_fastqc`            |
+| `--skipPreseq`               | `--skip_preseq`            |
+| `--skipDupRadar`             | `--skip_dupradar`          |
+| `--skipQualimap`             | `--skip_qualimap`          |
+| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
+| `--skipRseQC`                | `--skip_rseqc`             |
+| `--skipEdgeR`                | `--skip_edger`             |
+| `--skipMultiQC`              | `--skip_multiqc`           |
+
 ## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 
 * Minor version release for keeping Git History in sync

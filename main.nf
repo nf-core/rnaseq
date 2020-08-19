@@ -17,7 +17,7 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
+    nextflow run nf-core/rnaseq --input '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 
     Mandatory arguments:
       --input [file]                  Path to input data (must be surrounded with quotes)
@@ -25,82 +25,81 @@ def helpMessage() {
                                       Available: conda, docker, singularity, test, awsbatch, <institute> and more
 
     Generic:
-      --single_end                   Specifies that the input is single-end reads
+      --single_end [bool]             Specifies that the input is single-end reads
+      --sample_level [bool]           Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
 
-    References:                     If not specified in the configuration file or you wish to overwrite any of the references.
-      --genome                      Name of iGenomes reference
-      --star_index                  Path to STAR index
-      --hisat2_index                Path to HiSAT2 index
-      --salmon_index                Path to Salmon index
-      --fasta                       Path to genome fasta file
-      --transcript_fasta            Path to transcript fasta file
-      --additional_fasta            Additional fasta file(s) containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
-      --splicesites                 Path to splice sites file for building HiSat2 index
-      --gtf                         Path to GTF file
-      --gff                         Path to GFF3 file
-      --bed12                       Path to bed12 file
-      --saveReference               Save the generated reference files to the results directory
-      --gencode                     Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
+    References:                       If not specified in the configuration file or you wish to overwrite any of the references.
+      --genome [str]                  Name of iGenomes reference
+      --star_index [file]             Path to STAR index
+      --hisat2_index [file]           Path to HiSAT2 index
+      --salmon_index [file]           Path to Salmon index
+      --fasta [file]                  Path to genome fasta file
+      --transcript_fasta [file]       Path to transcript fasta file
+      --additional_fasta [file]       Additional fasta file(s) containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
+      --splicesites [file]            Path to splice sites file for building HiSat2 index
+      --gtf [file]                    Path to GTF file
+      --gff [file]                    Path to GFF3 file
+      --bed12 [file]                  Path to bed12 file
+      --save_reference [bool]         Save the generated reference files to the results directory
+      --gencode [bool]                Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
 
     Strandedness:
-      --forwardStranded             The library is forward stranded
-      --reverseStranded             The library is reverse stranded
-      --unStranded                  The default behaviour
+      --forward_stranded [bool]       The library is forward stranded
+      --reverse_stranded [bool]       The library is reverse stranded
+      --unstranded [bool]             The default behaviour
 
     UMI handling:
-      --with_umi                    Enable UMI-tools processing steps
-      --umitools_extract_method     The "extract method" used in the UMI tools extract step
-      --umitools_bc_pattern         Pattern for barcodes on read1
-      --umitools_extract_extra      Extra argument string which is literally passed to `umitools extract`
-      --umitools_dedup_extra        Extra argument string which is literally passed to `umitools dedup`
-      --save_umi_intermediates      Save FastQ files with UMIs added to the read name and deduplicated BAM filesl to the results directory
+      --with_umi [bool]               Enable UMI-tools processing steps
+      --umitools_extract_method [str] The "extract method" used in the UMI tools extract step
+      --umitools_bc_pattern [str]     Pattern for barcodes on read1
+      --umitools_extract_extra [str]  Extra argument string which is literally passed to `umitools extract`
+      --umitools_dedup_extra [str]    Extra argument string which is literally passed to `umitools dedup`
+      --save_umi_intermediates [bool] Save FastQ files with UMIs added to the read name and deduplicated BAM filesl to the results directory
 
     Trimming:
-      --skipTrimming                Skip Trim Galore step
-      --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
-      --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
-      --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --pico                        Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
-      --saveTrimmed                 Save trimmed FastQ file intermediates
+      --clip_r1 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+      --clip_r2 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+      --three_prime_clip_r1 [int]     Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+      --three_prime_clip_r2 [int]     Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+      --trim_nextseq [int]            Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
+      --pico [bool]                   Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forwardStranded --clip_r1 3 --three_prime_clip_r2 3
+      --skip_trimming [bool]          Skip Trim Galore step
+      --save_trimmed [bool]           Save trimmed FastQ file intermediates
 
     Ribosomal RNA removal:
-      --removeRiboRNA               Removes ribosomal RNA using SortMeRNA
-      --save_nonrRNA_reads          Save FastQ file intermediates after removing rRNA
-      --rRNA_database_manifest      Path to file that contains file paths for rRNA databases, optional
+      --remove_ribo_rna [bool]        Removes ribosomal RNA using SortMeRNA
+      --save_nonrrna_reads [bool]     Save FastQ file intermediates after removing rRNA
+      --rrna_database_manifest [file] Path to file that contains file paths for rRNA databases, optional
 
     Alignment:
-      --aligner                     Specifies the aligner to use (available are: 'hisat2', 'star')
-      --pseudo_aligner              Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
-      --stringTieIgnoreGTF          Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
-      --seq_center                  Add sequencing center in @RG line of output BAM header
-      --saveAlignedIntermediates    Save the BAM files from the aligment step - not done by default
-      --saveUnaligned               Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
-      --skipAlignment               Skip alignment altogether (usually in favor of pseudoalignment)
-      --percent_aln_skip            Percentage alignment below which samples are removed from further processing. Default: 5%
+      --aligner [str]                 Specifies the aligner to use (available are: 'hisat2', 'star')
+      --pseudo_aligner [str]          Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
+      --stringtie_ignore_gtf [bool]   Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
+      --seq_center [str]              Add sequencing center in @RG line of output BAM header
+      --save_align_intermeds  [bool]  Save the BAM files from the aligment step - not done by default
+      --save_unaligned [bool]         Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
+      --skip_rsem [bool]              Skip the RSEM step for read quantification
+      --skip_alignment [bool]         Skip alignment altogether (usually in favor of pseudoalignment)
+      --percent_aln_skip [float]      Percentage alignment below which samples are removed from further processing. Default: 5%
 
     Read Counting:
-      --skip_rsem                   Skip the RSEM step for read quantification
-      --fc_extra_attributes         Define which extra parameters should also be included in featureCounts (default: 'gene_name')
-      --fc_group_features           Define the attribute type used to group features. (default: 'gene_id')
-      --fc_count_type               Define the type used to assign reads. (default: 'exon')
-      --fc_group_features_type      Define the type attribute used to group features based on the group attribute (default: 'gene_biotype')
+      --fc_extra_attributes [str]     Define which extra parameters should also be included in featureCounts (default: 'gene_name')
+      --fc_group_features [str]       Define the attribute type used to group features. (default: 'gene_id')
+      --fc_count_type [str]           Define the type used to assign reads. (default: 'exon')
+      --fc_group_features_type [str]  Define the type attribute used to group features based on the group attribute (default: 'gene_biotype')
 
     QC:
-      --skipQC                      Skip all QC steps apart from MultiQC
-      --skipFastQC                  Skip FastQC
-      --skipPreseq                  Skip Preseq
-      --skipDupRadar                Skip dupRadar (and Picard MarkDuplicates)
-      --skipQualimap                Skip Qualimap
-      --skipBiotypeQC               Skip Biotype QC
-      --skipRseQC                   Skip RSeQC
-      --skipEdgeR                   Skip edgeR MDS plot and heatmap
-      --skipMultiQC                 Skip MultiQC
+      --skip_qc [bool]                Skip all QC steps apart from MultiQC
+      --skip_fastqc [bool]            Skip FastQC
+      --skip_preseq [bool]            Skip Preseq
+      --skip_dupradar [bool]          Skip dupRadar (and Picard MarkDuplicates)
+      --skip_qualimap [bool]          Skip Qualimap
+      --skip_biotype_qc [bool]        Skip Biotype QC
+      --skip_rseqc [bool]             Skip RSeQC
+      --skip_edger [bool]             Skip edgeR MDS plot and heatmap
+      --skip_multiqc [bool]           Skip MultiQC
 
     Other options:
-      --sampleLevel                   Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
-      -w/-work-dir                    The temporary directory where intermediate data will be saved
       --outdir [file]                 The output directory where the results will be saved
       --publish_dir_mode [str]        Mode for publishing results in the output directory. Available: symlink, rellink, link, copy, copyNoFollow, move (Default: copy)
       --email [email]                 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
@@ -304,7 +303,7 @@ if (params.rsem_reference && !params.skip_rsem && !params.skipAlignment) {
     rsem_reference = Channel
         .fromPath(params.rsem_reference, checkIfExists: true)
         .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
-} 
+}
 if (params.fasta && !params.skipAlignment) {
     if (hasExtension(params.fasta, 'gz')) {
         Channel.fromPath(params.fasta, checkIfExists: true)
@@ -540,8 +539,8 @@ process get_software_versions {
 }
 
 
-compressedReference = (hasExtension(params.fasta, 'gz') || 
-    hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') || 
+compressedReference = (hasExtension(params.fasta, 'gz') ||
+    hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') ||
     hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz" ))
 
 if (compressedReference) {
@@ -553,7 +552,7 @@ if (compressedReference) {
     need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
     need_rsem_ref = !params.skip_rsem && !params.rsem_reference
     //when an additional fasta is provided, the fasta and gtf file need
-    //to be unzipeed to be merged in a later stage. --> Execute the following code block. 
+    //to be unzipeed to be merged in a later stage. --> Execute the following code block.
     need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref || params.additional_fasta
     alignment_no_indices = !params.skipAlignment && need_aligner_index
     pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
@@ -753,7 +752,7 @@ if ( params.additional_fasta ) {
 
         output:
         file "${genome_name}.fa" into (
-            ch_fasta_for_star_index, ch_fasta_for_hisat_index, 
+            ch_fasta_for_star_index, ch_fasta_for_hisat_index,
             ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference
         )
         file "${genome_name}.gtf" into (
@@ -776,7 +775,7 @@ if ( params.additional_fasta ) {
 } else {
     gtfFile.into{ gtf_makeSTARindex; gtf_makeHisatSplicesites; gtf_makeHISATindex;
         gtf_makeSalmonIndex; gtf_makeBED12; gtf_star; gtf_dupradar; gtf_featureCounts;
-        gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge; gtf_qualimap; 
+        gtf_stringtieFPKM; gtf_salmon; gtf_salmon_merge; gtf_qualimap;
         gtf_makeRSEMReference }
 }
 
@@ -794,7 +793,7 @@ if (params.gff && !params.gtf) {
 
         output:
         file "${gff.baseName}.gtf" into (
-            gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex, 
+            gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex,
             gtf_makeSalmonIndex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_featureCounts,
             gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap)
 
@@ -1039,7 +1038,7 @@ if (params.with_umi) {
                 else null
             }
 
-        input: 
+        input:
         set val(name), file(reads) from raw_reads_umitools
         file wherearemyfiles from ch_where_umi_extract.collect()
 
@@ -1403,8 +1402,8 @@ if (!params.skipAlignment) {
             file wherearemyfiles from ch_where_hisat2_sort.collect()
 
             output:
-            file "${hisat2_bam.baseName}.sorted.bam" into bam 
-            file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index 
+            file "${hisat2_bam.baseName}.sorted.bam" into bam
+            file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index
             file "where_are_my_files.txt"
 
             script:
@@ -1424,7 +1423,7 @@ if (!params.skipAlignment) {
     * Step 3+ - Deduplicate bam files based on UMIs
     */
     if(params.with_umi) {
-        // preseq does not work on deduplicated BAM file. Pass it the raw BAM file. 
+        // preseq does not work on deduplicated BAM file. Pass it the raw BAM file.
         bam.into {bam_umitools_dedup; bam_preseq}
         bam_index.set{bam_index_umitools_dedup}
 
@@ -1438,7 +1437,7 @@ if (!params.skipAlignment) {
                     else if (params.save_umi_intermediates && filename != "where_are_my_files.txt") filename
                     else null
                 }
-            
+
             input:
             file bam_file from bam_umitools_dedup
             file bam_file_index from bam_index_umitools_dedup
@@ -1450,7 +1449,7 @@ if (!params.skipAlignment) {
             file "where_are_my_files.txt"
             file "*.tsv"
 
-            script:  
+            script:
             """
             umi_tools dedup -I ${bam_file} \
                 -S ${bam_file.baseName}_deduplicated.bam \
@@ -1471,7 +1470,7 @@ if (!params.skipAlignment) {
                         else if (params.save_umi_intermediates) filename
                         else null
                     }
-                
+
                 input:
                 file bam_file from bam_transcriptome
 
@@ -1479,10 +1478,10 @@ if (!params.skipAlignment) {
                 file "*_deduplicated.bam" into bam_rsem
                 file "*.tsv"
 
-                script:  
+                script:
                 // the transcriptome BAM file is not sorted or indexed by STAR
                 // since this is the only process consuming this BAM file,
-                // sorting and indexing happens right here. 
+                // sorting and indexing happens right here.
                 def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
                 def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
                 """

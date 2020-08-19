@@ -518,64 +518,6 @@ log.info "-\033[2m--------------------------------------------------\033[0m-"
 // Check the hostnames against configured profiles
 checkHostname()
 
-Channel.from(summary.collect{ [it.key, it.value] })
-    .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
-    .reduce { a, b -> return [a, b].join("\n            ") }
-    .map { x -> """
-    id: 'nf-core-rnaseq-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/rnaseq Workflow Summary'
-    section_href: 'https://github.com/nf-core/rnaseq'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-            $x
-        </dl>
-    """.stripIndent() }
-    .set { ch_workflow_summary }
-
-/*
- * Parse software version numbers
- */
-process GET_SOFTWARE_VERSIONS {
-    publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-        saveAs: { filename ->
-            if (filename.indexOf(".csv") > 0) filename
-            else null
-        }
-
-    output:
-    file 'software_versions_mqc.yaml' into ch_software_versions_yaml
-    file "software_versions.csv"
-
-    script:
-    """
-    echo $workflow.manifest.version &> v_ngi_rnaseq.txt
-    echo $workflow.nextflow.version &> v_nextflow.txt
-    fastqc --version &> v_fastqc.txt
-    cutadapt --version &> v_cutadapt.txt
-    trim_galore --version &> v_trim_galore.txt
-    sortmerna --version &> v_sortmerna.txt
-    STAR --version &> v_star.txt
-    hisat2 --version &> v_hisat2.txt
-    stringtie --version &> v_stringtie.txt
-    preseq &> v_preseq.txt
-    read_duplication.py --version &> v_rseqc.txt
-    bamCoverage --version &> v_deeptools.txt || true
-    featureCounts -v &> v_featurecounts.txt
-    rsem-calculate-expression --version &> v_rsem.txt
-    salmon --version &> v_salmon.txt
-    picard MarkDuplicates --version &> v_markduplicates.txt  || true
-    samtools --version &> v_samtools.txt
-    multiqc --version &> v_multiqc.txt
-    Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
-    Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
-    umi_tools --version &> v_umi_tools.txt
-    unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
-
 compressed_reference = (hasExtension(params.fasta, 'gz') ||
     hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') ||
     hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz"))
@@ -600,10 +542,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from genome_fasta_gz
+            path gz from genome_fasta_gz
 
             output:
-            file "${gz.baseName}" into ch_genome_fasta
+            path "${gz.baseName}" into ch_genome_fasta
 
             script:
             """
@@ -618,10 +560,10 @@ if (compressed_reference) {
                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
                 input:
-                file gz from additional_fasta_gz
+                path gz from additional_fasta_gz
 
                 output:
-                file "${gz.baseName}" into ch_additional_fasta_for_gtf, ch_additional_fasta_to_concat
+                path "${gz.baseName}" into ch_additional_fasta_for_gtf, ch_additional_fasta_to_concat
 
                 script:
                 """
@@ -637,10 +579,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from gtf_gz
+            path gz from gtf_gz
 
             output:
-            file "${gz.baseName}" into gtfFile
+            path "${gz.baseName}" into gtfFile
 
             script:
             """
@@ -655,10 +597,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from gff_gz
+            path gz from gff_gz
 
             output:
-            file "${gz.baseName}" into gffFile
+            path "${gz.baseName}" into gffFile
 
             script:
             """
@@ -673,10 +615,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from transcript_fasta_gz
+            path gz from transcript_fasta_gz
 
             output:
-            file "${gz.baseName}" into ch_fasta_for_salmon_index
+            path "${gz.baseName}" into ch_fasta_for_salmon_index
 
             script:
             """
@@ -691,10 +633,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from bed12_gz
+            path gz from bed12_gz
 
             output:
-            file "${gz.baseName}" into bed_rseqc
+            path "${gz.baseName}" into bed_rseqc
 
             script:
             """
@@ -709,10 +651,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from star_index_gz
+            path gz from star_index_gz
 
             output:
-            file "${gz.simpleName}" into star_index
+            path "${gz.simpleName}" into star_index
 
             script:
             // Use tar as the star indices are a folder, not a file
@@ -728,10 +670,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from hs2_indices_gz
+            path gz from hs2_indices_gz
 
             output:
-            file "*.ht2*" into hs2_indices
+            path "*.ht2*" into hs2_indices
 
             script:
             // Use tar as the hisat2 indices are a folder, not a file
@@ -747,10 +689,10 @@ if (compressed_reference) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gz from salmon_index_gz
+            path gz from salmon_index_gz
 
             output:
-            file "${gz.simpleName}" into salmon_index
+            path "${gz.simpleName}" into salmon_index
 
             script:
             // Use tar as the hisat2 indices are a folder, not a file
@@ -768,10 +710,10 @@ if (params.additional_fasta) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        file fasta from ch_additional_fasta_for_gtf
+        path fasta from ch_additional_fasta_for_gtf
 
         output:
-        file "${fasta.baseName}.gtf" into ch_additional_gtf
+        path "${fasta.baseName}.gtf" into ch_additional_gtf
 
         """
         fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
@@ -784,22 +726,29 @@ if (params.additional_fasta) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        file genome_fasta from ch_genome_fasta
-        file genome_gtf from gtfFile
-        file additional_fasta from ch_additional_fasta_to_concat.collect()
-        file additional_gtf from ch_additional_gtf.collect()
+        path genome_fasta from ch_genome_fasta
+        path genome_gtf from gtfFile
+        path additional_fasta from ch_additional_fasta_to_concat.collect()
+        path additional_gtf from ch_additional_gtf.collect()
 
         output:
-        file "${genome_name}.fa" into (
-            ch_fasta_for_star_index, ch_fasta_for_hisat_index,
-            ch_fasta_for_salmon_transcripts, ch_fasta_for_rsem_reference
-        )
-        file "${genome_name}.gtf" into (
-            gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex,
-            gtf_makeSalmonIndex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_featureCounts,
-            gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap,
-            gtf_makeRSEMReference
-        )
+        path "${genome_name}.fa" into ch_fasta_for_star_index,
+                                      ch_fasta_for_hisat_index,
+                                      ch_fasta_for_salmon_transcripts,
+                                      ch_fasta_for_rsem_reference
+        path "${genome_name}.gtf" into gtf_makeSTARindex,
+                                       gtf_makeHisatSplicesites,
+                                       gtf_makeHISATindex,
+                                       gtf_makeSalmonIndex,
+                                       gtf_makeBED12,
+                                       gtf_star,
+                                       gtf_dupradar,
+                                       gtf_featureCounts,
+                                       gtf_stringtieFPKM,
+                                       gtf_salmon,
+                                       gtf_salmon_merge,
+                                       gtf_qualimap,
+                                       gtf_makeRSEMReference
 
         script:
         main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
@@ -827,13 +776,21 @@ if (params.gff && !params.gtf) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        file gff from gffFile
+        path gff from gffFile
 
         output:
-        file "${gff.baseName}.gtf" into (
-            gtf_makeSTARindex, gtf_makeHisatSplicesites, gtf_makeHISATindex,
-            gtf_makeSalmonIndex, gtf_makeBED12, gtf_star, gtf_dupradar, gtf_featureCounts,
-            gtf_stringtieFPKM, gtf_salmon, gtf_salmon_merge, gtf_qualimap )
+        path "${gff.baseName}.gtf" into gtf_makeSTARindex,
+                                        gtf_makeHisatSplicesites,
+                                        gtf_makeHISATindex,
+                                        gtf_makeSalmonIndex,
+                                        gtf_makeBED12,
+                                        gtf_star,
+                                        gtf_dupradar,
+                                        gtf_featureCounts,
+                                        gtf_stringtieFPKM,
+                                        gtf_salmon,
+                                        gtf_salmon_merge,
+                                        gtf_qualimap
 
         script:
         """
@@ -852,10 +809,10 @@ if (!params.bed12) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        file gtf from gtf_makeBED12
+        path gtf from gtf_makeBED12
 
         output:
-        file "${gtf.baseName}.bed" into bed_rseqc
+        path "${gtf.baseName}.bed" into bed_rseqc
 
         script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
         """
@@ -876,11 +833,11 @@ if (!params.skip_alignment) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file fasta from ch_fasta_for_star_index
-            file gtf from gtf_makeSTARindex
+            path fasta from ch_fasta_for_star_index
+            path gtf from gtf_makeSTARindex
 
             output:
-            file "star" into star_index
+            path "star" into star_index
 
             script:
             def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
@@ -907,10 +864,11 @@ if (!params.skip_alignment) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file gtf from gtf_makeHisatSplicesites
+            path gtf from gtf_makeHisatSplicesites
 
             output:
-            file "${gtf.baseName}.hisat2_splice_sites.txt" into indexing_splicesites, alignment_splicesites
+            path "${gtf.baseName}.hisat2_splice_sites.txt" into indexing_splicesites,
+                                                                alignment_splicesites
 
             script:
             """
@@ -929,12 +887,12 @@ if (!params.skip_alignment) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file fasta from ch_fasta_for_hisat_index
-            file indexing_splicesites from indexing_splicesites
-            file gtf from gtf_makeHISATindex
+            path fasta from ch_fasta_for_hisat_index
+            path indexing_splicesites from indexing_splicesites
+            path gtf from gtf_makeHISATindex
 
             output:
-            file "${fasta.baseName}.*.ht2*" into hs2_indices
+            path "${fasta.baseName}.*.ht2*" into hs2_indices
 
             script:
             if (!task.memory) {
@@ -973,11 +931,11 @@ if (!params.skip_alignment) {
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            file fasta from ch_fasta_for_rsem_reference
-            file gtf from gtf_makeRSEMReference
+            path fasta from ch_fasta_for_rsem_reference
+            path gtf from gtf_makeRSEMReference
 
             output:
-            file "rsem" into rsem_reference
+            path "rsem" into rsem_reference
 
             script:
             """
@@ -1001,11 +959,11 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
 
 
             input:
-            file fasta from ch_fasta_for_salmon_transcripts
-            file gtf from gtf_makeSalmonIndex
+            path fasta from ch_fasta_for_salmon_transcripts
+            path gtf from gtf_makeSalmonIndex
 
             output:
-            file "*.fa" into ch_fasta_for_salmon_index
+            path "*.fa" into ch_fasta_for_salmon_index
 
             script:
 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
@@ -1022,10 +980,10 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        file fasta from ch_fasta_for_salmon_index
+        path fasta from ch_fasta_for_salmon_index
 
         output:
-        file 'salmon_index' into salmon_index
+        path 'salmon_index' into salmon_index
 
         script:
         def gencode = params.gencode  ? "--gencode" : ""
@@ -1053,7 +1011,7 @@ process FASTQC {
     set val(name), file(reads) from ch_read_files_fastqc
 
     output:
-    file "*_fastqc.{zip,html}" into ch_fastqc_results
+    path "*_fastqc.{zip,html}" into ch_fastqc_results
 
     script:
     def threads = params.single_end ? 1 : 2
@@ -1080,12 +1038,12 @@ if (params.with_umi) {
 
         input:
         set val(name), file(reads) from raw_reads_umitools
-        file wherearemyfiles from ch_where_umi_extract.collect()
+        path wherearemyfiles from ch_where_umi_extract.collect()
 
         output:
         set val(name), file("*fq.gz") into raw_reads_trimgalore
-        file "*.log"
-        file "where_are_my_files.txt"
+        path "*.log"
+        path "where_are_my_files.txt"
 
         script:
         if (params.single_end) {
@@ -1134,13 +1092,13 @@ if (!params.skip_trimming) {
 
         input:
         set val(name), file(reads) from raw_reads_trimgalore
-        file wherearemyfiles from ch_where_trim_galore.collect()
+        path wherearemyfiles from ch_where_trim_galore.collect()
 
         output:
         set val(name), file("*fq.gz") into trimgalore_reads
-        file "*trimming_report.txt" into trimgalore_results
-        file "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
-        file "where_are_my_files.txt"
+        path "*trimming_report.txt" into trimgalore_results
+        path "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+        path "where_are_my_files.txt"
 
         script:
         c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
@@ -1178,7 +1136,7 @@ if (!params.remove_ribo_rna) {
         tag "${fasta.baseName}"
 
         input:
-        file(fasta) from sortmerna_fasta
+        path fasta from sortmerna_fasta
 
         output:
         val("${fasta.baseName}") into sortmerna_db_name
@@ -1209,7 +1167,7 @@ if (!params.remove_ribo_rna) {
 
         output:
         set val(name), file("*.fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
-        file "*_rRNA_report.txt" into sortmerna_logs
+        path "*_rRNA_report.txt" into sortmerna_logs
 
 
         script:
@@ -1304,24 +1262,24 @@ if (!params.skip_alignment) {
 
             input:
             set val(name), file(reads) from trimmed_reads_alignment
-            file index from star_index.collect()
-            file gtf from gtf_star.collect()
-            file wherearemyfiles from ch_where_star.collect()
+            path index from star_index.collect()
+            path gtf from gtf_star.collect()
+            path wherearemyfiles from ch_where_star.collect()
 
             output:
-            set file("*Log.final.out"), file ('*.sortedByCoord.out.bam'), file ('*.toTranscriptome.out.bam') into star_aligned
-            file "*.out" into alignment_logs
-            file "*SJ.out.tab"
-            file "*Log.out" into star_log
-            file "where_are_my_files.txt"
-            file "*Unmapped*" optional true
-            file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index
+            set file("*Log.final.out"), file('*.sortedByCoord.out.bam'), file('*.toTranscriptome.out.bam') into star_aligned
+            path "*.out" into alignment_logs
+            path "*SJ.out.tab"
+            path "*Log.out" into star_log
+            path "where_are_my_files.txt"
+            path "*Unmapped*" optional true
+            path "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index
 
             script:
-            def prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+            prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+            seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
             def star_mem = task.memory ?: params.star_memory ?: false
             def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-            def seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
             def unaligned = params.save_unaligned ? "--outReadsUnmapped Fastx" : ''
             """
             STAR --genomeDir $index \\
@@ -1371,15 +1329,15 @@ if (!params.skip_alignment) {
 
             input:
             set val(name), file(reads) from trimmed_reads_alignment
-            file hs2_indices from hs2_indices.collect()
-            file alignment_splicesites from alignment_splicesites.collect()
-            file wherearemyfiles from ch_where_hisat2.collect()
+            path hs2_indices from hs2_indices.collect()
+            path alignment_splicesites from alignment_splicesites.collect()
+            path wherearemyfiles from ch_where_hisat2.collect()
 
             output:
-            file "${prefix}.bam" into hisat2_bam
-            file "${prefix}.hisat2_summary.txt" into alignment_logs
-            file "where_are_my_files.txt"
-            file "unmapped.hisat2*" optional true
+            path "${prefix}.bam" into hisat2_bam
+            path "${prefix}.hisat2_summary.txt" into alignment_logs
+            path "where_are_my_files.txt"
+            path "unmapped.hisat2*" optional true
 
             script:
             index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
@@ -1399,7 +1357,7 @@ if (!params.skip_alignment) {
                     -U $reads \\
                     $rnastrandness \\
                     --known-splicesite-infile $alignment_splicesites \\
-                    -p $task.cpus $unaligned\\
+                    -p $task.cpus $unaligned \\
                     --met-stderr \\
                     --new-summary \\
                     --dta \\
@@ -1417,7 +1375,7 @@ if (!params.skip_alignment) {
                     --known-splicesite-infile $alignment_splicesites \\
                     --no-mixed \\
                     --no-discordant \\
-                    -p $task.cpus $unaligned\\
+                    -p $task.cpus $unaligned \\
                     --met-stderr \\
                     --new-summary \\
                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
@@ -1437,13 +1395,13 @@ if (!params.skip_alignment) {
                 }
 
             input:
-            file hisat2_bam
-            file wherearemyfiles from ch_where_hisat2_sort.collect()
+            path hisat2_bam
+            path wherearemyfiles from ch_where_hisat2_sort.collect()
 
             output:
-            file "${hisat2_bam.baseName}.sorted.bam" into bam
-            file "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index
-            file "where_are_my_files.txt"
+            path "${hisat2_bam.baseName}.sorted.bam" into bam
+            path "${hisat2_bam.baseName}.sorted.bam.bai" into bam_index
+            path "where_are_my_files.txt"
 
             script:
             def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
@@ -1478,15 +1436,15 @@ if (!params.skip_alignment) {
                 }
 
             input:
-            file bam_file from bam_umitools_dedup
-            file bam_file_index from bam_index_umitools_dedup
-            file wherearemyfiles from ch_where_umi_dedup.collect()
+            path bam_file from bam_umitools_dedup
+            path bam_file_index from bam_index_umitools_dedup
+            path wherearemyfiles from ch_where_umi_dedup.collect()
 
             output:
-            file "*.bam" into bam_dedup
-            file "*.bai" into bam_dedup_index
-            file "where_are_my_files.txt"
-            file "*.tsv"
+            path "*.bam" into bam_dedup
+            path "*.bai" into bam_dedup_index
+            path "where_are_my_files.txt"
+            path "*.tsv"
 
             script:
             """
@@ -1512,11 +1470,11 @@ if (!params.skip_alignment) {
                     }
 
                 input:
-                file bam_file from bam_transcriptome
+                path bam_file from bam_transcriptome
 
                 output:
-                file "*_deduplicated.bam" into bam_rsem
-                file "*.tsv"
+                path "*_deduplicated.bam" into bam_rsem
+                path "*.tsv"
 
                 script:
                 // the transcriptome BAM file is not sorted or indexed by STAR
@@ -1590,12 +1548,12 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_rseqc
 
         input:
-        file bam_rseqc
-        file index from bam_index_rseqc
-        file bed12 from bed_rseqc.collect()
+        path bam_rseqc
+        path index from bam_index_rseqc
+        path bed12 from bed_rseqc.collect()
 
         output:
-        file "*.{txt,pdf,r,xls}" into rseqc_results
+        path "*.{txt,pdf,r,xls}" into rseqc_results
 
         script:
         """
@@ -1621,14 +1579,14 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_preseq
 
         input:
-        file bam_preseq
+        path bam from bam_preseq
 
         output:
-        file "${bam_preseq.baseName}.ccurve.txt" into preseq_results
+        path "${bam.baseName}.ccurve.txt" into preseq_results
 
         script:
         """
-        preseq lc_extrap -v -B $bam_preseq -o ${bam_preseq.baseName}.ccurve.txt
+        preseq lc_extrap -v -B $bam -o ${bam.baseName}.ccurve.txt
         """
     }
 
@@ -1646,17 +1604,17 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_dupradar
 
         input:
-        file bam from bam_markduplicates
+        path bam from bam_markduplicates
 
         output:
-        file "${bam.baseName}.markDups.bam" into bam_md
-        file "${bam.baseName}.markDups_metrics.txt" into picard_results
-        file "${bam.baseName}.markDups.bam.bai"
+        path "${bam.baseName}.markDups.bam" into bam_md
+        path "${bam.baseName}.markDups_metrics.txt" into picard_results
+        path "${bam.baseName}.markDups.bam.bai"
 
         script:
         markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2)+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
         """
-        picard ${markdup_java_options} MarkDuplicates \\
+        picard $markdup_java_options MarkDuplicates \\
             INPUT=$bam \\
             OUTPUT=${bam.baseName}.markDups.bam \\
             METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
@@ -1680,11 +1638,11 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_qualimap
 
         input:
-        file bam from bam_qualimap
-        file gtf from gtf_qualimap.collect()
+        path bam from bam_qualimap
+        path gtf from gtf_qualimap.collect()
 
         output:
-        file "${bam.baseName}" into qualimap_results
+        path "${bam.baseName}" into qualimap_results
 
         script:
         def qualimap_direction = 'non-strand-specific'
@@ -1722,11 +1680,11 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_dupradar
 
         input:
-        file bam_md
-        file gtf from gtf_dupradar.collect()
+        path bam_md
+        path gtf from gtf_dupradar.collect()
 
         output:
-        file "*.{pdf,txt}" into dupradar_results
+        path "*.{pdf,txt}" into dupradar_results
 
         script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
         def dupradar_direction = 0
@@ -1756,14 +1714,14 @@ if (!params.skip_alignment) {
             }
 
         input:
-        file bam_featurecounts
-        file gtf from gtf_featureCounts.collect()
-        file biotypes_header from ch_biotypes_header.collect()
+        path bam_featurecounts
+        path gtf from gtf_featureCounts.collect()
+        path biotypes_header from ch_biotypes_header.collect()
 
         output:
-        file "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
-        file "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-        file "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
+        path "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+        path "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
+        path "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
 
         script:
         def featureCounts_direction = 0
@@ -1801,10 +1759,10 @@ if (!params.skip_alignment) {
         publishDir "${params.outdir}/featureCounts", mode: params.publish_dir_mode
 
         input:
-        file input_files from featureCounts_to_merge.collect()
+        path input_files from featureCounts_to_merge.collect()
 
         output:
-        file 'merged_gene_counts.txt' into featurecounts_merged
+        path 'merged_gene_counts.txt' into featurecounts_merged
 
         script:
         // Redirection (the `<()`) for the win!
@@ -1828,8 +1786,8 @@ if (!params.skip_alignment) {
             publishDir "${params.outdir}/RSEM", mode: params.publish_dir_mode
 
             input:
-            file bam_file from bam_rsem
-            file "rsem" from rsem_reference.collect()
+            path bam_file from bam_rsem
+            path "rsem" from rsem_reference.collect()
 
             output:
             file("*.genes.results") into rsem_results_genes
@@ -1863,8 +1821,8 @@ if (!params.skip_alignment) {
             publishDir "${params.outdir}/RSEM", mode: params.publish_dir_mode
 
             input:
-            file rsem_res_gene from rsem_results_genes.collect()
-            file rsem_res_isoform from rsem_results_isoforms.collect()
+            path rsem_res_gene from rsem_results_genes.collect()
+            path rsem_res_isoform from rsem_results_isoforms.collect()
 
             output:
             file("rsem_tpm_gene.txt")
@@ -1915,14 +1873,14 @@ if (!params.skip_alignment) {
             }
 
         input:
-        file bam_stringtieFPKM
-        file gtf from gtf_stringtieFPKM.collect()
+        path bam_stringtieFPKM
+        path gtf from gtf_stringtieFPKM.collect()
 
         output:
-        file "${bam_stringtieFPKM.baseName}_transcripts.gtf"
-        file "${bam_stringtieFPKM.baseName}.gene_abund.txt"
-        file "${bam_stringtieFPKM}.cov_refs.gtf"
-        file "${bam_stringtieFPKM.baseName}_ballgown"
+        path "${bam_stringtieFPKM.baseName}_transcripts.gtf"
+        path "${bam_stringtieFPKM.baseName}.gene_abund.txt"
+        path "${bam_stringtieFPKM}.cov_refs.gtf"
+        path "${bam_stringtieFPKM.baseName}_ballgown"
 
         script:
         def st_direction = ''
@@ -1957,13 +1915,13 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_edger
 
         input:
-        file input_files from geneCounts.collect()
+        path input_files from geneCounts.collect()
         val num_bams from bam_count.count()
-        file mdsplot_header from ch_mdsplot_header
-        file heatmap_header from ch_heatmap_header
+        path mdsplot_header from ch_mdsplot_header
+        path heatmap_header from ch_heatmap_header
 
         output:
-        file "*.{txt,pdf,csv}" into sample_correlation_results
+        path "*.{txt,pdf,csv}" into sample_correlation_results
 
         when:
         num_bams > 2 && (!params.sample_level)
@@ -2003,11 +1961,11 @@ if (params.pseudo_aligner == 'salmon') {
 
         input:
         set sample, file(reads) from trimmed_reads_salmon
-        file index from salmon_index.collect()
-        file gtf from gtf_salmon.collect()
+        path index from salmon_index.collect()
+        path gtf from gtf_salmon.collect()
 
         output:
-        file "${sample}/" into salmon_logs
+        path "${sample}/" into salmon_logs
         set val(sample), file("${sample}/") into salmon_tximport, salmon_parsegtf
 
         script:
@@ -2037,11 +1995,11 @@ if (params.pseudo_aligner == 'salmon') {
         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 
         input:
-        file ("salmon/*") from salmon_parsegtf.collect()
-        file gtf from gtf_salmon_merge
+        path ("salmon/*") from salmon_parsegtf.collect()
+        path gtf from gtf_salmon_merge
 
         output:
-        file "tx2gene.csv" into salmon_tx2gene, salmon_merge_tx2gene
+        path "tx2gene.csv" into salmon_tx2gene, salmon_merge_tx2gene
 
         script:
         """
@@ -2054,14 +2012,14 @@ if (params.pseudo_aligner == 'salmon') {
         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 
         input:
-        set val(name), file ("salmon/*") from salmon_tximport
-        file tx2gene from salmon_tx2gene.collect()
+        set val(name), file("salmon/*") from salmon_tximport
+        path tx2gene from salmon_tx2gene.collect()
 
         output:
-        file "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
-        file "${name}_salmon_gene_counts.csv" into salmon_gene_counts
-        file "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
-        file "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
+        path "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
+        path "${name}_salmon_gene_counts.csv" into salmon_gene_counts
+        path "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
+        path "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
 
         script:
         """
@@ -2074,15 +2032,15 @@ if (params.pseudo_aligner == 'salmon') {
         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 
         input:
-        file gene_tpm_files from salmon_gene_tpm.collect()
-        file gene_count_files from salmon_gene_counts.collect()
-        file transcript_tpm_files from salmon_transcript_tpm.collect()
-        file transcript_count_files from salmon_transcript_counts.collect()
-        file tx2gene from salmon_merge_tx2gene
+        path gene_tpm_files from salmon_gene_tpm.collect()
+        path gene_count_files from salmon_gene_counts.collect()
+        path transcript_tpm_files from salmon_transcript_tpm.collect()
+        path transcript_count_files from salmon_transcript_counts.collect()
+        path tx2gene from salmon_merge_tx2gene
 
         output:
-        file "salmon_merged*.csv" into salmon_merged_ch
-        file "*.rds"
+        path "salmon_merged*.csv" into salmon_merged_ch
+        path "*.rds"
 
         script:
         // First field is the gene/transcript ID
@@ -2108,6 +2066,63 @@ if (params.pseudo_aligner == 'salmon') {
     salmon_logs = Channel.empty()
 }
 
+Channel.from(summary.collect{ [it.key, it.value] })
+    .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
+    .reduce { a, b -> return [a, b].join("\n            ") }
+    .map { x -> """
+    id: 'nf-core-rnaseq-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/rnaseq Workflow Summary'
+    section_href: 'https://github.com/nf-core/rnaseq'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+            $x
+        </dl>
+    """.stripIndent() }
+    .set { ch_workflow_summary }
+
+/*
+ * Parse software version numbers
+ */
+process GET_SOFTWARE_VERSIONS {
+    publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
+        saveAs: { filename ->
+            if (filename.indexOf(".csv") > 0) filename
+            else null
+        }
+
+    output:
+    path 'software_versions_mqc.yaml' into ch_software_versions_yaml
+    path "software_versions.csv"
+
+    script:
+    """
+    echo $workflow.manifest.version &> v_ngi_rnaseq.txt
+    echo $workflow.nextflow.version &> v_nextflow.txt
+    fastqc --version &> v_fastqc.txt
+    cutadapt --version &> v_cutadapt.txt
+    trim_galore --version &> v_trim_galore.txt
+    sortmerna --version &> v_sortmerna.txt
+    STAR --version &> v_star.txt
+    hisat2 --version &> v_hisat2.txt
+    stringtie --version &> v_stringtie.txt
+    preseq &> v_preseq.txt
+    read_duplication.py --version &> v_rseqc.txt
+    bamCoverage --version &> v_deeptools.txt || true
+    featureCounts -v &> v_featurecounts.txt
+    rsem-calculate-expression --version &> v_rsem.txt
+    salmon --version &> v_salmon.txt
+    picard MarkDuplicates --version &> v_markduplicates.txt  || true
+    samtools --version &> v_samtools.txt
+    multiqc --version &> v_multiqc.txt
+    Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
+    Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
+    umi_tools --version &> v_umi_tools.txt
+    unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
 
 /*
  * STEP 16 - MultiQC
@@ -2119,29 +2134,29 @@ process MULTIQC {
     !params.skip_multiqc
 
     input:
-    file multiqc_config from ch_multiqc_config
-    file (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
-    file (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
-    file ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
-    file ('alignment/*') from alignment_logs.collect().ifEmpty([])
-    file ('rseqc/*') from rseqc_results.collect().ifEmpty([])
-    file ('picard/*') from picard_results.collect().ifEmpty([])
-    file ('qualimap/*') from qualimap_results.collect().ifEmpty([])
-    file ('preseq/*') from preseq_results.collect().ifEmpty([])
-    file ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-    file ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
-    file ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
-    file ('rsem/*') from rsem_logs.collect().ifEmpty([])
-    file ('salmon/*') from salmon_logs.collect().ifEmpty([])
-    file ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
-    file ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
-    file ('software_versions/*') from ch_software_versions_yaml.collect()
-    file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
+    path multiqc_config from ch_multiqc_config
+    path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
+    path (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
+    path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
+    path ('alignment/*') from alignment_logs.collect().ifEmpty([])
+    path ('rseqc/*') from rseqc_results.collect().ifEmpty([])
+    path ('picard/*') from picard_results.collect().ifEmpty([])
+    path ('qualimap/*') from qualimap_results.collect().ifEmpty([])
+    path ('preseq/*') from preseq_results.collect().ifEmpty([])
+    path ('dupradar/*') from dupradar_results.collect().ifEmpty([])
+    path ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
+    path ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
+    path ('rsem/*') from rsem_logs.collect().ifEmpty([])
+    path ('salmon/*') from salmon_logs.collect().ifEmpty([])
+    path ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
+    path ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
+    path ('software_versions/*') from ch_software_versions_yaml.collect()
+    path workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
 
     output:
-    file "*multiqc_report.html" into ch_multiqc_report
-    file "*_data"
-    file "multiqc_plots"
+    path "*multiqc_report.html" into ch_multiqc_report
+    path "*_data"
+    path "multiqc_plots"
 
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
@@ -2159,11 +2174,11 @@ process OUTPUT_DOCUMENTATION {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
 
     input:
-    file output_docs from ch_output_docs
-    file images from ch_output_docs_images
+    path output_docs from ch_output_docs
+    path images from ch_output_docs_images
 
     output:
-    file "results_description.html"
+    path "results_description.html"
 
     script:
     """

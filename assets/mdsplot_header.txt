@@ -6,6 +6,6 @@
 # plot_type: 'scatter'
 # anchor: 'ngi_rnaseq-mds_plot'
 # pconfig:
-#     xlab: 'Leading'
 #     title: 'MDS Plot'
+#     xlab: 'Leading'
 #     ylab: 'logFC'

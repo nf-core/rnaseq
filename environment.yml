@@ -11,16 +11,12 @@ dependencies:
   - conda-forge::markdown=3.2.2
   - conda-forge::pymdown-extensions=8.0
   - conda-forge::pygments=2.6.1
+  - conda-forge::pigz=2.3.4 ## Required for TrimGalore multi-threading
   - conda-forge::r-base=4.0.2
   - conda-forge::r-data.table=1.12.8
   - conda-forge::r-gplots=3.0.4
-  - conda-forge::pigz=2.3.4 ## Required for TrimGalore multi-threading
 
   ## bioconda packages
-  - bioconda::bioconductor-dupradar=1.18.0
-  - bioconda::bioconductor-edger=3.30.0
-  - bioconda::bioconductor-tximeta=1.6.2
-  - bioconda::bioconductor-summarizedexperiment=1.18.1
   - bioconda::fastqc=0.11.9
   - bioconda::trim-galore=0.6.5
   - bioconda::gffread=0.12.1
@@ -39,3 +35,10 @@ dependencies:
   - bioconda::qualimap=2.2.2d
   - bioconda::rseqc=3.0.1
   - bioconda::multiqc=1.9
+  - bioconda::bioconductor-dupradar=1.18.0
+  - bioconda::bioconductor-edger=3.30.0
+  - bioconda::bioconductor-tximeta=1.6.2
+  - bioconda::bioconductor-summarizedexperiment=1.18.1
+
+
+

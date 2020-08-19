@@ -9,23 +9,23 @@ These files can be found in the pipeline `work` directory if needed.
 Alternatively, re-run the pipeline using `-resume` in addition to one of
 the below command-line options and they will be copied into the results directory:
 
-`--saveAlignedIntermediates`
+`--save_align_intermeds`
 The final BAM files created after the Picard MarkDuplicates step are always saved
 and can be found in the `markDuplicates/` folder.
 Specify this flag to also copy out BAM files from STAR / HISAT2 alignment and sorting steps.
 
-`--saveTrimmed`
+`--save_trimmed`
 Specify to save trimmed FastQ files to the results directory.
 
-`--saveReference`
+`--save_reference`
 Save any downloaded or generated reference genome files to your results folder.
 These can then be used for future pipeline runs, reducing processing times.
 
-`--save_umi_intermediates`
-UMI extraction and deduplication generates intermediate FastQ filese with the UMIs 
-removed from the read and added to the FastQ header, and deduplicated BAM files. 
-Enabling this option saves these files to the `umitools` folder in the 
-results directory. 
+`--save_umi_intermeds`
+UMI extraction and deduplication generates intermediate FastQ filese with the UMIs
+removed from the read and added to the FastQ header, and deduplicated BAM files.
+Enabling this option saves these files to the `umitools` folder in the
+results directory.
 
 -----------------------------------
  Setting defaults in a config file
@@ -34,10 +34,10 @@ If you would always like these files to be saved without having to specify this 
 the command line, you can save the following to your personal configuration file
 (eg. `~/.nextflow/config`):
 
-params.saveReference = true
-params.saveTrimmed = true
-params.saveAlignedIntermediates = true
-params.save_umi_intermediates = true
+params.save_reference = true
+params.save_trimmed = true
+params.save_align_intermeds = true
+params.save_umi_intermeds = true
 
 For more help, see the following documentation:
 

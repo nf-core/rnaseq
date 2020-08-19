@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0) [#384](https://github.com/nf-core/rnaseq/issues/384)
 * FastQC uses correct number of threads now [#437](https://github.com/nf-core/rnaseq/issues/434)
 * Fixed MDS plot axis labels [#302](https://github.com/nf-core/rnaseq/issues/302)
+* Change process names to uppercase.
 
 ### Updated Packages
 

@@ -1315,6 +1315,7 @@ if (!params.skip_alignment) {
                 --runDirPerm All_RWX $unaligned \\
                 --quantMode TranscriptomeSAM \\
                 --outFileNamePrefix $prefix $seq_center \\
+                --runRNGseed 0 \\
                 $params.star_options
 
             samtools index ${prefix}Aligned.sortedByCoord.out.bam

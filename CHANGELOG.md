@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Change process names to uppercase
 * Replace `set` with `tuple` and `file` with `path`
 * Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
+* Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
 
 ### Updated Packages
 

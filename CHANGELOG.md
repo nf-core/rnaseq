@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Pipeline enhancements & fixes
 
-* Minor tweaks to software version commands
+* Updated template to nf-core/tools `v1.10.2`
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
 * Fixes an issue where MultiQC fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
@@ -16,11 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 * Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 * Fixed issue where featureCounts process fails when setting --fc_count_type to gene [#440](https://github.com/nf-core/rnaseq/issues/440)
-* Add AWS tests GitHub actions workflow for small tests
 * Optimise MultiQC configuration for faster run-time on huge sample numbers
-* Build Docker image using GitHub Actions
-  * Pull-requests now rebuild the image if the software environment has been changed (so tests should pass)
-  * Builds are done on GitHub Actions and pushed to Docker Hub, which is much faster than waiting for Docker Hub to build
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
@@ -32,41 +28,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
 * Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0) [#384](https://github.com/nf-core/rnaseq/issues/384)
 * FastQC uses correct number of threads now [#437](https://github.com/nf-core/rnaseq/issues/434)
-* Updated template to nf-core/tools v1.10.2
+* Fixed MDS plot axis labels [#302](https://github.com/nf-core/rnaseq/issues/302)
 
-#### Updated Packages
+### Updated Packages
 
-* Salmon `0.14.2` -> `1.1.0`
-* MultiQC `1.7` -> `1.9`
-* Remove pinning of MatPlotLib version
-* R-Base updated to 4.0.2
-* R-Data.table updated to 1.12.8
-* R-Gplots updated to 3.0.4
-* Markdown updated to 3.2.2
-* Pymdown-extensions updated to 7.1
-* Pygments updated to 2.6.1
-* Dupradar updated to 1.18.0
-* EdgeR updated to 3.30.0
-* Tximeta updated to 1.6.2
-* SummarizedExperiment updated to 1.18.1
-* Deeptools updated to 3.4.3
-* FastQC updated to 0.11.9
-* GFFRead updated to 0.11.7
-* HISAT2 updated to 2.2.0
-* Picard updated to 2.23.2
-* Qualimap updated to 2.2.2d
-* Salmon updated to 1.3.0
-* Samtools updated to 1.10
-* Sortmerna updated to 4.2.0
-* Stringtie updated to 2.1.2
-* Subread updated to 2.0.1
-* trim-galore updated to 0.6.5
+* Update `salmon` `0.14.2` -> `1.3.0`
+* Update `multiqc` `1.7` -> `1.9`
+* Update `r-base` `3.6.1` -> `4.0.2`
+* Update `r-data.table` `1.12.4` -> `1.12.8`
+* Update `r-gplots` `3.0.1.1` -> `3.0.4`
+* Update `bioconductor-dupradar` `1.14.0` -> `1.18.0`
+* Update `bioconductor-edger` `3.26.5` -> `3.30.0`
+* Update `bioconductor-tximeta` `1.2.2` -> `1.6.2`
+* Update `bioconductor-summarizedexperiment` `1.14.0` -> `1.18.1`
+* Update `deeptools` `3.3.1` -> `3.4.3`
+* Update `fastqc` `0.11.8` -> `0.11.9`
+* Update `gffread` `0.11.4` -> `0.12.1`
+* Update `hisat2` `2.1.0` -> `2.2.1`
+* Update `picard` `2.21.1` -> `2.23.3`
+* Update `qualimap` `2.2.2c`-> `2.2.2d`
+* Update `samtools` `1.9` -> `1.10`
+* Update `sortmerna` `2.1b` -> `4.2.0`
+* Update `stringtie` `2.0` -> `2.1.2`
+* Update `subread` `1.6.4` -> `2.0.1`
+* Update `trim-galore` `0.6.4` -> `0.6.5`
 
-#### Added / Removed Packages
+### Added / Removed Packages
 
-* Added `pigz` `2.3.4` for parallelized trim-galore support
-* Added `rsem` `1.3.3` for gene/transcript quantification
-* Added `umi_tools` `1.0.1` for UMI extraction and deduplication
+* Add `pigz` `2.3.4`
+* Add `rsem` `1.3.3`
+* Add `umi_tools` `1.0.1`
+* Add `python` `3.7.8`
+* Add `markdown` `3.2.2`
+* Add `pymdown-extensions` `8.0`
+* Add `pygments` `2.6.1`
+* Remove `matplotlib`
+* Remove `r-markdown`
 
 ## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 

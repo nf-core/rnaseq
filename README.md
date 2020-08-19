@@ -57,7 +57,7 @@ See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options
 
 ### Documentation
 
-The nf-core/rnaseq pipeline comes with documentation about the pipeline which you can read at [https://nf-co.re/rnaseq](https://nf-co.re/rnaseq) or find in the [`docs/` directory](docs).
+The nf-core/rnaseq pipeline comes with documentation about the pipeline which you can read on the [nf-core website](https://nf-co.re/rnaseq) or find in the [`docs/` directory](docs).
 
 ### Credits
 

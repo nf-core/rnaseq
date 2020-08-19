@@ -37,4 +37,4 @@ jobs:
             --job-name nf-core-rnaseq \
             --job-queue $AWS_JOB_QUEUE \
             --job-definition $AWS_JOB_DEFINITION \
-            --container-overrides '{"command": ["nf-core/rnaseq", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/rnaseq/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/rnaseq/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
+            --container-overrides '{"command": ["nf-core/rnaseq", "-r '"${GITHUB_SHA}"' -profile test_full --outdir s3://'"${AWS_S3_BUCKET}"'/rnaseq/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/rnaseq/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'

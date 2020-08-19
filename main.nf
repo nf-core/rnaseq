@@ -974,8 +974,8 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
         }
     }
     process SALMON_INDEX {
-        label "salmon"
         tag "$fasta"
+        label "salmon"
         publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
@@ -1078,8 +1078,8 @@ if (params.with_umi) {
  */
 if (!params.skip_trimming) {
     process TRIMGALORE {
-        label 'low_memory'
         tag "$name"
+        label 'process_high'
         publishDir "${params.outdir}/trim_galore", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
@@ -1100,6 +1100,17 @@ if (!params.skip_trimming) {
         path "where_are_my_files.txt"
 
         script:
+        // Calculate number of --cores for TrimGalore based on value of task.cpus
+        // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
+        // See: https://github.com/nf-core/atacseq/pull/65
+        def cores = 1
+        if (task.cpus) {
+            cores = (task.cpus as int) - 4
+            if (params.single_end) cores = (task.cpus as int) - 3
+            if (cores < 1) cores = 1
+            if (cores > 4) cores = 4
+        }
+
         c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
         c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
         tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
@@ -1107,11 +1118,11 @@ if (!params.skip_trimming) {
         nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
         if (params.single_end) {
             """
-            trim_galore --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
+            trim_galore --cores $cores --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
             """
         } else {
             """
-            trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
+            trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
             """
         }
     }
@@ -1130,8 +1141,8 @@ if (!params.remove_ribo_rna) {
     sortmerna_logs = Channel.empty()
 } else {
     process SORTMERNA_INDEXDBRNA {
-        label 'low_memory'
         tag "${fasta.baseName}"
+        label 'low_memory'
 
         input:
         path fasta from sortmerna_fasta
@@ -1148,8 +1159,8 @@ if (!params.remove_ribo_rna) {
     }
 
     process SORTMERNA {
-        label 'low_memory'
         tag "$name"
+        label 'low_memory'
         publishDir "${params.outdir}/SortMeRNA", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
@@ -1924,8 +1935,8 @@ if (!params.skip_alignment) {
     * STEP 14 - edgeR MDS and heatmap
     */
     process SAMPLE_CORRELATION {
-        label 'low_memory'
         tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
+        label 'low_memory'
         publishDir "${params.outdir}/sample_correlation", mode: params.publish_dir_mode
 
         when:

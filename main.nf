@@ -139,9 +139,9 @@ params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : fals
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
-ch_mdsplot_header = Channel.fromPath("$baseDir/assets/mdsplot_header.txt", checkIfExists: true)
-ch_heatmap_header = Channel.fromPath("$baseDir/assets/heatmap_header.txt", checkIfExists: true)
-ch_biotypes_header = Channel.fromPath("$baseDir/assets/biotypes_header.txt", checkIfExists: true)
+ch_mdsplot_header = Channel.fromPath("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
+ch_heatmap_header = Channel.fromPath("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
+ch_biotypes_header = Channel.fromPath("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 Channel.fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
        .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort
              ch_where_umi_extract; ch_where_umi_dedup}

@@ -1027,7 +1027,6 @@ if (params.with_umi) {
     process UMITOOLS_EXTRACT {
         tag "$name"
         label "low_memory"
-        cpus 1
         publishDir "${params.outdir}/umitools/extract", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.endsWith('.log')) filename
@@ -1533,7 +1532,7 @@ if (!params.skip_alignment) {
     * STEP 4 - RSeQC analysis
     */
     process RSEQC {
-        tag "${bam_rseqc.baseName - '.sorted'}"
+        tag "${bam.baseName - '.sorted'}"
         label 'mid_memory'
         publishDir "${params.outdir}/rseqc" , mode: params.publish_dir_mode,
             saveAs: { filename ->
@@ -1566,8 +1565,8 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_rseqc
 
         input:
-        path bam_rseqc
-        path index from bam_index_rseqc
+        path bam from bam_rseqc
+        path bai from bam_index_rseqc
         path bed12 from bed_rseqc.collect()
 
         output:
@@ -1575,13 +1574,13 @@ if (!params.skip_alignment) {
 
         script:
         """
-        infer_experiment.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.infer_experiment.txt
-        junction_annotation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12 2> ${bam_rseqc.baseName}.junction_annotation_log.txt
-        bam_stat.py -i $bam_rseqc 2> ${bam_rseqc.baseName}.bam_stat.txt
-        junction_saturation.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
-        inner_distance.py -i $bam_rseqc -o ${bam_rseqc.baseName}.rseqc -r $bed12
-        read_distribution.py -i $bam_rseqc -r $bed12 > ${bam_rseqc.baseName}.read_distribution.txt
-        read_duplication.py -i $bam_rseqc -o ${bam_rseqc.baseName}.read_duplication
+        infer_experiment.py -i $bam -r $bed12 > ${bam.baseName}.infer_experiment.txt
+        junction_annotation.py -i $bam -o ${bam.baseName}.rseqc -r $bed12 2> ${bam.baseName}.junction_annotation_log.txt
+        bam_stat.py -i $bam 2> ${bam.baseName}.bam_stat.txt
+        junction_saturation.py -i $bam -o ${bam.baseName}.rseqc -r $bed12
+        inner_distance.py -i $bam -o ${bam.baseName}.rseqc -r $bed12
+        read_distribution.py -i $bam -r $bed12 > ${bam.baseName}.read_distribution.txt
+        read_duplication.py -i $bam -o ${bam.baseName}.read_duplication
         """
     }
 
@@ -1681,7 +1680,7 @@ if (!params.skip_alignment) {
     * STEP 8 - dupRadar
     */
     process DUPRADAR {
-        tag "${bam_md.baseName - '.sorted.markDups'}"
+        tag "${bam.baseName - '.sorted.markDups'}"
         label 'high_time'
         publishDir "${params.outdir}/dupradar", mode: params.publish_dir_mode,
             saveAs: { filename ->
@@ -1698,7 +1697,7 @@ if (!params.skip_alignment) {
         !params.skip_qc && !params.skip_dupradar
 
         input:
-        path bam_md
+        path bam from bam_md
         path gtf from gtf_dupradar.collect()
 
         output:
@@ -1713,7 +1712,7 @@ if (!params.skip_alignment) {
         }
         def paired = params.single_end ? 'single' :  'paired'
         """
-        dupRadar.r $bam_md $gtf $dupradar_direction $paired $task.cpus
+        dupRadar.r $bam $gtf $dupradar_direction $paired $task.cpus
         """
     }
 
@@ -1721,7 +1720,7 @@ if (!params.skip_alignment) {
     * STEP 9 - Feature counts
     */
     process SUBREAD_FEATURECOUNTS {
-        tag "${bam_featurecounts.baseName - '.sorted'}"
+        tag "${bam.baseName - '.sorted'}"
         label 'low_memory'
         publishDir "${params.outdir}/featureCounts", mode: params.publish_dir_mode,
             saveAs: { filename ->
@@ -1732,14 +1731,14 @@ if (!params.skip_alignment) {
             }
 
         input:
-        path bam_featurecounts
+        path bam from bam_featurecounts
         path gtf from gtf_featureCounts.collect()
         path biotypes_header from ch_biotypes_header.collect()
 
         output:
-        path "${bam_featurecounts.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
-        path "${bam_featurecounts.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-        path "${bam_featurecounts.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
+        path "${bam.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+        path "${bam.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
+        path "${bam.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
 
         script:
         def featureCounts_direction = 0
@@ -1750,19 +1749,19 @@ if (!params.skip_alignment) {
             featureCounts_direction = 2
         }
         // Try to get real sample name
-        sample_name = bam_featurecounts.baseName - 'Aligned.sortedByCoord.out' - '_subsamp.sorted'
-        biotype_qc = params.skip_biotype_qc ? '' : "featureCounts -a $gtf -g $biotype -t ${params.fc_count_type} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts"
-        mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv"
+        sample_name = bam.baseName - 'Aligned.sortedByCoord.out' - '_subsamp.sorted'
+        biotype_qc = params.skip_biotype_qc ? '' : "featureCounts -a $gtf -g $biotype -t ${params.fc_count_type} -o ${bam.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam"
+        mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam.baseName}_biotype_counts_gs_mqc.tsv"
         """
         featureCounts \\
             -a $gtf \\
             -g $params.fc_group_features \\
             -t $params.fc_count_type \\
-            -o ${bam_featurecounts.baseName}_gene.featureCounts.txt \\
+            -o ${bam.baseName}_gene.featureCounts.txt \\
             $extraAttributes \\
             -p \\
             -s $featureCounts_direction \\
-            $bam_featurecounts
+            $bam
         $biotype_qc
         $mod_biotype
         """
@@ -1881,7 +1880,7 @@ if (!params.skip_alignment) {
     * STEP 13 - stringtie FPKM
     */
     process STRINGTIE {
-        tag "${bam_stringtieFPKM.baseName - '.sorted'}"
+        tag "${bam.baseName - '.sorted'}"
         publishDir "${params.outdir}/stringtieFPKM", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
@@ -1891,14 +1890,14 @@ if (!params.skip_alignment) {
             }
 
         input:
-        path bam_stringtieFPKM
+        path bam from bam_stringtieFPKM
         path gtf from gtf_stringtieFPKM.collect()
 
         output:
-        path "${bam_stringtieFPKM.baseName}_transcripts.gtf"
-        path "${bam_stringtieFPKM.baseName}.gene_abund.txt"
-        path "${bam_stringtieFPKM}.cov_refs.gtf"
-        path "${bam_stringtieFPKM.baseName}_ballgown"
+        path "${bam.baseName}_transcripts.gtf"
+        path "${bam.baseName}.gene_abund.txt"
+        path "${bam}.cov_refs.gtf"
+        path "${bam.baseName}_ballgown"
 
         script:
         def st_direction = ''
@@ -1909,14 +1908,14 @@ if (!params.skip_alignment) {
         }
         def ignore_gtf = params.stringtie_ignore_gtf ? "" : "-e"
         """
-        stringtie $bam_stringtieFPKM \\
+        stringtie $bam \\
             $st_direction \\
-            -o ${bam_stringtieFPKM.baseName}_transcripts.gtf \\
+            -o ${bam.baseName}_transcripts.gtf \\
             -v \\
             -G $gtf \\
-            -A ${bam_stringtieFPKM.baseName}.gene_abund.txt \\
-            -C ${bam_stringtieFPKM}.cov_refs.gtf \\
-            -b ${bam_stringtieFPKM.baseName}_ballgown \\
+            -A ${bam.baseName}.gene_abund.txt \\
+            -C ${bam}.cov_refs.gtf \\
+            -b ${bam.baseName}_ballgown \\
             $ignore_gtf
         """
     }
@@ -2154,7 +2153,7 @@ process MULTIQC {
 
     input:
     path multiqc_config from ch_multiqc_config
-    path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
+    path mqc_custom_config from ch_multiqc_custom_config.collect().ifEmpty([])
     file (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
     path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     path ('alignment/*') from alignment_logs.collect().ifEmpty([])

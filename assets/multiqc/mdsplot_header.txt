@@ -7,5 +7,5 @@
 # anchor: 'ngi_rnaseq-mds_plot'
 # pconfig:
 #     title: 'MDS Plot'
-#     xlab: 'Leading'
-#     ylab: 'logFC'
+#     xlab: 'Leading logFC dim 1'
+#     ylab: 'Leading logFC dim 2'

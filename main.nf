@@ -1090,22 +1090,22 @@ if (params.with_umi) {
         script:
         if (params.single_end) {
             """
-            umi_tools extract \
-                -I $reads \
-                -S ${name}_umi_extracted.fq.gz \
-                --extract-method=${params.umitools_extract_method} \
-                --bc-pattern="${params.umitools_bc_pattern}" \
+            umi_tools extract \\
+                -I $reads \\
+                -S ${name}_umi_extracted.fq.gz \\
+                --extract-method=${params.umitools_extract_method} \\
+                --bc-pattern="${params.umitools_bc_pattern}" \\
                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
             """
         }  else {
             """
-            umi_tools extract \
-                -I ${reads[0]} \
-                --read2-in=${reads[1]} \
-                -S ${name}_umi_extracted_R1.fq.gz \
-                --read2-out=${name}_umi_extracted_R2.fq.gz \
-                --extract-method=${params.umitools_extract_method} \
-                --bc-pattern="${params.umitools_bc_pattern}" \
+            umi_tools extract \\
+                -I ${reads[0]} \\
+                --read2-in=${reads[1]} \\
+                -S ${name}_umi_extracted_R1.fq.gz \\
+                --read2-out=${name}_umi_extracted_R2.fq.gz \\
+                --extract-method=${params.umitools_extract_method} \\
+                --bc-pattern="${params.umitools_bc_pattern}" \\
                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
             """
         }
@@ -1217,18 +1217,17 @@ if (!params.remove_ribo_rna) {
         def Refs = ''
         for (i=0; i<db_fasta.size(); i++) { Refs+= ":${db_fasta[i]},${db_name[i]}" }
         Refs = Refs.substring(1)
-
         if (params.single_end) {
             """
-            gzip -d --force < ${reads} > all-reads.fastq
+            gzip -d --force < $reads > all-reads.fastq
 
-            sortmerna --ref ${Refs} \
-                --reads all-reads.fastq \
-                --num_alignments 1 \
-                -a $task.cpus \
-                --fastx \
-                --aligned rRNA-reads \
-                --other non-rRNA-reads \
+            sortmerna --ref $Refs \\
+                --reads all-reads.fastq \\
+                --num_alignments 1 \\
+                -a $task.cpus \\
+                --fastx \\
+                --aligned rRNA-reads \\
+                --other non-rRNA-reads \\
                 --log -v
 
             gzip --force < non-rRNA-reads.fastq > ${name}.fq.gz
@@ -1241,13 +1240,13 @@ if (!params.remove_ribo_rna) {
             gzip -d --force < ${reads[1]} > reads-rv.fq
             merge-paired-reads.sh reads-fw.fq reads-rv.fq all-reads.fastq
 
-            sortmerna --ref ${Refs} \
-                --reads all-reads.fastq \
-                --num_alignments 1 \
-                -a $task.cpus \
-                --fastx --paired_in \
-                --aligned rRNA-reads \
-                --other non-rRNA-reads \
+            sortmerna --ref $Refs \\
+                --reads all-reads.fastq \\
+                --num_alignments 1 \\
+                -a $task.cpus \\
+                --fastx --paired_in \\
+                --aligned rRNA-reads \\
+                --other non-rRNA-reads \\
                 --log -v
 
             unmerge-paired-reads.sh non-rRNA-reads.fastq non-rRNA-reads-fw.fq non-rRNA-reads-rv.fq
@@ -1319,11 +1318,11 @@ if (!params.skip_alignment) {
             file "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index
 
             script:
-            prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
+            def prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
             def star_mem = task.memory ?: params.star_memory ?: false
             def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-            seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
-            unaligned = params.save_unaligned ? "--outReadsUnmapped Fastx" : ''
+            def seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
+            def unaligned = params.save_unaligned ? "--outReadsUnmapped Fastx" : ''
             """
             STAR --genomeDir $index \\
                 --sjdbGTFfile $gtf \\
@@ -1392,36 +1391,37 @@ if (!params.skip_alignment) {
             } else if (reverse_stranded && !unstranded) {
                 rnastrandness = params.single_end ? '--rna-strandness R' : '--rna-strandness RF'
             }
-
             if (params.single_end) {
                 unaligned = params.save_unaligned ? "--un-gz unmapped.hisat2.gz" : ''
                 """
-                hisat2 -x $index_base \\
-                        -U $reads \\
-                        $rnastrandness \\
-                        --known-splicesite-infile $alignment_splicesites \\
-                        -p $task.cpus $unaligned\\
-                        --met-stderr \\
-                        --new-summary \\
-                        --dta \\
-                        --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
-                        | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
+                hisat2 \\
+                    -x $index_base \\
+                    -U $reads \\
+                    $rnastrandness \\
+                    --known-splicesite-infile $alignment_splicesites \\
+                    -p $task.cpus $unaligned\\
+                    --met-stderr \\
+                    --new-summary \\
+                    --dta \\
+                    --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                    | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
                 """
             } else {
                 unaligned = params.save_unaligned ? "--un-conc-gz unmapped.hisat2.gz" : ''
                 """
-                hisat2 -x $index_base \\
-                        -1 ${reads[0]} \\
-                        -2 ${reads[1]} \\
-                        $rnastrandness \\
-                        --known-splicesite-infile $alignment_splicesites \\
-                        --no-mixed \\
-                        --no-discordant \\
-                        -p $task.cpus $unaligned\\
-                        --met-stderr \\
-                        --new-summary \\
-                        --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
-                        | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
+                hisat2 \\
+                    -x $index_base \\
+                    -1 ${reads[0]} \\
+                    -2 ${reads[1]} \\
+                    $rnastrandness \\
+                    --known-splicesite-infile $alignment_splicesites \\
+                    --no-mixed \\
+                    --no-discordant \\
+                    -p $task.cpus $unaligned\\
+                    --met-stderr \\
+                    --new-summary \\
+                    --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
+                    | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
                 """
             }
         }
@@ -1490,10 +1490,11 @@ if (!params.skip_alignment) {
 
             script:
             """
-            umi_tools dedup -I ${bam_file} \
-                -S ${bam_file.baseName}_deduplicated.bam \
-                --output-stats=${bam_file.baseName} \
-                ${params.umitools_dedup_extra}
+            umi_tools dedup \\
+                -I $bam_file \\
+                -S ${bam_file.baseName}_deduplicated.bam \\
+                --output-stats=${bam_file.baseName} \\
+                $params.umitools_dedup_extra
             samtools index ${bam_file.baseName}_deduplicated.bam
             """
         }
@@ -1524,16 +1525,17 @@ if (!params.skip_alignment) {
                 def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
                 def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
                 """
-                samtools sort \
-                    ${bam_file} \
-                    -@ $task.cpus $avail_mem \
+                samtools sort \\
+                    $bam_file \\
+                    -@ $task.cpus $avail_mem \\
                     -o ${bam_file.baseName}.sorted.bam
                 samtools index ${bam_file.baseName}.sorted.bam
 
-                umi_tools dedup -I ${bam_file.baseName}.sorted.bam \
-                    -S ${bam_file.baseName}_deduplicated.bam \
-                    --output-stats=${bam_file.baseName} \
-                    ${params.umitools_dedup_extra}
+                umi_tools dedup \\
+                    -I ${bam_file.baseName}.sorted.bam \\
+                    -S ${bam_file.baseName}_deduplicated.bam \\
+                    --output-stats=${bam_file.baseName} \\
+                    $params.umitools_dedup_extra
                 """
             }
         }
@@ -1692,10 +1694,10 @@ if (!params.skip_alignment) {
             qualimap_direction = 'strand-specific-reverse'
         }
         def paired = params.single_end ? '' : '-pe'
-        memory = task.memory.toGiga() + "G"
+        def memory = task.memory.toGiga() + "G"
         """
         unset DISPLAY
-        qualimap --java-mem-size=${memory} rnaseq -p $qualimap_direction $paired -bam $bam -gtf $gtf -outdir ${bam.baseName}
+        qualimap --java-mem-size=$memory rnaseq -p $qualimap_direction $paired -bam $bam -gtf $gtf -outdir ${bam.baseName}
         """
     }
 
@@ -1776,7 +1778,15 @@ if (!params.skip_alignment) {
         biotype_qc = params.skip_biotype_qc ? '' : "featureCounts -a $gtf -g $biotype -t ${params.fc_count_type} -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts"
         mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam_featurecounts.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam_featurecounts.baseName}_biotype_counts_gs_mqc.tsv"
         """
-        featureCounts -a $gtf -g ${params.fc_group_features} -t ${params.fc_count_type} -o ${bam_featurecounts.baseName}_gene.featureCounts.txt $extraAttributes -p -s $featureCounts_direction $bam_featurecounts
+        featureCounts \\
+            -a $gtf \\
+            -g $params.fc_group_features \\
+            -t $params.fc_count_type \\
+            -o ${bam_featurecounts.baseName}_gene.featureCounts.txt \\
+            $extraAttributes \\
+            -p \\
+            -s $featureCounts_direction \\
+            $bam_featurecounts
         $biotype_qc
         $mod_biotype
         """
@@ -1827,18 +1837,20 @@ if (!params.skip_alignment) {
             file("*.stat") into rsem_logs
 
             script:
-            sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
-            paired_end_flag = params.single_end ? "" : "--paired-end"
+            def sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
+            def paired_end_flag = params.single_end ? "" : "--paired-end"
             """
             REF_FILENAME=\$(basename rsem/*.grp)
             REF_NAME="\${REF_FILENAME%.*}"
-            rsem-calculate-expression -p $task.cpus $paired_end_flag \
-            --bam \
-            --estimate-rspd \
-            --append-names \
-            ${bam_file} \
-            rsem/\$REF_NAME \
-            ${sample_name}
+            rsem-calculate-expression \\
+                -p $task.cpus \\
+                $paired_end_flag \\
+                --bam \\
+                --estimate-rspd \\
+                --append-names \\
+                $bam_file \\
+                rsem/\$REF_NAME \\
+                $sample_name
             """
         }
 
@@ -2006,7 +2018,7 @@ if (params.pseudo_aligner == 'salmon') {
             rnastrandness = params.single_end ? 'SR' : 'ISR'
         }
         def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
-        unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
+        def unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
         """
         salmon quant \\
             --validateMappings \\
@@ -2033,7 +2045,7 @@ if (params.pseudo_aligner == 'salmon') {
 
         script:
         """
-        parse_gtf.py --gtf $gtf --salmon salmon --id ${params.fc_group_features} --extra ${params.fc_extra_attributes} -o tx2gene.csv
+        parse_gtf.py --gtf $gtf --salmon salmon --id $params.fc_group_features --extra $params.fc_extra_attributes -o tx2gene.csv
         """
     }
 
@@ -2053,7 +2065,7 @@ if (params.pseudo_aligner == 'salmon') {
 
         script:
         """
-        tximport.r NULL salmon ${name}
+        tximport.r NULL salmon $name
         """
     }
 

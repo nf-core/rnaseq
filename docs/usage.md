@@ -6,31 +6,31 @@
 
 Three command line flags / config parameters set the library strandedness for a run:
 
-* `--forwardStranded`
-* `--reverseStranded`
-* `--unStranded`
+* `--forward_stranded`
+* `--reverse_stranded`
+* `--unstranded`
 
-If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forwardStranded` mode.
+If not set, the pipeline will be run as unstranded. Specifying `--pico` makes the pipeline run in `forward_stranded` mode.
 
 You can set a default in a custom Nextflow configuration file such as one saved in `~/.nextflow/config` (see the [nextflow docs](https://www.nextflow.io/docs/latest/config.html) for more). For example:
 
 ```nextflow
 params {
-    reverseStranded = true
+    reverse_stranded = true
 }
 ```
 
-If you have a default strandedness set in your personal config file you can use `--unStranded` to overwrite it for a given run.
+If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
 
 These flags affect the commands used for several steps in the pipeline * namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
 
-* `--forwardStranded`
+* `--forward_stranded`
   * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
   * featureCounts: `-s 1`
   * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
   * Qualimap: `-pe strand-specific-forward`
   * StringTie: `--fr`
-* `--reverseStranded`
+* `--reverse_stranded`
   * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
   * featureCounts: `-s 2`
   * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
@@ -127,7 +127,7 @@ This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by
 By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL:
 
 ```bash
-nextflow run nf-core/rnaseq --reads 'data/{R1,R2}*.fastq.gz' \
+nextflow run nf-core/rnaseq --input 'data/{R1,R2}*.fastq.gz' \
     --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
     --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz
 ```
@@ -136,7 +136,7 @@ This assumes that ALL of the reference files are compressed, including the refer
 
 ## Stand-alone scripts
 
-The `bin` directory contains some scripts used by the pipeline which may also be run manually:
+The `bin/` directory contains some scripts used by the pipeline which may also be run manually:
 
 * `gtf2bed`
   * Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
@@ -150,7 +150,7 @@ The `bin` directory contains some scripts used by the pipeline which may also be
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/rnaseq --reads '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
+nextflow run nf-core/rnaseq --input '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

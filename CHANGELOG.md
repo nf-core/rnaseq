@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--readPaths`                | `--input_paths`            |
 | `--singleEnd`                | `--single_end`             |
 | `--saveReference`            | `--save_reference`         |
+| `--compressedReference`      | `--compressed_reference`   |
 | `--forwardStranded`          | `--forward_stranded`       |
 | `--reverseStranded`          | `--reverse_stranded`       |
 | `--unStranded`               | `--unstranded`             |
@@ -84,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
 | `--sampleLevel`              | `--sample_level`           |
 | `--saveAlignedIntermediates` | `--save_align_intermeds`   |
+| `--save_umi_intermediates`   | `--save_umi_intermeds`     |
 | `--saveUnaligned`            | `--save_unaligned`         |
 | `--skipAlignment`            | `--skip_alignment`         |
 | `--skipQC`                   | `--skip_qc`                |

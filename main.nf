@@ -82,7 +82,7 @@ def helpMessage() {
       --skip_alignment [bool]         Skip alignment altogether (usually in favor of pseudoalignment)
       --percent_aln_skip [float]      Percentage alignment below which samples are removed from further processing. Default: 5%
 
-    Read Counting:
+    Read counting:
       --fc_extra_attributes [str]     Define which extra parameters should also be included in featureCounts (default: 'gene_name')
       --fc_group_features [str]       Define the attribute type used to group features. (default: 'gene_id')
       --fc_count_type [str]           Define the type used to assign reads. (default: 'exon')
@@ -141,9 +141,14 @@ params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: 
 ch_mdsplot_header = Channel.fromPath("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
 ch_heatmap_header = Channel.fromPath("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
 ch_biotypes_header = Channel.fromPath("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-Channel.fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
-       .into{ch_where_trim_galore; ch_where_star; ch_where_hisat2; ch_where_hisat2_sort
-             ch_where_umi_extract; ch_where_umi_dedup}
+Channel
+    .fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
+    .into { ch_where_trim_galore
+            ch_where_star
+            ch_where_hisat2
+            ch_where_hisat2_sort
+            ch_where_umi_extract
+            ch_where_umi_dedup }
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -167,7 +172,6 @@ if (params.pico) {
 
 // Get rRNA databases
 // Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
-
 rRNA_database = file(params.rrna_database_manifest)
 if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
 Channel
@@ -185,52 +189,64 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
 
 if (params.star_index && params.aligner == 'star' && !params.skip_alignment) {
     if (hasExtension(params.star_index, 'gz')) {
-        star_index_gz = Channel
+        Channel
             .fromPath(params.star_index, checkIfExists: true)
             .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
+            .set { star_index_gz }
     } else {
-        star_index = Channel
+        Channel
             .fromPath(params.star_index, checkIfExists: true)
             .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
+            .set { star_index }
     }
 } else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skip_alignment) {
     if (hasExtension(params.hisat2_index, 'gz')) {
-        hs2_indices_gz = Channel
+        Channel
             .fromPath("${params.hisat2_index}", checkIfExists: true)
             .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
+            .set { hs2_indices_gz }
     } else {
-        hs2_indices = Channel
+        Channel
             .fromPath("${params.hisat2_index}*", checkIfExists: true)
             .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
+            .set { hs2_indices }
     }
 }
 if ( params.fasta && !params.skip_alignment) {
     if (params.additional_fasta) {
         if ( hasExtension(params.additional_fasta, "gz" )){
-            Channel.fromPath(params.additional_fasta)
+            Channel
+                .fromPath(params.additional_fasta)
                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-                .into { additional_fasta_gz }
-            Channel.fromPath(params.fasta, checkIfExists: true)
+                .set { additional_fasta_gz }
+            Channel
+                .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
                 .set { genome_fasta_gz }
         } else {
-            Channel.fromPath(params.additional_fasta)
+            Channel
+                .fromPath(params.additional_fasta)
                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-                .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
-            Channel.fromPath(params.fasta, checkIfExists: true)
+                .into { ch_additional_fasta_for_gtf
+                        ch_additional_fasta_to_concat }
+            Channel
+                .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
                 .set { ch_genome_fasta }
         }
     } else {
         if (hasExtension(params.fasta, "gz")){
-            Channel.fromPath(params.fasta, checkIfExists: true)
+            Channel
+                .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
                 .set { genome_fasta_gz }
         } else {
-            Channel.fromPath(params.fasta)
+            Channel
+                .fromPath(params.fasta)
                 .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-                .into { ch_fasta_for_star_index; ch_fasta_for_hisat_index;
-                        ch_fasta_for_rsem_reference}
+                .into { ch_fasta_for_star_index
+                        ch_fasta_for_hisat_index
+                        ch_fasta_for_rsem_reference }
         }
     }
 } else if (params.skip_alignment) {
@@ -271,10 +287,13 @@ if (params.pseudo_aligner == 'salmon') {
         }
     } else if (params.fasta) {
         if (params.additional_fasta){
-            Channel.fromPath(params.additional_fasta)
+            Channel
+                .fromPath(params.additional_fasta)
                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-                .into { ch_additional_fasta_for_gtf; ch_additional_fasta_to_concat }
-            Channel.fromPath(params.fasta, checkIfExists: true)
+                .into { ch_additional_fasta_for_gtf
+                        ch_additional_fasta_to_concat }
+            Channel
+                .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
                 .set { ch_genome_fasta }
     } else if ( params.fasta && (params.gff || params.gtf)) {
@@ -282,13 +301,17 @@ if (params.pseudo_aligner == 'salmon') {
         // transcript fasta
         log.info "Extracting transcript fastas from genome fasta + gtf/gff"
         if (params.compressed_reference) {
-            Channel.fromPath(params.fasta, checkIfExists: true)
+            Channel
+                .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
                 .set { genome_fasta_gz }
         } else {
-            Channel.fromPath(params.fasta, checkIfExists: true)
+            Channel
+                .fromPath(params.fasta, checkIfExists: true)
                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-                .set { ch_fasta_for_salmon_transcripts }}}
+                .set { ch_fasta_for_salmon_transcripts }
+        }
+    }
     } else {
         exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
     }
@@ -306,7 +329,8 @@ if (params.rsem_reference && !params.skip_rsem && !params.skip_alignment) {
 }
 if (params.fasta && !params.skip_alignment) {
     if (hasExtension(params.fasta, 'gz')) {
-        Channel.fromPath(params.fasta, checkIfExists: true)
+        Channel
+            .fromPath(params.fasta, checkIfExists: true)
             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
             .set { genome_fasta_gz }
     }
@@ -333,11 +357,15 @@ if( params.gtf ) {
     }
 } else if (params.gff) {
     if (hasExtension(params.gff, 'gz')) {
-        gff_gz = Channel.fromPath(params.gff, checkIfExists: true)
+        Channel
+            .fromPath(params.gff, checkIfExists: true)
             .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
+            .set { gff_gz }
     } else {
-        gffFile = Channel.fromPath(params.gff, checkIfExists: true)
+        Channel
+            .fromPath(params.gff, checkIfExists: true)
             .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
+            .set { gffFile }
     }
 } else {
     exit 1, "No GTF or GFF3 annotation specified!"

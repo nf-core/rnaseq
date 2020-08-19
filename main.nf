@@ -1571,7 +1571,7 @@ if (!params.skip_alignment) {
     * STEP 5 - preseq analysis
     */
     process PRESEQ {
-        tag "${bam_preseq.baseName - '.sorted'}"
+        tag "${bam.baseName - '.sorted'}"
         label 'high_time'
         publishDir "${params.outdir}/preseq", mode: params.publish_dir_mode
 

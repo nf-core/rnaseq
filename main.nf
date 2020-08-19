@@ -68,8 +68,8 @@ def helpMessage() {
 
     Ribosomal RNA removal:
       --remove_ribo_rna [bool]        Removes ribosomal RNA using SortMeRNA
-      --save_nonrrna_reads [bool]     Save FastQ file intermediates after removing rRNA
-      --rrna_database_manifest [file] Path to file that contains file paths for rRNA databases, optional
+      --save_non_ribo_reads [bool]    Save FastQ file intermediates after removing rRNA
+      --ribo_database_manifest [file] Path to file that contains file paths for rRNA databases, optional
 
     Alignment:
       --aligner [str]                 Specifies the aligner to use (available are: 'hisat2', 'star')
@@ -172,7 +172,7 @@ if (params.pico) {
 
 // Get rRNA databases
 // Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
-rRNA_database = file(params.rrna_database_manifest)
+rRNA_database = file(params.ribo_database_manifest)
 if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
 Channel
     .from(rRNA_database.readLines())

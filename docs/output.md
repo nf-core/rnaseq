@@ -82,7 +82,7 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 
 * `reads/sample-fw.fq.gz`, `reads/sample-rv.fq.gz`
   * Trimmed and rRNA depleted FastQ data, reads forward and reverse.
-  * NB: Only saved if `--save_nonrrna_reads` has been specified.
+  * NB: Only saved if `--save_non_ribo_reads` has been specified.
 * `logs/sample_rRNA_report.txt`
   * Report how many reads where removed due to matches to reference database(s).
 

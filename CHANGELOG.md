@@ -83,8 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--skipTrimming`             | `--skip_trimming`          |
 | `--saveTrimmed`              | `--save_trimmed`           |
 | `--removeRiboRNA`            | `--remove_ribo_rna`        |
-| `--save_nonrRNA_reads`       | `--save_nonrrna_reads`     |
-| `--rRNA_database_manifest`   | `--rrna_database_manifest` |
+| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
+| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
 | `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
 | `--sampleLevel`              | `--sample_level`           |
 | `--saveAlignedIntermediates` | `--save_align_intermeds`   |

@@ -315,11 +315,11 @@
                     "type": "string",
                     "fa_icon": "fab fa-envira"
                 },
-                "save_nonrrna_reads": {
+                "save_non_ribo_reads": {
                     "type": "string",
                     "fa_icon": "fas fa-cloud-download-alt"
                 },
-                "rrna_database_manifest": {
+                "ribo_database_manifest": {
                     "type": "string",
                     "default": "/Users/alexanderpeltzer/IDEA/nf-core/rnaseq/assets/rrna-db-defaults.txt",
                     "fa_icon": "far fa-file-alt"

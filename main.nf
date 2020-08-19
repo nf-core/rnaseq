@@ -1008,7 +1008,7 @@ process FASTQC {
     !params.skip_fastqc
 
     input:
-    set val(name), file(reads) from ch_read_files_fastqc
+    tuple val(name), path(reads) from ch_read_files_fastqc
 
     output:
     path "*_fastqc.{zip,html}" into ch_fastqc_results
@@ -1037,11 +1037,11 @@ if (params.with_umi) {
             }
 
         input:
-        set val(name), file(reads) from raw_reads_umitools
+        tuple val(name), path(reads) from raw_reads_umitools
         path wherearemyfiles from ch_where_umi_extract.collect()
 
         output:
-        set val(name), file("*fq.gz") into raw_reads_trimgalore
+        tuple val(name), path("*fq.gz") into raw_reads_trimgalore
         path "*.log"
         path "where_are_my_files.txt"
 
@@ -1069,7 +1069,7 @@ if (params.with_umi) {
         }
     }
 } else {
-    raw_reads_umitools.set{raw_reads_trimgalore}
+    raw_reads_trimgalore = raw_reads_umitools
     umi_tools_extract_results = Channel.empty()
 }
 
@@ -1091,11 +1091,11 @@ if (!params.skip_trimming) {
             }
 
         input:
-        set val(name), file(reads) from raw_reads_trimgalore
+        tuple val(name), path(reads) from raw_reads_trimgalore
         path wherearemyfiles from ch_where_trim_galore.collect()
 
         output:
-        set val(name), file("*fq.gz") into trimgalore_reads
+        tuple val(name), path("*fq.gz") into trimgalore_reads
         path "*trimming_report.txt" into trimgalore_results
         path "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
         path "where_are_my_files.txt"
@@ -1117,18 +1117,17 @@ if (!params.skip_trimming) {
         }
     }
 } else {
-   raw_reads_trimgalore
-       .set {trimgalore_reads}
-   trimgalore_results = Channel.empty()
+    trimgalore_reads = raw_reads_trimgalore
+    trimgalore_results = Channel.empty()
 }
-
 
 /*
  * STEP 2+ - SortMeRNA - remove rRNA sequences on request
  */
 if (!params.remove_ribo_rna) {
     trimgalore_reads
-        .into { trimmed_reads_alignment; trimmed_reads_salmon }
+        .into { trimmed_reads_alignment
+                trimmed_reads_salmon }
     sortmerna_logs = Channel.empty()
 } else {
     process SORTMERNA_INDEXDBRNA {
@@ -1139,9 +1138,9 @@ if (!params.remove_ribo_rna) {
         path fasta from sortmerna_fasta
 
         output:
-        val("${fasta.baseName}") into sortmerna_db_name
-        file("$fasta") into sortmerna_db_fasta
-        file("${fasta.baseName}*") into sortmerna_db
+        val "${fasta.baseName}" into sortmerna_db_name
+        path "$fasta" into sortmerna_db_fasta
+        path "${fasta.baseName}*" into sortmerna_db
 
         script:
         """
@@ -1160,13 +1159,14 @@ if (!params.remove_ribo_rna) {
             }
 
         input:
-        set val(name), file(reads) from trimgalore_reads
-        val(db_name) from sortmerna_db_name.collect()
-        file(db_fasta) from sortmerna_db_fasta.collect()
-        file(db) from sortmerna_db.collect()
+        tuple val(name), path(reads) from trimgalore_reads
+        val db_name from sortmerna_db_name.collect()
+        path db_fasta from sortmerna_db_fasta.collect()
+        path db from sortmerna_db.collect()
 
         output:
-        set val(name), file("*.fq.gz") into trimmed_reads_alignment, trimmed_reads_salmon
+        tuple val(name), path("*.fq.gz") into trimmed_reads_alignment,
+                                              trimmed_reads_salmon
         path "*_rRNA_report.txt" into sortmerna_logs
 
 
@@ -1261,13 +1261,13 @@ if (!params.skip_alignment) {
                 }
 
             input:
-            set val(name), file(reads) from trimmed_reads_alignment
+            tuple val(name), path(reads) from trimmed_reads_alignment
             path index from star_index.collect()
             path gtf from gtf_star.collect()
             path wherearemyfiles from ch_where_star.collect()
 
             output:
-            set file("*Log.final.out"), file('*.sortedByCoord.out.bam'), file('*.toTranscriptome.out.bam') into star_aligned
+            tuple path("*Log.final.out"), path('*.sortedByCoord.out.bam'), path('*.toTranscriptome.out.bam') into star_aligned
             path "*.out" into alignment_logs
             path "*SJ.out.tab"
             path "*Log.out" into star_log
@@ -1305,11 +1305,9 @@ if (!params.skip_alignment) {
             .separate (star_bams, star_bams_transcriptome) {
                 bam_set -> [bam_set[1], bam_set[2]]
             }
-
-        star_bams.set{bam}
-        star_bams_transcriptome.set{bam_transcriptome}
+        bam = star_bams
+        bam_transcriptome = star_bams_transcriptome
     }
-
 
     /*
     * STEP 3 - align with HISAT2
@@ -1328,7 +1326,7 @@ if (!params.skip_alignment) {
                 }
 
             input:
-            set val(name), file(reads) from trimmed_reads_alignment
+            tuple val(name), path(reads) from trimmed_reads_alignment
             path hs2_indices from hs2_indices.collect()
             path alignment_splicesites from alignment_splicesites.collect()
             path wherearemyfiles from ch_where_hisat2.collect()
@@ -1421,8 +1419,10 @@ if (!params.skip_alignment) {
     */
     if (params.with_umi) {
         // preseq does not work on deduplicated BAM file. Pass it the raw BAM file.
-        bam.into {bam_umitools_dedup; bam_preseq}
-        bam_index.set{bam_index_umitools_dedup}
+        bam
+            .into { bam_umitools_dedup
+                    bam_preseq }
+        bam_index_umitools_dedup = bam_index
 
         process UMITOOLS_DEDUP {
             tag "${bam_file.baseName}"
@@ -1498,18 +1498,36 @@ if (!params.skip_alignment) {
             }
         }
 
-        bam_dedup.into{ bam_count; bam_rseqc; bam_qualimap; bam_markduplicates;
-                        bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp }
-        bam_dedup_index.into {bam_index_rseqc; bam_index_genebody}
+        bam_dedup
+            .into { bam_count
+                    bam_rseqc
+                    bam_qualimap
+                    bam_markduplicates
+                    bam_featurecounts
+                    bam_stringtieFPKM
+                    bam_forSubsamp
+                    bam_skipSubsamp }
+        bam_dedup_index
+            .into { bam_index_rseqc
+                    bam_index_genebody }
     } else {
-        bam.into { bam_count; bam_rseqc; bam_qualimap; bam_preseq; bam_markduplicates;
-                    bam_featurecounts; bam_stringtieFPKM; bam_forSubsamp; bam_skipSubsamp}
-        bam_index.into {bam_index_rseqc; bam_index_genebody}
+        bam
+            .into { bam_count
+                    bam_rseqc
+                    bam_qualimap
+                    bam_preseq
+                    bam_markduplicates
+                    bam_featurecounts
+                    bam_stringtieFPKM
+                    bam_forSubsamp
+                    bam_skipSubsamp }
+        bam_index
+            .into { bam_index_rseqc
+                    bam_index_genebody }
         if (!skip_rsem) {
-            bam_transcriptome.set{bam_rsem}
+            bam_rsem = bam_transcriptome
         }
     }
-
 
     /*
     * STEP 4 - RSeQC analysis
@@ -1790,9 +1808,9 @@ if (!params.skip_alignment) {
             path "rsem" from rsem_reference.collect()
 
             output:
-            file("*.genes.results") into rsem_results_genes
-            file("*.isoforms.results") into rsem_results_isoforms
-            file("*.stat") into rsem_logs
+            path "*.genes.results" into rsem_results_genes
+            path "*.isoforms.results" into rsem_results_isoforms
+            path "*.stat" into rsem_logs
 
             script:
             def sample_name = bam_file.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
@@ -1825,10 +1843,10 @@ if (!params.skip_alignment) {
             path rsem_res_isoform from rsem_results_isoforms.collect()
 
             output:
-            file("rsem_tpm_gene.txt")
-            file("rsem_tpm_isoform.txt")
-            file("rsem_transcript_counts_gene.txt")
-            file("rsem_transcript_counts_isoform.txt")
+            path "rsem_tpm_gene.txt"
+            path "rsem_tpm_isoform.txt"
+            path "rsem_transcript_counts_gene.txt"
+            path "rsem_transcript_counts_isoform.txt"
 
             script:
             """
@@ -1960,13 +1978,14 @@ if (params.pseudo_aligner == 'salmon') {
         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 
         input:
-        set sample, file(reads) from trimmed_reads_salmon
+        tuple val(sample), path(reads) from trimmed_reads_salmon
         path index from salmon_index.collect()
         path gtf from gtf_salmon.collect()
 
         output:
         path "${sample}/" into salmon_logs
-        set val(sample), file("${sample}/") into salmon_tximport, salmon_parsegtf
+        tuple val(sample), path("${sample}/") into salmon_tximport,
+                                                   salmon_parsegtf
 
         script:
         def rnastrandness = params.single_end ? 'U' : 'IU'
@@ -2012,7 +2031,7 @@ if (params.pseudo_aligner == 'salmon') {
         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 
         input:
-        set val(name), file("salmon/*") from salmon_tximport
+        tuple val(name), path("salmon/*") from salmon_tximport
         path tx2gene from salmon_tx2gene.collect()
 
         output:

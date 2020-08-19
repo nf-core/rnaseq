@@ -64,7 +64,7 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 
 * `sample_val_1.fq.gz`, `sample_val_2.fq.gz`
   * Trimmed FastQ data, reads 1 and 2.
-  * NB: Only saved if `--saveTrimmed` has been specified.
+  * NB: Only saved if `--save_trimmed` has been specified.
 * `logs/sample_val_1.fq.gz_trimming_report.txt`
   * Trimming report (describes which parameters that were used)
 * `FastQC/sample_val_1_fastqc.zip`
@@ -74,7 +74,7 @@ Single-end data will have slightly different file names and only one FastQ file 
 
 ## SortMeRNA
 
-When `--removeRiboRNA` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
+When `--remove_ribo_rna` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
 
 **Output directory: `results/SortMeRNA`**
 
@@ -82,7 +82,7 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 
 * `reads/sample-fw.fq.gz`, `reads/sample-rv.fq.gz`
   * Trimmed and rRNA depleted FastQ data, reads forward and reverse.
-  * NB: Only saved if `--save_nonrRNA_reads` has been specified.
+  * NB: Only saved if `--save_nonrrna_reads` has been specified.
 * `logs/sample_rRNA_report.txt`
   * Report how many reads where removed due to matches to reference database(s).
 
@@ -107,7 +107,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 * `Sample_SJ.out.tab`
   * Filtered splice junctions detected in the mapping
 * `unaligned/...`
-  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--saveUnaligned` output.
+  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--save_unaligned` output.
 
 ## UMI tools
 
@@ -120,7 +120,7 @@ address PCR-bias. UMI-tools performs two independent steps:
 **Output directory: `results/umitools/extract`**
 
 For each sample, this directory contains a log file.
-If `--save_umi_intermediates` is specified, this directory additionally contains the
+If `--save_umi_intermeds` is specified, this directory additionally contains the
 FastQ files with the extracted UMI.
 
 **Output directory: `results/umitools/dedup`**
@@ -135,7 +135,7 @@ For each sample, this directory contains summary statistics on the UMI duplicati
 
 The content of these files is explained [in the UMI tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/dedup.html#dedup-specific-options).
 
-If `--save_umi_intermediates` is specified, this directory additionally contains
+If `--save_umi_intermeds` is specified, this directory additionally contains
 the deduplicated BAM file and its associated index.
 
 ## RSeQC

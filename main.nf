@@ -79,7 +79,7 @@ def helpMessage() {
       --hisat2_align_options [str]    Additional options that will be appended to the HISAT2 alignment command
       --stringtie_ignore_gtf [bool]   Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
       --seq_center [str]              Add sequencing center in @RG line of output BAM header
-      --save_align_intermeds  [bool]  Save the BAM files from the aligment step - not done by default
+      --save_align_intermeds [bool]   Save the BAM files from the aligment step - not done by default
       --save_unaligned [bool]         Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
       --skip_rsem [bool]              Skip the RSEM step for read quantification
       --skip_alignment [bool]         Skip alignment altogether (usually in favor of pseudoalignment)
@@ -1180,7 +1180,7 @@ if (!params.remove_ribo_rna) {
                 --other non-rRNA-reads \\
                 -v
 
-            gzip --force < non-rRNA-reads.fastq > ${name}.fq.gz
+            gzip --force < non-rRNA-reads.fq > ${name}.fq.gz
             mv rRNA-reads.log ${name}_rRNA_report.txt
             """
         } else {

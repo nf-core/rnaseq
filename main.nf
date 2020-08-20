@@ -1386,6 +1386,7 @@ if (!params.skip_alignment) {
                     -p $task.cpus $unaligned \\
                     --met-stderr \\
                     --new-summary \\
+                    $params.hisat2_align_options \\
                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                     | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
                 """

@@ -1199,9 +1199,8 @@ if (!params.remove_ribo_rna) {
                 --out2 \\
                 -v
 
-            unmerge-paired-reads.sh non-rRNA-reads.fastq non-rRNA-reads-fw.fq non-rRNA-reads-rv.fq
-            gzip < non-rRNA-reads-fw.fq > ${name}-fw.fq.gz
-            gzip < non-rRNA-reads-rv.fq > ${name}-rv.fq.gz
+            gzip < non-rRNA-reads_fwd.fq > ${name}_1.fq.gz
+            gzip < non-rRNA-reads_rev.fq > ${name}_2.fq.gz
             mv rRNA-reads.log ${name}_rRNA_report.txt
             """
         }

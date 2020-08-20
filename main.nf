@@ -1269,7 +1269,7 @@ def check_log(logs) {
 }
 if (!params.skip_alignment) {
     if (params.aligner == 'star') {
-        hisat_stdout = Channel.from(false)
+        hisat_stdout = Channel.empty()
         process STAR_ALIGN {
             tag "$name"
             label 'high_memory'
@@ -1337,7 +1337,7 @@ if (!params.skip_alignment) {
     * STEP 3 - align with HISAT2
     */
     if (params.aligner == 'hisat2') {
-        star_log = Channel.from(false)
+        star_log = Channel.empty()
         process HISAT2_ALIGN {
             tag "$name"
             label 'high_memory'
@@ -1898,7 +1898,7 @@ if (!params.skip_alignment) {
             """
         }
     } else {
-        rsem_logs = Channel.from(false)
+        rsem_logs = Channel.empty()
     }
 
     /*
@@ -1978,18 +1978,18 @@ if (!params.skip_alignment) {
         """
     }
 } else {
-    star_log = Channel.from(false)
-    hisat_stdout = Channel.from(false)
-    alignment_logs = Channel.from(false)
-    rseqc_results = Channel.from(false)
-    picard_results = Channel.from(false)
-    qualimap_results = Channel.from(false)
-    sample_correlation_results = Channel.from(false)
-    featureCounts_logs = Channel.from(false)
-    dupradar_results = Channel.from(false)
-    preseq_results = Channel.from(false)
-    featureCounts_biotype = Channel.from(false)
-    rsem_logs = Channel.from(false)
+    star_log = Channel.empty()
+    hisat_stdout = Channel.empty()
+    alignment_logs = Channel.empty()
+    rseqc_results = Channel.empty()
+    picard_results = Channel.empty()
+    qualimap_results = Channel.empty()
+    sample_correlation_results = Channel.empty()
+    featureCounts_logs = Channel.empty()
+    dupradar_results = Channel.empty()
+    preseq_results = Channel.empty()
+    featureCounts_biotype = Channel.empty()
+    rsem_logs = Channel.empty()
 }
 
 
@@ -2166,7 +2166,7 @@ process GET_SOFTWARE_VERSIONS {
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
-
+println(rsem_logs)
 /*
  * STEP 16 - MultiQC
  */
@@ -2178,8 +2178,8 @@ process MULTIQC {
 
     input:
     path multiqc_config from ch_multiqc_config
-    path mqc_custom_config from ch_multiqc_custom_config.collect().ifEmpty([])
-    file (fastqc:'fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
+    path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
+    path ('fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
     path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
     path ('alignment/*') from alignment_logs.collect().ifEmpty([])
     path ('rseqc/*') from rseqc_results.collect().ifEmpty([])
@@ -2187,11 +2187,11 @@ process MULTIQC {
     path ('qualimap/*') from qualimap_results.collect().ifEmpty([])
     path ('preseq/*') from preseq_results.collect().ifEmpty([])
     path ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-    path ('featureCounts/*') from featureCounts_logs.collect().ifEmpty([])
-    path ('featureCounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
-    path ('rsem/*') from rsem_logs.collect().ifEmpty([])
+    path ('featurecounts/*') from featureCounts_logs.collect().ifEmpty([])
+    path ('featurecounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
+    //path ('rsem/*') from rsem_logs.collect().ifEmpty([])
     path ('salmon/*') from salmon_logs.collect().ifEmpty([])
-    path ('sample_correlation_results/*') from sample_correlation_results.collect().ifEmpty([]) // If the Edge-R is not run create an Empty array
+    path ('sample_correlation/*') from sample_correlation_results.collect().ifEmpty([])
     path ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
     path ('software_versions/*') from ch_software_versions_yaml.collect()
     path workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")

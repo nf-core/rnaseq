@@ -58,7 +58,7 @@ The nfcore/rnaseq pipeline uses [TrimGalore](http://www.bioinformatics.babraham.
 
 MultiQC reports the percentage of bases removed by TrimGalore in the _General Statistics_ table, along with a line plot showing where reads were trimmed.
 
-**Output directory: `results/trim_galore`**
+**Output directory: `results/trimgalore`**
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
 
@@ -67,7 +67,7 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
   * NB: Only saved if `--save_trimmed` has been specified.
 * `logs/sample_val_1.fq.gz_trimming_report.txt`
   * Trimming report (describes which parameters that were used)
-* `FastQC/sample_val_1_fastqc.zip`
+* `fastqc/sample_val_1_fastqc.zip`
   * FastQC report for trimmed reads
 
 Single-end data will have slightly different file names and only one FastQ file per sample.
@@ -76,7 +76,7 @@ Single-end data will have slightly different file names and only one FastQ file 
 
 When `--remove_ribo_rna` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
 
-**Output directory: `results/SortMeRNA`**
+**Output directory: `results/sortmerna`**
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
 
@@ -96,7 +96,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 ![STAR](images/star_alignment_plot.png)
 
-**Output directory: `results/STAR`**
+**Output directory: `results/star`**
 
 * `Sample_Aligned.sortedByCoord.out.bam`
   * The aligned BAM file
@@ -319,7 +319,7 @@ Qualimap RNAseq documentation: [Qualimap docs](http://qualimap.bioinfo.cipf.es/d
 
 > _Credit: [dupRadar documentation](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html)_
 
-**Output directory: `results/dupRadar`**
+**Output directory: `results/dupradar`**
 
 * `Sample_markDups.bam_duprateExpDens.pdf`
 * `Sample_markDups.bam_duprateExpBoxplot.pdf`
@@ -353,7 +353,7 @@ RNA reads should mostly overlap genes, so be assigned.
 We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
 ![biotypes](images/featureCounts_biotype_plot.png)
 
-**Output directory: `results/featureCounts`**
+**Output directory: `results/featurecounts`**
 
 * `Sample.bam_biotype_counts.txt`
   * Read counts for the different gene biotypes that featureCounts distinguishes.
@@ -368,7 +368,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 [RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
 
-**Output directory: `results/RSEM`**
+**Output directory: `results/rsem`**
 
 * `rsem_tpm_gene.txt`
   * Main gene-level TPM matrix including all genes
@@ -423,7 +423,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 ### Index files
 
-**Output directory: `results/reference_genome/salmon_index`**
+**Output directory: `results/reference/genome/salmon_index`**
 
 * `duplicate_clusters.tsv`
   * Stores which transcripts are duplicates of one another

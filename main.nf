@@ -540,7 +540,7 @@ if (compressed_reference) {
     if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {
         process GUNZIP_GENOME_FASTA {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -558,7 +558,7 @@ if (compressed_reference) {
         if (params.additional_fasta) {
             process GUNZIP_ADDITIONAL_FASTA {
                 tag "$gz"
-                publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome" : params.outdir },
                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
                 input:
@@ -577,7 +577,7 @@ if (compressed_reference) {
     if (params.gtf) {
         process GUNZIP_GTF {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -595,7 +595,7 @@ if (compressed_reference) {
     if (params.gff && !params.gtf) {
         process GUNZIP_GFF {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -613,7 +613,7 @@ if (compressed_reference) {
     if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index) {
         process GUNZIP_TRANSCRIPT_FASTA {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -631,7 +631,7 @@ if (compressed_reference) {
     if (params.bed12) {
         process GUNZIP_BED12 {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -649,7 +649,7 @@ if (compressed_reference) {
     if (!params.skip_alignment && params.star_index && params.aligner == "star") {
         process GUNZIP_STAR_INDEX {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome/star" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -668,7 +668,7 @@ if (compressed_reference) {
     if (!params.skip_alignment && params.hisat2_index && params.aligner == 'hisat2') {
         process GUNZIP_HISAT2_INDEX {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -687,7 +687,7 @@ if (compressed_reference) {
     if (params.salmon_index && params.pseudo_aligner == 'salmon') {
         process GUNZIP_SALMON_INDEX {
             tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome/hisat2" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -708,7 +708,7 @@ if (compressed_reference) {
 if (params.additional_fasta) {
     process MAKE_ADDITIONAL_GTF {
         tag "$fasta"
-        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
@@ -724,7 +724,7 @@ if (params.additional_fasta) {
 
     process COMBINE_GENOME_ANNOTATIONS {
         tag "$genome_name"
-        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
@@ -784,7 +784,7 @@ if (params.additional_fasta) {
 if (params.gff && !params.gtf) {
     process GFF2GTF {
         tag "$gff"
-        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
@@ -817,7 +817,7 @@ if (params.gff && !params.gtf) {
 if (!params.bed12) {
     process GTF2BED {
         tag "$gtf"
-        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
@@ -841,7 +841,7 @@ if (!params.skip_alignment) {
         process STAR_GENOMEGENERATE {
             tag "$fasta"
             label 'high_memory'
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -872,7 +872,7 @@ if (!params.skip_alignment) {
     if (params.aligner == 'hisat2' && !params.splicesites) {
         process MAKE_HISAT2_SPLICESITES {
             tag "$gtf"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -895,7 +895,7 @@ if (!params.skip_alignment) {
     if (params.aligner == 'hisat2' && !params.hisat2_index && params.fasta) {
         process HISAT2_BUILD {
             tag "$fasta"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -939,7 +939,7 @@ if (!params.skip_alignment) {
     if (!params.skip_rsem && !params.rsem_reference && params.fasta) {
         process RSEM_PREPAREREFERENCE {
             tag "$fasta"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
@@ -966,7 +966,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
     if (!params.transcript_fasta) {
         process TRANSCRIPTS_TO_FASTA {
             tag "$fasta"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
 
@@ -988,7 +988,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
     process SALMON_INDEX {
         tag "$fasta"
         label "salmon"
-        publishDir path: { params.save_reference ? "${params.outdir}/reference_genome" : params.outdir },
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
@@ -1092,9 +1092,9 @@ if (!params.skip_trimming) {
     process TRIMGALORE {
         tag "$name"
         label 'process_high'
-        publishDir "${params.outdir}/trim_galore", mode: params.publish_dir_mode,
+        publishDir "${params.outdir}/trimgalore", mode: params.publish_dir_mode,
             saveAs: { filename ->
-                if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
+                if (filename.indexOf("_fastqc") > 0) "fastqc/$filename"
                 else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
                 else if (!params.save_trimmed && filename == "where_are_my_files.txt") filename
                 else if (params.save_trimmed && filename != "where_are_my_files.txt") filename
@@ -1173,7 +1173,7 @@ if (!params.remove_ribo_rna) {
     process SORTMERNA {
         tag "$name"
         label 'low_memory'
-        publishDir "${params.outdir}/SortMeRNA", mode: params.publish_dir_mode,
+        publishDir "${params.outdir}/sortmerna", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
                 else if (params.saveNonRiboRNAReads) "reads/$filename"
@@ -1273,7 +1273,7 @@ if (!params.skip_alignment) {
         process STAR_ALIGN {
             tag "$name"
             label 'high_memory'
-            publishDir "${params.outdir}/STAR", mode: params.publish_dir_mode,
+            publishDir "${params.outdir}/star", mode: params.publish_dir_mode,
                 saveAs: { filename ->
                     if (filename.indexOf(".bam") == -1) "logs/$filename"
                     else if (params.save_unaligned && filename != "where_are_my_files.txt" && 'Unmapped' in filename) unmapped/filename
@@ -1341,7 +1341,7 @@ if (!params.skip_alignment) {
         process HISAT2_ALIGN {
             tag "$name"
             label 'high_memory'
-            publishDir "${params.outdir}/HISAT2", mode: params.publish_dir_mode,
+            publishDir "${params.outdir}/hisat2", mode: params.publish_dir_mode,
                 saveAs: { filename ->
                     if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
                     else if (!params.save_align_intermeds && filename == "where_are_my_files.txt") filename
@@ -1409,7 +1409,7 @@ if (!params.skip_alignment) {
         process HISAT2_SORT_BAM {
             tag "${bam.baseName}"
             label 'mid_memory'
-            publishDir "${params.outdir}/HISAT2", mode: params.publish_dir_mode,
+            publishDir "${params.outdir}/hisat2", mode: params.publish_dir_mode,
                 saveAs: { filename ->
                     if (!params.save_align_intermeds && filename == "where_are_my_files.txt") filename
                     else if (params.save_align_intermeds && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
@@ -1637,7 +1637,7 @@ if (!params.skip_alignment) {
     */
     process PICARD_MARKDUPLICATES {
         tag "${bam.baseName - '.sorted'}"
-        publishDir "${params.outdir}/markDuplicates", mode: params.publish_dir_mode,
+        publishDir "${params.outdir}/markduplicates", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"
             }
@@ -1747,7 +1747,7 @@ if (!params.skip_alignment) {
     process SUBREAD_FEATURECOUNTS {
         tag "${bam.baseName - '.sorted'}"
         label 'low_memory'
-        publishDir "${params.outdir}/featureCounts", mode: params.publish_dir_mode,
+        publishDir "${params.outdir}/featurecounts", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
                 else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
@@ -1798,7 +1798,7 @@ if (!params.skip_alignment) {
     process MERGE_FEATURECOUNTS {
         tag "${input_files[0].baseName - '.sorted'}"
         label "mid_memory"
-        publishDir "${params.outdir}/featureCounts", mode: params.publish_dir_mode
+        publishDir "${params.outdir}/featurecounts", mode: params.publish_dir_mode
 
         input:
         path input_files from featureCounts_to_merge.collect()
@@ -1825,7 +1825,7 @@ if (!params.skip_alignment) {
         process RSEM_CALCULATEEXPRESSION {
             tag "${bam.baseName - '.sorted'}"
             label "mid_memory"
-            publishDir "${params.outdir}/RSEM", mode: params.publish_dir_mode
+            publishDir "${params.outdir}/rsem", mode: params.publish_dir_mode
 
             input:
             path bam from bam_rsem
@@ -1860,7 +1860,7 @@ if (!params.skip_alignment) {
         process MERGE_RSEM_COUNTS {
             tag "${rsem_res_gene[0].baseName}"
             label "low_memory"
-            publishDir "${params.outdir}/RSEM", mode: params.publish_dir_mode
+            publishDir "${params.outdir}/rsem", mode: params.publish_dir_mode
 
             input:
             path rsem_res_gene from rsem_results_genes.collect()
@@ -1906,7 +1906,7 @@ if (!params.skip_alignment) {
     */
     process STRINGTIE {
         tag "${bam.baseName - '.sorted'}"
-        publishDir "${params.outdir}/stringtieFPKM", mode: params.publish_dir_mode,
+        publishDir "${params.outdir}/stringtie", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
                 else if (filename.indexOf("cov_refs.gtf") > 0) "cov_refs/$filename"
@@ -2171,7 +2171,7 @@ process GET_SOFTWARE_VERSIONS {
  * STEP 16 - MultiQC
  */
 process MULTIQC {
-    publishDir "${params.outdir}/MultiQC", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
     when:
     !params.skip_multiqc

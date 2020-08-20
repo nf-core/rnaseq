@@ -40,6 +40,7 @@ def helpMessage() {
       --gtf [file]                    Path to GTF file
       --gff [file]                    Path to GFF3 file
       --bed12 [file]                  Path to bed12 file
+      --star_index_options [str]      Additional options that will be appended to the STAR genome indexing command
       --save_reference [bool]         Save the generated reference files to the results directory
       --gencode [bool]                Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
 
@@ -74,7 +75,8 @@ def helpMessage() {
     Alignment:
       --aligner [str]                 Specifies the aligner to use (available are: 'hisat2', 'star')
       --pseudo_aligner [str]          Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
-      --star_options [str]            Additional options that will be appended to the STAR alignment command
+      --star_align_options [str]      Additional options that will be appended to the STAR alignment command
+      --hisat2_align_options [str]    Additional options that will be appended to the HISAT2 alignment command
       --stringtie_ignore_gtf [bool]   Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
       --seq_center [str]              Add sequencing center in @RG line of output BAM header
       --save_align_intermeds  [bool]  Save the BAM files from the aligment step - not done by default
@@ -472,11 +474,13 @@ if (params.with_umi) {
 if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
 if (params.aligner == 'star') {
     summary['Aligner'] = "STAR"
-    if (params.star_options) summary['STAR Extra Options'] = params.star_options
-    if (params.star_index)   summary['STAR Index'] = params.star_index
-    else if (params.fasta)   summary['Fasta Ref']  = params.fasta
+    if (params.star_align_options) summary['STAR Align Options'] = params.star_align_options
+    if (params.star_index_options) summary['STAR Index Options'] = params.star_index_options
+    if (params.star_index)         summary['STAR Index'] = params.star_index
+    else if (params.fasta)         summary['Fasta Ref']  = params.fasta
 } else if (params.aligner == 'hisat2') {
     summary['Aligner'] = "HISAT2"
+    if (params.hisat2_align_options) summary['HISAT2 Align Options'] = params.hisat2_align_options
     if (params.hisat2_index) summary['HISAT2 Index'] = params.hisat2_index
     else if (params.fasta)   summary['Fasta Ref']    = params.fasta
     if (params.splicesites)  summary['Splice Sites'] = params.splicesites
@@ -861,7 +865,8 @@ if (!params.skip_alignment) {
                 --sjdbGTFfile $gtf \\
                 --genomeDir star/ \\
                 --genomeFastaFiles $fasta \\
-                $avail_mem
+                $avail_mem \\
+                $params.star_index_options
             """
         }
     }
@@ -1316,7 +1321,7 @@ if (!params.skip_alignment) {
                 --quantMode TranscriptomeSAM \\
                 --outFileNamePrefix $prefix $seq_center \\
                 --runRNGseed 0 \\
-                $params.star_options
+                $params.star_align_options
 
             samtools index ${prefix}Aligned.sortedByCoord.out.bam
             """
@@ -1383,6 +1388,7 @@ if (!params.skip_alignment) {
                     --met-stderr \\
                     --new-summary \\
                     --dta \\
+                    $params.hisat2_align_options \\
                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
                     | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
                 """

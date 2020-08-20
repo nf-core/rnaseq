@@ -1157,66 +1157,45 @@ if (!params.remove_ribo_rna) {
                 trimmed_reads_salmon }
     sortmerna_logs = Channel.empty()
 } else {
-    process SORTMERNA_INDEXDBRNA {
-        tag "${fasta.baseName}"
-        label 'low_memory'
-
-        input:
-        path fasta from sortmerna_fasta
-
-        output:
-        val "${fasta.baseName}" into sortmerna_db_name
-        path "$fasta" into sortmerna_db_fasta
-        path "${fasta.baseName}*" into sortmerna_db
-
-        script:
-        """
-        indexdb_rna --ref $fasta,${fasta.baseName} -m 3072 -v
-        """
-    }
-
     process SORTMERNA {
         tag "$name"
         label 'low_memory'
         publishDir "${params.outdir}/sortmerna", mode: params.publish_dir_mode,
             saveAs: { filename ->
                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
-                else if (params.saveNonRiboRNAReads) "reads/$filename"
+                else if (params.save_non_ribo_reads) "reads/$filename"
                 else null
             }
 
         input:
         tuple val(name), path(reads) from trimgalore_reads
-        val db_name from sortmerna_db_name.collect()
-        path db_fasta from sortmerna_db_fasta.collect()
-        path db from sortmerna_db.collect()
+        path fasta from sortmerna_fasta.collect()
 
         output:
         tuple val(name), path("*.fq.gz") into trimmed_reads_alignment,
                                               trimmed_reads_salmon
         path "*_rRNA_report.txt" into sortmerna_logs
 
-
         script:
         //concatenate reference files: ${db_fasta},${db_name}:${db_fasta},${db_name}:...
-        def Refs = ''
-        for (i=0; i<db_fasta.size(); i++) { Refs+= ":${db_fasta[i]},${db_name[i]}" }
-        Refs = Refs.substring(1)
+        def Refs = ""
+        for (i=0; i<fasta.size(); i++) { Refs+= " --ref ${fasta[i]}" }
         if (params.single_end) {
             """
             gzip -d --force < $reads > all-reads.fastq
 
-            sortmerna --ref $Refs \\
+            sortmerna \\
+                $Refs \\
                 --reads all-reads.fastq \\
                 --num_alignments 1 \\
-                -a $task.cpus \\
+                --threads $task.cpus \\
+                --workdir . \\
                 --fastx \\
                 --aligned rRNA-reads \\
                 --other non-rRNA-reads \\
-                --log -v
+                -v
 
             gzip --force < non-rRNA-reads.fastq > ${name}.fq.gz
-
             mv rRNA-reads.log ${name}_rRNA_report.txt
             """
         } else {
@@ -1225,19 +1204,20 @@ if (!params.remove_ribo_rna) {
             gzip -d --force < ${reads[1]} > reads-rv.fq
             merge-paired-reads.sh reads-fw.fq reads-rv.fq all-reads.fastq
 
-            sortmerna --ref $Refs \\
+            sortmerna \\
+                $Refs \\
                 --reads all-reads.fastq \\
                 --num_alignments 1 \\
-                -a $task.cpus \\
+                --threads $task.cpus \\
+                --workdir . \\
                 --fastx --paired_in \\
                 --aligned rRNA-reads \\
                 --other non-rRNA-reads \\
-                --log -v
+                -v
 
             unmerge-paired-reads.sh non-rRNA-reads.fastq non-rRNA-reads-fw.fq non-rRNA-reads-rv.fq
             gzip < non-rRNA-reads-fw.fq > ${name}-fw.fq.gz
             gzip < non-rRNA-reads-rv.fq > ${name}-rv.fq.gz
-
             mv rRNA-reads.log ${name}_rRNA_report.txt
             """
         }

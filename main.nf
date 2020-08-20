@@ -1199,8 +1199,8 @@ if (!params.remove_ribo_rna) {
                 --out2 \\
                 -v
 
-            gzip < non-rRNA-reads_fwd.fq > ${name}_1.fq.gz
-            gzip < non-rRNA-reads_rev.fq > ${name}_2.fq.gz
+            gzip --force < non-rRNA-reads_fwd.fq > ${name}_1.fq.gz
+            gzip --force < non-rRNA-reads_rev.fq > ${name}_2.fq.gz
             mv rRNA-reads.log ${name}_rRNA_report.txt
             """
         }

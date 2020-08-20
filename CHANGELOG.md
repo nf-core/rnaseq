@@ -75,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * `--star_align_options` parameter to pass additional options to the `STAR` alignment process. Fixes [#363](https://github.com/nf-core/rnaseq/issues/363)
 * `--star_index_options` parameter to pass additional options to the `STAR` genome indexing process. Fixes [#276](https://github.com/nf-core/rnaseq/issues/276)
-* `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#363](https://github.com/nf-core/rnaseq/issues/363)
+* `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#368](https://github.com/nf-core/rnaseq/pull/368) and [#371](https://github.com/nf-core/rnaseq/pull/371)
 
 #### Deprecated
 

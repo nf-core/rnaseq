@@ -1703,6 +1703,7 @@ if (!params.skip_alignment) {
         def memory = task.memory.toGiga() + "G"
         """
         unset DISPLAY
+        export _JAVA_OPTIONS=-Djava.io.tmpdir=./tmp
         qualimap --java-mem-size=$memory rnaseq -p $qualimap_direction $paired -bam $bam -gtf $gtf -outdir ${bam.baseName}
         """
     }

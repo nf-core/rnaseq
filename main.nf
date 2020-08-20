@@ -1182,11 +1182,9 @@ if (!params.remove_ribo_rna) {
         for (i=0; i<fasta.size(); i++) { Refs+= " --ref ${fasta[i]}" }
         if (params.single_end) {
             """
-            gzip -d --force < $reads > all-reads.fastq
-
             sortmerna \\
                 $Refs \\
-                --reads all-reads.fastq \\
+                --reads $reads \\
                 --num_alignments 1 \\
                 --threads $task.cpus \\
                 --workdir . \\
@@ -1200,19 +1198,18 @@ if (!params.remove_ribo_rna) {
             """
         } else {
             """
-            gzip -d --force < ${reads[0]} > reads-fw.fq
-            gzip -d --force < ${reads[1]} > reads-rv.fq
-            merge-paired-reads.sh reads-fw.fq reads-rv.fq all-reads.fastq
-
             sortmerna \\
                 $Refs \\
-                --reads all-reads.fastq \\
+                --reads ${reads[0]} \\
+                --reads ${reads[1]} \\
                 --num_alignments 1 \\
                 --threads $task.cpus \\
                 --workdir . \\
-                --fastx --paired_in \\
+                --fastx \\
                 --aligned rRNA-reads \\
                 --other non-rRNA-reads \\
+                --paired_in \\
+                --out2 \\
                 -v
 
             unmerge-paired-reads.sh non-rRNA-reads.fastq non-rRNA-reads-fw.fq non-rRNA-reads-rv.fq
@@ -1995,9 +1992,10 @@ if (params.pseudo_aligner == 'salmon') {
         path gtf from gtf_salmon.collect()
 
         output:
+        tuple val(sample), path("${sample}/") into salmon_parsegtf,
+                                                   salmon_tximport
+
         path "${sample}/" into salmon_logs
-        tuple val(sample), path("${sample}/") into salmon_tximport,
-                                                   salmon_parsegtf
 
         script:
         def rnastrandness = params.single_end ? 'U' : 'IU'
@@ -2011,13 +2009,16 @@ if (params.pseudo_aligner == 'salmon') {
         """
         salmon quant \\
             --validateMappings \\
-            --seqBias --useVBOpt --gcBias \\
-            --geneMap ${gtf} \\
+            --seqBias \\
+            --useVBOpt \\
+            --gcBias \\
+            --geneMap $gtf \\
             --threads $task.cpus \\
-            --libType=${rnastrandness} \\
-            --index ${index} \\
-            $endedness $unmapped\\
-            -o ${sample}
+            --libType=$rnastrandness \\
+            --index $index \\
+            $endedness \\
+            $unmapped \\
+            -o $sample
         """
     }
 
@@ -2026,11 +2027,12 @@ if (params.pseudo_aligner == 'salmon') {
         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 
         input:
-        path ("salmon/*") from salmon_parsegtf.collect()
+        path ("salmon/*") from salmon_parsegtf.collect{it[1]}
         path gtf from gtf_salmon_merge
 
         output:
-        path "tx2gene.csv" into salmon_tx2gene, salmon_merge_tx2gene
+        path "tx2gene.csv" into salmon_tx2gene,
+                                salmon_merge_tx2gene
 
         script:
         """

@@ -21,16 +21,6 @@ jobs:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['19.10.0', '']
-        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
-        options:
-          - '--skip_qc'
-          - '--remove_ribo_rna'
-          - '--save_unaligned'
-          - '--skip_trimming'
-          - '--star_index false'
-          - '--skip_rsem'
-          - '--with_umi'
-          - '--with_umi --skip_trimming --save_umi_intermeds --skip_rsem'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -57,8 +47,107 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      - name: Basic workflow tests
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+      - name: Run pipeline with test data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
-      - name: Basic workflow, gzipped input
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
+  parameters:
+    name: Test workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '19.10.0'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
+        config: ['test', 'test_gz']
+        parameters:
+          - '--skip_qc'
+          - '--remove_ribo_rna'
+          - '--skip_trimming'
+          - '--star_index false'
+          - '--skip_rsem'
+          - '--with_umi'
+          - '--with_umi --skip_trimming --save_umi_intermeds --skip_rsem'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
+
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Run pipeline with various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.config }},docker ${{ matrix.aligner }} ${{ matrix.parameters }}
+
+# jobs:
+#   test:
+#     name: Run workflow tests
+#     # Only run on push if this is the nf-core dev branch (merged PRs)
+#     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+#     runs-on: ubuntu-latest
+#     env:
+#       NXF_VER: ${{ matrix.nxf_ver }}
+#       NXF_ANSI_LOG: false
+#     strategy:
+#       matrix:
+#         # Nextflow versions: check pipeline minimum and current latest
+#         nxf_ver: ['19.10.0', '']
+#         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
+#         options:
+#           - '--skip_qc'
+#           - '--remove_ribo_rna'
+#           - '--save_unaligned'
+#           - '--skip_trimming'
+#           - '--star_index false'
+#           - '--skip_rsem'
+#           - '--with_umi'
+#           - '--with_umi --skip_trimming --save_umi_intermeds --skip_rsem'
+#     steps:
+#       - name: Check out pipeline code
+#         uses: actions/checkout@v2
+#
+#       - name: Check if Dockerfile or Conda environment changed
+#         uses: technote-space/get-diff-action@v1
+#         with:
+#           PREFIX_FILTER: |
+#             Dockerfile
+#             environment.yml
+#
+#       - name: Build new docker image
+#         if: env.GIT_DIFF
+#         run: docker build --no-cache . -t nfcore/rnaseq:dev
+#
+#       - name: Pull docker image
+#         if: ${{ !env.GIT_DIFF }}
+#         run: |
+#           docker pull nfcore/rnaseq:dev
+#           docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+#
+#       - name: Install Nextflow
+#         run: |
+#           wget -qO- get.nextflow.io | bash
+#           sudo mv nextflow /usr/local/bin/
+#
+#       - name: Basic workflow tests
+#         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
+#
+#       - name: Basic workflow, gzipped input
+#         run: nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}

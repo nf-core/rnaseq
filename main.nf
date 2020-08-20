@@ -1010,9 +1010,6 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
     }
 }
 
-/*
- * STEP 1 - FastQC
- */
 process FASTQC {
     tag "$name"
     label 'mid_memory'
@@ -1037,9 +1034,6 @@ process FASTQC {
     """
 }
 
-/*
- * STEP 1+ - UMItools
- */
 if (params.with_umi) {
     process UMITOOLS_EXTRACT {
         tag "$name"
@@ -1089,10 +1083,6 @@ if (params.with_umi) {
     umi_tools_extract_results = Channel.empty()
 }
 
-
-/*
- * STEP 2 - Trim Galore!
- */
 if (!params.skip_trimming) {
     process TRIMGALORE {
         tag "$name"
@@ -1148,9 +1138,6 @@ if (!params.skip_trimming) {
     trimgalore_results = Channel.empty()
 }
 
-/*
- * STEP 2+ - SortMeRNA - remove rRNA sequences on request
- */
 if (!params.remove_ribo_rna) {
     trimgalore_reads
         .into { trimmed_reads_alignment
@@ -1221,9 +1208,6 @@ if (!params.remove_ribo_rna) {
     }
 }
 
-/*
- * STEP 3 - align with STAR
- */
 // Function that checks the alignment rate of the STAR output
 // and returns true if the alignment passed and otherwise false
 good_alignment_scores = [:]
@@ -1315,9 +1299,6 @@ if (!params.skip_alignment) {
         bam_transcriptome = star_bams_transcriptome
     }
 
-    /*
-    * STEP 3 - align with HISAT2
-    */
     if (params.aligner == 'hisat2') {
         star_log = Channel.empty()
         process HISAT2_ALIGN {
@@ -1422,9 +1403,6 @@ if (!params.skip_alignment) {
         }
     }
 
-    /*
-    * Step 3+ - Deduplicate bam files based on UMIs
-    */
     if (params.with_umi) {
         // preseq does not work on deduplicated BAM file. Pass it the raw BAM file.
         bam
@@ -1537,9 +1515,6 @@ if (!params.skip_alignment) {
         }
     }
 
-    /*
-    * STEP 4 - RSeQC analysis
-    */
     process RSEQC {
         tag "${bam.baseName - '.sorted'}"
         label 'mid_memory'
@@ -1593,9 +1568,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 5 - preseq analysis
-    */
     process PRESEQ {
         tag "${bam.baseName - '.sorted'}"
         label 'high_time'
@@ -1616,9 +1588,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 6 - Mark duplicates
-    */
     process PICARD_MARKDUPLICATES {
         tag "${bam.baseName - '.sorted'}"
         publishDir "${params.outdir}/markduplicates", mode: params.publish_dir_mode,
@@ -1652,9 +1621,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 7 - Qualimap
-    */
     process QUALIMAP {
         tag "${bam.baseName}"
         label 'low_memory'
@@ -1686,9 +1652,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 8 - dupRadar
-    */
     process DUPRADAR {
         tag "${bam.baseName - '.sorted.markDups'}"
         label 'high_time'
@@ -1726,9 +1689,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 9 - Feature counts
-    */
     process SUBREAD_FEATURECOUNTS {
         tag "${bam.baseName - '.sorted'}"
         label 'low_memory'
@@ -1777,9 +1737,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 10 - Merge featurecounts
-    */
     process MERGE_FEATURECOUNTS {
         tag "${input_files[0].baseName - '.sorted'}"
         label "mid_memory"
@@ -1804,9 +1761,6 @@ if (!params.skip_alignment) {
     }
 
     if (!skip_rsem) {
-        /**
-        * Step 11 - RSEM
-        */
         process RSEM_CALCULATEEXPRESSION {
             tag "${bam.baseName - '.sorted'}"
             label "mid_memory"
@@ -1839,9 +1793,6 @@ if (!params.skip_alignment) {
             """
         }
 
-        /**
-        * Step 12 - merge RSEM TPM and counts
-        */
         process MERGE_RSEM_COUNTS {
             tag "${rsem_res_gene[0].baseName}"
             label "low_memory"
@@ -1886,9 +1837,6 @@ if (!params.skip_alignment) {
         rsem_logs = Channel.empty()
     }
 
-    /*
-    * STEP 13 - stringtie FPKM
-    */
     process STRINGTIE {
         tag "${bam.baseName - '.sorted'}"
         publishDir "${params.outdir}/stringtie", mode: params.publish_dir_mode,
@@ -1930,9 +1878,6 @@ if (!params.skip_alignment) {
         """
     }
 
-    /*
-    * STEP 14 - edgeR MDS and heatmap
-    */
     process SAMPLE_CORRELATION {
         tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
         label 'low_memory'
@@ -1977,10 +1922,6 @@ if (!params.skip_alignment) {
     rsem_logs = Channel.empty()
 }
 
-
-/*
- * STEP 15 - Transcriptome quantification with Salmon
- */
 if (params.pseudo_aligner == 'salmon') {
     process SALMON_QUANT {
         tag "$sample"
@@ -2115,9 +2056,6 @@ Channel.from(summary.collect{ [it.key, it.value] })
     """.stripIndent() }
     .set { ch_workflow_summary }
 
-/*
- * Parse software version numbers
- */
 process GET_SOFTWARE_VERSIONS {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
         saveAs: { filename ->
@@ -2157,9 +2095,6 @@ process GET_SOFTWARE_VERSIONS {
     """
 }
 
-/*
- * STEP 16 - MultiQC
- */
 process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
@@ -2200,9 +2135,6 @@ process MULTIQC {
     """
 }
 
-/*
- * STEP 17 - Output Description HTML
- */
 process OUTPUT_DOCUMENTATION {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
 

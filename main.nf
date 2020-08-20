@@ -2166,7 +2166,7 @@ process GET_SOFTWARE_VERSIONS {
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
-println(rsem_logs)
+
 /*
  * STEP 16 - MultiQC
  */
@@ -2189,7 +2189,7 @@ process MULTIQC {
     path ('dupradar/*') from dupradar_results.collect().ifEmpty([])
     path ('featurecounts/*') from featureCounts_logs.collect().ifEmpty([])
     path ('featurecounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
-    //path ('rsem/*') from rsem_logs.collect().ifEmpty([])
+    path ('rsem/*') from rsem_logs.collect().ifEmpty([])
     path ('salmon/*') from salmon_logs.collect().ifEmpty([])
     path ('sample_correlation/*') from sample_correlation_results.collect().ifEmpty([])
     path ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])

@@ -180,18 +180,70 @@ if (params.skip_alignment && !params.pseudo_aligner) {
     exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
 }
 
-// Get rRNA databases
-// Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
-rRNA_database = file(params.ribo_database_manifest)
-if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
-Channel
-    .from(rRNA_database.readLines())
-    .map { row -> file(row) }
-    .set { sortmerna_fasta }
-
 // Check basic annotation files and uncompress if required
+if (!params.skip_alignment) {
+    if (params.fasta) {
+        file(params.fasta, checkIfExists: true)
+        if (params.fasta.endsWith('.gz')) {
+            process GUNZIP_FASTA {
+                tag "$gz"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
+                input:
+                path gz from params.fasta
 
+                output:
+                path "$unzip" into ch_fasta
+
+                script:
+                unzip = gz.toString() - '.gz'
+                """
+                pigz -f -d -p $task.cpus $gz
+                """
+            }
+        } else {
+            ch_fasta = file(params.fasta, checkIfExists: true)
+        }
+    } else {
+        exit 1, "Fasta file for reference genome not specified!"
+    }
+    // .set { genome_fasta_gz }
+    // .set { ch_genome_fasta }
+    // .into { ch_fasta_for_star_index
+    //         ch_fasta_for_hisat_index
+    //         ch_fasta_for_rsem_reference }
+
+    if (params.additional_fasta) {
+        file(params.additional_fasta, checkIfExists: true)
+        if (params.additional_fasta.endsWith('.gz')) {
+            process GUNZIP_ADDITIONAL_FASTA {
+                tag "$gz"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path gz from params.additional_fasta
+
+                output:
+                path "$unzip" into ch_additional_fasta
+
+                script:
+                unzip = gz.toString() - '.gz'
+                """
+                pigz -f -d -p $task.cpus $gz
+                """
+            }
+        } else {
+            ch_additional_fasta = file(params.additional_fasta, checkIfExists: true)
+        }
+    }
+    // .set { additional_fasta_gz }
+    // .into { ch_additional_fasta_for_gtf
+    //         ch_additional_fasta_to_concat }
+} else {
+    log.info "Skipping alignment processes..."
+}
 
 if (params.gtf) {
     file(params.gtf, checkIfExists: true)
@@ -208,7 +260,7 @@ if (params.gtf) {
             path gz from params.gtf
 
             output:
-            path "$gz" into ch_gtf
+            path "$unzip" into ch_gtf
 
             script:
             unzip = gz.toString() - '.gz'
@@ -233,7 +285,7 @@ if (params.gtf) {
             path gz from params.gff
 
             output:
-            path "$gz" into ch_gff
+            path "$unzip" into ch_gff
 
             script:
             unzip = gz.toString() - '.gz'
@@ -262,7 +314,7 @@ if (params.bed12) {
             path gz from params.bed12
 
             output:
-            path "$gz" into ch_bed12
+            path "$unzip" into ch_bed12
 
             script:
             unzip = gz.toString() - '.gz'
@@ -350,48 +402,6 @@ if (!params.skip_alignment) {
 //         }
 
 // }
-// // if (params.fasta && !params.skip_alignment) {
-// //     if (params.additional_fasta) {
-// //         if (hasExtension(params.additional_fasta, "gz")) {
-// //             Channel
-// //                 .fromPath(params.additional_fasta)
-// //                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-// //                 .set { additional_fasta_gz }
-// //             Channel
-// //                 .fromPath(params.fasta, checkIfExists: true)
-// //                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-// //                 .set { genome_fasta_gz }
-// //         } else {
-// //             Channel
-// //                 .fromPath(params.additional_fasta)
-// //                 .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-// //                 .into { ch_additional_fasta_for_gtf
-// //                         ch_additional_fasta_to_concat }
-// //             Channel
-// //                 .fromPath(params.fasta, checkIfExists: true)
-// //                 .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-// //                 .set { ch_genome_fasta }
-// //         }
-// //     } else {
-// //         if (hasExtension(params.fasta, "gz")) {
-// //             Channel
-// //                 .fromPath(params.fasta, checkIfExists: true)
-// //                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-// //                 .set { genome_fasta_gz }
-// //         } else {
-// //             Channel
-// //                 .fromPath(params.fasta)
-// //                 .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-// //                 .into { ch_fasta_for_star_index
-// //                         ch_fasta_for_hisat_index
-// //                         ch_fasta_for_rsem_reference }
-// //         }
-// //     }
-// // } else if (params.skip_alignment) {
-// //     println "Skipping alignment ..."
-// // } else {
-// //     exit 1, "No reference genome files specified!"
-// // }
 // //
 // //
 // // // Separately check for whether salmon needs a genome fasta to extract
@@ -436,7 +446,7 @@ if (!params.skip_alignment) {
 // //         // Need to extract transcripts out of genome fasta + gtf to get
 // //         // transcript fasta
 // //         log.info "Extracting transcript fastas from genome fasta + gtf/gff"
-// //         if (params.compressed_reference) {
+// //         if (compressed_reference) {
 // //             Channel
 // //                 .fromPath(params.fasta, checkIfExists: true)
 // //                 .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
@@ -456,7 +466,7 @@ if (!params.skip_alignment) {
 // // skip_rsem = params.skip_rsem
 // // if (!params.skip_alignment && !params.skip_rsem && params.aligner != "star") {
 // //     skip_rsem = true
-// //     println "RSEM only works with STAR. Disabling RSEM."
+// //     log.info "RSEM only works when  STAR. Disabling RSEM."
 // // }
 // // if (params.rsem_reference && !params.skip_rsem && !params.skip_alignment) {
 // //     Channel
@@ -464,21 +474,15 @@ if (!params.skip_alignment) {
 // //         .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
 // //         .set { rsem_reference }
 // // }
-// // if (params.fasta && !params.skip_alignment) {
-// //     if (hasExtension(params.fasta, 'gz')) {
-// //         Channel
-// //             .fromPath(params.fasta, checkIfExists: true)
-// //             .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-// //             .set { genome_fasta_gz }
-// //     }
-// // } else if (params.skip_alignment) {
-// //     println "Skipping Alignment ..."
-// // } else {
-// //     exit 1, "No reference genome files specified! "
-// // }
-// //
 
-
+// Get rRNA databases
+// Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
+rRNA_database = file(params.ribo_database_manifest, checkIfExists: true)
+if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
+Channel
+    .from(rRNA_database.readLines())
+    .map { row -> file(row) }
+    .set { sortmerna_fasta }
 
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name

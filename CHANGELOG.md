@@ -3,24 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Version 1.4.3dev
+## [Version 1.5](https://github.com/nf-core/rnaseq/releases/tag/1.5) - 2020-08-28
 
 ### Pipeline enhancements & fixes
 
-* Minor tweaks to software version commands
+* Updated template to nf-core/tools `v1.10.2`
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
-* Fixes an issue where MultiQC fails to run with `--skipbiotypeQC` option [#353](https://github.com/nf-core/rnaseq/issues/353)
+* Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option [#353](https://github.com/nf-core/rnaseq/issues/353)
 * Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
 * Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 * Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 * Fixed issue where featureCounts process fails when setting --fc_count_type to gene [#440](https://github.com/nf-core/rnaseq/issues/440)
-* Add AWS tests GitHub actions workflow for small tests
 * Optimise MultiQC configuration for faster run-time on huge sample numbers
-* Build Docker image using GitHub Actions
-  * Pull-requests now rebuild the image if the software environment has been changed (so tests should pass)
-  * Builds are done on GitHub Actions and pushed to Docker Hub, which is much faster than waiting for Docker Hub to build
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
@@ -32,41 +28,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
 * Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0) [#384](https://github.com/nf-core/rnaseq/issues/384)
 * FastQC uses correct number of threads now [#437](https://github.com/nf-core/rnaseq/issues/434)
-* Updated template to nf-core/tools v1.10.2
+* Fixed MDS plot axis labels [#302](https://github.com/nf-core/rnaseq/issues/302)
+* Change process names to uppercase
+* Replace `set` with `tuple` and `file` with `path`
+* Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
+* Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
+* Fix `--gff` input bug [#452](https://github.com/nf-core/rnaseq/issues/452)
 
-#### Updated Packages
+### Updated Packages
 
-* Salmon `0.14.2` -> `1.1.0`
-* MultiQC `1.7` -> `1.9`
-* Remove pinning of MatPlotLib version
-* R-Base updated to 4.0.2
-* R-Data.table updated to 1.12.8
-* R-Gplots updated to 3.0.4
-* Markdown updated to 3.2.2
-* Pymdown-extensions updated to 7.1
-* Pygments updated to 2.6.1
-* Dupradar updated to 1.18.0
-* EdgeR updated to 3.30.0
-* Tximeta updated to 1.6.2
-* SummarizedExperiment updated to 1.18.1
-* Deeptools updated to 3.4.3
-* FastQC updated to 0.11.9
-* GFFRead updated to 0.11.7
-* HISAT2 updated to 2.2.0
-* Picard updated to 2.23.2
-* Qualimap updated to 2.2.2d
-* Salmon updated to 1.3.0
-* Samtools updated to 1.10
-* Sortmerna updated to 4.2.0
-* Stringtie updated to 2.1.2
-* Subread updated to 2.0.1
-* trim-galore updated to 0.6.5
+* Update `r-base` `3.6.1` -> `4.0.2`
+* Update `r-data.table` `1.12.4` -> `1.12.8`
+* Update `r-gplots` `3.0.1.1` -> `3.0.4`
+* Update `fastqc` `0.11.8` -> `0.11.9`
+* Update `trim-galore` `0.6.4` -> `0.6.5`
+* Update `gffread` `0.11.4` -> `0.12.1`
+* Update `hisat2` `2.1.0` -> `2.2.1`
+* Update `stringtie` `2.0` -> `2.1.2`
+* Update `salmon` `0.14.2` -> `1.3.0`
+* Update `subread` `1.6.4` -> `2.0.1`
+* Update `sortmerna` `2.1b` -> `4.2.0`
+* Update `samtools` `1.9` -> `1.10`
+* Update `deeptools` `3.3.1` -> `3.4.3`
+* Update `picard` `2.21.1` -> `2.23.3`
+* Update `qualimap` `2.2.2c`-> `2.2.2d`
+* Update `multiqc` `1.7` -> `1.9`
+* Update `bioconductor-dupradar` `1.14.0` -> `1.18.0`
+* Update `bioconductor-edger` `3.26.5` -> `3.30.0`
+* Update `bioconductor-tximeta` `1.2.2` -> `1.6.2`
+* Update `bioconductor-summarizedexperiment` `1.14.0` -> `1.18.1`
 
-#### Added / Removed Packages
+### Added / Removed Packages
 
-* Added `pigz` `2.3.4` for parallelized trim-galore support
-* Added `rsem` `1.3.3` for gene/transcript quantification
-* Added `umi_tools` `1.0.1` for UMI extraction and deduplication
+* Add `python` `3.7.8`
+* Add `markdown` `3.2.2`
+* Add `pymdown-extensions` `8.0`
+* Add `pygments` `2.6.1`
+* Add `pigz` `2.3.4`
+* Add `rsem` `1.3.3`
+* Add `umi_tools` `1.0.1`
+* Remove `matplotlib`
+* Remove `r-markdown`
+
+### Parameters
+
+#### Added
+
+* `--star_align_options` parameter to pass additional options to the `STAR` alignment process. Fixes [#363](https://github.com/nf-core/rnaseq/issues/363)
+* `--star_index_options` parameter to pass additional options to the `STAR` genome indexing process. Fixes [#276](https://github.com/nf-core/rnaseq/issues/276)
+* `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#368](https://github.com/nf-core/rnaseq/pull/368) and [#371](https://github.com/nf-core/rnaseq/pull/371)
+
+#### Deprecated
+
+| Deprecated                   | Replacement                |
+|------------------------------|----------------------------|
+| `--reads`                    | `--input`                  |
+| `--readPaths`                | `--input_paths`            |
+| `--singleEnd`                | `--single_end`             |
+| `--saveReference`            | `--save_reference`         |
+| `--compressedReference`      | `--compressed_reference`   |
+| `--forwardStranded`          | `--forward_stranded`       |
+| `--reverseStranded`          | `--reverse_stranded`       |
+| `--unStranded`               | `--unstranded`             |
+| `--skipTrimming`             | `--skip_trimming`          |
+| `--saveTrimmed`              | `--save_trimmed`           |
+| `--removeRiboRNA`            | `--remove_ribo_rna`        |
+| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
+| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
+| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
+| `--sampleLevel`              | `--sample_level`           |
+| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
+| `--save_umi_intermediates`   | `--save_umi_intermeds`     |
+| `--saveUnaligned`            | `--save_unaligned`         |
+| `--skipAlignment`            | `--skip_alignment`         |
+| `--skipQC`                   | `--skip_qc`                |
+| `--skipFastQC`               | `--skip_fastqc`            |
+| `--skipPreseq`               | `--skip_preseq`            |
+| `--skipDupRadar`             | `--skip_dupradar`          |
+| `--skipQualimap`             | `--skip_qualimap`          |
+| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
+| `--skipRseQC`                | `--skip_rseqc`             |
+| `--skipEdgeR`                | `--skip_edger`             |
+| `--skipMultiQC`              | `--skip_multiqc`           |
 
 ## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 

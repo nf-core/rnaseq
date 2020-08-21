@@ -6,36 +6,36 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  ## conda-forge packages, sorting now alphabetically, without the channel prefix!
-  - r-base=4.0.2
+  ## conda-forge packages
+  - conda-forge::python=3.7.8
+  - conda-forge::markdown=3.2.2
+  - conda-forge::pymdown-extensions=8.0
+  - conda-forge::pygments=2.6.1
+  - conda-forge::pigz=2.3.4 ## Required for TrimGalore multi-threading
+  - conda-forge::r-base=4.0.2
   - conda-forge::r-data.table=1.12.8
   - conda-forge::r-gplots=3.0.4
-  - conda-forge::python=3.7.3
-  - conda-forge::markdown=3.2.2
-  - conda-forge::pymdown-extensions=7.1
-  - conda-forge::pygments=2.6.1
 
-  ## bioconda packages, see above
-  - bioconductor-dupradar=1.18.0
-  - bioconductor-edger=3.30.0
-  - bioconductor-tximeta=1.6.2
-  - bioconductor-summarizedexperiment=1.18.1
-  - deeptools=3.4.3
-  - fastqc=0.11.9
-  - gffread=0.11.7
-  - hisat2=2.2.0
-  - multiqc=1.9
-  - picard=2.23.2
-  - preseq=2.0.3
-  - qualimap=2.2.2d
-  - rseqc=3.0.1
-  - salmon=1.3.0
-  - samtools=1.10
-  - sortmerna=4.2.0 # for metatranscriptomics
-  - star=2.6.1d # Don't upgrade me - 2.7X indices incompatible with iGenomes.
-  - stringtie=2.1.2
-  - subread=2.0.1
-  - trim-galore=0.6.5
-  - pigz=2.3.4
-  - rsem=1.3.3
-  - umi_tools=1.0.1
+  ## bioconda packages
+  - bioconda::fastqc=0.11.9
+  - bioconda::trim-galore=0.6.5
+  - bioconda::gffread=0.12.1
+  - bioconda::star=2.6.1d ## Don't upgrade me - 2.7X indices incompatible with iGenomes.
+  - bioconda::rsem=1.3.3
+  - bioconda::hisat2=2.2.1
+  - bioconda::stringtie=2.1.2
+  - bioconda::salmon=1.3.0
+  - bioconda::subread=2.0.1
+  - bioconda::sortmerna=4.2.0 ## For metatranscriptomics
+  - bioconda::samtools=1.10
+  - bioconda::deeptools=3.4.3
+  - bioconda::umi_tools=1.0.1
+  - bioconda::picard=2.23.3
+  - bioconda::preseq=2.0.3
+  - bioconda::qualimap=2.2.2d
+  - bioconda::rseqc=3.0.1
+  - bioconda::multiqc=1.9
+  - bioconda::bioconductor-dupradar=1.18.0
+  - bioconda::bioconductor-edger=3.30.0
+  - bioconda::bioconductor-tximeta=1.6.2
+  - bioconda::bioconductor-summarizedexperiment=1.18.1

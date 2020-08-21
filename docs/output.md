@@ -2,40 +2,40 @@
 
 This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
+
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-* [nf-core/rnaseq: Output](#nf-corernaseq-output)
-  * [Pipeline overview](#pipeline-overview)
-  * [FastQC](#fastqc)
-  * [TrimGalore](#trimgalore)
-  * [SortMeRNA](#sortmerna)
-  * [STAR](#star)
-  * [UMI tools](#umi-tools)
-  * [RSeQC](#rseqc)
-    * [BAM stat](#bam-stat)
-    * [Infer experiment](#infer-experiment)
-    * [Junction saturation](#junction-saturation)
-    * [RPKM saturation](#rpkm-saturation)
-    * [Read duplication](#read-duplication)
-    * [Inner distance](#inner-distance)
-    * [Read distribution](#read-distribution)
-    * [Junction annotation](#junction-annotation)
-  * [Qualimap](#qualimap)
-  * [dupRadar](#dupradar)
-  * [Preseq](#preseq)
-  * [featureCounts](#featurecounts)
-  * [RSEM](#rsem)
-  * [Salmon](#salmon)
-  * [tximport](#tximport)
-    * [Index files](#index-files)
-    * [Quantification output](#quantification-output)
-  * [StringTie](#stringtie)
-  * [Sample Correlation](#sample-correlation)
-  * [MultiQC](#multiqc)
-  * [Pipeline information](#pipeline-information)
+* [FastQC](#fastqc)
+* [TrimGalore](#trimgalore)
+* [SortMeRNA](#sortmerna)
+* [STAR](#star)
+* [UMI tools](#umi-tools)
+* [RSeQC](#rseqc)
+  * [BAM stat](#bam-stat)
+  * [Infer experiment](#infer-experiment)
+  * [Junction saturation](#junction-saturation)
+  * [RPKM saturation](#rpkm-saturation)
+  * [Read duplication](#read-duplication)
+  * [Inner distance](#inner-distance)
+  * [Read distribution](#read-distribution)
+  * [Junction annotation](#junction-annotation)
+* [Qualimap](#qualimap)
+* [dupRadar](#dupradar)
+* [Preseq](#preseq)
+* [featureCounts](#featurecounts)
+* [RSEM](#rsem)
+* [Salmon](#salmon)
+* [tximport](#tximport)
+  * [Index files](#index-files)
+  * [Quantification output](#quantification-output)
+* [StringTie](#stringtie)
+* [Sample Correlation](#sample-correlation)
+* [MultiQC](#multiqc)
+* [Pipeline information](#pipeline-information)
 
 ## FastQC
 
@@ -50,10 +50,7 @@ For further reading and documentation see the [FastQC help pages](http://www.bio
 * `fastqc/zips/`
   * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
-* `sample_fastqc.html`
-  * FastQC report, containing quality metrics for your untrimmed raw fastq files
-* `zips/sample_fastqc.zip`
-  * zip file containing the FastQC report, tab-delimited data file and plot images
+> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
 
 ## TrimGalore
 
@@ -61,31 +58,31 @@ The nfcore/rnaseq pipeline uses [TrimGalore](http://www.bioinformatics.babraham.
 
 MultiQC reports the percentage of bases removed by TrimGalore in the _General Statistics_ table, along with a line plot showing where reads were trimmed.
 
-**Output directory: `results/trim_galore`**
+**Output directory: `results/trimgalore`**
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
 
 * `sample_val_1.fq.gz`, `sample_val_2.fq.gz`
   * Trimmed FastQ data, reads 1 and 2.
-  * NB: Only saved if `--saveTrimmed` has been specified.
+  * NB: Only saved if `--save_trimmed` has been specified.
 * `logs/sample_val_1.fq.gz_trimming_report.txt`
   * Trimming report (describes which parameters that were used)
-* `FastQC/sample_val_1_fastqc.zip`
+* `fastqc/sample_val_1_fastqc.zip`
   * FastQC report for trimmed reads
 
 Single-end data will have slightly different file names and only one FastQ file per sample.
 
 ## SortMeRNA
 
-When `--removeRiboRNA` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
+When `--remove_ribo_rna` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
 
-**Output directory: `results/SortMeRNA`**
+**Output directory: `results/sortmerna`**
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
 
 * `reads/sample-fw.fq.gz`, `reads/sample-rv.fq.gz`
   * Trimmed and rRNA depleted FastQ data, reads forward and reverse.
-  * NB: Only saved if `--save_nonrRNA_reads` has been specified.
+  * NB: Only saved if `--save_non_ribo_reads` has been specified.
 * `logs/sample_rRNA_report.txt`
   * Report how many reads where removed due to matches to reference database(s).
 
@@ -99,7 +96,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 ![STAR](images/star_alignment_plot.png)
 
-**Output directory: `results/STAR`**
+**Output directory: `results/star`**
 
 * `Sample_Aligned.sortedByCoord.out.bam`
   * The aligned BAM file
@@ -110,7 +107,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 * `Sample_SJ.out.tab`
   * Filtered splice junctions detected in the mapping
 * `unaligned/...`
-  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--saveUnaligned` output.
+  * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--save_unaligned` output.
 
 ## UMI tools
 
@@ -123,7 +120,7 @@ address PCR-bias. UMI-tools performs two independent steps:
 **Output directory: `results/umitools/extract`**
 
 For each sample, this directory contains a log file.
-If `--save_umi_intermediates` is specified, this directory additionally contains the
+If `--save_umi_intermeds` is specified, this directory additionally contains the
 FastQ files with the extracted UMI.
 
 **Output directory: `results/umitools/dedup`**
@@ -138,7 +135,7 @@ For each sample, this directory contains summary statistics on the UMI duplicati
 
 The content of these files is explained [in the UMI tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/dedup.html#dedup-specific-options).
 
-If `--save_umi_intermediates` is specified, this directory additionally contains
+If `--save_umi_intermeds` is specified, this directory additionally contains
 the deduplicated BAM file and its associated index.
 
 ## RSeQC
@@ -322,7 +319,7 @@ Qualimap RNAseq documentation: [Qualimap docs](http://qualimap.bioinfo.cipf.es/d
 
 > _Credit: [dupRadar documentation](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html)_
 
-**Output directory: `results/dupRadar`**
+**Output directory: `results/dupradar`**
 
 * `Sample_markDups.bam_duprateExpDens.pdf`
 * `Sample_markDups.bam_duprateExpBoxplot.pdf`
@@ -356,7 +353,7 @@ RNA reads should mostly overlap genes, so be assigned.
 We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
 ![biotypes](images/featureCounts_biotype_plot.png)
 
-**Output directory: `results/featureCounts`**
+**Output directory: `results/featurecounts`**
 
 * `Sample.bam_biotype_counts.txt`
   * Read counts for the different gene biotypes that featureCounts distinguishes.
@@ -371,7 +368,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 [RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
 
-**Output directory: `results/RSEM`**
+**Output directory: `results/rsem`**
 
 * `rsem_tpm_gene.txt`
   * Main gene-level TPM matrix including all genes
@@ -426,7 +423,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 ### Index files
 
-**Output directory: `results/reference_genome/salmon_index`**
+**Output directory: `results/reference/genome/salmon_index`**
 
 * `duplicate_clusters.tsv`
   * Stores which transcripts are duplicates of one another
@@ -529,10 +526,7 @@ For more information about how to use MultiQC reports, see [https://multiqc.info
 
 [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
 
-* `Project_multiqc_report.html`
-  * MultiQC report - a standalone HTML file that can be viewed in your web browser
-* `Project_multiqc_data/`
-  * Directory containing parsed statistics from the different tools used in the pipeline
+**Output files:**
 
 * `pipeline_info/`
   * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.

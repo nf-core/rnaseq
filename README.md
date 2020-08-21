@@ -1,11 +1,9 @@
 # ![nf-core/rnaseq](docs/images/nf-core-rnaseq_logo.png)
 
-**Nextflow RNA-Seq analysis pipeline, part of the nf-core community.**.
-
 [![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
-[![DOI](https://zenodo.org/badge/127293091.svg)](https://zenodo.org/badge/latestdoi/127293091)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1400710.svg)](https://doi.org/10.5281/zenodo.1400710)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/rnaseq.svg)](https://hub.docker.com/r/nfcore/rnaseq)
@@ -13,9 +11,7 @@
 
 ## Introduction
 
-**nf-core/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data.
-
-The workflow processes raw data from
+**nf-core/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data. The workflow processes raw data from
 FastQ inputs ([FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),
 [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)),
 aligns the reads
@@ -33,7 +29,7 @@ generates counts relative to genes
 [Preseq](http://smithlabresearch.org/software/preseq/),
 [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html),
 [umi_tools](https://github.com/CGATOxford/UMI-tools),
-[MultiQC](http://multiqc.info/)). See the [output documentation](docs/output.md) for more details of the results.
+[MultiQC](http://multiqc.info/)).
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
@@ -41,7 +37,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 1. Install [`nextflow`](https://nf-co.re/usage/installation)
 
-2. Install either [`Docker`](https://docs.docker.com/engine/installation/) or [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_
+2. Install either [`Docker`](https://docs.docker.com/engine/installation/) or [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles). Note: This pipeline does not currently support running with Conda on macOS because the latest version of the `sortmerna` package is not available for this platform.)_
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
@@ -57,11 +53,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     nextflow run nf-core/rnaseq -profile <docker/singularity/conda/institute> --input '*_R{1,2}.fastq.gz' --genome GRCh37
     ```
 
-See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
+See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.
 
 ### Documentation
 
-The nf-core/rnaseq pipeline comes with documentation about the pipeline which you can read at [https://nf-core/rnaseq/docs](https://nf-core/rnaseq/docs) or find in the [`docs/` directory](docs).
+The nf-core/rnaseq pipeline comes with documentation about the pipeline which you can read on the [nf-core website](https://nf-co.re/rnaseq) or find in the [`docs/` directory](docs).
 
 ### Credits
 
@@ -86,7 +82,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citation
 
-<!-- If you use  nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use  nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.1400710](https://doi.org/10.5281/zenodo.1400710)
 
 You can cite the `nf-core` publication as follows:
 

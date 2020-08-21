@@ -93,14 +93,14 @@
                 "additional_fasta": {
                     "type": "string"
                 },
-                "saveReference": {
+                "save_reference": {
                     "type": "string",
                     "fa_icon": "fas fa-download"
                 },
                 "gencode": {
                     "type": "string"
                 },
-                "compressedReference": {
+                "compressed_reference": {
                     "type": "string"
                 },
                 "rsem_reference": {
@@ -116,12 +116,12 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
-                "stringTieIgnoreGTF": {
+                "stringtie_ignore_gtf": {
                     "type": "string"
                 },
-                "readPaths": {
+                "star_index_options": {
                     "type": "string",
-                    "default": "null"
+                    "fa_icon": "fas fa-database"
                 }
             }
         },
@@ -151,7 +151,7 @@
                         "link",
                         "copy",
                         "copyNoFollow",
-                        "mov"
+                        "move"
                     ]
                 },
                 "name": {
@@ -295,15 +295,15 @@
             "default": "",
             "fa_icon": "fas fa-share-alt",
             "properties": {
-                "forwardStranded": {
+                "forward_stranded": {
                     "type": "string",
                     "fa_icon": "fas fa-angle-double-right"
                 },
-                "reverseStranded": {
+                "reverse_stranded": {
                     "type": "string",
                     "fa_icon": "fas fa-angle-double-left"
                 },
-                "unStranded": {
+                "unstranded": {
                     "type": "string",
                     "fa_icon": "fas fa-arrows-alt"
                 }
@@ -315,15 +315,15 @@
             "description": "Options to configure rRNA removal",
             "default": "",
             "properties": {
-                "removeRiboRNA": {
+                "remove_ribo_rna": {
                     "type": "string",
                     "fa_icon": "fab fa-envira"
                 },
-                "save_nonrRNA_reads": {
+                "save_non_ribo_reads": {
                     "type": "string",
                     "fa_icon": "fas fa-cloud-download-alt"
                 },
-                "rRNA_database_manifest": {
+                "ribo_database_manifest": {
                     "type": "string",
                     "default": "/Users/alexanderpeltzer/IDEA/nf-core/rnaseq/assets/rrna-db-defaults.txt",
                     "fa_icon": "far fa-file-alt"
@@ -350,7 +350,7 @@
                 "three_prime_clip_r2": {
                     "type": "integer"
                 },
-                "saveTrimmed": {
+                "save_trimmed": {
                     "type": "string",
                     "fa_icon": "fas fa-hdd"
                 },
@@ -370,40 +370,40 @@
             "default": "",
             "fa_icon": "fas fa-forward",
             "properties": {
-                "skipFastQC": {
+                "skip_fastqc": {
                     "type": "string"
                 },
-                "skipQC": {
+                "skip_qc": {
                     "type": "string"
                 },
-                "skipEdgeR": {
+                "skip_edger": {
                     "type": "string"
                 },
-                "skipTrimming": {
+                "skip_trimming": {
                     "type": "string"
                 },
-                "skipAlignment": {
+                "skip_alignment": {
                     "type": "string"
                 },
-                "skipMultiQC": {
+                "skip_multiqc": {
                     "type": "string"
                 },
                 "skip_rsem": {
                     "type": "string"
                 },
-                "skipQualimap": {
+                "skip_qualimap": {
                     "type": "string"
                 },
-                "skipDupRadar": {
+                "skip_dupradar": {
                     "type": "string"
                 },
-                "skipPreseq": {
+                "skip_preseq": {
                     "type": "string"
                 },
-                "skipBiotypeQC": {
+                "skip_biotype_qc": {
                     "type": "string"
                 },
-                "skipRseQC": {
+                "skip_rseqc": {
                     "type": "string"
                 }
             }
@@ -435,7 +435,7 @@
                     "type": "string",
                     "fa_icon": "far fa-copy"
                 },
-                "save_umi_intermediates": {
+                "save_umi_intermeds": {
                     "type": "string",
                     "fa_icon": "fas fa-cloud-download-alt"
                 }
@@ -452,11 +452,11 @@
                     "default": "star",
                     "fa_icon": "fas fa-align-justify"
                 },
-                "saveAlignedIntermediates": {
+                "save_align_intermeds": {
                     "type": "string",
                     "fa_icon": "fas fa-cloud-download-alt"
                 },
-                "saveUnaligned": {
+                "save_unaligned": {
                     "type": "string",
                     "fa_icon": "fas fa-cloud-download-alt"
                 },
@@ -471,6 +471,14 @@
                     "fa_icon": "fas fa-database"
                 },
                 "star_memory": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database"
+                },
+                "star_align_options": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database"
+                },
+                "hisat2_align_options": {
                     "type": "string",
                     "fa_icon": "fas fa-database"
                 }
@@ -532,7 +540,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-hospital-alt"
                 },
-                "sampleLevel": {
+                "sample_level": {
                     "type": "string"
                 },
                 "markdup_java_options": {

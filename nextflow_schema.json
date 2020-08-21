@@ -100,9 +100,6 @@
                 "gencode": {
                     "type": "string"
                 },
-                "compressed_reference": {
-                    "type": "string"
-                },
                 "rsem_reference": {
                     "type": "string"
                 },

@@ -1745,380 +1745,379 @@ if (!params.skip_alignment) {
     featureCounts_biotype = Channel.empty()
     rsem_logs = Channel.empty()
 }
-//
-// if (params.pseudo_aligner == 'salmon') {
-//     process SALMON_QUANT {
-//         tag "$sample"
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         tuple val(sample), path(reads) from trimmed_reads_salmon
-//         path index from salmon_index.collect()
-//         path gtf from ch_gtf
-//
-//         output:
-//         tuple val(sample), path("${sample}/") into salmon_parsegtf,
-//                                                    salmon_tximport
-//
-//         path "${sample}/" into salmon_logs
-//
-//         script:
-//         def rnastrandness = params.single_end ? 'U' : 'IU'
-//         if (forward_stranded && !unstranded) {
-//             rnastrandness = params.single_end ? 'SF' : 'ISF'
-//         } else if (reverse_stranded && !unstranded) {
-//             rnastrandness = params.single_end ? 'SR' : 'ISR'
-//         }
-//         def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
-//         def unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
-//         """
-//         salmon quant \\
-//             --validateMappings \\
-//             --seqBias \\
-//             --useVBOpt \\
-//             --gcBias \\
-//             --geneMap $gtf \\
-//             --threads $task.cpus \\
-//             --libType=$rnastrandness \\
-//             --index $index \\
-//             $endedness \\
-//             $unmapped \\
-//             -o $sample
-//         """
-//     }
-//
-//     process SALMON_TX2GENE {
-//         label 'low_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         path ("salmon/*") from salmon_parsegtf.collect{it[1]}
-//         path gtf from ch_gtf
-//
-//         output:
-//         path "tx2gene.csv" into salmon_tx2gene,
-//                                 salmon_merge_tx2gene
-//
-//         script:
-//         """
-//         parse_gtf.py --gtf $gtf --salmon salmon --id $params.fc_group_features --extra $params.fc_extra_attributes -o tx2gene.csv
-//         """
-//     }
-//
-//     process SALMON_TXIMPORT {
-//         label 'low_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         tuple val(name), path("salmon/*") from salmon_tximport
-//         path tx2gene from salmon_tx2gene.collect()
-//
-//         output:
-//         path "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
-//         path "${name}_salmon_gene_counts.csv" into salmon_gene_counts
-//         path "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
-//         path "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
-//
-//         script:
-//         """
-//         tximport.r NULL salmon $name
-//         """
-//     }
-//
-//     process SALMON_MERGE {
-//         label 'mid_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         path gene_tpm_files from salmon_gene_tpm.collect()
-//         path gene_count_files from salmon_gene_counts.collect()
-//         path transcript_tpm_files from salmon_transcript_tpm.collect()
-//         path transcript_count_files from salmon_transcript_counts.collect()
-//         path tx2gene from salmon_merge_tx2gene
-//
-//         output:
-//         path "salmon_merged*.csv" into salmon_merged_ch
-//         path "*.rds"
-//
-//         script:
-//         // First field is the gene/transcript ID
-//         gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
-//         transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
-//
-//         // Second field is counts/TPM
-//         gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         """
-//         paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
-//         paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
-//         paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
-//         paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
-//
-//         se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
-//         se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
-//         """
-//     }
-// } else {
-//     salmon_logs = Channel.empty()
-// }
-//
-// Channel.from(summary.collect{ [it.key, it.value] })
-//     .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
-//     .reduce { a, b -> return [a, b].join("\n            ") }
-//     .map { x -> """
-//     id: 'nf-core-rnaseq-summary'
-//     description: " - this information is collected when the pipeline is started."
-//     section_name: 'nf-core/rnaseq Workflow Summary'
-//     section_href: 'https://github.com/nf-core/rnaseq'
-//     plot_type: 'html'
-//     data: |
-//         <dl class=\"dl-horizontal\">
-//             $x
-//         </dl>
-//     """.stripIndent() }
-//     .set { ch_workflow_summary }
-//
-// process GET_SOFTWARE_VERSIONS {
-//     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-//         saveAs: { filename ->
-//             if (filename.indexOf(".csv") > 0) filename
-//             else null
-//         }
-//
-//     output:
-//     path 'software_versions_mqc.yaml' into ch_software_versions_yaml
-//     path "software_versions.csv"
-//
-//     script:
-//     """
-//     echo $workflow.manifest.version &> v_ngi_rnaseq.txt
-//     echo $workflow.nextflow.version &> v_nextflow.txt
-//     fastqc --version &> v_fastqc.txt
-//     cutadapt --version &> v_cutadapt.txt
-//     trim_galore --version &> v_trim_galore.txt
-//     sortmerna --version &> v_sortmerna.txt
-//     STAR --version &> v_star.txt
-//     hisat2 --version &> v_hisat2.txt
-//     stringtie --version &> v_stringtie.txt
-//     preseq &> v_preseq.txt
-//     read_duplication.py --version &> v_rseqc.txt
-//     bamCoverage --version &> v_deeptools.txt || true
-//     featureCounts -v &> v_featurecounts.txt
-//     rsem-calculate-expression --version &> v_rsem.txt
-//     salmon --version &> v_salmon.txt
-//     picard MarkDuplicates --version &> v_markduplicates.txt  || true
-//     samtools --version &> v_samtools.txt
-//     multiqc --version &> v_multiqc.txt
-//     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
-//     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
-//     umi_tools --version &> v_umi_tools.txt
-//     unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
-//     scrape_software_versions.py &> software_versions_mqc.yaml
-//     """
-// }
-//
-// process MULTIQC {
-//     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
-//
-//     when:
-//     !params.skip_multiqc
-//
-//     input:
-//     path multiqc_config from ch_multiqc_config
-//     path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
-//     path ('fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
-//     path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
-//     path ('alignment/*') from alignment_logs.collect().ifEmpty([])
-//     path ('rseqc/*') from rseqc_results.collect().ifEmpty([])
-//     path ('picard/*') from picard_results.collect().ifEmpty([])
-//     path ('qualimap/*') from qualimap_results.collect().ifEmpty([])
-//     path ('preseq/*') from preseq_results.collect().ifEmpty([])
-//     path ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-//     path ('featurecounts/*') from featureCounts_logs.collect().ifEmpty([])
-//     path ('featurecounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
-//     path ('rsem/*') from rsem_logs.collect().ifEmpty([])
-//     path ('salmon/*') from salmon_logs.collect().ifEmpty([])
-//     path ('sample_correlation/*') from sample_correlation_results.collect().ifEmpty([])
-//     path ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
-//     path ('software_versions/*') from ch_software_versions_yaml.collect()
-//     path workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-//
-//     output:
-//     path "*multiqc_report.html" into ch_multiqc_report
-//     path "*_data"
-//     path "multiqc_plots"
-//
-//     script:
-//     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-//     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-//     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-//     """
-//     multiqc . -f $rtitle $rfilename $custom_config_file
-//     """
-// }
-//
-// process OUTPUT_DOCUMENTATION {
-//     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
-//
-//     input:
-//     path output_docs from ch_output_docs
-//     path images from ch_output_docs_images
-//
-//     output:
-//     path "results_description.html"
-//
-//     script:
-//     """
-//     markdown_to_html.py $output_docs -o results_description.html
-//     """
-// }
-//
-// /*
-//  * Completion e-mail notification
-//  */
-// workflow.onComplete {
-//     // Set up the e-mail variables
-//     def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
-//     if (poor_alignment_scores.size() > 0) {
-//         subject = "[nf-core/rnaseq] Partially Successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
-//     }
-//     if (!workflow.success) {
-//       subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
-//     }
-//     def email_fields = [:]
-//     email_fields['version'] = workflow.manifest.version
-//     email_fields['runName'] = custom_runName ?: workflow.runName
-//     email_fields['success'] = workflow.success
-//     email_fields['dateComplete'] = workflow.complete
-//     email_fields['duration'] = workflow.duration
-//     email_fields['exitStatus'] = workflow.exitStatus
-//     email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-//     email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-//     email_fields['commandLine'] = workflow.commandLine
-//     email_fields['projectDir'] = workflow.projectDir
-//     email_fields['summary'] = summary
-//     email_fields['summary']['Date Started'] = workflow.start
-//     email_fields['summary']['Date Completed'] = workflow.complete
-//     email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-//     email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-//     if (workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-//     if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-//     if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-//     if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
-//     email_fields['skipped_poor_alignment'] = poor_alignment_scores.keySet()
-//     email_fields['percent_aln_skip'] = params.percent_aln_skip
-//     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
-//     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
-//     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
-//
-//     // On success try attach the multiqc report
-//     def mqc_report = null
-//     try {
-//         if (workflow.success && !params.skip_multiqc) {
-//             mqc_report = multiqc_report.getVal()
-//             if (mqc_report.getClass() == ArrayList) {
-//                 log.warn "[nf-core/rnaseq] Found multiple reports from process 'MULTIQC', will use only one"
-//                 mqc_report = mqc_report[0]
-//             }
-//         }
-//     } catch (all) {
-//         log.warn "[nf-core/rnaseq] Could not attach MultiQC report to summary email"
-//     }
-//
-//     // Check if we are only sending emails on failure
-//     email_address = params.email
-//     if (!params.email && params.email_on_fail && !workflow.success) {
-//         email_address = params.email_on_fail
-//     }
-//
-//     // Render the TXT template
-//     def engine = new groovy.text.GStringTemplateEngine()
-//     def tf = new File("$baseDir/assets/email_template.txt")
-//     def txt_template = engine.createTemplate(tf).make(email_fields)
-//     def email_txt = txt_template.toString()
-//
-//     // Render the HTML template
-//     def hf = new File("$baseDir/assets/email_template.html")
-//     def html_template = engine.createTemplate(hf).make(email_fields)
-//     def email_html = html_template.toString()
-//
-//     // Render the sendmail template
-//     def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
-//     def sf = new File("$baseDir/assets/sendmail_template.txt")
-//     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-//     def sendmail_html = sendmail_template.toString()
-//
-//     // Send the HTML e-mail
-//     if (email_address) {
-//         try {
-//             if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
-//             // Try to send HTML e-mail using sendmail
-//             [ 'sendmail', '-t' ].execute() << sendmail_html
-//             log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (sendmail)"
-//         } catch (all) {
-//             // Catch failures and try with plaintext
-//             def mail_cmd = [ 'mail', '-s', subject, '--content-type=text/html', email_address ]
-//             if (mqc_report.size() <= params.max_multiqc_email_size.toBytes()) {
-//               mail_cmd += [ '-A', mqc_report ]
-//             }
-//             mail_cmd.execute() << email_html
-//             log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (mail)"
-//         }
-//     }
-//
-//     // Write summary e-mail HTML to a file
-//     def output_d = new File("${params.outdir}/pipeline_info/")
-//     if (!output_d.exists()) {
-//         output_d.mkdirs()
-//     }
-//     def output_hf = new File(output_d, "pipeline_report.html")
-//     output_hf.withWriter { w -> w << email_html }
-//     def output_tf = new File(output_d, "pipeline_report.txt")
-//     output_tf.withWriter { w -> w << email_txt }
-//
-//     c_green = params.monochrome_logs ? '' : "\033[0;32m";
-//     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-//     c_red = params.monochrome_logs ? '' : "\033[0;31m";
-//     c_reset = params.monochrome_logs ? '' : "\033[0m";
-//
-//     if (good_alignment_scores.size() > 0) {
-//         total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
-//         idx = 0;
-//         samp_aln = ''
-//         for (samp in good_alignment_scores) {
-//             samp_aln += "    ${samp.key}: ${samp.value}%\n"
-//             idx += 1
-//             if (idx > 5) {
-//                 samp_aln += "    ..see pipeline reports for full list\n"
-//                 break;
-//             }
-//         }
-//         log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green}${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${c_reset}"
-//     }
-//     if (poor_alignment_scores.size() > 0) {
-//         samp_aln = ''
-//         poor_alignment_scores.each { samp, value ->
-//             samp_aln += "    ${samp}: ${value}%\n"
-//         }
-//         log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} WARNING - ${poor_alignment_scores.size()} samples skipped due to poor mapping percentages!\n${samp_aln}${c_reset}"
-//     }
-//
-//     if (workflow.stats.ignoredCount > 0 && workflow.success) {
-//         log.info "- ${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
-//         log.info "- ${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
-//         log.info "- ${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
-//     }
-//
-//     if (workflow.success) {
-//         log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green} Pipeline completed successfully${c_reset}"
-//     } else {
-//         checkHostname()
-//         log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} Pipeline completed with errors${c_reset}"
-//     }
-//
-// }
+
+if (params.pseudo_aligner == 'salmon') {
+    process SALMON_QUANT {
+        tag "$sample"
+        publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+
+        input:
+        tuple val(sample), path(reads) from trimmed_reads_salmon
+        path index from ch_salmon_index
+        path gtf from ch_gtf
+
+        output:
+        tuple val(sample), path("${sample}/") into salmon_parsegtf,
+                                                   salmon_tximport
+        path "${sample}/" into salmon_logs
+
+        script:
+        def rnastrandness = params.single_end ? 'U' : 'IU'
+        if (forward_stranded && !unstranded) {
+            rnastrandness = params.single_end ? 'SF' : 'ISF'
+        } else if (reverse_stranded && !unstranded) {
+            rnastrandness = params.single_end ? 'SR' : 'ISR'
+        }
+        def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+        def unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
+        """
+        salmon quant \\
+            --validateMappings \\
+            --seqBias \\
+            --useVBOpt \\
+            --gcBias \\
+            --geneMap $gtf \\
+            --threads $task.cpus \\
+            --libType=$rnastrandness \\
+            --index $index \\
+            $endedness \\
+            $unmapped \\
+            -o $sample
+        """
+    }
+
+    process SALMON_TX2GENE {
+        label 'low_memory'
+        publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+
+        input:
+        path ("salmon/*") from salmon_parsegtf.collect{it[1]}
+        path gtf from ch_gtf
+
+        output:
+        path "tx2gene.csv" into salmon_tx2gene,
+                                salmon_merge_tx2gene
+
+        script:
+        """
+        parse_gtf.py --gtf $gtf --salmon salmon --id $params.fc_group_features --extra $params.fc_extra_attributes -o tx2gene.csv
+        """
+    }
+
+    process SALMON_TXIMPORT {
+        label 'low_memory'
+        publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+
+        input:
+        tuple val(name), path("salmon/*") from salmon_tximport
+        path tx2gene from salmon_tx2gene.collect()
+
+        output:
+        path "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
+        path "${name}_salmon_gene_counts.csv" into salmon_gene_counts
+        path "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
+        path "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
+
+        script:
+        """
+        tximport.r NULL salmon $name
+        """
+    }
+
+    process SALMON_MERGE {
+        label 'mid_memory'
+        publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+
+        input:
+        path gene_tpm_files from salmon_gene_tpm.collect()
+        path gene_count_files from salmon_gene_counts.collect()
+        path transcript_tpm_files from salmon_transcript_tpm.collect()
+        path transcript_count_files from salmon_transcript_counts.collect()
+        path tx2gene from salmon_merge_tx2gene
+
+        output:
+        path "salmon_merged*.csv" into salmon_merged_ch
+        path "*.rds"
+
+        script:
+        // First field is the gene/transcript ID
+        gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
+        transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
+
+        // Second field is counts/TPM
+        gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+        gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+        transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+        transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+        """
+        paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
+        paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
+        paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
+        paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
+
+        se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
+        se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
+        """
+    }
+} else {
+    salmon_logs = Channel.empty()
+}
+
+Channel.from(summary.collect{ [it.key, it.value] })
+    .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
+    .reduce { a, b -> return [a, b].join("\n            ") }
+    .map { x -> """
+    id: 'nf-core-rnaseq-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/rnaseq Workflow Summary'
+    section_href: 'https://github.com/nf-core/rnaseq'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+            $x
+        </dl>
+    """.stripIndent() }
+    .set { ch_workflow_summary }
+
+process GET_SOFTWARE_VERSIONS {
+    publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
+        saveAs: { filename ->
+            if (filename.indexOf(".csv") > 0) filename
+            else null
+        }
+
+    output:
+    path 'software_versions_mqc.yaml' into ch_software_versions_yaml
+    path "software_versions.csv"
+
+    script:
+    """
+    echo $workflow.manifest.version &> v_ngi_rnaseq.txt
+    echo $workflow.nextflow.version &> v_nextflow.txt
+    fastqc --version &> v_fastqc.txt
+    cutadapt --version &> v_cutadapt.txt
+    trim_galore --version &> v_trim_galore.txt
+    sortmerna --version &> v_sortmerna.txt
+    STAR --version &> v_star.txt
+    hisat2 --version &> v_hisat2.txt
+    stringtie --version &> v_stringtie.txt
+    preseq &> v_preseq.txt
+    read_duplication.py --version &> v_rseqc.txt
+    bamCoverage --version &> v_deeptools.txt || true
+    featureCounts -v &> v_featurecounts.txt
+    rsem-calculate-expression --version &> v_rsem.txt
+    salmon --version &> v_salmon.txt
+    picard MarkDuplicates --version &> v_markduplicates.txt  || true
+    samtools --version &> v_samtools.txt
+    multiqc --version &> v_multiqc.txt
+    Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
+    Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
+    umi_tools --version &> v_umi_tools.txt
+    unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
+
+process MULTIQC {
+    publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
+
+    when:
+    !params.skip_multiqc
+
+    input:
+    path multiqc_config from ch_multiqc_config
+    path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
+    path ('fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
+    path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
+    path ('alignment/*') from alignment_logs.collect().ifEmpty([])
+    path ('rseqc/*') from rseqc_results.collect().ifEmpty([])
+    path ('picard/*') from picard_results.collect().ifEmpty([])
+    path ('qualimap/*') from qualimap_results.collect().ifEmpty([])
+    path ('preseq/*') from preseq_results.collect().ifEmpty([])
+    path ('dupradar/*') from dupradar_results.collect().ifEmpty([])
+    path ('featurecounts/*') from featureCounts_logs.collect().ifEmpty([])
+    path ('featurecounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
+    path ('rsem/*') from rsem_logs.collect().ifEmpty([])
+    path ('salmon/*') from salmon_logs.collect().ifEmpty([])
+    path ('sample_correlation/*') from sample_correlation_results.collect().ifEmpty([])
+    path ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
+    path ('software_versions/*') from ch_software_versions_yaml.collect()
+    path workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
+
+    output:
+    path "*multiqc_report.html" into ch_multiqc_report
+    path "*_data"
+    path "multiqc_plots"
+
+    script:
+    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
+    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
+    """
+    multiqc . -f $rtitle $rfilename $custom_config_file
+    """
+}
+
+process OUTPUT_DOCUMENTATION {
+    publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
+
+    input:
+    path output_docs from ch_output_docs
+    path images from ch_output_docs_images
+
+    output:
+    path "results_description.html"
+
+    script:
+    """
+    markdown_to_html.py $output_docs -o results_description.html
+    """
+}
+
+/*
+ * Completion e-mail notification
+ */
+workflow.onComplete {
+    // Set up the e-mail variables
+    def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
+    if (poor_alignment_scores.size() > 0) {
+        subject = "[nf-core/rnaseq] Partially Successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
+    }
+    if (!workflow.success) {
+      subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
+    }
+    def email_fields = [:]
+    email_fields['version'] = workflow.manifest.version
+    email_fields['runName'] = custom_runName ?: workflow.runName
+    email_fields['success'] = workflow.success
+    email_fields['dateComplete'] = workflow.complete
+    email_fields['duration'] = workflow.duration
+    email_fields['exitStatus'] = workflow.exitStatus
+    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
+    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
+    email_fields['commandLine'] = workflow.commandLine
+    email_fields['projectDir'] = workflow.projectDir
+    email_fields['summary'] = summary
+    email_fields['summary']['Date Started'] = workflow.start
+    email_fields['summary']['Date Completed'] = workflow.complete
+    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
+    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
+    if (workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
+    if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
+    if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
+    if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
+    email_fields['skipped_poor_alignment'] = poor_alignment_scores.keySet()
+    email_fields['percent_aln_skip'] = params.percent_aln_skip
+    email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
+    email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
+    email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+
+    // On success try attach the multiqc report
+    def mqc_report = null
+    try {
+        if (workflow.success && !params.skip_multiqc) {
+            mqc_report = multiqc_report.getVal()
+            if (mqc_report.getClass() == ArrayList) {
+                log.warn "[nf-core/rnaseq] Found multiple reports from process 'MULTIQC', will use only one"
+                mqc_report = mqc_report[0]
+            }
+        }
+    } catch (all) {
+        log.warn "[nf-core/rnaseq] Could not attach MultiQC report to summary email"
+    }
+
+    // Check if we are only sending emails on failure
+    email_address = params.email
+    if (!params.email && params.email_on_fail && !workflow.success) {
+        email_address = params.email_on_fail
+    }
+
+    // Render the TXT template
+    def engine = new groovy.text.GStringTemplateEngine()
+    def tf = new File("$baseDir/assets/email_template.txt")
+    def txt_template = engine.createTemplate(tf).make(email_fields)
+    def email_txt = txt_template.toString()
+
+    // Render the HTML template
+    def hf = new File("$baseDir/assets/email_template.html")
+    def html_template = engine.createTemplate(hf).make(email_fields)
+    def email_html = html_template.toString()
+
+    // Render the sendmail template
+    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
+    def sf = new File("$baseDir/assets/sendmail_template.txt")
+    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
+    def sendmail_html = sendmail_template.toString()
+
+    // Send the HTML e-mail
+    if (email_address) {
+        try {
+            if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
+            // Try to send HTML e-mail using sendmail
+            [ 'sendmail', '-t' ].execute() << sendmail_html
+            log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (sendmail)"
+        } catch (all) {
+            // Catch failures and try with plaintext
+            def mail_cmd = [ 'mail', '-s', subject, '--content-type=text/html', email_address ]
+            if (mqc_report.size() <= params.max_multiqc_email_size.toBytes()) {
+              mail_cmd += [ '-A', mqc_report ]
+            }
+            mail_cmd.execute() << email_html
+            log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (mail)"
+        }
+    }
+
+    // Write summary e-mail HTML to a file
+    def output_d = new File("${params.outdir}/pipeline_info/")
+    if (!output_d.exists()) {
+        output_d.mkdirs()
+    }
+    def output_hf = new File(output_d, "pipeline_report.html")
+    output_hf.withWriter { w -> w << email_html }
+    def output_tf = new File(output_d, "pipeline_report.txt")
+    output_tf.withWriter { w -> w << email_txt }
+
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_red = params.monochrome_logs ? '' : "\033[0;31m";
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+
+    if (good_alignment_scores.size() > 0) {
+        total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
+        idx = 0;
+        samp_aln = ''
+        for (samp in good_alignment_scores) {
+            samp_aln += "    ${samp.key}: ${samp.value}%\n"
+            idx += 1
+            if (idx > 5) {
+                samp_aln += "    ..see pipeline reports for full list\n"
+                break;
+            }
+        }
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green}${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${c_reset}"
+    }
+    if (poor_alignment_scores.size() > 0) {
+        samp_aln = ''
+        poor_alignment_scores.each { samp, value ->
+            samp_aln += "    ${samp}: ${value}%\n"
+        }
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} WARNING - ${poor_alignment_scores.size()} samples skipped due to poor mapping percentages!\n${samp_aln}${c_reset}"
+    }
+
+    if (workflow.stats.ignoredCount > 0 && workflow.success) {
+        log.info "- ${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
+        log.info "- ${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
+        log.info "- ${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
+    }
+
+    if (workflow.success) {
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green} Pipeline completed successfully${c_reset}"
+    } else {
+        checkHostname()
+        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} Pipeline completed with errors${c_reset}"
+    }
+
+}
 
 def nfcoreHeader() {
     // Log colors ANSI codes

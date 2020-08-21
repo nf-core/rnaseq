@@ -135,11 +135,11 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 
 // Reference index path configuration
 // Define these here - after the profiles are loaded with the iGenomes paths
-params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
+params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
 ch_mdsplot_header = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
@@ -208,11 +208,6 @@ if (params.fasta) {
 } //else {
 //    exit 1, "Fasta file for reference genome not specified!"
 //}
-// .set { genome_fasta_gz }
-// .set { ch_genome_fasta }
-// .into { ch_fasta_for_star_index
-//         ch_fasta_for_hisat_index
-//         ch_fasta_for_rsem_reference }
 
 if (params.gtf) {
     file(params.gtf, checkIfExists: true)
@@ -239,16 +234,8 @@ if (params.gtf) {
         }
     } else {
         ch_gtf = file(params.gtf)
-        // .set { gtf_gz }
-        // .set { gtfFile }
-        // // ch_gtf
-        // //     .into { gtf_makeSTARindex
-        // //             gtf_makeHisatSplicesites
-        // //             gtf_makeHISATindex
-        // //             gtf_makeSalmonIndex
-        // //             gtf_makeBED12
-        // //             gtf_star
-        // //             gtf_dupradar
+
+
         // //             gtf_featureCounts
         // //             gtf_stringtieFPKM
         // //             gtf_salmon
@@ -1095,8 +1082,8 @@ if (!params.skip_trimming) {
 //
 //             input:
 //             tuple val(name), path(reads) from trimmed_reads_alignment
-//             path index from star_index.collect()
-//             path gtf from gtf_star.collect()
+//             path index from ch_star_index.collect()
+//             path gtf from ch_gtf
 //             path wherearemyfiles from ch_where_are_my_files
 //
 //             output:
@@ -1516,7 +1503,7 @@ if (!params.skip_trimming) {
 //
 //         input:
 //         path bam from bam_md
-//         path gtf from gtf_dupradar.collect()
+//         path gtf from ch_gtf
 //
 //         output:
 //         path "*.{pdf,txt}" into dupradar_results
@@ -1547,8 +1534,8 @@ if (!params.skip_trimming) {
 //
 //         input:
 //         path bam from bam_featurecounts
-//         path gtf from gtf_featureCounts.collect()
-//         path biotypes_header from ch_biotypes_header.collect()
+//         path gtf from ch_gtf
+//         path biotypes_header from ch_biotypes_header
 //
 //         output:
 //         path "${bam.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge

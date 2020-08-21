@@ -336,21 +336,21 @@ if (!params.skip_alignment) {
             ch_hisat2_index = file(params.hisat2_index)
         }
     }
-} else {
-    log.info "Skipping alignment processes..."
-}
 
-// Check if we are running RSEM
-skip_rsem = params.skip_rsem
-if (!params.skip_alignment && !params.skip_rsem) {
-    if (params.aligner != "star") {
-        skip_rsem = true
-        log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
-    } else {
-        if (params.rsem_index) {
-            ch_rsem_index = file(params.rsem_index, checkIfExists: true)
+    // Check if we are running RSEM
+    skip_rsem = params.skip_rsem
+    if (!params.skip_rsem) {
+        if (params.aligner != "star") {
+            skip_rsem = true
+            log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
+        } else {
+            if (params.rsem_index) {
+                ch_rsem_index = file(params.rsem_index, checkIfExists: true)
+            }
         }
     }
+} else {
+    log.info "Skipping alignment processes..."
 }
 
 // Check psuedo-aligner indices and uncompress if required

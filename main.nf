@@ -181,69 +181,37 @@ if (params.skip_alignment && !params.pseudo_aligner) {
 }
 
 // Check basic annotation files and uncompress if required
-if (!params.skip_alignment) {
-    if (params.fasta) {
-        file(params.fasta, checkIfExists: true)
-        if (params.fasta.endsWith('.gz')) {
-            process GUNZIP_FASTA {
-                tag "$gz"
-                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+if (params.fasta) {
+    file(params.fasta, checkIfExists: true)
+    if (params.fasta.endsWith('.gz')) {
+        process GUNZIP_FASTA {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
-                input:
-                path gz from params.fasta
+            input:
+            path gz from params.fasta
 
-                output:
-                path "$unzip" into ch_fasta
+            output:
+            path "$unzip" into ch_fasta
 
-                script:
-                unzip = gz.toString() - '.gz'
-                """
-                pigz -f -d -p $task.cpus $gz
-                """
-            }
-        } else {
-            ch_fasta = file(params.fasta, checkIfExists: true)
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
         }
     } else {
-        exit 1, "Fasta file for reference genome not specified!"
+        ch_fasta = file(params.fasta, checkIfExists: true)
     }
-    // .set { genome_fasta_gz }
-    // .set { ch_genome_fasta }
-    // .into { ch_fasta_for_star_index
-    //         ch_fasta_for_hisat_index
-    //         ch_fasta_for_rsem_reference }
-
-    if (params.additional_fasta) {
-        file(params.additional_fasta, checkIfExists: true)
-        if (params.additional_fasta.endsWith('.gz')) {
-            process GUNZIP_ADDITIONAL_FASTA {
-                tag "$gz"
-                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-                input:
-                path gz from params.additional_fasta
-
-                output:
-                path "$unzip" into ch_additional_fasta
-
-                script:
-                unzip = gz.toString() - '.gz'
-                """
-                pigz -f -d -p $task.cpus $gz
-                """
-            }
-        } else {
-            ch_additional_fasta = file(params.additional_fasta, checkIfExists: true)
-        }
-    }
-    // .set { additional_fasta_gz }
-    // .into { ch_additional_fasta_for_gtf
-    //         ch_additional_fasta_to_concat }
-} else {
-    log.info "Skipping alignment processes..."
-}
+} //else {
+//    exit 1, "Fasta file for reference genome not specified!"
+//}
+// .set { genome_fasta_gz }
+// .set { ch_genome_fasta }
+// .into { ch_fasta_for_star_index
+//         ch_fasta_for_hisat_index
+//         ch_fasta_for_rsem_reference }
 
 if (params.gtf) {
     file(params.gtf, checkIfExists: true)
@@ -327,6 +295,34 @@ if (params.bed12) {
     }
 }
 
+if (params.additional_fasta) {
+    file(params.additional_fasta, checkIfExists: true)
+    if (params.additional_fasta.endsWith('.gz')) {
+        process GUNZIP_ADDITIONAL_FASTA {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path gz from params.additional_fasta
+
+            output:
+            path "$unzip" into ch_additional_fasta
+
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
+        }
+    } else {
+        ch_additional_fasta = file(params.additional_fasta, checkIfExists: true)
+    }
+}
+// .set { additional_fasta_gz }
+// .into { ch_additional_fasta_for_gtf
+//         ch_additional_fasta_to_concat }
+
 // Check genome/transcriptome indices and uncompress if required
 if (!params.skip_alignment) {
     if (params.aligner == 'star' && params.star_index) {
@@ -378,10 +374,30 @@ if (!params.skip_alignment) {
         }
         if (params.splicesites) { ch_splicesites = file(params.bed12, checkIfExists: true) }
     }
+} else {
+    log.info "Skipping alignment processes..."
 }
 
+// Check if we are running RSEM
+skip_rsem = params.skip_rsem
+if (!params.skip_alignment && !params.skip_rsem) {
+    if (params.aligner != "star") {
+        skip_rsem = true
+        log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
+    } else {
+        if (params.rsem_index) {
+            ch_rsem_index = file(params.rsem_index, checkIfExists: true)
+        }
+    }
+}
 
-//     }
+// Check psueod-aligner indices and uncompress if required
+
+
+
+
+
+
 //     if (params.salmon_index && params.pseudo_aligner == 'salmon') {
 //         process GUNZIP_SALMON_INDEX {
 //             tag "$gz"
@@ -401,9 +417,7 @@ if (!params.skip_alignment) {
 //             """
 //         }
 
-// }
-// //
-// //
+
 // // // Separately check for whether salmon needs a genome fasta to extract
 // // // transcripts from, or can use a transcript fasta directly
 // // if (params.pseudo_aligner == 'salmon') {
@@ -463,17 +477,6 @@ if (!params.skip_alignment) {
 // //     }
 // // }
 // //
-// // skip_rsem = params.skip_rsem
-// // if (!params.skip_alignment && !params.skip_rsem && params.aligner != "star") {
-// //     skip_rsem = true
-// //     log.info "RSEM only works when  STAR. Disabling RSEM."
-// // }
-// // if (params.rsem_reference && !params.skip_rsem && !params.skip_alignment) {
-// //     Channel
-// //         .fromPath(params.rsem_reference, checkIfExists: true)
-// //         .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
-// //         .set { rsem_reference }
-// // }
 
 // Get rRNA databases
 // Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
@@ -609,89 +612,6 @@ log.info "-\033[2m--------------------------------------------------\033[0m-"
 
 // Check the hostnames against configured profiles
 checkHostname()
-
-// compressed_reference = (hasExtension(params.fasta, 'gz') ||
-//     hasExtension(params.additional_fasta, "gz") ||
-//     hasExtension(params.gtf, 'gz') ||
-//     hasExtension(params.gff, 'gz') ||
-//     hasExtension(params.bed12, 'gz') ||
-//     hasExtension(params.transcript_fasta, 'gz') ||
-//     hasExtension(params.star_index, 'gz') ||
-//     hasExtension(params.hisat2_index, 'gz') ||
-//     hasExtension(params.salmon_index, 'gz'))
-//
-// if (compressed_reference) {
-//     // This complex logic is to prevent accessing the genome_fasta_gz variable if
-//     // necessary indices for STAR, HiSAT2, Salmon already exist, or if
-//     // params.transcript_fasta is provided as then the transcript sequences don't
-//     // need to be extracted.
-//     need_star_index = params.aligner == 'star' && !params.star_index
-//     need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
-//     need_rsem_ref = !params.skip_rsem && !params.rsem_reference
-//     //when an additional fasta is provided, the fasta and gtf file need
-//     //to be unzipeed to be merged in a later stage. --> Execute the following code block.
-//     need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref || params.additional_fasta
-//     alignment_no_indices = !params.skip_alignment && need_aligner_index
-//     pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
-//     if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {
-//         process GUNZIP_GENOME_FASTA {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gz from genome_fasta_gz
-//
-//             output:
-//             path "${gz.baseName}" into ch_genome_fasta
-//
-//             script:
-//             """
-//             gunzip --verbose --stdout --force $gz > ${gz.baseName}
-//             """
-//         }
-//
-//         if (params.additional_fasta) {
-//             process GUNZIP_ADDITIONAL_FASTA {
-//                 tag "$gz"
-//                 publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome" : params.outdir },
-//                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//                 input:
-//                 path gz from additional_fasta_gz
-//
-//                 output:
-//                 path "${gz.baseName}" into ch_additional_fasta_for_gtf,
-//                                            ch_additional_fasta_to_concat
-//
-//                 script:
-//                 """
-//                 gunzip --verbose --stdout --force $gz > ${gz.baseName}
-//                 """
-//             }
-//         }
-//     }
-//     if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index) {
-//         process GUNZIP_TRANSCRIPT_FASTA {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gz from transcript_fasta_gz
-//
-//             output:
-//             path "${gz.baseName}" into ch_fasta_for_salmon_index
-//
-//             script:
-//             """
-//             gunzip --verbose --stdout --force $gz > ${gz.baseName}
-//             """
-//         }
-//     }
-//     }
-//     }
-// }
 
 // /*
 //  * PREPROCESSING - Convert GFF3 to GTF
@@ -1729,7 +1649,7 @@ if (!params.skip_alignment) {
 
             input:
             path bam from bam_rsem
-            path "rsem" from rsem_reference.collect()
+            path "rsem" from rsem_reference
 
             output:
             path "*.genes.results" into rsem_results_genes

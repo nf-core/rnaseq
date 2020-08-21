@@ -324,8 +324,7 @@ if (!params.skip_alignment) {
                 path tar from params.hisat2_index
 
                 output:
-                path "$untar" into ch_hisat2_index
-                //path "*.ht2*" into ch_hisat2_index
+                path "*.ht2*" into ch_hisat2_index
 
                 script:
                 untar = tar.toString() - '.tar.gz'
@@ -692,8 +691,8 @@ if (!params.skip_alignment) {
     }
 
     /*
-    * PREPROCESSING - Build HISAT2 index and splice sites file (if required)
-    */
+     * PREPROCESSING - Build HISAT2 index and splice sites file (if required)
+     */
     if (params.aligner == 'hisat2') {
         if (!params.splicesites) {
             process MAKE_HISAT2_SPLICESITES {
@@ -717,8 +716,8 @@ if (!params.skip_alignment) {
         }
 
         /*
-        * PREPROCESSING - Build HISAT2 index
-        */
+         * PREPROCESSING - Build HISAT2 index
+         */
         if (!params.hisat2_index && params.fasta) {
             process HISAT2_BUILD {
                 tag "$fasta"
@@ -761,9 +760,9 @@ if (!params.skip_alignment) {
         }
     }
 
-    /**
-    * PREPROCESSING - Build RSEM reference
-    */
+    /*
+     * PREPROCESSING - Build RSEM reference
+     */
     if (!skip_rsem && !params.rsem_index && params.fasta) {
         process RSEM_PREPAREREFERENCE {
             tag "$fasta"

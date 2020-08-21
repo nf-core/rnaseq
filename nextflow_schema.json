@@ -100,7 +100,7 @@
                 "gencode": {
                     "type": "string"
                 },
-                "rsem_reference": {
+                "rsem_index": {
                     "type": "string"
                 },
                 "hisat2_index": {

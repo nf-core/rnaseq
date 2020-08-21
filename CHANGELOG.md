@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Version 1.4.3dev
+## [Version 1.5](https://github.com/nf-core/rnaseq/releases/tag/1.5) - 2020-08-28
 
 ### Pipeline enhancements & fixes
 
@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Replace `set` with `tuple` and `file` with `path`
 * Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
 * Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
+* Fix `--gff` input bug [#452](https://github.com/nf-core/rnaseq/issues/452)
 
 ### Updated Packages
 

@@ -569,7 +569,8 @@ if (compressed_reference) {
                 path gz from additional_fasta_gz
 
                 output:
-                path "${gz.baseName}" into ch_additional_fasta_for_gtf, ch_additional_fasta_to_concat
+                path "${gz.baseName}" into ch_additional_fasta_for_gtf,
+                                           ch_additional_fasta_to_concat
 
                 script:
                 """
@@ -709,6 +710,28 @@ if (compressed_reference) {
     }
 }
 
+/*
+ * PREPROCESSING - Convert GFF3 to GTF
+ */
+if (params.gff && !params.gtf) {
+    process GFF2GTF {
+        tag "$gff"
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+            saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+        input:
+        path gff from gffFile
+
+        output:
+        path "${gff.baseName}.gtf" into gtfFile
+
+        script:
+        """
+        gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
+        """
+    }
+}
+
 if (params.additional_fasta) {
     process MAKE_ADDITIONAL_GTF {
         tag "$fasta"
@@ -742,19 +765,7 @@ if (params.additional_fasta) {
                                       ch_fasta_for_hisat_index,
                                       ch_fasta_for_salmon_transcripts,
                                       ch_fasta_for_rsem_reference
-        path "${genome_name}.gtf" into gtf_makeSTARindex,
-                                       gtf_makeHisatSplicesites,
-                                       gtf_makeHISATindex,
-                                       gtf_makeSalmonIndex,
-                                       gtf_makeBED12,
-                                       gtf_star,
-                                       gtf_dupradar,
-                                       gtf_featureCounts,
-                                       gtf_stringtieFPKM,
-                                       gtf_salmon,
-                                       gtf_salmon_merge,
-                                       gtf_qualimap,
-                                       gtf_makeRSEMReference
+        path "${genome_name}.gtf" into ch_gtf
 
         script:
         main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
@@ -766,54 +777,23 @@ if (params.additional_fasta) {
         """
     }
 } else {
-    gtfFile
-        .into { gtf_makeSTARindex
-                gtf_makeHisatSplicesites
-                gtf_makeHISATindex
-                gtf_makeSalmonIndex
-                gtf_makeBED12
-                gtf_star
-                gtf_dupradar
-                gtf_featureCounts
-                gtf_stringtieFPKM
-                gtf_salmon
-                gtf_salmon_merge
-                gtf_qualimap
-                gtf_makeRSEMReference }
+    ch_gtf = gtfFile
 }
 
-/*
- * PREPROCESSING - Convert GFF3 to GTF
- */
-if (params.gff && !params.gtf) {
-    process GFF2GTF {
-        tag "$gff"
-        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-            saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-        input:
-        path gff from gffFile
-
-        output:
-        path "${gff.baseName}.gtf" into gtf_makeSTARindex,
-                                        gtf_makeHisatSplicesites,
-                                        gtf_makeHISATindex,
-                                        gtf_makeSalmonIndex,
-                                        gtf_makeBED12,
-                                        gtf_star,
-                                        gtf_dupradar,
-                                        gtf_featureCounts,
-                                        gtf_stringtieFPKM,
-                                        gtf_salmon,
-                                        gtf_salmon_merge,
-                                        gtf_qualimap
-
-        script:
-        """
-        gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
-        """
-    }
-}
+ch_gtf
+    .into { gtf_makeSTARindex
+            gtf_makeHisatSplicesites
+            gtf_makeHISATindex
+            gtf_makeSalmonIndex
+            gtf_makeBED12
+            gtf_star
+            gtf_dupradar
+            gtf_featureCounts
+            gtf_stringtieFPKM
+            gtf_salmon
+            gtf_salmon_merge
+            gtf_qualimap
+            gtf_makeRSEMReference }
 
 /*
  * PREPROCESSING - Build BED12 file

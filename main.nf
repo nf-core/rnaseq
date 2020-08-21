@@ -30,17 +30,17 @@ def helpMessage() {
 
     References:                       If not specified in the configuration file or you wish to overwrite any of the references.
       --genome [str]                  Name of iGenomes reference
+      --fasta [file]                  Path to genome fasta file
+      --gtf [file]                    Path to GTF file
+      --gff [file]                    Path to GFF3 file
+      --bed12 [file]                  Path to bed12 file
+      --transcript_fasta [file]       Path to transcript fasta file
+      --additional_fasta [file]       Additional fasta file containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
       --star_index [file]             Path to STAR index
       --hisat2_index [file]           Path to HiSAT2 index
       --rsem_index [file]             Path to RSEM index
       --salmon_index [file]           Path to Salmon index
-      --fasta [file]                  Path to genome fasta file
-      --transcript_fasta [file]       Path to transcript fasta file
-      --additional_fasta [file]       Additional fasta file containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
       --splicesites [file]            Path to splice sites file for building HiSat2 index
-      --gtf [file]                    Path to GTF file
-      --gff [file]                    Path to GFF3 file
-      --bed12 [file]                  Path to bed12 file
       --star_index_options [str]      Additional options that will be appended to the STAR genome indexing command
       --save_reference [bool]         Save the generated reference files to the results directory
       --gencode [bool]                Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
@@ -649,7 +649,7 @@ if (!params.bed12) {
         output:
         path "${gtf.baseName}.bed" into ch_bed12
 
-        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
         """
         gtf2bed $gtf > ${gtf.baseName}.bed
         """
@@ -1498,7 +1498,7 @@ if (!params.skip_alignment) {
         output:
         path "*.{pdf,txt}" into dupradar_results
 
-        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
         def dupradar_direction = 0
         if (forward_stranded && !unstranded) {
             dupradar_direction = 1
@@ -1721,7 +1721,7 @@ if (!params.skip_alignment) {
         when:
         num_bams > 2 && (!params.sample_level)
 
-        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
         """
         edgeR_heatmap_MDS.r $input_files
         cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file

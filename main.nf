@@ -788,7 +788,7 @@ if (!params.skip_alignment) {
     /**
     * PREPROCESSING - Build RSEM reference
     */
-    if (!skip_rsem && !params.rsem_index && params.fasta && params.gtf) {
+    if (!skip_rsem && !params.rsem_index && params.fasta) {
         process RSEM_PREPAREREFERENCE {
             tag "$fasta"
             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/rsem" : params.outdir },
@@ -809,53 +809,52 @@ if (!params.skip_alignment) {
         }
     }
 }
-//
-//
-// /*
-//  * PREPROCESSING - Create Salmon transcriptome index
-//  */
-// if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
-//     if (!params.transcript_fasta) {
-//         process TRANSCRIPTS_TO_FASTA {
-//             tag "$fasta"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//
-//             input:
-//             path fasta from ch_fasta_for_salmon_transcripts
-//             path gtf from gtf_makeSalmonIndex
-//
-//             output:
-//             path "*.fa" into ch_fasta_for_salmon_index
-//
-//             script:
-// 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
-//             """
-//             filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}__in__${fasta.baseName}.gtf
-//             gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}__in__${fasta.baseName}.gtf
-//             """
-//         }
-//     }
-//     process SALMON_INDEX {
-//         tag "$fasta"
-//         label "salmon"
-//         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//         input:
-//         path fasta from ch_fasta_for_salmon_index
-//
-//         output:
-//         path 'salmon_index' into salmon_index
-//
-//         script:
-//         def gencode = params.gencode  ? "--gencode" : ""
-//         """
-//         salmon index --threads $task.cpus -t $fasta $gencode -i salmon_index
-//         """
-//     }
-// }
+
+/*
+ * PREPROCESSING - Create Salmon transcriptome index
+ */
+if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
+    if (!params.transcript_fasta) {
+        process TRANSCRIPTS_TO_FASTA {
+            tag "$fasta"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path fasta from ch_fasta
+            path gtf from ch_gtf
+
+            output:
+            path "*.fa" into ch_transcript_fasta
+
+            script:
+	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
+            """
+            filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}_in_${fasta.baseName}.gtf
+            gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}_in_${fasta.baseName}.gtf
+            """
+        }
+    }
+
+    process SALMON_INDEX {
+        tag "$fasta"
+        label "salmon"
+        publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+            saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+        input:
+        path fasta from ch_transcript_fasta
+
+        output:
+        path 'salmon_index' into ch_salmon_index
+
+        script:
+        def gencode = params.gencode  ? "--gencode" : ""
+        """
+        salmon index --threads $task.cpus -t $fasta $gencode -i salmon_index
+        """
+    }
+}
 //
 // process FASTQC {
 //     tag "$name"

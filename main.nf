@@ -358,7 +358,6 @@ if (!params.skip_alignment) {
         } else {
             ch_hisat2_index = file(params.hisat2_index)
         }
-        if (params.splicesites) { ch_splicesites = file(params.bed12, checkIfExists: true) }
     }
 } else {
     log.info "Skipping alignment processes..."
@@ -681,131 +680,135 @@ if (!params.bed12) {
         """
     }
 }
-//
-// /*
-//  * PREPROCESSING - Build STAR index
-//  */
-// if (!params.skip_alignment) {
-//     if (params.aligner == 'star' && !params.star_index && params.fasta) {
-//         process STAR_GENOMEGENERATE {
-//             tag "$fasta"
-//             label 'high_memory'
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path fasta from ch_fasta_for_star_index
-//             path gtf from gtf_makeSTARindex
-//
-//             output:
-//             path "star" into star_index
-//
-//             script:
-//             def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
-//             """
-//             mkdir star
-//             STAR \\
-//                 --runMode genomeGenerate \\
-//                 --runThreadN $task.cpus \\
-//                 --sjdbGTFfile $gtf \\
-//                 --genomeDir star/ \\
-//                 --genomeFastaFiles $fasta \\
-//                 $avail_mem \\
-//                 $params.star_index_options
-//             """
-//         }
-//     }
-//
-//     /*
-//     * PREPROCESSING - Build HISAT2 splice sites file
-//     */
-//     if (params.aligner == 'hisat2' && !params.splicesites) {
-//         process MAKE_HISAT2_SPLICESITES {
-//             tag "$gtf"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gtf from gtf_makeHisatSplicesites
-//
-//             output:
-//             path "${gtf.baseName}.hisat2_splice_sites.txt" into ch_splicesites
-//
-//             script:
-//             """
-//             hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
-//             """
-//         }
-//     }
-//
-//     /*
-//     * PREPROCESSING - Build HISAT2 index
-//     */
-//     if (params.aligner == 'hisat2' && !params.hisat2_index && params.fasta) {
-//         process HISAT2_BUILD {
-//             tag "$fasta"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path fasta from ch_fasta_for_hisat_index
-//             path splicesites from ch_splicesites
-//             path gtf from gtf_makeHISATindex
-//
-//             output:
-//             path "${fasta.baseName}.*.ht2*" into hs2_indices
-//
-//             script:
-//             if (!task.memory) {
-//                 log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
-//                 avail_mem = 0
-//             } else {
-//                 log.info "[HISAT2 index build] Available memory: ${task.memory}"
-//                 avail_mem = task.memory.toGiga()
-//             }
-//             if (avail_mem > params.hisat_build_memory) {
-//                 log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
-//                 extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
-//                 ss = "--ss $splicesites"
-//                 exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
-//             } else {
-//                 log.info "[HISAT2 index build] Less than ${params.hisat_build_memory} GB available, so NOT using splice sites and exons in HISAT2 index."
-//                 log.info "[HISAT2 index build] Use --hisat_build_memory [small number] to skip this check."
-//                 extract_exons = ''
-//                 ss = ''
-//                 exon = ''
-//             }
-//             """
-//             $extract_exons
-//             hisat2-build -p $task.cpus $ss $exon $fasta ${fasta.baseName}.hisat2_index
-//             """
-//         }
-//     }
-//
-//     /**
-//     * PREPROCESSING - Build RSEM reference
-//     */
-//     if (!skip_rsem && !params.rsem_index && params.fasta) {
-//         process RSEM_PREPAREREFERENCE {
-//             tag "$fasta"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path fasta from ch_fasta_for_rsem_reference
-//             path gtf from gtf_makeRSEMReference
-//
-//             output:
-//             path "rsem" into ch_rsem_index
-//
-//             script:
-//             """
-//             mkdir rsem
-//             rsem-prepare-reference -p $task.cpus --gtf $gtf $fasta rsem/ref
-//             """
-//         }
-//     }
-// }
+
+/*
+ * PREPROCESSING - Build STAR index
+ */
+if (!params.skip_alignment) {
+    if (params.aligner == 'star' && !params.star_index && params.fasta) {
+        process STAR_GENOMEGENERATE {
+            tag "$fasta"
+            label 'high_memory'
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path fasta from ch_fasta
+            path gtf from ch_gtf
+
+            output:
+            path "star" into ch_star_index
+
+            script:
+            def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
+            """
+            mkdir star
+            STAR \\
+                --runMode genomeGenerate \\
+                --runThreadN $task.cpus \\
+                --sjdbGTFfile $gtf \\
+                --genomeDir star/ \\
+                --genomeFastaFiles $fasta \\
+                $avail_mem \\
+                $params.star_index_options
+            """
+        }
+    }
+
+    /*
+    * PREPROCESSING - Build HISAT2 index and splice sites file (if required)
+    */
+    if (params.aligner == 'hisat2') {
+        if (!params.splicesites) {
+            process MAKE_HISAT2_SPLICESITES {
+                tag "$gtf"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path gtf from ch_gtf
+
+                output:
+                path "${gtf.baseName}.hisat2_splice_sites.txt" into ch_splicesites
+
+                script:
+                """
+                hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
+                """
+            }
+        } else {
+            ch_splicesites = file(params.bed12, checkIfExists: true)
+        }
+
+        /*
+        * PREPROCESSING - Build HISAT2 index
+        */
+        if (!params.hisat2_index && params.fasta) {
+            process HISAT2_BUILD {
+                tag "$fasta"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path fasta from ch_fasta
+                path gtf from ch_gtf
+                path splicesites from ch_splicesites
+
+                output:
+                path "${fasta.baseName}.*.ht2*" into ch_hisat2_index
+
+                script:
+                if (!task.memory) {
+                    log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
+                    avail_mem = 0
+                } else {
+                    log.info "[HISAT2 index build] Available memory: ${task.memory}"
+                    avail_mem = task.memory.toGiga()
+                }
+                if (avail_mem > params.hisat_build_memory) {
+                    log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
+                    extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
+                    ss = "--ss $splicesites"
+                    exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
+                } else {
+                    log.info "[HISAT2 index build] Less than ${params.hisat_build_memory} GB available, so NOT using splice sites and exons in HISAT2 index."
+                    log.info "[HISAT2 index build] Use --hisat_build_memory [small number] to skip this check."
+                    extract_exons = ''
+                    ss = ''
+                    exon = ''
+                }
+                """
+                $extract_exons
+                hisat2-build -p $task.cpus $ss $exon $fasta ${fasta.baseName}.hisat2_index
+                """
+            }
+        }
+    }
+
+    /**
+    * PREPROCESSING - Build RSEM reference
+    */
+    if (!skip_rsem && !params.rsem_index && params.fasta && params.gtf) {
+        process RSEM_PREPAREREFERENCE {
+            tag "$fasta"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/rsem" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path fasta from ch_fasta
+            path gtf from ch_gtf
+
+            output:
+            path "rsem" into ch_rsem_index
+
+            script:
+            """
+            mkdir rsem
+            rsem-prepare-reference -p $task.cpus --gtf $gtf $fasta rsem/ref
+            """
+        }
+    }
+}
 //
 //
 // /*
@@ -1157,7 +1160,7 @@ if (!params.bed12) {
 //
 //             input:
 //             tuple val(name), path(reads) from trimmed_reads_alignment
-//             path hs2_indices from hs2_indices.collect()
+//             path index from ch_hisat2_index
 //             path splicesites from ch_splicesites
 //             path wherearemyfiles from ch_where_are_my_files
 //
@@ -1168,7 +1171,7 @@ if (!params.bed12) {
 //             path "unmapped.hisat2*" optional true
 //
 //             script:
-//             index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
+//             index_base = index[0].toString() - ~/.\d.ht2l?/
 //             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
 //             seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
 //             def rnastrandness = ''

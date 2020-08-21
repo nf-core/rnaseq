@@ -855,134 +855,134 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
         """
     }
 }
-//
-// process FASTQC {
-//     tag "$name"
-//     label 'mid_memory'
-//     publishDir "${params.outdir}/fastqc", mode: params.publish_dir_mode,
-//         saveAs: { filename ->
-//             filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"
-//         }
-//
-//     when:
-//     !params.skip_fastqc
-//
-//     input:
-//     tuple val(name), path(reads) from ch_read_files_fastqc
-//
-//     output:
-//     path "*_fastqc.{zip,html}" into ch_fastqc_results
-//
-//     script:
-//     def threads = params.single_end ? 1 : 2
-//     """
-//     fastqc --quiet --threads $threads $reads
-//     """
-// }
-//
-// if (params.with_umi) {
-//     process UMITOOLS_EXTRACT {
-//         tag "$name"
-//         label "low_memory"
-//         publishDir "${params.outdir}/umitools/extract", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.endsWith('.log')) filename
-//                 else if (!params.save_umi_intermeds && filename == "where_are_my_files.txt") filename
-//                 else if (params.save_umi_intermeds && filename != "where_are_my_files.txt") filename
-//                 else null
-//             }
-//
-//         input:
-//         tuple val(name), path(reads) from raw_reads_umitools
-//         path wherearemyfiles from ch_where_are_my_files
-//
-//         output:
-//         tuple val(name), path("*fq.gz") into raw_reads_trimgalore
-//         path "*.log"
-//         path "where_are_my_files.txt"
-//
-//         script:
-//         if (params.single_end) {
-//             """
-//             umi_tools extract \\
-//                 -I $reads \\
-//                 -S ${name}_umi_extracted.fq.gz \\
-//                 --extract-method=${params.umitools_extract_method} \\
-//                 --bc-pattern="${params.umitools_bc_pattern}" \\
-//                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
-//             """
-//         }  else {
-//             """
-//             umi_tools extract \\
-//                 -I ${reads[0]} \\
-//                 --read2-in=${reads[1]} \\
-//                 -S ${name}_umi_extracted_R1.fq.gz \\
-//                 --read2-out=${name}_umi_extracted_R2.fq.gz \\
-//                 --extract-method=${params.umitools_extract_method} \\
-//                 --bc-pattern="${params.umitools_bc_pattern}" \\
-//                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
-//             """
-//         }
-//     }
-// } else {
-//     raw_reads_trimgalore = raw_reads_umitools
-//     umi_tools_extract_results = Channel.empty()
-// }
-//
-// if (!params.skip_trimming) {
-//     process TRIMGALORE {
-//         tag "$name"
-//         label 'process_high'
-//         publishDir "${params.outdir}/trimgalore", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("_fastqc") > 0) "fastqc/$filename"
-//                 else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-//                 else if (!params.save_trimmed && filename == "where_are_my_files.txt") filename
-//                 else if (params.save_trimmed && filename != "where_are_my_files.txt") filename
-//                 else null
-//             }
-//
-//         input:
-//         tuple val(name), path(reads) from raw_reads_trimgalore
-//         path wherearemyfiles from ch_where_are_my_files
-//
-//         output:
-//         tuple val(name), path("*fq.gz") into trimgalore_reads
-//         path "*trimming_report.txt" into trimgalore_results
-//         path "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
-//         path "where_are_my_files.txt"
-//
-//         script:
-//         // Calculate number of --cores for TrimGalore based on value of task.cpus
-//         // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
-//         // See: https://github.com/nf-core/atacseq/pull/65
-//         def cores = 1
-//         if (task.cpus) {
-//             cores = (task.cpus as int) - 4
-//             if (params.single_end) cores = (task.cpus as int) - 3
-//             if (cores < 1) cores = 1
-//             if (cores > 4) cores = 4
-//         }
-//
-//         c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
-//         c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
-//         tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
-//         tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
-//         nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-//         if (params.single_end) {
-//             """
-//             trim_galore --cores $cores --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
-//             """
-//         } else {
-//             """
-//             trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
-//             """
-//         }
-//     }
-// } else {
-//     trimgalore_reads = raw_reads_trimgalore
-//     trimgalore_results = Channel.empty()
-// }
+
+process FASTQC {
+    tag "$name"
+    label 'mid_memory'
+    publishDir "${params.outdir}/fastqc", mode: params.publish_dir_mode,
+        saveAs: { filename ->
+            filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"
+        }
+
+    when:
+    !params.skip_fastqc
+
+    input:
+    tuple val(name), path(reads) from ch_read_files_fastqc
+
+    output:
+    path "*_fastqc.{zip,html}" into ch_fastqc_results
+
+    script:
+    def threads = params.single_end ? 1 : 2
+    """
+    fastqc --quiet --threads $threads $reads
+    """
+}
+
+if (params.with_umi) {
+    process UMITOOLS_EXTRACT {
+        tag "$name"
+        label "low_memory"
+        publishDir "${params.outdir}/umitools/extract", mode: params.publish_dir_mode,
+            saveAs: { filename ->
+                if (filename.endsWith('.log')) filename
+                else if (!params.save_umi_intermeds && filename == "where_are_my_files.txt") filename
+                else if (params.save_umi_intermeds && filename != "where_are_my_files.txt") filename
+                else null
+            }
+
+        input:
+        tuple val(name), path(reads) from raw_reads_umitools
+        path wherearemyfiles from ch_where_are_my_files
+
+        output:
+        tuple val(name), path("*fq.gz") into raw_reads_trimgalore
+        path "*.log"
+        path "where_are_my_files.txt"
+
+        script:
+        if (params.single_end) {
+            """
+            umi_tools extract \\
+                -I $reads \\
+                -S ${name}_umi_extracted.fq.gz \\
+                --extract-method=${params.umitools_extract_method} \\
+                --bc-pattern="${params.umitools_bc_pattern}" \\
+                ${params.umitools_extract_extra} > ${name}_umi_extract.log
+            """
+        }  else {
+            """
+            umi_tools extract \\
+                -I ${reads[0]} \\
+                --read2-in=${reads[1]} \\
+                -S ${name}_umi_extracted_R1.fq.gz \\
+                --read2-out=${name}_umi_extracted_R2.fq.gz \\
+                --extract-method=${params.umitools_extract_method} \\
+                --bc-pattern="${params.umitools_bc_pattern}" \\
+                ${params.umitools_extract_extra} > ${name}_umi_extract.log
+            """
+        }
+    }
+} else {
+    raw_reads_trimgalore = raw_reads_umitools
+    umi_tools_extract_results = Channel.empty()
+}
+
+if (!params.skip_trimming) {
+    process TRIMGALORE {
+        tag "$name"
+        label 'process_high'
+        publishDir "${params.outdir}/trimgalore", mode: params.publish_dir_mode,
+            saveAs: { filename ->
+                if (filename.indexOf("_fastqc") > 0) "fastqc/$filename"
+                else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
+                else if (!params.save_trimmed && filename == "where_are_my_files.txt") filename
+                else if (params.save_trimmed && filename != "where_are_my_files.txt") filename
+                else null
+            }
+
+        input:
+        tuple val(name), path(reads) from raw_reads_trimgalore
+        path wherearemyfiles from ch_where_are_my_files
+
+        output:
+        tuple val(name), path("*fq.gz") into trimgalore_reads
+        path "*trimming_report.txt" into trimgalore_results
+        path "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
+        path "where_are_my_files.txt"
+
+        script:
+        // Calculate number of --cores for TrimGalore based on value of task.cpus
+        // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
+        // See: https://github.com/nf-core/atacseq/pull/65
+        def cores = 1
+        if (task.cpus) {
+            cores = (task.cpus as int) - 4
+            if (params.single_end) cores = (task.cpus as int) - 3
+            if (cores < 1) cores = 1
+            if (cores > 4) cores = 4
+        }
+
+        c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
+        c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
+        tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
+        tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
+        nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
+        if (params.single_end) {
+            """
+            trim_galore --cores $cores --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
+            """
+        } else {
+            """
+            trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
+            """
+        }
+    }
+} else {
+    trimgalore_reads = raw_reads_trimgalore
+    trimgalore_results = Channel.empty()
+}
 //
 // if (!params.remove_ribo_rna) {
 //     trimgalore_reads

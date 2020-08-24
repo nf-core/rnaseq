@@ -2,7 +2,7 @@
 include { saveFiles } from './functions'
 
 /*
- * Reformat design file, check validitiy and create IP vs control mappings
+ * Reformat design file and check validity
  */
 process SAMPLESHEET_CHECK {
     tag "$samplesheet"
@@ -19,7 +19,7 @@ process SAMPLESHEET_CHECK {
     output:
     path '*.csv'
 
-    script:  // This script is bundled with the pipeline, in nf-core/chipseq/bin/
+    script:  // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     check_samplesheet.py $samplesheet samplesheet.valid.csv
     """
@@ -30,8 +30,6 @@ def get_samplesheet_paths(LinkedHashMap row, String seq_center) {
     def meta = [:]
     meta.id = row.sample
     meta.single_end = row.single_end.toBoolean()
-    meta.antibody = row.antibody
-    meta.control = row.control
 
     def rg = "\'@RG\\tID:${meta.id}\\tSM:${meta.id.split('_')[0..-2].join('_')}\\tPL:ILLUMINA\\tLB:${meta.id}\\tPU:1\'"
     if (seq_center) {

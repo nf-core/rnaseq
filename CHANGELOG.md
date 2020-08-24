@@ -79,13 +79,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `--star_index_options` parameter to pass additional options to the `STAR` genome indexing process. Fixes [#276](https://github.com/nf-core/rnaseq/issues/276)
 * `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#368](https://github.com/nf-core/rnaseq/pull/368) and [#371](https://github.com/nf-core/rnaseq/pull/371)
 
+#### Removed
+
+* `--singleEnd` is now auto-detected from the input samplesheet
+* `--readPaths` is not required since these are provided from the input samplesheet
+ 
 #### Deprecated
 
 | Deprecated                   | Replacement                |
 |------------------------------|----------------------------|
 | `--reads`                    | `--input`                  |
-| `--readPaths`                | `--input_paths`            |
-| `--singleEnd`                | `--single_end`             |
 | `--saveReference`            | `--save_reference`         |
 | `--forwardStranded`          | `--forward_stranded`       |
 | `--reverseStranded`          | `--reverse_stranded`       |

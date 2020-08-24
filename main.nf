@@ -9,7 +9,7 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
+//nextflow.enable.dsl = 2
 
 /*
  * Print help message if required
@@ -46,15 +46,13 @@ anno_readme = params.genome ? params.genomes[ params.genome ].readme ?: false : 
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
-/*
- * Validate parameters
- */
-if (params.input)     { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Samples design file not specified!' }
+if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Samples design file not specified!' }
 if (params.fasta) {
     ch_fasta = file(params.fasta, checkIfExists: true)
 } else {
     exit 1, 'Fasta file not specified!'
 }
+
 if (params.aligner != 'star' && params.aligner != 'hisat2') {
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
@@ -71,16 +69,18 @@ if (anno_readme && file(anno_readme).exists()) {
     file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
-// Define regular variables so that they can be overwritten
-clip_r1 = params.clip_r1
-clip_r2 = params.clip_r2
-three_prime_clip_r1 = params.three_prime_clip_r1
-three_prime_clip_r2 = params.three_prime_clip_r2
-forward_stranded = params.forward_stranded
-reverse_stranded = params.reverse_stranded
-unstranded = params.unstranded
-
+/*
+ * Initiate parameters
+ */
 // Preset trimming options
+// Define regular variables so that they can be overwritten
+def clip_r1 = params.clip_r1
+def clip_r2 = params.clip_r2
+def three_prime_clip_r1 = params.three_prime_clip_r1
+def three_prime_clip_r2 = params.three_prime_clip_r2
+def forward_stranded = params.forward_stranded
+def reverse_stranded = params.reverse_stranded
+def unstranded = params.unstranded
 if (params.pico) {
     clip_r1 = 3
     clip_r2 = 0
@@ -92,7 +92,7 @@ if (params.pico) {
 }
 
 // Set biotype for featureCounts
-biotype = params.gencode ? "gene_type" : params.fc_group_features_type
+def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 
 /*
  * Check parameters
@@ -100,13 +100,14 @@ biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 Checks.aws_batch(workflow, params)     // Check AWS batch settings
 Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
 
+// if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
+//     if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
+// }
+
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
 
-/*
- * Stage config files
- */
 ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
@@ -132,104 +133,190 @@ run_name = params.name
 if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     run_name = workflow.runName
 }
+
 summary = Schema.params_summary(workflow, params, run_name)
 log.info Headers.nf_core(workflow, params.monochrome_logs)
 log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
 
-// // Has the run name been specified by the user?
-// // this has the bonus effect of catching both -name and --name
-// run_name = params.name
-// if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
-//     run_name = workflow.runName
-// }
-//
-// // Check AWS batch settings
-// if (workflow.profile.contains('awsbatch')) {
-//     // AWSBatch sanity checking
-//     if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-//     // Check outdir paths to be S3 buckets if running on AWSBatch
-//     // related: https://github.com/nextflow-io/nextflow/issues/813
-//     if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
-//     // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-//     if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
-// }
-//
-// if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
-//     if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
-// }
+////////////////////////////////////////////////////
+/* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
+////////////////////////////////////////////////////
 
-// // Header log info
-// log.info nfcoreHeader()
-// def summary = [:]
-// if (workflow.revision)  summary['Pipeline Release'] = workflow.revision
-// summary['Run Name']     = run_name ?: workflow.runName
-// summary['Input']        = params.input
-// summary['Data Type']    = params.single_end ? 'Single-End' : 'Paired-End'
-// if (params.genome)      summary['Genome'] = params.genome
-// if (params.pico)        summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
-// summary['Strandedness'] = (unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None')
-// summary['Trimming']     = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
-// if (params.with_umi) {
-//     summary["With UMI"]                           = params.with_umi
-//     summary["umi_tools extract-method"]           = params.umitools_extract_method
-//     summary["umi_tools bc-pattern"]               = params.umitools_bc_pattern
-//     summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
-//     summary["umi_tools dedup extra parameters"]   = params.umitools_dedup_extra
-// }
-// if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
-// if (params.aligner == 'star') {
-//     summary['Aligner'] = "STAR"
-//     if (params.star_align_options) summary['STAR Align Options'] = params.star_align_options
-//     if (params.star_index_options) summary['STAR Index Options'] = params.star_index_options
-//     if (params.star_index)         summary['STAR Index'] = params.star_index
-//     else if (params.fasta)         summary['Fasta Ref']  = params.fasta
-// } else if (params.aligner == 'hisat2') {
-//     summary['Aligner'] = "HISAT2"
-//     if (params.hisat2_align_options) summary['HISAT2 Align Options'] = params.hisat2_align_options
-//     if (params.hisat2_index) summary['HISAT2 Index'] = params.hisat2_index
-//     else if (params.fasta)   summary['Fasta Ref']    = params.fasta
-//     if (params.splicesites)  summary['Splice Sites'] = params.splicesites
-// }
-// if (params.pseudo_aligner == 'salmon') {
-//     summary['Pseudo Aligner'] = "Salmon"
-//     if (params.transcript_fasta) summary['Transcript Fasta'] = params.transcript_fasta
-// }
-// if (params.gtf)                    summary['GTF Annotation'] = params.gtf
-// if (params.gff)                    summary['GFF3 Annotation'] = params.gff
-// if (params.bed12)                  summary['BED Annotation'] = params.bed12
-// if (params.gencode)                summary['GENCODE'] = params.gencode
-// if (params.stringtie_ignore_gtf)   summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
-// summary['Remove Ribosomal RNA']    = params.remove_ribo_rna
-// if (params.fc_group_features_type) summary['Biotype GTF field'] = biotype
-// summary['Save prefs'] = "Ref Genome: "+(params.save_reference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.save_trimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.save_align_intermeds ? 'Yes' : 'No')
-// summary['Max Resources'] = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-// if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-// summary['Output dir']  = params.outdir
-// summary['Launch dir']  = workflow.launchDir
-// summary['Working dir'] = workflow.workDir
-// summary['Script dir']  = workflow.projectDir
-// summary['User']        = workflow.userName
-// if (workflow.profile == 'awsbatch') {
-//     summary['AWS Region']     = params.awsregion
-//     summary['AWS Queue']      = params.awsqueue
-// }
-// summary['Config Profile'] = workflow.profile
-// if (params.config_profile_description) summary['Config Profile Description'] = params.config_profile_description
-// if (params.config_profile_contact)     summary['Config Profile Contact']     = params.config_profile_contact
-// if (params.config_profile_url)         summary['Config Profile URL']         = params.config_profile_url
-// summary['Config Files'] = workflow.configFiles.join(', ')
-// if (params.email || params.email_on_fail) {
-//     summary['E-mail Address']    = params.email
-//     summary['E-mail on failure'] = params.email_on_fail
-//     summary['MultiQC maxsize']   = params.max_multiqc_email_size
-// }
-// log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
-// log.info "-\033[2m--------------------------------------------------\033[0m-"
-//
-// // Check the hostnames against configured profiles
-// checkHostname()
+//include { GTF2BED                             } from './modules/local/process/gtf2bed'
+//include { GET_CHROM_SIZES                     } from './modules/local/process/get_chrom_sizes'
+//include { OUTPUT_DOCUMENTATION                } from './modules/local/process/output_documentation'
+//include { GET_SOFTWARE_VERSIONS               } from './modules/local/process/get_software_versions'
+//include { MULTIQC                             } from './modules/local/process/multiqc'
 
+//include { INPUT_CHECK                         } from './modules/local/subworkflow/input_check'
+
+////////////////////////////////////////////////////
+/* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
+////////////////////////////////////////////////////
+
+//include { PICARD_COLLECTMULTIPLEMETRICS } from './modules/nf-core/software/picard/collectmultiplemetrics/main'
+//include { PRESEQ_LCEXTRAP               } from './modules/nf-core/software/preseq/lcextrap/main'
+//include { UCSC_BEDRAPHTOBIGWIG          } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main'
+//include { SUBREAD_FEATURECOUNTS         } from './modules/nf-core/software/subread/featurecounts/main'
+
+//include { FASTQC_TRIMGALORE             } from './modules/nf-core/subworkflow/fastqc_trimgalore'
+//include { MARK_DUPLICATES_PICARD        } from './modules/nf-core/subworkflow/mark_duplicates_picard'
+
+////////////////////////////////////////////////////
+/* --           RUN MAIN WORKFLOW              -- */
+////////////////////////////////////////////////////
+
+// workflow {
+//
+//     /*
+//      * Read in samplesheet, validate and stage input files
+//      */
+//     INPUT_CHECK (
+//         ch_input,
+//         params.seq_center,
+//         [:]
+//     )
+//
+//     /*
+//      * Prepare genome files
+//      */
+//     ch_index = params.bwa_index ? Channel.value(file(params.bwa_index)) : BWA_INDEX ( ch_fasta, params.modules['bwa_index'] ).index
+//     if (makeBED) { ch_gene_bed = GTF2BED ( ch_gtf, [:] ) }
+//     ch_software_versions = Channel.empty()
+//     ch_software_versions = ch_software_versions.mix(MAKE_GENOME_FILTER.out.version.first().ifEmpty(null))
+//
+//     /*
+//      * Read QC & trimming
+//      */
+//     nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
+//     params.modules['trimgalore'].args += nextseq
+//     FASTQC_TRIMGALORE (
+//         INPUT_CHECK.out.reads,
+//         params.skip_fastqc,
+//         params.skip_trimming,
+//         params.modules['fastqc'],
+//         params.modules['trimgalore']
+//     )
+//     ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+//     ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+//
+//     /*
+//      * Map reads & BAM QC
+//      */
+//     score = params.bwa_min_score ? " -T ${params.bwa_min_score}" : ''
+//     params.modules['bwa_mem'].args += score
+//     MAP_BWA_MEM (
+//         FASTQC_TRIMGALORE.out.reads,
+//         ch_index,
+//         ch_fasta,
+//         params.modules['bwa_mem'],
+//         params.modules['samtools_sort_lib']
+//     )
+//     ch_software_versions = ch_software_versions.mix(MAP_BWA_MEM.out.bwa_version.first())
+//     ch_software_versions = ch_software_versions.mix(MAP_BWA_MEM.out.samtools_version.first().ifEmpty(null))
+//
+//     /*
+//      * Mark duplicates & filter BAM files
+//      */
+//     MARK_DUPLICATES_PICARD (
+//         PICARD_MERGESAMFILES.out.bam,
+//         params.modules['picard_markduplicates'],
+//         params.modules['samtools_sort_merged_lib']
+//     )
+//
+//     /*
+//      * Post alignment QC
+//      */
+//     PICARD_COLLECTMULTIPLEMETRICS (
+//         BAM_CLEAN.out.bam,
+//         ch_fasta,
+//         params.modules['picard_collectmultiplemetrics']
+//     )
+//
+//     PRESEQ_LCEXTRAP (
+//         BAM_CLEAN.out.bam,
+//         params.modules['preseq_lcextrap']
+//     )
+//     ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
+//
+//     /*
+//      * Coverage tracks
+//      */
+//     BEDTOOLS_GENOMECOV (
+//         BAM_CLEAN.out.bam.join(BAM_CLEAN.out.flagstat, by: [0]),
+//         params.modules['bedtools_genomecov']
+//     )
+//
+//     UCSC_BEDRAPHTOBIGWIG (
+//         BEDTOOLS_GENOMECOV.out.bedgraph,
+//         GET_CHROM_SIZES.out.sizes,
+//         params.modules['ucsc_bedgraphtobigwig']
+//     )
+//     ch_software_versions = ch_software_versions.mix(UCSC_BEDRAPHTOBIGWIG.out.version.first().ifEmpty(null))
+//
+//     /*
+//      * Pipeline reporting
+//      */
+//     GET_SOFTWARE_VERSIONS (
+//         ch_software_versions.map { it }.collect(),
+//         params.modules['get_software_versions']
+//     )
+//
+//     OUTPUT_DOCUMENTATION (
+//         ch_output_docs,
+//         ch_output_docs_images,
+//         [:]
+//     )
+//
+//     /*
+//      * MultiQC
+//      */
+//     workflow_summary = Schema.params_mqc_summary(summary)
+//     ch_workflow_summary = Channel.value(workflow_summary)
+//     MULTIQC (
+//         ch_multiqc_config,
+//         ch_multiqc_custom_config.collect().ifEmpty([]),
+//         GET_SOFTWARE_VERSIONS.out.yaml.collect(),
+//         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+//
+//         FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
+//         FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+//         FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
+//
+//         MAP_BWA_MEM.out.stats.collect{it[1]},
+//         MAP_BWA_MEM.out.flagstat.collect{it[1]},
+//         MAP_BWA_MEM.out.idxstats.collect{it[1]},
+//
+//         MARK_DUPLICATES_PICARD.out.stats.collect{it[1]}.ifEmpty([]),
+//         MARK_DUPLICATES_PICARD.out.flagstat.collect{it[1]}.ifEmpty([]),
+//         MARK_DUPLICATES_PICARD.out.idxstats.collect{it[1]}.ifEmpty([]),
+//         MARK_DUPLICATES_PICARD.out.metrics.collect{it[1]}.ifEmpty([]),
+//
+//         PICARD_COLLECTMULTIPLEMETRICS.out.metrics.collect{it[1]}.ifEmpty([]),
+//
+//         PRESEQ_LCEXTRAP.out.ccurve.collect{it[1]}.ifEmpty([]),
+//
+//         SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]),
+//         // path ('macs/consensus/*') from ch_macs_consensus_deseq_mqc.collect().ifEmpty([])
+//
+//         params.modules['multiqc']
+//     )
+// }
+//
+// ////////////////////////////////////////////////////
+// /* --              COMPLETION EMAIL            -- */
+// ////////////////////////////////////////////////////
+//
+// workflow.onComplete {
+//     def multiqc_report = []
+//     Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log)
+//     Completion.summary(workflow, params, log)
+// }
+//
+////////////////////////////////////////////////////
+/* --                  THE END                 -- */
+////////////////////////////////////////////////////
 
 // Check basic annotation files and uncompress if required
 if (params.fasta) {
@@ -1925,191 +2012,12 @@ process OUTPUT_DOCUMENTATION {
     """
 }
 
-/*
- * Completion e-mail notification
- */
+////////////////////////////////////////////////////
+/* --              COMPLETION EMAIL            -- */
+////////////////////////////////////////////////////
+
 workflow.onComplete {
-    // Set up the e-mail variables
-    def subject = "[nf-core/rnaseq] Successful: $workflow.runName"
-    if (poor_alignment_scores.size() > 0) {
-        subject = "[nf-core/rnaseq] Partially Successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
-    }
-    if (!workflow.success) {
-      subject = "[nf-core/rnaseq] FAILED: $workflow.runName"
-    }
-    def email_fields = [:]
-    email_fields['version'] = workflow.manifest.version
-    email_fields['runName'] = run_name ?: workflow.runName
-    email_fields['success'] = workflow.success
-    email_fields['dateComplete'] = workflow.complete
-    email_fields['duration'] = workflow.duration
-    email_fields['exitStatus'] = workflow.exitStatus
-    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-    email_fields['commandLine'] = workflow.commandLine
-    email_fields['projectDir'] = workflow.projectDir
-    email_fields['summary'] = summary
-    email_fields['summary']['Date Started'] = workflow.start
-    email_fields['summary']['Date Completed'] = workflow.complete
-    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-    if (workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-    if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-    if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-    if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
-    email_fields['skipped_poor_alignment'] = poor_alignment_scores.keySet()
-    email_fields['percent_aln_skip'] = params.percent_aln_skip
-    email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
-    email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
-    email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
-
-    // On success try attach the multiqc report
-    def mqc_report = null
-    try {
-        if (workflow.success && !params.skip_multiqc) {
-            mqc_report = multiqc_report.getVal()
-            if (mqc_report.getClass() == ArrayList) {
-                log.warn "[nf-core/rnaseq] Found multiple reports from process 'MULTIQC', will use only one"
-                mqc_report = mqc_report[0]
-            }
-        }
-    } catch (all) {
-        log.warn "[nf-core/rnaseq] Could not attach MultiQC report to summary email"
-    }
-
-    // Check if we are only sending emails on failure
-    email_address = params.email
-    if (!params.email && params.email_on_fail && !workflow.success) {
-        email_address = params.email_on_fail
-    }
-
-    // Render the TXT template
-    def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
-    def txt_template = engine.createTemplate(tf).make(email_fields)
-    def email_txt = txt_template.toString()
-
-    // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
-    def html_template = engine.createTemplate(hf).make(email_fields)
-    def email_html = html_template.toString()
-
-    // Render the sendmail template
-    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
-    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-    def sendmail_html = sendmail_template.toString()
-
-    // Send the HTML e-mail
-    if (email_address) {
-        try {
-            if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
-            // Try to send HTML e-mail using sendmail
-            [ 'sendmail', '-t' ].execute() << sendmail_html
-            log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (sendmail)"
-        } catch (all) {
-            // Catch failures and try with plaintext
-            def mail_cmd = [ 'mail', '-s', subject, '--content-type=text/html', email_address ]
-            if (mqc_report.size() <= params.max_multiqc_email_size.toBytes()) {
-              mail_cmd += [ '-A', mqc_report ]
-            }
-            mail_cmd.execute() << email_html
-            log.info "[nf-core/rnaseq] Sent summary e-mail to $email_address (mail)"
-        }
-    }
-
-    // Write summary e-mail HTML to a file
-    def output_d = new File("${params.outdir}/pipeline_info/")
-    if (!output_d.exists()) {
-        output_d.mkdirs()
-    }
-    def output_hf = new File(output_d, "pipeline_report.html")
-    output_hf.withWriter { w -> w << email_html }
-    def output_tf = new File(output_d, "pipeline_report.txt")
-    output_tf.withWriter { w -> w << email_txt }
-
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_red = params.monochrome_logs ? '' : "\033[0;31m";
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-
-    if (good_alignment_scores.size() > 0) {
-        total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
-        idx = 0;
-        samp_aln = ''
-        for (samp in good_alignment_scores) {
-            samp_aln += "    ${samp.key}: ${samp.value}%\n"
-            idx += 1
-            if (idx > 5) {
-                samp_aln += "    ..see pipeline reports for full list\n"
-                break;
-            }
-        }
-        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green}${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${c_reset}"
-    }
-    if (poor_alignment_scores.size() > 0) {
-        samp_aln = ''
-        poor_alignment_scores.each { samp, value ->
-            samp_aln += "    ${samp}: ${value}%\n"
-        }
-        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} WARNING - ${poor_alignment_scores.size()} samples skipped due to poor mapping percentages!\n${samp_aln}${c_reset}"
-    }
-
-    if (workflow.stats.ignoredCount > 0 && workflow.success) {
-        log.info "- ${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
-        log.info "- ${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
-        log.info "- ${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
-    }
-
-    if (workflow.success) {
-        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_green} Pipeline completed successfully${c_reset}"
-    } else {
-        checkHostname()
-        log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} Pipeline completed with errors${c_reset}"
-    }
-
+    def multiqc_report = []
+    Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, poor_alignment_scores)
+    Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)
 }
-
-// def nfcoreHeader() {
-//     // Log colors ANSI codes
-//     c_black = params.monochrome_logs ? '' : "\033[0;30m";
-//     c_blue = params.monochrome_logs ? '' : "\033[0;34m";
-//     c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
-//     c_dim = params.monochrome_logs ? '' : "\033[2m";
-//     c_green = params.monochrome_logs ? '' : "\033[0;32m";
-//     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-//     c_reset = params.monochrome_logs ? '' : "\033[0m";
-//     c_white = params.monochrome_logs ? '' : "\033[0;37m";
-//     c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
-//
-//     return """    -${c_dim}--------------------------------------------------${c_reset}-
-//                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
-//     ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
-//     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
-//     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
-//                                             ${c_green}`._,._,\'${c_reset}
-//     ${c_purple}  nf-core/rnaseq v${workflow.manifest.version}${c_reset}
-//     -${c_dim}--------------------------------------------------${c_reset}-
-//     """.stripIndent()
-// }
-//
-// def checkHostname() {
-//     def c_reset = params.monochrome_logs ? '' : "\033[0m"
-//     def c_white = params.monochrome_logs ? '' : "\033[0;37m"
-//     def c_red = params.monochrome_logs ? '' : "\033[1;91m"
-//     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
-//     if (params.hostnames) {
-//         def hostname = "hostname".execute().text.trim()
-//         params.hostnames.each { prof, hnames ->
-//             hnames.each { hname ->
-//                 if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-//                     log.error "====================================================\n" +
-//                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
-//                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
-//                             "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
-//                             "============================================================"
-//                 }
-//             }
-//         }
-//     }
-// }

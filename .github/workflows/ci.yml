@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['19.10.0', '']
+        nxf_ver: ['20.07.1', '']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -56,7 +56,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '19.10.0'
+      NXF_VER: '20.07.1'
       NXF_ANSI_LOG: false
     strategy:
       matrix:

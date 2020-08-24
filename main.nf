@@ -174,6 +174,9 @@ workflow {
         params.seq_center,
         [:]
     )
+    //             .into { ch_raw_reads_fastqc
+    //                     ch_raw_reads_umitools }
+
 }
 //
 //     /*
@@ -551,33 +554,6 @@ workflow {
 //     .from(rRNA_database.readLines())
 //     .map { row -> file(row) }
 //     .set { sortmerna_fasta }
-//
-// /*
-//  * Create a channel for input read files
-//  */
-// if (params.input_paths) {
-//     if (params.single_end) {
-//         Channel
-//             .from(params.input_paths)
-//             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
-//             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-//             .into { ch_raw_reads_fastqc
-//                     ch_raw_reads_umitools }
-//     } else {
-//         Channel
-//             .from(params.input_paths)
-//             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
-//             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-//             .into { ch_raw_reads_fastqc
-//                     ch_raw_reads_umitools }
-//     }
-// } else {
-//     Channel
-//         .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
-//         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-//         .into { ch_raw_reads_fastqc
-//                 ch_raw_reads_umitools }
-// }
 //
 // /*
 //  * PREPROCESSING - Convert GFF3 to GTF

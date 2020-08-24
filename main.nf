@@ -34,11 +34,11 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 }
 
 // Configurable variables
-params.fasta        = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-params.gtf          = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
-params.gff          = params.genome ? params.genomes[ params.genome ].gff ?: false : false
-params.bed12        = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
-params.star_index   = params.genome ? params.genomes[ params.genome ].star ?: false : false
+params.fasta        = params.genome ? params.genomes[ params.genome ].fasta  ?: false : false
+params.gtf          = params.genome ? params.genomes[ params.genome ].gtf    ?: false : false
+params.gff          = params.genome ? params.genomes[ params.genome ].gff    ?: false : false
+params.bed12        = params.genome ? params.genomes[ params.genome ].bed12  ?: false : false
+params.star_index   = params.genome ? params.genomes[ params.genome ].star   ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: false : false
 
@@ -46,7 +46,7 @@ anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: 
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
-if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Samples design file not specified!' }
+if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) {
     ch_fasta = file(params.fasta, checkIfExists: true)
 } else {
@@ -174,6 +174,10 @@ workflow {
         params.seq_center,
         [:]
     )
+    INPUT_CHECK
+        .out
+        .reads
+        .view()
     //             .into { ch_raw_reads_fastqc
     //                     ch_raw_reads_umitools }
 

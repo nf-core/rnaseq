@@ -60,7 +60,6 @@ jobs:
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        config: ['test', 'test_gz']
         aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
         parameters:
           - '--skip_qc'
@@ -95,4 +94,4 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Run pipeline with various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.config }},docker ${{ matrix.aligner }} ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.parameters }}

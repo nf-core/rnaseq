@@ -9,143 +9,67 @@
 ----------------------------------------------------------------------------------------
 */
 
-def helpMessage() {
-    log.info nfcoreHeader()
-    log.info """
+nextflow.enable.dsl = 2
 
-    Usage:
-
-    The typical command for running the pipeline is as follows:
-
-    nextflow run nf-core/rnaseq --input '*_R{1,2}.fastq.gz' --genome GRCh37 -profile docker
-
-    Mandatory arguments:
-      --input [file]                  Path to input data (must be surrounded with quotes)
-      -profile [str]                  Configuration profile to use. Can use multiple (comma separated)
-                                      Available: conda, docker, singularity, test, awsbatch, <institute> and more
-
-    Generic:
-      --single_end [bool]             Specifies that the input is single-end reads
-      --sample_level [bool]           Used to turn off the edgeR MDS and heatmap. Set automatically when running on fewer than 3 samples
-
-    References:                       If not specified in the configuration file or you wish to overwrite any of the references.
-      --genome [str]                  Name of iGenomes reference
-      --fasta [file]                  Path to genome fasta file
-      --gtf [file]                    Path to GTF file
-      --gff [file]                    Path to GFF3 file
-      --bed12 [file]                  Path to bed12 file
-      --transcript_fasta [file]       Path to transcript fasta file
-      --additional_fasta [file]       Additional fasta file containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
-      --star_index [file]             Path to STAR index
-      --hisat2_index [file]           Path to HiSAT2 index
-      --rsem_index [file]             Path to RSEM index
-      --salmon_index [file]           Path to Salmon index
-      --splicesites [file]            Path to splice sites file for building HiSat2 index
-      --star_index_options [str]      Additional options that will be appended to the STAR genome indexing command
-      --save_reference [bool]         Save the generated reference files to the results directory
-      --gencode [bool]                Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
-
-    Strandedness:
-      --forward_stranded [bool]       The library is forward stranded
-      --reverse_stranded [bool]       The library is reverse stranded
-      --unstranded [bool]             The default behaviour
-
-    UMI handling:
-      --with_umi [bool]               Enable UMI-tools processing steps
-      --umitools_extract_method [str] The "extract method" used in the UMI tools extract step
-      --umitools_bc_pattern [str]     Pattern for barcodes on read1
-      --umitools_extract_extra [str]  Extra argument string which is literally passed to `umitools extract`
-      --umitools_dedup_extra [str]    Extra argument string which is literally passed to `umitools dedup`
-      --save_umi_intermeds [bool]     Save FastQ files with UMIs added to the read name and deduplicated BAM filesl to the results directory
-
-    Trimming:
-      --clip_r1 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
-      --clip_r2 [int]                 Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
-      --three_prime_clip_r1 [int]     Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2 [int]     Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq [int]            Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --pico [bool]                   Sets trimming and standedness settings for the SMARTer Stranded Total RNA-Seq Kit - Pico Input kit. Equivalent to: --forward_stranded --clip_r1 3 --three_prime_clip_r2 3
-      --skip_trimming [bool]          Skip Trim Galore step
-      --save_trimmed [bool]           Save trimmed FastQ file intermediates
-
-    Ribosomal RNA removal:
-      --remove_ribo_rna [bool]        Removes ribosomal RNA using SortMeRNA
-      --save_non_ribo_reads [bool]    Save FastQ file intermediates after removing rRNA
-      --ribo_database_manifest [file] Path to file that contains file paths for rRNA databases, optional
-
-    Alignment:
-      --aligner [str]                 Specifies the aligner to use (available are: 'hisat2', 'star')
-      --pseudo_aligner [str]          Specifies the pseudo aligner to use (available are: 'salmon'). Runs in addition to `--aligner`
-      --star_align_options [str]      Additional options that will be appended to the STAR alignment command
-      --hisat2_align_options [str]    Additional options that will be appended to the HISAT2 alignment command
-      --stringtie_ignore_gtf [bool]   Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file
-      --seq_center [str]              Add sequencing center in @RG line of output BAM header
-      --save_align_intermeds [bool]   Save the BAM files from the aligment step - not done by default
-      --save_unaligned [bool]         Save unaligned reads from either STAR, HISAT2 or Salmon to extra output files.
-      --skip_rsem [bool]              Skip the RSEM step for read quantification
-      --skip_alignment [bool]         Skip alignment altogether (usually in favor of pseudoalignment)
-      --percent_aln_skip [float]      Percentage alignment below which samples are removed from further processing. Default: 5%
-
-    Read counting:
-      --fc_extra_attributes [str]     Define which extra parameters should also be included in featureCounts (default: 'gene_name')
-      --fc_group_features [str]       Define the attribute type used to group features. (default: 'gene_id')
-      --fc_count_type [str]           Define the type used to assign reads. (default: 'exon')
-      --fc_group_features_type [str]  Define the type attribute used to group features based on the group attribute (default: 'gene_biotype')
-
-    QC:
-      --skip_qc [bool]                Skip all QC steps apart from MultiQC
-      --skip_fastqc [bool]            Skip FastQC
-      --skip_preseq [bool]            Skip Preseq
-      --skip_dupradar [bool]          Skip dupRadar (and Picard MarkDuplicates)
-      --skip_qualimap [bool]          Skip Qualimap
-      --skip_biotype_qc [bool]        Skip Biotype QC
-      --skip_rseqc [bool]             Skip RSeQC
-      --skip_edger [bool]             Skip edgeR MDS plot and heatmap
-      --skip_multiqc [bool]           Skip MultiQC
-
-    Other options:
-      --outdir [file]                 The output directory where the results will be saved
-      --publish_dir_mode [str]        Mode for publishing results in the output directory. Available: symlink, rellink, link, copy, copyNoFollow, move (Default: copy)
-      --email [email]                 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --email_on_fail [email]         Same as --email, except only send mail if the workflow is not successful
-      --max_multiqc_email_size [str]  Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
-      -name [str]                     Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
-
-    AWSBatch options:
-      --awsqueue [str]                The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion [str]               The AWS Region for your AWS Batch job to run on
-      --awscli [str]                  Path to the AWS CLI tool
-    """.stripIndent()
-}
-
-// Show help message
+/*
+ * Print help message if required
+ */
 if (params.help) {
-    helpMessage()
+    def command = "nextflow run nf-core/rnaseq --input design.csv --genome GRCh37 -profile docker"
+    log.info Headers.nf_core(workflow, params.monochrome_logs)
+    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
     exit 0
 }
 
-/*
- * SET UP CONFIGURATION VARIABLES
- */
+////////////////////////////////////////////////////
+/* --         DEFAULT PARAMETER VALUES         -- */
+////////////////////////////////////////////////////
 
+/*
+ * Reference genomes
+ */
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-// Reference index path configuration
-// Define these here - after the profiles are loaded with the iGenomes paths
+// Configurable variables
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
 params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+anno_readme = params.genome ? params.genomes[ params.genome ].readme ?: false : false
 
-ch_mdsplot_header = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
-ch_heatmap_header = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
-ch_biotypes_header = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-ch_where_are_my_files = file("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
+////////////////////////////////////////////////////
+/* --          VALIDATE INPUTS                 -- */
+////////////////////////////////////////////////////
+
+/*
+ * Validate parameters
+ */
+if (params.input)     { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Samples design file not specified!' }
+if (params.fasta) {
+    ch_fasta = file(params.fasta, checkIfExists: true)
+} else {
+    exit 1, 'Fasta file not specified!'
+}
+if (params.aligner != 'star' && params.aligner != 'hisat2') {
+    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
+}
+if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
+    exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
+}
+if (params.skip_alignment && !params.pseudo_aligner) {
+    exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
+}
+
+// Save AWS IGenomes file containing annotation version
+if (anno_readme && file(anno_readme).exists()) {
+    file("${params.outdir}/genome/").mkdirs()
+    file(anno_readme).copyTo("${params.outdir}/genome/")
+}
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -170,16 +94,142 @@ if (params.pico) {
 // Set biotype for featureCounts
 biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 
-// Validate inputs
-if (params.aligner != 'star' && params.aligner != 'hisat2') {
-    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
+/*
+ * Check parameters
+ */
+Checks.aws_batch(workflow, params)     // Check AWS batch settings
+Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
+
+////////////////////////////////////////////////////
+/* --          CONFIG FILES                    -- */
+////////////////////////////////////////////////////
+
+/*
+ * Stage config files
+ */
+ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
+
+// Header files for MultiQC
+ch_mdsplot_header = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
+ch_heatmap_header = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
+ch_biotypes_header = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+
+ch_where_are_my_files = file("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
+
+////////////////////////////////////////////////////
+/* --          PARAMETER SUMMARY               -- */
+////////////////////////////////////////////////////
+
+/*
+ * Print parameter summary
+ */
+// Has the run name been specified by the user?
+// this has the bonus effect of catching both -name and --name
+run_name = params.name
+if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
+    run_name = workflow.runName
 }
-if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
-    exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
-}
-if (params.skip_alignment && !params.pseudo_aligner) {
-    exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
-}
+summary = Schema.params_summary(workflow, params, run_name)
+log.info Headers.nf_core(workflow, params.monochrome_logs)
+log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
+log.info "-\033[2m----------------------------------------------------\033[0m-"
+
+// // Has the run name been specified by the user?
+// // this has the bonus effect of catching both -name and --name
+// run_name = params.name
+// if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
+//     run_name = workflow.runName
+// }
+//
+// // Check AWS batch settings
+// if (workflow.profile.contains('awsbatch')) {
+//     // AWSBatch sanity checking
+//     if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
+//     // Check outdir paths to be S3 buckets if running on AWSBatch
+//     // related: https://github.com/nextflow-io/nextflow/issues/813
+//     if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+//     // Prevent trace files to be stored on S3 since S3 does not support rolling files.
+//     if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+// }
+//
+// if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
+//     if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
+// }
+
+// // Header log info
+// log.info nfcoreHeader()
+// def summary = [:]
+// if (workflow.revision)  summary['Pipeline Release'] = workflow.revision
+// summary['Run Name']     = run_name ?: workflow.runName
+// summary['Input']        = params.input
+// summary['Data Type']    = params.single_end ? 'Single-End' : 'Paired-End'
+// if (params.genome)      summary['Genome'] = params.genome
+// if (params.pico)        summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
+// summary['Strandedness'] = (unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None')
+// summary['Trimming']     = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
+// if (params.with_umi) {
+//     summary["With UMI"]                           = params.with_umi
+//     summary["umi_tools extract-method"]           = params.umitools_extract_method
+//     summary["umi_tools bc-pattern"]               = params.umitools_bc_pattern
+//     summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
+//     summary["umi_tools dedup extra parameters"]   = params.umitools_dedup_extra
+// }
+// if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
+// if (params.aligner == 'star') {
+//     summary['Aligner'] = "STAR"
+//     if (params.star_align_options) summary['STAR Align Options'] = params.star_align_options
+//     if (params.star_index_options) summary['STAR Index Options'] = params.star_index_options
+//     if (params.star_index)         summary['STAR Index'] = params.star_index
+//     else if (params.fasta)         summary['Fasta Ref']  = params.fasta
+// } else if (params.aligner == 'hisat2') {
+//     summary['Aligner'] = "HISAT2"
+//     if (params.hisat2_align_options) summary['HISAT2 Align Options'] = params.hisat2_align_options
+//     if (params.hisat2_index) summary['HISAT2 Index'] = params.hisat2_index
+//     else if (params.fasta)   summary['Fasta Ref']    = params.fasta
+//     if (params.splicesites)  summary['Splice Sites'] = params.splicesites
+// }
+// if (params.pseudo_aligner == 'salmon') {
+//     summary['Pseudo Aligner'] = "Salmon"
+//     if (params.transcript_fasta) summary['Transcript Fasta'] = params.transcript_fasta
+// }
+// if (params.gtf)                    summary['GTF Annotation'] = params.gtf
+// if (params.gff)                    summary['GFF3 Annotation'] = params.gff
+// if (params.bed12)                  summary['BED Annotation'] = params.bed12
+// if (params.gencode)                summary['GENCODE'] = params.gencode
+// if (params.stringtie_ignore_gtf)   summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
+// summary['Remove Ribosomal RNA']    = params.remove_ribo_rna
+// if (params.fc_group_features_type) summary['Biotype GTF field'] = biotype
+// summary['Save prefs'] = "Ref Genome: "+(params.save_reference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.save_trimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.save_align_intermeds ? 'Yes' : 'No')
+// summary['Max Resources'] = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+// if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+// summary['Output dir']  = params.outdir
+// summary['Launch dir']  = workflow.launchDir
+// summary['Working dir'] = workflow.workDir
+// summary['Script dir']  = workflow.projectDir
+// summary['User']        = workflow.userName
+// if (workflow.profile == 'awsbatch') {
+//     summary['AWS Region']     = params.awsregion
+//     summary['AWS Queue']      = params.awsqueue
+// }
+// summary['Config Profile'] = workflow.profile
+// if (params.config_profile_description) summary['Config Profile Description'] = params.config_profile_description
+// if (params.config_profile_contact)     summary['Config Profile Contact']     = params.config_profile_contact
+// if (params.config_profile_url)         summary['Config Profile URL']         = params.config_profile_url
+// summary['Config Files'] = workflow.configFiles.join(', ')
+// if (params.email || params.email_on_fail) {
+//     summary['E-mail Address']    = params.email
+//     summary['E-mail on failure'] = params.email_on_fail
+//     summary['MultiQC maxsize']   = params.max_multiqc_email_size
+// }
+// log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
+// log.info "-\033[2m--------------------------------------------------\033[0m-"
+//
+// // Check the hostnames against configured profiles
+// checkHostname()
+
 
 // Check basic annotation files and uncompress if required
 if (params.fasta) {
@@ -416,34 +466,6 @@ Channel
     .map { row -> file(row) }
     .set { sortmerna_fasta }
 
-// Has the run name been specified by the user?
-// this has the bonus effect of catching both -name and --name
-custom_runName = params.name
-if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
-    custom_runName = workflow.runName
-}
-
-// Check AWS batch settings
-if (workflow.profile.contains('awsbatch')) {
-    // AWSBatch sanity checking
-    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-    // Check outdir paths to be S3 buckets if running on AWSBatch
-    // related: https://github.com/nextflow-io/nextflow/issues/813
-    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
-    // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-    if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
-}
-
-if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
-    if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
-}
-
-// Stage config files
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
-
 /*
  * Create a channel for input read files
  */
@@ -470,77 +492,6 @@ if (params.input_paths) {
         .into { ch_raw_reads_fastqc
                 ch_raw_reads_umitools }
 }
-
-// Header log info
-log.info nfcoreHeader()
-def summary = [:]
-if (workflow.revision)  summary['Pipeline Release'] = workflow.revision
-summary['Run Name']     = custom_runName ?: workflow.runName
-summary['Input']        = params.input
-summary['Data Type']    = params.single_end ? 'Single-End' : 'Paired-End'
-if (params.genome)      summary['Genome'] = params.genome
-if (params.pico)        summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
-summary['Strandedness'] = (unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None')
-summary['Trimming']     = "5'R1: $clip_r1 / 5'R2: $clip_r2 / 3'R1: $three_prime_clip_r1 / 3'R2: $three_prime_clip_r2 / NextSeq Trim: $params.trim_nextseq"
-if (params.with_umi) {
-    summary["With UMI"]                           = params.with_umi
-    summary["umi_tools extract-method"]           = params.umitools_extract_method
-    summary["umi_tools bc-pattern"]               = params.umitools_bc_pattern
-    summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
-    summary["umi_tools dedup extra parameters"]   = params.umitools_dedup_extra
-}
-if (params.additional_fasta) summary["Additional Fasta"] = params.additional_fasta
-if (params.aligner == 'star') {
-    summary['Aligner'] = "STAR"
-    if (params.star_align_options) summary['STAR Align Options'] = params.star_align_options
-    if (params.star_index_options) summary['STAR Index Options'] = params.star_index_options
-    if (params.star_index)         summary['STAR Index'] = params.star_index
-    else if (params.fasta)         summary['Fasta Ref']  = params.fasta
-} else if (params.aligner == 'hisat2') {
-    summary['Aligner'] = "HISAT2"
-    if (params.hisat2_align_options) summary['HISAT2 Align Options'] = params.hisat2_align_options
-    if (params.hisat2_index) summary['HISAT2 Index'] = params.hisat2_index
-    else if (params.fasta)   summary['Fasta Ref']    = params.fasta
-    if (params.splicesites)  summary['Splice Sites'] = params.splicesites
-}
-if (params.pseudo_aligner == 'salmon') {
-    summary['Pseudo Aligner'] = "Salmon"
-    if (params.transcript_fasta) summary['Transcript Fasta'] = params.transcript_fasta
-}
-if (params.gtf)                    summary['GTF Annotation'] = params.gtf
-if (params.gff)                    summary['GFF3 Annotation'] = params.gff
-if (params.bed12)                  summary['BED Annotation'] = params.bed12
-if (params.gencode)                summary['GENCODE'] = params.gencode
-if (params.stringtie_ignore_gtf)   summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
-summary['Remove Ribosomal RNA']    = params.remove_ribo_rna
-if (params.fc_group_features_type) summary['Biotype GTF field'] = biotype
-summary['Save prefs'] = "Ref Genome: "+(params.save_reference ? 'Yes' : 'No')+" / Trimmed FastQ: "+(params.save_trimmed ? 'Yes' : 'No')+" / Alignment intermediates: "+(params.save_align_intermeds ? 'Yes' : 'No')
-summary['Max Resources'] = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-summary['Output dir']  = params.outdir
-summary['Launch dir']  = workflow.launchDir
-summary['Working dir'] = workflow.workDir
-summary['Script dir']  = workflow.projectDir
-summary['User']        = workflow.userName
-if (workflow.profile == 'awsbatch') {
-    summary['AWS Region']     = params.awsregion
-    summary['AWS Queue']      = params.awsqueue
-}
-summary['Config Profile'] = workflow.profile
-if (params.config_profile_description) summary['Config Profile Description'] = params.config_profile_description
-if (params.config_profile_contact)     summary['Config Profile Contact']     = params.config_profile_contact
-if (params.config_profile_url)         summary['Config Profile URL']         = params.config_profile_url
-summary['Config Files'] = workflow.configFiles.join(', ')
-if (params.email || params.email_on_fail) {
-    summary['E-mail Address']    = params.email
-    summary['E-mail on failure'] = params.email_on_fail
-    summary['MultiQC maxsize']   = params.max_multiqc_email_size
-}
-log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
-log.info "-\033[2m--------------------------------------------------\033[0m-"
-
-// Check the hostnames against configured profiles
-checkHostname()
 
 /*
  * PREPROCESSING - Convert GFF3 to GTF
@@ -1950,8 +1901,8 @@ process MULTIQC {
     path "multiqc_plots"
 
     script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    rtitle = run_name ? "--title \"$run_name\"" : ''
+    rfilename = run_name ? "--filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
     multiqc . -f $rtitle $rfilename $custom_config_file
@@ -1988,7 +1939,7 @@ workflow.onComplete {
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
+    email_fields['runName'] = run_name ?: workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete
     email_fields['duration'] = workflow.duration
@@ -2119,46 +2070,46 @@ workflow.onComplete {
 
 }
 
-def nfcoreHeader() {
-    // Log colors ANSI codes
-    c_black = params.monochrome_logs ? '' : "\033[0;30m";
-    c_blue = params.monochrome_logs ? '' : "\033[0;34m";
-    c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
-    c_dim = params.monochrome_logs ? '' : "\033[2m";
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-    c_white = params.monochrome_logs ? '' : "\033[0;37m";
-    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
-
-    return """    -${c_dim}--------------------------------------------------${c_reset}-
-                                            ${c_green},--.${c_black}/${c_green},-.${c_reset}
-    ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
-    ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
-    ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
-                                            ${c_green}`._,._,\'${c_reset}
-    ${c_purple}  nf-core/rnaseq v${workflow.manifest.version}${c_reset}
-    -${c_dim}--------------------------------------------------${c_reset}-
-    """.stripIndent()
-}
-
-def checkHostname() {
-    def c_reset = params.monochrome_logs ? '' : "\033[0m"
-    def c_white = params.monochrome_logs ? '' : "\033[0;37m"
-    def c_red = params.monochrome_logs ? '' : "\033[1;91m"
-    def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
-    if (params.hostnames) {
-        def hostname = "hostname".execute().text.trim()
-        params.hostnames.each { prof, hnames ->
-            hnames.each { hname ->
-                if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-                    log.error "====================================================\n" +
-                            "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
-                            "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
-                            "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
-                            "============================================================"
-                }
-            }
-        }
-    }
-}
+// def nfcoreHeader() {
+//     // Log colors ANSI codes
+//     c_black = params.monochrome_logs ? '' : "\033[0;30m";
+//     c_blue = params.monochrome_logs ? '' : "\033[0;34m";
+//     c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
+//     c_dim = params.monochrome_logs ? '' : "\033[2m";
+//     c_green = params.monochrome_logs ? '' : "\033[0;32m";
+//     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+//     c_reset = params.monochrome_logs ? '' : "\033[0m";
+//     c_white = params.monochrome_logs ? '' : "\033[0;37m";
+//     c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
+//
+//     return """    -${c_dim}--------------------------------------------------${c_reset}-
+//                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
+//     ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
+//     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
+//     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
+//                                             ${c_green}`._,._,\'${c_reset}
+//     ${c_purple}  nf-core/rnaseq v${workflow.manifest.version}${c_reset}
+//     -${c_dim}--------------------------------------------------${c_reset}-
+//     """.stripIndent()
+// }
+//
+// def checkHostname() {
+//     def c_reset = params.monochrome_logs ? '' : "\033[0m"
+//     def c_white = params.monochrome_logs ? '' : "\033[0;37m"
+//     def c_red = params.monochrome_logs ? '' : "\033[1;91m"
+//     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
+//     if (params.hostnames) {
+//         def hostname = "hostname".execute().text.trim()
+//         params.hostnames.each { prof, hnames ->
+//             hnames.each { hname ->
+//                 if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
+//                     log.error "====================================================\n" +
+//                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
+//                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
+//                             "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
+//                             "============================================================"
+//                 }
+//             }
+//         }
+//     }
+// }

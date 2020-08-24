@@ -9,7 +9,7 @@
 ----------------------------------------------------------------------------------------
 */
 
-//nextflow.enable.dsl = 2
+nextflow.enable.dsl = 2
 
 /*
  * Print help message if required
@@ -124,9 +124,6 @@ ch_where_are_my_files = file("$baseDir/assets/where_are_my_files.txt", checkIfEx
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-/*
- * Print parameter summary
- */
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name
 run_name = params.name
@@ -149,7 +146,7 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 //include { GET_SOFTWARE_VERSIONS               } from './modules/local/process/get_software_versions'
 //include { MULTIQC                             } from './modules/local/process/multiqc'
 
-//include { INPUT_CHECK                         } from './modules/local/subworkflow/input_check'
+include { INPUT_CHECK                         } from './modules/local/subworkflow/input_check'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -167,16 +164,17 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
-// workflow {
-//
-//     /*
-//      * Read in samplesheet, validate and stage input files
-//      */
-//     INPUT_CHECK (
-//         ch_input,
-//         params.seq_center,
-//         [:]
-//     )
+workflow {
+
+    /*
+     * Read in samplesheet, validate and stage input files
+     */
+    INPUT_CHECK (
+        ch_input,
+        params.seq_center,
+        [:]
+    )
+}
 //
 //     /*
 //      * Prepare genome files

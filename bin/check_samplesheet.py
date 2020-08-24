@@ -48,6 +48,7 @@ def check_samplesheet(file_in, file_out):
     with open(file_in, "r") as fin:
 
         ## Check header
+        MIN_COLS = 3
         HEADER = ['group', 'replicate', 'fastq_1', 'fastq_2']
         header = fin.readline().strip().split(",")
         if header[:len(HEADER)] != HEADER:
@@ -56,18 +57,18 @@ def check_samplesheet(file_in, file_out):
 
         ## Check sample entries
         for line in fin:
-            lspl = [x.strip() for x in line.strip().split(",")][:len(HEADER)]
-            sample, replicate, fastq_1, fastq_2 = lspl
+            lspl = [x.strip() for x in line.strip().split(",")]
 
             ## Check valid number of columns per row
-            if len(lspl) != len(HEADER):
+            if len(lspl) < len(HEADER):
                 print_error("Invalid number of columns (minimum = {})!".format(len(HEADER)), 'Line', line)
 
             num_cols = len([x for x in lspl if x])
-            if num_cols < 3:
-                print_error("Invalid number of populated columns (minimum = 3)!", 'Line', line)
+            if num_cols < MIN_COLS:
+                print_error("Invalid number of populated columns (minimum = {})!".format(MIN_COLS), 'Line', line)
 
             ## Check sample name entries
+            sample, replicate, fastq_1, fastq_2 = lspl[:len(HEADER)]
             if sample:
                 if sample.find(" ") != -1:
                     print_error("Group entry contains spaces!", 'Line', line)

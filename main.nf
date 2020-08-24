@@ -34,13 +34,13 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 }
 
 // Configurable variables
-params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
-params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
-params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
-params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
+params.fasta        = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
+params.gtf          = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
+params.gff          = params.genome ? params.genomes[ params.genome ].gff ?: false : false
+params.bed12        = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
+params.star_index   = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
-anno_readme = params.genome ? params.genomes[ params.genome ].readme ?: false : false
+anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: false : false
 
 ////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
@@ -108,17 +108,17 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
 
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config        = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
+ch_output_docs           = file("$baseDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images    = file("$baseDir/docs/images/", checkIfExists: true)
 
 // Header files for MultiQC
-ch_mdsplot_header = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
-ch_heatmap_header = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
-ch_biotypes_header = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
+ch_heatmap_header        = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
+ch_biotypes_header       = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 
-ch_where_are_my_files = file("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
+ch_where_are_my_files    = file("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER SUMMARY               -- */

@@ -105,7 +105,7 @@ def check_samplesheet(file_in, file_out):
                 if sample_info in sample_run_dict[sample][replicate]:
                     print_error("Samplesheet contains duplicate rows!", 'Line', line)
                 else:
-                    sample_run_dict[sample].append(sample_info)
+                    sample_run_dict[sample][replicate].append(sample_info)
 
     ## Write validated samplesheet with appropriate columns
     if len(sample_run_dict) > 0:

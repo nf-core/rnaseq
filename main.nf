@@ -30,16 +30,17 @@ def helpMessage() {
 
     References:                       If not specified in the configuration file or you wish to overwrite any of the references.
       --genome [str]                  Name of iGenomes reference
-      --star_index [file]             Path to STAR index
-      --hisat2_index [file]           Path to HiSAT2 index
-      --salmon_index [file]           Path to Salmon index
       --fasta [file]                  Path to genome fasta file
-      --transcript_fasta [file]       Path to transcript fasta file
-      --additional_fasta [file]       Additional fasta file(s) containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
-      --splicesites [file]            Path to splice sites file for building HiSat2 index
       --gtf [file]                    Path to GTF file
       --gff [file]                    Path to GFF3 file
       --bed12 [file]                  Path to bed12 file
+      --transcript_fasta [file]       Path to transcript fasta file
+      --additional_fasta [file]       Additional fasta file containing e.g. ERCCs spike-ins, GFP or CAR-T transgene sequences to map to
+      --star_index [file]             Path to STAR index
+      --hisat2_index [file]           Path to HiSAT2 index
+      --rsem_index [file]             Path to RSEM index
+      --salmon_index [file]           Path to Salmon index
+      --splicesites [file]            Path to splice sites file for building HiSat2 index
       --star_index_options [str]      Additional options that will be appended to the STAR genome indexing command
       --save_reference [bool]         Save the generated reference files to the results directory
       --gencode [bool]                Use fc_group_features_type = 'gene_type' and pass '--gencode' flag to Salmon
@@ -134,24 +135,17 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 
 // Reference index path configuration
 // Define these here - after the profiles are loaded with the iGenomes paths
-params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 params.gff = params.genome ? params.genomes[ params.genome ].gff ?: false : false
 params.bed12 = params.genome ? params.genomes[ params.genome ].bed12 ?: false : false
+params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
 params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 
-ch_mdsplot_header = Channel.fromPath("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
-ch_heatmap_header = Channel.fromPath("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
-ch_biotypes_header = Channel.fromPath("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-Channel
-    .fromPath("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
-    .into { ch_where_trim_galore
-            ch_where_star
-            ch_where_hisat2
-            ch_where_hisat2_sort
-            ch_where_umi_extract
-            ch_where_umi_dedup }
+ch_mdsplot_header = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
+ch_heatmap_header = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
+ch_biotypes_header = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_where_are_my_files = file("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
 
 // Define regular variables so that they can be overwritten
 clip_r1 = params.clip_r1
@@ -173,14 +167,8 @@ if (params.pico) {
     unstranded = false
 }
 
-// Get rRNA databases
-// Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
-rRNA_database = file(params.ribo_database_manifest)
-if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
-Channel
-    .from(rRNA_database.readLines())
-    .map { row -> file(row) }
-    .set { sortmerna_fasta }
+// Set biotype for featureCounts
+biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 
 // Validate inputs
 if (params.aligner != 'star' && params.aligner != 'hisat2') {
@@ -189,218 +177,244 @@ if (params.aligner != 'star' && params.aligner != 'hisat2') {
 if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
     exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
 }
-
-if (params.star_index && params.aligner == 'star' && !params.skip_alignment) {
-    if (hasExtension(params.star_index, 'gz')) {
-        Channel
-            .fromPath(params.star_index, checkIfExists: true)
-            .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
-            .set { star_index_gz }
-    } else {
-        Channel
-            .fromPath(params.star_index, checkIfExists: true)
-            .ifEmpty { exit 1, "STAR index not found: ${params.star_index}" }
-            .set { star_index }
-    }
-} else if (params.hisat2_index && params.aligner == 'hisat2' && !params.skip_alignment) {
-    if (hasExtension(params.hisat2_index, 'gz')) {
-        Channel
-            .fromPath("${params.hisat2_index}", checkIfExists: true)
-            .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
-            .set { hs2_indices_gz }
-    } else {
-        Channel
-            .fromPath("${params.hisat2_index}*", checkIfExists: true)
-            .ifEmpty { exit 1, "HISAT2 index not found: ${params.hisat2_index}" }
-            .set { hs2_indices }
-    }
-}
-if (params.fasta && !params.skip_alignment) {
-    if (params.additional_fasta) {
-        if (hasExtension(params.additional_fasta, "gz")) {
-            Channel
-                .fromPath(params.additional_fasta)
-                .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-                .set { additional_fasta_gz }
-            Channel
-                .fromPath(params.fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-                .set { genome_fasta_gz }
-        } else {
-            Channel
-                .fromPath(params.additional_fasta)
-                .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-                .into { ch_additional_fasta_for_gtf
-                        ch_additional_fasta_to_concat }
-            Channel
-                .fromPath(params.fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-                .set { ch_genome_fasta }
-        }
-    } else {
-        if (hasExtension(params.fasta, "gz")) {
-            Channel
-                .fromPath(params.fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-                .set { genome_fasta_gz }
-        } else {
-            Channel
-                .fromPath(params.fasta)
-                .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-                .into { ch_fasta_for_star_index
-                        ch_fasta_for_hisat_index
-                        ch_fasta_for_rsem_reference }
-        }
-    }
-} else if (params.skip_alignment) {
-    println "Skipping alignment ..."
-} else {
-    exit 1, "No reference genome files specified!"
+if (params.skip_alignment && !params.pseudo_aligner) {
+    exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
 }
 
-if (params.aligner == 'hisat2' && params.splicesites) {
-    Channel
-        .fromPath(params.bed12, checkIfExists: true)
-        .ifEmpty { exit 1, "HISAT2 splice sites file not found: $alignment_splicesites" }
-        .into { indexing_splicesites
-                alignment_splicesites }
-}
+// Check basic annotation files and uncompress if required
+if (params.fasta) {
+    file(params.fasta, checkIfExists: true)
+    if (params.fasta.endsWith('.gz')) {
+        process GUNZIP_FASTA {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
-// Separately check for whether salmon needs a genome fasta to extract
-// transcripts from, or can use a transcript fasta directly
-if (params.pseudo_aligner == 'salmon') {
-    if (params.salmon_index) {
-        if (hasExtension(params.salmon_index, 'gz')) {
-            Channel
-                .fromPath(params.salmon_index, checkIfExists: true)
-                .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
-                .set { salmon_index_gz }
-        } else {
-            Channel
-                .fromPath(params.salmon_index, checkIfExists: true)
-                .ifEmpty { exit 1, "Salmon index not found: ${params.salmon_index}" }
-                .set { salmon_index }
+            input:
+            path gz from params.fasta
+
+            output:
+            path "$unzip" into ch_fasta
+
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
         }
-    } else if (params.transcript_fasta) {
-        if (hasExtension(params.transcript_fasta, 'gz')) {
-            Channel
-                .fromPath(params.transcript_fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
-                .set { transcript_fasta_gz }
-        } else {
-            Channel
-                .fromPath(params.transcript_fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Transcript fasta file not found: ${params.transcript_fasta}" }
-                .set { ch_fasta_for_salmon_index }
-        }
-    } else if (params.fasta) {
-        if (params.additional_fasta) {
-            Channel
-                .fromPath(params.additional_fasta)
-                .ifEmpty { exit 1, "Additional Fasta file not found: ${params.additional_fasta}" }
-                .into { ch_additional_fasta_for_gtf
-                        ch_additional_fasta_to_concat }
-            Channel
-                .fromPath(params.fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Genome Fasta file not found: ${params.fasta}" }
-                .set { ch_genome_fasta }
-    } else if (params.fasta && (params.gff || params.gtf)) {
-        // Need to extract transcripts out of genome fasta + gtf to get
-        // transcript fasta
-        log.info "Extracting transcript fastas from genome fasta + gtf/gff"
-        if (params.compressed_reference) {
-            Channel
-                .fromPath(params.fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-                .set { genome_fasta_gz }
-        } else {
-            Channel
-                .fromPath(params.fasta, checkIfExists: true)
-                .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-                .set { ch_fasta_for_salmon_transcripts }
-        }
-    }
     } else {
-        exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf"
+        ch_fasta = file(params.fasta)
     }
-}
-
-skip_rsem = params.skip_rsem
-if (!params.skip_alignment && !params.skip_rsem && params.aligner != "star") {
-    skip_rsem = true
-    println "RSEM only works with STAR. Disabling RSEM."
-}
-if (params.rsem_reference && !params.skip_rsem && !params.skip_alignment) {
-    Channel
-        .fromPath(params.rsem_reference, checkIfExists: true)
-        .ifEmpty {exit 1, "RSEM reference not found: ${params.rsem_reference}"}
-        .set { rsem_reference }
-}
-if (params.fasta && !params.skip_alignment) {
-    if (hasExtension(params.fasta, 'gz')) {
-        Channel
-            .fromPath(params.fasta, checkIfExists: true)
-            .ifEmpty { exit 1, "Genome fasta file not found: ${params.fasta}" }
-            .set { genome_fasta_gz }
-    }
-} else if (params.skip_alignment) {
-    println "Skipping Alignment ..."
-} else {
-    exit 1, "No reference genome files specified! "
-}
+} //else {
+//    exit 1, "Fasta file for reference genome not specified!"
+//}
 
 if (params.gtf) {
+    file(params.gtf, checkIfExists: true)
     if (params.gff) {
-        // Prefer gtf over gff
         log.info "Both GTF and GFF have been provided: Using GTF as priority."
     }
-    if (hasExtension(params.gtf, 'gz')) {
-        Channel
-            .fromPath(params.gtf, checkIfExists: true)
-            .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-            .set { gtf_gz }
+    if (params.gtf.endsWith('.gz')) {
+        process GUNZIP_GTF {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path gz from params.gtf
+
+            output:
+            path "$unzip" into ch_gtf
+
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
+        }
     } else {
-        Channel
-            .fromPath(params.gtf, checkIfExists: true)
-            .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
-            .set { gtfFile }
+        ch_gtf = file(params.gtf)
     }
 } else if (params.gff) {
-    if (hasExtension(params.gff, 'gz')) {
-        Channel
-            .fromPath(params.gff, checkIfExists: true)
-            .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
-            .set { gff_gz }
+    file(params.gff, checkIfExists: true)
+    if (params.gff.endsWith('.gz')) {
+        process GUNZIP_GFF {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path gz from params.gff
+
+            output:
+            path "$unzip" into ch_gff
+
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
+        }
     } else {
-        Channel
-            .fromPath(params.gff, checkIfExists: true)
-            .ifEmpty { exit 1, "GFF annotation file not found: ${params.gff}" }
-            .set { gffFile }
+        ch_gff = file(params.gff)
     }
 } else {
     exit 1, "No GTF or GFF3 annotation specified!"
 }
 
 if (params.bed12) {
-    Channel
-        .fromPath(params.bed12, checkIfExists: true)
-        .ifEmpty { exit 1, "BED12 annotation file not found: ${params.bed12}" }
-        .set { bed_rseqc }
+    file(params.bed12, checkIfExists: true)
+    if (params.bed12.endsWith('.gz')) {
+        process GUNZIP_BED12 {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path gz from params.bed12
+
+            output:
+            path "$unzip" into ch_bed12
+
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
+        }
+    } else {
+        ch_bed12 = file(params.bed12)
+    }
 }
 
-if (params.gencode) {
-    biotype = "gene_type"
+// Check genome/transcriptome indices and uncompress if required
+if (!params.skip_alignment) {
+    if (params.aligner == 'star' && params.star_index) {
+        file(params.star_index, checkIfExists: true)
+        if (params.star_index.endsWith('.tar.gz')) {
+            process UNTAR_STAR_INDEX {
+                tag "$tar"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path tar from params.star_index
+
+                output:
+                path "$untar" into ch_star_index
+
+                script:
+                untar = tar.toString() - '.tar.gz'
+                """
+                tar -xzvf $tar
+                """
+            }
+        } else {
+            ch_star_index = file(params.star_index)
+        }
+    } else if (params.aligner == 'hisat2' && params.hisat2_index) {
+        file(params.hisat2_index, checkIfExists: true)
+        if (params.hisat2_index.endsWith('.tar.gz')) {
+            process UNTAR_HISAT2_INDEX {
+                tag "$tar"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path tar from params.hisat2_index
+
+                output:
+                path "*.ht2*" into ch_hisat2_index
+
+                script:
+                untar = tar.toString() - '.tar.gz'
+                """
+                tar -xzvf $tar
+                """
+            }
+        } else {
+            ch_hisat2_index = file(params.hisat2_index)
+        }
+    }
+
+    // Check if we are running RSEM
+    skip_rsem = params.skip_rsem
+    if (!params.skip_rsem) {
+        if (params.aligner != "star") {
+            skip_rsem = true
+            log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
+        } else {
+            if (params.rsem_index) {
+                ch_rsem_index = file(params.rsem_index, checkIfExists: true)
+            }
+        }
+    }
 } else {
-    biotype = params.fc_group_features_type
+    log.info "Skipping alignment processes..."
 }
 
-if (params.skip_alignment && !params.pseudo_aligner) {
-    exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
+// Check psuedo-aligner indices and uncompress if required
+if (params.pseudo_aligner == 'salmon') {
+    if (params.salmon_index) {
+        file(params.salmon_index, checkIfExists: true)
+        if (params.salmon_index.endsWith('.tar.gz')) {
+            process UNTAR_SALMON_INDEX {
+                tag "$tar"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/salmon" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path tar from params.salmon_index
+
+                output:
+                path "$untar" into ch_salmon_index
+
+                script:
+                untar = tar.toString() - '.tar.gz'
+                """
+                tar -xzvf $tar
+                """
+            }
+        } else {
+            ch_salmon_index = file(params.salmon_index)
+        }
+    // If index isn't provided use transcript.fasta to generate it
+    } else if (params.transcript_fasta) {
+        file(params.transcript_fasta, checkIfExists: true)
+        if (params.transcript_fasta.endsWith('.gz')) {
+            process GUNZIP_TRANSCRIPT_FASTA {
+                tag "$gz"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path gz from params.transcript_fasta
+
+                output:
+                path "$unzip" into ch_transcript_fasta
+
+                script:
+                unzip = gz.toString() - '.gz'
+                """
+                pigz -f -d -p $task.cpus $gz
+                """
+            }
+        } else {
+            ch_transcript_fasta = file(params.transcript_fasta)
+        }
+    } else if (!params.fasta || !(params.gff || params.gtf)) {
+        exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf / --gff"
+    }
 }
 
-if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
-    if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
-}
+// Get rRNA databases
+// Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
+rRNA_database = file(params.ribo_database_manifest, checkIfExists: true)
+if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
+Channel
+    .from(rRNA_database.readLines())
+    .map { row -> file(row) }
+    .set { sortmerna_fasta }
 
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name
@@ -420,6 +434,10 @@ if (workflow.profile.contains('awsbatch')) {
     if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
+if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
+    if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
+}
+
 // Stage config files
 ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
@@ -435,22 +453,22 @@ if (params.input_paths) {
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_read_files_fastqc
-                    raw_reads_umitools }
+            .into { ch_raw_reads_fastqc
+                    ch_raw_reads_umitools }
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_read_files_fastqc
-                    raw_reads_umitools }
+            .into { ch_raw_reads_fastqc
+                    ch_raw_reads_umitools }
     }
 } else {
     Channel
         .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { ch_read_files_fastqc
-                raw_reads_umitools }
+        .into { ch_raw_reads_fastqc
+                ch_raw_reads_umitools }
 }
 
 // Header log info
@@ -524,192 +542,6 @@ log.info "-\033[2m--------------------------------------------------\033[0m-"
 // Check the hostnames against configured profiles
 checkHostname()
 
-compressed_reference = (hasExtension(params.fasta, 'gz') ||
-    hasExtension(params.transcript_fasta, 'gz') || hasExtension(params.star_index, 'gz') ||
-    hasExtension(params.hisat2_index, 'gz') || hasExtension(params.additional_fasta, "gz"))
-
-if (compressed_reference) {
-    // This complex logic is to prevent accessing the genome_fasta_gz variable if
-    // necessary indices for STAR, HiSAT2, Salmon already exist, or if
-    // params.transcript_fasta is provided as then the transcript sequences don't
-    // need to be extracted.
-    need_star_index = params.aligner == 'star' && !params.star_index
-    need_hisat2_index = params.aligner == 'hisat2' && !params.hisat2_index
-    need_rsem_ref = !params.skip_rsem && !params.rsem_reference
-    //when an additional fasta is provided, the fasta and gtf file need
-    //to be unzipeed to be merged in a later stage. --> Execute the following code block.
-    need_aligner_index = need_hisat2_index || need_star_index || need_rsem_ref || params.additional_fasta
-    alignment_no_indices = !params.skip_alignment && need_aligner_index
-    pseudoalignment_no_indices = params.pseudo_aligner == "salmon" && !(params.transcript_fasta || params.salmon_index)
-    if (params.fasta && (alignment_no_indices || pseudoalignment_no_indices)) {
-        process GUNZIP_GENOME_FASTA {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from genome_fasta_gz
-
-            output:
-            path "${gz.baseName}" into ch_genome_fasta
-
-            script:
-            """
-            gunzip --verbose --stdout --force $gz > ${gz.baseName}
-            """
-        }
-
-        if (params.additional_fasta) {
-            process GUNZIP_ADDITIONAL_FASTA {
-                tag "$gz"
-                publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome" : params.outdir },
-                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-                input:
-                path gz from additional_fasta_gz
-
-                output:
-                path "${gz.baseName}" into ch_additional_fasta_for_gtf,
-                                           ch_additional_fasta_to_concat
-
-                script:
-                """
-                gunzip --verbose --stdout --force $gz > ${gz.baseName}
-                """
-            }
-        }
-    }
-    if (params.gtf) {
-        process GUNZIP_GTF {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from gtf_gz
-
-            output:
-            path "${gz.baseName}" into gtfFile
-
-            script:
-            """
-            gunzip --verbose --stdout --force $gz > ${gz.baseName}
-            """
-        }
-    }
-    if (params.gff && !params.gtf) {
-        process GUNZIP_GFF {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from gff_gz
-
-            output:
-            path "${gz.baseName}" into gffFile
-
-            script:
-            """
-            gunzip --verbose --stdout --force $gz > ${gz.baseName}
-            """
-        }
-    }
-    if (params.transcript_fasta && params.pseudo_aligner == 'salmon' && !params.salmon_index) {
-        process GUNZIP_TRANSCRIPT_FASTA {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from transcript_fasta_gz
-
-            output:
-            path "${gz.baseName}" into ch_fasta_for_salmon_index
-
-            script:
-            """
-            gunzip --verbose --stdout --force $gz > ${gz.baseName}
-            """
-        }
-    }
-    if (params.bed12) {
-        process GUNZIP_BED12 {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from bed12_gz
-
-            output:
-            path "${gz.baseName}" into bed_rseqc
-
-            script:
-            """
-            gunzip --verbose --stdout --force $gz > ${gz.baseName}
-            """
-        }
-    }
-    if (!params.skip_alignment && params.star_index && params.aligner == "star") {
-        process GUNZIP_STAR_INDEX {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from star_index_gz
-
-            output:
-            path "${gz.simpleName}" into star_index
-
-            script:
-            // Use tar as the star indices are a folder, not a file
-            """
-            tar -xzvf $gz
-            """
-        }
-    }
-    if (!params.skip_alignment && params.hisat2_index && params.aligner == 'hisat2') {
-        process GUNZIP_HISAT2_INDEX {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from hs2_indices_gz
-
-            output:
-            path "*.ht2*" into hs2_indices
-
-            script:
-            // Use tar as the hisat2 indices are a folder, not a file
-            """
-            tar -xzvf $gz
-            """
-        }
-    }
-    if (params.salmon_index && params.pseudo_aligner == 'salmon') {
-        process GUNZIP_SALMON_INDEX {
-            tag "$gz"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/transcriptome/hisat2" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path gz from salmon_index_gz
-
-            output:
-            path "${gz.simpleName}" into salmon_index
-
-            script:
-            // Use tar as the hisat2 indices are a folder, not a file
-            """
-            tar -xzvf $gz
-            """
-        }
-    }
-}
-
 /*
  * PREPROCESSING - Convert GFF3 to GTF
  */
@@ -720,10 +552,10 @@ if (params.gff && !params.gtf) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        path gff from gffFile
+        path gff from ch_gff
 
         output:
-        path "${gff.baseName}.gtf" into gtfFile
+        path "${gff.baseName}.gtf" into ch_gtf
 
         script:
         """
@@ -732,68 +564,75 @@ if (params.gff && !params.gtf) {
     }
 }
 
+// Check additional fasta file, uncompress and concatenate with reference files
 if (params.additional_fasta) {
+    file(params.additional_fasta, checkIfExists: true)
+    if (params.additional_fasta.endsWith('.gz')) {
+        process GUNZIP_ADDITIONAL_FASTA {
+            tag "$gz"
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+            input:
+            path gz from params.additional_fasta
+
+            output:
+            path "$unzip" into ch_additional_fasta
+
+            script:
+            unzip = gz.toString() - '.gz'
+            """
+            pigz -f -d -p $task.cpus $gz
+            """
+        }
+    } else {
+        ch_additional_fasta = file(params.additional_fasta)
+    }
+
     process MAKE_ADDITIONAL_GTF {
         tag "$fasta"
         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        path fasta from ch_additional_fasta_for_gtf
+        path fasta from ch_additional_fasta
 
         output:
         path "${fasta.baseName}.gtf" into ch_additional_gtf
 
+        script:
         """
         fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
         """
     }
 
-    process COMBINE_GENOME_ANNOTATIONS {
-        tag "$genome_name"
+    process CAT_ANNOTATION {
+        tag "$name"
         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        path genome_fasta from ch_genome_fasta
-        path genome_gtf from gtfFile
-        path additional_fasta from ch_additional_fasta_to_concat.collect()
-        path additional_gtf from ch_additional_gtf.collect()
+        path fasta from ch_fasta
+        path gtf from ch_gtf
+        path add_fasta from ch_additional_fasta
+        path add_gtf from ch_additional_gtf
 
         output:
-        path "${genome_name}.fa" into ch_fasta_for_star_index,
-                                      ch_fasta_for_hisat_index,
-                                      ch_fasta_for_salmon_transcripts,
-                                      ch_fasta_for_rsem_reference
-        path "${genome_name}.gtf" into ch_gtf
+        path "${name}.fa" into ch_cat_fasta
+        path "${name}.gtf" into ch_cat_gtf
 
         script:
-        main_genome_name = params.genome ? params.genome : genome_fasta.getBaseName()
-        transgenomes = additional_fasta.collect{ it.getBaseName() }.sort().join("+")
-        genome_name = "${main_genome_name}_${transgenomes}"
+        genome_name = params.genome ? params.genome : fasta.getBaseName()
+        transgenomes = add_fasta.getBaseName()
+        name = "${genome_name}_${transgenomes}"
         """
-        cat $genome_fasta $additional_fasta > ${genome_name}.fa
-        cat $genome_gtf $additional_gtf > ${genome_name}.gtf
+        cat $fasta $add_fasta > ${name}.fa
+        cat $gtf $add_gtf > ${name}.gtf
         """
     }
-} else {
-    ch_gtf = gtfFile
+    ch_fasta = ch_cat_fasta
+    ch_gtf = ch_cat_gtf
 }
-
-ch_gtf
-    .into { gtf_makeSTARindex
-            gtf_makeHisatSplicesites
-            gtf_makeHISATindex
-            gtf_makeSalmonIndex
-            gtf_makeBED12
-            gtf_star
-            gtf_dupradar
-            gtf_featureCounts
-            gtf_stringtieFPKM
-            gtf_salmon
-            gtf_salmon_merge
-            gtf_qualimap
-            gtf_makeRSEMReference }
 
 /*
  * PREPROCESSING - Build BED12 file
@@ -805,12 +644,12 @@ if (!params.bed12) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        path gtf from gtf_makeBED12
+        path gtf from ch_gtf
 
         output:
-        path "${gtf.baseName}.bed" into bed_rseqc
+        path "${gtf.baseName}.bed" into ch_bed12
 
-        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
         """
         gtf2bed $gtf > ${gtf.baseName}.bed
         """
@@ -825,15 +664,15 @@ if (!params.skip_alignment) {
         process STAR_GENOMEGENERATE {
             tag "$fasta"
             label 'high_memory'
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            path fasta from ch_fasta_for_star_index
-            path gtf from gtf_makeSTARindex
+            path fasta from ch_fasta
+            path gtf from ch_gtf
 
             output:
-            path "star" into star_index
+            path "star" into ch_star_index
 
             script:
             def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
@@ -852,87 +691,90 @@ if (!params.skip_alignment) {
     }
 
     /*
-    * PREPROCESSING - Build HISAT2 splice sites file
-    */
-    if (params.aligner == 'hisat2' && !params.splicesites) {
-        process MAKE_HISAT2_SPLICESITES {
-            tag "$gtf"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+     * PREPROCESSING - Build HISAT2 index and splice sites file (if required)
+     */
+    if (params.aligner == 'hisat2') {
+        if (!params.splicesites) {
+            process MAKE_HISAT2_SPLICESITES {
+                tag "$gtf"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
-            input:
-            path gtf from gtf_makeHisatSplicesites
+                input:
+                path gtf from ch_gtf
 
-            output:
-            path "${gtf.baseName}.hisat2_splice_sites.txt" into indexing_splicesites,
-                                                                alignment_splicesites
+                output:
+                path "${gtf.baseName}.hisat2_splice_sites.txt" into ch_splicesites
 
-            script:
-            """
-            hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
-            """
+                script:
+                """
+                hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
+                """
+            }
+        } else {
+            ch_splicesites = file(params.bed12, checkIfExists: true)
+        }
+
+        /*
+         * PREPROCESSING - Build HISAT2 index
+         */
+        if (!params.hisat2_index && params.fasta) {
+            process HISAT2_BUILD {
+                tag "$fasta"
+                publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
+                    saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+
+                input:
+                path fasta from ch_fasta
+                path gtf from ch_gtf
+                path splicesites from ch_splicesites
+
+                output:
+                path "${fasta.baseName}.*.ht2*" into ch_hisat2_index
+
+                script:
+                if (!task.memory) {
+                    log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
+                    avail_mem = 0
+                } else {
+                    log.info "[HISAT2 index build] Available memory: ${task.memory}"
+                    avail_mem = task.memory.toGiga()
+                }
+                if (avail_mem > params.hisat_build_memory) {
+                    log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
+                    extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
+                    ss = "--ss $splicesites"
+                    exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
+                } else {
+                    log.info "[HISAT2 index build] Less than ${params.hisat_build_memory} GB available, so NOT using splice sites and exons in HISAT2 index."
+                    log.info "[HISAT2 index build] Use --hisat_build_memory [small number] to skip this check."
+                    extract_exons = ''
+                    ss = ''
+                    exon = ''
+                }
+                """
+                $extract_exons
+                hisat2-build -p $task.cpus $ss $exon $fasta ${fasta.baseName}.hisat2_index
+                """
+            }
         }
     }
 
     /*
-    * PREPROCESSING - Build HISAT2 index
-    */
-    if (params.aligner == 'hisat2' && !params.hisat2_index && params.fasta) {
-        process HISAT2_BUILD {
-            tag "$fasta"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-                saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-
-            input:
-            path fasta from ch_fasta_for_hisat_index
-            path indexing_splicesites from indexing_splicesites
-            path gtf from gtf_makeHISATindex
-
-            output:
-            path "${fasta.baseName}.*.ht2*" into hs2_indices
-
-            script:
-            if (!task.memory) {
-                log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
-                avail_mem = 0
-            } else {
-                log.info "[HISAT2 index build] Available memory: ${task.memory}"
-                avail_mem = task.memory.toGiga()
-            }
-            if (avail_mem > params.hisat_build_memory) {
-                log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
-                extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
-                ss = "--ss $indexing_splicesites"
-                exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
-            } else {
-                log.info "[HISAT2 index build] Less than ${params.hisat_build_memory} GB available, so NOT using splice sites and exons in HISAT2 index."
-                log.info "[HISAT2 index build] Use --hisat_build_memory [small number] to skip this check."
-                extract_exons = ''
-                ss = ''
-                exon = ''
-            }
-            """
-            $extract_exons
-            hisat2-build -p $task.cpus $ss $exon $fasta ${fasta.baseName}.hisat2_index
-            """
-        }
-    }
-
-    /**
-    * PREPROCESSING - Build RSEM reference
-    */
-    if (!params.skip_rsem && !params.rsem_reference && params.fasta) {
+     * PREPROCESSING - Build RSEM reference
+     */
+    if (!skip_rsem && !params.rsem_index && params.fasta) {
         process RSEM_PREPAREREFERENCE {
             tag "$fasta"
-            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+            publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/rsem" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
             input:
-            path fasta from ch_fasta_for_rsem_reference
-            path gtf from gtf_makeRSEMReference
+            path fasta from ch_fasta
+            path gtf from ch_gtf
 
             output:
-            path "rsem" into rsem_reference
+            path "rsem" into ch_rsem_index
 
             script:
             """
@@ -942,7 +784,6 @@ if (!params.skip_alignment) {
         }
     }
 }
-
 
 /*
  * PREPROCESSING - Create Salmon transcriptome index
@@ -954,22 +795,22 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
-
             input:
-            path fasta from ch_fasta_for_salmon_transcripts
-            path gtf from gtf_makeSalmonIndex
+            path fasta from ch_fasta
+            path gtf from ch_gtf
 
             output:
-            path "*.fa" into ch_fasta_for_salmon_index
+            path "*.fa" into ch_transcript_fasta
 
             script:
 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
             """
-            filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}__in__${fasta.baseName}.gtf
-            gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}__in__${fasta.baseName}.gtf
+            filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}_in_${fasta.baseName}.gtf
+            gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}_in_${fasta.baseName}.gtf
             """
         }
     }
+
     process SALMON_INDEX {
         tag "$fasta"
         label "salmon"
@@ -977,10 +818,10 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 
         input:
-        path fasta from ch_fasta_for_salmon_index
+        path fasta from ch_transcript_fasta
 
         output:
-        path 'salmon_index' into salmon_index
+        path 'salmon_index' into ch_salmon_index
 
         script:
         def gencode = params.gencode  ? "--gencode" : ""
@@ -1002,7 +843,7 @@ process FASTQC {
     !params.skip_fastqc
 
     input:
-    tuple val(name), path(reads) from ch_read_files_fastqc
+    tuple val(name), path(reads) from ch_raw_reads_fastqc
 
     output:
     path "*_fastqc.{zip,html}" into ch_fastqc_results
@@ -1027,8 +868,8 @@ if (params.with_umi) {
             }
 
         input:
-        tuple val(name), path(reads) from raw_reads_umitools
-        path wherearemyfiles from ch_where_umi_extract.collect()
+        tuple val(name), path(reads) from ch_raw_reads_umitools
+        path wherearemyfiles from ch_where_are_my_files
 
         output:
         tuple val(name), path("*fq.gz") into raw_reads_trimgalore
@@ -1059,7 +900,7 @@ if (params.with_umi) {
         }
     }
 } else {
-    raw_reads_trimgalore = raw_reads_umitools
+    raw_reads_trimgalore = ch_raw_reads_umitools
     umi_tools_extract_results = Channel.empty()
 }
 
@@ -1078,7 +919,7 @@ if (!params.skip_trimming) {
 
         input:
         tuple val(name), path(reads) from raw_reads_trimgalore
-        path wherearemyfiles from ch_where_trim_galore.collect()
+        path wherearemyfiles from ch_where_are_my_files
 
         output:
         tuple val(name), path("*fq.gz") into trimgalore_reads
@@ -1198,7 +1039,7 @@ def check_log(logs) {
             percent_aligned = matcher[0][1]
         }
     }
-    logname = logs.getBaseName() - 'Log.final'
+    logname = logs.getBaseName() - '.Log.final'
     c_reset = params.monochrome_logs ? '' : "\033[0m";
     c_green = params.monochrome_logs ? '' : "\033[0;32m";
     c_red = params.monochrome_logs ? '' : "\033[0;31m";
@@ -1212,6 +1053,7 @@ def check_log(logs) {
         return true
     }
 }
+
 if (!params.skip_alignment) {
     if (params.aligner == 'star') {
         hisat_stdout = Channel.empty()
@@ -1229,9 +1071,9 @@ if (!params.skip_alignment) {
 
             input:
             tuple val(name), path(reads) from trimmed_reads_alignment
-            path index from star_index.collect()
-            path gtf from gtf_star.collect()
-            path wherearemyfiles from ch_where_star.collect()
+            path index from ch_star_index
+            path gtf from ch_gtf
+            path wherearemyfiles from ch_where_are_my_files
 
             output:
             tuple path("*Log.final.out"), path('*.sortedByCoord.out.bam'), path('*.toTranscriptome.out.bam') into star_aligned
@@ -1240,7 +1082,7 @@ if (!params.skip_alignment) {
             path "*Log.out" into star_log
             path "where_are_my_files.txt"
             path "*Unmapped*" optional true
-            path "${prefix}Aligned.sortedByCoord.out.bam.bai" into bam_index
+            path "${prefix}.Aligned.sortedByCoord.out.bam.bai" into bam_index
 
             script:
             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
@@ -1249,7 +1091,8 @@ if (!params.skip_alignment) {
             def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
             def unaligned = params.save_unaligned ? "--outReadsUnmapped Fastx" : ''
             """
-            STAR --genomeDir $index \\
+            STAR \\
+                --genomeDir $index \\
                 --sjdbGTFfile $gtf \\
                 --readFilesIn $reads  \\
                 --runThreadN $task.cpus \\
@@ -1259,11 +1102,11 @@ if (!params.skip_alignment) {
                 --readFilesCommand zcat \\
                 --runDirPerm All_RWX $unaligned \\
                 --quantMode TranscriptomeSAM \\
-                --outFileNamePrefix $prefix $seq_center \\
+                --outFileNamePrefix $prefix. $seq_center \\
                 --runRNGseed 0 \\
                 $params.star_align_options
 
-            samtools index ${prefix}Aligned.sortedByCoord.out.bam
+            samtools index ${prefix}.Aligned.sortedByCoord.out.bam
             """
         }
         // Filter removes all 'aligned' channels that fail the check
@@ -1293,9 +1136,9 @@ if (!params.skip_alignment) {
 
             input:
             tuple val(name), path(reads) from trimmed_reads_alignment
-            path hs2_indices from hs2_indices.collect()
-            path alignment_splicesites from alignment_splicesites.collect()
-            path wherearemyfiles from ch_where_hisat2.collect()
+            path index from ch_hisat2_index
+            path splicesites from ch_splicesites
+            path wherearemyfiles from ch_where_are_my_files
 
             output:
             path "${prefix}.bam" into hisat2_bam
@@ -1304,7 +1147,7 @@ if (!params.skip_alignment) {
             path "unmapped.hisat2*" optional true
 
             script:
-            index_base = hs2_indices[0].toString() - ~/.\d.ht2l?/
+            index_base = index[0].toString() - ~/.\d.ht2l?/
             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
             seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
             def rnastrandness = ''
@@ -1320,7 +1163,7 @@ if (!params.skip_alignment) {
                     -x $index_base \\
                     -U $reads \\
                     $rnastrandness \\
-                    --known-splicesite-infile $alignment_splicesites \\
+                    --known-splicesite-infile $splicesites \\
                     -p $task.cpus $unaligned \\
                     --met-stderr \\
                     --new-summary \\
@@ -1337,7 +1180,7 @@ if (!params.skip_alignment) {
                     -1 ${reads[0]} \\
                     -2 ${reads[1]} \\
                     $rnastrandness \\
-                    --known-splicesite-infile $alignment_splicesites \\
+                    --known-splicesite-infile $splicesites \\
                     --no-mixed \\
                     --no-discordant \\
                     -p $task.cpus $unaligned \\
@@ -1362,7 +1205,7 @@ if (!params.skip_alignment) {
 
             input:
             path bam from hisat2_bam
-            path wherearemyfiles from ch_where_hisat2_sort.collect()
+            path wherearemyfiles from ch_where_are_my_files
 
             output:
             path "${bam.baseName}.sorted.bam" into bam
@@ -1403,7 +1246,7 @@ if (!params.skip_alignment) {
             input:
             path bam from bam_umitools_dedup
             path bai from bam_index_umitools_dedup
-            path wherearemyfiles from ch_where_umi_dedup.collect()
+            path wherearemyfiles from ch_where_are_my_files
 
             output:
             path "*.bam" into bam_dedup
@@ -1530,7 +1373,7 @@ if (!params.skip_alignment) {
         input:
         path bam from bam_rseqc
         path bai from bam_index_rseqc
-        path bed12 from bed_rseqc.collect()
+        path bed12 from ch_bed12
 
         output:
         path "*.{txt,pdf,r,xls}" into rseqc_results
@@ -1611,7 +1454,7 @@ if (!params.skip_alignment) {
 
         input:
         path bam from bam_qualimap
-        path gtf from gtf_qualimap.collect()
+        path gtf from ch_gtf
 
         output:
         path "${bam.baseName}" into qualimap_results
@@ -1651,12 +1494,12 @@ if (!params.skip_alignment) {
 
         input:
         path bam from bam_md
-        path gtf from gtf_dupradar.collect()
+        path gtf from ch_gtf
 
         output:
         path "*.{pdf,txt}" into dupradar_results
 
-        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
         def dupradar_direction = 0
         if (forward_stranded && !unstranded) {
             dupradar_direction = 1
@@ -1682,11 +1525,12 @@ if (!params.skip_alignment) {
 
         input:
         path bam from bam_featurecounts
-        path gtf from gtf_featureCounts.collect()
-        path biotypes_header from ch_biotypes_header.collect()
+        path gtf from ch_gtf
+        path biotypes_header from ch_biotypes_header
 
         output:
-        path "${bam.baseName}_gene.featureCounts.txt" into geneCounts, featureCounts_to_merge
+        path "${bam.baseName}_gene.featureCounts.txt" into geneCounts,
+                                                           featureCounts_to_merge
         path "${bam.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
         path "${bam.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
 
@@ -1748,7 +1592,7 @@ if (!params.skip_alignment) {
 
             input:
             path bam from bam_rsem
-            path "rsem" from rsem_reference.collect()
+            path "rsem" from ch_rsem_index
 
             output:
             path "*.genes.results" into rsem_results_genes
@@ -1756,14 +1600,14 @@ if (!params.skip_alignment) {
             path "*.stat" into rsem_logs
 
             script:
-            def sample_name = bam.baseName - 'Aligned.toTranscriptome.out' - '_subsamp'
-            def paired_end_flag = params.single_end ? "" : "--paired-end"
+            def sample_name = bam.baseName - '.Aligned.toTranscriptome.out' - '_subsamp'
+            def paired_end = params.single_end ? "" : "--paired-end"
             """
             REF_FILENAME=\$(basename rsem/*.grp)
             REF_NAME="\${REF_FILENAME%.*}"
             rsem-calculate-expression \\
                 -p $task.cpus \\
-                $paired_end_flag \\
+                $paired_end \\
                 --bam \\
                 --estimate-rspd \\
                 --append-names \\
@@ -1829,7 +1673,7 @@ if (!params.skip_alignment) {
 
         input:
         path bam from bam_stringtieFPKM
-        path gtf from gtf_stringtieFPKM.collect()
+        path gtf from ch_gtf
 
         output:
         path "${bam.baseName}_transcripts.gtf"
@@ -1859,7 +1703,7 @@ if (!params.skip_alignment) {
     }
 
     process SAMPLE_CORRELATION {
-        tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
+        tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - '.Aligned'}"
         label 'low_memory'
         publishDir "${params.outdir}/sample_correlation", mode: params.publish_dir_mode
 
@@ -1878,7 +1722,7 @@ if (!params.skip_alignment) {
         when:
         num_bams > 2 && (!params.sample_level)
 
-        script: // This script is bundled with the pipeline, in nfcore/rnaseq/bin/
+        script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
         """
         edgeR_heatmap_MDS.r $input_files
         cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
@@ -1909,13 +1753,12 @@ if (params.pseudo_aligner == 'salmon') {
 
         input:
         tuple val(sample), path(reads) from trimmed_reads_salmon
-        path index from salmon_index.collect()
-        path gtf from gtf_salmon.collect()
+        path index from ch_salmon_index
+        path gtf from ch_gtf
 
         output:
         tuple val(sample), path("${sample}/") into salmon_parsegtf,
                                                    salmon_tximport
-
         path "${sample}/" into salmon_logs
 
         script:
@@ -1949,7 +1792,7 @@ if (params.pseudo_aligner == 'salmon') {
 
         input:
         path ("salmon/*") from salmon_parsegtf.collect{it[1]}
-        path gtf from gtf_salmon_merge
+        path gtf from ch_gtf
 
         output:
         path "tx2gene.csv" into salmon_tx2gene,
@@ -2274,11 +2117,6 @@ workflow.onComplete {
         log.info "[${c_purple}nf-core/rnaseq${c_reset}] ${c_red} Pipeline completed with errors${c_reset}"
     }
 
-}
-
-// Check file extension
-def hasExtension(it, extension) {
-    it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
 
 def nfcoreHeader() {

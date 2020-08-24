@@ -87,7 +87,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--readPaths`                | `--input_paths`            |
 | `--singleEnd`                | `--single_end`             |
 | `--saveReference`            | `--save_reference`         |
-| `--compressedReference`      | `--compressed_reference`   |
 | `--forwardStranded`          | `--forward_stranded`       |
 | `--reverseStranded`          | `--reverse_stranded`       |
 | `--unStranded`               | `--unstranded`             |

@@ -50,7 +50,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
     ```bash
-    nextflow run nf-core/rnaseq -profile <docker/singularity/conda/institute> --input '*_R{1,2}.fastq.gz' --genome GRCh37
+    nextflow run nf-core/rnaseq -profile <docker/singularity/conda/institute> --input samplesheet.csv --genome GRCh37
     ```
 
 See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.

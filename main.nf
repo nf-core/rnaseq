@@ -2016,6 +2016,7 @@ process OUTPUT_DOCUMENTATION {
 /* --              COMPLETION EMAIL            -- */
 ////////////////////////////////////////////////////
 
+// Find a way to pass MultiQC report here as well as poor_alignment_scores, good_alignment_scores
 workflow.onComplete {
     def multiqc_report = []
     Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, poor_alignment_scores)

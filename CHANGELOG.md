@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
 * Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
 * Fix `--gff` input bug [#452](https://github.com/nf-core/rnaseq/issues/452)
+* Fix `TMP_DIR` for process MarkDuplicates and Qualimap [#458](https://github.com/nf-core/rnaseq/pull/458)
 
 ### Updated Packages
 

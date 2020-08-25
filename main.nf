@@ -52,7 +52,11 @@ if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { 
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
 
 // Check input path parameters to see if they exist
-checkPathParamList = [ params.gtf, params.gff, params.bed12, params.additional_fasta, params.ribo_database_manifest ]
+checkPathParamList = [
+    params.gtf, params.gff, params.bed12, params.additional_fasta,
+    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index,
+    params.ribo_database_manifest
+]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check rRNA databases for sortmerna
@@ -154,9 +158,9 @@ include {
     GUNZIP as GUNZIP_BED12
     GUNZIP as GUNZIP_ADDITIONAL_FASTA } from './modules/local/process/gunzip'
 include {
-    UNTAR as UNTAR_STAR
-    UNTAR as UNTAR_HISAT2
-    UNTAR as UNTAR_SALMON             } from './modules/local/process/untar'
+    UNTAR as UNTAR_STAR_INDEX
+    UNTAR as UNTAR_HISAT2_INDEX
+    UNTAR as UNTAR_SALMON_INDEX       } from './modules/local/process/untar'
 include { GFFREAD                     } from './modules/local/process/gffread'
 include { GTF2BED                     } from './modules/local/process/gtf2bed'
 include { CAT_ADDITIONAL_FASTA        } from './modules/local/process/cat_additional_fasta'
@@ -250,11 +254,51 @@ workflow {
     }
 
     /*
+     * PREPROCESSING: Check genome/transcriptome indices and uncompress if required
+     */
+    def publish_index = params.save_reference ? [publish_dir : 'genome/index'] : [:]
+    if (!params.skip_alignment) {
+        if (params.aligner == 'star') {
+            if (params.star_index) {
+                if (params.star_index.endsWith('.tar.gz')) {
+                    ch_star_index = UNTAR_STAR_INDEX ( params.star_index, publish_index ).untar
+                } else {
+                    ch_star_index = file(params.star_index)
+                }
+            }
+        } else if (params.aligner == 'hisat2') {
+            if (params.hisat2_index.endsWith('.tar.gz')) {
+                ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index ).untar
+            } else {
+                ch_hisat2_index = file(params.hisat2_index)
+            }
+        }
+
+        // Check if we are running RSEM
+        skip_rsem = params.skip_rsem
+        if (!params.skip_rsem) {
+            if (params.aligner != "star") {
+                skip_rsem = true
+                log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
+            } else {
+                if (params.rsem_index) {
+                    if (params.rsem_index.endsWith('.tar.gz')) {
+                        ch_rsem_index = UNTAR_STAR_INDEX ( params.rsem_index, publish_index ).untar
+                    } else {
+                        ch_rsem_index = file(params.rsem_index)
+                    }
+                }
+            }
+        }
+    } else {
+        log.info "Skipping alignment processes..."
+    }
+
+
+    /*
      * Read in samplesheet, validate and stage input files
      */
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
-
-
 
     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
 
@@ -392,73 +436,6 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-//
-//
-// // Check genome/transcriptome indices and uncompress if required
-// if (!params.skip_alignment) {
-//     if (params.aligner == 'star' && params.star_index) {
-//         file(params.star_index, checkIfExists: true)
-//         if (params.star_index.endsWith('.tar.gz')) {
-//             process UNTAR_STAR_INDEX {
-//                 tag "$tar"
-//                 publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
-//                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//                 input:
-//                 path tar from params.star_index
-//
-//                 output:
-//                 path "$untar" into ch_star_index
-//
-//                 script:
-//                 untar = tar.toString() - '.tar.gz'
-//                 """
-//                 tar -xzvf $tar
-//                 """
-//             }
-//         } else {
-//             ch_star_index = file(params.star_index)
-//         }
-//     } else if (params.aligner == 'hisat2' && params.hisat2_index) {
-//         file(params.hisat2_index, checkIfExists: true)
-//         if (params.hisat2_index.endsWith('.tar.gz')) {
-//             process UNTAR_HISAT2_INDEX {
-//                 tag "$tar"
-//                 publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
-//                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//                 input:
-//                 path tar from params.hisat2_index
-//
-//                 output:
-//                 path "*.ht2*" into ch_hisat2_index
-//
-//                 script:
-//                 untar = tar.toString() - '.tar.gz'
-//                 """
-//                 tar -xzvf $tar
-//                 """
-//             }
-//         } else {
-//             ch_hisat2_index = file(params.hisat2_index)
-//         }
-//     }
-//
-//     // Check if we are running RSEM
-//     skip_rsem = params.skip_rsem
-//     if (!params.skip_rsem) {
-//         if (params.aligner != "star") {
-//             skip_rsem = true
-//             log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
-//         } else {
-//             if (params.rsem_index) {
-//                 ch_rsem_index = file(params.rsem_index, checkIfExists: true)
-//             }
-//         }
-//     }
-// } else {
-//     log.info "Skipping alignment processes..."
-// }
 //
 // // Check psuedo-aligner indices and uncompress if required
 // if (params.pseudo_aligner == 'salmon') {

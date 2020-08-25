@@ -152,8 +152,8 @@ include {
 include { GFFREAD               } from './modules/local/process/gffread'
 include { GTF2BED               } from './modules/local/process/gtf2bed'
 // include { GET_CHROM_SIZES       } from './modules/local/process/get_chrom_sizes'
-// include { OUTPUT_DOCUMENTATION  } from './modules/local/process/output_documentation'
-// include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
+include { OUTPUT_DOCUMENTATION  } from './modules/local/process/output_documentation'
+include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
 // include { MULTIQC               } from './modules/local/process/multiqc'
 
 include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'
@@ -182,12 +182,6 @@ workflow {
      * Read in samplesheet, validate and stage input files
      */
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
-    // INPUT_CHECK
-    //     .out
-    //     .reads
-    //     .view()
-    //             .into { ch_raw_reads_fastqc
-    //                     ch_raw_reads_umitools }
 
     /*
      * Uncompress genome fasta file if required
@@ -213,13 +207,14 @@ workflow {
         }
     } else if (params.gff) {
         if (params.gff.endsWith('.gz')) {
-            GUNZIP_GFF ( params.gff, publish_genome ).gunzip
+            ch_gff = GUNZIP_GFF ( params.gff, publish_genome ).gunzip
         } else {
             ch_gff = file(params.gff)
         }
         ch_gtf = GFFREAD ( ch_gff, publish_genome ).gtf
-        ch_software_versions = ch_software_versions.mix(GFFREAD.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(GFFREAD.out.version)
     }
+    ch_software_versions.view()
 
     /*
      * Uncompress BED12 annotation file or create from GTF if required
@@ -235,13 +230,13 @@ workflow {
     }
 
 
-}
+//             .into { ch_raw_reads_fastqc
+//                     ch_raw_reads_umitools }
 //
 //     /*
 //      * Prepare genome files
 //      */
 //     ch_index = params.bwa_index ? Channel.value(file(params.bwa_index)) : BWA_INDEX ( ch_fasta, params.modules['bwa_index'] ).index
-//     if (makeBED) { ch_gene_bed = GTF2BED ( ch_gtf, [:] ) }
 
 //     /*
 //      * Read QC & trimming
@@ -312,19 +307,11 @@ workflow {
 //     )
 //     ch_software_versions = ch_software_versions.mix(UCSC_BEDRAPHTOBIGWIG.out.version.first().ifEmpty(null))
 //
-//     /*
-//      * Pipeline reporting
-//      */
-//     GET_SOFTWARE_VERSIONS (
-//         ch_software_versions.map { it }.collect(),
-//         params.modules['get_software_versions']
-//     )
-//
-//     OUTPUT_DOCUMENTATION (
-//         ch_output_docs,
-//         ch_output_docs_images,
-//         [:]
-//     )
+    /*
+     * Pipeline reporting
+     */
+    GET_SOFTWARE_VERSIONS ( ch_software_versions.map { it }.collect(), [publish_files : ['csv':'']] )
+    OUTPUT_DOCUMENTATION  ( ch_output_docs, ch_output_docs_images, [:] )
 //
 //     /*
 //      * MultiQC
@@ -359,7 +346,9 @@ workflow {
 //
 //         params.modules['multiqc']
 //     )
-// }
+
+}
+
 //
 // ////////////////////////////////////////////////////
 // /* --              COMPLETION EMAIL            -- */
@@ -1783,22 +1772,6 @@ workflow {
 //     salmon_logs = Channel.empty()
 // }
 //
-// Channel.from(summary.collect{ [it.key, it.value] })
-//     .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
-//     .reduce { a, b -> return [a, b].join("\n            ") }
-//     .map { x -> """
-//     id: 'nf-core-rnaseq-summary'
-//     description: " - this information is collected when the pipeline is started."
-//     section_name: 'nf-core/rnaseq Workflow Summary'
-//     section_href: 'https://github.com/nf-core/rnaseq'
-//     plot_type: 'html'
-//     data: |
-//         <dl class=\"dl-horizontal\">
-//             $x
-//         </dl>
-//     """.stripIndent() }
-//     .set { ch_workflow_summary }
-//
 // process GET_SOFTWARE_VERSIONS {
 //     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
 //         saveAs: { filename ->
@@ -1875,21 +1848,5 @@ workflow {
 //     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
 //     """
 //     multiqc . -f $rtitle $rfilename $custom_config_file
-//     """
-// }
-//
-// process OUTPUT_DOCUMENTATION {
-//     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
-//
-//     input:
-//     path output_docs from ch_output_docs
-//     path images from ch_output_docs_images
-//
-//     output:
-//     path "results_description.html"
-//
-//     script:
-//     """
-//     markdown_to_html.py $output_docs -o results_description.html
 //     """
 // }

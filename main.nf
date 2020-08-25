@@ -177,6 +177,7 @@ include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genom
 include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
 include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
+include { TRANSCRIPTS2FASTA           } from './modules/local/process/transcripts2fasta'
 include { SALMON_INDEX                } from './modules/local/process/salmon_index'
 //include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
@@ -331,9 +332,10 @@ workflow {
                 } else {
                     ch_transcript_fasta = file(params.transcript_fasta)
                 }
-            } //else {
-                //ch_transcript_fasta =
-            //}
+            } else {
+                def publish_transcripts = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
+                ch_transcript_fasta = TRANSCRIPTS2FASTA ( ch_fasta, ch_gtf, publish_transcripts ).fasta
+            }
             // TODO nf-core: Not working - only save indices if --save_reference is specified
             if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
             def gencode = params.gencode  ? "--gencode" : ""
@@ -341,33 +343,6 @@ workflow {
             ch_salmon_index = SALMON_INDEX ( ch_transcript_fasta, params.modules['salmon_index'])
         }
     }
-
-    // /*
-    //  * PREPROCESSING - Create Salmon transcriptome index
-    //  */
-    // if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
-    //     if (!params.transcript_fasta) {
-    //         process TRANSCRIPTS_TO_FASTA {
-    //             tag "$fasta"
-    //             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-    //                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-    //
-    //             input:
-    //             path fasta from ch_fasta
-    //             path gtf from ch_gtf
-    //
-    //             output:
-    //             path "*.fa" into ch_transcript_fasta
-    //
-    //             script:
-    // 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
-    //             """
-    //             filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}_in_${fasta.baseName}.gtf
-    //             gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}_in_${fasta.baseName}.gtf
-    //             """
-    //         }
-    //     }
-    //
 
     /*
      * Read in samplesheet, validate and stage input files

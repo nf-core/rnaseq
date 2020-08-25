@@ -47,11 +47,11 @@ anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: 
 ////////////////////////////////////////////////////
 
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
-if (params.fasta) {
-    ch_fasta = file(params.fasta, checkIfExists: true)
-} else {
-    exit 1, 'Fasta file not specified!'
-}
+if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
+if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
+
+checkPathParamList = [ params.gtf, params.gff, params.bed12 ]
+for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 if (params.aligner != 'star' && params.aligner != 'hisat2') {
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
@@ -140,13 +140,22 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-//include { GTF2BED                             } from './modules/local/process/gtf2bed'
-//include { GET_CHROM_SIZES                     } from './modules/local/process/get_chrom_sizes'
-//include { OUTPUT_DOCUMENTATION                } from './modules/local/process/output_documentation'
-//include { GET_SOFTWARE_VERSIONS               } from './modules/local/process/get_software_versions'
-//include { MULTIQC                             } from './modules/local/process/multiqc'
+include {
+    GUNZIP as GUNZIP_FASTA
+    GUNZIP as GUNZIP_GTF
+    GUNZIP as GUNZIP_GFF
+    GUNZIP as GUNZIP_BED12      } from './modules/local/process/gunzip'
+include {
+    UNTAR as UNTAR_STAR
+    UNTAR as UNTAR_HISAT2
+    UNTAR as UNTAR_SALMON       } from './modules/local/process/untar'
+// include { GTF2BED               } from './modules/local/process/gtf2bed'
+// include { GET_CHROM_SIZES       } from './modules/local/process/get_chrom_sizes'
+// include { OUTPUT_DOCUMENTATION  } from './modules/local/process/output_documentation'
+// include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
+// include { MULTIQC               } from './modules/local/process/multiqc'
 
-include { INPUT_CHECK                         } from './modules/local/subworkflow/input_check'
+include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -174,12 +183,59 @@ workflow {
         params.seq_center,
         [:]
     )
-    INPUT_CHECK
-        .out
-        .reads
-        .view()
+    // INPUT_CHECK
+    //     .out
+    //     .reads
+    //     .view()
     //             .into { ch_raw_reads_fastqc
     //                     ch_raw_reads_umitools }
+
+    if (params.fasta.endsWith('.gz')) {
+        GUNZIP_FASTA (
+            params.fasta,
+            params.save_reference ? [publish_dir : 'reference/genome'] : [:]
+        ).gunzip
+        .set { ch_fasta }
+    } else {
+        ch_fasta = file(params.fasta)
+    }
+
+    if (params.gtf) {
+        if (params.gff) {
+            log.info "Both GTF and GFF have been provided: Using GTF as priority."
+        }
+        if (params.gtf.endsWith('.gz')) {
+            GUNZIP_GTF (
+                params.gtf,
+                params.save_reference ? [publish_dir : 'reference'] : [:]
+            ).gunzip
+            .set { ch_gtf }
+        } else {
+            ch_gtf = file(params.gtf)
+        }
+    } else if (params.gff) {
+        if (params.gff.endsWith('.gz')) {
+            GUNZIP_GFF (
+                params.gff,
+                params.save_reference ? [publish_dir : 'reference'] : [:]
+            ).gunzip
+            .set { ch_gff }
+        } else {
+            ch_gff = file(params.gff)
+        }
+    }
+
+    if (params.bed12) {
+        if (params.bed12.endsWith('.gz')) {
+            GUNZIP_BED12 (
+                params.bed12,
+                params.save_reference ? [publish_dir : 'reference'] : [:]
+            ).gunzip
+            .set { ch_bed12 }
+        } else {
+            ch_bed12 = file(params.bed12)
+        }
+    }
 
 }
 //
@@ -323,112 +379,7 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-
-// // Check basic annotation files and uncompress if required
-// if (params.fasta) {
-//     file(params.fasta, checkIfExists: true)
-//     if (params.fasta.endsWith('.gz')) {
-//         process GUNZIP_FASTA {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
 //
-//             input:
-//             path gz from params.fasta
-//
-//             output:
-//             path "$unzip" into ch_fasta
-//
-//             script:
-//             unzip = gz.toString() - '.gz'
-//             """
-//             pigz -f -d -p $task.cpus $gz
-//             """
-//         }
-//     } else {
-//         ch_fasta = file(params.fasta)
-//     }
-// } //else {
-// //    exit 1, "Fasta file for reference genome not specified!"
-// //}
-//
-// if (params.gtf) {
-//     file(params.gtf, checkIfExists: true)
-//     if (params.gff) {
-//         log.info "Both GTF and GFF have been provided: Using GTF as priority."
-//     }
-//     if (params.gtf.endsWith('.gz')) {
-//         process GUNZIP_GTF {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gz from params.gtf
-//
-//             output:
-//             path "$unzip" into ch_gtf
-//
-//             script:
-//             unzip = gz.toString() - '.gz'
-//             """
-//             pigz -f -d -p $task.cpus $gz
-//             """
-//         }
-//     } else {
-//         ch_gtf = file(params.gtf)
-//     }
-// } else if (params.gff) {
-//     file(params.gff, checkIfExists: true)
-//     if (params.gff.endsWith('.gz')) {
-//         process GUNZIP_GFF {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gz from params.gff
-//
-//             output:
-//             path "$unzip" into ch_gff
-//
-//             script:
-//             unzip = gz.toString() - '.gz'
-//             """
-//             pigz -f -d -p $task.cpus $gz
-//             """
-//         }
-//     } else {
-//         ch_gff = file(params.gff)
-//     }
-// } else {
-//     exit 1, "No GTF or GFF3 annotation specified!"
-// }
-//
-// if (params.bed12) {
-//     file(params.bed12, checkIfExists: true)
-//     if (params.bed12.endsWith('.gz')) {
-//         process GUNZIP_BED12 {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gz from params.bed12
-//
-//             output:
-//             path "$unzip" into ch_bed12
-//
-//             script:
-//             unzip = gz.toString() - '.gz'
-//             """
-//             pigz -f -d -p $task.cpus $gz
-//             """
-//         }
-//     } else {
-//         ch_bed12 = file(params.bed12)
-//     }
-// }
 //
 // // Check genome/transcriptome indices and uncompress if required
 // if (!params.skip_alignment) {

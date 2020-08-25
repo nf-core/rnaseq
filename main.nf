@@ -99,20 +99,11 @@ if (anno_readme && file(anno_readme).exists()) {
 /*
  * Initiate parameters
  */
-// Preset trimming options
 // Define regular variables so that they can be overwritten
-def clip_r1 = params.clip_r1
-def clip_r2 = params.clip_r2
-def three_prime_clip_r1 = params.three_prime_clip_r1
-def three_prime_clip_r2 = params.three_prime_clip_r2
 def forward_stranded = params.forward_stranded
 def reverse_stranded = params.reverse_stranded
 def unstranded = params.unstranded
 if (params.pico) {
-    clip_r1 = 3
-    clip_r2 = 0
-    three_prime_clip_r1 = 0
-    three_prime_clip_r2 = 3
     forward_stranded = true
     reverse_stranded = false
     unstranded = false
@@ -198,7 +189,7 @@ include { INPUT_CHECK                 } from './modules/local/subworkflow/input_
 //include { UCSC_BEDRAPHTOBIGWIG          } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main'
 //include { SUBREAD_FEATURECOUNTS         } from './modules/nf-core/software/subread/featurecounts/main'
 
-//include { FASTQC_TRIMGALORE             } from './modules/nf-core/subworkflow/fastqc_trimgalore'
+include { FASTQC_TRIMGALORE             } from './modules/nf-core/subworkflow/fastqc_trimgalore'
 //include { MARK_DUPLICATES_PICARD        } from './modules/nf-core/subworkflow/mark_duplicates_picard'
 
 ////////////////////////////////////////////////////
@@ -321,30 +312,22 @@ workflow {
      */
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
 
+    /*
+     * Read QC & trimming
+     */
+    nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
+    params.modules['trimgalore'].args += nextseq
+    FASTQC_TRIMGALORE (
+        INPUT_CHECK.out.reads,
+        params.skip_fastqc,
+        params.skip_trimming,
+        params.modules['fastqc'],
+        params.modules['trimgalore']
+    )
+    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+
     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
-
-//             .into { ch_raw_reads_fastqc
-//                     ch_raw_reads_umitools }
-//
-//     /*
-//      * Prepare genome files
-//      */
-//     ch_index = params.bwa_index ? Channel.value(file(params.bwa_index)) : BWA_INDEX ( ch_fasta, params.modules['bwa_index'] ).index
-
-//     /*
-//      * Read QC & trimming
-//      */
-//     nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
-//     params.modules['trimgalore'].args += nextseq
-//     FASTQC_TRIMGALORE (
-//         INPUT_CHECK.out.reads,
-//         params.skip_fastqc,
-//         params.skip_trimming,
-//         params.modules['fastqc'],
-//         params.modules['trimgalore']
-//     )
-//     ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-//     ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 //
 //     /*
 //      * Map reads & BAM QC
@@ -633,29 +616,6 @@ workflow {
 //     }
 // }
 //
-// process FASTQC {
-//     tag "$name"
-//     label 'mid_memory'
-//     publishDir "${params.outdir}/fastqc", mode: params.publish_dir_mode,
-//         saveAs: { filename ->
-//             filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"
-//         }
-//
-//     when:
-//     !params.skip_fastqc
-//
-//     input:
-//     tuple val(name), path(reads) from ch_raw_reads_fastqc
-//
-//     output:
-//     path "*_fastqc.{zip,html}" into ch_fastqc_results
-//
-//     script:
-//     def threads = params.single_end ? 1 : 2
-//     """
-//     fastqc --quiet --threads $threads $reads
-//     """
-// }
 //
 // if (params.with_umi) {
 //     process UMITOOLS_EXTRACT {
@@ -706,60 +666,6 @@ workflow {
 //     umi_tools_extract_results = Channel.empty()
 // }
 //
-// if (!params.skip_trimming) {
-//     process TRIMGALORE {
-//         tag "$name"
-//         label 'process_high'
-//         publishDir "${params.outdir}/trimgalore", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("_fastqc") > 0) "fastqc/$filename"
-//                 else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-//                 else if (!params.save_trimmed && filename == "where_are_my_files.txt") filename
-//                 else if (params.save_trimmed && filename != "where_are_my_files.txt") filename
-//                 else null
-//             }
-//
-//         input:
-//         tuple val(name), path(reads) from raw_reads_trimgalore
-//         path wherearemyfiles from ch_where_are_my_files
-//
-//         output:
-//         tuple val(name), path("*fq.gz") into trimgalore_reads
-//         path "*trimming_report.txt" into trimgalore_results
-//         path "*_fastqc.{zip,html}" into trimgalore_fastqc_reports
-//         path "where_are_my_files.txt"
-//
-//         script:
-//         // Calculate number of --cores for TrimGalore based on value of task.cpus
-//         // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
-//         // See: https://github.com/nf-core/atacseq/pull/65
-//         def cores = 1
-//         if (task.cpus) {
-//             cores = (task.cpus as int) - 4
-//             if (params.single_end) cores = (task.cpus as int) - 3
-//             if (cores < 1) cores = 1
-//             if (cores > 4) cores = 4
-//         }
-//
-//         c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
-//         c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
-//         tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
-//         tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
-//         nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-//         if (params.single_end) {
-//             """
-//             trim_galore --cores $cores --fastqc --gzip $c_r1 $tpc_r1 $nextseq $reads
-//             """
-//         } else {
-//             """
-//             trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq $reads
-//             """
-//         }
-//     }
-// } else {
-//     trimgalore_reads = raw_reads_trimgalore
-//     trimgalore_results = Channel.empty()
-// }
 //
 // if (!params.remove_ribo_rna) {
 //     trimgalore_reads

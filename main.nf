@@ -46,13 +46,20 @@ anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: 
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
+// Check mandatory parameters
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
 
-checkPathParamList = [ params.gtf, params.gff, params.bed12 ]
+// Check input path parameters to see if they exist
+checkPathParamList = [ params.gtf, params.gff, params.bed12, params.additional_fasta, params.ribo_database_manifest ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
+// Check rRNA databases for sortmerna
+ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
+if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
+
+// Check alignment parameters
 if (params.aligner != 'star' && params.aligner != 'hisat2') {
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
@@ -95,7 +102,7 @@ if (params.pico) {
 def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 
 /*
- * Check parameters
+ * Check other parameters
  */
 Checks.aws_batch(workflow, params)     // Check AWS batch settings
 Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
@@ -144,19 +151,21 @@ include {
     GUNZIP as GUNZIP_FASTA
     GUNZIP as GUNZIP_GTF
     GUNZIP as GUNZIP_GFF
-    GUNZIP as GUNZIP_BED12      } from './modules/local/process/gunzip'
+    GUNZIP as GUNZIP_BED12
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from './modules/local/process/gunzip'
 include {
     UNTAR as UNTAR_STAR
     UNTAR as UNTAR_HISAT2
-    UNTAR as UNTAR_SALMON       } from './modules/local/process/untar'
-include { GFFREAD               } from './modules/local/process/gffread'
-include { GTF2BED               } from './modules/local/process/gtf2bed'
-// include { GET_CHROM_SIZES       } from './modules/local/process/get_chrom_sizes'
-include { OUTPUT_DOCUMENTATION  } from './modules/local/process/output_documentation'
-include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
-// include { MULTIQC               } from './modules/local/process/multiqc'
+    UNTAR as UNTAR_SALMON             } from './modules/local/process/untar'
+include { GFFREAD                     } from './modules/local/process/gffread'
+include { GTF2BED                     } from './modules/local/process/gtf2bed'
+include { CAT_ADDITIONAL_FASTA        } from './modules/local/process/cat_additional_fasta'
+//include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
+include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
+include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
+// include { MULTIQC                     } from './modules/local/process/multiqc'
 
-include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'
+include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -176,17 +185,15 @@ include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'
 
 workflow {
 
+    /*
+     * PREPROCESSING: Initialise variables / empty channels
+     */
     ch_software_versions = Channel.empty()
 
     /*
-     * Read in samplesheet, validate and stage input files
+     * PREPROCESSING: Uncompress genome fasta file if required
      */
-    INPUT_CHECK ( ch_input, params.seq_center, [:] )
-
-    /*
-     * Uncompress genome fasta file if required
-     */
-    def publish_genome = params.save_reference ? [publish_dir : 'reference'] : [:]
+    def publish_genome = params.save_reference ? [publish_dir : 'genome'] : [:]
     if (params.fasta.endsWith('.gz')) {
         ch_fasta = GUNZIP_FASTA ( params.fasta, publish_genome ).gunzip
     } else {
@@ -194,7 +201,7 @@ workflow {
     }
 
     /*
-     * Uncompress GTF annotation file or create from GFF3 if required
+     * PREPROCESSING: Uncompress GTF annotation file or create from GFF3 if required
      */
     if (params.gtf) {
         if (params.gff) {
@@ -214,10 +221,23 @@ workflow {
         ch_gtf = GFFREAD ( ch_gff, publish_genome ).gtf
         ch_software_versions = ch_software_versions.mix(GFFREAD.out.version)
     }
-    ch_software_versions.view()
 
     /*
-     * Uncompress BED12 annotation file or create from GTF if required
+     * PREPROCESSING: Uncompress additional fasta file and concatenate with reference fasta and gtf files
+     */
+    if (params.additional_fasta) {
+        if (params.additional_fasta.endsWith('.gz')) {
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( params.additional_fasta, publish_genome ).gunzip
+        } else {
+            ch_add_fasta = file(params.additional_fasta)
+        }
+        CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta, publish_genome )
+        ch_fasta = CAT_ADDITIONAL_FASTA.out.fasta
+        ch_gtf   = CAT_ADDITIONAL_FASTA.out.gtf
+    }
+
+    /*
+     * PREPROCESSING: Uncompress BED12 annotation file or create from GTF if required
      */
     if (params.bed12) {
         if (params.bed12.endsWith('.gz')) {
@@ -229,6 +249,14 @@ workflow {
         ch_bed12 = GTF2BED ( ch_gtf, publish_genome )
     }
 
+    /*
+     * Read in samplesheet, validate and stage input files
+     */
+    INPUT_CHECK ( ch_input, params.seq_center, [:] )
+
+
+
+    ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
 
 //             .into { ch_raw_reads_fastqc
 //                     ch_raw_reads_umitools }
@@ -484,85 +512,6 @@ workflow {
 //     } else if (!params.fasta || !(params.gff || params.gtf)) {
 //         exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf / --gff"
 //     }
-// }
-//
-// // Get rRNA databases
-// // Default is set to bundled DB list in `assets/rrna-db-defaults.txt`
-// rRNA_database = file(params.ribo_database_manifest, checkIfExists: true)
-// if (rRNA_database.isEmpty()) {exit 1, "File ${rRNA_database.getName()} is empty!"}
-// Channel
-//     .from(rRNA_database.readLines())
-//     .map { row -> file(row) }
-//     .set { sortmerna_fasta }
-//
-// // Check additional fasta file, uncompress and concatenate with reference files
-// if (params.additional_fasta) {
-//     file(params.additional_fasta, checkIfExists: true)
-//     if (params.additional_fasta.endsWith('.gz')) {
-//         process GUNZIP_ADDITIONAL_FASTA {
-//             tag "$gz"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path gz from params.additional_fasta
-//
-//             output:
-//             path "$unzip" into ch_additional_fasta
-//
-//             script:
-//             unzip = gz.toString() - '.gz'
-//             """
-//             pigz -f -d -p $task.cpus $gz
-//             """
-//         }
-//     } else {
-//         ch_additional_fasta = file(params.additional_fasta)
-//     }
-//
-//     process MAKE_ADDITIONAL_GTF {
-//         tag "$fasta"
-//         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//         input:
-//         path fasta from ch_additional_fasta
-//
-//         output:
-//         path "${fasta.baseName}.gtf" into ch_additional_gtf
-//
-//         script:
-//         """
-//         fasta2gtf.py -o ${fasta.baseName}.gtf $fasta
-//         """
-//     }
-//
-//     process CAT_ANNOTATION {
-//         tag "$name"
-//         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//         input:
-//         path fasta from ch_fasta
-//         path gtf from ch_gtf
-//         path add_fasta from ch_additional_fasta
-//         path add_gtf from ch_additional_gtf
-//
-//         output:
-//         path "${name}.fa" into ch_cat_fasta
-//         path "${name}.gtf" into ch_cat_gtf
-//
-//         script:
-//         genome_name = params.genome ? params.genome : fasta.getBaseName()
-//         transgenomes = add_fasta.getBaseName()
-//         name = "${genome_name}_${transgenomes}"
-//         """
-//         cat $fasta $add_fasta > ${name}.fa
-//         cat $gtf $add_gtf > ${name}.gtf
-//         """
-//     }
-//     ch_fasta = ch_cat_fasta
-//     ch_gtf = ch_cat_gtf
 // }
 //
 // /*

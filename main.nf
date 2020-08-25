@@ -313,10 +313,15 @@ workflow {
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
 
     /*
+     * Concatenate FastQ files from same sample if required
+     */
+
+    /*
      * Read QC & trimming
      */
     nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
     params.modules['trimgalore'].args += nextseq
+    if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
     FASTQC_TRIMGALORE (
         INPUT_CHECK.out.reads,
         params.skip_fastqc,

@@ -149,7 +149,8 @@ include {
     UNTAR as UNTAR_STAR
     UNTAR as UNTAR_HISAT2
     UNTAR as UNTAR_SALMON       } from './modules/local/process/untar'
-// include { GTF2BED               } from './modules/local/process/gtf2bed'
+include { GFFREAD               } from './modules/local/process/gffread'
+include { GTF2BED               } from './modules/local/process/gtf2bed'
 // include { GET_CHROM_SIZES       } from './modules/local/process/get_chrom_sizes'
 // include { OUTPUT_DOCUMENTATION  } from './modules/local/process/output_documentation'
 // include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
@@ -175,14 +176,12 @@ include { INPUT_CHECK           } from './modules/local/subworkflow/input_check'
 
 workflow {
 
+    ch_software_versions = Channel.empty()
+
     /*
      * Read in samplesheet, validate and stage input files
      */
-    INPUT_CHECK (
-        ch_input,
-        params.seq_center,
-        [:]
-    )
+    INPUT_CHECK ( ch_input, params.seq_center, [:] )
     // INPUT_CHECK
     //     .out
     //     .reads
@@ -190,52 +189,51 @@ workflow {
     //             .into { ch_raw_reads_fastqc
     //                     ch_raw_reads_umitools }
 
+    /*
+     * Uncompress genome fasta file if required
+     */
+    def publish_genome = params.save_reference ? [publish_dir : 'reference'] : [:]
     if (params.fasta.endsWith('.gz')) {
-        GUNZIP_FASTA (
-            params.fasta,
-            params.save_reference ? [publish_dir : 'reference/genome'] : [:]
-        ).gunzip
-        .set { ch_fasta }
+        ch_fasta = GUNZIP_FASTA ( params.fasta, publish_genome ).gunzip
     } else {
         ch_fasta = file(params.fasta)
     }
 
+    /*
+     * Uncompress GTF annotation file or create from GFF3 if required
+     */
     if (params.gtf) {
         if (params.gff) {
             log.info "Both GTF and GFF have been provided: Using GTF as priority."
         }
         if (params.gtf.endsWith('.gz')) {
-            GUNZIP_GTF (
-                params.gtf,
-                params.save_reference ? [publish_dir : 'reference'] : [:]
-            ).gunzip
-            .set { ch_gtf }
+            ch_gtf = GUNZIP_GTF ( params.gtf, publish_genome ).gunzip
         } else {
             ch_gtf = file(params.gtf)
         }
     } else if (params.gff) {
         if (params.gff.endsWith('.gz')) {
-            GUNZIP_GFF (
-                params.gff,
-                params.save_reference ? [publish_dir : 'reference'] : [:]
-            ).gunzip
-            .set { ch_gff }
+            GUNZIP_GFF ( params.gff, publish_genome ).gunzip
         } else {
             ch_gff = file(params.gff)
         }
+        ch_gtf = GFFREAD ( ch_gff, publish_genome ).gtf
+        ch_software_versions = ch_software_versions.mix(GFFREAD.out.version.first().ifEmpty(null))
     }
 
+    /*
+     * Uncompress BED12 annotation file or create from GTF if required
+     */
     if (params.bed12) {
         if (params.bed12.endsWith('.gz')) {
-            GUNZIP_BED12 (
-                params.bed12,
-                params.save_reference ? [publish_dir : 'reference'] : [:]
-            ).gunzip
-            .set { ch_bed12 }
+            ch_bed12 = GUNZIP_BED12 ( params.bed12, publish_genome ).gunzip
         } else {
             ch_bed12 = file(params.bed12)
         }
+    } else {
+        ch_bed12 = GTF2BED ( ch_gtf, publish_genome )
     }
+
 
 }
 //
@@ -244,9 +242,7 @@ workflow {
 //      */
 //     ch_index = params.bwa_index ? Channel.value(file(params.bwa_index)) : BWA_INDEX ( ch_fasta, params.modules['bwa_index'] ).index
 //     if (makeBED) { ch_gene_bed = GTF2BED ( ch_gtf, [:] ) }
-//     ch_software_versions = Channel.empty()
-//     ch_software_versions = ch_software_versions.mix(MAKE_GENOME_FILTER.out.version.first().ifEmpty(null))
-//
+
 //     /*
 //      * Read QC & trimming
 //      */
@@ -510,28 +506,6 @@ workflow {
 //     .map { row -> file(row) }
 //     .set { sortmerna_fasta }
 //
-// /*
-//  * PREPROCESSING - Convert GFF3 to GTF
-//  */
-// if (params.gff && !params.gtf) {
-//     process GFF2GTF {
-//         tag "$gff"
-//         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//         input:
-//         path gff from ch_gff
-//
-//         output:
-//         path "${gff.baseName}.gtf" into ch_gtf
-//
-//         script:
-//         """
-//         gffread $gff --keep-exon-attrs -F -T -o ${gff.baseName}.gtf
-//         """
-//     }
-// }
-//
 // // Check additional fasta file, uncompress and concatenate with reference files
 // if (params.additional_fasta) {
 //     file(params.additional_fasta, checkIfExists: true)
@@ -600,28 +574,6 @@ workflow {
 //     }
 //     ch_fasta = ch_cat_fasta
 //     ch_gtf = ch_cat_gtf
-// }
-//
-// /*
-//  * PREPROCESSING - Build BED12 file
-//  */
-// if (!params.bed12) {
-//     process GTF2BED {
-//         tag "$gtf"
-//         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//         input:
-//         path gtf from ch_gtf
-//
-//         output:
-//         path "${gtf.baseName}.bed" into ch_bed12
-//
-//         script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
-//         """
-//         gtf2bed $gtf > ${gtf.baseName}.bed
-//         """
-//     }
 // }
 //
 // /*

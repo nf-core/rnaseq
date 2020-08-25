@@ -274,8 +274,8 @@ workflow {
                     ch_star_index = file(params.star_index)
                 }
             } else {
-                // Only save indices if --save_reference is specified
-                //def options = params.save_reference ? params.modules['star_genomegenerate'] : (params.modules['star_genomegenerate'].publish_files = [:])
+                // TODO nf-core: Only save indices if --save_reference is specified
+                if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
                 ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, params.modules['star_genomegenerate'] ).index
             }
         } else if (params.aligner == 'hisat2') {
@@ -294,8 +294,9 @@ workflow {
                     ch_rsem_index = file(params.rsem_index)
                 }
             } else {
-                // Only save indices if --save_reference is specified
-                //def options = params.save_reference ? params.modules['rsem_preparereference'] : (params.modules['rsem_preparereference'].publish_files = [:])
+                // TODO nf-core: Only save indices if --save_reference is specified
+                if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
+                //println(params.modules['rsem_preparereference'])
                 ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf, params.modules['rsem_preparereference'] ).index
             }
         }

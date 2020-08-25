@@ -588,5 +588,10 @@
         {
             "$ref": "#/definitions/other_options"
         }
-    ]
+    ],
+    "properties": {
+        "conda": {
+            "type": "string"
+        }
+    }
 }

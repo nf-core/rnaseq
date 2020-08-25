@@ -56,7 +56,7 @@ if (params.gtf && params.gff)   { log.info "Both GTF and GFF have been provided:
 checkPathParamList = [
     params.gtf, params.gff, params.bed12, params.additional_fasta, params.transcript_fasta,
     params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index,
-    params.ribo_database_manifest
+    params.splicesites, params.ribo_database_manifest
 ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
@@ -174,6 +174,8 @@ include { GFFREAD                     } from './modules/local/process/gffread'
 include { GTF2BED                     } from './modules/local/process/gtf2bed'
 include { CAT_ADDITIONAL_FASTA        } from './modules/local/process/cat_additional_fasta'
 include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genomegenerate'
+include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
+include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
 //include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
@@ -274,15 +276,27 @@ workflow {
                     ch_star_index = file(params.star_index)
                 }
             } else {
-                // TODO nf-core: Only save indices if --save_reference is specified
+                // TODO nf-core: Not working - only save indices if --save_reference is specified
                 if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
                 ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, params.modules['star_genomegenerate'] ).index
             }
         } else if (params.aligner == 'hisat2') {
-            if (params.hisat2_index.endsWith('.tar.gz')) {
-                ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index ).untar
+            if (params.hisat2_index) {
+                if (params.hisat2_index.endsWith('.tar.gz')) {
+                    ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index ).untar
+                } else {
+                    ch_hisat2_index = file(params.hisat2_index)
+                }
             } else {
-                ch_hisat2_index = file(params.hisat2_index)
+                if (!params.splicesites) {
+                    def publish_splicesites = params.save_reference ? [publish_dir : 'genome/index/hisat2'] : [publish_files : [:]]
+                    ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf, publish_splicesites ).txt
+                } else {
+                    ch_splicesites = file(params.splicesites)
+                }
+                // TODO nf-core: Not working - only save indices if --save_reference is specified
+                if (params.save_reference) { params.modules['hisat2_build']['publish_files'] = null }
+                ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites, params.modules['hisat2_build'] ).index
             }
         }
 
@@ -294,83 +308,13 @@ workflow {
                     ch_rsem_index = file(params.rsem_index)
                 }
             } else {
-                // TODO nf-core: Only save indices if --save_reference is specified
+                // TODO nf-core: Not working - only save indices if --save_reference is specified
                 if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
                 //println(params.modules['rsem_preparereference'])
                 ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf, params.modules['rsem_preparereference'] ).index
             }
         }
     }
-
-    //     /*
-    //      * PREPROCESSING - Build HISAT2 index and splice sites file (if required)
-    //      */
-    //     if (params.aligner == 'hisat2') {
-    //         if (!params.splicesites) {
-    //             process MAKE_HISAT2_SPLICESITES {
-    //                 tag "$gtf"
-    //                 publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
-    //                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-    //
-    //                 input:
-    //                 path gtf from ch_gtf
-    //
-    //                 output:
-    //                 path "${gtf.baseName}.hisat2_splice_sites.txt" into ch_splicesites
-    //
-    //                 script:
-    //                 """
-    //                 hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.hisat2_splice_sites.txt
-    //                 """
-    //             }
-    //         } else {
-    //             ch_splicesites = file(params.bed12, checkIfExists: true)
-    //         }
-    //
-    //         /*
-    //          * PREPROCESSING - Build HISAT2 index
-    //          */
-    //         if (!params.hisat2_index && params.fasta) {
-    //             process HISAT2_BUILD {
-    //                 tag "$fasta"
-    //                 publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/hisat2" : params.outdir },
-    //                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-    //
-    //                 input:
-    //                 path fasta from ch_fasta
-    //                 path gtf from ch_gtf
-    //                 path splicesites from ch_splicesites
-    //
-    //                 output:
-    //                 path "${fasta.baseName}.*.ht2*" into ch_hisat2_index
-    //
-    //                 script:
-    //                 if (!task.memory) {
-    //                     log.info "[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this."
-    //                     avail_mem = 0
-    //                 } else {
-    //                     log.info "[HISAT2 index build] Available memory: ${task.memory}"
-    //                     avail_mem = task.memory.toGiga()
-    //                 }
-    //                 if (avail_mem > params.hisat_build_memory) {
-    //                     log.info "[HISAT2 index build] Over ${params.hisat_build_memory} GB available, so using splice sites and exons in HISAT2 index"
-    //                     extract_exons = "hisat2_extract_exons.py $gtf > ${gtf.baseName}.hisat2_exons.txt"
-    //                     ss = "--ss $splicesites"
-    //                     exon = "--exon ${gtf.baseName}.hisat2_exons.txt"
-    //                 } else {
-    //                     log.info "[HISAT2 index build] Less than ${params.hisat_build_memory} GB available, so NOT using splice sites and exons in HISAT2 index."
-    //                     log.info "[HISAT2 index build] Use --hisat_build_memory [small number] to skip this check."
-    //                     extract_exons = ''
-    //                     ss = ''
-    //                     exon = ''
-    //                 }
-    //                 """
-    //                 $extract_exons
-    //                 hisat2-build -p $task.cpus $ss $exon $fasta ${fasta.baseName}.hisat2_index
-    //                 """
-    //             }
-    //         }
-    //     }
 
     if (params.pseudo_aligner == 'salmon') {
         if (params.salmon_index) {
@@ -387,6 +331,52 @@ workflow {
             }
         }
     }
+
+    // /*
+    //  * PREPROCESSING - Create Salmon transcriptome index
+    //  */
+    // if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
+    //     if (!params.transcript_fasta) {
+    //         process TRANSCRIPTS_TO_FASTA {
+    //             tag "$fasta"
+    //             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+    //                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+    //
+    //             input:
+    //             path fasta from ch_fasta
+    //             path gtf from ch_gtf
+    //
+    //             output:
+    //             path "*.fa" into ch_transcript_fasta
+    //
+    //             script:
+    // 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
+    //             """
+    //             filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}_in_${fasta.baseName}.gtf
+    //             gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}_in_${fasta.baseName}.gtf
+    //             """
+    //         }
+    //     }
+    //
+    //     process SALMON_INDEX {
+    //         tag "$fasta"
+    //         label "salmon"
+    //         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
+    //             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+    //
+    //         input:
+    //         path fasta from ch_transcript_fasta
+    //
+    //         output:
+    //         path 'salmon_index' into ch_salmon_index
+    //
+    //         script:
+    //         def gencode = params.gencode  ? "--gencode" : ""
+    //         """
+    //         salmon index --threads $task.cpus -t $fasta $gencode -i salmon_index
+    //         """
+    //     }
+    // }
 
     /*
      * Read in samplesheet, validate and stage input files
@@ -526,53 +516,7 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-// /*
-//  * PREPROCESSING - Create Salmon transcriptome index
-//  */
-// if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
-//     if (!params.transcript_fasta) {
-//         process TRANSCRIPTS_TO_FASTA {
-//             tag "$fasta"
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path fasta from ch_fasta
-//             path gtf from ch_gtf
-//
-//             output:
-//             path "*.fa" into ch_transcript_fasta
-//
-//             script:
-// 	          // filter_gtf_for_genes_in_genome.py is bundled in this package, in rnaseq/bin
-//             """
-//             filter_gtf_for_genes_in_genome.py --gtf $gtf --fasta $fasta -o ${gtf.baseName}_in_${fasta.baseName}.gtf
-//             gffread -F -w transcripts.fa -g $fasta ${gtf.baseName}_in_${fasta.baseName}.gtf
-//             """
-//         }
-//     }
-//
-//     process SALMON_INDEX {
-//         tag "$fasta"
-//         label "salmon"
-//         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//         input:
-//         path fasta from ch_transcript_fasta
-//
-//         output:
-//         path 'salmon_index' into ch_salmon_index
-//
-//         script:
-//         def gencode = params.gencode  ? "--gencode" : ""
-//         """
-//         salmon index --threads $task.cpus -t $fasta $gencode -i salmon_index
-//         """
-//     }
-// }
-//
-//
+
 // if (params.with_umi) {
 //     process UMITOOLS_EXTRACT {
 //         tag "$name"

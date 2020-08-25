@@ -50,10 +50,11 @@ anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: 
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
+if (params.gtf && params.gff)   { log.info "Both GTF and GFF have been provided: Using GTF as priority." }
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
-    params.gtf, params.gff, params.bed12, params.additional_fasta,
+    params.gtf, params.gff, params.bed12, params.additional_fasta, params.transcript_fasta,
     params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index,
     params.ribo_database_manifest
 ]
@@ -64,6 +65,7 @@ ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
+if (params.skip_alignment) { log.info "Skipping alignment processes..." }
 if (params.aligner != 'star' && params.aligner != 'hisat2') {
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
@@ -72,6 +74,20 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
 }
 if (params.skip_alignment && !params.pseudo_aligner) {
     exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
+}
+if (params.pseudo_aligner == 'salmon') {
+    if (!params.salmon_index || !params.transcript_fasta || (!params.fasta || !(params.gff || params.gtf))) {
+        exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
+    }
+}
+
+// Check if we are running RSEM
+def skip_rsem = params.skip_rsem
+if (!params.skip_rsem) {
+    if (params.aligner != "star") {
+        skip_rsem = true
+        log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
+    }
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -156,10 +172,12 @@ include {
     GUNZIP as GUNZIP_GTF
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_BED12
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from './modules/local/process/gunzip'
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA
+    GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from './modules/local/process/gunzip'
 include {
     UNTAR as UNTAR_STAR_INDEX
     UNTAR as UNTAR_HISAT2_INDEX
+    UNTAR as UNTAR_RSEM_INDEX
     UNTAR as UNTAR_SALMON_INDEX       } from './modules/local/process/untar'
 include { GFFREAD                     } from './modules/local/process/gffread'
 include { GTF2BED                     } from './modules/local/process/gtf2bed'
@@ -208,9 +226,6 @@ workflow {
      * PREPROCESSING: Uncompress GTF annotation file or create from GFF3 if required
      */
     if (params.gtf) {
-        if (params.gff) {
-            log.info "Both GTF and GFF have been provided: Using GTF as priority."
-        }
         if (params.gtf.endsWith('.gz')) {
             ch_gtf = GUNZIP_GTF ( params.gtf, publish_genome ).gunzip
         } else {
@@ -274,26 +289,32 @@ workflow {
             }
         }
 
-        // Check if we are running RSEM
-        skip_rsem = params.skip_rsem
-        if (!params.skip_rsem) {
-            if (params.aligner != "star") {
-                skip_rsem = true
-                log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
-            } else {
-                if (params.rsem_index) {
-                    if (params.rsem_index.endsWith('.tar.gz')) {
-                        ch_rsem_index = UNTAR_STAR_INDEX ( params.rsem_index, publish_index ).untar
-                    } else {
-                        ch_rsem_index = file(params.rsem_index)
-                    }
+        if (!skip_rsem && params.aligner == "star") {
+            if (params.rsem_index) {
+                if (params.rsem_index.endsWith('.tar.gz')) {
+                    ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index ).untar
+                } else {
+                    ch_rsem_index = file(params.rsem_index)
                 }
             }
         }
-    } else {
-        log.info "Skipping alignment processes..."
     }
 
+    if (params.pseudo_aligner == 'salmon') {
+        if (params.salmon_index) {
+            if (params.salmon_index.endsWith('.tar.gz')) {
+                ch_salmon_index = UNTAR_SALMON_INDEX ( params.salmon_index, publish_index ).untar
+            } else {
+                ch_salmon_index = file(params.salmon_index)
+            }
+        } else if (params.transcript_fasta) {
+            if (params.transcript_fasta.endsWith('.gz')) {
+                ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( params.transcript_fasta, publish_genome ).gunzip
+            } else {
+                ch_transcript_fasta = file(params.transcript_fasta)
+            }
+        }
+    }
 
     /*
      * Read in samplesheet, validate and stage input files
@@ -436,60 +457,6 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-//
-// // Check psuedo-aligner indices and uncompress if required
-// if (params.pseudo_aligner == 'salmon') {
-//     if (params.salmon_index) {
-//         file(params.salmon_index, checkIfExists: true)
-//         if (params.salmon_index.endsWith('.tar.gz')) {
-//             process UNTAR_SALMON_INDEX {
-//                 tag "$tar"
-//                 publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/salmon" : params.outdir },
-//                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//                 input:
-//                 path tar from params.salmon_index
-//
-//                 output:
-//                 path "$untar" into ch_salmon_index
-//
-//                 script:
-//                 untar = tar.toString() - '.tar.gz'
-//                 """
-//                 tar -xzvf $tar
-//                 """
-//             }
-//         } else {
-//             ch_salmon_index = file(params.salmon_index)
-//         }
-//     // If index isn't provided use transcript.fasta to generate it
-//     } else if (params.transcript_fasta) {
-//         file(params.transcript_fasta, checkIfExists: true)
-//         if (params.transcript_fasta.endsWith('.gz')) {
-//             process GUNZIP_TRANSCRIPT_FASTA {
-//                 tag "$gz"
-//                 publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-//                     saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//                 input:
-//                 path gz from params.transcript_fasta
-//
-//                 output:
-//                 path "$unzip" into ch_transcript_fasta
-//
-//                 script:
-//                 unzip = gz.toString() - '.gz'
-//                 """
-//                 pigz -f -d -p $task.cpus $gz
-//                 """
-//             }
-//         } else {
-//             ch_transcript_fasta = file(params.transcript_fasta)
-//         }
-//     } else if (!params.fasta || !(params.gff || params.gtf)) {
-//         exit 1, "To use with `--pseudo_aligner 'salmon'`, must provide either --transcript_fasta or both --fasta and --gtf / --gff"
-//     }
-// }
 //
 // /*
 //  * PREPROCESSING - Build STAR index

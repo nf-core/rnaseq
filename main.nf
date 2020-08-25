@@ -75,11 +75,11 @@ if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
 if (params.skip_alignment && !params.pseudo_aligner) {
     exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
 }
-if (params.pseudo_aligner == 'salmon') {
-    if (!params.salmon_index || !params.transcript_fasta || (!params.fasta || !(params.gff || params.gtf))) {
-        exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
-    }
-}
+// if (params.pseudo_aligner == 'salmon') {
+//     if (!params.salmon_index || !params.transcript_fasta || (!params.fasta || !(params.gff || params.gtf))) {
+//         exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
+//     }
+// }
 
 // Check if we are running RSEM
 def skip_rsem = params.skip_rsem
@@ -177,6 +177,7 @@ include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genom
 include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
 include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
+include { SALMON_INDEX                } from './modules/local/process/salmon_index'
 //include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
@@ -323,12 +324,21 @@ workflow {
             } else {
                 ch_salmon_index = file(params.salmon_index)
             }
-        } else if (params.transcript_fasta) {
-            if (params.transcript_fasta.endsWith('.gz')) {
-                ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( params.transcript_fasta, publish_genome ).gunzip
-            } else {
-                ch_transcript_fasta = file(params.transcript_fasta)
-            }
+        } else {
+            if (params.transcript_fasta) {
+                if (params.transcript_fasta.endsWith('.gz')) {
+                    ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( params.transcript_fasta, publish_genome ).gunzip
+                } else {
+                    ch_transcript_fasta = file(params.transcript_fasta)
+                }
+            } //else {
+                //ch_transcript_fasta =
+            //}
+            // TODO nf-core: Not working - only save indices if --save_reference is specified
+            if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
+            def gencode = params.gencode  ? "--gencode" : ""
+            params.modules['salmon_index'].args += gencode
+            ch_salmon_index = SALMON_INDEX ( ch_transcript_fasta, params.modules['salmon_index'])
         }
     }
 
@@ -358,25 +368,6 @@ workflow {
     //         }
     //     }
     //
-    //     process SALMON_INDEX {
-    //         tag "$fasta"
-    //         label "salmon"
-    //         publishDir path: { params.save_reference ? "${params.outdir}/reference/genome" : params.outdir },
-    //             saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-    //
-    //         input:
-    //         path fasta from ch_transcript_fasta
-    //
-    //         output:
-    //         path 'salmon_index' into ch_salmon_index
-    //
-    //         script:
-    //         def gencode = params.gencode  ? "--gencode" : ""
-    //         """
-    //         salmon index --threads $task.cpus -t $fasta $gencode -i salmon_index
-    //         """
-    //     }
-    // }
 
     /*
      * Read in samplesheet, validate and stage input files

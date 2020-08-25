@@ -22,7 +22,7 @@ process UNTAR {
     def ioptions = initOptions(options)
     untar = archive.toString() - '.tar.gz'
     """
-    tar -xvf $ioptions.args $archive
+    tar -xzvf $ioptions.args $archive
     echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//' > ${software}.version.txt
     """
 }

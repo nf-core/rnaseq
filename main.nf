@@ -173,6 +173,7 @@ include {
 include { GFFREAD                     } from './modules/local/process/gffread'
 include { GTF2BED                     } from './modules/local/process/gtf2bed'
 include { CAT_ADDITIONAL_FASTA        } from './modules/local/process/cat_additional_fasta'
+include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genomegenerate'
 //include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
@@ -271,6 +272,9 @@ workflow {
                 } else {
                     ch_star_index = file(params.star_index)
                 }
+            } else {
+                params.modules['star_genomegenerate'].args += params.star_index_options
+                ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, params.modules['star_genomegenerate'] ).index
             }
         } else if (params.aligner == 'hisat2') {
             if (params.hisat2_index.endsWith('.tar.gz')) {
@@ -290,6 +294,37 @@ workflow {
             }
         }
     }
+
+    //     if (params.aligner == 'star' && !params.star_index && params.fasta) {
+    //         process STAR_GENOMEGENERATE {
+    //             tag "$fasta"
+    //             label 'high_memory'
+    //             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
+    //                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
+    //
+    //             input:
+    //             path fasta from ch_fasta
+    //             path gtf from ch_gtf
+    //
+    //             output:
+    //             path "star" into ch_star_index
+    //
+    //             script:
+    //             def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
+    //             """
+    //             mkdir star
+    //             STAR \\
+    //                 --runMode genomeGenerate \\
+    //                 --runThreadN $task.cpus \\
+    //                 --sjdbGTFfile $gtf \\
+    //                 --genomeDir star/ \\
+    //                 --genomeFastaFiles $fasta \\
+    //                 $avail_mem \\
+    //                 $params.star_index_options
+    //             """
+    //         }
+    //     }
+
 
     if (params.pseudo_aligner == 'salmon') {
         if (params.salmon_index) {
@@ -450,35 +485,6 @@ workflow {
 //  * PREPROCESSING - Build STAR index
 //  */
 // if (!params.skip_alignment) {
-//     if (params.aligner == 'star' && !params.star_index && params.fasta) {
-//         process STAR_GENOMEGENERATE {
-//             tag "$fasta"
-//             label 'high_memory'
-//             publishDir path: { params.save_reference ? "${params.outdir}/reference/genome/star" : params.outdir },
-//                 saveAs: { params.save_reference ? it : null }, mode: params.publish_dir_mode
-//
-//             input:
-//             path fasta from ch_fasta
-//             path gtf from ch_gtf
-//
-//             output:
-//             path "star" into ch_star_index
-//
-//             script:
-//             def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
-//             """
-//             mkdir star
-//             STAR \\
-//                 --runMode genomeGenerate \\
-//                 --runThreadN $task.cpus \\
-//                 --sjdbGTFfile $gtf \\
-//                 --genomeDir star/ \\
-//                 --genomeFastaFiles $fasta \\
-//                 $avail_mem \\
-//                 $params.star_index_options
-//             """
-//         }
-//     }
 //
 //     /*
 //      * PREPROCESSING - Build HISAT2 index and splice sites file (if required)

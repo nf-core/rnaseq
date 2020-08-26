@@ -181,6 +181,7 @@ include { TRANSCRIPTS2FASTA           } from './modules/local/process/transcript
 include { SALMON_INDEX                } from './modules/local/process/salmon_index'
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { SORTMERNA                   } from './modules/local/process/sortmerna'
+include { SALMON_QUANT                } from './modules/local/process/salmon_quant'
 
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
@@ -366,7 +367,7 @@ workflow {
      */
     def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
     def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
-    params.modules['umitools_extract'].args += "$method $pattern"
+    params.modules['umitools_extract'].args += " $method $pattern"
     if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
 
     def nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
@@ -400,7 +401,6 @@ workflow {
         ch_sortmerna_log = SORTMERNA.out.log
         ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
     }
-    ch_trimmed_reads.view()
 
     /*
      * Pseudo-alignment with Salmon
@@ -425,10 +425,17 @@ workflow {
             }
             // TODO nf-core: Not working - only save indices if --save_reference is specified
             if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
-            def gencode = params.gencode  ? "--gencode" : ""
+            def gencode = params.gencode  ? " --gencode" : ""
             params.modules['salmon_index'].args += gencode
             ch_salmon_index = SALMON_INDEX ( ch_transcript_fasta, params.modules['salmon_index'])
         }
+
+        def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
+        params.modules['salmon_quant'].args += unmapped
+        SALMON_QUANT ( ch_trimmed_reads, ch_salmon_index, ch_gtf, params.modules['salmon_quant'] )
+        ch_software_versions = ch_software_versions.mix(SALMON_QUANT.out.version.first().ifEmpty(null))
+
+
     }
 
 //
@@ -518,44 +525,6 @@ workflow {
 ////////////////////////////////////////////////////
 
 // if (params.pseudo_aligner == 'salmon') {
-//     process SALMON_QUANT {
-//         tag "$sample"
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         tuple val(sample), path(reads) from trimmed_reads_salmon
-//         path index from ch_salmon_index
-//         path gtf from ch_gtf
-//
-//         output:
-//         tuple val(sample), path("${sample}/") into salmon_parsegtf,
-//                                                    salmon_tximport
-//         path "${sample}/" into salmon_logs
-//
-//         script:
-//         def rnastrandness = params.single_end ? 'U' : 'IU'
-//         if (forward_stranded && !unstranded) {
-//             rnastrandness = params.single_end ? 'SF' : 'ISF'
-//         } else if (reverse_stranded && !unstranded) {
-//             rnastrandness = params.single_end ? 'SR' : 'ISR'
-//         }
-//         def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
-//         def unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
-//         """
-//         salmon quant \\
-//             --validateMappings \\
-//             --seqBias \\
-//             --useVBOpt \\
-//             --gcBias \\
-//             --geneMap $gtf \\
-//             --threads $task.cpus \\
-//             --libType=$rnastrandness \\
-//             --index $index \\
-//             $endedness \\
-//             $unmapped \\
-//             -o $sample
-//         """
-//     }
 //
 //     process SALMON_TX2GENE {
 //         label 'low_memory'

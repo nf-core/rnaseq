@@ -182,6 +182,9 @@ include { SALMON_INDEX                } from './modules/local/process/salmon_ind
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { SORTMERNA                   } from './modules/local/process/sortmerna'
 include { SALMON_QUANT                } from './modules/local/process/salmon_quant'
+include { SALMON_TX2GENE              } from './modules/local/process/salmon_tx2gene'
+// include { SALMON_TXIMPORT             } from './modules/local/process/salmon_import'
+// include { SALMON_MERGE                } from './modules/local/process/salmon_merge'
 
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
@@ -406,6 +409,7 @@ workflow {
      * Pseudo-alignment with Salmon
      */
     if (params.pseudo_aligner == 'salmon') {
+        def publish_salmon = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
         if (params.salmon_index) {
             if (params.salmon_index.endsWith('.tar.gz')) {
                 ch_salmon_index = UNTAR_SALMON_INDEX ( params.salmon_index, publish_index ).untar
@@ -420,8 +424,7 @@ workflow {
                     ch_transcript_fasta = file(params.transcript_fasta)
                 }
             } else {
-                def publish_transcripts = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
-                ch_transcript_fasta = TRANSCRIPTS2FASTA ( ch_fasta, ch_gtf, publish_transcripts ).fasta
+                ch_transcript_fasta = TRANSCRIPTS2FASTA ( ch_fasta, ch_gtf, publish_salmon ).fasta
             }
             // TODO nf-core: Not working - only save indices if --save_reference is specified
             if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
@@ -435,7 +438,7 @@ workflow {
         SALMON_QUANT ( ch_trimmed_reads, ch_salmon_index, ch_gtf, params.modules['salmon_quant'] )
         ch_software_versions = ch_software_versions.mix(SALMON_QUANT.out.version.first().ifEmpty(null))
 
-
+        SALMON_TX2GENE ( SALMON_QUANT.out.results.collect{it[1]}, ch_gtf, publish_salmon )
     }
 
 //

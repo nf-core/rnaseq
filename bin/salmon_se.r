@@ -1,8 +1,10 @@
 #!/usr/bin/env Rscript
 
+## Create SummarizedExperiment (se) object from Salmon counts
+
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) < 2) {
-  stop("Usage: tximeta.r <coldata> <salmon_out>", call.=FALSE)
+  stop("Usage: salmon_se.r <coldata> <salmon_out>", call.=FALSE)
 }
 
 coldata = args[1]

@@ -21,8 +21,8 @@ process SALMON_TXIMPORT {
     tuple val(meta), path("*transcript_tpm.csv"), emit: transcript_tpm
     tuple val(meta), path("*transcript_counts.csv"), emit: transcript_counts
 
-    script:
+    script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
-    tximport.r NULL salmon $meta.id
+    salmon_tximport.r NULL salmon $meta.id
     """
 }

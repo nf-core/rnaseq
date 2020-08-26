@@ -395,12 +395,12 @@ workflow {
         if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fastq.gz','') }
         ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
         SORTMERNA ( ch_trimmed_reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
-        //SORTMERNA ( FASTQC_UMITOOLS_TRIMGALORE.out.reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
             .reads
             .set { ch_trimmed_reads }
         ch_sortmerna_log = SORTMERNA.out.log
         ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
     }
+    ch_trimmed_reads.view()
 
     /*
      * Pseudo-alignment with Salmon

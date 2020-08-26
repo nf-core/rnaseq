@@ -42,7 +42,7 @@ process SORTMERNA {
             $ioptions.args
 
         gzip -f < non_rRNA_reads.fq > ${prefix}.fastq.gz
-        mv rRNA_reads.log ${prefix}_rRNA_report.log
+        mv rRNA_reads.log ${prefix}.sortmerna.log
 
         echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//' > ${software}.version.txt
         """
@@ -62,7 +62,7 @@ process SORTMERNA {
 
         gzip -f < non_rRNA_reads_fwd.fq > ${prefix}_1.fastq.gz
         gzip -f < non_rRNA_reads_rev.fq > ${prefix}_2.fastq.gz
-        mv rRNA_reads.log ${prefix}_rRNA_report.log
+        mv rRNA_reads.log ${prefix}.sortmerna.log
 
         echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//' > ${software}.version.txt
         """

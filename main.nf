@@ -183,7 +183,7 @@ include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { SORTMERNA                   } from './modules/local/process/sortmerna'
 include { SALMON_QUANT                } from './modules/local/process/salmon_quant'
 include { SALMON_TX2GENE              } from './modules/local/process/salmon_tx2gene'
-// include { SALMON_TXIMPORT             } from './modules/local/process/salmon_import'
+include { SALMON_TXIMPORT             } from './modules/local/process/salmon_tximport'
 // include { SALMON_MERGE                } from './modules/local/process/salmon_merge'
 
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
@@ -438,7 +438,8 @@ workflow {
         SALMON_QUANT ( ch_trimmed_reads, ch_salmon_index, ch_gtf, params.modules['salmon_quant'] )
         ch_software_versions = ch_software_versions.mix(SALMON_QUANT.out.version.first().ifEmpty(null))
 
-        SALMON_TX2GENE ( SALMON_QUANT.out.results.collect{it[1]}, ch_gtf, publish_salmon )
+        SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, ch_gtf, publish_salmon )
+        SALMON_TXIMPORT ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
     }
 
 //

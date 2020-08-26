@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName } from './functions'
 
 process SALMON_TX2GENE {
     tag "$gtf"

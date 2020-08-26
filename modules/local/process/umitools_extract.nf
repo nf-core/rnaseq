@@ -9,7 +9,7 @@ process UMITOOLS_EXTRACT {
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/umi_tools:1.0.1--py37h516909a_1"
-    container "https://depot.galaxyproject.org/singularity/umi_tools:1.0.1--py37h516909a_1"
+    //container "https://depot.galaxyproject.org/singularity/umi_tools:1.0.1--py37h516909a_1"
 
     conda (params.conda ? "bioconda::umi_tools=1.0.1" : null)
 
@@ -31,9 +31,9 @@ process UMITOOLS_EXTRACT {
         umi_tools \\
             extract \\
             -I $reads \\
-            -S ${prefix}.rm_umi.fastq.gz \\
+            -S ${prefix}.umi_extract.fastq.gz \\
             $ioptions.args \\
-            > ${prefix}.umi.log
+            > ${prefix}.umi_extract.log
 
         umi_tools --version | sed -e "s/UMI-tools version: //g" > ${software}.version.txt
         """
@@ -43,10 +43,10 @@ process UMITOOLS_EXTRACT {
             extract \\
             -I ${reads[0]} \\
             --read2-in=${reads[1]} \\
-            -S ${prefix}.rm_umi_1.fastq.gz \\
-            --read2-out=${prefix}.rm_umi_2.fastq.gz \\
+            -S ${prefix}.umi_extract_1.fastq.gz \\
+            --read2-out=${prefix}.umi_extract_2.fastq.gz \\
             $ioptions.args \\
-            > ${prefix}.umi.log
+            > ${prefix}.umi_extract.log
 
         umi_tools --version | sed -e "s/UMI-tools version: //g" > ${software}.version.txt
         """

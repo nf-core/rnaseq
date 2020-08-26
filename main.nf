@@ -180,7 +180,8 @@ include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_prepa
 include { TRANSCRIPTS2FASTA           } from './modules/local/process/transcripts2fasta'
 include { SALMON_INDEX                } from './modules/local/process/salmon_index'
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
-include { UMITOOLS_EXTRACT            } from './modules/local/process/umitools_extract'
+include { SORTMERNA                   } from './modules/local/process/sortmerna'
+
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 // include { MULTIQC                     } from './modules/local/process/multiqc'
@@ -191,11 +192,11 @@ include { INPUT_CHECK                 } from './modules/local/subworkflow/input_
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
 ////////////////////////////////////////////////////
 
-//include { PRESEQ_LCEXTRAP               } from './modules/nf-core/software/preseq/lcextrap/main'
-//include { SUBREAD_FEATURECOUNTS         } from './modules/nf-core/software/subread/featurecounts/main'
+// include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
+// include { SUBREAD_FEATURECOUNTS      } from './modules/nf-core/software/subread/featurecounts/main'
 
-include { FASTQC_TRIMGALORE             } from './modules/nf-core/subworkflow/fastqc_trimgalore'
-//include { MARK_DUPLICATES_PICARD        } from './modules/nf-core/subworkflow/mark_duplicates_picard'
+include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
+//include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -387,37 +388,42 @@ workflow {
     CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
 
     /*
-     * Read QC & trimming
+     * Read QC, trim UMI and adapters
      */
-    nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
+    def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
+    def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
+    params.modules['umitools_extract'].args += "$method $pattern"
+    if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
+
+    def nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
     params.modules['trimgalore'].args += nextseq
     if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
-    FASTQC_TRIMGALORE (
+
+    FASTQC_UMITOOLS_TRIMGALORE (
         CAT_FASTQ.out.reads,
         params.skip_fastqc,
+        params.with_umi,
         params.skip_trimming,
         params.modules['fastqc'],
+        params.modules['umitools_extract'],
         params.modules['trimgalore']
     )
-    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
 
-    /*
-     * Extract UMIs from reads
-     */
-    if (params.with_umi) {
-        def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
-        def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
-        params.modules['umitools_extract'].args += "$method $pattern"
-        if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
-        UMITOOLS_EXTRACT ( CAT_FASTQ.out.reads, params.modules['umitools_extract'] )
-    }
+    // if (!params.remove_ribo_rna) {
+    //     trimgalore_reads
+    //         .into { trimmed_reads_alignment
+    //                 trimmed_reads_salmon }
+    //     sortmerna_logs = Channel.empty()
     // } else {
-    //     raw_reads_trimgalore = ch_raw_reads_umitools
-    //     umi_tools_extract_results = Channel.empty()
+    //     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
+    //     if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fq.gz','') }
+    //     SORTMERNA ()
     // }
 
-    ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
+
 //
 //     /*
 //      * Map reads & BAM QC
@@ -531,75 +537,6 @@ workflow {
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
 //
-// if (!params.remove_ribo_rna) {
-//     trimgalore_reads
-//         .into { trimmed_reads_alignment
-//                 trimmed_reads_salmon }
-//     sortmerna_logs = Channel.empty()
-// } else {
-//     process SORTMERNA {
-//         tag "$name"
-//         label 'low_memory'
-//         publishDir "${params.outdir}/sortmerna", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
-//                 else if (params.save_non_ribo_reads) "reads/$filename"
-//                 else null
-//             }
-//
-//         input:
-//         tuple val(name), path(reads) from trimgalore_reads
-//         path fasta from sortmerna_fasta.collect()
-//
-//         output:
-//         tuple val(name), path("*.fq.gz") into trimmed_reads_alignment,
-//                                               trimmed_reads_salmon
-//         path "*_rRNA_report.txt" into sortmerna_logs
-//
-//         script:
-//         //concatenate reference files: ${db_fasta},${db_name}:${db_fasta},${db_name}:...
-//         def Refs = ""
-//         for (i=0; i<fasta.size(); i++) { Refs+= " --ref ${fasta[i]}" }
-//         if (params.single_end) {
-//             """
-//             sortmerna \\
-//                 $Refs \\
-//                 --reads $reads \\
-//                 --num_alignments 1 \\
-//                 --threads $task.cpus \\
-//                 --workdir . \\
-//                 --fastx \\
-//                 --aligned rRNA-reads \\
-//                 --other non-rRNA-reads \\
-//                 -v
-//
-//             gzip --force < non-rRNA-reads.fq > ${name}.fq.gz
-//             mv rRNA-reads.log ${name}_rRNA_report.txt
-//             """
-//         } else {
-//             """
-//             sortmerna \\
-//                 $Refs \\
-//                 --reads ${reads[0]} \\
-//                 --reads ${reads[1]} \\
-//                 --num_alignments 1 \\
-//                 --threads $task.cpus \\
-//                 --workdir . \\
-//                 --fastx \\
-//                 --aligned rRNA-reads \\
-//                 --other non-rRNA-reads \\
-//                 --paired_in \\
-//                 --out2 \\
-//                 -v
-//
-//             gzip --force < non-rRNA-reads_fwd.fq > ${name}_1.fq.gz
-//             gzip --force < non-rRNA-reads_rev.fq > ${name}_2.fq.gz
-//             mv rRNA-reads.log ${name}_rRNA_report.txt
-//             """
-//         }
-//     }
-// }
-
 // if (!params.skip_alignment) {
 //     if (params.aligner == 'star') {
 //         hisat_stdout = Channel.empty()

@@ -30,7 +30,6 @@ dependencies:
   - bioconda::preseq=2.0.3
   - bioconda::qualimap=2.2.2d
   - bioconda::rseqc=3.0.1
-  - bioconda::multiqc=1.9
   - bioconda::bioconductor-dupradar=1.18.0
   - bioconda::bioconductor-edger=3.30.0
   - bioconda::bioconductor-tximeta=1.6.2

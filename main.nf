@@ -344,6 +344,67 @@ workflow {
         }
     }
 
+    /*
+     * Read in samplesheet, validate and stage input files
+     */
+    INPUT_CHECK ( ch_input, params.seq_center, [:] )
+        .map {
+            meta, bam ->
+                meta.id = meta.id.split('_')[0..-2].join('_')
+                [ meta, bam ] }
+        .groupTuple(by: [0])
+        .map { it ->  [ it[0], it[1].flatten() ] }
+        .set { ch_cat_fastq }
+
+    /*
+     * Concatenate FastQ files from same sample if required
+     */
+    CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
+
+    /*
+     * Read QC, extract UMI and trim adapters
+     */
+    def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
+    def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
+    params.modules['umitools_extract'].args += "$method $pattern"
+    if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
+
+    def nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
+    params.modules['trimgalore'].args += nextseq
+    if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
+
+    FASTQC_UMITOOLS_TRIMGALORE (
+        CAT_FASTQ.out.reads,
+        params.skip_fastqc,
+        params.with_umi,
+        params.skip_trimming,
+        params.modules['fastqc'],
+        params.modules['umitools_extract'],
+        params.modules['trimgalore']
+    )
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
+
+    /*
+     * Remove ribosomal RNA reads
+     */
+    ch_trimmed_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    ch_sortmerna_log = Channel.empty()
+    if (params.remove_ribo_rna) {
+        if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fastq.gz','') }
+        ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
+        SORTMERNA ( ch_trimmed_reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
+        //SORTMERNA ( FASTQC_UMITOOLS_TRIMGALORE.out.reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
+            .reads
+            .set { ch_trimmed_reads }
+        ch_sortmerna_log = SORTMERNA.out.log
+        ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
+    }
+
+    /*
+     * Pseudo-alignment with Salmon
+     */
     if (params.pseudo_aligner == 'salmon') {
         if (params.salmon_index) {
             if (params.salmon_index.endsWith('.tar.gz')) {
@@ -370,60 +431,6 @@ workflow {
         }
     }
 
-    /*
-     * Read in samplesheet, validate and stage input files
-     */
-    INPUT_CHECK ( ch_input, params.seq_center, [:] )
-        .map {
-            meta, bam ->
-                meta.id = meta.id.split('_')[0..-2].join('_')
-                [ meta, bam ] }
-        .groupTuple(by: [0])
-        .map { it ->  [ it[0], it[1].flatten() ] }
-        .set { ch_cat_fastq }
-
-    /*
-     * Concatenate FastQ files from same sample if required
-     */
-    CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
-
-    /*
-     * Read QC, trim UMI and adapters
-     */
-    def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
-    def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
-    params.modules['umitools_extract'].args += "$method $pattern"
-    if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
-
-    def nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
-    params.modules['trimgalore'].args += nextseq
-    if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
-
-    FASTQC_UMITOOLS_TRIMGALORE (
-        CAT_FASTQ.out.reads,
-        params.skip_fastqc,
-        params.with_umi,
-        params.skip_trimming,
-        params.modules['fastqc'],
-        params.modules['umitools_extract'],
-        params.modules['trimgalore']
-    )
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
-
-    // if (!params.remove_ribo_rna) {
-    //     trimgalore_reads
-    //         .into { trimmed_reads_alignment
-    //                 trimmed_reads_salmon }
-    //     sortmerna_logs = Channel.empty()
-    // } else {
-    //     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
-    //     if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fq.gz','') }
-    //     SORTMERNA ()
-    // }
-
-
 //
 //     /*
 //      * Map reads & BAM QC
@@ -449,35 +456,11 @@ workflow {
 //         params.modules['samtools_sort_merged_lib']
 //     )
 //
-//     /*
-//      * Post alignment QC
-//      */
-//     PICARD_COLLECTMULTIPLEMETRICS (
-//         BAM_CLEAN.out.bam,
-//         ch_fasta,
-//         params.modules['picard_collectmultiplemetrics']
-//     )
-//
 //     PRESEQ_LCEXTRAP (
 //         BAM_CLEAN.out.bam,
 //         params.modules['preseq_lcextrap']
 //     )
 //     ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
-//
-//     /*
-//      * Coverage tracks
-//      */
-//     BEDTOOLS_GENOMECOV (
-//         BAM_CLEAN.out.bam.join(BAM_CLEAN.out.flagstat, by: [0]),
-//         params.modules['bedtools_genomecov']
-//     )
-//
-//     UCSC_BEDRAPHTOBIGWIG (
-//         BEDTOOLS_GENOMECOV.out.bedgraph,
-//         GET_CHROM_SIZES.out.sizes,
-//         params.modules['ucsc_bedgraphtobigwig']
-//     )
-//     ch_software_versions = ch_software_versions.mix(UCSC_BEDRAPHTOBIGWIG.out.version.first().ifEmpty(null))
 //
     /*
      * Pipeline reporting
@@ -509,12 +492,9 @@ workflow {
 //         MARK_DUPLICATES_PICARD.out.idxstats.collect{it[1]}.ifEmpty([]),
 //         MARK_DUPLICATES_PICARD.out.metrics.collect{it[1]}.ifEmpty([]),
 //
-//         PICARD_COLLECTMULTIPLEMETRICS.out.metrics.collect{it[1]}.ifEmpty([]),
-//
 //         PRESEQ_LCEXTRAP.out.ccurve.collect{it[1]}.ifEmpty([]),
 //
 //         SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]),
-//         // path ('macs/consensus/*') from ch_macs_consensus_deseq_mqc.collect().ifEmpty([])
 //
 //         params.modules['multiqc']
 //     )
@@ -536,7 +516,131 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
+
+// if (params.pseudo_aligner == 'salmon') {
+//     process SALMON_QUANT {
+//         tag "$sample"
+//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
 //
+//         input:
+//         tuple val(sample), path(reads) from trimmed_reads_salmon
+//         path index from ch_salmon_index
+//         path gtf from ch_gtf
+//
+//         output:
+//         tuple val(sample), path("${sample}/") into salmon_parsegtf,
+//                                                    salmon_tximport
+//         path "${sample}/" into salmon_logs
+//
+//         script:
+//         def rnastrandness = params.single_end ? 'U' : 'IU'
+//         if (forward_stranded && !unstranded) {
+//             rnastrandness = params.single_end ? 'SF' : 'ISF'
+//         } else if (reverse_stranded && !unstranded) {
+//             rnastrandness = params.single_end ? 'SR' : 'ISR'
+//         }
+//         def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
+//         def unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
+//         """
+//         salmon quant \\
+//             --validateMappings \\
+//             --seqBias \\
+//             --useVBOpt \\
+//             --gcBias \\
+//             --geneMap $gtf \\
+//             --threads $task.cpus \\
+//             --libType=$rnastrandness \\
+//             --index $index \\
+//             $endedness \\
+//             $unmapped \\
+//             -o $sample
+//         """
+//     }
+//
+//     process SALMON_TX2GENE {
+//         label 'low_memory'
+//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+//
+//         input:
+//         path ("salmon/*") from salmon_parsegtf.collect{it[1]}
+//         path gtf from ch_gtf
+//
+//         output:
+//         path "tx2gene.csv" into salmon_tx2gene,
+//                                 salmon_merge_tx2gene
+//
+//         script:
+//         """
+//         parse_gtf.py --gtf $gtf --salmon salmon --id $params.fc_group_features --extra $params.fc_extra_attributes -o tx2gene.csv
+//         """
+//     }
+//
+//     process SALMON_TXIMPORT {
+//         label 'low_memory'
+//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+//
+//         input:
+//         tuple val(name), path("salmon/*") from salmon_tximport
+//         path tx2gene from salmon_tx2gene.collect()
+//
+//         output:
+//         path "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
+//         path "${name}_salmon_gene_counts.csv" into salmon_gene_counts
+//         path "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
+//         path "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
+//
+//         script:
+//         """
+//         tximport.r NULL salmon $name
+//         """
+//     }
+//
+//     process SALMON_MERGE {
+//         label 'mid_memory'
+//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
+//
+//         input:
+//         path gene_tpm_files from salmon_gene_tpm.collect()
+//         path gene_count_files from salmon_gene_counts.collect()
+//         path transcript_tpm_files from salmon_transcript_tpm.collect()
+//         path transcript_count_files from salmon_transcript_counts.collect()
+//         path tx2gene from salmon_merge_tx2gene
+//
+//         output:
+//         path "salmon_merged*.csv" into salmon_merged_ch
+//         path "*.rds"
+//
+//         script:
+//         // First field is the gene/transcript ID
+//         gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
+//         transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
+//
+//         // Second field is counts/TPM
+//         gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+//         gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+//         transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+//         transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+//         """
+//         paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
+//         paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
+//         paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
+//         paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
+//
+//         se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
+//         se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
+//         """
+//     }
+// } else {
+//     salmon_logs = Channel.empty()
+// }
+
+
+
+
+
+
+
+
 // if (!params.skip_alignment) {
 //     if (params.aligner == 'star') {
 //         hisat_stdout = Channel.empty()
@@ -1227,123 +1331,6 @@ workflow {
 //     preseq_results = Channel.empty()
 //     featureCounts_biotype = Channel.empty()
 //     rsem_logs = Channel.empty()
-// }
-//
-// if (params.pseudo_aligner == 'salmon') {
-//     process SALMON_QUANT {
-//         tag "$sample"
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         tuple val(sample), path(reads) from trimmed_reads_salmon
-//         path index from ch_salmon_index
-//         path gtf from ch_gtf
-//
-//         output:
-//         tuple val(sample), path("${sample}/") into salmon_parsegtf,
-//                                                    salmon_tximport
-//         path "${sample}/" into salmon_logs
-//
-//         script:
-//         def rnastrandness = params.single_end ? 'U' : 'IU'
-//         if (forward_stranded && !unstranded) {
-//             rnastrandness = params.single_end ? 'SF' : 'ISF'
-//         } else if (reverse_stranded && !unstranded) {
-//             rnastrandness = params.single_end ? 'SR' : 'ISR'
-//         }
-//         def endedness = params.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
-//         def unmapped = params.save_unaligned ? "--writeUnmappedNames" : ''
-//         """
-//         salmon quant \\
-//             --validateMappings \\
-//             --seqBias \\
-//             --useVBOpt \\
-//             --gcBias \\
-//             --geneMap $gtf \\
-//             --threads $task.cpus \\
-//             --libType=$rnastrandness \\
-//             --index $index \\
-//             $endedness \\
-//             $unmapped \\
-//             -o $sample
-//         """
-//     }
-//
-//     process SALMON_TX2GENE {
-//         label 'low_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         path ("salmon/*") from salmon_parsegtf.collect{it[1]}
-//         path gtf from ch_gtf
-//
-//         output:
-//         path "tx2gene.csv" into salmon_tx2gene,
-//                                 salmon_merge_tx2gene
-//
-//         script:
-//         """
-//         parse_gtf.py --gtf $gtf --salmon salmon --id $params.fc_group_features --extra $params.fc_extra_attributes -o tx2gene.csv
-//         """
-//     }
-//
-//     process SALMON_TXIMPORT {
-//         label 'low_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         tuple val(name), path("salmon/*") from salmon_tximport
-//         path tx2gene from salmon_tx2gene.collect()
-//
-//         output:
-//         path "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
-//         path "${name}_salmon_gene_counts.csv" into salmon_gene_counts
-//         path "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
-//         path "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
-//
-//         script:
-//         """
-//         tximport.r NULL salmon $name
-//         """
-//     }
-//
-//     process SALMON_MERGE {
-//         label 'mid_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         path gene_tpm_files from salmon_gene_tpm.collect()
-//         path gene_count_files from salmon_gene_counts.collect()
-//         path transcript_tpm_files from salmon_transcript_tpm.collect()
-//         path transcript_count_files from salmon_transcript_counts.collect()
-//         path tx2gene from salmon_merge_tx2gene
-//
-//         output:
-//         path "salmon_merged*.csv" into salmon_merged_ch
-//         path "*.rds"
-//
-//         script:
-//         // First field is the gene/transcript ID
-//         gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
-//         transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
-//
-//         // Second field is counts/TPM
-//         gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         """
-//         paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
-//         paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
-//         paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
-//         paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
-//
-//         se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
-//         se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
-//         """
-//     }
-// } else {
-//     salmon_logs = Channel.empty()
 // }
 //
 // process GET_SOFTWARE_VERSIONS {

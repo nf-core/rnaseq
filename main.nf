@@ -180,6 +180,7 @@ include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_prepa
 include { TRANSCRIPTS2FASTA           } from './modules/local/process/transcripts2fasta'
 include { SALMON_INDEX                } from './modules/local/process/salmon_index'
 //include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
+include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 // include { MULTIQC                     } from './modules/local/process/multiqc'
@@ -348,10 +349,18 @@ workflow {
      * Read in samplesheet, validate and stage input files
      */
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
+        .map {
+            meta, bam ->
+                meta.id = meta.id.split('_')[0..-2].join('_')
+                [ meta, bam ] }
+        .groupTuple(by: [0])
+        .map { it ->  [ it[0], it[1].flatten() ] }
+        .set { ch_cat_fastq }
 
     /*
      * Concatenate FastQ files from same sample if required
      */
+    CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
 
     /*
      * Read QC & trimming

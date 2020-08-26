@@ -31,9 +31,10 @@ def get_samplesheet_paths(LinkedHashMap row, String seq_center) {
     meta.id = row.sample
     meta.single_end = row.single_end.toBoolean()
 
-    def rg = "\'@RG\\tID:${meta.id}\\tSM:${meta.id.split('_')[0..-2].join('_')}\\tPL:ILLUMINA\\tLB:${meta.id}\\tPU:1\'"
+    def sample = meta.id.split('_')[0..-2].join('_')
+    def rg = "\'@RG\\tID:${sample}\\tSM:${sample}\\tPL:ILLUMINA\\tLB:${sample}\\tPU:1\'"
     if (seq_center) {
-        rg = "\'@RG\\tID:${meta.id}\\tSM:${meta.id.split('_')[0..-2].join('_')}\\tPL:ILLUMINA\\tLB:${meta.id}\\tPU:1\\tCN:${seq_center}\'"
+        rg = "\'@RG\\tID:${sample}\\tSM:${sample}\\tPL:ILLUMINA\\tLB:${sample}\\tPU:1\\tCN:${seq_center}\'"
     }
     meta.read_group = rg
 

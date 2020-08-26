@@ -179,8 +179,8 @@ include { HISAT2_BUILD                } from './modules/local/process/hisat2_bui
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
 include { TRANSCRIPTS2FASTA           } from './modules/local/process/transcripts2fasta'
 include { SALMON_INDEX                } from './modules/local/process/salmon_index'
-//include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
+include { UMITOOLS_EXTRACT            } from './modules/local/process/umitools_extract'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 // include { MULTIQC                     } from './modules/local/process/multiqc'
@@ -191,9 +191,7 @@ include { INPUT_CHECK                 } from './modules/local/subworkflow/input_
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
 ////////////////////////////////////////////////////
 
-//include { PICARD_COLLECTMULTIPLEMETRICS } from './modules/nf-core/software/picard/collectmultiplemetrics/main'
 //include { PRESEQ_LCEXTRAP               } from './modules/nf-core/software/preseq/lcextrap/main'
-//include { UCSC_BEDRAPHTOBIGWIG          } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main'
 //include { SUBREAD_FEATURECOUNTS         } from './modules/nf-core/software/subread/featurecounts/main'
 
 include { FASTQC_TRIMGALORE             } from './modules/nf-core/subworkflow/fastqc_trimgalore'
@@ -202,6 +200,32 @@ include { FASTQC_TRIMGALORE             } from './modules/nf-core/subworkflow/fa
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
+
+// Function that checks the alignment rate of the STAR output
+// and returns true if the alignment passed and otherwise false
+def good_alignment_scores = [:]
+def poor_alignment_scores = [:]
+def check_log(logs) {
+    def percent_aligned = 0;
+    logs.eachLine { line ->
+        if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
+            percent_aligned = matcher[0][1]
+        }
+    }
+    logname = logs.getBaseName() - '.Log.final'
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_red = params.monochrome_logs ? '' : "\033[0;31m";
+    if (percent_aligned.toFloat() <= params.percent_aln_skip.toFloat()) {
+        log.info "#${c_red}################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<${c_reset}"
+        poor_alignment_scores[logname] = percent_aligned
+        return false
+    } else {
+        log.info "-${c_green}           Passed alignment > star ($logname)   >> ${percent_aligned}% <<${c_reset}"
+        good_alignment_scores[logname] = percent_aligned
+        return true
+    }
+}
 
 workflow {
 
@@ -378,6 +402,21 @@ workflow {
     ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
     ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 
+    /*
+     * Extract UMIs from reads
+     */
+    if (params.with_umi) {
+        def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
+        def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
+        params.modules['umitools_extract'].args += "$method $pattern"
+        if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
+        UMITOOLS_EXTRACT ( CAT_FASTQ.out.reads, params.modules['umitools_extract'] )
+    }
+    // } else {
+    //     raw_reads_trimgalore = ch_raw_reads_umitools
+    //     umi_tools_extract_results = Channel.empty()
+    // }
+
     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }
 //
 //     /*
@@ -491,56 +530,6 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-
-// if (params.with_umi) {
-//     process UMITOOLS_EXTRACT {
-//         tag "$name"
-//         label "low_memory"
-//         publishDir "${params.outdir}/umitools/extract", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.endsWith('.log')) filename
-//                 else if (!params.save_umi_intermeds && filename == "where_are_my_files.txt") filename
-//                 else if (params.save_umi_intermeds && filename != "where_are_my_files.txt") filename
-//                 else null
-//             }
-//
-//         input:
-//         tuple val(name), path(reads) from ch_raw_reads_umitools
-//         path wherearemyfiles from ch_where_are_my_files
-//
-//         output:
-//         tuple val(name), path("*fq.gz") into raw_reads_trimgalore
-//         path "*.log"
-//         path "where_are_my_files.txt"
-//
-//         script:
-//         if (params.single_end) {
-//             """
-//             umi_tools extract \\
-//                 -I $reads \\
-//                 -S ${name}_umi_extracted.fq.gz \\
-//                 --extract-method=${params.umitools_extract_method} \\
-//                 --bc-pattern="${params.umitools_bc_pattern}" \\
-//                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
-//             """
-//         }  else {
-//             """
-//             umi_tools extract \\
-//                 -I ${reads[0]} \\
-//                 --read2-in=${reads[1]} \\
-//                 -S ${name}_umi_extracted_R1.fq.gz \\
-//                 --read2-out=${name}_umi_extracted_R2.fq.gz \\
-//                 --extract-method=${params.umitools_extract_method} \\
-//                 --bc-pattern="${params.umitools_bc_pattern}" \\
-//                 ${params.umitools_extract_extra} > ${name}_umi_extract.log
-//             """
-//         }
-//     }
-// } else {
-//     raw_reads_trimgalore = ch_raw_reads_umitools
-//     umi_tools_extract_results = Channel.empty()
-// }
-//
 //
 // if (!params.remove_ribo_rna) {
 //     trimgalore_reads
@@ -610,33 +599,7 @@ workflow {
 //         }
 //     }
 // }
-//
-// // Function that checks the alignment rate of the STAR output
-// // and returns true if the alignment passed and otherwise false
-// good_alignment_scores = [:]
-// poor_alignment_scores = [:]
-// def check_log(logs) {
-//     def percent_aligned = 0;
-//     logs.eachLine { line ->
-//         if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
-//             percent_aligned = matcher[0][1]
-//         }
-//     }
-//     logname = logs.getBaseName() - '.Log.final'
-//     c_reset = params.monochrome_logs ? '' : "\033[0m";
-//     c_green = params.monochrome_logs ? '' : "\033[0;32m";
-//     c_red = params.monochrome_logs ? '' : "\033[0;31m";
-//     if (percent_aligned.toFloat() <= params.percent_aln_skip.toFloat()) {
-//         log.info "#${c_red}################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<${c_reset}"
-//         poor_alignment_scores[logname] = percent_aligned
-//         return false
-//     } else {
-//         log.info "-${c_green}           Passed alignment > star ($logname)   >> ${percent_aligned}% <<${c_reset}"
-//         good_alignment_scores[logname] = percent_aligned
-//         return true
-//     }
-// }
-//
+
 // if (!params.skip_alignment) {
 //     if (params.aligner == 'star') {
 //         hisat_stdout = Channel.empty()

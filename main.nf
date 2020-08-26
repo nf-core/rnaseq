@@ -369,7 +369,7 @@ workflow {
     params.modules['trimgalore'].args += nextseq
     if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
     FASTQC_TRIMGALORE (
-        INPUT_CHECK.out.reads,
+        CAT_FASTQ.out.reads,
         params.skip_fastqc,
         params.skip_trimming,
         params.modules['fastqc'],

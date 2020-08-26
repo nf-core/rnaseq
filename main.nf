@@ -184,7 +184,7 @@ include { SORTMERNA                   } from './modules/local/process/sortmerna'
 include { SALMON_QUANT                } from './modules/local/process/salmon_quant'
 include { SALMON_TX2GENE              } from './modules/local/process/salmon_tx2gene'
 include { SALMON_TXIMPORT             } from './modules/local/process/salmon_tximport'
-// include { SALMON_MERGE                } from './modules/local/process/salmon_merge'
+include { SALMON_MERGE                } from './modules/local/process/salmon_merge'
 
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
@@ -408,6 +408,7 @@ workflow {
     /*
      * Pseudo-alignment with Salmon
      */
+    ch_salmon_log = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
         def publish_salmon = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
         if (params.salmon_index) {
@@ -436,10 +437,19 @@ workflow {
         def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
         params.modules['salmon_quant'].args += unmapped
         SALMON_QUANT ( ch_trimmed_reads, ch_salmon_index, ch_gtf, params.modules['salmon_quant'] )
+        ch_salmon_log = SALMON_QUANT.out.results
         ch_software_versions = ch_software_versions.mix(SALMON_QUANT.out.version.first().ifEmpty(null))
 
         SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, ch_gtf, publish_salmon )
         SALMON_TXIMPORT ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
+        SALMON_MERGE    (
+            SALMON_TXIMPORT.out.gene_tpm.collect{it[1]},
+            SALMON_TXIMPORT.out.gene_counts.collect{it[1]},
+            SALMON_TXIMPORT.out.transcript_tpm.collect{it[1]},
+            SALMON_TXIMPORT.out.transcript_counts.collect{it[1]},
+            SALMON_TX2GENE.out.collect(),
+            [:]
+        )
     }
 
 //
@@ -527,92 +537,6 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-
-// if (params.pseudo_aligner == 'salmon') {
-//
-//     process SALMON_TX2GENE {
-//         label 'low_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         path ("salmon/*") from salmon_parsegtf.collect{it[1]}
-//         path gtf from ch_gtf
-//
-//         output:
-//         path "tx2gene.csv" into salmon_tx2gene,
-//                                 salmon_merge_tx2gene
-//
-//         script:
-//         """
-//         parse_gtf.py --gtf $gtf --salmon salmon --id $params.fc_group_features --extra $params.fc_extra_attributes -o tx2gene.csv
-//         """
-//     }
-//
-//     process SALMON_TXIMPORT {
-//         label 'low_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         tuple val(name), path("salmon/*") from salmon_tximport
-//         path tx2gene from salmon_tx2gene.collect()
-//
-//         output:
-//         path "${name}_salmon_gene_tpm.csv" into salmon_gene_tpm
-//         path "${name}_salmon_gene_counts.csv" into salmon_gene_counts
-//         path "${name}_salmon_transcript_tpm.csv" into salmon_transcript_tpm
-//         path "${name}_salmon_transcript_counts.csv" into salmon_transcript_counts
-//
-//         script:
-//         """
-//         tximport.r NULL salmon $name
-//         """
-//     }
-//
-//     process SALMON_MERGE {
-//         label 'mid_memory'
-//         publishDir "${params.outdir}/salmon", mode: params.publish_dir_mode
-//
-//         input:
-//         path gene_tpm_files from salmon_gene_tpm.collect()
-//         path gene_count_files from salmon_gene_counts.collect()
-//         path transcript_tpm_files from salmon_transcript_tpm.collect()
-//         path transcript_count_files from salmon_transcript_counts.collect()
-//         path tx2gene from salmon_merge_tx2gene
-//
-//         output:
-//         path "salmon_merged*.csv" into salmon_merged_ch
-//         path "*.rds"
-//
-//         script:
-//         // First field is the gene/transcript ID
-//         gene_ids = "<(cut -f1 -d, ${gene_tpm_files[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
-//         transcript_ids = "<(cut -f1 -d, ${transcript_tpm_files[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
-//
-//         // Second field is counts/TPM
-//         gene_tpm = gene_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         gene_counts = gene_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         transcript_tpm = transcript_tpm_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         transcript_counts = transcript_count_files.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-//         """
-//         paste -d, $gene_ids $gene_tpm > salmon_merged_gene_tpm.csv
-//         paste -d, $gene_ids $gene_counts > salmon_merged_gene_counts.csv
-//         paste -d, $transcript_ids $transcript_tpm > salmon_merged_transcript_tpm.csv
-//         paste -d, $transcript_ids $transcript_counts > salmon_merged_transcript_counts.csv
-//
-//         se.r NULL salmon_merged_gene_counts.csv salmon_merged_gene_tpm.csv
-//         se.r NULL salmon_merged_transcript_counts.csv salmon_merged_transcript_tpm.csv
-//         """
-//     }
-// } else {
-//     salmon_logs = Channel.empty()
-// }
-
-
-
-
-
-
-
 
 // if (!params.skip_alignment) {
 //     if (params.aligner == 'star') {

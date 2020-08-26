@@ -19,7 +19,7 @@ process SALMON_MERGE {
     val options
 
     output:
-    path "salmon_merged*.csv", emit: csv
+    path "salmon.merged*.csv", emit: csv
     path "*.rds", emit: rds
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/

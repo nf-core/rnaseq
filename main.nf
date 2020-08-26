@@ -296,59 +296,6 @@ workflow {
     }
 
     /*
-     * PREPROCESSING: Check genome/transcriptome indices and uncompress if required
-     */
-    def publish_index = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : [:]]
-    if (!params.skip_alignment) {
-        if (params.aligner == 'star') {
-            if (params.star_index) {
-                if (params.star_index.endsWith('.tar.gz')) {
-                    ch_star_index = UNTAR_STAR_INDEX ( params.star_index, publish_index ).untar
-                } else {
-                    ch_star_index = file(params.star_index)
-                }
-            } else {
-                // TODO nf-core: Not working - only save indices if --save_reference is specified
-                if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
-                ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, params.modules['star_genomegenerate'] ).index
-            }
-        } else if (params.aligner == 'hisat2') {
-            if (params.hisat2_index) {
-                if (params.hisat2_index.endsWith('.tar.gz')) {
-                    ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index ).untar
-                } else {
-                    ch_hisat2_index = file(params.hisat2_index)
-                }
-            } else {
-                if (!params.splicesites) {
-                    def publish_splicesites = params.save_reference ? [publish_dir : 'genome/index/hisat2'] : [publish_files : [:]]
-                    ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf, publish_splicesites ).txt
-                } else {
-                    ch_splicesites = file(params.splicesites)
-                }
-                // TODO nf-core: Not working - only save indices if --save_reference is specified
-                if (params.save_reference) { params.modules['hisat2_build']['publish_files'] = null }
-                ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites, params.modules['hisat2_build'] ).index
-            }
-        }
-
-        if (!skip_rsem && params.aligner == "star") {
-            if (params.rsem_index) {
-                if (params.rsem_index.endsWith('.tar.gz')) {
-                    ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index ).untar
-                } else {
-                    ch_rsem_index = file(params.rsem_index)
-                }
-            } else {
-                // TODO nf-core: Not working - only save indices if --save_reference is specified
-                if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
-                //println(params.modules['rsem_preparereference'])
-                ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf, params.modules['rsem_preparereference'] ).index
-            }
-        }
-    }
-
-    /*
      * Read in samplesheet, validate and stage input files
      */
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
@@ -403,6 +350,69 @@ workflow {
             .set { ch_trimmed_reads }
         ch_sortmerna_log = SORTMERNA.out.log
         ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
+    }
+
+    /*
+     * Splice-aware genome alignment
+     */
+    def publish_index = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : [:]]
+    if (!params.skip_alignment) {
+        /*
+         * Alignment with STAR
+         */
+        if (params.aligner == 'star') {
+            if (params.star_index) {
+                if (params.star_index.endsWith('.tar.gz')) {
+                    ch_star_index = UNTAR_STAR_INDEX ( params.star_index, publish_index ).untar
+                } else {
+                    ch_star_index = file(params.star_index)
+                }
+            } else {
+                // TODO nf-core: Not working - only save indices if --save_reference is specified
+                if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
+                ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, params.modules['star_genomegenerate'] ).index
+            }
+
+            /*
+             * Gene/transcript quantification with RSEM
+             */
+            if (!skip_rsem) {
+                if (params.rsem_index) {
+                    if (params.rsem_index.endsWith('.tar.gz')) {
+                        ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index ).untar
+                    } else {
+                        ch_rsem_index = file(params.rsem_index)
+                    }
+                } else {
+                    // TODO nf-core: Not working - only save indices if --save_reference is specified
+                    if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
+                    //println(params.modules['rsem_preparereference'])
+                    ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf, params.modules['rsem_preparereference'] ).index
+                }
+            }
+
+        /*
+         * Alignment with HISAT2
+         */
+        } else if (params.aligner == 'hisat2') {
+            if (params.hisat2_index) {
+                if (params.hisat2_index.endsWith('.tar.gz')) {
+                    ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index ).untar
+                } else {
+                    ch_hisat2_index = file(params.hisat2_index)
+                }
+            } else {
+                if (!params.splicesites) {
+                    def publish_splicesites = params.save_reference ? [publish_dir : 'genome/index/hisat2'] : [publish_files : [:]]
+                    ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf, publish_splicesites ).txt
+                } else {
+                    ch_splicesites = file(params.splicesites)
+                }
+                // TODO nf-core: Not working - only save indices if --save_reference is specified
+                if (params.save_reference) { params.modules['hisat2_build']['publish_files'] = null }
+                ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites, params.modules['hisat2_build'] ).index
+            }
+        }
     }
 
     /*

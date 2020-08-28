@@ -158,24 +158,16 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-include { GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from './modules/local/process/gunzip'
 include {
     UNTAR as UNTAR_STAR_INDEX
     UNTAR as UNTAR_HISAT2_INDEX
-    UNTAR as UNTAR_RSEM_INDEX
-    UNTAR as UNTAR_SALMON_INDEX       } from './modules/local/process/untar'
+    UNTAR as UNTAR_RSEM_INDEX         } from './modules/local/process/untar'
 include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genomegenerate'
 include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
 include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
-include { TRANSCRIPTS2FASTA           } from './modules/local/process/transcripts2fasta'
-include { SALMON_INDEX                } from './modules/local/process/salmon_index'
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { SORTMERNA                   } from './modules/local/process/sortmerna'
-include { SALMON_QUANT                } from './modules/local/process/salmon_quant'
-include { SALMON_TX2GENE              } from './modules/local/process/salmon_tx2gene'
-include { SALMON_TXIMPORT             } from './modules/local/process/salmon_tximport'
-include { SALMON_MERGE                } from './modules/local/process/salmon_merge'
 
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
@@ -183,6 +175,7 @@ include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_softwa
 
 include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
 include { PREP_GENOME                 } from './modules/local/subworkflow/prep_genome'
+include { QUANTIFY_SALMON             } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -270,34 +263,61 @@ workflow {
     params.modules['trimgalore'].args += nextseq
     if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
 
-    // FASTQC_UMITOOLS_TRIMGALORE (
-    //     CAT_FASTQ.out.reads,
-    //     params.skip_fastqc,
-    //     params.with_umi,
-    //     params.skip_trimming,
-    //     params.modules['fastqc'],
-    //     params.modules['umitools_extract'],
-    //     params.modules['trimgalore']
-    // )
-    // ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    // ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
-    // ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
-    //
-    // /*
-    //  * Remove ribosomal RNA reads
-    //  */
-    // ch_trimmed_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
-    // ch_sortmerna_log = Channel.empty()
-    // if (params.remove_ribo_rna) {
-    //     if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fastq.gz','') }
-    //     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
-    //     SORTMERNA ( ch_trimmed_reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
-    //         .reads
-    //         .set { ch_trimmed_reads }
-    //     ch_sortmerna_log = SORTMERNA.out.log
-    //     ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
-    // }
-    //
+    FASTQC_UMITOOLS_TRIMGALORE (
+        CAT_FASTQ.out.reads,
+        params.skip_fastqc,
+        params.with_umi,
+        params.skip_trimming,
+        params.modules['fastqc'],
+        params.modules['umitools_extract'],
+        params.modules['trimgalore']
+    )
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
+
+    /*
+     * Remove ribosomal RNA reads
+     */
+    ch_trimmed_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    ch_sortmerna_log = Channel.empty()
+    if (params.remove_ribo_rna) {
+        if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fastq.gz','') }
+        ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
+        SORTMERNA ( ch_trimmed_reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
+            .reads
+            .set { ch_trimmed_reads }
+        ch_sortmerna_log = SORTMERNA.out.log
+        ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
+    }
+
+    /*
+     * Pseudo-alignment and quantification with Salmon
+     */
+    ch_salmon_log = Channel.empty()
+    if (params.pseudo_aligner == 'salmon') {
+        // TODO nf-core: Not working - only save indices if --save_reference is specified
+        if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
+        def gencode = params.gencode  ? " --gencode" : ""
+        params.modules['salmon_index'].args += gencode
+
+        def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
+        params.modules['salmon_quant'].args += unmapped
+
+        def publish_salmon_options = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
+        QUANTIFY_SALMON (
+            ch_trimmed_reads,
+            params.salmon_index,
+            PREP_GENOME.out.fasta,
+            PREP_GENOME.out.gtf,
+            prep_options,
+            params.modules['salmon_index'],
+            params.modules['salmon_quant']
+        )
+        ch_salmon_log = QUANTIFY_SALMON.out.results
+    }
+
+
     // /*
     //  * Splice-aware genome alignment
     //  */
@@ -359,53 +379,6 @@ workflow {
     //             ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites, params.modules['hisat2_build'] ).index
     //         }
     //     }
-    // }
-    //
-    // /*
-    //  * Pseudo-alignment with Salmon
-    //  */
-    // ch_salmon_log = Channel.empty()
-    // if (params.pseudo_aligner == 'salmon') {
-    //     def publish_salmon = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
-    //     if (params.salmon_index) {
-    //         if (params.salmon_index.endsWith('.tar.gz')) {
-    //             ch_salmon_index = UNTAR_SALMON_INDEX ( params.salmon_index, publish_index ).untar
-    //         } else {
-    //             ch_salmon_index = file(params.salmon_index)
-    //         }
-    //     } else {
-    //         if (params.transcript_fasta) {
-    //             if (params.transcript_fasta.endsWith('.gz')) {
-    //                 ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( params.transcript_fasta, publish_genome ).gunzip
-    //             } else {
-    //                 ch_transcript_fasta = file(params.transcript_fasta)
-    //             }
-    //         } else {
-    //             ch_transcript_fasta = TRANSCRIPTS2FASTA ( ch_fasta, ch_gtf, publish_salmon ).fasta
-    //         }
-    //         // TODO nf-core: Not working - only save indices if --save_reference is specified
-    //         if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
-    //         def gencode = params.gencode  ? " --gencode" : ""
-    //         params.modules['salmon_index'].args += gencode
-    //         ch_salmon_index = SALMON_INDEX ( ch_transcript_fasta, params.modules['salmon_index'])
-    //     }
-    //
-    //     def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
-    //     params.modules['salmon_quant'].args += unmapped
-    //     SALMON_QUANT ( ch_trimmed_reads, ch_salmon_index, ch_gtf, params.modules['salmon_quant'] )
-    //     ch_salmon_log = SALMON_QUANT.out.results
-    //     ch_software_versions = ch_software_versions.mix(SALMON_QUANT.out.version.first().ifEmpty(null))
-    //
-    //     SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, ch_gtf, publish_salmon )
-    //     SALMON_TXIMPORT ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
-    //     SALMON_MERGE    (
-    //         SALMON_TXIMPORT.out.gene_tpm.collect{it[1]},
-    //         SALMON_TXIMPORT.out.gene_counts.collect{it[1]},
-    //         SALMON_TXIMPORT.out.transcript_tpm.collect{it[1]},
-    //         SALMON_TXIMPORT.out.transcript_counts.collect{it[1]},
-    //         SALMON_TX2GENE.out.collect(),
-    //         [:]
-    //     )
     // }
 
 //

@@ -24,7 +24,7 @@ workflow PREP_GENOME {
 
     main:
     /*
-     * PREPROCESSING: Uncompress genome fasta file if required
+     * Uncompress genome fasta file if required
      */
     if (fasta.endsWith('.gz')) {
         ch_fasta = GUNZIP_FASTA ( fasta, options ).gunzip
@@ -33,7 +33,7 @@ workflow PREP_GENOME {
     }
 
     /*
-     * PREPROCESSING: Uncompress GTF annotation file or create from GFF3 if required
+     * Uncompress GTF annotation file or create from GFF3 if required
      */
     gffread_version = Channel.empty()
     if (gtf) {
@@ -53,7 +53,7 @@ workflow PREP_GENOME {
     }
 
     /*
-     * PREPROCESSING: Uncompress additional fasta file and concatenate with reference fasta and gtf files
+     * Uncompress additional fasta file and concatenate with reference fasta and gtf files
      */
     if (additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
@@ -67,7 +67,7 @@ workflow PREP_GENOME {
     }
 
     /*
-     * PREPROCESSING: Uncompress BED12 annotation file or create from GTF if required
+     * Uncompress BED12 annotation file or create from GTF if required
      */
     if (bed12) {
         if (bed12.endsWith('.gz')) {

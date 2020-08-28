@@ -163,8 +163,10 @@ include {
     UNTAR as UNTAR_HISAT2_INDEX
     UNTAR as UNTAR_RSEM_INDEX         } from './modules/local/process/untar'
 include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genomegenerate'
+include { STAR_ALIGN                  } from './modules/local/process/star_align'
 include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
 include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
+include { HISAT2_ALIGN                } from './modules/local/process/hisat2_align'
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { SORTMERNA                   } from './modules/local/process/sortmerna'
@@ -274,8 +276,8 @@ workflow {
         params.modules['trimgalore']
     )
     ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
     ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 
     /*
      * Remove ribosomal RNA reads
@@ -292,26 +294,50 @@ workflow {
         ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
     }
 
-    // /*
-    //  * Splice-aware genome alignment
-    //  */
-    // def publish_index = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : [:]]
-    // if (!params.skip_alignment) {
-    //     /*
-    //      * Alignment with STAR
-    //      */
-    //     if (params.aligner == 'star') {
-    //         if (params.star_index) {
-    //             if (params.star_index.endsWith('.tar.gz')) {
-    //                 ch_star_index = UNTAR_STAR_INDEX ( params.star_index, publish_index ).untar
-    //             } else {
-    //                 ch_star_index = file(params.star_index)
+    /*
+     * Alignment with STAR
+     */
+    ch_star_log = Channel.empty()
+    if (!params.skip_alignment && params.aligner == 'star') {
+        if (params.star_index) {
+            if (params.star_index.endsWith('.tar.gz')) {
+                ch_star_index = UNTAR_STAR_INDEX ( params.star_index, publish_index_options ).untar
+            } else {
+                ch_star_index = file(params.star_index)
+            }
+        } else {
+            // TODO nf-core: Not working - only save indices if --save_reference is specified
+            if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
+            ch_star_index = STAR_GENOMEGENERATE ( PREP_GENOME.out.fasta, PREP_GENOME.out.gtf, params.modules['star_genomegenerate'] ).index
+        }
+
+        if (params.save_align_intermeds) { params.modules['star_align'].publish_files.put('bam','')              }
+        if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
+        def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
+        params.modules['star_align'].args += unaligned
+        println(params.modules['star_align'])
+        STAR_ALIGN (
+            ch_trimmed_reads,
+            ch_star_index,
+            PREP_GENOME.out.gtf,
+            params.modules['star_align']
+        )
+
+        ch_star_log = STAR_ALIGN.out.log_final
+        // tuple path("*Log.final.out"), path('*.sortedByCoord.out.bam'), path('*.toTranscriptome.out.bam') into star_aligned
+    }
+    //         // Filter removes all 'aligned' channels that fail the check
+    //         star_bams = Channel.create()
+    //         star_bams_transcriptome = Channel.create()
+    //         star_aligned
+    //             .filter { logs, bams, bams_transcriptome -> check_log(logs) }
+    //             .separate (star_bams, star_bams_transcriptome) {
+    //                 bam_set -> [bam_set[1], bam_set[2]]
     //             }
-    //         } else {
-    //             // TODO nf-core: Not working - only save indices if --save_reference is specified
-    //             if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
-    //             ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, params.modules['star_genomegenerate'] ).index
-    //         }
+    //         bam = star_bams
+    //         bam_transcriptome = star_bams_transcriptome
+    //     }
+
     //
     //         /*
     //          * Gene/transcript quantification with RSEM
@@ -319,7 +345,7 @@ workflow {
     //         if (!skip_rsem) {
     //             if (params.rsem_index) {
     //                 if (params.rsem_index.endsWith('.tar.gz')) {
-    //                     ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index ).untar
+    //                     ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index_options ).untar
     //                 } else {
     //                     ch_rsem_index = file(params.rsem_index)
     //                 }
@@ -334,10 +360,11 @@ workflow {
     //     /*
     //      * Alignment with HISAT2
     //      */
+    // ch_hisat2_log = Channel.empty()
     //     } else if (params.aligner == 'hisat2') {
     //         if (params.hisat2_index) {
     //             if (params.hisat2_index.endsWith('.tar.gz')) {
-    //                 ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index ).untar
+    //                 ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index_options ).untar
     //             } else {
     //                 ch_hisat2_index = file(params.hisat2_index)
     //             }
@@ -468,73 +495,7 @@ workflow {
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
 
-// if (!params.skip_alignment) {
-//     if (params.aligner == 'star') {
-//         hisat_stdout = Channel.empty()
-//         process STAR_ALIGN {
-//             tag "$name"
-//             label 'high_memory'
-//             publishDir "${params.outdir}/star", mode: params.publish_dir_mode,
-//                 saveAs: { filename ->
-//                     if (filename.indexOf(".bam") == -1) "logs/$filename"
-//                     else if (params.save_unaligned && filename != "where_are_my_files.txt" && 'Unmapped' in filename) unmapped/filename
-//                     else if (!params.save_align_intermeds && filename == "where_are_my_files.txt") filename
-//                     else if (params.save_align_intermeds && filename != "where_are_my_files.txt") filename
-//                     else null
-//                 }
-//
-//             input:
-//             tuple val(name), path(reads) from trimmed_reads_alignment
-//             path index from ch_star_index
-//             path gtf from ch_gtf
-//             path wherearemyfiles from ch_where_are_my_files
-//
-//             output:
-//             tuple path("*Log.final.out"), path('*.sortedByCoord.out.bam'), path('*.toTranscriptome.out.bam') into star_aligned
-//             path "*.out" into alignment_logs
-//             path "*SJ.out.tab"
-//             path "*Log.out" into star_log
-//             path "where_are_my_files.txt"
-//             path "*Unmapped*" optional true
-//             path "${prefix}.Aligned.sortedByCoord.out.bam.bai" into bam_index
-//
-//             script:
-//             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-//             seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
-//             def star_mem = task.memory ?: params.star_memory ?: false
-//             def avail_mem = star_mem ? "--limitBAMsortRAM ${star_mem.toBytes() - 100000000}" : ''
-//             def unaligned = params.save_unaligned ? "--outReadsUnmapped Fastx" : ''
-//             """
-//             STAR \\
-//                 --genomeDir $index \\
-//                 --sjdbGTFfile $gtf \\
-//                 --readFilesIn $reads  \\
-//                 --runThreadN $task.cpus \\
-//                 --twopassMode Basic \\
-//                 --outWigType bedGraph \\
-//                 --outSAMtype BAM SortedByCoordinate $avail_mem \\
-//                 --readFilesCommand zcat \\
-//                 --runDirPerm All_RWX $unaligned \\
-//                 --quantMode TranscriptomeSAM \\
-//                 --outFileNamePrefix $prefix. $seq_center \\
-//                 --runRNGseed 0 \\
-//                 $params.star_align_options
-//
-//             samtools index ${prefix}.Aligned.sortedByCoord.out.bam
-//             """
-//         }
-//         // Filter removes all 'aligned' channels that fail the check
-//         star_bams = Channel.create()
-//         star_bams_transcriptome = Channel.create()
-//         star_aligned
-//             .filter { logs, bams, bams_transcriptome -> check_log(logs) }
-//             .separate (star_bams, star_bams_transcriptome) {
-//                 bam_set -> [bam_set[1], bam_set[2]]
-//             }
-//         bam = star_bams
-//         bam_transcriptome = star_bams_transcriptome
-//     }
-//
+// if (!params.skip_alignment) {//
 //     if (params.aligner == 'hisat2') {
 //         star_log = Channel.empty()
 //         process HISAT2_ALIGN {

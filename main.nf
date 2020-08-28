@@ -159,11 +159,8 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 ////////////////////////////////////////////////////
 
 include {
-    UNTAR as UNTAR_STAR_INDEX
     UNTAR as UNTAR_HISAT2_INDEX
     UNTAR as UNTAR_RSEM_INDEX         } from './modules/local/process/untar'
-include { STAR_GENOMEGENERATE         } from './modules/local/process/star_genomegenerate'
-include { STAR_ALIGN                  } from './modules/local/process/star_align'
 include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
 include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
 include { HISAT2_ALIGN                } from './modules/local/process/hisat2_align'
@@ -177,6 +174,8 @@ include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_softwa
 
 include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
 include { PREP_GENOME                 } from './modules/local/subworkflow/prep_genome'
+include { ALIGN_STAR                  } from './modules/local/subworkflow/align_star'
+//include { ALIGN_HISAT2                } from './modules/local/subworkflow/align_hisat2'
 include { QUANTIFY_SALMON             } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
@@ -222,7 +221,7 @@ def check_log(logs) {
 workflow {
 
     /*
-     * PREPROCESSING: Uncompress and prepare reference genome files
+     * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
     def publish_genome_options = params.save_reference ? [publish_dir : 'genome']       : [publish_files : [:]]
     def publish_index_options  = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : [:]]
@@ -238,7 +237,7 @@ workflow {
     ch_software_versions = ch_software_versions.mix(PREP_GENOME.out.gffread_version.ifEmpty(null))
 
     /*
-     * Read in samplesheet, validate and stage input files
+     * SUBWORKFLOW: Read in samplesheet, validate and stage input files
      */
     INPUT_CHECK ( ch_input, params.seq_center, [:] )
         .map {
@@ -250,12 +249,12 @@ workflow {
         .set { ch_cat_fastq }
 
     /*
-     * Concatenate FastQ files from same sample if required
+     * MODULE: Concatenate FastQ files from same sample if required
      */
     CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
 
     /*
-     * Read QC, extract UMI and trim adapters
+     * SUBWORKFLOW: Read QC, extract UMI and trim adapters
      */
     def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
     def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
@@ -280,7 +279,7 @@ workflow {
     ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 
     /*
-     * Remove ribosomal RNA reads
+     * MODULE: Remove ribosomal RNA reads
      */
     ch_trimmed_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
     ch_sortmerna_log = Channel.empty()
@@ -295,48 +294,41 @@ workflow {
     }
 
     /*
-     * Alignment with STAR
+     * SUBWORKFLOW: Alignment with STAR
      */
     ch_star_log = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
-        if (params.star_index) {
-            if (params.star_index.endsWith('.tar.gz')) {
-                ch_star_index = UNTAR_STAR_INDEX ( params.star_index, publish_index_options ).untar
-            } else {
-                ch_star_index = file(params.star_index)
-            }
-        } else {
-            // TODO nf-core: Not working - only save indices if --save_reference is specified
-            if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
-            ch_star_index = STAR_GENOMEGENERATE ( PREP_GENOME.out.fasta, PREP_GENOME.out.gtf, params.modules['star_genomegenerate'] ).index
-        }
+        // TODO nf-core: Not working - only save indices if --save_reference is specified
+        if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
 
         if (params.save_align_intermeds) { params.modules['star_align'].publish_files.put('bam','')              }
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
         params.modules['star_align'].args += unaligned
-        println(params.modules['star_align'])
-        STAR_ALIGN (
+
+        ALIGN_STAR (
             ch_trimmed_reads,
-            ch_star_index,
+            params.star_index,
+            PREP_GENOME.out.fasta,
             PREP_GENOME.out.gtf,
+            params.modules['star_genomegenerate'],
             params.modules['star_align']
         )
+        ch_star_log = ALIGN_STAR.out.log_final
+        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.version.first().ifEmpty(null))
 
-        ch_star_log = STAR_ALIGN.out.log_final
-        // tuple path("*Log.final.out"), path('*.sortedByCoord.out.bam'), path('*.toTranscriptome.out.bam') into star_aligned
+        //     // Filter removes all 'aligned' channels that fail the check
+        //     star_bams = Channel.create()
+        //     star_bams_transcriptome = Channel.create()
+        //     star_aligned
+        //         .filter { logs, bams, bams_transcriptome -> check_log(logs) }
+        //         .separate (star_bams, star_bams_transcriptome) {
+        //             bam_set -> [bam_set[1], bam_set[2]]
+        //         }
+        //     bam = star_bams
+        //     bam_transcriptome = star_bams_transcriptome
+        // }
     }
-    //         // Filter removes all 'aligned' channels that fail the check
-    //         star_bams = Channel.create()
-    //         star_bams_transcriptome = Channel.create()
-    //         star_aligned
-    //             .filter { logs, bams, bams_transcriptome -> check_log(logs) }
-    //             .separate (star_bams, star_bams_transcriptome) {
-    //                 bam_set -> [bam_set[1], bam_set[2]]
-    //             }
-    //         bam = star_bams
-    //         bam_transcriptome = star_bams_transcriptome
-    //     }
 
     //
     //         /*

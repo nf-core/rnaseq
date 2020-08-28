@@ -158,16 +158,10 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-include {
-    UNTAR as UNTAR_HISAT2_INDEX
-    UNTAR as UNTAR_RSEM_INDEX         } from './modules/local/process/untar'
-include { HISAT2_EXTRACTSPLICESITES   } from './modules/local/process/hisat2_extractsplicesites'
-include { HISAT2_BUILD                } from './modules/local/process/hisat2_build'
-include { HISAT2_ALIGN                } from './modules/local/process/hisat2_align'
+include { UNTAR as UNTAR_RSEM_INDEX   } from './modules/local/process/untar'
 include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
 include { SORTMERNA                   } from './modules/local/process/sortmerna'
-
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 // include { MULTIQC                     } from './modules/local/process/multiqc'
@@ -175,7 +169,7 @@ include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_softwa
 include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
 include { PREP_GENOME                 } from './modules/local/subworkflow/prep_genome'
 include { ALIGN_STAR                  } from './modules/local/subworkflow/align_star'
-//include { ALIGN_HISAT2                } from './modules/local/subworkflow/align_hisat2'
+include { ALIGN_HISAT2                } from './modules/local/subworkflow/align_hisat2'
 include { QUANTIFY_SALMON             } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
@@ -328,54 +322,51 @@ workflow {
         //     bam = star_bams
         //     bam_transcriptome = star_bams_transcriptome
         // }
+        //
+        // /*
+        //  * SUBWORKFLOW: Gene/transcript quantification with RSEM
+        //  */
+        // if (!skip_rsem) {
+        //     if (params.rsem_index) {
+        //         if (params.rsem_index.endsWith('.tar.gz')) {
+        //             ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index_options ).untar
+        //         } else {
+        //             ch_rsem_index = file(params.rsem_index)
+        //         }
+        //     } else {
+        //         // TODO nf-core: Not working - only save indices if --save_reference is specified
+        //         if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
+        //         //println(params.modules['rsem_preparereference'])
+        //         ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf, params.modules['rsem_preparereference'] ).index
+        //     }
+        // }
     }
 
-    //
-    //         /*
-    //          * Gene/transcript quantification with RSEM
-    //          */
-    //         if (!skip_rsem) {
-    //             if (params.rsem_index) {
-    //                 if (params.rsem_index.endsWith('.tar.gz')) {
-    //                     ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index, publish_index_options ).untar
-    //                 } else {
-    //                     ch_rsem_index = file(params.rsem_index)
-    //                 }
-    //             } else {
-    //                 // TODO nf-core: Not working - only save indices if --save_reference is specified
-    //                 if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
-    //                 //println(params.modules['rsem_preparereference'])
-    //                 ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf, params.modules['rsem_preparereference'] ).index
-    //             }
-    //         }
-    //
-    //     /*
-    //      * Alignment with HISAT2
-    //      */
-    // ch_hisat2_log = Channel.empty()
-    //     } else if (params.aligner == 'hisat2') {
-    //         if (params.hisat2_index) {
-    //             if (params.hisat2_index.endsWith('.tar.gz')) {
-    //                 ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index, publish_index_options ).untar
-    //             } else {
-    //                 ch_hisat2_index = file(params.hisat2_index)
-    //             }
-    //         } else {
-    //             if (!params.splicesites) {
-    //                 def publish_splicesites = params.save_reference ? [publish_dir : 'genome/index/hisat2'] : [publish_files : [:]]
-    //                 ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf, publish_splicesites ).txt
-    //             } else {
-    //                 ch_splicesites = file(params.splicesites)
-    //             }
-    //             // TODO nf-core: Not working - only save indices if --save_reference is specified
-    //             if (params.save_reference) { params.modules['hisat2_build']['publish_files'] = null }
-    //             ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites, params.modules['hisat2_build'] ).index
-    //         }
-    //     }
-    // }
+    /*
+     * SUBWORKFLOW: Alignment with HISAT2
+     */
+    ch_hisat2_log = Channel.empty()
+    if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
+        // TODO nf-core: Not working - only save indices if --save_reference is specified
+        if (params.save_reference) { params.modules['hisat2_build']['publish_files'] = null }
+        if (params.save_align_intermeds) { params.modules['hisat2_align'].publish_files.put('bam','')              }
+        if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
+
+        ALIGN_HISAT2 (
+            ch_trimmed_reads,
+            params.hisat2_index,
+            PREP_GENOME.out.fasta,
+            PREP_GENOME.out.gtf,
+            params.splicesites,
+            params.modules['hisat2_build'],
+            params.modules['hisat2_align']
+        )
+        ch_hisat2_log = ALIGN_HISAT2.out.log
+        ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.version.first().ifEmpty(null))
+    }
 
     /*
-     * Pseudo-alignment and quantification with Salmon
+     * SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
      */
     ch_salmon_log = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
@@ -403,21 +394,6 @@ workflow {
 
 //
 //     /*
-//      * Map reads & BAM QC
-//      */
-//     score = params.bwa_min_score ? " -T ${params.bwa_min_score}" : ''
-//     params.modules['bwa_mem'].args += score
-//     MAP_BWA_MEM (
-//         FASTQC_TRIMGALORE.out.reads,
-//         ch_index,
-//         ch_fasta,
-//         params.modules['bwa_mem'],
-//         params.modules['samtools_sort_lib']
-//     )
-//     ch_software_versions = ch_software_versions.mix(MAP_BWA_MEM.out.bwa_version.first())
-//     ch_software_versions = ch_software_versions.mix(MAP_BWA_MEM.out.samtools_version.first().ifEmpty(null))
-//
-//     /*
 //      * Mark duplicates & filter BAM files
 //      */
 //     MARK_DUPLICATES_PICARD (
@@ -433,7 +409,7 @@ workflow {
 //     ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
 //
     /*
-     * Pipeline reporting
+     * MODULE: Pipeline reporting
      */
     GET_SOFTWARE_VERSIONS ( ch_software_versions.map { it }.collect(), [publish_files : ['csv':'']] )
     OUTPUT_DOCUMENTATION  ( ch_output_docs, ch_output_docs_images, [:] )
@@ -488,78 +464,6 @@ workflow {
 ////////////////////////////////////////////////////
 
 // if (!params.skip_alignment) {//
-//     if (params.aligner == 'hisat2') {
-//         star_log = Channel.empty()
-//         process HISAT2_ALIGN {
-//             tag "$name"
-//             label 'high_memory'
-//             publishDir "${params.outdir}/hisat2", mode: params.publish_dir_mode,
-//                 saveAs: { filename ->
-//                     if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
-//                     else if (!params.save_align_intermeds && filename == "where_are_my_files.txt") filename
-//                     else if (params.save_align_intermeds && filename != "where_are_my_files.txt") filename
-//                     else null
-//                 }
-//
-//             input:
-//             tuple val(name), path(reads) from trimmed_reads_alignment
-//             path index from ch_hisat2_index
-//             path splicesites from ch_splicesites
-//             path wherearemyfiles from ch_where_are_my_files
-//
-//             output:
-//             path "${prefix}.bam" into hisat2_bam
-//             path "${prefix}.hisat2_summary.txt" into alignment_logs
-//             path "where_are_my_files.txt"
-//             path "unmapped.hisat2*" optional true
-//
-//             script:
-//             index_base = index[0].toString() - ~/.\d.ht2l?/
-//             prefix = reads[0].toString() - ~/(_1)?(_R1)?(_trimmed)?(_val_1)?(\.fq)?(\.fastq)?(\.gz)?$/
-//             seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
-//             def rnastrandness = ''
-//             if (forward_stranded && !unstranded) {
-//                 rnastrandness = params.single_end ? '--rna-strandness F' : '--rna-strandness FR'
-//             } else if (reverse_stranded && !unstranded) {
-//                 rnastrandness = params.single_end ? '--rna-strandness R' : '--rna-strandness RF'
-//             }
-//             if (params.single_end) {
-//                 unaligned = params.save_unaligned ? "--un-gz unmapped.hisat2.gz" : ''
-//                 """
-//                 hisat2 \\
-//                     -x $index_base \\
-//                     -U $reads \\
-//                     $rnastrandness \\
-//                     --known-splicesite-infile $splicesites \\
-//                     -p $task.cpus $unaligned \\
-//                     --met-stderr \\
-//                     --new-summary \\
-//                     --dta \\
-//                     $params.hisat2_align_options \\
-//                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
-//                     | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
-//                 """
-//             } else {
-//                 unaligned = params.save_unaligned ? "--un-conc-gz unmapped.hisat2.gz" : ''
-//                 """
-//                 hisat2 \\
-//                     -x $index_base \\
-//                     -1 ${reads[0]} \\
-//                     -2 ${reads[1]} \\
-//                     $rnastrandness \\
-//                     --known-splicesite-infile $splicesites \\
-//                     --no-mixed \\
-//                     --no-discordant \\
-//                     -p $task.cpus $unaligned \\
-//                     --met-stderr \\
-//                     --new-summary \\
-//                     $params.hisat2_align_options \\
-//                     --summary-file ${prefix}.hisat2_summary.txt $seq_center \\
-//                     | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
-//                 """
-//             }
-//         }
-//
 //         process HISAT2_SORT_BAM {
 //             tag "${bam.baseName}"
 //             label 'mid_memory'

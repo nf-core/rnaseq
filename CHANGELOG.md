@@ -37,6 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
 * Fix `--gff` input bug [#452](https://github.com/nf-core/rnaseq/issues/452)
 * Fix `TMP_DIR` for process MarkDuplicates and Qualimap [#458](https://github.com/nf-core/rnaseq/pull/458)
+* Fix error with gzipped annotation file [#362](https://github.com/nf-core/rnaseq/issues/362)
+* Fix STAR unmapped reads not output [#413](https://github.com/nf-core/rnaseq/issues/413)
+* Add option for turning on/off STAR command line option (--sjdbGTFfile) [#338](https://github.com/nf-core/rnaseq/issues/338)
 
 ### Updated Packages
 
@@ -77,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
+* `--star_ignore_sjdbgtf` [#338](https://github.com/nf-core/rnaseq/issues/338)
 * `--star_align_options` parameter to pass additional options to the `STAR` alignment process. Fixes [#363](https://github.com/nf-core/rnaseq/issues/363)
 * `--star_index_options` parameter to pass additional options to the `STAR` genome indexing process. Fixes [#276](https://github.com/nf-core/rnaseq/issues/276)
 * `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#368](https://github.com/nf-core/rnaseq/pull/368) and [#371](https://github.com/nf-core/rnaseq/pull/371)

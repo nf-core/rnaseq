@@ -292,33 +292,6 @@ workflow {
         ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
     }
 
-    /*
-     * Pseudo-alignment and quantification with Salmon
-     */
-    ch_salmon_log = Channel.empty()
-    if (params.pseudo_aligner == 'salmon') {
-        // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
-        def gencode = params.gencode  ? " --gencode" : ""
-        params.modules['salmon_index'].args += gencode
-
-        def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
-        params.modules['salmon_quant'].args += unmapped
-
-        QUANTIFY_SALMON (
-            ch_trimmed_reads,
-            params.salmon_index,
-            PREP_GENOME.out.fasta,
-            PREP_GENOME.out.gtf,
-            publish_index_options,
-            publish_genome_options,
-            params.modules['salmon_index'],
-            params.modules['salmon_quant']
-        )
-        ch_salmon_log = QUANTIFY_SALMON.out.results
-    }
-
-
     // /*
     //  * Splice-aware genome alignment
     //  */
@@ -381,6 +354,33 @@ workflow {
     //         }
     //     }
     // }
+
+    /*
+     * Pseudo-alignment and quantification with Salmon
+     */
+    ch_salmon_log = Channel.empty()
+    if (params.pseudo_aligner == 'salmon') {
+        // TODO nf-core: Not working - only save indices if --save_reference is specified
+        if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
+        def gencode = params.gencode  ? " --gencode" : ""
+        params.modules['salmon_index'].args += gencode
+
+        def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
+        params.modules['salmon_quant'].args += unmapped
+
+        QUANTIFY_SALMON (
+            ch_trimmed_reads,
+            params.salmon_index,
+            PREP_GENOME.out.fasta,
+            PREP_GENOME.out.gtf,
+            publish_index_options,
+            publish_genome_options,
+            params.modules['salmon_index'],
+            params.modules['salmon_quant']
+        )
+        ch_salmon_log = QUANTIFY_SALMON.out.results
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))
+    }
 
 //
 //     /*

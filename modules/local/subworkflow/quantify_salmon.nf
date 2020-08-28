@@ -13,13 +13,14 @@ include { SALMON_MERGE      } from '../process/salmon_merge'
 
 workflow QUANTIFY_SALMON {
     take:
-    reads         // channel: [ val(meta), [ reads ] ]
-    index             // file: /path/to/salmon/index/
-    fasta             // file: /path/to/transcripts.fasta
-    gtf               // file: /path/to/genome.gtf
-    prep_options     //  map: module options for additional arguments and publishing files
-    index_options
-    quant_options
+    reads                  // channel: [ val(meta), [ reads ] ]
+    index                  //    file: /path/to/salmon/index/
+    fasta                  //    file: /path/to/transcripts.fasta
+    gtf                    //    file: /path/to/genome.gtf
+    publish_index_options  //     map: options for publishing index
+    publish_genome_options //     map: options for publishing genome files
+    salmon_index_options   //     map: options for salmon_index module
+    salmon_quant_options   //     map: options for salmon_quant module
 
     main:
     /*
@@ -27,19 +28,19 @@ workflow QUANTIFY_SALMON {
      */
     if (index) {
         if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index, prep_options ).untar
+            ch_index = UNTAR ( index, publish_index_options ).untar
         } else {
             ch_index = file(index)
         }
     } else {
         if (fasta) {
             if (fasta.endsWith('.gz')) {
-                ch_fasta = GUNZIP ( fasta, prep_options ).gunzip
+                ch_fasta = GUNZIP ( fasta, publish_genome_options ).gunzip
             } else {
                 ch_fasta = file(fasta)
             }
         } else {
-            ch_fasta = TRANSCRIPTS2FASTA ( fasta, gtf, prep_options ).fasta
+            ch_fasta = TRANSCRIPTS2FASTA ( fasta, gtf, publish_genome_options ).fasta
         }
         ch_index = SALMON_INDEX ( ch_fasta, index_options )
     }
@@ -60,6 +61,6 @@ workflow QUANTIFY_SALMON {
     )
 
     emit:
-    results        = SALMON_QUANT.out.results // channel: [ val(meta), results_dir ]
-    salmon_version = SALMON_QUANT.out.version // path: *.version.txt
+    results = SALMON_QUANT.out.results // channel: [ val(meta), results_dir ]
+    version = SALMON_QUANT.out.version // path: *.version.txt
 }

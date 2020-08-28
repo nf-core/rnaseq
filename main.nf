@@ -222,14 +222,15 @@ workflow {
     /*
      * PREPROCESSING: Uncompress and prepare reference genome files
      */
-    def prep_genome_options = params.save_reference ? [publish_dir : 'genome'] : [publish_files : [:]]
+    def publish_genome_options = params.save_reference ? [publish_dir : 'genome']       : [publish_files : [:]]
+    def publish_index_options  = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : [:]]
     PREP_GENOME (
         params.fasta,
         params.gtf,
         params.gff,
         params.bed12,
         params.additional_fasta,
-        prep_genome_options
+        publish_genome_options
     )
     ch_software_versions = Channel.empty()
     ch_software_versions = ch_software_versions.mix(PREP_GENOME.out.gffread_version.ifEmpty(null))
@@ -304,13 +305,13 @@ workflow {
         def unmapped = params.save_unaligned ? " --writeUnmappedNames" : ''
         params.modules['salmon_quant'].args += unmapped
 
-        def publish_salmon_options = params.save_reference ? [publish_dir : 'genome/index/salmon'] : [publish_files : [:]]
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             params.salmon_index,
             PREP_GENOME.out.fasta,
             PREP_GENOME.out.gtf,
-            prep_options,
+            publish_index_options,
+            publish_genome_options
             params.modules['salmon_index'],
             params.modules['salmon_quant']
         )

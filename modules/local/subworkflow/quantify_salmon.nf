@@ -42,14 +42,14 @@ workflow QUANTIFY_SALMON {
         } else {
             ch_fasta = TRANSCRIPTS2FASTA ( fasta, gtf, publish_genome_options ).fasta
         }
-        ch_index = SALMON_INDEX ( ch_fasta, index_options )
+        ch_index = SALMON_INDEX ( ch_fasta, salmon_index_options )
     }
 
     /*
      * Quantify and merge counts across samples
      */
-    SALMON_QUANT    ( reads, ch_index, gtf, quant_options )
-    SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, ch_gtf, prep_options )
+    SALMON_QUANT    ( reads, ch_index, gtf, salmon_quant_options )
+    SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, gtf, publish_genome_options )
     SALMON_TXIMPORT ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
     SALMON_MERGE    (
         SALMON_TXIMPORT.out.gene_tpm.collect{it[1]},

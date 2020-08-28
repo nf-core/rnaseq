@@ -311,7 +311,7 @@ workflow {
             PREP_GENOME.out.fasta,
             PREP_GENOME.out.gtf,
             publish_index_options,
-            publish_genome_options
+            publish_genome_options,
             params.modules['salmon_index'],
             params.modules['salmon_quant']
         )

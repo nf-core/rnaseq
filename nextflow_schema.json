@@ -465,6 +465,10 @@
                     "type": "string",
                     "fa_icon": "fas fa-database"
                 },
+                "star_ignore_sjdbgtf": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database"
+                },
                 "star_align_options": {
                     "type": "string",
                     "fa_icon": "fas fa-database"

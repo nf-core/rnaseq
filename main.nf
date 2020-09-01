@@ -136,8 +136,6 @@ ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", ch
 ch_heatmap_header        = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
 ch_biotypes_header       = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 
-ch_where_are_my_files    = file("$baseDir/assets/where_are_my_files.txt", checkIfExists: true)
-
 ////////////////////////////////////////////////////
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
@@ -463,7 +461,6 @@ workflow {
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
 
-// if (!params.skip_alignment) {//
 //         process HISAT2_SORT_BAM {
 //             tag "${bam.baseName}"
 //             label 'mid_memory'

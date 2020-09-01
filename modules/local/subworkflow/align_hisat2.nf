@@ -21,6 +21,11 @@ workflow ALIGN_HISAT2 {
     /*
      * Uncompress HISAT2 index or generate from scratch if required
     */
+    if (!splicesites) {
+        ch_splicesites = HISAT2_EXTRACTSPLICESITES ( gtf, index_options ).txt
+    } else {
+        ch_splicesites = file(splicesites)
+    }
     if (index) {
         if (index.endsWith('.tar.gz')) {
             ch_index = UNTAR ( index, index_options ).untar
@@ -28,22 +33,18 @@ workflow ALIGN_HISAT2 {
             ch_index = file(index)
         }
     } else {
-        if (!splicesites) {
-            ch_splicesites = HISAT2_EXTRACTSPLICESITES ( gtf, index_options ).txt
-        } else {
-            ch_splicesites = file(splicesites)
-        }
         ch_index = HISAT2_BUILD ( fasta, gtf, ch_splicesites, index_options ).index
     }
+
 
     /*
      * Map reads with HISAT2
      */
-    HISAT2_ALIGN ( reads, ch_index, gtf, align_options )
+    HISAT2_ALIGN ( reads, ch_index, ch_splicesites, align_options )
 
     emit:
-    bam     = HISAT2_ALIGN.out.bam     // channel: [ val(meta), bam   ]
-    log     = HISAT2_ALIGN.out.log     // channel: [ val(meta), log   ]
-    fastq   = HISAT2_ALIGN.out.fastq   // channel: [ val(meta), fastq ]
+    //bam     = HISAT2_ALIGN.out.bam     // channel: [ val(meta), bam   ]
+    //log     = HISAT2_ALIGN.out.log     // channel: [ val(meta), log   ]
+    //fastq   = HISAT2_ALIGN.out.fastq   // channel: [ val(meta), fastq ]
     version = HISAT2_ALIGN.out.version //    path: *.version.txt
 }

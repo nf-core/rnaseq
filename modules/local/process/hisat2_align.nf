@@ -8,10 +8,10 @@ process HISAT2_ALIGN {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/hisat2:2.2.0--py37hfa133b6_4"
-    //container "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37hfa133b6_4"
+    container "quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
+    //container "https://depot.galaxyproject.org/singularity/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
 
-    conda (params.conda ? "bioconda::hisat2=2.2.0" : null)
+    conda (params.conda ? "bioconda::hisat2=2.2.0 bioconda::samtools=1.10" : null)
 
     input:
     tuple val(meta), path(reads)
@@ -49,13 +49,13 @@ process HISAT2_ALIGN {
         rnastrandness = meta.single_end ? '--rna-strandness R' : '--rna-strandness RF'
     }
 
-    def index_base = index[0].toString() - ~/.\d.ht2l?/
     def seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
     if (meta.single_end) {
         def unaligned = params.save_unaligned ? "--un-gz unmapped.hisat2.gz" : ''
         """
+        INDEX=`find -L ./ -name "*.1.ht2" | sed 's/.1.ht2//'`
         hisat2 \\
-            -x $index_base \\
+            -x \$INDEX \\
             -U $reads \\
             $rnastrandness \\
             --known-splicesite-infile $splicesites \\
@@ -71,8 +71,9 @@ process HISAT2_ALIGN {
     } else {
         def unaligned = params.save_unaligned ? "--un-conc-gz unmapped.hisat2.gz" : ''
         """
+        INDEX=`find -L ./ -name "*.1.ht2" | sed 's/.1.ht2//'`
         hisat2 \\
-            -x $index_base \\
+            -x \$INDEX \\
             -1 ${reads[0]} \\
             -2 ${reads[1]} \\
             $rnastrandness \\

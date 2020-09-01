@@ -392,41 +392,6 @@ workflow {
         ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
     }
 
-    //
-    //     process PICARD_MARKDUPLICATES {
-    //         tag "${bam.baseName - '.sorted'}"
-    //         publishDir "${params.outdir}/markduplicates", mode: params.publish_dir_mode,
-    //             saveAs: { filename ->
-    //                 filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"
-    //             }
-    //
-    //         when:
-    //         !params.skip_qc && !params.skip_dupradar
-    //
-    //         input:
-    //         path bam from bam_markduplicates
-    //
-    //         output:
-    //         path "${bam.baseName}.markDups.bam" into bam_md
-    //         path "${bam.baseName}.markDups_metrics.txt" into picard_results
-    //         path "${bam.baseName}.markDups.bam.bai"
-    //
-    //         script:
-    //         markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2)+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
-    //         """
-    //         picard $markdup_java_options MarkDuplicates \\
-    //             INPUT=$bam \\
-    //             OUTPUT=${bam.baseName}.markDups.bam \\
-    //             TMP_DIR='./tmp' \\
-    //             METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
-    //             REMOVE_DUPLICATES=false \\
-    //             ASSUME_SORTED=true \\
-    //             PROGRAM_RECORD_ID='null' \\
-    //             VALIDATION_STRINGENCY=LENIENT
-    //         samtools index ${bam.baseName}.markDups.bam
-    //         """
-    //     }
-
     /*
      * MODULE: Remove duplicate reads based on UMIs
      */
@@ -455,25 +420,14 @@ workflow {
     /*
      * SUBWORKFLOW: Mark duplicate reads
      */
-    // if (!params.skip_alignment && !params.skip_markduplicates) {
-    //     // MARK_DUPLICATES_PICARD (
-    //     //     ch_genome_bam,
-    //     //     params.modules['picard_markduplicates'],
-    //     //     params.modules['picard_markduplicates_samtools']
-    //     // )
-    //     // ch_software_versions = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
-    //     //
-    //     //         picard $markdup_java_options MarkDuplicates \\
-    //     //             INPUT=$bam \\
-    //     //             OUTPUT=${bam.baseName}.markDups.bam \\
-    //     //             TMP_DIR='./tmp' \\
-    //     //             METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
-    //     //             REMOVE_DUPLICATES=false \\
-    //     //             ASSUME_SORTED=true \\
-    //     //             PROGRAM_RECORD_ID='null' \\
-    //     //             VALIDATION_STRINGENCY=LENIENT
-    //     //         samtools index ${bam.baseName}.markDups.bam
-    // }
+    if (!params.skip_alignment && !params.skip_markduplicates) {
+        MARK_DUPLICATES_PICARD (
+            ch_genome_bam,
+            params.modules['picard_markduplicates'],
+            params.modules['picard_markduplicates_samtools']
+        )
+        ch_software_versions = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
+    }
 
     /*
      * SUBWORKFLOW: Pseudo-alignment and quantification with Salmon

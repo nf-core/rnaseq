@@ -15,7 +15,7 @@ workflow ALIGN_STAR {
     gtf              //    file: /path/to/genome.gtf
     index_options    //     map: options for star_genomegenerate module
     align_options    //     map: options for star_align module
-    samtools_options //     map: options for bam_sort_samtools workflow
+    samtools_options //     map: options for bam_sort_samtools subworkflow
 
     main:
     /*
@@ -42,7 +42,7 @@ workflow ALIGN_STAR {
     BAM_SORT_SAMTOOLS ( STAR_ALIGN.out.bam, samtools_options )
 
     emit:
-    star_bam         = STAR_ALIGN.out.bam                     // channel: [ val(meta), bam            ]
+    orig_bam         = STAR_ALIGN.out.bam                     // channel: [ val(meta), bam            ]
     log_final        = STAR_ALIGN.out.log_final               // channel: [ val(meta), log_final      ]
     log_out          = STAR_ALIGN.out.log_out                 // channel: [ val(meta), log_out        ]
     log_progress     = STAR_ALIGN.out.log_progress            // channel: [ val(meta), log_progress   ]

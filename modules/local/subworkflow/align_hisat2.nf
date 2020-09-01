@@ -17,7 +17,7 @@ workflow ALIGN_HISAT2 {
     splicesites      //    file: /path/to/genome.splicesites.txt
     index_options    //     map: options for hisat2_build module
     align_options    //     map: options for hisat2_align module
-    samtools_options //     map: options for bam_sort_samtools workflow
+    samtools_options //     map: options for bam_sort_samtools subworkflow
 
     main:
     /*
@@ -49,7 +49,7 @@ workflow ALIGN_HISAT2 {
     BAM_SORT_SAMTOOLS ( HISAT2_ALIGN.out.bam, samtools_options )
 
     emit:
-    hisat2_bam       = HISAT2_ALIGN.out.bam     // channel: [ val(meta), bam   ]
+    orig_bam         = HISAT2_ALIGN.out.bam     // channel: [ val(meta), bam   ]
     summary          = HISAT2_ALIGN.out.summary // channel: [ val(meta), log   ]
     fastq            = HISAT2_ALIGN.out.fastq   // channel: [ val(meta), fastq ]
     hisat2_version   = HISAT2_ALIGN.out.version //    path: *.version.txt

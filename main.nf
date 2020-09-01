@@ -295,11 +295,7 @@ workflow {
         if (params.save_align_intermeds) {
             params.modules['star_align'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_dir += '/star'
-            params.modules['samtools_sort'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_files.put('bai','')
-            params.modules['samtools_sort'].publish_files.put('stats','samtools_stats')
-            params.modules['samtools_sort'].publish_files.put('flagstat','samtools_stats')
-            params.modules['samtools_sort'].publish_files.put('idxstats','samtools_stats')
+            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
         }
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
@@ -354,15 +350,11 @@ workflow {
     ch_hisat2_log = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference)       { params.modules['hisat2_build']['publish_files'] = null                  }
+        if (params.save_reference)       { params.modules['hisat2_build']['publish_files'] = null }
         if (params.save_align_intermeds) {
             params.modules['hisat2_align'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_dir += '/hisat2'
-            params.modules['samtools_sort'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_files.put('bai','')
-            params.modules['samtools_sort'].publish_files.put('stats','samtools_stats')
-            params.modules['samtools_sort'].publish_files.put('flagstat','samtools_stats')
-            params.modules['samtools_sort'].publish_files.put('idxstats','samtools_stats')
+            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
         }
         if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
 
@@ -477,38 +469,6 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-
-//         process HISAT2_SORT_BAM {
-//             tag "${bam.baseName}"
-//             label 'mid_memory'
-//             publishDir "${params.outdir}/hisat2", mode: params.publish_dir_mode,
-//                 saveAs: { filename ->
-//                     if (!params.save_align_intermeds && filename == "where_are_my_files.txt") filename
-//                     else if (params.save_align_intermeds && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
-//                     else null
-//                 }
-//
-//             input:
-//             path bam from hisat2_bam
-//             path wherearemyfiles from ch_where_are_my_files
-//
-//             output:
-//             path "${bam.baseName}.sorted.bam" into bam
-//             path "${bam.baseName}.sorted.bam.bai" into bam_index
-//             path "where_are_my_files.txt"
-//
-//             script:
-//             def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
-//             def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
-//             """
-//             samtools sort \\
-//                 $bam \\
-//                 -@ $task.cpus $avail_mem \\
-//                 -o ${bam.baseName}.sorted.bam
-//             samtools index ${bam.baseName}.sorted.bam
-//             """
-//         }
-//     }
 //
 //     if (params.with_umi) {
 //         // preseq does not work on deduplicated BAM file. Pass it the raw BAM file.

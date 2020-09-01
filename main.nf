@@ -390,8 +390,8 @@ workflow {
     if (!params.skip_qc && !params.skip_preseq) {
         PRESEQ_LCEXTRAP ( ch_genome_bam, params.modules['preseq_lcextrap'] )
         ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
-        //preseq lc_extrap -v -B $bam -o ${bam.baseName}.ccurve.txt
     }
+
     //
     //     process PICARD_MARKDUPLICATES {
     //         tag "${bam.baseName - '.sorted'}"

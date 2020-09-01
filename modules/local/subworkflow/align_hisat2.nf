@@ -22,7 +22,7 @@ workflow ALIGN_HISAT2 {
     main:
     /*
      * Uncompress HISAT2 index or generate from scratch if required
-    */
+     */
     if (!splicesites) {
         ch_splicesites = HISAT2_EXTRACTSPLICESITES ( gtf, index_options ).txt
     } else {

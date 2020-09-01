@@ -291,9 +291,16 @@ workflow {
     ch_star_log = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference) { params.modules['star_genomegenerate']['publish_files'] = null }
-
-        if (params.save_align_intermeds) { params.modules['star_align'].publish_files.put('bam','')              }
+        if (params.save_reference)       { params.modules['star_genomegenerate']['publish_files'] = null }
+        if (params.save_align_intermeds) {
+            params.modules['star_align'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_dir += '/star'
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
+            params.modules['samtools_sort'].publish_files.put('stats','samtools_stats')
+            params.modules['samtools_sort'].publish_files.put('flagstat','samtools_stats')
+            params.modules['samtools_sort'].publish_files.put('idxstats','samtools_stats')
+        }
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
         params.modules['star_align'].args += unaligned
@@ -304,10 +311,11 @@ workflow {
             PREP_GENOME.out.fasta,
             PREP_GENOME.out.gtf,
             params.modules['star_genomegenerate'],
-            params.modules['star_align']
+            params.modules['star_align'],
+            params.modules['samtools_sort']
         )
         ch_star_log = ALIGN_STAR.out.log_final
-        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
 
         //     // Filter removes all 'aligned' channels that fail the check
         //     star_bams = Channel.create()
@@ -347,7 +355,15 @@ workflow {
     if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference)       { params.modules['hisat2_build']['publish_files'] = null                  }
-        if (params.save_align_intermeds) { params.modules['hisat2_align'].publish_files.put('bam','')              }
+        if (params.save_align_intermeds) {
+            params.modules['hisat2_align'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_dir += '/hisat2'
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
+            params.modules['samtools_sort'].publish_files.put('stats','samtools_stats')
+            params.modules['samtools_sort'].publish_files.put('flagstat','samtools_stats')
+            params.modules['samtools_sort'].publish_files.put('idxstats','samtools_stats')
+        }
         if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
 
         ALIGN_HISAT2 (
@@ -357,10 +373,11 @@ workflow {
             PREP_GENOME.out.gtf,
             params.splicesites,
             params.modules['hisat2_build'],
-            params.modules['hisat2_align']
+            params.modules['hisat2_align'],
+            params.modules['samtools_sort']
         )
         ch_hisat2_log = ALIGN_HISAT2.out.summary
-        ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
     }
 
     /*

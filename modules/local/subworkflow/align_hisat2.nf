@@ -36,15 +36,14 @@ workflow ALIGN_HISAT2 {
         ch_index = HISAT2_BUILD ( fasta, gtf, ch_splicesites, index_options ).index
     }
 
-
     /*
      * Map reads with HISAT2
      */
     HISAT2_ALIGN ( reads, ch_index, ch_splicesites, align_options )
 
     emit:
-    //bam     = HISAT2_ALIGN.out.bam     // channel: [ val(meta), bam   ]
-    //log     = HISAT2_ALIGN.out.log     // channel: [ val(meta), log   ]
-    //fastq   = HISAT2_ALIGN.out.fastq   // channel: [ val(meta), fastq ]
+    bam     = HISAT2_ALIGN.out.bam     // channel: [ val(meta), bam   ]
+    summary = HISAT2_ALIGN.out.summary // channel: [ val(meta), log   ]
+    fastq   = HISAT2_ALIGN.out.fastq   // channel: [ val(meta), fastq ]
     version = HISAT2_ALIGN.out.version //    path: *.version.txt
 }

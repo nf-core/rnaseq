@@ -346,7 +346,7 @@ workflow {
     ch_hisat2_log = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference) { params.modules['hisat2_build']['publish_files'] = null }
+        if (params.save_reference)       { params.modules['hisat2_build']['publish_files'] = null                  }
         if (params.save_align_intermeds) { params.modules['hisat2_align'].publish_files.put('bam','')              }
         if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
 
@@ -359,7 +359,7 @@ workflow {
             params.modules['hisat2_build'],
             params.modules['hisat2_align']
         )
-        ch_hisat2_log = ALIGN_HISAT2.out.log
+        ch_hisat2_log = ALIGN_HISAT2.out.summary
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.version.first().ifEmpty(null))
     }
 

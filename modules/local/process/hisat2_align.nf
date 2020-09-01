@@ -21,12 +21,9 @@ process HISAT2_ALIGN {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    tuple val(meta), path("*.log"), emit: log
+    tuple val(meta), path("*.log"), emit: summary
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
     path "*.version.txt", emit: version
-    // path "${prefix}.bam" into hisat2_bam
-    // path "${prefix}.hisat2_summary.txt" into alignment_logs
-    // path "unmapped.hisat2*" optional true
 
     script:
     def software = getSoftwareName(task.process)
@@ -51,7 +48,7 @@ process HISAT2_ALIGN {
 
     def seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
     if (meta.single_end) {
-        def unaligned = params.save_unaligned ? "--un-gz unmapped.hisat2.gz" : ''
+        def unaligned = params.save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
         """
         INDEX=`find -L ./ -name "*.1.ht2" | sed 's/.1.ht2//'`
         hisat2 \\
@@ -69,7 +66,7 @@ process HISAT2_ALIGN {
         echo \$(hisat2 --version 2>&1) | sed 's/^.*version //; s/64.*\$//' > ${software}.version.txt
         """
     } else {
-        def unaligned = params.save_unaligned ? "--un-conc-gz unmapped.hisat2.gz" : ''
+        def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
         """
         INDEX=`find -L ./ -name "*.1.ht2" | sed 's/.1.ht2//'`
         hisat2 \\
@@ -87,6 +84,13 @@ process HISAT2_ALIGN {
             $ioptions.args \\
             | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
 
+        if [ -f ${prefix}.unmapped.fastq.1.gz ]; then
+            mv ${prefix}.unmapped.fastq.1.gz ${prefix}.unmapped_1.fastq.gz
+        fi
+        if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
+            mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
+        fi
+        
         echo \$(hisat2 --version 2>&1) | sed 's/^.*version //; s/64.*\$//' > ${software}.version.txt
         """
     }

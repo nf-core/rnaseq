@@ -456,6 +456,9 @@
                     "default": 5,
                     "fa_icon": "fas fa-forward"
                 },
+                "skip_markduplicates": {
+                    "type": "string"
+                },
                 "hisat_build_memory": {
                     "type": "integer",
                     "default": 200,

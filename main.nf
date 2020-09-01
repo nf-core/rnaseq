@@ -156,29 +156,33 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-include { UNTAR as UNTAR_RSEM_INDEX   } from './modules/local/process/untar'
-include { RSEM_PREPAREREFERENCE       } from './modules/local/process/rsem_preparereference'
-include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
-include { SORTMERNA                   } from './modules/local/process/sortmerna'
-include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
-include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
-// include { MULTIQC                     } from './modules/local/process/multiqc'
+include { UNTAR as UNTAR_RSEM_INDEX                      } from './modules/local/process/untar'
+include { RSEM_PREPAREREFERENCE                          } from './modules/local/process/rsem_preparereference'
+include { CAT_FASTQ                                      } from './modules/local/process/cat_fastq'
+include { SORTMERNA                                      } from './modules/local/process/sortmerna'
+include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
+          UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
+include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
+include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
+// include { MULTIQC                                        } from './modules/local/process/multiqc'
 
-include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
-include { PREP_GENOME                 } from './modules/local/subworkflow/prep_genome'
-include { ALIGN_STAR                  } from './modules/local/subworkflow/align_star'
-include { ALIGN_HISAT2                } from './modules/local/subworkflow/align_hisat2'
-include { QUANTIFY_SALMON             } from './modules/local/subworkflow/quantify_salmon'
+include { INPUT_CHECK                                    } from './modules/local/subworkflow/input_check'
+include { PREP_GENOME                                    } from './modules/local/subworkflow/prep_genome'
+include { ALIGN_STAR                                     } from './modules/local/subworkflow/align_star'
+include { ALIGN_HISAT2                                   } from './modules/local/subworkflow/align_hisat2'
+include { QUANTIFY_SALMON                                } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
 ////////////////////////////////////////////////////
 
+include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
 // include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
 // include { SUBREAD_FEATURECOUNTS      } from './modules/nf-core/software/subread/featurecounts/main'
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
-//include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'
+include { BAM_SORT_SAMTOOLS          } from './modules/nf-core/subworkflow/bam_sort_samtools'
+include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -288,7 +292,10 @@ workflow {
     /*
      * SUBWORKFLOW: Alignment with STAR
      */
-    ch_star_log = Channel.empty()
+    ch_genome_bam        = Channel.empty()
+    ch_genome_bai        = Channel.empty()
+    ch_transcriptome_bam = Channel.empty()
+    ch_star_log          = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference)       { params.modules['star_genomegenerate']['publish_files'] = null }
@@ -310,7 +317,10 @@ workflow {
             params.modules['star_align'],
             params.modules['samtools_sort']
         )
-        ch_star_log = ALIGN_STAR.out.log_final
+        ch_genome_bam        = ALIGN_STAR.out.bam
+        ch_genome_bai        = ALIGN_STAR.out.bai
+        ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
+        ch_star_log          = ALIGN_STAR.out.log_final
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
 
         //     // Filter removes all 'aligned' channels that fail the check
@@ -368,9 +378,58 @@ workflow {
             params.modules['hisat2_align'],
             params.modules['samtools_sort']
         )
+        ch_genome_bam = ALIGN_HISAT2.out.bam
+        ch_genome_bai = ALIGN_HISAT2.out.bai
         ch_hisat2_log = ALIGN_HISAT2.out.summary
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
     }
+
+    /*
+     * MODULE: Remove duplicate reads based on UMIs
+     */
+    if (!params.skip_alignment && params.with_umi) {
+        if (params.save_umi_intermeds) {
+            params.modules['umitools_dedup_genome'].publish_files.put('bam','')
+            params.modules['umitools_dedup_genome'].publish_files.put('bai','')
+        }
+        UMITOOLS_DEDUP_GENOME ( ch_genome_bam.join(ch_genome_bai, by: [0]), params.modules['umitools_dedup_genome'] )
+        SAMTOOLS_INDEX ( UMITOOLS_DEDUP_GENOME.out.bam, params.modules['umitools_dedup_genome'] )
+        ch_genome_bam = UMITOOLS_DEDUP_GENOME.out.bam
+        ch_genome_bai = SAMTOOLS_INDEX.out.bai
+
+        // if (!skip_rsem) {
+        //     if (params.save_umi_intermeds) { params.modules['umitools_dedup_transcriptome'].publish_files.put('bam','') }
+        //     // SORT BAM BEFORE HAND
+        //     UMITOOLS_DEDUP_TRANSCRIPTOME (
+        //         ch_transcriptome_bam,
+        //         params.modules['umitools_dedup_transcriptome']
+        //     )
+        //     //ch_transcriptome_bam = UMITOOLS_DEDUP_TRANSCRIPTOME.out.bam
+        // }
+    }
+
+    /*
+     * SUBWORKFLOW: Mark duplicate reads
+     */
+    // if (!params.skip_alignment && !params.skip_markduplicates) {
+    //     // MARK_DUPLICATES_PICARD (
+    //     //     ch_genome_bam,
+    //     //     params.modules['picard_markduplicates'],
+    //     //     params.modules['picard_markduplicates_samtools']
+    //     // )
+    //     // ch_software_versions = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
+    //     //
+    //     //         picard $markdup_java_options MarkDuplicates \\
+    //     //             INPUT=$bam \\
+    //     //             OUTPUT=${bam.baseName}.markDups.bam \\
+    //     //             TMP_DIR='./tmp' \\
+    //     //             METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
+    //     //             REMOVE_DUPLICATES=false \\
+    //     //             ASSUME_SORTED=true \\
+    //     //             PROGRAM_RECORD_ID='null' \\
+    //     //             VALIDATION_STRINGENCY=LENIENT
+    //     //         samtools index ${bam.baseName}.markDups.bam
+    // }
 
     /*
      * SUBWORKFLOW: Pseudo-alignment and quantification with Salmon

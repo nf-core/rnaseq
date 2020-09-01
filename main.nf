@@ -177,7 +177,7 @@ include { QUANTIFY_SALMON                                } from './modules/local
 ////////////////////////////////////////////////////
 
 include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
-// include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
+include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
 // include { SUBREAD_FEATURECOUNTS      } from './modules/nf-core/software/subread/featurecounts/main'
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
@@ -385,6 +385,49 @@ workflow {
     }
 
     /*
+     * MODULE: Run Preseq
+     */
+    if (!params.skip_qc && !params.skip_preseq) {
+        PRESEQ_LCEXTRAP ( ch_genome_bam, params.modules['preseq_lcextrap'] )
+        ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
+        //preseq lc_extrap -v -B $bam -o ${bam.baseName}.ccurve.txt
+    }
+    //
+    //     process PICARD_MARKDUPLICATES {
+    //         tag "${bam.baseName - '.sorted'}"
+    //         publishDir "${params.outdir}/markduplicates", mode: params.publish_dir_mode,
+    //             saveAs: { filename ->
+    //                 filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"
+    //             }
+    //
+    //         when:
+    //         !params.skip_qc && !params.skip_dupradar
+    //
+    //         input:
+    //         path bam from bam_markduplicates
+    //
+    //         output:
+    //         path "${bam.baseName}.markDups.bam" into bam_md
+    //         path "${bam.baseName}.markDups_metrics.txt" into picard_results
+    //         path "${bam.baseName}.markDups.bam.bai"
+    //
+    //         script:
+    //         markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2)+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
+    //         """
+    //         picard $markdup_java_options MarkDuplicates \\
+    //             INPUT=$bam \\
+    //             OUTPUT=${bam.baseName}.markDups.bam \\
+    //             TMP_DIR='./tmp' \\
+    //             METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
+    //             REMOVE_DUPLICATES=false \\
+    //             ASSUME_SORTED=true \\
+    //             PROGRAM_RECORD_ID='null' \\
+    //             VALIDATION_STRINGENCY=LENIENT
+    //         samtools index ${bam.baseName}.markDups.bam
+    //         """
+    //     }
+
+    /*
      * MODULE: Remove duplicate reads based on UMIs
      */
     if (!params.skip_alignment && params.with_umi) {
@@ -397,15 +440,16 @@ workflow {
         ch_genome_bam = UMITOOLS_DEDUP_GENOME.out.bam
         ch_genome_bai = SAMTOOLS_INDEX.out.bai
 
-        // if (!skip_rsem) {
-        //     if (params.save_umi_intermeds) { params.modules['umitools_dedup_transcriptome'].publish_files.put('bam','') }
-        //     // SORT BAM BEFORE HAND
-        //     UMITOOLS_DEDUP_TRANSCRIPTOME (
-        //         ch_transcriptome_bam,
-        //         params.modules['umitools_dedup_transcriptome']
-        //     )
-        //     //ch_transcriptome_bam = UMITOOLS_DEDUP_TRANSCRIPTOME.out.bam
-        // }
+        if (!skip_rsem) {
+            BAM_SORT_SAMTOOLS ( ch_transcriptome_bam, params.modules['samtools_sort_umitools_dedup'] )
+
+            if (params.save_umi_intermeds) { params.modules['umitools_dedup_transcriptome'].publish_files.put('bam','') }
+            UMITOOLS_DEDUP_TRANSCRIPTOME (
+                BAM_SORT_SAMTOOLS.out.bam.join(BAM_SORT_SAMTOOLS.out.bai, by: [0]),
+                params.modules['umitools_dedup_transcriptome']
+            )
+            ch_transcriptome_bam = UMITOOLS_DEDUP_TRANSCRIPTOME.out.bam
+        }
     }
 
     /*
@@ -458,22 +502,6 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))
     }
 
-//
-//     /*
-//      * Mark duplicates & filter BAM files
-//      */
-//     MARK_DUPLICATES_PICARD (
-//         PICARD_MERGESAMFILES.out.bam,
-//         params.modules['picard_markduplicates'],
-//         params.modules['samtools_sort_merged_lib']
-//     )
-//
-//     PRESEQ_LCEXTRAP (
-//         BAM_CLEAN.out.bam,
-//         params.modules['preseq_lcextrap']
-//     )
-//     ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
-//
     /*
      * MODULE: Pipeline reporting
      */
@@ -529,87 +557,7 @@ workflow {
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
 //
-//     if (params.with_umi) {
-//         // preseq does not work on deduplicated BAM file. Pass it the raw BAM file.
-//         bam
-//             .into { bam_umitools_dedup
-//                     bam_preseq }
-//         bam_index_umitools_dedup = bam_index
-//
-//         process UMITOOLS_DEDUP {
-//             tag "${bam.baseName}"
-//             label "mid_memory"
-//             publishDir "${params.outdir}/umitools/dedup", mode: params.publish_dir_mode,
-//                 saveAs: { filename ->
-//                     if (filename.endsWith('.tsv')) filename
-//                     else if (!params.save_umi_intermeds && filename == "where_are_my_files.txt") filename
-//                     else if (params.save_umi_intermeds && filename != "where_are_my_files.txt") filename
-//                     else null
-//                 }
-//
-//             input:
-//             path bam from bam_umitools_dedup
-//             path bai from bam_index_umitools_dedup
-//             path wherearemyfiles from ch_where_are_my_files
-//
-//             output:
-//             path "*.bam" into bam_dedup
-//             path "*.bai" into bam_dedup_index
-//             path "where_are_my_files.txt"
-//             path "*.tsv"
-//
-//             script:
-//             """
-//             umi_tools dedup \\
-//                 -I $bam \\
-//                 -S ${bam.baseName}_deduplicated.bam \\
-//                 --output-stats=${bam.baseName} \\
-//                 $params.umitools_dedup_extra
-//             samtools index ${bam.baseName}_deduplicated.bam
-//             """
-//         }
-//
-//         // RSEM transcriptome BAM file treated separately...
-//         if (!skip_rsem) {
-//             process UMITOOLS_DEDUP_TRANSCRIPTOME {
-//                 tag "${bam.baseName}"
-//                 label "mid_memory"
-//                 publishDir "${params.outdir}/umitools/dedup/transcriptome", mode: params.publish_dir_mode,
-//                     saveAs: { filename ->
-//                         if (filename.endsWith('.tsv')) filename
-//                         else if (params.save_umi_intermeds) filename
-//                         else null
-//                     }
-//
-//                 input:
-//                 path bam from bam_transcriptome
-//
-//                 output:
-//                 path "*_deduplicated.bam" into bam_rsem
-//                 path "*.tsv"
-//
-//                 script:
-//                 // the transcriptome BAM file is not sorted or indexed by STAR
-//                 // since this is the only process consuming this BAM file,
-//                 // sorting and indexing happens right here.
-//                 def suff_mem = ("${(task.memory.toBytes() - 6000000000) / task.cpus}" > 2000000000) ? 'true' : 'false'
-//                 def avail_mem = (task.memory && suff_mem) ? "-m" + "${(task.memory.toBytes() - 6000000000) / task.cpus}" : ''
-//                 """
-//                 samtools sort \\
-//                     $bam \\
-//                     -@ $task.cpus $avail_mem \\
-//                     -o ${bam.baseName}.sorted.bam
-//                 samtools index ${bam.baseName}.sorted.bam
-//
-//                 umi_tools dedup \\
-//                     -I ${bam.baseName}.sorted.bam \\
-//                     -S ${bam.baseName}_deduplicated.bam \\
-//                     --output-stats=${bam.baseName} \\
-//                     $params.umitools_dedup_extra
-//                 """
-//             }
-//         }
-//
+//     if (params.with_umi) {//
 //         bam_dedup
 //             .into { bam_count
 //                     bam_rseqc
@@ -691,60 +639,6 @@ workflow {
 //         inner_distance.py -i $bam -o ${bam.baseName}.rseqc -r $bed12
 //         read_distribution.py -i $bam -r $bed12 > ${bam.baseName}.read_distribution.txt
 //         read_duplication.py -i $bam -o ${bam.baseName}.read_duplication
-//         """
-//     }
-//
-//     process PRESEQ {
-//         tag "${bam.baseName - '.sorted'}"
-//         label 'high_time'
-//         publishDir "${params.outdir}/preseq", mode: params.publish_dir_mode
-//
-//         when:
-//         !params.skip_qc && !params.skip_preseq
-//
-//         input:
-//         path bam from bam_preseq
-//
-//         output:
-//         path "${bam.baseName}.ccurve.txt" into preseq_results
-//
-//         script:
-//         """
-//         preseq lc_extrap -v -B $bam -o ${bam.baseName}.ccurve.txt
-//         """
-//     }
-//
-//     process PICARD_MARKDUPLICATES {
-//         tag "${bam.baseName - '.sorted'}"
-//         publishDir "${params.outdir}/markduplicates", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"
-//             }
-//
-//         when:
-//         !params.skip_qc && !params.skip_dupradar
-//
-//         input:
-//         path bam from bam_markduplicates
-//
-//         output:
-//         path "${bam.baseName}.markDups.bam" into bam_md
-//         path "${bam.baseName}.markDups_metrics.txt" into picard_results
-//         path "${bam.baseName}.markDups.bam.bai"
-//
-//         script:
-//         markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2)+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
-//         """
-//         picard $markdup_java_options MarkDuplicates \\
-//             INPUT=$bam \\
-//             OUTPUT=${bam.baseName}.markDups.bam \\
-//             TMP_DIR='./tmp' \\
-//             METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
-//             REMOVE_DUPLICATES=false \\
-//             ASSUME_SORTED=true \\
-//             PROGRAM_RECORD_ID='null' \\
-//             VALIDATION_STRINGENCY=LENIENT
-//         samtools index ${bam.baseName}.markDups.bam
 //         """
 //     }
 //

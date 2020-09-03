@@ -530,10 +530,6 @@
             "default": "",
             "fa_icon": "fas fa-bong",
             "properties": {
-                "project": {
-                    "type": "string",
-                    "fa_icon": "fas fa-tasks"
-                },
                 "seq_center": {
                     "type": "string",
                     "fa_icon": "fas fa-hospital-alt"

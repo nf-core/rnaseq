@@ -118,10 +118,6 @@ def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 Checks.aws_batch(workflow, params)     // Check AWS batch settings
 Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
 
-// if (workflow.profile == 'uppmax' || workflow.profile == 'uppmax-devel') {
-//     if (!params.project) exit 1, "No UPPMAX project ID found! Use --project"
-// }
-
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////

@@ -184,32 +184,6 @@ include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
-// Function that checks the alignment rate of the STAR output
-// and returns true if the alignment passed and otherwise false
-def good_alignment_scores = [:]
-def poor_alignment_scores = [:]
-def check_log(logs) {
-    def percent_aligned = 0;
-    logs.eachLine { line ->
-        if ((matcher = line =~ /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/)) {
-            percent_aligned = matcher[0][1]
-        }
-    }
-    logname = logs.getBaseName() - '.Log.final'
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_red = params.monochrome_logs ? '' : "\033[0;31m";
-    if (percent_aligned.toFloat() <= params.percent_aln_skip.toFloat()) {
-        log.info "#${c_red}################### VERY POOR ALIGNMENT RATE! IGNORING FOR FURTHER DOWNSTREAM ANALYSIS! ($logname)    >> ${percent_aligned}% <<${c_reset}"
-        poor_alignment_scores[logname] = percent_aligned
-        return false
-    } else {
-        log.info "-${c_green}           Passed alignment > star ($logname)   >> ${percent_aligned}% <<${c_reset}"
-        good_alignment_scores[logname] = percent_aligned
-        return true
-    }
-}
-
 workflow {
 
     /*
@@ -318,6 +292,19 @@ workflow {
         ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
         ch_star_log          = ALIGN_STAR.out.log_final
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
+
+        // def good_alignment_scores = [:]
+        // def poor_alignment_scores = [:]
+        ch_star_log
+          .map { meta, align_log ->  Checks.get_percent_mapped(params, log, align_log) }
+          //.view()
+        //poor_alignment_scores[logname] = percent_aligned
+        //return false
+        //good_alignment_scores[logname] = percent_aligned
+        // return true
+
+
+        //ch_star_log.view()
 
         //     // Filter removes all 'aligned' channels that fail the check
         //     star_bams = Channel.create()
@@ -909,25 +896,15 @@ workflow {
 //     """
 //     echo $workflow.manifest.version &> v_ngi_rnaseq.txt
 //     echo $workflow.nextflow.version &> v_nextflow.txt
-//     fastqc --version &> v_fastqc.txt
-//     cutadapt --version &> v_cutadapt.txt
-//     trim_galore --version &> v_trim_galore.txt
-//     sortmerna --version &> v_sortmerna.txt
-//     STAR --version &> v_star.txt
-//     hisat2 --version &> v_hisat2.txt
 //     stringtie --version &> v_stringtie.txt
-//     preseq &> v_preseq.txt
 //     read_duplication.py --version &> v_rseqc.txt
 //     bamCoverage --version &> v_deeptools.txt || true
 //     featureCounts -v &> v_featurecounts.txt
 //     rsem-calculate-expression --version &> v_rsem.txt
-//     salmon --version &> v_salmon.txt
-//     picard MarkDuplicates --version &> v_markduplicates.txt  || true
 //     samtools --version &> v_samtools.txt
 //     multiqc --version &> v_multiqc.txt
 //     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
 //     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
-//     umi_tools --version &> v_umi_tools.txt
 //     unset DISPLAY && qualimap rnaseq &> v_qualimap.txt || true
 //     scrape_software_versions.py &> software_versions_mqc.yaml
 //     """

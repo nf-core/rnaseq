@@ -18,18 +18,18 @@ dependencies:
 
   ## bioconda packages
   - bioconda::gffread=0.12.1
-  - bioconda::star=2.6.1d ## Don't upgrade me - 2.7X indices incompatible with iGenomes.
-  - bioconda::rsem=1.3.3
-  - bioconda::hisat2=2.2.1
-  - bioconda::stringtie=2.1.2
-  - bioconda::salmon=1.3.0
-  - bioconda::subread=2.0.1
+  #- bioconda::star=2.6.1d ## Don't upgrade me - 2.7X indices incompatible with iGenomes.
+  #- bioconda::rsem=1.3.3
+  #- bioconda::hisat2=2.2.1
+  #- bioconda::stringtie=2.1.2
+  #- bioconda::salmon=1.3.0
+  #- bioconda::subread=2.0.1
   - bioconda::samtools=1.10
-  - bioconda::deeptools=3.4.3
-  - bioconda::picard=2.23.3
-  - bioconda::preseq=2.0.3
-  - bioconda::qualimap=2.2.2d
-  - bioconda::rseqc=3.0.1
+  #- bioconda::deeptools=3.4.3
+  #- bioconda::picard=2.23.3
+  #- bioconda::preseq=2.0.3
+  #- bioconda::qualimap=2.2.2d
+  #- bioconda::rseqc=3.0.1
   - bioconda::bioconductor-dupradar=1.18.0
   - bioconda::bioconductor-edger=3.30.0
   - bioconda::bioconductor-tximeta=1.6.2

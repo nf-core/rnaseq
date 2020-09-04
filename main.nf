@@ -831,7 +831,6 @@ workflow {
 //     read_duplication.py --version &> v_rseqc.txt
 //     bamCoverage --version &> v_deeptools.txt || true
 //     featureCounts -v &> v_featurecounts.txt
-//     rsem-calculate-expression --version &> v_rsem.txt
 //     samtools --version &> v_samtools.txt
 //     multiqc --version &> v_multiqc.txt
 //     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"

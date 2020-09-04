@@ -164,7 +164,7 @@ include { INPUT_CHECK                                    } from './modules/local
 include { PREPARE_GENOME                                 } from './modules/local/subworkflow/prepare_genome'
 include { ALIGN_STAR                                     } from './modules/local/subworkflow/align_star'
 include { ALIGN_HISAT2                                   } from './modules/local/subworkflow/align_hisat2'
-include { QUANTIFY_BAM_RSEM                              } from './modules/local/subworkflow/quantify_bam_rsem'
+include { QUANTIFY_RSEM                                  } from './modules/local/subworkflow/quantify_rsem'
 include { QUANTIFY_SALMON                                } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
@@ -406,59 +406,17 @@ workflow {
     if (!params.skip_alignment && params.aligner == 'star' && !skip_rsem) {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
-        QUANTIFY_BAM_RSEM (
+        QUANTIFY_RSEM (
             ch_transcriptome_bam,
             params.rsem_index,
             PREPARE_GENOME.out.fasta,
             PREPARE_GENOME.out.gtf,
             params.modules['rsem_preparereference'],
-            params.modules['rsem_calculateexpression']
+            params.modules['rsem_calculateexpression'],
+            params.modules['merge_counts_rsem']
         )
-
-        //
-        //         process MERGE_RSEM_COUNTS {
-        //             tag "${rsem_res_gene[0].baseName}"
-        //             label "low_memory"
-        //             publishDir "${params.outdir}/rsem", mode: params.publish_dir_mode
-        //
-        //             input:
-        //             path rsem_res_gene from rsem_results_genes.collect()
-        //             path rsem_res_isoform from rsem_results_isoforms.collect()
-        //
-        //             output:
-        //             path "rsem_tpm_gene.txt"
-        //             path "rsem_tpm_isoform.txt"
-        //             path "rsem_transcript_counts_gene.txt"
-        //             path "rsem_transcript_counts_isoform.txt"
-        //
-        //             script:
-        //             """
-        //             echo "gene_id\tgene_symbol" > gene_ids.txt
-        //             echo "transcript_id\tgene_symbol" > transcript_ids.txt
-        //             cut -f 1 ${rsem_res_gene[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
-        //             cut -f 1 ${rsem_res_isoform[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
-        //             mkdir tmp_genes tmp_isoforms
-        //             for fileid in $rsem_res_gene; do
-        //                 basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt
-        //                 grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
-        //                 basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.counts.txt
-        //                 grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.counts.txt
-        //             done
-        //             for fileid in $rsem_res_isoform; do
-        //                 basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.tpm.txt
-        //                 grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
-        //                 basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.counts.txt
-        //                 grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.counts.txt
-        //             done
-        //             paste gene_ids.txt tmp_genes/*.tpm.txt > rsem_tpm_gene.txt
-        //             paste gene_ids.txt tmp_genes/*.counts.txt > rsem_transcript_counts_gene.txt
-        //             paste transcript_ids.txt tmp_isoforms/*.tpm.txt > rsem_tpm_isoform.txt
-        //             paste transcript_ids.txt tmp_isoforms/*.counts.txt > rsem_transcript_counts_isoform.txt
-        //             """
-        //         }
-        //     } else {
-        //         rsem_logs = Channel.empty()
-        //     }
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.version.first().ifEmpty(null))
+        ch_rsem_log = QUANTIFY_RSEM.out.stat
     }
 
     /*
@@ -482,7 +440,8 @@ workflow {
             publish_index_options,
             publish_genome_options,
             params.modules['salmon_index'],
-            params.modules['salmon_quant']
+            params.modules['salmon_quant'],
+            params.modules['merge_counts_salmon']
         )
         ch_salmon_log = QUANTIFY_SALMON.out.results
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))

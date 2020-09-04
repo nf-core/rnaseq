@@ -21,6 +21,7 @@ workflow QUANTIFY_SALMON {
     publish_genome_options //     map: options for publishing genome files
     salmon_index_options   //     map: options for salmon_index module
     salmon_quant_options   //     map: options for salmon_quant module
+    merge_counts_options   //     map: options for merge_counts_salmon module
 
     main:
     /*
@@ -57,15 +58,21 @@ workflow QUANTIFY_SALMON {
         SALMON_TXIMPORT.out.transcript_tpm.collect{it[1]},
         SALMON_TXIMPORT.out.transcript_counts.collect{it[1]},
         SALMON_TX2GENE.out.collect(),
-        [:]
+        merge_counts_options
     )
 
     emit:
-    results           = SALMON_QUANT.out.results                  // channel: [ val(meta), results_dir ]
-    tpm_gene          = MERGE_COUNTS_SALMON.out.tpm_gene          //    path: *.gene_tpm.csv
-    counts_gene       = MERGE_COUNTS_SALMON.out.counts_gene       //    path: *.gene_counts.csv
-    tpm_transcript    = MERGE_COUNTS_SALMON.out.tpm_transcript    //    path: *.transcript_tpm.csv
-    counts_transcript = MERGE_COUNTS_SALMON.out.counts_transcript //    path: *.transcript_counts.csv
-    rds               = MERGE_COUNTS_SALMON.out.rds               //    path: *.rds
-    version           = SALMON_QUANT.out.version                  // path: *.version.txt
+    results                  = SALMON_QUANT.out.results                  // channel: [ val(meta), results_dir ]
+    version                  = SALMON_QUANT.out.version                  //    path: *.version.txt
+
+    tpm_gene                 = SALMON_TXIMPORT.out.tpm_gene              // channel: [ val(meta), counts ]
+    counts_gene              = SALMON_TXIMPORT.out.counts_gene           // channel: [ val(meta), counts ]
+    tpm_transcript           = SALMON_TXIMPORT.out.tpm_transcript        // channel: [ val(meta), counts ]
+    counts_transcript        = SALMON_TXIMPORT.out.counts_transcript     // channel: [ val(meta), counts ]
+
+    merged_tpm_gene          = MERGE_COUNTS_SALMON.out.tpm_gene          //    path: *.gene_tpm.csv
+    merged_counts_gene       = MERGE_COUNTS_SALMON.out.counts_gene       //    path: *.gene_counts.csv
+    merged_tpm_transcript    = MERGE_COUNTS_SALMON.out.tpm_transcript    //    path: *.transcript_tpm.csv
+    merged_counts_transcript = MERGE_COUNTS_SALMON.out.counts_transcript //    path: *.transcript_counts.csv
+    rds                      = MERGE_COUNTS_SALMON.out.rds               //    path: *.rds
 }

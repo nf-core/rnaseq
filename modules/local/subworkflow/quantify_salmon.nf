@@ -2,14 +2,14 @@
  * Pseudo-alignment and quantification with Salmon
  */
 
-include { GUNZIP            } from '../process/gunzip'
-include { UNTAR             } from '../process/untar'
-include { TRANSCRIPTS2FASTA } from '../process/transcripts2fasta'
-include { SALMON_INDEX      } from '../process/salmon_index'
-include { SALMON_QUANT      } from '../process/salmon_quant'
-include { SALMON_TX2GENE    } from '../process/salmon_tx2gene'
-include { SALMON_TXIMPORT   } from '../process/salmon_tximport'
-include { SALMON_MERGE      } from '../process/salmon_merge'
+include { GUNZIP              } from '../process/gunzip'
+include { UNTAR               } from '../process/untar'
+include { TRANSCRIPTS2FASTA   } from '../process/transcripts2fasta'
+include { SALMON_INDEX        } from '../process/salmon_index'
+include { SALMON_QUANT        } from '../process/salmon_quant'
+include { SALMON_TX2GENE      } from '../process/salmon_tx2gene'
+include { SALMON_TXIMPORT     } from '../process/salmon_tximport'
+include { MERGE_COUNTS_SALMON } from '../process/merge_counts_salmon'
 
 workflow QUANTIFY_SALMON {
     take:
@@ -48,10 +48,10 @@ workflow QUANTIFY_SALMON {
     /*
      * Quantify and merge counts across samples
      */
-    SALMON_QUANT    ( reads, ch_index, gtf, salmon_quant_options )
-    SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, gtf, publish_genome_options )
-    SALMON_TXIMPORT ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
-    SALMON_MERGE    (
+    SALMON_QUANT        ( reads, ch_index, gtf, salmon_quant_options )
+    SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf, publish_genome_options )
+    SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
+    MERGE_COUNTS_SALMON (
         SALMON_TXIMPORT.out.gene_tpm.collect{it[1]},
         SALMON_TXIMPORT.out.gene_counts.collect{it[1]},
         SALMON_TXIMPORT.out.transcript_tpm.collect{it[1]},
@@ -61,6 +61,11 @@ workflow QUANTIFY_SALMON {
     )
 
     emit:
-    results = SALMON_QUANT.out.results // channel: [ val(meta), results_dir ]
-    version = SALMON_QUANT.out.version // path: *.version.txt
+    results           = SALMON_QUANT.out.results                  // channel: [ val(meta), results_dir ]
+    tpm_gene          = MERGE_COUNTS_SALMON.out.tpm_gene          //    path: *.gene_tpm.csv
+    counts_gene       = MERGE_COUNTS_SALMON.out.counts_gene       //    path: *.gene_counts.csv
+    tpm_transcript    = MERGE_COUNTS_SALMON.out.tpm_transcript    //    path: *.transcript_tpm.csv
+    counts_transcript = MERGE_COUNTS_SALMON.out.counts_transcript //    path: *.transcript_counts.csv
+    rds               = MERGE_COUNTS_SALMON.out.rds               //    path: *.rds
+    version           = SALMON_QUANT.out.version                  // path: *.version.txt
 }

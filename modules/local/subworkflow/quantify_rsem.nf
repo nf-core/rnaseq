@@ -40,14 +40,14 @@ workflow QUANTIFY_RSEM {
      * Merge counts across samples
      */
     MERGE_COUNTS_RSEM (
-        RSEM_CALCULATEEXPRESSION.out.gene_counts.collect{it[1]},
-        RSEM_CALCULATEEXPRESSION.out.isoform_counts.collect{it[1]},
+        RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},
+        RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]},
         merge_counts_options
     )
 
     emit:
-    gene_counts              = RSEM_CALCULATEEXPRESSION.out.gene_counts       // channel: [ val(meta), counts ]
-    transcript_counts        = RSEM_CALCULATEEXPRESSION.out.transcript_counts // channel: [ val(meta), counts ]
+    counts_gene              = RSEM_CALCULATEEXPRESSION.out.counts_gene       // channel: [ val(meta), counts ]
+    counts_transcript        = RSEM_CALCULATEEXPRESSION.out.counts_transcript // channel: [ val(meta), counts ]
     stat                     = RSEM_CALCULATEEXPRESSION.out.stat              // channel: [ val(meta), stat ]
     bam_star                 = RSEM_CALCULATEEXPRESSION.out.bam_star          // channel: [ val(meta), bam ]
     bam_genome               = RSEM_CALCULATEEXPRESSION.out.bam_genome        // channel: [ val(meta), bam ]

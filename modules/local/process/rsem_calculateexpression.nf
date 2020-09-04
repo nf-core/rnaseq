@@ -41,7 +41,7 @@ process RSEM_CALCULATEEXPRESSION {
         $paired_end \\
         $ioptions.args \\
         $reads \\
-        $INDEX \\
+        \$INDEX \\
         $prefix
 
     rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt

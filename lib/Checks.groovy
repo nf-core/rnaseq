@@ -34,8 +34,7 @@ class Checks {
     }
 
     // Function that parses and returns the alignment rate from the STAR log output
-    static Float get_percent_mapped(params, log, align_log) {
-        Map colors = Headers.log_colours(params.monochrome_logs)
+    static Float get_star_percent_mapped(params, log, align_log) {
         def percent_aligned = 0
         def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
         align_log.eachLine { line ->
@@ -45,12 +44,12 @@ class Checks {
             }
         }
         def logname = align_log.getBaseName() - '.Log.final'
+        Map colors = Headers.log_colours(params.monochrome_logs)
         if (percent_aligned <= params.percent_aln_skip.toFloat()) {
             log.info ">${colors.red}>>>> FAILED STAR ${params.percent_aln_skip}% MAPPED THRESHOLD. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS: ${percent_aligned}% - $logname${colors.reset}."
-            return percent_aligned
         } else {
             log.info ">${colors.green}>>>> PASSED STAR ${params.percent_aln_skip}% MAPPED THRESHOLD: ${percent_aligned}% - $logname${colors.reset}."
-            return percent_aligned
         }
+        return percent_aligned
     }
 }

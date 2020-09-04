@@ -262,6 +262,8 @@ workflow {
     /*
      * SUBWORKFLOW: Alignment with STAR
      */
+    def good_alignment_scores = [:]
+    def poor_alignment_scores = [:]
     ch_genome_bam        = Channel.empty()
     ch_genome_bai        = Channel.empty()
     ch_transcriptome_bam = Channel.empty()
@@ -293,30 +295,35 @@ workflow {
         ch_star_log          = ALIGN_STAR.out.log_final
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
 
-        // def good_alignment_scores = [:]
-        // def poor_alignment_scores = [:]
+        // Filter channels to get samples that passed minimum mapping percentage
         ch_star_log
-          .map { meta, align_log ->  Checks.get_percent_mapped(params, log, align_log) }
-          //.view()
-        //poor_alignment_scores[logname] = percent_aligned
-        //return false
-        //good_alignment_scores[logname] = percent_aligned
-        // return true
+            .map { meta, align_log ->
+                def percent_aligned = Checks.get_star_percent_mapped(params, log, align_log)
+                if (percent_aligned <= params.percent_aln_skip.toFloat()) {
+                    poor_alignment_scores[meta.id] = percent_aligned
+                    [ meta, true ]
+                } else {
+                    good_alignment_scores[meta.id] = percent_aligned
+                    [ meta, false ]
+                }
+            }
+            .set { ch_sample_filter }
 
+        ch_genome_bam
+            .join(ch_sample_filter, by: [0])
+            .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
+            .set { ch_genome_bam }
 
-        //ch_star_log.view()
+        ch_genome_bai
+            .join(ch_sample_filter, by: [0])
+            .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
+            .set { ch_genome_bai }
 
-        //     // Filter removes all 'aligned' channels that fail the check
-        //     star_bams = Channel.create()
-        //     star_bams_transcriptome = Channel.create()
-        //     star_aligned
-        //         .filter { logs, bams, bams_transcriptome -> check_log(logs) }
-        //         .separate (star_bams, star_bams_transcriptome) {
-        //             bam_set -> [bam_set[1], bam_set[2]]
-        //         }
-        //     bam = star_bams
-        //     bam_transcriptome = star_bams_transcriptome
-        // }
+        ch_transcriptome_bam
+            .join(ch_sample_filter, by: [0])
+            .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
+            .set { ch_transcriptome_bam }
+
         //
         // /*
         //  * SUBWORKFLOW: Gene/transcript quantification with RSEM
@@ -336,6 +343,8 @@ workflow {
         //     }
         // }
     }
+    println(good_alignment_scores)
+    println(poor_alignment_scores)
 
     /*
      * SUBWORKFLOW: Alignment with HISAT2

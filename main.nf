@@ -156,6 +156,7 @@ include { CAT_FASTQ                                      } from './modules/local
 include { SORTMERNA                                      } from './modules/local/process/sortmerna'
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
+include { MERGE_COUNTS_FEATURECOUNTS                     } from './modules/local/process/merge_counts_featurecounts'
 include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
 // include { MULTIQC                                        } from './modules/local/process/multiqc'
@@ -701,29 +702,6 @@ workflow {
 //             $bam
 //         $biotype_qc
 //         $mod_biotype
-//         """
-//     }
-//
-//     process MERGE_FEATURECOUNTS {
-//         tag "${input_files[0].baseName - '.sorted'}"
-//         label "mid_memory"
-//         publishDir "${params.outdir}/featurecounts", mode: params.publish_dir_mode
-//
-//         input:
-//         path input_files from featureCounts_to_merge.collect()
-//
-//         output:
-//         path 'merged_gene_counts.txt' into featurecounts_merged
-//
-//         script:
-//         // Redirection (the `<()`) for the win!
-//         // Geneid in 1st column and gene_name in 7th
-//         gene_ids = "<(tail -n +2 ${input_files[0]} | cut -f1,7 )"
-//         counts = input_files.collect{filename ->
-//             // Remove first line and take third column
-//             "<(tail -n +2 ${filename} | sed 's:.sorted.bam::' | cut -f8)"}.join(" ")
-//         """
-//         paste $gene_ids $counts > merged_gene_counts.txt
 //         """
 //     }
 //

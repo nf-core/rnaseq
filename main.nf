@@ -157,9 +157,9 @@ include { SORTMERNA                                      } from './modules/local
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
 include { MERGE_COUNTS_FEATURECOUNTS                     } from './modules/local/process/merge_counts_featurecounts'
-include { QUALIMAP                                       } from './modules/local/process/qualimap'
-// include { DUPRADAR                                       } from './modules/local/process/dupradar'
 // include { RSEQC                                          } from './modules/local/process/rseqc'
+include { QUALIMAP                                       } from './modules/local/process/qualimap'
+include { DUPRADAR                                       } from './modules/local/process/dupradar'
 // include { STRINGTIE                                      } from './modules/local/process/stringtie'
 include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
@@ -456,18 +456,18 @@ workflow {
      * MODULE: Downstream QC steps
      */
     if (!params.skip_qc) {
-        if (!params.skip_qualimap) {
-            QUALIMAP ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap'] )
-            ch_software_versions = ch_software_versions.mix(QUALIMAP.out.version.first().ifEmpty(null))
-        }
-        // if (!params.skip_dupradar) {
-        //     DUPRADAR ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['dupradar'] )
-        //     ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
-        // }
         // if (!params.skip_rseqc) {
         //     RSEQC ( ch_genome_bam.join(ch_genome.bai, by: [0]), PREPARE_GENOME.out.bed12, params.modules['rseqc'] )
         //     ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
         // }
+        if (!params.skip_qualimap) {
+            QUALIMAP ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap'] )
+            ch_software_versions = ch_software_versions.mix(QUALIMAP.out.version.first().ifEmpty(null))
+        }
+        if (!params.skip_dupradar) {
+            DUPRADAR ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['dupradar'] )
+            ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
+        }
     }
 
     /*
@@ -524,6 +524,18 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
+
+//     process DUPRADAR {
+//         publishDir "${params.outdir}/dupradar", mode: params.publish_dir_mode,
+//             saveAs: { filename ->
+//                 if (filename.indexOf("_duprateExpDens.pdf") > 0) "scatter_plots/$filename"
+//                 else if (filename.indexOf("_duprateExpBoxplot.pdf") > 0) "box_plots/$filename"
+//                 else if (filename.indexOf("_expressionHist.pdf") > 0) "histograms/$filename"
+//                 else if (filename.indexOf("_dupMatrix.txt") > 0) "gene_data/$filename"
+//                 else if (filename.indexOf("_duprateExpDensCurve.txt") > 0) "scatter_curve_data/$filename"
+//                 else if (filename.indexOf("_intercept_slope.txt") > 0) "intercepts_slopes/$filename"
+//                 else "$filename"
+//             }
 
 //     process SUBREAD_FEATURECOUNTS {
 //         tag "${bam.baseName - '.sorted'}"

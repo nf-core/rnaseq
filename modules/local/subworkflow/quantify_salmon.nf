@@ -53,10 +53,10 @@ workflow QUANTIFY_SALMON {
     SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf, publish_genome_options )
     SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
     MERGE_COUNTS_SALMON (
-        SALMON_TXIMPORT.out.gene_tpm.collect{it[1]},
-        SALMON_TXIMPORT.out.gene_counts.collect{it[1]},
-        SALMON_TXIMPORT.out.transcript_tpm.collect{it[1]},
-        SALMON_TXIMPORT.out.transcript_counts.collect{it[1]},
+        SALMON_TXIMPORT.out.tpm_gene.collect{it[1]},
+        SALMON_TXIMPORT.out.counts_gene.collect{it[1]},
+        SALMON_TXIMPORT.out.tpm_transcript.collect{it[1]},
+        SALMON_TXIMPORT.out.counts_transcript.collect{it[1]},
         SALMON_TX2GENE.out.collect(),
         merge_counts_options
     )

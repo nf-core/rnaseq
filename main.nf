@@ -506,7 +506,6 @@ workflow {
 //
 //         params.modules['multiqc']
 //     )
-
 }
 
 //
@@ -652,7 +651,6 @@ workflow {
 //     samtools --version &> v_samtools.txt
 //     multiqc --version &> v_multiqc.txt
 //     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
-//     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='v_dupRadar.txt')"
 //     scrape_software_versions.py &> software_versions_mqc.yaml
 //     """
 // }

@@ -13,7 +13,7 @@ include { GFFREAD                     } from '../process/gffread'
 include { GTF2BED                     } from '../process/gtf2bed'
 include { CAT_ADDITIONAL_FASTA        } from '../process/cat_additional_fasta'
 
-workflow PREP_GENOME {
+workflow PREPARE_GENOME {
     take:
     fasta             // file: /path/to/genome.fasta
     gtf               // file: /path/to/genome.gtf

@@ -27,9 +27,6 @@ dependencies:
   - bioconda::samtools=1.10
   #- bioconda::deeptools=3.4.3
   #- bioconda::picard=2.23.3
-  #- bioconda::preseq=2.0.3
-  #- bioconda::qualimap=2.2.2d
-  #- bioconda::rseqc=3.0.1
   - bioconda::bioconductor-dupradar=1.18.0
   - bioconda::bioconductor-edger=3.30.0
   - bioconda::bioconductor-tximeta=1.6.2

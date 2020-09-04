@@ -14,10 +14,10 @@ process GFFREAD {
 
     input:
     path gff
-    val options
+    val  options
 
     output:
-    path "*.gtf", emit: gtf
+    path "*.gtf"        , emit: gtf
     path "*.version.txt", emit: version
 
     script:

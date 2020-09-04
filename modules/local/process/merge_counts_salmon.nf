@@ -16,25 +16,25 @@ process MERGE_COUNTS_SALMON {
     path transcript_tpm
     path transcript_counts
     path tx2gene
-    val options
+    val  options
 
     output:
     path "salmon.merged.gene_tpm.csv"         , emit: tpm_gene
     path "salmon.merged.gene_counts.csv"      , emit: counts_gene
     path "salmon.merged.transcript_tpm.csv"   , emit: tpm_transcript
     path "salmon.merged.transcript_counts.csv", emit: counts_transcript
-    path "*.rds",                               emit: rds
+    path "*.rds"                              , emit: rds
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     // First field is the gene/transcript ID
-    gene_ids = "<(cut -f1 -d, ${gene_tpm[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
+    gene_ids       = "<(cut -f1 -d, ${gene_tpm[0]} | tail -n +2 | cat <(echo '${params.fc_group_features}') - )"
     transcript_ids = "<(cut -f1 -d, ${transcript_tpm[0]} | tail -n +2 | cat <(echo 'transcript_id') - )"
 
     // Second field is counts/TPM
-    gene_tpm_cols = gene_tpm.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-    gene_counts_cols = gene_counts.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-    transcript_tpm_cols = transcript_tpm.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
-    transcript_counts_cols = transcript_counts.collect{f -> "<(cut -d, -f2 ${f})"}.join(" ")
+    gene_tpm_cols          = gene_tpm.collect { f -> "<(cut -d, -f2 ${f})" }.join(" ")
+    gene_counts_cols       = gene_counts.collect { f -> "<(cut -d, -f2 ${f})" }.join(" ")
+    transcript_tpm_cols    = transcript_tpm.collect { f -> "<(cut -d, -f2 ${f})" }.join(" ")
+    transcript_counts_cols = transcript_counts.collect { f -> "<(cut -d, -f2 ${f})" }.join(" ")
     """
     paste -d, $gene_ids $gene_tpm_cols > salmon.merged.gene_tpm.csv
     paste -d, $gene_ids $gene_counts_cols > salmon.merged.gene_counts.csv

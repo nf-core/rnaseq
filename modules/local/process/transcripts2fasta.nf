@@ -12,7 +12,7 @@ process TRANSCRIPTS2FASTA {
     input:
     path fasta
     path gtf
-    val options
+    val  options
 
     output:
     path "*.fa", emit: fasta

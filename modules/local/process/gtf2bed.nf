@@ -18,7 +18,7 @@ process GTF2BED {
 
     input:
     path gtf
-    val options
+    val  options
 
     output:
     path '*.bed'

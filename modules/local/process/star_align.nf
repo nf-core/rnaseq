@@ -16,26 +16,26 @@ process STAR_ALIGN {
 
     input:
     tuple val(meta), path(reads)
-    path index
-    path gtf
-    val options
+    path  index
+    path  gtf
+    val   options
 
     output:
-    tuple val(meta), path("*Aligned.out.bam"),         emit: bam
-    tuple val(meta), path("*Log.final.out"),           emit: log_final
-    tuple val(meta), path("*Log.out"),                 emit: log_out
-    tuple val(meta), path("*Log.progress.out"),        emit: log_progress
-    path "*.version.txt",                              emit: version
+    tuple val(meta), path("*Aligned.out.bam") , emit: bam
+    tuple val(meta), path("*Log.final.out")   , emit: log_final
+    tuple val(meta), path("*Log.out")         , emit: log_out
+    tuple val(meta), path("*Log.progress.out"), emit: log_progress
+    path  "*.version.txt"                     , emit: version
 
-    tuple val(meta), path("*sortedByCoord.out.bam"),   optional:true, emit: bam_sorted
+    tuple val(meta), path("*sortedByCoord.out.bam")  , optional:true, emit: bam_sorted
     tuple val(meta), path("*toTranscriptome.out.bam"), optional:true, emit: bam_transcript
-    tuple val(meta), path("*fastq.gz"),                optional:true, emit: fastq
-    tuple val(meta), path("*.tab"),                    optional:true, emit: tab
+    tuple val(meta), path("*fastq.gz")               , optional:true, emit: fastq
+    tuple val(meta), path("*.tab")                   , optional:true, emit: tab
 
     script:
-    def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def software   = getSoftwareName(task.process)
+    def ioptions   = initOptions(options)
+    def prefix     = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
     def ignore_gtf = params.star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
     def seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
     """

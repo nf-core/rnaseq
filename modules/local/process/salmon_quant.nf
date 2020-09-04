@@ -15,18 +15,18 @@ process SALMON_QUANT {
 
     input:
     tuple val(meta), path(reads)
-    path index
-    path gtf
-    val options
+    path  index
+    path  gtf
+    val   options
 
     output:
     tuple val(meta), path("${prefix}"), emit: results
-    path "*.version.txt", emit: version
+    path  "*.version.txt"             , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
-    prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    prefix       = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
 
     def unstranded       = params.unstranded
     def forward_stranded = params.forward_stranded

@@ -14,7 +14,7 @@ process SAMPLESHEET_CHECK {
 
     input:
     path samplesheet
-    val options
+    val  options
 
     output:
     path '*.csv'

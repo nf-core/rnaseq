@@ -12,14 +12,14 @@ process SALMON_TXIMPORT {
 
     input:
     tuple val(meta), path("salmon/*")
-    path tx2gene
-    val options
+    path  tx2gene
+    val   options
 
     output:
-    tuple val(meta), path("*gene_tpm.csv"), emit: gene_tpm
-    tuple val(meta), path("*gene_counts.csv"), emit: gene_counts
-    tuple val(meta), path("*transcript_tpm.csv"), emit: transcript_tpm
-    tuple val(meta), path("*transcript_counts.csv"), emit: transcript_counts
+    tuple val(meta), path("*gene_tpm.csv")         , emit: tpm_gene
+    tuple val(meta), path("*gene_counts.csv")      , emit: counts_gene
+    tuple val(meta), path("*transcript_tpm.csv")   , emit: tpm_transcript
+    tuple val(meta), path("*transcript_counts.csv"), emit: counts_transcript
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

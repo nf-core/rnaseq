@@ -12,7 +12,7 @@ process MERGE_COUNTS_RSEM {
     input:
     path gene_counts
     path isoform_counts
-    val options
+    val  options
 
     output:
     path "rsem.merged.gene_tpm.tsv"         , emit: tpm_gene

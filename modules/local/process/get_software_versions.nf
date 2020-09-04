@@ -11,10 +11,10 @@ process GET_SOFTWARE_VERSIONS {
 
     input:
     path versions
-    val options
+    val  options
 
     output:
-    path "software_versions.csv", emit: csv
+    path "software_versions.csv"     , emit: csv
     path 'software_versions_mqc.yaml', emit: yaml
 
     script:

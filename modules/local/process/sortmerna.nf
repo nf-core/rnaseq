@@ -15,13 +15,13 @@ process SORTMERNA {
 
     input:
     tuple val(meta), path(reads)
-    path fasta
-    val options
+    path  fasta
+    val   options
 
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
-    tuple val(meta), path("*.log"), emit: log
-    path "*.version.txt", emit: version
+    tuple val(meta), path("*.log")     , emit: log
+    path  "*.version.txt"              , emit: version
 
     script:
     def software = getSoftwareName(task.process)

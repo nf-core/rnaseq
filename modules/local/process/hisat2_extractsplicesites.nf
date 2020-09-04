@@ -14,11 +14,11 @@ process HISAT2_EXTRACTSPLICESITES {
 
     input:
     path gtf
-    val options
+    val  options
 
     output:
     path "*.splice_sites.txt", emit: txt
-    path "*.version.txt", emit: version
+    path "*.version.txt"     , emit: version
 
     script:
     def software = getSoftwareName(task.process)

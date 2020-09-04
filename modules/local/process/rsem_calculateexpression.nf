@@ -15,17 +15,17 @@ process RSEM_CALCULATEEXPRESSION {
 
     input:
     tuple val(meta), path(reads)
-    path index
-    val options
+    path  index
+    val   options
 
     output:
-    tuple val(meta), path("*.genes.results"),    emit: gene_count
-    tuple val(meta), path("*.isoforms.results"), emit: isoform_count
-    tuple val(meta), path("*.stat"),             emit: stat
-    path "*.version.txt",                        emit: version
+    tuple val(meta), path("*.genes.results")   , emit: counts_gene
+    tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
+    tuple val(meta), path("*.stat")            , emit: stat
+    path  "*.version.txt"                      , emit: version
 
-    tuple val(meta), path("*.STAR.genome.bam"),        optional:true, emit: bam_star
-    tuple val(meta), path("${prefix}.genome.bam"),     optional:true, emit: bam_genome
+    tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
+    tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
     tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
 
     script:

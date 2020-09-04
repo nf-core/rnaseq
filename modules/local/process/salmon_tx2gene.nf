@@ -13,7 +13,7 @@ process SALMON_TX2GENE {
     input:
     path ("salmon/*")
     path gtf
-    val options
+    val  options
 
     output:
     path "*.csv", emit: csv

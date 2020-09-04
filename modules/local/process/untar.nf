@@ -11,16 +11,16 @@ process UNTAR {
 
     input:
     path archive
-    val options
+    val  options
 
     output:
-    path "$untar", emit: untar
+    path "$untar"       , emit: untar
     path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
-    untar = archive.toString() - '.tar.gz'
+    untar        = archive.toString() - '.tar.gz'
     """
     tar -xzvf $ioptions.args $archive
     echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//' > ${software}.version.txt

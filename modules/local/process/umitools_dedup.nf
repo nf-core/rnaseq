@@ -15,12 +15,12 @@ process UMITOOLS_DEDUP {
 
     input:
     tuple val(meta), path(bam), path(bai)
-    val options
+    val   options
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.tsv"), emit: tsv
-    path "*.version.txt", emit: version
+    path  "*.version.txt"         , emit: version
 
     script:
     def software = getSoftwareName(task.process)

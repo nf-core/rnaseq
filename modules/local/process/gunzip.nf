@@ -11,16 +11,16 @@ process GUNZIP {
 
     input:
     path archive
-    val options
+    val  options
 
     output:
-    path "$gunzip", emit: gunzip
+    path "$gunzip",       emit: gunzip
     path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
-    gunzip = archive.toString() - '.gz'
+    gunzip       = archive.toString() - '.gz'
     """
     gunzip --force $ioptions.args $archive
     echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//' > ${software}.version.txt

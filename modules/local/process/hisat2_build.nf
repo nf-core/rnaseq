@@ -16,10 +16,10 @@ process HISAT2_BUILD {
     path fasta
     path gtf
     path splicesites
-    val options
+    val  options
 
     output:
-    path "hisat2", emit: index
+    path "hisat2",        emit: index
     path "*.version.txt", emit: version
 
     script:

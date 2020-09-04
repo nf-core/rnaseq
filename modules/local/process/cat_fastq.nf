@@ -14,7 +14,7 @@ process CAT_FASTQ {
 
     input:
     tuple val(meta), path(reads)
-    val options
+    val   options
 
     output:
     tuple val(meta), path("*.merged.fastq.gz"), emit: reads
@@ -22,7 +22,7 @@ process CAT_FASTQ {
     script:
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
-    readList = reads.collect{it.toString()}
+    readList     = reads.collect{it.toString()}
     if (!meta.single_end) {
         if (readList.size > 2) {
             def read1 = []

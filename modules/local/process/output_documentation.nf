@@ -14,7 +14,7 @@ process OUTPUT_DOCUMENTATION {
     input:
     path output_docs
     path images
-    val options
+    val  options
 
     output:
     path "results_description.html"

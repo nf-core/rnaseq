@@ -15,10 +15,10 @@ process SALMON_INDEX {
 
     input:
     path fasta
-    val options
+    val  options
 
     output:
-    path "salmon", emit: index
+    path "salmon"       , emit: index
     path "*.version.txt", emit: version
 
     script:

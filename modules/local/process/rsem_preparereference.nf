@@ -16,10 +16,10 @@ process RSEM_PREPAREREFERENCE {
     input:
     path fasta
     path gtf
-    val options
+    val  options
 
     output:
-    path "rsem", emit: index
+    path "rsem"         , emit: index
     path "*.version.txt", emit: version
 
     script:

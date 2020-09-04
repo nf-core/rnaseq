@@ -17,15 +17,15 @@ process STAR_GENOMEGENERATE {
     input:
     path fasta
     path gtf
-    val options
+    val  options
 
     output:
-    path "star", emit: index
+    path "star"         , emit: index
     path "*.version.txt", emit: version
 
     script:
-    def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
+    def software  = getSoftwareName(task.process)
+    def ioptions  = initOptions(options)
     def avail_mem = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     """
     mkdir star

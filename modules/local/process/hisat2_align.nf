@@ -15,15 +15,16 @@ process HISAT2_ALIGN {
 
     input:
     tuple val(meta), path(reads)
-    path index
-    path splicesites
-    val options
+    path  index
+    path  splicesites
+    val   options
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.log"), emit: summary
+    path  "*.version.txt"         , emit: version
+    
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
-    path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)

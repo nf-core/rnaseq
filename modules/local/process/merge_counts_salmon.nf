@@ -1,12 +1,12 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles } from './functions'
 
 process MERGE_COUNTS_SALMON {
     tag "$tx2gene"
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:'salmon', publish_id:'') }
 
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 

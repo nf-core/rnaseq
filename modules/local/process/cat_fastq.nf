@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles } from './functions'
 
 /*
  * Concatenate FastQ files
@@ -8,7 +8,7 @@ process CAT_FASTQ {
     tag "$meta.id"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:'merged_fastq', publish_id:meta.id) }
 
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 

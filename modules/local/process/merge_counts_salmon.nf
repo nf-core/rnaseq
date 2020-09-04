@@ -1,7 +1,7 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
-process SALMON_MERGE {
+process MERGE_COUNTS_SALMON {
     tag "$tx2gene"
     label "process_medium"
     publishDir "${params.outdir}",
@@ -19,8 +19,11 @@ process SALMON_MERGE {
     val options
 
     output:
-    path "salmon.merged*.csv", emit: csv
-    path "*.rds", emit: rds
+    path "salmon.merged.gene_tpm.csv"         , emit: tpm_gene
+    path "salmon.merged.gene_counts.csv"      , emit: counts_gene
+    path "salmon.merged.transcript_tpm.csv"   , emit: tpm_transcript
+    path "salmon.merged.transcript_counts.csv", emit: counts_transcript
+    path "*.rds",                               emit: rds
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     // First field is the gene/transcript ID

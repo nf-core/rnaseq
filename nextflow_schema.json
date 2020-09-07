@@ -534,13 +534,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-hospital-alt"
                 },
-                "sample_level": {
-                    "type": "string"
-                },
-                "markdup_java_options": {
-                    "type": "string",
-                    "default": "-Xms4000m -Xmx7g"
-                },
                 "clusterOptions": {
                     "type": "string",
                     "fa_icon": "fab fa-cc-diners-club"

@@ -30,4 +30,3 @@ dependencies:
   - bioconda::gffread=0.12.1
 
   #- bioconda::samtools=1.10
-  #- bioconda::deeptools=3.4.3

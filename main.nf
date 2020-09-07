@@ -33,13 +33,13 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-// Configurable variables
+// Auto-load genome files from config (conf/igenomes.config)
 params.fasta        = params.genome ? params.genomes[ params.genome ].fasta  ?: false : false
 params.gtf          = params.genome ? params.genomes[ params.genome ].gtf    ?: false : false
 params.gff          = params.genome ? params.genomes[ params.genome ].gff    ?: false : false
 params.bed12        = params.genome ? params.genomes[ params.genome ].bed12  ?: false : false
 params.star_index   = params.genome ? params.genomes[ params.genome ].star   ?: false : false
-params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
+// params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
 anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: false : false
 
 ////////////////////////////////////////////////////
@@ -298,6 +298,7 @@ workflow {
         ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
         ch_star_log          = ALIGN_STAR.out.log_final
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
 
         // Filter channels to get samples that passed minimum mapping percentage
         ch_star_log
@@ -357,6 +358,7 @@ workflow {
         ch_genome_bai = ALIGN_HISAT2.out.bai
         ch_hisat2_log = ALIGN_HISAT2.out.summary
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.samtools_version.first().ifEmpty(null))
     }
 
     /*
@@ -627,32 +629,6 @@ workflow {
 //     preseq_results = Channel.empty()
 //     featureCounts_biotype = Channel.empty()
 //     rsem_logs = Channel.empty()
-// }
-//
-// process GET_SOFTWARE_VERSIONS {
-//     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-//         saveAs: { filename ->
-//             if (filename.indexOf(".csv") > 0) filename
-//             else null
-//         }
-//
-//     output:
-//     path 'software_versions_mqc.yaml' into ch_software_versions_yaml
-//     path "software_versions.csv"
-//
-//     script:
-//     """
-//     echo $workflow.manifest.version &> v_ngi_rnaseq.txt
-//     echo $workflow.nextflow.version &> v_nextflow.txt
-//     stringtie --version &> v_stringtie.txt
-//     read_duplication.py --version &> v_rseqc.txt
-//     bamCoverage --version &> v_deeptools.txt || true
-//     featureCounts -v &> v_featurecounts.txt
-//     samtools --version &> v_samtools.txt
-//     multiqc --version &> v_multiqc.txt
-//     Rscript -e "library(edgeR); write(x=as.character(packageVersion('edgeR')), file='v_edgeR.txt')"
-//     scrape_software_versions.py &> software_versions_mqc.yaml
-//     """
 // }
 //
 // process MULTIQC {

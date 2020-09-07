@@ -160,7 +160,7 @@ include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
 include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
 // include { SAMPLE_CORRELATION                             } from './modules/local/process/sample_correlation'
 // include { RSEQC                                          } from './modules/local/process/rseqc'
-include { QUALIMAP                                       } from './modules/local/process/qualimap'
+include { QUALIMAP_RNASEQ                                } from './modules/local/process/qualimap_rnaseq'
 include { DUPRADAR                                       } from './modules/local/process/dupradar'
 include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
@@ -480,11 +480,13 @@ workflow {
         //     ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
         // }
         if (!params.skip_qualimap) {
-            QUALIMAP ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap'] )
-            ch_software_versions = ch_software_versions.mix(QUALIMAP.out.version.first().ifEmpty(null))
+            QUALIMAP_RNASEQ ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap_rnaseq'] )
+            ch_qualimap_multiqc  = QUALIMAP_RNASEQ.out.results
+            ch_software_versions = ch_software_versions.mix(QUALIMAP_RNASEQ.out.version.first().ifEmpty(null))
         }
         if (!params.skip_dupradar) {
             DUPRADAR ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['dupradar'] )
+            ch_dupradar_multiqc  = DUPRADAR.out.multiqc
             ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
         }
     }

@@ -178,7 +178,7 @@ include { QUANTIFY_SALMON                                } from './modules/local
 
 include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
 include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
-// include { SUBREAD_FEATURECOUNTS      } from './modules/nf-core/software/subread/featurecounts/main'
+include { SUBREAD_FEATURECOUNTS      } from './modules/nf-core/software/subread/featurecounts/main'
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
 include { BAM_SORT_SAMTOOLS          } from './modules/nf-core/subworkflow/bam_sort_samtools'

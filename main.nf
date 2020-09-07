@@ -163,7 +163,7 @@ include { DUPRADAR                                       } from './modules/local
 // include { STRINGTIE                                      } from './modules/local/process/stringtie'
 include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
-// include { MULTIQC                                        } from './modules/local/process/multiqc'
+include { MULTIQC                                        } from './modules/local/process/multiqc'
 
 include { INPUT_CHECK                                    } from './modules/local/subworkflow/input_check'
 include { PREPARE_GENOME                                 } from './modules/local/subworkflow/prepare_genome'
@@ -252,14 +252,14 @@ workflow {
      * MODULE: Remove ribosomal RNA reads
      */
     ch_trimmed_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
-    ch_sortmerna_log = Channel.empty()
+    ch_sortmerna_multiqc = Channel.empty()
     if (params.remove_ribo_rna) {
         if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fastq.gz','') }
         ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
         SORTMERNA ( ch_trimmed_reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
             .reads
             .set { ch_trimmed_reads }
-        ch_sortmerna_log = SORTMERNA.out.log
+        ch_sortmerna_multiqc = SORTMERNA.out.log
         ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
     }
 
@@ -271,7 +271,10 @@ workflow {
     ch_genome_bam        = Channel.empty()
     ch_genome_bai        = Channel.empty()
     ch_transcriptome_bam = Channel.empty()
-    ch_star_log          = Channel.empty()
+    ch_samtools_stats    = Channel.empty()
+    ch_samtools_flagstat = Channel.empty()
+    ch_samtools_idxstats = Channel.empty()
+    ch_star_multiqc      = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference)       { params.modules['star_genomegenerate']['publish_files'] = null }
@@ -296,12 +299,15 @@ workflow {
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bai        = ALIGN_STAR.out.bai
         ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
-        ch_star_log          = ALIGN_STAR.out.log_final
+        ch_samtools_stats    = ALIGN_STAR.out.stats
+        ch_samtools_flagstat = ALIGN_STAR.out.flagstat
+        ch_samtools_idxstats = ALIGN_STAR.out.idxstats
+        ch_star_multiqc      = ALIGN_STAR.out.log_final
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
 
         // Filter channels to get samples that passed minimum mapping percentage
-        ch_star_log
+        ch_star_multiqc
             .map { meta, align_log ->
                 def percent_aligned = Checks.get_star_percent_mapped(params, log, align_log)
                 if (percent_aligned <= params.percent_aln_skip.toFloat()) {
@@ -333,7 +339,7 @@ workflow {
     /*
      * SUBWORKFLOW: Alignment with HISAT2
      */
-    ch_hisat2_log = Channel.empty()
+    ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference)       { params.modules['hisat2_build']['publish_files'] = null }
@@ -354,9 +360,12 @@ workflow {
             params.modules['hisat2_align'],
             params.modules['samtools_sort']
         )
-        ch_genome_bam = ALIGN_HISAT2.out.bam
-        ch_genome_bai = ALIGN_HISAT2.out.bai
-        ch_hisat2_log = ALIGN_HISAT2.out.summary
+        ch_genome_bam        = ALIGN_HISAT2.out.bam
+        ch_genome_bai        = ALIGN_HISAT2.out.bai
+        ch_samtools_stats    = ALIGN_HISAT2.out.stats
+        ch_samtools_flagstat = ALIGN_HISAT2.out.flagstat
+        ch_samtools_idxstats = ALIGN_HISAT2.out.idxstats
+        ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.samtools_version.first().ifEmpty(null))
     }
@@ -364,8 +373,10 @@ workflow {
     /*
      * MODULE: Run Preseq
      */
+    ch_preseq_multiqc = Channel.empty()
     if (!params.skip_qc && !params.skip_preseq) {
         PRESEQ_LCEXTRAP ( ch_genome_bam, params.modules['preseq_lcextrap'] )
+        ch_preseq_multiqc    = PRESEQ_LCEXTRAP.out.ccurve
         ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
     }
 
@@ -397,19 +408,21 @@ workflow {
     /*
      * SUBWORKFLOW: Mark duplicate reads
      */
+    ch_markduplicates_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_markduplicates) {
         MARK_DUPLICATES_PICARD (
             ch_genome_bam,
             params.modules['picard_markduplicates'],
             params.modules['picard_markduplicates_samtools']
         )
-        ch_software_versions = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
+        ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
+        ch_software_versions      = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
     }
 
     /*
      * SUBWORKFLOW: Gene/transcript quantification with RSEM
      */
-    ch_rsem_log = Channel.empty()
+    ch_rsem_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star' && !skip_rsem) {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
@@ -422,14 +435,14 @@ workflow {
             params.modules['rsem_calculateexpression'],
             params.modules['rsem_merge_counts']
         )
+        ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.version.first().ifEmpty(null))
-        ch_rsem_log = QUANTIFY_RSEM.out.stat
     }
 
     /*
      * SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
      */
-    ch_salmon_log = Channel.empty()
+    ch_salmon_multiqc = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
@@ -450,13 +463,16 @@ workflow {
             params.modules['salmon_quant'],
             params.modules['salmon_merge_counts']
         )
-        ch_salmon_log = QUANTIFY_SALMON.out.results
+        ch_salmon_multiqc    = QUANTIFY_SALMON.out.results
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))
     }
 
     /*
      * MODULE: Downstream QC steps
      */
+    ch_rseqc_multiqc    = Channel.empty()
+    ch_qualimap_multiqc = Channel.empty()
+    ch_dupradar_multiqc = Channel.empty()
     if (!params.skip_qc) {
         // if (!params.skip_rseqc) {
         //     RSEQC ( ch_genome_bam.join(ch_genome.bai, by: [0]), PREPARE_GENOME.out.bed12, params.modules['rseqc'] )
@@ -477,40 +493,41 @@ workflow {
      */
     GET_SOFTWARE_VERSIONS ( ch_software_versions.map { it }.collect(), [publish_files : ['csv':'']] )
     OUTPUT_DOCUMENTATION  ( ch_output_docs, ch_output_docs_images, [:] )
-//
-//     /*
-//      * MultiQC
-//      */
-//     workflow_summary = Schema.params_mqc_summary(summary)
-//     ch_workflow_summary = Channel.value(workflow_summary)
-//     MULTIQC (
-//         ch_multiqc_config,
-//         ch_multiqc_custom_config.collect().ifEmpty([]),
-//         GET_SOFTWARE_VERSIONS.out.yaml.collect(),
-//         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-//
-//         FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-//         FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
-//         FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-//
-//         MAP_BWA_MEM.out.stats.collect{it[1]},
-//         MAP_BWA_MEM.out.flagstat.collect{it[1]},
-//         MAP_BWA_MEM.out.idxstats.collect{it[1]},
-//
-//         MARK_DUPLICATES_PICARD.out.stats.collect{it[1]}.ifEmpty([]),
-//         MARK_DUPLICATES_PICARD.out.flagstat.collect{it[1]}.ifEmpty([]),
-//         MARK_DUPLICATES_PICARD.out.idxstats.collect{it[1]}.ifEmpty([]),
-//         MARK_DUPLICATES_PICARD.out.metrics.collect{it[1]}.ifEmpty([]),
-//
-//         PRESEQ_LCEXTRAP.out.ccurve.collect{it[1]}.ifEmpty([]),
-//
-//         SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]),
-//
-//         params.modules['multiqc']
-//     )
+
+    /*
+     * MultiQC
+     */
+    if (!params.skip_multiqc) {
+        workflow_summary    = Schema.params_mqc_summary(summary)
+        ch_workflow_summary = Channel.value(workflow_summary)
+        MULTIQC (
+            ch_multiqc_config,
+            ch_multiqc_custom_config.collect().ifEmpty([]),
+            GET_SOFTWARE_VERSIONS.out.yaml.collect(),
+            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+            FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
+            FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+            ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_star_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_rsem_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_salmon_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_samtools_stats.collect{it[1]}.ifEmpty([]),
+            ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
+            ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
+            ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_rseqc_multiqc.collect{it[1]}.ifEmpty([]),                 // rseqc_results.collect().ifEmpty([])
+            ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),              // qualimap_results.collect().ifEmpty([])
+            ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),              // dupradar_results.collect().ifEmpty([])
+            // SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]) // featureCounts_logs.collect().ifEmpty([])
+            // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
+            // path ('sample_correlation/*')                                // sample_correlation_results.collect().ifEmpty([])
+            params.modules['multiqc']
+        )
+    }
 }
 
-//
 // ////////////////////////////////////////////////////
 // /* --              COMPLETION EMAIL            -- */
 // ////////////////////////////////////////////////////
@@ -619,42 +636,3 @@ workflow {
 //     rsem_logs = Channel.empty()
 // }
 //
-// process MULTIQC {
-//     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
-//
-//     when:
-//     !params.skip_multiqc
-//
-//     input:
-//     path multiqc_config from ch_multiqc_config
-//     path (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
-//     path ('fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
-//     path ('trimgalore/*') from trimgalore_results.collect().ifEmpty([])
-//     path ('alignment/*') from alignment_logs.collect().ifEmpty([])
-//     path ('rseqc/*') from rseqc_results.collect().ifEmpty([])
-//     path ('picard/*') from picard_results.collect().ifEmpty([])
-//     path ('qualimap/*') from qualimap_results.collect().ifEmpty([])
-//     path ('preseq/*') from preseq_results.collect().ifEmpty([])
-//     path ('dupradar/*') from dupradar_results.collect().ifEmpty([])
-//     path ('featurecounts/*') from featureCounts_logs.collect().ifEmpty([])
-//     path ('featurecounts_biotype/*') from featureCounts_biotype.collect().ifEmpty([])
-//     path ('rsem/*') from rsem_logs.collect().ifEmpty([])
-//     path ('salmon/*') from salmon_logs.collect().ifEmpty([])
-//     path ('sample_correlation/*') from sample_correlation_results.collect().ifEmpty([])
-//     path ('sortmerna/*') from sortmerna_logs.collect().ifEmpty([])
-//     path ('software_versions/*') from ch_software_versions_yaml.collect()
-//     path workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-//
-//     output:
-//     path "*multiqc_report.html" into ch_multiqc_report
-//     path "*_data"
-//     path "multiqc_plots"
-//
-//     script:
-//     rtitle = run_name ? "--title \"$run_name\"" : ''
-//     rfilename = run_name ? "--filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-//     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-//     """
-//     multiqc . -f $rtitle $rfilename $custom_config_file
-//     """
-// }

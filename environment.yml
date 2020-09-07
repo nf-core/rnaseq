@@ -6,21 +6,28 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  ## conda-forge packages
+  ### modules/local/process/output_documentation.nf
   - conda-forge::python=3.7.8
   - conda-forge::markdown=3.2.2
   - conda-forge::pymdown-extensions=8.0
   - conda-forge::pygments=2.6.1
-  - conda-forge::pigz=2.3.4
+
+  ## modules/local/process/sample_correlation.nf
   - conda-forge::r-base=4.0.2
   - conda-forge::r-data.table=1.12.8
   - conda-forge::r-gplots=3.0.4
-
-  ## bioconda packages
-  - bioconda::gffread=0.12.1 # Required for local transcripts2fasta.nf module
-  - bioconda::samtools=1.10
-  #- bioconda::deeptools=3.4.3
-  - bioconda::bioconductor-dupradar=1.18.0 # Required for local dupradar.nf module
   - bioconda::bioconductor-edger=3.30.0
-  #- bioconda::bioconductor-tximeta=1.6.2
-  #- bioconda::bioconductor-summarizedexperiment=1.18.1
+
+  ### modules/local/process/dupradar.nf
+  - bioconda::bioconductor-dupradar=1.18.0
+
+  ### modules/local/process/salmon_tximport.nf
+  ### modules/local/process/salmon_merge_counts.nf
+  - bioconda::bioconductor-tximeta=1.6.2
+  - bioconda::bioconductor-summarizedexperiment=1.18.1
+
+  ### modules/local/process/transcripts2fasta.nf
+  - bioconda::gffread=0.12.1
+
+  #- bioconda::samtools=1.10
+  #- bioconda::deeptools=3.4.3

@@ -1,11 +1,11 @@
 // Import generic module functions
-include { saveFiles } from './functions'
+include { saveFiles; getSoftwareName } from './functions'
 
-process MERGE_COUNTS_RSEM {
+process RSEM_MERGE_COUNTS {
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:'rsem', publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 

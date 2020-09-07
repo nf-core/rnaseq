@@ -420,7 +420,7 @@ workflow {
             PREPARE_GENOME.out.gtf,
             params.modules['rsem_preparereference'],
             params.modules['rsem_calculateexpression'],
-            params.modules['merge_counts_rsem']
+            params.modules['rsem_merge_counts']
         )
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.version.first().ifEmpty(null))
         ch_rsem_log = QUANTIFY_RSEM.out.stat
@@ -448,7 +448,7 @@ workflow {
             publish_genome_options,
             params.modules['salmon_index'],
             params.modules['salmon_quant'],
-            params.modules['merge_counts_salmon']
+            params.modules['salmon_merge_counts']
         )
         ch_salmon_log = QUANTIFY_SALMON.out.results
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))
@@ -525,18 +525,6 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-
-//     process DUPRADAR {
-//         publishDir "${params.outdir}/dupradar", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("_duprateExpDens.pdf") > 0) "scatter_plots/$filename"
-//                 else if (filename.indexOf("_duprateExpBoxplot.pdf") > 0) "box_plots/$filename"
-//                 else if (filename.indexOf("_expressionHist.pdf") > 0) "histograms/$filename"
-//                 else if (filename.indexOf("_dupMatrix.txt") > 0) "gene_data/$filename"
-//                 else if (filename.indexOf("_duprateExpDensCurve.txt") > 0) "scatter_curve_data/$filename"
-//                 else if (filename.indexOf("_intercept_slope.txt") > 0) "intercepts_slopes/$filename"
-//                 else "$filename"
-//             }
 
 //     process SUBREAD_FEATURECOUNTS {
 //         tag "${bam.baseName - '.sorted'}"

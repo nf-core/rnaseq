@@ -50,7 +50,7 @@ anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: 
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
-if (params.gtf && params.gff)   { log.info "Both GTF and GFF have been provided: Using GTF as priority." }
+if (params.gtf && params.gff)   { log.info "WARN: Both GTF and GFF have been provided: Using GTF as priority." }
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
@@ -65,7 +65,7 @@ ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
-if (params.skip_alignment) { log.info "Skipping alignment processes..." }
+if (params.skip_alignment) { log.info "WARN: Skipping alignment processes..." }
 if (params.aligner != 'star' && params.aligner != 'hisat2') {
     exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
 }
@@ -81,13 +81,8 @@ if (params.skip_alignment && !params.pseudo_aligner) {
 //     }
 // }
 
-// Check if we are running RSEM
-def skip_rsem = params.skip_rsem
-if (!params.skip_rsem) {
-    if (params.aligner != "star") {
-        skip_rsem = true
-        log.info "RSEM only works when '--aligner star' is set. Disabling RSEM."
-    }
+if (!params.skip_alignment && params.aligner != "star" && !params.skip_rsem) {
+    log.info "WARN: RSEM only works when '--aligner star' is set. Disabling RSEM."
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -394,7 +389,7 @@ workflow {
         ch_genome_bam = UMITOOLS_DEDUP_GENOME.out.bam
         ch_genome_bai = SAMTOOLS_INDEX.out.bai
 
-        if (!skip_rsem) {
+        if (params.aligner == 'star' && !params.skip_rsem) {
             BAM_SORT_SAMTOOLS ( ch_transcriptome_bam, params.modules['samtools_sort_umitools_dedup'] )
 
             if (params.save_umi_intermeds) { params.modules['umitools_dedup_transcriptome'].publish_files.put('bam','') }
@@ -429,7 +424,7 @@ workflow {
      * SUBWORKFLOW: Gene/transcript quantification with RSEM
      */
     ch_rsem_multiqc = Channel.empty()
-    if (!params.skip_alignment && params.aligner == 'star' && !skip_rsem) {
+    if (!params.skip_alignment && params.aligner == 'star' && !params.skip_rsem) {
         // TODO nf-core: Not working - only save indices if --save_reference is specified
         if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
         QUANTIFY_RSEM (

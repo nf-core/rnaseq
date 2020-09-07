@@ -521,8 +521,8 @@ workflow {
             ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
             ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
             ch_rseqc_multiqc.collect{it[1]}.ifEmpty([]),                 // rseqc_results.collect().ifEmpty([])
-            ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),              // qualimap_results.collect().ifEmpty([])
-            ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),              // dupradar_results.collect().ifEmpty([])
+            ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
             // SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]) // featureCounts_logs.collect().ifEmpty([])
             // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
             // path ('sample_correlation/*')                                // sample_correlation_results.collect().ifEmpty([])

@@ -8,7 +8,10 @@ process SALMON_TXIMPORT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.conda ? "${baseDir}/environment.yml" : null)
+    container "quay.io/biocontainers/bioconductor-tximeta:1.6.2--r40_0"
+    //container "https://depot.galaxyproject.org/singularity/bioconductor-tximeta:1.6.2--r40_0"
+
+    conda (params.conda ? "bioconda::bioconductor-tximeta=1.6.2" : null)
 
     input:
     tuple val(meta), path("salmon/*")

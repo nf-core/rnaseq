@@ -2,7 +2,7 @@
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) < 2) {
-  stop("Usage: tximeta.r <coldata> <salmon_out>", call.=FALSE)
+  stop("Usage: salmon_tximport.r <coldata> <salmon_out>", call.=FALSE)
 }
 
 path = args[2]

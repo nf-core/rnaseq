@@ -156,7 +156,7 @@ include { CAT_FASTQ                                      } from './modules/local
 include { SORTMERNA                                      } from './modules/local/process/sortmerna'
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
-include { MERGE_COUNTS_FEATURECOUNTS                     } from './modules/local/process/merge_counts_featurecounts'
+include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
 // include { RSEQC                                          } from './modules/local/process/rseqc'
 include { QUALIMAP                                       } from './modules/local/process/qualimap'
 include { DUPRADAR                                       } from './modules/local/process/dupradar'

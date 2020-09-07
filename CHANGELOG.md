@@ -89,6 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * `--singleEnd` is now auto-detected from the input samplesheet
 * `--readPaths` is not required since these are provided from the input samplesheet
+* `--markdup_java_options` in favour of updating centrally on nf-core/configs
+* `--sampleLevel` not required
 
 #### Deprecated
 
@@ -105,7 +107,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
 | `--rRNA_database_manifest`   | `--ribo_database_manifest` |
 | `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
-| `--sampleLevel`              | `--sample_level`           |
 | `--saveAlignedIntermediates` | `--save_align_intermeds`   |
 | `--save_umi_intermediates`   | `--save_umi_intermeds`     |
 | `--saveUnaligned`            | `--save_unaligned`         |

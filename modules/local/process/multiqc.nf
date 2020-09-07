@@ -41,7 +41,7 @@ process MULTIQC {
     path ('dupradar/*')
     // path ('featurecounts/*')
     // path ('featurecounts/biotype/*')
-    // path ('sample_correlation/*')
+    path ('edger/*')
     val options
 
     output:

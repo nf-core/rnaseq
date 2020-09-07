@@ -153,7 +153,7 @@ include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
 // include { STRINGTIE                                      } from './modules/local/process/stringtie'
 include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
-// include { SAMPLE_CORRELATION                             } from './modules/local/process/sample_correlation'
+// include { EDGER_CORRELATION                             } from './modules/local/process/edger_correlation'
 // include { RSEQC                                          } from './modules/local/process/rseqc'
 include { QUALIMAP_RNASEQ                                } from './modules/local/process/qualimap_rnaseq'
 include { DUPRADAR                                       } from './modules/local/process/dupradar'
@@ -474,6 +474,7 @@ workflow {
     ch_rseqc_multiqc    = Channel.empty()
     ch_qualimap_multiqc = Channel.empty()
     ch_dupradar_multiqc = Channel.empty()
+    ch_edger_multiqc    = Channel.empty()
     if (!params.skip_qc) {
         // if (!params.skip_rseqc) {
         //     RSEQC ( ch_genome_bam.join(ch_genome.bai, by: [0]), PREPARE_GENOME.out.bed12, params.modules['rseqc'] )
@@ -489,6 +490,11 @@ workflow {
             ch_dupradar_multiqc  = DUPRADAR.out.multiqc
             ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
         }
+        // if (!params.skip_edger) {
+        //     EDGER_CORRELATION ( counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
+        //     ch_edger_multiqc     = EDGER_CORRELATION.out.multiqc
+        //     ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.first().ifEmpty(null))
+        // }
     }
 
     /*
@@ -524,8 +530,8 @@ workflow {
             ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
             ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
             // SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]) // featureCounts_logs.collect().ifEmpty([])
-            // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
-            // path ('sample_correlation/*')                                // sample_correlation_results.collect().ifEmpty([])
+            // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])   
+            ch_edger_multiqc.collect().ifEmpty([]),                      // sample_correlation_results.collect().ifEmpty([])
             params.modules['multiqc']
         )
     }
@@ -592,35 +598,5 @@ workflow {
 //             $bam
 //         $biotype_qc
 //         $mod_biotype
-//         """
-//     }
-////
-//     process SAMPLE_CORRELATION {
-//         tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - '.Aligned'}"
-//         label 'low_memory'
-//         publishDir "${params.outdir}/sample_correlation", mode: params.publish_dir_mode
-//
-//         when:
-//         !params.skip_qc && !params.skip_edger
-//
-//         input:
-//         path input_files from geneCounts.collect()
-//         val num_bams from bam_count.count()
-//         path mdsplot_header from ch_mdsplot_header
-//         path heatmap_header from ch_heatmap_header
-//
-//         output:
-//         path "*.{txt,pdf,csv}" into sample_correlation_results
-//
-//         when:
-//         num_bams > 2 && (!params.sample_level)
-//
-//         script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
-//         """
-//         edgeR_heatmap_MDS.r $input_files
-//         cat $mdsplot_header edgeR_MDS_Aplot_coordinates_mqc.csv >> tmp_file
-//         mv tmp_file edgeR_MDS_Aplot_coordinates_mqc.csv
-//         cat $heatmap_header log2CPM_sample_correlation_mqc.csv >> tmp_file
-//         mv tmp_file log2CPM_sample_correlation_mqc.csv
 //         """
 //     }

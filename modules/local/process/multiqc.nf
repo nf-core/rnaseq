@@ -24,45 +24,30 @@ process MULTIQC {
     path mqc_custom_config
     path software_versions
     path workflow_summary
-
     path ('fastqc/*')
     path ('trimgalore/*')
-    path ('trimgalore/fastqc/*')
-
-    path ('alignment/library/*')
-    path ('alignment/library/*')
-    path ('alignment/library/*')
-
-    path ('alignment/mergedLibrary/unfiltered/*')
-    path ('alignment/mergedLibrary/unfiltered/*')
-    path ('alignment/mergedLibrary/unfiltered/*')
-    path ('alignment/mergedLibrary/unfiltered/picard_metrics/*')
-
-    path ('alignment/mergedLibrary/filtered/*')
-    path ('alignment/mergedLibrary/filtered/*')
-    path ('alignment/mergedLibrary/filtered/*')
-    path ('alignment/mergedLibrary/filtered/picard_metrics/*')
-
+    path ('sortmerna/*')
+    path ('star/*')
+    path ('hisat2/*')
+    path ('rsem/*')
+    path ('salmon/*')
+    path ('samtools/stats/*')
+    path ('samtools/flagstat/*')
+    path ('samtools/idxstats/*')
+    path ('picard/*')
     path ('preseq/*')
-    path ('deeptools/*')
-    path ('deeptools/*')
-    path ('phantompeakqualtools/*')
-    path ('phantompeakqualtools/*')
-    path ('phantompeakqualtools/*')
-    path ('phantompeakqualtools/*')
-
-    path ('macs2/peaks/*')
-    path ('macs2/peaks/*')
-    path ('macs2/annotation/*')
-
-    path ('featurecounts/*')
-    // path ('macs/consensus/*') from ch_macs_consensus_deseq_mqc.collect().ifEmpty([])
-
+    path ('rseqc/*')
+    path ('qualimap/*')
+    path ('dupradar/*')
+    // path ('featurecounts/*')
+    // path ('featurecounts/biotype/*')
+    // path ('sample_correlation/*')
     val options
 
     output:
     path "*multiqc_report.html", emit: report
-    path "*_data", emit: data
+    path "*_data"              , emit: data
+    path "multiqc_plots"       , emit: plots
 
     script:
     def software      = getSoftwareName(task.process)

@@ -156,11 +156,12 @@ include { CAT_FASTQ                                      } from './modules/local
 include { SORTMERNA                                      } from './modules/local/process/sortmerna'
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
+// include { STRINGTIE                                      } from './modules/local/process/stringtie'
 include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
+// include { SAMPLE_CORRELATION                             } from './modules/local/process/sample_correlation'
 // include { RSEQC                                          } from './modules/local/process/rseqc'
 include { QUALIMAP                                       } from './modules/local/process/qualimap'
 include { DUPRADAR                                       } from './modules/local/process/dupradar'
-// include { STRINGTIE                                      } from './modules/local/process/stringtie'
 include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
 include { MULTIQC                                        } from './modules/local/process/multiqc'
@@ -621,18 +622,3 @@ workflow {
 //         mv tmp_file log2CPM_sample_correlation_mqc.csv
 //         """
 //     }
-// } else {
-//     star_log = Channel.empty()
-//     hisat_stdout = Channel.empty()
-//     alignment_logs = Channel.empty()
-//     rseqc_results = Channel.empty()
-//     picard_results = Channel.empty()
-//     qualimap_results = Channel.empty()
-//     sample_correlation_results = Channel.empty()
-//     featureCounts_logs = Channel.empty()
-//     dupradar_results = Channel.empty()
-//     preseq_results = Channel.empty()
-//     featureCounts_biotype = Channel.empty()
-//     rsem_logs = Channel.empty()
-// }
-//

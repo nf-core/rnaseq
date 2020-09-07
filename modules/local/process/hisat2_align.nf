@@ -1,6 +1,8 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+def VERSION = '2.2.0'
+
 process HISAT2_ALIGN {
     tag "$meta.id"
     label 'process_high'
@@ -23,7 +25,7 @@ process HISAT2_ALIGN {
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.log"), emit: summary
     path  "*.version.txt"         , emit: version
-    
+
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
 
     script:
@@ -64,7 +66,7 @@ process HISAT2_ALIGN {
             $ioptions.args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
-        echo \$(hisat2 --version 2>&1) | sed 's/^.*version //; s/64.*\$//' > ${software}.version.txt
+        echo $VERSION > ${software}.version.txt
         """
     } else {
         def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -91,8 +93,8 @@ process HISAT2_ALIGN {
         if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
             mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
         fi
-        
-        echo \$(hisat2 --version 2>&1) | sed 's/^.*version //; s/64.*\$//' > ${software}.version.txt
+
+        echo $VERSION > ${software}.version.txt
         """
     }
 }

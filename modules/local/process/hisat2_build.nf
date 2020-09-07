@@ -1,6 +1,8 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+def VERSION = '2.2.0'
+
 process HISAT2_BUILD {
     tag "$fasta"
     publishDir "${params.outdir}",
@@ -56,6 +58,7 @@ process HISAT2_BUILD {
         $ioptions.args \\
         $fasta \\
         hisat2/${fasta.baseName}
-    echo \$(hisat2 --version 2>&1) | sed 's/^.*version //; s/64.*\$//' > ${software}.version.txt
+
+    echo $VERSION > ${software}.version.txt
     """
 }

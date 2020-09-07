@@ -46,7 +46,7 @@ process DUPRADAR {
     }
     def paired_end = meta.single_end ? 'single' :  'paired'
     """
-    dupRadar.r $bam $gtf $strandedness $paired_end $task.cpus
+    dupradar.r $bam $gtf $strandedness $paired_end $task.cpus
     Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='${software}.version.txt')"
     """
 }

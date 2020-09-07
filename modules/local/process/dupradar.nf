@@ -8,10 +8,6 @@ process DUPRADAR {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    // container "quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_0"
-    // //container "https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.18.0--r40_0"
-    //
-    // conda (params.conda ? "bioconda::bioconductor-dupradar=1.18.0" : null)
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 
     input:
@@ -20,9 +16,10 @@ process DUPRADAR {
     val   options
 
     output:
-    tuple val(meta), path("*.pdf"), emit: pdf
-    tuple val(meta), path("*.txt"), emit: txt
-    path  "*.version.txt"         , emit: version
+    tuple val(meta), path("*.pdf")    , emit: pdf
+    tuple val(meta), path("*.txt")    , emit: txt
+    tuple val(meta), path("*_mqc.txt"), emit: multiqc
+    path  "*.version.txt"             , emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     def software = getSoftwareName(task.process)

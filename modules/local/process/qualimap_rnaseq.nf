@@ -1,7 +1,7 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-process QUALIMAP {
+process QUALIMAP_RNASEQ {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
@@ -50,6 +50,7 @@ process QUALIMAP {
     export _JAVA_OPTIONS=-Djava.io.tmpdir=./tmp
     qualimap \\
         --java-mem-size=$memory \\
+        rnaseq \\
         $ioptions.args \\
         -bam $bam \\
         -gtf $gtf \\

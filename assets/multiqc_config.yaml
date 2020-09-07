@@ -74,19 +74,19 @@ sp:
         fn: '*.summary'
 
     hisat2:
-        fn: '*.hisat2_summary.txt'
+        fn: '*.hisat2.summary.log'
 
     cutadapt:
         fn: '*trimming_report.txt'
 
     sortmerna:
-        fn: '*_rRNA_report.txt'
+        fn: '*.sortmerna.log'
 
     salmon/meta:
         fn: 'meta_info.json'
 
     picard/markdups:
-        fn: '*.markDups_metrics.txt'
+        fn: '*.MarkDuplicates.metrics.txt'
     picard/alignment_metrics:
         skip: true
     picard/basedistributionbycycle:

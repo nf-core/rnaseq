@@ -59,7 +59,7 @@ process HISAT2_ALIGN {
             -U $reads \\
             $rnastrandness \\
             --known-splicesite-infile $splicesites \\
-            --summary-file ${prefix}.summary.log \\
+            --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
             $seq_center \\
             $unaligned \\
@@ -78,7 +78,7 @@ process HISAT2_ALIGN {
             -2 ${reads[1]} \\
             $rnastrandness \\
             --known-splicesite-infile $splicesites \\
-            --summary-file ${prefix}.summary.log \\
+            --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
             $seq_center \\
             $unaligned \\

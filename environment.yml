@@ -28,5 +28,3 @@ dependencies:
 
   ### modules/local/process/transcripts2fasta.nf
   - bioconda::gffread=0.12.1
-
-  #- bioconda::samtools=1.10

@@ -5,7 +5,7 @@
 include { UNTAR                    } from '../process/untar'
 include { RSEM_PREPAREREFERENCE    } from '../process/rsem_preparereference'
 include { RSEM_CALCULATEEXPRESSION } from '../process/rsem_calculateexpression'
-include { MERGE_COUNTS_RSEM        } from '../process/merge_counts_rsem'
+include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'
 
 workflow QUANTIFY_RSEM {
     take:
@@ -39,7 +39,7 @@ workflow QUANTIFY_RSEM {
     /*
      * Merge counts across samples
      */
-    MERGE_COUNTS_RSEM (
+    RSEM_MERGE_COUNTS (
         RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},
         RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]},
         merge_counts_options
@@ -54,8 +54,8 @@ workflow QUANTIFY_RSEM {
     bam_transcript           = RSEM_CALCULATEEXPRESSION.out.bam_transcript    // channel: [ val(meta), bam ]
     version                  = RSEM_CALCULATEEXPRESSION.out.version           //    path: *.version.txt
 
-    merged_tpm_gene          = MERGE_COUNTS_RSEM.out.tpm_gene                 //    path: *.gene_tpm.csv
-    merged_counts_gene       = MERGE_COUNTS_RSEM.out.counts_gene              //    path: *.gene_counts.csv
-    merged_tpm_transcript    = MERGE_COUNTS_RSEM.out.tpm_transcript           //    path: *.transcript_tpm.csv
-    merged_counts_transcript = MERGE_COUNTS_RSEM.out.counts_transcript        //    path: *.transcript_counts.csv
+    merged_tpm_gene          = RSEM_MERGE_COUNTS.out.tpm_gene                 //    path: *.gene_tpm.csv
+    merged_counts_gene       = RSEM_MERGE_COUNTS.out.counts_gene              //    path: *.gene_counts.csv
+    merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.csv
+    merged_counts_transcript = RSEM_MERGE_COUNTS.out.counts_transcript        //    path: *.transcript_counts.csv
 }

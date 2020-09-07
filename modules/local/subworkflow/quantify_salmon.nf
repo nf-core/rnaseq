@@ -9,7 +9,7 @@ include { SALMON_INDEX        } from '../process/salmon_index'
 include { SALMON_QUANT        } from '../process/salmon_quant'
 include { SALMON_TX2GENE      } from '../process/salmon_tx2gene'
 include { SALMON_TXIMPORT     } from '../process/salmon_tximport'
-include { MERGE_COUNTS_SALMON } from '../process/merge_counts_salmon'
+include { SALMON_MERGE_COUNTS } from '../process/salmon_merge_counts'
 
 workflow QUANTIFY_SALMON {
     take:
@@ -52,7 +52,7 @@ workflow QUANTIFY_SALMON {
     SALMON_QUANT        ( reads, ch_index, gtf, salmon_quant_options )
     SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf, publish_genome_options )
     SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
-    MERGE_COUNTS_SALMON (
+    SALMON_MERGE_COUNTS (
         SALMON_TXIMPORT.out.tpm_gene.collect{it[1]},
         SALMON_TXIMPORT.out.counts_gene.collect{it[1]},
         SALMON_TXIMPORT.out.tpm_transcript.collect{it[1]},
@@ -70,9 +70,9 @@ workflow QUANTIFY_SALMON {
     tpm_transcript           = SALMON_TXIMPORT.out.tpm_transcript        // channel: [ val(meta), counts ]
     counts_transcript        = SALMON_TXIMPORT.out.counts_transcript     // channel: [ val(meta), counts ]
 
-    merged_tpm_gene          = MERGE_COUNTS_SALMON.out.tpm_gene          //    path: *.gene_tpm.csv
-    merged_counts_gene       = MERGE_COUNTS_SALMON.out.counts_gene       //    path: *.gene_counts.csv
-    merged_tpm_transcript    = MERGE_COUNTS_SALMON.out.tpm_transcript    //    path: *.transcript_tpm.csv
-    merged_counts_transcript = MERGE_COUNTS_SALMON.out.counts_transcript //    path: *.transcript_counts.csv
-    rds                      = MERGE_COUNTS_SALMON.out.rds               //    path: *.rds
+    merged_tpm_gene          = SALMON_MERGE_COUNTS.out.tpm_gene          //    path: *.gene_tpm.csv
+    merged_counts_gene       = SALMON_MERGE_COUNTS.out.counts_gene       //    path: *.gene_counts.csv
+    merged_tpm_transcript    = SALMON_MERGE_COUNTS.out.tpm_transcript    //    path: *.transcript_tpm.csv
+    merged_counts_transcript = SALMON_MERGE_COUNTS.out.counts_transcript //    path: *.transcript_counts.csv
+    rds                      = SALMON_MERGE_COUNTS.out.rds               //    path: *.rds
 }

@@ -34,7 +34,7 @@ process MULTIQC {
     path ('samtools/stats/*')
     path ('samtools/flagstat/*')
     path ('samtools/idxstats/*')
-    path ('picard/*')
+    path ('picard/markduplicates/*')
     path ('preseq/*')
     path ('rseqc/*')
     path ('qualimap/*')

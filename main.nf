@@ -416,6 +416,11 @@ workflow {
             params.modules['picard_markduplicates'],
             params.modules['picard_markduplicates_samtools']
         )
+        ch_genome_bam             = MARK_DUPLICATES_PICARD.out.bam
+        ch_genome_bai             = MARK_DUPLICATES_PICARD.out.bai
+        ch_samtools_stats         = MARK_DUPLICATES_PICARD.out.stats
+        ch_samtools_flagstat      = MARK_DUPLICATES_PICARD.out.flagstat
+        ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
         ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
         ch_software_versions      = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
     }

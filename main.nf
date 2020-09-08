@@ -33,14 +33,16 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-// Auto-load genome files from config (conf/igenomes.config)
-params.fasta        = params.genome ? params.genomes[ params.genome ].fasta  ?: false : false
-params.gtf          = params.genome ? params.genomes[ params.genome ].gtf    ?: false : false
-params.gff          = params.genome ? params.genomes[ params.genome ].gff    ?: false : false
-params.bed12        = params.genome ? params.genomes[ params.genome ].bed12  ?: false : false
-params.star_index   = params.genome ? params.genomes[ params.genome ].star   ?: false : false
-// params.hisat2_index = params.genome ? params.genomes[ params.genome ].hisat2 ?: false : false
-anno_readme         = params.genome ? params.genomes[ params.genome ].readme ?: false : false
+// Auto-load genome files from genome config
+params.fasta        = params.genomes[ params.genome ]?.fasta
+params.gtf          = params.genomes[ params.genome ]?.gtf
+params.gff          = params.genomes[ params.genome ]?.gff
+params.bed12        = params.genomes[ params.genome ]?.bed12
+params.star_index   = params.genomes[ params.genome ]?.star
+params.hisat2_index = params.genomes[ params.genome ]?.hisat2
+params.rsem_index   = params.genomes[ params.genome ]?.rsem
+params.salmon_index = params.genomes[ params.genome ]?.salmon
+anno_readme         = params.genomes[ params.genome ]?.readme
 
 ////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
@@ -65,24 +67,27 @@ ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
-if (params.skip_alignment) { log.info "WARN: Skipping alignment processes..." }
-if (params.aligner != 'star' && params.aligner != 'hisat2') {
-    exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
+if (!params.skip_alignment) {
+    if (params.aligner != 'star' && params.aligner != 'hisat2') {
+        exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
+    }
+    if (params.aligner != "star" && !params.skip_rsem) {
+        log.info "WARN: RSEM only works when '--aligner star' is set. Disabling RSEM."
+    }
+} else {
+    log.info "WARN: Skipping alignment processes..."
+    if (!params.pseudo_aligner) {
+        exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
+    }
 }
-if (params.pseudo_aligner && params.pseudo_aligner != 'salmon') {
-    exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
-}
-if (params.skip_alignment && !params.pseudo_aligner) {
-    exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
-}
-// if (params.pseudo_aligner == 'salmon') {
-//     if (!params.salmon_index || !params.transcript_fasta || (!params.fasta || !(params.gff || params.gtf))) {
-//         exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
-//     }
-// }
-
-if (!params.skip_alignment && params.aligner != "star" && !params.skip_rsem) {
-    log.info "WARN: RSEM only works when '--aligner star' is set. Disabling RSEM."
+if (params.pseudo_aligner) {
+    if (params.pseudo_aligner != 'salmon') {
+        exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
+    } //else {
+        // if (!params.salmon_index || !params.transcript_fasta || (!params.fasta || !(params.gff || params.gtf))) {
+        //     exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
+        // }
+    //}
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -530,7 +535,7 @@ workflow {
             ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
             ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
             // SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]) // featureCounts_logs.collect().ifEmpty([])
-            // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])   
+            // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
             ch_edger_multiqc.collect().ifEmpty([]),                      // sample_correlation_results.collect().ifEmpty([])
             params.modules['multiqc']
         )

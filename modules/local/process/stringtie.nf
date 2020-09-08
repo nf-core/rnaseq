@@ -17,77 +17,48 @@ process STRINGTIE {
     tuple val(meta), path(bam)
     path  gtf
     val   options
+    // path bam from bam_stringtieFPKM
+    // path gtf from ch_gtf
 
     // output:
     // path "${bam.baseName}" into qualimap_results
     // tuple val(meta), path("*.bam"), emit: bam
     // path  "*.version.txt"         , emit: version
 
+    // output:
+    // path "${bam.baseName}_transcripts.gtf"
+    // path "${bam.baseName}.gene_abund.txt"
+    // path "${bam}.cov_refs.gtf"
+    // path "${bam.baseName}_ballgown"
+
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
 
-    // Figure out strandedness from pipeline parameters
-    def strandedness = 'non-strand-specific'
+    def strandedness = ''
     if (meta.strandedness == 'forward') {
-        strandedness = 'strand-specific-forward'
+        strandedness = '--fr'
     } else if (meta.strandedness == 'reverse') {
-        strandedness = 'strand-specific-reverse'
+        strandedness = '--rf'
     }
-    def paired_end = meta.single_end ? '' : '-pe'
-    def memory     = task.memory.toGiga() + "G"
     """
-    unset DISPLAY
-    export _JAVA_OPTIONS=-Djava.io.tmpdir=./tmp
-    qualimap \\
-        --java-mem-size=$memory \\
-        $ioptions.args \\
-        -bam $bam \\
-        -gtf $gtf \\
-        -p $strandedness \\
-        $paired_end \\
-        -outdir $prefix
+    stringtie \\
+        $bam \\
+        $strandedness \\
+        -G $gtf \\
+        -o ${prefix}.transcripts.gtf \\
+        -A ${prefix}.gene_abundance.txt \\
+        -C ${prefix}.coverage.gtf \\
+        -b ${prefix}.ballgown \\
+        $ioptions.args
+
+    stringtie --version > ${software}.version.txt
     """
 }
-
-//     process STRINGTIE {
-//         tag "${bam.baseName - '.sorted'}"
-//         publishDir "${params.outdir}/stringtie", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
-//                 else if (filename.indexOf("cov_refs.gtf") > 0) "cov_refs/$filename"
-//                 else if (filename.indexOf("ballgown") > 0) "ballgown/$filename"
-//                 else "$filename"
-//             }
-//
-//         input:
-//         path bam from bam_stringtieFPKM
-//         path gtf from ch_gtf
-//
-//         output:
-//         path "${bam.baseName}_transcripts.gtf"
-//         path "${bam.baseName}.gene_abund.txt"
-//         path "${bam}.cov_refs.gtf"
-//         path "${bam.baseName}_ballgown"
-//
-//         script:
-//         def st_direction = ''
-//         if (forward_stranded && !unstranded) {
-//             st_direction = "--fr"
-//         } else if (reverse_stranded && !unstranded) {
-//             st_direction = "--rf"
-//         }
-//         def ignore_gtf = params.stringtie_ignore_gtf ? "" : "-e"
-//         """
-//         stringtie $bam \\
-//             $st_direction \\
-//             -o ${bam.baseName}_transcripts.gtf \\
-//             -v \\
-//             -G $gtf \\
-//             -A ${bam.baseName}.gene_abund.txt \\
-//             -C ${bam}.cov_refs.gtf \\
-//             -b ${bam.baseName}_ballgown \\
-//             $ignore_gtf
-//         """
-//     }
+// saveAs: { filename ->
+//     if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
+//     else if (filename.indexOf("coverage.gtf") > 0) "cov_refs/$filename"
+//     else if (filename.indexOf("ballgown") > 0) "ballgown/$filename"
+//     else "$filename"
+// }

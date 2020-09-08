@@ -91,17 +91,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `--readPaths` is not required since these are provided from the input samplesheet
 * `--markdup_java_options` in favour of updating centrally on nf-core/configs
 * `--sampleLevel` not required
-* `--pico` since strandedness has to be specified at the sample-level via the input samplesheet
+* Strandedness is now specified at the sample-level via the input samplesheet
+  * `--forwardStranded`
+  * `--reverseStranded`
+  * `--unStranded`
+  * `--pico`
 
-#### Deprecated
+#### Replaced
 
 | Deprecated                   | Replacement                |
 |------------------------------|----------------------------|
 | `--reads`                    | `--input`                  |
 | `--saveReference`            | `--save_reference`         |
-| `--forwardStranded`          | `--forward_stranded`       |
-| `--reverseStranded`          | `--reverse_stranded`       |
-| `--unStranded`               | `--unstranded`             |
 | `--skipTrimming`             | `--skip_trimming`          |
 | `--saveTrimmed`              | `--save_trimmed`           |
 | `--removeRiboRNA`            | `--remove_ribo_rna`        |

@@ -506,6 +506,11 @@ workflow {
             ch_dupradar_multiqc  = DUPRADAR.out.multiqc
             ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
         }
+        // if (!params.skip_edger) {
+        //     EDGER_CORRELATION ( counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
+        //     ch_edger_multiqc     = EDGER_CORRELATION.out.multiqc
+        //     ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.first().ifEmpty(null))
+        // }
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             RSEQC (
                 ch_genome_bam,
@@ -528,11 +533,6 @@ workflow {
             ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
             ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
         }
-        // if (!params.skip_edger) {
-        //     EDGER_CORRELATION ( counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
-        //     ch_edger_multiqc     = EDGER_CORRELATION.out.multiqc
-        //     ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.first().ifEmpty(null))
-        // }
     }
 
     /*
@@ -564,12 +564,18 @@ workflow {
             ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
             ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
             ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_rseqc_multiqc.collect{it[1]}.ifEmpty([]),                 // rseqc_results.collect().ifEmpty([])
             ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
             ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_edger_multiqc.collect().ifEmpty([]),                      // sample_correlation_results.collect().ifEmpty([])
+            ch_bamstat_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_inferexperiment_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_innerdistance_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_junctionannotation_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_readduplication_multiqc.collect{it[1]}.ifEmpty([]),
             // SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]) // featureCounts_logs.collect().ifEmpty([])
             // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
-            ch_edger_multiqc.collect().ifEmpty([]),                      // sample_correlation_results.collect().ifEmpty([])
             params.modules['multiqc']
         )
     }

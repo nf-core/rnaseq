@@ -96,11 +96,19 @@ if (anno_readme && file(anno_readme).exists()) {
     file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
-/*
- * Initiate parameters
- */
 // Set biotype for featureCounts
 def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
+
+// Check which RSeQC modules we are running
+def rseqcModuleList = [
+    'bam_stat', 'inner_distance', 'infer_experiment',
+    'junction_annotation', 'junction_saturation',
+    'read_distribution', 'read_duplication'
+]
+def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
+if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size()) {
+    exit 1, "Invalid RSeqC module options: ${params.rseqc_modules}. Valid options: ${rseqcModuleList.join(', ')}"
+}
 
 /*
  * Check other parameters
@@ -148,8 +156,7 @@ include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
 // include { STRINGTIE                                      } from './modules/local/process/stringtie'
 include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
-// include { EDGER_CORRELATION                             } from './modules/local/process/edger_correlation'
-// include { RSEQC                                          } from './modules/local/process/rseqc'
+// include { EDGER_CORRELATION                              } from './modules/local/process/edger_correlation'
 include { QUALIMAP_RNASEQ                                } from './modules/local/process/qualimap_rnaseq'
 include { DUPRADAR                                       } from './modules/local/process/dupradar'
 include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
@@ -162,6 +169,7 @@ include { ALIGN_STAR                                     } from './modules/local
 include { ALIGN_HISAT2                                   } from './modules/local/subworkflow/align_hisat2'
 include { QUANTIFY_RSEM                                  } from './modules/local/subworkflow/quantify_rsem'
 include { QUANTIFY_SALMON                                } from './modules/local/subworkflow/quantify_salmon'
+include { RSEQC                                          } from './modules/local/subworkflow/rseqc'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -178,6 +186,9 @@ include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
+
+def good_alignment_scores = [:]
+def poor_alignment_scores = [:]
 
 workflow {
 
@@ -208,7 +219,7 @@ workflow {
         .groupTuple(by: [0])
         .map { it ->  [ it[0], it[1].flatten() ] }
         .set { ch_cat_fastq }
-    
+
     /*
      * MODULE: Concatenate FastQ files from same sample if required
      */
@@ -257,8 +268,6 @@ workflow {
     /*
      * SUBWORKFLOW: Alignment with STAR
      */
-    def good_alignment_scores = [:]
-    def poor_alignment_scores = [:]
     ch_genome_bam        = Channel.empty()
     ch_genome_bai        = Channel.empty()
     ch_transcriptome_bam = Channel.empty()
@@ -476,15 +485,17 @@ workflow {
     /*
      * MODULE: Downstream QC steps
      */
-    ch_rseqc_multiqc    = Channel.empty()
-    ch_qualimap_multiqc = Channel.empty()
-    ch_dupradar_multiqc = Channel.empty()
-    ch_edger_multiqc    = Channel.empty()
+    ch_qualimap_multiq            = Channel.empty()
+    ch_dupradar_multiqc           = Channel.empty()
+    ch_edger_multiqc              = Channel.empty()
+    ch_bamstat_multiqc            = Channel.empty()
+    ch_inferexperiment_multiqc    = Channel.empty()
+    ch_innerdistance_multiqc      = Channel.empty()
+    ch_junctionannotation_multiqc = Channel.empty()
+    ch_junctionsaturation_multiqc = Channel.empty()
+    ch_readdistribution_multiqc   = Channel.empty()
+    ch_readduplication_multiqc    = Channel.empty()
     if (!params.skip_qc) {
-        // if (!params.skip_rseqc) {
-        //     RSEQC ( ch_genome_bam.join(ch_genome.bai, by: [0]), PREPARE_GENOME.out.bed12, params.modules['rseqc'] )
-        //     ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
-        // }
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap_rnaseq'] )
             ch_qualimap_multiqc  = QUALIMAP_RNASEQ.out.results
@@ -494,6 +505,28 @@ workflow {
             DUPRADAR ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['dupradar'] )
             ch_dupradar_multiqc  = DUPRADAR.out.multiqc
             ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
+        }
+        if (!params.skip_rseqc && rseqc_modules.size() > 0) {
+            RSEQC (
+                ch_genome_bam,
+                PREPARE_GENOME.out.bed12,
+                rseqc_modules,
+                params.modules['rseqc_bamstat'],
+                params.modules['rseqc_innerdistance'],
+                params.modules['rseqc_inferexperiment'],
+                params.modules['rseqc_junctionannotation'],
+                params.modules['rseqc_junctionsaturation'],
+                params.modules['rseqc_readdistribution'],
+                params.modules['rseqc_readduplication']
+            )
+            ch_bamstat_multiqc            = RSEQC.out.bamstat_txt
+            ch_inferexperiment_multiqc    = RSEQC.out.inferexperiment_txt
+            ch_innerdistance_multiqc      = RSEQC.out.innerdistance_freq
+            ch_junctionannotation_multiqc = RSEQC.out.junctionannotation_log
+            ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
+            ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
+            ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
+            ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
         }
         // if (!params.skip_edger) {
         //     EDGER_CORRELATION ( counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
@@ -556,6 +589,37 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
+
+//     process RSEQC {
+//         tag "${bam.baseName - '.sorted'}"
+//         label 'mid_memory'
+//         publishDir "${params.outdir}/rseqc" , mode: params.publish_dir_mode,
+//             saveAs: { filename ->
+//                 if (filename.indexOf("bam_stat.txt") > 0)                           "bam_stat/$filename"
+//                 else if (filename.indexOf("infer_experiment.txt") > 0)              "infer_experiment/$filename"
+//                 else if (filename.indexOf("read_distribution.txt") > 0)             "read_distribution/$filename"
+//                 else if (filename.indexOf("read_duplication.DupRate_plot.pdf") > 0) "read_duplication/$filename"
+//                 else if (filename.indexOf("read_duplication.DupRate_plot.r") > 0)   "read_duplication/rscripts/$filename"
+//                 else if (filename.indexOf("read_duplication.pos.DupRate.xls") > 0)  "read_duplication/dup_pos/$filename"
+//                 else if (filename.indexOf("read_duplication.seq.DupRate.xls") > 0)  "read_duplication/dup_seq/$filename"
+//                 else if (filename.indexOf("RPKM_saturation.eRPKM.xls") > 0)         "RPKM_saturation/rpkm/$filename"
+//                 else if (filename.indexOf("RPKM_saturation.rawCount.xls") > 0)      "RPKM_saturation/counts/$filename"
+//                 else if (filename.indexOf("RPKM_saturation.saturation.pdf") > 0)    "RPKM_saturation/$filename"
+//                 else if (filename.indexOf("RPKM_saturation.saturation.r") > 0)      "RPKM_saturation/rscripts/$filename"
+//                 else if (filename.indexOf("inner_distance.txt") > 0)                "inner_distance/$filename"
+//                 else if (filename.indexOf("inner_distance_freq.txt") > 0)           "inner_distance/data/$filename"
+//                 else if (filename.indexOf("inner_distance_plot.r") > 0)             "inner_distance/rscripts/$filename"
+//                 else if (filename.indexOf("inner_distance_plot.pdf") > 0)           "inner_distance/plots/$filename"
+//                 else if (filename.indexOf("junction_plot.r") > 0)                   "junction_annotation/rscripts/$filename"
+//                 else if (filename.indexOf("junction.xls") > 0)                      "junction_annotation/data/$filename"
+//                 else if (filename.indexOf("splice_events.pdf") > 0)                 "junction_annotation/events/$filename"
+//                 else if (filename.indexOf("splice_junction.pdf") > 0)               "junction_annotation/junctions/$filename"
+//                 else if (filename.indexOf("junction_annotation_log.txt") > 0)       "junction_annotation/$filename"
+//                 else if (filename.indexOf("junctionSaturation_plot.pdf") > 0)       "junction_saturation/$filename"
+//                 else if (filename.indexOf("junctionSaturation_plot.r") > 0)         "junction_saturation/rscripts/$filename"
+//                 else filename
+//             }
+
 
 //     process SUBREAD_FEATURECOUNTS {
 //         tag "${bam.baseName - '.sorted'}"

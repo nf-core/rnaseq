@@ -200,7 +200,7 @@ workflow {
     /*
      * SUBWORKFLOW: Read in samplesheet, validate and stage input files
      */
-    INPUT_CHECK ( ch_input, params.seq_center, [:] )
+    INPUT_CHECK ( ch_input, [:] )
         .map {
             meta, bam ->
                 meta.id = meta.id.split('_')[0..-2].join('_')
@@ -208,7 +208,7 @@ workflow {
         .groupTuple(by: [0])
         .map { it ->  [ it[0], it[1].flatten() ] }
         .set { ch_cat_fastq }
-
+    
     /*
      * MODULE: Concatenate FastQ files from same sample if required
      */

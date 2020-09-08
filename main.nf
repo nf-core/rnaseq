@@ -626,7 +626,6 @@ workflow {
 //                 else filename
 //             }
 
-
 //     process SUBREAD_FEATURECOUNTS {
 //         tag "${bam.baseName - '.sorted'}"
 //         label 'low_memory'

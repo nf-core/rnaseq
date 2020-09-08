@@ -48,7 +48,6 @@ process MULTIQC {
     path ('rseqc/read_duplication/*')
     // path ('featurecounts/*')
     // path ('featurecounts/biotype/*')
-
     val options
 
     output:

@@ -26,19 +26,19 @@ process DUPRADAR {
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
 
-    // Figure out strandedness from pipeline parameters
-    def unstranded       = params.unstranded
-    def forward_stranded = params.forward_stranded
-    def reverse_stranded = params.reverse_stranded
-    if (params.pico) {
-        unstranded       = false
-        forward_stranded = true
-        reverse_stranded = false
-    }
+    // // Figure out strandedness from pipeline parameters
+    // def unstranded       = params.unstranded
+    // def forward_stranded = params.forward_stranded
+    // def reverse_stranded = params.reverse_stranded
+    // if (params.pico) {
+    //     unstranded       = false
+    //     forward_stranded = true
+    //     reverse_stranded = false
+    // }
     def strandedness = 0
-    if (forward_stranded && !unstranded) {
+    if (meta.strandedness == 'forward') {
         strandedness = 1
-    } else if (reverse_stranded && !unstranded) {
+    } else if (meta.strandedness == 'reverse') {
         strandedness = 2
     }
     def paired_end = meta.single_end ? 'single' :  'paired'

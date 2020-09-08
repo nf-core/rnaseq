@@ -40,6 +40,7 @@ process RSEQC {
         -outdir $prefix
     """
 }
+// read_duplication.py --version | sed -e "s/read_duplication.py //g" > ${software}.version.txt
 
 //     process RSEQC {
 //         tag "${bam.baseName - '.sorted'}"

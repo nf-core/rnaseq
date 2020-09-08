@@ -347,10 +347,6 @@
                 },
                 "trim_nextseq": {
                     "type": "integer"
-                },
-                "pico": {
-                    "type": "string",
-                    "fa_icon": "fas fa-compress-alt"
                 }
             }
         },

@@ -91,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `--readPaths` is not required since these are provided from the input samplesheet
 * `--markdup_java_options` in favour of updating centrally on nf-core/configs
 * `--sampleLevel` not required
+* `--pico` since strandedness has to be specified at the sample-level via the input samplesheet
 
 #### Deprecated
 

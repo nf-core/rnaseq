@@ -99,16 +99,6 @@ if (anno_readme && file(anno_readme).exists()) {
 /*
  * Initiate parameters
  */
-// Define regular variables so that they can be overwritten
-def forward_stranded = params.forward_stranded
-def reverse_stranded = params.reverse_stranded
-def unstranded = params.unstranded
-if (params.pico) {
-    forward_stranded = true
-    reverse_stranded = false
-    unstranded = false
-}
-
 // Set biotype for featureCounts
 def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
 

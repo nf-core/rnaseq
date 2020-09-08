@@ -100,30 +100,10 @@ class Schema {
     }
 
     private static LinkedHashMap params_summary(workflow, params, run_name) {
-        // Preset trimming options
-        // Define regular variables so that they can be overwritten
-        def clip_r1 = params.clip_r1
-        def clip_r2 = params.clip_r2
-        def three_prime_clip_r1 = params.three_prime_clip_r1
-        def three_prime_clip_r2 = params.three_prime_clip_r2
-        def forward_stranded = params.forward_stranded
-        def reverse_stranded = params.reverse_stranded
-        def unstranded = params.unstranded
-        if (params.pico) {
-            clip_r1 = 3
-            clip_r2 = 0
-            three_prime_clip_r1 = 0
-            three_prime_clip_r2 = 3
-            forward_stranded = true
-            reverse_stranded = false
-            unstranded = false
-        }
-
         def Map summary = [:]
         if (workflow.revision)             summary['Pipeline Release'] = workflow.revision
         summary['Run Name']                = run_name ?: workflow.runName
         summary['Design File']             = params.input
-        summary['Strandedness']            = (unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None')
         summary['Genome']                  = params.genome ?: 'Not supplied'
         summary['Fasta File']              = params.fasta
         if (params.additional_fasta)       summary["Additional Fasta File"] = params.additional_fasta
@@ -138,9 +118,8 @@ class Schema {
         if (params.skip_trimming) {
             summary['Trimming Step']       = 'Skipped'
         } else {
-            summary['Trimming']            = "5'R1: $clip_r1 bp / 5'R2: $clip_r2 bp / 3'R1: $three_prime_clip_r1 bp / 3'R2: $three_prime_clip_r2 bp / NextSeq Trim: $params.trim_nextseq bp"
+            summary['Trimming']            = "5'R1: $params.clip_r1 bp / 5'R2: $params.clip_r2 bp / 3'R1: $params.three_prime_clip_r1 bp / 3'R2: $params.three_prime_clip_r2 bp / NextSeq Trim: $params.trim_nextseq bp"
         }
-        if (params.pico)                   summary['Library Prep'] = "SMARTer Stranded Total RNA-Seq Kit - Pico Input"
         if (params.with_umi) {
             summary["With UMI"]                           = params.with_umi
             summary["umi_tools extract-method"]           = params.umitools_extract_method

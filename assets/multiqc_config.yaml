@@ -84,13 +84,13 @@ sp:
     rseqc/gene_body_coverage:
         skip: true
     rseqc/junction_annotation:
-        fn: '*.junction_annotation_log.txt'
+        fn: '*.junction_annotation.log'
     rseqc/read_gc:
         skip: true
     rseqc/read_distribution:
         fn: '*.read_distribution.txt'
     rseqc/infer_experiment:
-        fn: '*infer_experiment.txt'
+        fn: '*.infer_experiment.txt'
 
     picard/markdups:
         fn: '*.MarkDuplicates.metrics.txt'

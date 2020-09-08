@@ -37,19 +37,19 @@ def check_samplesheet(file_in, file_out):
     """
     This function checks that the samplesheet follows the following structure:
 
-    group,replicate,fastq_1,fastq_2
-    WT,1,WT_LIB1_REP1_1.fastq.gz,WT_LIB1_REP1_2.fastq.gz
-    WT,1,WT_LIB2_REP1_1.fastq.gz,WT_LIB2_REP1_2.fastq.gz
-    WT,2,WT_LIB1_REP2_1.fastq.gz,WT_LIB1_REP2_2.fastq.gz
-    KO,1,KO_LIB1_REP1_1.fastq.gz,KO_LIB1_REP1_2.fastq.gz
+    group,replicate,fastq_1,fastq_2,strandedness
+    WT,1,WT_LIB1_REP1_1.fastq.gz,WT_LIB1_REP1_2.fastq.gz,forward
+    WT,1,WT_LIB2_REP1_1.fastq.gz,WT_LIB2_REP1_2.fastq.gz,forward
+    WT,2,WT_LIB1_REP2_1.fastq.gz,WT_LIB1_REP2_2.fastq.gz,forward
+    KO,1,KO_LIB1_REP1_1.fastq.gz,KO_LIB1_REP1_2.fastq.gz,forward
     """
 
     sample_run_dict = {}
     with open(file_in, "r") as fin:
 
         ## Check header
-        MIN_COLS = 3
-        HEADER = ['group', 'replicate', 'fastq_1', 'fastq_2']
+        MIN_COLS = 4
+        HEADER = ['group', 'replicate', 'fastq_1', 'fastq_2', 'strandedness']
         header = fin.readline().strip().split(",")
         if header[:len(HEADER)] != HEADER:
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
@@ -68,7 +68,7 @@ def check_samplesheet(file_in, file_out):
                 print_error("Invalid number of populated columns (minimum = {})!".format(MIN_COLS), 'Line', line)
 
             ## Check sample name entries
-            sample, replicate, fastq_1, fastq_2 = lspl[:len(HEADER)]
+            sample, replicate, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
             if sample:
                 if sample.find(" ") != -1:
                     print_error("Group entry contains spaces!", 'Line', line)
@@ -88,16 +88,24 @@ def check_samplesheet(file_in, file_out):
                     if not fastq.endswith(".fastq.gz") and not fastq.endswith(".fq.gz"):
                         print_error("FastQ file does not have extension '.fastq.gz' or '.fq.gz'!", 'Line', line)
 
+            ## Check strandedness
+            strandednesses = ['unstranded', 'forward', 'reverse']
+            if strandedness:
+                if strandedness not in strandednesses:
+                    print_error("Strandedness must be one of '{}'!".format(', '.join(strandednesses)), 'Line', line)
+            else:
+                print_error("Strandedness has not been specified! Must be one of '{}'.".format(', '.join(strandednesses)), 'Line', line)
+
             ## Auto-detect paired-end/single-end
-            sample_info = []  ## [single_end, fastq_1, fastq_2]
+            sample_info = []  ## [single_end, fastq_1, fastq_2, strandedness]
             if sample and fastq_1 and fastq_2:  ## Paired-end short reads
-                sample_info = ["0", fastq_1, fastq_2]
+                sample_info = ["0", fastq_1, fastq_2, strandedness]
             elif sample and fastq_1 and not fastq_2:  ## Single-end short reads
-                sample_info = ["1", fastq_1, fastq_2]
+                sample_info = ["1", fastq_1, fastq_2, strandedness]
             else:
                 print_error("Invalid combination of columns provided!", 'Line', line)
 
-            ## Create sample mapping dictionary = {sample: {replicate : [ single_end, fastq_1, fastq_2 ]}}
+            ## Create sample mapping dictionary = {sample: {replicate : [ single_end, fastq_1, fastq_2, strandedness ]}}
             if sample not in sample_run_dict:
                 sample_run_dict[sample] = {}
             if replicate not in sample_run_dict[sample]:
@@ -114,13 +122,13 @@ def check_samplesheet(file_in, file_out):
         make_dir(out_dir)
         with open(file_out, "w") as fout:
 
-            fout.write(",".join(['sample', 'single_end', 'fastq_1', 'fastq_2']) + "\n")
+            fout.write(",".join(['sample', 'single_end', 'fastq_1', 'fastq_2', 'strandedness']) + "\n")
             for sample in sorted(sample_run_dict.keys()):
 
                 ## Check that replicate ids are in format 1..<NUM_REPS>
                 uniq_rep_ids = set(sample_run_dict[sample].keys())
                 if len(uniq_rep_ids) != max(uniq_rep_ids):
-                    print_error("Replicate IDs must start with 1..<num_replicates>!", 'Group', sample)
+                    print_error("Replicate ids must start with 1..<num_replicates>!", 'Group', sample)
 
                 for replicate in sorted(sample_run_dict[sample].keys()):
 

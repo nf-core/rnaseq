@@ -9,13 +9,12 @@ include {
 workflow INPUT_CHECK {
     take:
     samplesheet //   file: /path/to/samplesheet.csv
-    seq_center  // string: sequencing center for read group
     options     //    map: options for samplesheet_check module
 
     main:
     SAMPLESHEET_CHECK ( samplesheet, options )
         .splitCsv ( header:true, sep:',' )
-        .map { get_samplesheet_paths(it, seq_center) }
+        .map { get_samplesheet_paths(it) }
         .set { reads }
 
     emit:

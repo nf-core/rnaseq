@@ -464,6 +464,16 @@ workflow {
     }
 
     /*
+     * MODULE: FEATURECOUNTS
+     */
+
+    /*
+     * MODULE: STRINGTIE
+     */
+    // def ignore_gtf = params.stringtie_ignore_gtf ? "" : "-e"
+    // params.modules['stringtie'].args += ignore_gtf
+
+    /*
      * MODULE: Downstream QC steps
      */
     ch_rseqc_multiqc    = Channel.empty()

@@ -36,12 +36,19 @@ process MULTIQC {
     path ('samtools/idxstats/*')
     path ('picard/markduplicates/*')
     path ('preseq/*')
-    path ('rseqc/*')
     path ('qualimap/*')
     path ('dupradar/*')
+    path ('edger/*')
+    path ('rseqc/bam_stat/*')
+    path ('rseqc/infer_experiment/*')
+    path ('rseqc/inner_distance/*')
+    path ('rseqc/junction_annotation/*')
+    path ('rseqc/junction_saturation/*')
+    path ('rseqc/read_distribution/*')
+    path ('rseqc/read_duplication/*')
     // path ('featurecounts/*')
     // path ('featurecounts/biotype/*')
-    path ('edger/*')
+
     val options
 
     output:

@@ -28,26 +28,18 @@ process SALMON_QUANT {
     def ioptions = initOptions(options)
     prefix       = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
 
-    def unstranded       = params.unstranded
-    def forward_stranded = params.forward_stranded
-    def reverse_stranded = params.reverse_stranded
-    if (params.pico) {
-        unstranded       = false
-        forward_stranded = true
-        reverse_stranded = false
-    }
-    def rnastrandness = meta.single_end ? 'U' : 'IU'
-    if (forward_stranded && !unstranded) {
-        rnastrandness = meta.single_end ? 'SF' : 'ISF'
-    } else if (reverse_stranded && !unstranded) {
-        rnastrandness = meta.single_end ? 'SR' : 'ISR'
+    def strandedness = meta.single_end ? 'U' : 'IU'
+    if (meta.strandedness == 'forward') {
+        strandedness = meta.single_end ? 'SF' : 'ISF'
+    } else if (meta.strandedness == 'reverse') {
+        strandedness = meta.single_end ? 'SR' : 'ISR'
     }
     def endedness = meta.single_end ? "-r $reads" : "-1 ${reads[0]} -2 ${reads[1]}"
     """
     salmon quant \\
         --geneMap $gtf \\
         --threads $task.cpus \\
-        --libType=$rnastrandness \\
+        --libType=$strandedness \\
         --index $index \\
         $endedness \\
         $ioptions.args \\

@@ -36,21 +36,11 @@ process TRIMGALORE {
         if (cores > 4) cores = 4
     }
 
-    // Clipping presets have to be evaluated by protocol or in the context of SE/PE
-    def clip_r1 = params.clip_r1
-    def clip_r2 = params.clip_r2
-    def three_prime_clip_r1 = params.three_prime_clip_r1
-    def three_prime_clip_r2 = params.three_prime_clip_r2
-    if (params.pico) {
-        clip_r1 = 3
-        clip_r2 = 0
-        three_prime_clip_r1 = 0
-        three_prime_clip_r2 = 3
-    }
-    c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
-    c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
-    tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
-    tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
+    // Clipping presets have to be evaluated in the context of SE/PE
+    def c_r1   = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
+    def c_r2   = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
+    def tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
+    def tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
 
     // Added soft-links to original fastqs for consistent naming in MultiQC
     def software = getSoftwareName(task.process)

@@ -29,18 +29,10 @@ process STRINGTIE {
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
 
     // Figure out strandedness from pipeline parameters
-    def unstranded       = params.unstranded
-    def forward_stranded = params.forward_stranded
-    def reverse_stranded = params.reverse_stranded
-    if (params.pico) {
-        unstranded       = false
-        forward_stranded = true
-        reverse_stranded = false
-    }
     def strandedness = 'non-strand-specific'
-    if (forward_stranded) {
+    if (meta.strandedness == 'forward') {
         strandedness = 'strand-specific-forward'
-    } else if (reverse_stranded) {
+    } else if (meta.strandedness == 'reverse') {
         strandedness = 'strand-specific-reverse'
     }
     def paired_end = meta.single_end ? '' : '-pe'

@@ -33,22 +33,12 @@ process HISAT2_ALIGN {
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
 
-    // Figure out strandedness from pipeline parameters
-    def unstranded       = params.unstranded
-    def forward_stranded = params.forward_stranded
-    def reverse_stranded = params.reverse_stranded
-    if (params.pico) {
-        unstranded       = false
-        forward_stranded = true
-        reverse_stranded = false
+    def strandedness = ''
+    if (meta.strandedness == 'forward') {
+        strandedness = meta.single_end ? '--rna-strandness F' : '--rna-strandness FR'
+    } else if (meta.strandedness == 'reverse') {
+        strandedness = meta.single_end ? '--rna-strandness R' : '--rna-strandness RF'
     }
-    def rnastrandness = ''
-    if (forward_stranded && !unstranded) {
-        rnastrandness = meta.single_end ? '--rna-strandness F' : '--rna-strandness FR'
-    } else if (reverse_stranded && !unstranded) {
-        rnastrandness = meta.single_end ? '--rna-strandness R' : '--rna-strandness RF'
-    }
-
     def seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
     if (meta.single_end) {
         def unaligned = params.save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -57,7 +47,7 @@ process HISAT2_ALIGN {
         hisat2 \\
             -x \$INDEX \\
             -U $reads \\
-            $rnastrandness \\
+            $strandedness \\
             --known-splicesite-infile $splicesites \\
             --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
@@ -76,7 +66,7 @@ process HISAT2_ALIGN {
             -x \$INDEX \\
             -1 ${reads[0]} \\
             -2 ${reads[1]} \\
-            $rnastrandness \\
+            $strandedness \\
             --known-splicesite-infile $splicesites \\
             --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\

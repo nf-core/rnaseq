@@ -27,24 +27,6 @@ process RSEQC {
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
-
-    // Figure out strandedness from pipeline parameters
-    def unstranded       = params.unstranded
-    def forward_stranded = params.forward_stranded
-    def reverse_stranded = params.reverse_stranded
-    if (params.pico) {
-        unstranded       = false
-        forward_stranded = true
-        reverse_stranded = false
-    }
-    def strandedness = 'non-strand-specific'
-    if (forward_stranded) {
-        strandedness = 'strand-specific-forward'
-    } else if (reverse_stranded) {
-        strandedness = 'strand-specific-reverse'
-    }
-    def paired_end = meta.single_end ? '' : '-pe'
-    def memory     = task.memory.toGiga() + "G"
     """
     unset DISPLAY
     export _JAVA_OPTIONS=-Djava.io.tmpdir=./tmp

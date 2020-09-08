@@ -26,17 +26,11 @@ process SAMPLESHEET_CHECK {
 }
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
-def get_samplesheet_paths(LinkedHashMap row, String seq_center) {
+def get_samplesheet_paths(LinkedHashMap row) {
     def meta = [:]
-    meta.id = row.sample
-    meta.single_end = row.single_end.toBoolean()
-
-    def sample = meta.id.split('_')[0..-2].join('_')
-    def rg = "\'@RG\\tID:${sample}\\tSM:${sample}\\tPL:ILLUMINA\\tLB:${sample}\\tPU:1\'"
-    if (seq_center) {
-        rg = "\'@RG\\tID:${sample}\\tSM:${sample}\\tPL:ILLUMINA\\tLB:${sample}\\tPU:1\\tCN:${seq_center}\'"
-    }
-    meta.read_group = rg
+    meta.id           = row.sample
+    meta.single_end   = row.single_end.toBoolean()
+    meta.strandedness = row.strandedness
 
     def array = []
     if (meta.single_end) {

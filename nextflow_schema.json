@@ -279,27 +279,6 @@
                 }
             }
         },
-        "strandedness_settings": {
-            "title": "Strandedness Settings",
-            "type": "object",
-            "description": "Options for handling various RNAseq strandedness protocols",
-            "default": "",
-            "fa_icon": "fas fa-share-alt",
-            "properties": {
-                "forward_stranded": {
-                    "type": "string",
-                    "fa_icon": "fas fa-angle-double-right"
-                },
-                "reverse_stranded": {
-                    "type": "string",
-                    "fa_icon": "fas fa-angle-double-left"
-                },
-                "unstranded": {
-                    "type": "string",
-                    "fa_icon": "fas fa-arrows-alt"
-                }
-            }
-        },
         "ribosomal_removal": {
             "title": "Ribosomal Removal",
             "type": "object",
@@ -552,9 +531,6 @@
         },
         {
             "$ref": "#/definitions/institutional_config_options"
-        },
-        {
-            "$ref": "#/definitions/strandedness_settings"
         },
         {
             "$ref": "#/definitions/ribosomal_removal"

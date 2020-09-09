@@ -149,6 +149,7 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 
 include { CAT_FASTQ                  } from './modules/local/process/cat_fastq'
 include { SORTMERNA                  } from './modules/local/process/sortmerna'
+include { MULTIQC_CUSTOM_BIOTYPE     } from './modules/local/process/multiqc_custom_biotype'
 include { FEATURECOUNTS_MERGE_COUNTS } from './modules/local/process/featurecounts_merge_counts'
 include { STRINGTIE                  } from './modules/local/process/stringtie'
 include { EDGER_CORRELATION          } from './modules/local/process/edger_correlation'
@@ -488,17 +489,10 @@ workflow {
             def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
             params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
             SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
+
+            MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
+            ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
         }
-        // input:
-        // path biotypes_header from ch_biotypes_header
-
-        // path "${bam.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
-
-        // script:
-        // mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam.baseName}_biotype_counts_gs_mqc.tsv"
-        // """
-        // $mod_biotype
-        // """
     }
 
     /*
@@ -599,8 +593,8 @@ workflow {
             ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
             ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
             ch_readduplication_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),        // featureCounts_logs.collect().ifEmpty([])
-            // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
+            ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             params.modules['multiqc']
         )
     }

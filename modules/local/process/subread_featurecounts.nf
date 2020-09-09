@@ -18,7 +18,7 @@ process SUBREAD_FEATURECOUNTS {
     val   options
 
     output:
-    tuple val(meta), path("*featureCounts.txt")        , emit: txt
+    tuple val(meta), path("*featureCounts.txt")        , emit: counts
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
     path "*.version.txt"                               , emit: version
 

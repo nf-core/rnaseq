@@ -17,19 +17,13 @@ process STRINGTIE {
     tuple val(meta), path(bam)
     path  gtf
     val   options
-    // path bam from bam_stringtieFPKM
-    // path gtf from ch_gtf
 
-    // output:
-    // path "${bam.baseName}" into qualimap_results
-    // tuple val(meta), path("*.bam"), emit: bam
-    // path  "*.version.txt"         , emit: version
-
-    // output:
-    // path "${bam.baseName}_transcripts.gtf"
-    // path "${bam.baseName}.gene_abund.txt"
-    // path "${bam}.cov_refs.gtf"
-    // path "${bam.baseName}_ballgown"
+    output:
+    tuple val(meta), path("*.coverage.gtf")   , emit: coverage_gtf
+    tuple val(meta), path("*.transcripts.gtf"), emit: transcript_gtf
+    tuple val(meta), path("*.txt")            , emit: abundance
+    tuple val(meta), path("*.ballgown")       , emit: ballgown
+    path  "*.version.txt"                     , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -56,9 +50,3 @@ process STRINGTIE {
     stringtie --version > ${software}.version.txt
     """
 }
-// saveAs: { filename ->
-//     if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
-//     else if (filename.indexOf("coverage.gtf") > 0) "cov_refs/$filename"
-//     else if (filename.indexOf("ballgown") > 0) "ballgown/$filename"
-//     else "$filename"
-// }

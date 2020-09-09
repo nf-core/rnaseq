@@ -96,9 +96,6 @@ if (anno_readme && file(anno_readme).exists()) {
     file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
-// Set biotype for featureCounts
-def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
-
 // Check which RSeQC modules we are running
 def rseqcModuleList = [
     'bam_stat', 'inner_distance', 'infer_experiment',
@@ -150,34 +147,35 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-include { CAT_FASTQ                                      } from './modules/local/process/cat_fastq'
-include { SORTMERNA                                      } from './modules/local/process/sortmerna'
+include { CAT_FASTQ                  } from './modules/local/process/cat_fastq'
+include { SORTMERNA                  } from './modules/local/process/sortmerna'
+include { FEATURECOUNTS_MERGE_COUNTS } from './modules/local/process/featurecounts_merge_counts'
+include { STRINGTIE                  } from './modules/local/process/stringtie'
+include { EDGER_CORRELATION          } from './modules/local/process/edger_correlation'
+include { QUALIMAP_RNASEQ            } from './modules/local/process/qualimap_rnaseq'
+include { DUPRADAR                   } from './modules/local/process/dupradar'
+include { OUTPUT_DOCUMENTATION       } from './modules/local/process/output_documentation'
+include { GET_SOFTWARE_VERSIONS      } from './modules/local/process/get_software_versions'
+include { MULTIQC                    } from './modules/local/process/multiqc'
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
-          UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
-include { SUBREAD_FEATURECOUNTS                          } from './modules/local/process/subread_featurecounts'
-include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
-// include { STRINGTIE                                      } from './modules/local/process/stringtie'
-// include { EDGER_CORRELATION                              } from './modules/local/process/edger_correlation'
-include { QUALIMAP_RNASEQ                                } from './modules/local/process/qualimap_rnaseq'
-include { DUPRADAR                                       } from './modules/local/process/dupradar'
-include { OUTPUT_DOCUMENTATION                           } from './modules/local/process/output_documentation'
-include { GET_SOFTWARE_VERSIONS                          } from './modules/local/process/get_software_versions'
-include { MULTIQC                                        } from './modules/local/process/multiqc'
+          UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME         } from './modules/local/process/umitools_dedup'
+include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS
+          SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/local/process/subread_featurecounts'
 
-include { INPUT_CHECK                                    } from './modules/local/subworkflow/input_check'
-include { PREPARE_GENOME                                 } from './modules/local/subworkflow/prepare_genome'
-include { ALIGN_STAR                                     } from './modules/local/subworkflow/align_star'
-include { ALIGN_HISAT2                                   } from './modules/local/subworkflow/align_hisat2'
-include { QUANTIFY_RSEM                                  } from './modules/local/subworkflow/quantify_rsem'
-include { QUANTIFY_SALMON                                } from './modules/local/subworkflow/quantify_salmon'
-include { RSEQC                                          } from './modules/local/subworkflow/rseqc'
+include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'
+include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'
+include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'
+include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'
+include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'
+include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon'
+include { RSEQC           } from './modules/local/subworkflow/rseqc'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
 ////////////////////////////////////////////////////
 
-include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
-include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
+include { SAMTOOLS_INDEX   } from './modules/nf-core/software/samtools/index/main'
+include { PRESEQ_LCEXTRAP  } from './modules/nf-core/software/preseq/lcextrap/main'
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
 include { BAM_SORT_SAMTOOLS          } from './modules/nf-core/subworkflow/bam_sort_samtools'
@@ -475,20 +473,32 @@ workflow {
     /*
      * MODULE: FEATURECOUNTS
      */
+    ch_featurecounts_multiqc = Channel.empty()
+    ch_featurecounts_biotype_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_featurecounts) {
-        // if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
-        // else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
-        // else if (filename.indexOf("_gene.featureCounts.txt") > 0) "gene_counts/$filename"
-        // else "$filename"
         def fc_extra_attributes = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
         params.modules['subread_featurecounts'].args += fc_extra_attributes
         params.modules['subread_featurecounts'].args += " -g $params.fc_group_features -t $params.fc_count_type"
-        println(params.modules['subread_featurecounts'])
 
-        SUBREAD_FEATURECOUNTS (
-            ch_genome_bam.combine(PREPARE_GENOME.out.gtf),
-            params.modules['subread_featurecounts']
-        )
+        SUBREAD_FEATURECOUNTS ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts'] )
+        ch_featurecounts_multiqc = SUBREAD_FEATURECOUNTS.out.summary
+        ch_software_versions = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
+
+        if (!params.skip_biotype_qc) {
+            def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
+            params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
+            SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
+        }
+        // input:
+        // path biotypes_header from ch_biotypes_header
+
+        // path "${bam.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
+
+        // script:
+        // mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam.baseName}_biotype_counts_gs_mqc.tsv"
+        // """
+        // $mod_biotype
+        // """
     }
 
     /*
@@ -589,7 +599,7 @@ workflow {
             ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
             ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
             ch_readduplication_multiqc.collect{it[1]}.ifEmpty([]),
-            // SUBREAD_FEATURECOUNTS.out.summary.collect{it[1]}.ifEmpty([]) // featureCounts_logs.collect().ifEmpty([])
+            ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),        // featureCounts_logs.collect().ifEmpty([])
             // path ('featurecounts/biotype/*')                             // featureCounts_biotype.collect().ifEmpty([])
             params.modules['multiqc']
         )

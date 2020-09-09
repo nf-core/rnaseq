@@ -51,6 +51,7 @@ extra_fn_clean_exts:
     - '.read_distribution'
     - '.junction_annotation'
     - '.infer_experiment'
+    - '.biotype'
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

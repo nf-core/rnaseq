@@ -6,10 +6,11 @@ if (length(args) < 5) {
   stop("Usage: dupRadar.r <input.bam> <annotation.gtf> <strandDirection:0=unstranded/1=forward/2=reverse> <paired/single> <nbThreads> <R-package-location (optional)>", call.=FALSE)
 }
 input_bam <- args[1]
-annotation_gtf <- args[2]
-stranded <- as.numeric(args[3])
-paired_end <- if(args[4]=='paired') TRUE else FALSE
-threads <- as.numeric(args[5])
+output_prefix <- args[2]
+annotation_gtf <- args[3]
+stranded <- as.numeric(args[4])
+paired_end <- if(args[5]=='paired') TRUE else FALSE
+threads <- as.numeric(args[6])
 
 bamRegex <- "(.+)\\.bam$"
 
@@ -18,12 +19,6 @@ if(!(file.exists(annotation_gtf) &&  (!file.info(annotation_gtf)$isdir))) stop("
 if(is.na(stranded) || (!(stranded %in% (0:2)))) stop("Third argument <strandDirection> must be a numeric value in 0(unstranded)/1(forward)/2(reverse)...")
 if(is.na(threads) || (threads<=0)) stop("Fifth argument <nbThreads> must be a strictly positive numeric value...")
 
-# Remove bam file extension to generate basename
-input_bam_basename <- gsub(bamRegex, "\\1", input_bam)
-input_bam_basename <- gsub("_subsamp.*", "", input_bam_basename)
-input_bam_basename <- gsub("\\.sorted.*", "", input_bam_basename)
-input_bam_basename <- gsub("Aligned.*", "", input_bam_basename)
-
 # Debug messages (stderr)
 message("Input bam      (Arg 1): ", input_bam)
 message("Input gtf      (Arg 2): ", annotation_gtf)
@@ -31,7 +26,7 @@ message("Strandness     (Arg 3): ", c("unstranded", "forward", "reverse")[strand
 message("paired/single  (Arg 4): ", ifelse(paired_end, 'paired', 'single'))
 message("Nb threads     (Arg 5): ", threads)
 message("R package loc. (Arg 6): ", ifelse(length(args) > 4, args[5], "Not specified"))
-message("Output basename       : ", input_bam_basename)
+message("Output basename       : ", output_prefix)
 
 
 # Load / install packages
@@ -48,24 +43,24 @@ if (!require("parallel")) {
 
 # Duplicate stats
 dm <- analyzeDuprates(input_bam, annotation_gtf, stranded, paired_end, threads)
-write.table(dm, file=paste(input_bam_basename, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
+write.table(dm, file=paste(output_prefix, "_dupMatrix.txt", sep=""), quote=F, row.name=F, sep="\t")
 
 # 2D density scatter plot
-pdf(paste0(input_bam_basename, "_duprateExpDens.pdf"))
+pdf(paste0(output_prefix, "_duprateExpDens.pdf"))
 duprateExpDensPlot(DupMat=dm)
 title("Density scatter plot")
-mtext(input_bam_basename, side=3)
+mtext(output_prefix, side=3)
 dev.off()
 fit <- duprateExpFit(DupMat=dm)
 cat(
   paste("- dupRadar Int (duprate at low read counts):", fit$intercept),
   paste("- dupRadar Sl (progression of the duplication rate):", fit$slope),
-  fill=TRUE, labels=input_bam_basename,
-  file=paste0(input_bam_basename, "_intercept_slope.txt"), append=FALSE
+  fill=TRUE, labels=output_prefix,
+  file=paste0(output_prefix, "_intercept_slope.txt"), append=FALSE
 )
 
 # Create a multiqc file dupInt
-sample_name <- gsub("Aligned.sortedByCoord.out.markDups", "", input_bam_basename)
+sample_name <- gsub("Aligned.sortedByCoord.out.markDups", "", output_prefix)
 line="#id: DupInt
 #plot_type: 'generalstats'
 #pconfig:
@@ -79,8 +74,8 @@ line="#id: DupInt
 #        format: '{:.2f}%'
 Sample dupRadar_intercept"
 
-write(line,file=paste0(input_bam_basename, "_dup_intercept_mqc.txt"),append=TRUE)
-write(paste(sample_name, fit$intercept),file=paste0(input_bam_basename, "_dup_intercept_mqc.txt"),append=TRUE)
+write(line,file=paste0(output_prefix, "_dup_intercept_mqc.txt"),append=TRUE)
+write(paste(sample_name, fit$intercept),file=paste0(output_prefix, "_dup_intercept_mqc.txt"),append=TRUE)
 
 # Get numbers from dupRadar GLM
 curve_x <- sort(log10(dm$RPK))
@@ -128,28 +123,28 @@ line="#id: DupRadar
 #          value: 1000
 #          width: 1"
 
-write(line,file=paste0(input_bam_basename, "_duprateExpDensCurve_mqc.txt"),append=TRUE)
+write(line,file=paste0(output_prefix, "_duprateExpDensCurve_mqc.txt"),append=TRUE)
 write.table(
   cbind(curve_x, curve_y),
-  file=paste0(input_bam_basename, "_duprateExpDensCurve_mqc.txt"),
-  quote=FALSE, row.names=FALSE, col.names=FALSE, append=TRUE, 
+  file=paste0(output_prefix, "_duprateExpDensCurve_mqc.txt"),
+  quote=FALSE, row.names=FALSE, col.names=FALSE, append=TRUE,
 )
 
 # Distribution of expression box plot
-pdf(paste0(input_bam_basename, "_duprateExpBoxplot.pdf"))
+pdf(paste0(output_prefix, "_duprateExpBoxplot.pdf"))
 duprateExpBoxplot(DupMat=dm)
 title("Percent Duplication by Expression")
-mtext(input_bam_basename, side=3)
+mtext(output_prefix, side=3)
 dev.off()
 
 # Distribution of RPK values per gene
-pdf(paste0(input_bam_basename, "_expressionHist.pdf"))
+pdf(paste0(output_prefix, "_expressionHist.pdf"))
 expressionHist(DupMat=dm)
 title("Distribution of RPK values per gene")
-mtext(input_bam_basename, side=3)
+mtext(output_prefix, side=3)
 dev.off()
 
 # Print sessioninfo to standard out
-print(input_bam_basename)
+print(output_prefix)
 citation("dupRadar")
 sessionInfo()

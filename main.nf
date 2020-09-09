@@ -154,8 +154,9 @@ include { CAT_FASTQ                                      } from './modules/local
 include { SORTMERNA                                      } from './modules/local/process/sortmerna'
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME } from './modules/local/process/umitools_dedup'
-// include { STRINGTIE                                      } from './modules/local/process/stringtie'
+include { SUBREAD_FEATURECOUNTS                          } from './modules/local/process/subread_featurecounts'
 include { FEATURECOUNTS_MERGE_COUNTS                     } from './modules/local/process/featurecounts_merge_counts'
+// include { STRINGTIE                                      } from './modules/local/process/stringtie'
 // include { EDGER_CORRELATION                              } from './modules/local/process/edger_correlation'
 include { QUALIMAP_RNASEQ                                } from './modules/local/process/qualimap_rnaseq'
 include { DUPRADAR                                       } from './modules/local/process/dupradar'
@@ -177,7 +178,6 @@ include { RSEQC                                          } from './modules/local
 
 include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
 include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
-include { SUBREAD_FEATURECOUNTS      } from './modules/nf-core/software/subread/featurecounts/main'
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
 include { BAM_SORT_SAMTOOLS          } from './modules/nf-core/subworkflow/bam_sort_samtools'
@@ -374,7 +374,7 @@ workflow {
      * MODULE: Run Preseq
      */
     ch_preseq_multiqc = Channel.empty()
-    if (!params.skip_qc && !params.skip_preseq) {
+    if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq) {
         PRESEQ_LCEXTRAP ( ch_genome_bam, params.modules['preseq_lcextrap'] )
         ch_preseq_multiqc    = PRESEQ_LCEXTRAP.out.ccurve
         ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
@@ -475,6 +475,23 @@ workflow {
     /*
      * MODULE: FEATURECOUNTS
      */
+    if (!params.skip_alignment && !params.skip_featurecounts) {
+        // if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
+        // else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
+        // else if (filename.indexOf("_gene.featureCounts.txt") > 0) "gene_counts/$filename"
+        // else "$filename"
+        def fc_extra_attributes = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
+        params.modules['subread_featurecounts'].args += fc_extra_attributes
+        params.modules['subread_featurecounts'].args += " -g $params.fc_group_features -t $params.fc_count_type"
+
+        ch_genome_bam
+            .map { it -> it + [ PREPARE_GENOME.out.gtf ] }
+            .set { ch_featurecounts_bam }
+        SUBREAD_FEATURECOUNTS (
+            ch_featurecounts_bam,
+            params.modules['subread_featurecounts']
+        )
+    }
 
     /*
      * MODULE: STRINGTIE
@@ -495,7 +512,7 @@ workflow {
     ch_junctionsaturation_multiqc = Channel.empty()
     ch_readdistribution_multiqc   = Channel.empty()
     ch_readduplication_multiqc    = Channel.empty()
-    if (!params.skip_qc) {
+    if (!params.skip_alignment && !params.skip_qc) {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap_rnaseq'] )
             ch_qualimap_multiqc  = QUALIMAP_RNASEQ.out.results
@@ -595,52 +612,3 @@ workflow {
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
-
-//     process SUBREAD_FEATURECOUNTS {
-//         tag "${bam.baseName - '.sorted'}"
-//         label 'low_memory'
-//         publishDir "${params.outdir}/featurecounts", mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
-//                 else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
-//                 else if (filename.indexOf("_gene.featureCounts.txt") > 0) "gene_counts/$filename"
-//                 else "$filename"
-//             }
-//
-//         input:
-//         path bam from bam_featurecounts
-//         path gtf from ch_gtf
-//         path biotypes_header from ch_biotypes_header
-//
-//         output:
-//         path "${bam.baseName}_gene.featureCounts.txt" into geneCounts,
-//                                                            featureCounts_to_merge
-//         path "${bam.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-//         path "${bam.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
-//
-//         script:
-//         def featureCounts_direction = 0
-//         def extraAttributes = params.fc_extra_attributes ? "--extraAttributes ${params.fc_extra_attributes}" : ''
-//         if (forward_stranded && !unstranded) {
-//             featureCounts_direction = 1
-//         } else if (reverse_stranded && !unstranded) {
-//             featureCounts_direction = 2
-//         }
-//         // Try to get real sample name
-//         sample_name = bam.baseName - 'Aligned.sortedByCoord.out' - '_subsamp.sorted'
-//         biotype_qc = params.skip_biotype_qc ? '' : "featureCounts -a $gtf -g $biotype -t ${params.fc_count_type} -o ${bam.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam"
-//         mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam.baseName}_biotype_counts_gs_mqc.tsv"
-//         """
-//         featureCounts \\
-//             -a $gtf \\
-//             -g $params.fc_group_features \\
-//             -t $params.fc_count_type \\
-//             -o ${bam.baseName}_gene.featureCounts.txt \\
-//             $extraAttributes \\
-//             -p \\
-//             -s $featureCounts_direction \\
-//             $bam
-//         $biotype_qc
-//         $mod_biotype
-//         """
-//     }

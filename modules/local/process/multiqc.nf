@@ -46,7 +46,7 @@ process MULTIQC {
     path ('rseqc/junction_saturation/*')
     path ('rseqc/read_distribution/*')
     path ('rseqc/read_duplication/*')
-    // path ('featurecounts/*')
+    path ('featurecounts/*')
     // path ('featurecounts/biotype/*')
     val options
 

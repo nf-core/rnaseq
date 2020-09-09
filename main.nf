@@ -474,6 +474,7 @@ workflow {
     /*
      * MODULE: FEATURECOUNTS
      */
+    ch_edger_multiqc = Channel.empty()
     ch_featurecounts_multiqc = Channel.empty()
     ch_featurecounts_biotype_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_featurecounts) {
@@ -486,14 +487,21 @@ workflow {
         ch_software_versions = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
 
         FEATURECOUNTS_MERGE_COUNTS ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, params.modules['featurecounts_merge_counts'] )
-        
-        if (!params.skip_biotype_qc) {
-            def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
-            params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
-            SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
 
-            MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
-            ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
+        if (!params.skip_qc) {
+            if (!params.skip_edger) {
+                EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
+                ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
+                ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.first().ifEmpty(null))
+            }
+            if (!params.skip_biotype_qc) {
+                def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
+                params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
+                SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
+
+                MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
+                ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
+            }
         }
     }
 
@@ -508,7 +516,6 @@ workflow {
      */
     ch_qualimap_multiq            = Channel.empty()
     ch_dupradar_multiqc           = Channel.empty()
-    ch_edger_multiqc              = Channel.empty()
     ch_bamstat_multiqc            = Channel.empty()
     ch_inferexperiment_multiqc    = Channel.empty()
     ch_innerdistance_multiqc      = Channel.empty()
@@ -527,11 +534,6 @@ workflow {
             ch_dupradar_multiqc  = DUPRADAR.out.multiqc
             ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
         }
-        // if (!params.skip_edger) {
-        //     EDGER_CORRELATION ( counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
-        //     ch_edger_multiqc     = EDGER_CORRELATION.out.multiqc
-        //     ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.first().ifEmpty(null))
-        // }
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             RSEQC (
                 ch_genome_bam,

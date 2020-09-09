@@ -485,6 +485,8 @@ workflow {
         ch_featurecounts_multiqc = SUBREAD_FEATURECOUNTS.out.summary
         ch_software_versions = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
 
+        FEATURECOUNTS_MERGE_COUNTS ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, params.modules['featurecounts_merge_counts'] )
+        
         if (!params.skip_biotype_qc) {
             def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
             params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"

@@ -14,15 +14,17 @@ process FEATURECOUNTS_MERGE_COUNTS {
     val  options
 
     output:
-    path ".txt", emit: tsv
+    path "*.txt", emit: counts
 
     script:
-    // Redirection (the `<()`) for the win!
-    // Geneid in 1st column and gene_name in 7th
-    ids = "<(tail -n +2 ${counts[0]} | cut -f1,7 )"
-    // Remove first line and take third column
-    files = counts.collect { filename -> "<(tail -n +2 ${filename} | sed 's:.sorted.bam::' | cut -f8)" }.join(" ")
     """
-    paste $ids $files > featurecounts.merged.counts.tsv
+    mkdir tmp_counts
+    cut -f 1,7 ${counts[0]} | grep -v "^#" | tail -n+1 > ids.tsv
+    for fileid in $counts; do
+        basename \$fileid | sed s/\\.featureCounts.txt\$//g > tmp_counts/\$fileid
+        grep -v "^#" \${fileid} | cut -f 8 | tail -n+2 >> tmp_counts/\$fileid
+    done
+
+    paste ids.tsv tmp_counts/* > featurecounts.merged.counts.txt
     """
 }

@@ -596,36 +596,6 @@ workflow {
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
 
-//     process RSEQC {
-//         tag "${bam.baseName - '.sorted'}"
-//         label 'mid_memory'
-//         publishDir "${params.outdir}/rseqc" , mode: params.publish_dir_mode,
-//             saveAs: { filename ->
-//                 if (filename.indexOf("bam_stat.txt") > 0)                           "bam_stat/$filename"
-//                 else if (filename.indexOf("infer_experiment.txt") > 0)              "infer_experiment/$filename"
-//                 else if (filename.indexOf("read_distribution.txt") > 0)             "read_distribution/$filename"
-//                 else if (filename.indexOf("read_duplication.DupRate_plot.pdf") > 0) "read_duplication/$filename"
-//                 else if (filename.indexOf("read_duplication.DupRate_plot.r") > 0)   "read_duplication/rscripts/$filename"
-//                 else if (filename.indexOf("read_duplication.pos.DupRate.xls") > 0)  "read_duplication/dup_pos/$filename"
-//                 else if (filename.indexOf("read_duplication.seq.DupRate.xls") > 0)  "read_duplication/dup_seq/$filename"
-//                 else if (filename.indexOf("RPKM_saturation.eRPKM.xls") > 0)         "RPKM_saturation/rpkm/$filename"
-//                 else if (filename.indexOf("RPKM_saturation.rawCount.xls") > 0)      "RPKM_saturation/counts/$filename"
-//                 else if (filename.indexOf("RPKM_saturation.saturation.pdf") > 0)    "RPKM_saturation/$filename"
-//                 else if (filename.indexOf("RPKM_saturation.saturation.r") > 0)      "RPKM_saturation/rscripts/$filename"
-//                 else if (filename.indexOf("inner_distance.txt") > 0)                "inner_distance/$filename"
-//                 else if (filename.indexOf("inner_distance_freq.txt") > 0)           "inner_distance/data/$filename"
-//                 else if (filename.indexOf("inner_distance_plot.r") > 0)             "inner_distance/rscripts/$filename"
-//                 else if (filename.indexOf("inner_distance_plot.pdf") > 0)           "inner_distance/plots/$filename"
-//                 else if (filename.indexOf("junction_plot.r") > 0)                   "junction_annotation/rscripts/$filename"
-//                 else if (filename.indexOf("junction.xls") > 0)                      "junction_annotation/data/$filename"
-//                 else if (filename.indexOf("splice_events.pdf") > 0)                 "junction_annotation/events/$filename"
-//                 else if (filename.indexOf("splice_junction.pdf") > 0)               "junction_annotation/junctions/$filename"
-//                 else if (filename.indexOf("junction_annotation_log.txt") > 0)       "junction_annotation/$filename"
-//                 else if (filename.indexOf("junctionSaturation_plot.pdf") > 0)       "junction_saturation/$filename"
-//                 else if (filename.indexOf("junctionSaturation_plot.r") > 0)         "junction_saturation/rscripts/$filename"
-//                 else filename
-//             }
-
 //     process SUBREAD_FEATURECOUNTS {
 //         tag "${bam.baseName - '.sorted'}"
 //         label 'low_memory'

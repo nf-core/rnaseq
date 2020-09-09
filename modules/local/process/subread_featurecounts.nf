@@ -47,33 +47,3 @@ process SUBREAD_FEATURECOUNTS {
     echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g" > ${software}.version.txt
     """
 }
-
-// input:
-// path bam from bam_featurecounts
-// path gtf from ch_gtf
-// path biotypes_header from ch_biotypes_header
-
-// output:
-// path "${bam.baseName}_gene.featureCounts.txt" into geneCounts,
-//                                                    featureCounts_to_merge
-// path "${bam.baseName}_gene.featureCounts.txt.summary" into featureCounts_logs
-// path "${bam.baseName}_biotype_counts*mqc.{txt,tsv}" optional true into featureCounts_biotype
-
-// script:
-// // Try to get real sample name
-// sample_name = bam.baseName - 'Aligned.sortedByCoord.out' - '_subsamp.sorted'
-// biotype_qc = params.skip_biotype_qc ? '' : "featureCounts -a $gtf -g $biotype -t ${params.fc_count_type} -o ${bam.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam"
-// mod_biotype = params.skip_biotype_qc ? '' : "cut -f 1,7 ${bam.baseName}_biotype.featureCounts.txt | tail -n +3 | cat $biotypes_header - >> ${bam.baseName}_biotype_counts_mqc.txt && mqc_features_stat.py ${bam.baseName}_biotype_counts_mqc.txt -s $sample_name -f rRNA -o ${bam.baseName}_biotype_counts_gs_mqc.tsv"
-// """
-// featureCounts \\
-//     -a $gtf \\
-//     -g $params.fc_group_features \\
-//     -t $params.fc_count_type \\
-//     -o ${bam.baseName}_gene.featureCounts.txt \\
-//     $extraAttributes \\
-//     -p \\
-//     -s $featureCounts_direction \\
-//     $bam
-// $biotype_qc
-// $mod_biotype
-// """

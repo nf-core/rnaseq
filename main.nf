@@ -483,12 +483,10 @@ workflow {
         def fc_extra_attributes = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
         params.modules['subread_featurecounts'].args += fc_extra_attributes
         params.modules['subread_featurecounts'].args += " -g $params.fc_group_features -t $params.fc_count_type"
+        println(params.modules['subread_featurecounts'])
 
-        ch_genome_bam
-            .map { it -> it + [ PREPARE_GENOME.out.gtf ] }
-            .set { ch_featurecounts_bam }
         SUBREAD_FEATURECOUNTS (
-            ch_featurecounts_bam,
+            ch_genome_bam.combine(PREPARE_GENOME.out.gtf),
             params.modules['subread_featurecounts']
         )
     }

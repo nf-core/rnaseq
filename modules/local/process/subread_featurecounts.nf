@@ -15,12 +15,12 @@ process SUBREAD_FEATURECOUNTS {
 
     input:
     tuple val(meta), path(bams), path(annotation)
-    val options
+    val   options
 
     output:
-    tuple val(meta), path("*featureCounts.txt"), emit: txt
+    tuple val(meta), path("*featureCounts.txt")        , emit: txt
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
-    path "*.version.txt", emit: version
+    path "*.version.txt"                               , emit: version
 
     script:
     def software = getSoftwareName(task.process)

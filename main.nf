@@ -186,6 +186,8 @@ include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
+// Info required for completion email and summary
+def ch_multiqc_report     = []
 def good_alignment_scores = [:]
 def poor_alignment_scores = [:]
 
@@ -474,7 +476,7 @@ workflow {
             if (!params.skip_edger) {
                 EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
                 ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
-                ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.first().ifEmpty(null))
+                ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
             }
             if (!params.skip_biotype_qc) {
                 def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
@@ -605,20 +607,19 @@ workflow {
             ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             params.modules['multiqc']
         )
+        ch_multiqc_report = MULTIQC.out.report.collect()
     }
 }
 
-// ////////////////////////////////////////////////////
-// /* --              COMPLETION EMAIL            -- */
-// ////////////////////////////////////////////////////
-//
-// // Find a way to pass MultiQC report here as well as poor_alignment_scores, good_alignment_scores
-// workflow.onComplete {
-//     def multiqc_report = []
-//     Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, poor_alignment_scores)
-//     Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)
-// }
-//
+////////////////////////////////////////////////////
+/* --              COMPLETION EMAIL            -- */
+////////////////////////////////////////////////////
+
+workflow.onComplete {
+    Completion.email(workflow, params, summary, run_name, baseDir, ch_multiqc_report, log, poor_alignment_scores)
+    Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)
+}
+
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////

@@ -148,20 +148,13 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 ////////////////////////////////////////////////////
 
 include { CAT_FASTQ                  } from './modules/local/process/cat_fastq'
-include { SORTMERNA                  } from './modules/local/process/sortmerna'
 include { MULTIQC_CUSTOM_BIOTYPE     } from './modules/local/process/multiqc_custom_biotype'
 include { FEATURECOUNTS_MERGE_COUNTS } from './modules/local/process/featurecounts_merge_counts'
-include { STRINGTIE                  } from './modules/local/process/stringtie'
 include { EDGER_CORRELATION          } from './modules/local/process/edger_correlation'
-include { QUALIMAP_RNASEQ            } from './modules/local/process/qualimap_rnaseq'
 include { DUPRADAR                   } from './modules/local/process/dupradar'
 include { OUTPUT_DOCUMENTATION       } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS      } from './modules/local/process/get_software_versions'
 include { MULTIQC                    } from './modules/local/process/multiqc'
-include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
-          UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME         } from './modules/local/process/umitools_dedup'
-include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS
-          SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/local/process/subread_featurecounts'
 
 include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'
 include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'
@@ -169,7 +162,6 @@ include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'
 include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'
 include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'
 include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon'
-include { RSEQC           } from './modules/local/subworkflow/rseqc'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -177,10 +169,18 @@ include { RSEQC           } from './modules/local/subworkflow/rseqc'
 
 include { SAMTOOLS_INDEX   } from './modules/nf-core/software/samtools/index/main'
 include { PRESEQ_LCEXTRAP  } from './modules/nf-core/software/preseq/lcextrap/main'
+include { SORTMERNA        } from './modules/nf-core/software/sortmerna/main'
+include { STRINGTIE        } from './modules/nf-core/software/stringtie/main'
+include { QUALIMAP_RNASEQ  } from './modules/nf-core/software/qualimap/rnaseq/main'
+include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
+          UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME         } from './modules/nf-core/software/umitools/dedup/main'
+include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS
+          SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/nf-core/software/subread/featurecounts/main'
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
 include { BAM_SORT_SAMTOOLS          } from './modules/nf-core/subworkflow/bam_sort_samtools'
 include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'
+include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc'
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -196,8 +196,8 @@ workflow {
     /*
      * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
-    def publish_genome_options = params.save_reference ? [publish_dir : 'genome']       : [publish_files : [:]]
-    def publish_index_options  = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : [:]]
+    def publish_genome_options = params.save_reference ? [publish_dir : 'genome']       : [publish_files : false]
+    def publish_index_options  = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : false]
     PREPARE_GENOME (
         params.fasta,
         params.gtf,
@@ -279,8 +279,7 @@ workflow {
     ch_samtools_idxstats = Channel.empty()
     ch_star_multiqc      = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
-        // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference)       { params.modules['star_genomegenerate']['publish_files'] = null }
+        if (!params.save_reference)      { params.modules['star_genomegenerate']['publish_files'] = false }
         if (params.save_align_intermeds) {
             params.modules['star_align'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_dir += '/star'
@@ -344,8 +343,7 @@ workflow {
      */
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
-        // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference)       { params.modules['hisat2_build']['publish_files'] = null }
+        if (!params.save_reference)      { params.modules['hisat2_build']['publish_files'] = false }
         if (params.save_align_intermeds) {
             params.modules['hisat2_align'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_dir += '/hisat2'
@@ -432,8 +430,7 @@ workflow {
      */
     ch_rsem_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star' && !params.skip_rsem) {
-        // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = null }
+        if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
         QUANTIFY_RSEM (
             ch_transcriptome_bam,
             params.rsem_index,
@@ -543,8 +540,7 @@ workflow {
      */
     ch_salmon_multiqc = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
-        // TODO nf-core: Not working - only save indices if --save_reference is specified
-        if (params.save_reference) { params.modules['salmon_index']['publish_files'] = null }
+        if (!params.save_reference) { params.modules['salmon_index']['publish_files'] = false }
         def gencode = params.gencode  ? " --gencode" : ""
         params.modules['salmon_index'].args += gencode
 

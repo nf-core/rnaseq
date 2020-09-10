@@ -9,9 +9,9 @@ include {
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_ADDITIONAL_FASTA
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../process/gunzip'
-include { GFFREAD                     } from '../process/gffread'
 include { GTF2BED                     } from '../process/gtf2bed'
 include { CAT_ADDITIONAL_FASTA        } from '../process/cat_additional_fasta'
+include { GFFREAD                     } from '../../nf-core/software/gffread/main'
 
 workflow PREPARE_GENOME {
     take:

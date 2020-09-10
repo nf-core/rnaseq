@@ -3,8 +3,8 @@
  */
 
 include { UNTAR               } from '../process/untar'
-include { STAR_GENOMEGENERATE } from '../process/star_genomegenerate'
-include { STAR_ALIGN          } from '../process/star_align'
+include { STAR_GENOMEGENERATE } from '../../nf-core/software/star/genomegenerate/main'
+include { STAR_ALIGN          } from '../../nf-core/software/star/align/main'
 include { BAM_SORT_SAMTOOLS   } from '../../nf-core/subworkflow/bam_sort_samtools'
 
 workflow ALIGN_STAR {

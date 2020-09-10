@@ -109,7 +109,7 @@ class Schema {
         if (params.additional_fasta)       summary["Additional Fasta File"] = params.additional_fasta
         if (params.gtf)                    summary['GTF Annotation'] = params.gtf
         if (params.gff)                    summary['GFF3 Annotation'] = params.gff
-        if (params.bed12)                  summary['BED Annotation'] = params.bed12
+        if (params.gene_bed)               summary['Gene BED Annotation'] = params.gene_bed
         if (params.gencode)                summary['GENCODE'] = params.gencode
         if (params.stringtie_ignore_gtf)   summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
         if (params.fc_group_features_type) summary['Biotype GTF field'] = params.gencode ? "gene_type" : params.fc_group_features_type
@@ -130,12 +130,9 @@ class Schema {
         if (params.save_trimmed)           summary['Save Trimmed'] = 'Yes'
         if (params.aligner == 'star') {
             summary['Aligner'] = "STAR"
-            if (params.star_align_options) summary['STAR Align Options'] = params.star_align_options
-            if (params.star_index_options) summary['STAR Index Options'] = params.star_index_options
             if (params.star_index)         summary['STAR Index'] = params.star_index
         } else if (params.aligner == 'hisat2') {
             summary['Aligner'] = "HISAT2"
-            if (params.hisat2_align_options) summary['HISAT2 Align Options'] = params.hisat2_align_options
             if (params.hisat2_index)         summary['HISAT2 Index'] = params.hisat2_index
             if (params.splicesites)          summary['Splice Sites'] = params.splicesites
         }

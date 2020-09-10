@@ -5,11 +5,11 @@
 include { GUNZIP              } from '../process/gunzip'
 include { UNTAR               } from '../process/untar'
 include { TRANSCRIPTS2FASTA   } from '../process/transcripts2fasta'
-include { SALMON_INDEX        } from '../process/salmon_index'
-include { SALMON_QUANT        } from '../process/salmon_quant'
 include { SALMON_TX2GENE      } from '../process/salmon_tx2gene'
 include { SALMON_TXIMPORT     } from '../process/salmon_tximport'
 include { SALMON_MERGE_COUNTS } from '../process/salmon_merge_counts'
+include { SALMON_INDEX        } from '../../nf-core/software/salmon/index/main'
+include { SALMON_QUANT        } from '../../nf-core/software/salmon/quant/main'
 
 workflow QUANTIFY_SALMON {
     take:

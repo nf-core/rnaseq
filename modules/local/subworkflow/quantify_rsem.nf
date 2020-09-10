@@ -3,9 +3,9 @@
  */
 
 include { UNTAR                    } from '../process/untar'
-include { RSEM_PREPAREREFERENCE    } from '../process/rsem_preparereference'
-include { RSEM_CALCULATEEXPRESSION } from '../process/rsem_calculateexpression'
 include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'
+include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'
+include { RSEM_CALCULATEEXPRESSION } from '../../nf-core/software/rsem/calculateexpression/main'
 
 workflow QUANTIFY_RSEM {
     take:

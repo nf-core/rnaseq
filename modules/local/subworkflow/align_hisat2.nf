@@ -3,9 +3,9 @@
  */
 
 include { UNTAR                     } from '../process/untar'
-include { HISAT2_EXTRACTSPLICESITES } from '../process/hisat2_extractsplicesites'
-include { HISAT2_BUILD              } from '../process/hisat2_build'
-include { HISAT2_ALIGN              } from '../process/hisat2_align'
+include { HISAT2_EXTRACTSPLICESITES } from '../../nf-core/software/hisat2/extractsplicesites/main'
+include { HISAT2_BUILD              } from '../../nf-core/software/hisat2/build/main'
+include { HISAT2_ALIGN              } from '../../nf-core/software/hisat2/align/main'
 include { BAM_SORT_SAMTOOLS         } from '../../nf-core/subworkflow/bam_sort_samtools'
 
 workflow ALIGN_HISAT2 {

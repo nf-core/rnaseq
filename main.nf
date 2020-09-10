@@ -37,7 +37,7 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 params.fasta        = params.genomes[ params.genome ]?.fasta
 params.gtf          = params.genomes[ params.genome ]?.gtf
 params.gff          = params.genomes[ params.genome ]?.gff
-params.bed12        = params.genomes[ params.genome ]?.bed12
+params.gene_bed     = params.genomes[ params.genome ]?.bed12
 params.star_index   = params.genomes[ params.genome ]?.star
 params.hisat2_index = params.genomes[ params.genome ]?.hisat2
 params.rsem_index   = params.genomes[ params.genome ]?.rsem
@@ -56,7 +56,7 @@ if (params.gtf && params.gff)   { log.info "WARN: Both GTF and GFF have been pro
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
-    params.gtf, params.gff, params.bed12, params.additional_fasta, params.transcript_fasta,
+    params.gtf, params.gff, params.gene_bed, params.additional_fasta, params.transcript_fasta,
     params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index,
     params.splicesites, params.ribo_database_manifest
 ]
@@ -202,8 +202,9 @@ workflow {
         params.fasta,
         params.gtf,
         params.gff,
-        params.bed12,
+        params.gene_bed,
         params.additional_fasta,
+        params.modules['gffread'],
         publish_genome_options
     )
     ch_software_versions = Channel.empty()
@@ -224,6 +225,7 @@ workflow {
     /*
      * MODULE: Concatenate FastQ files from same sample if required
      */
+    if (!params.save_merged_fastq) { params.modules['cat_fastq'].publish_files == null }
     CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
 
     /*
@@ -492,7 +494,7 @@ workflow {
     /*
      * MODULE: Downstream QC steps
      */
-    ch_qualimap_multiq            = Channel.empty()
+    ch_qualimap_multiqc           = Channel.empty()
     ch_dupradar_multiqc           = Channel.empty()
     ch_bamstat_multiqc            = Channel.empty()
     ch_inferexperiment_multiqc    = Channel.empty()
@@ -515,7 +517,7 @@ workflow {
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             RSEQC (
                 ch_genome_bam,
-                PREPARE_GENOME.out.bed12,
+                PREPARE_GENOME.out.gene_bed,
                 rseqc_modules,
                 params.modules['rseqc_bamstat'],
                 params.modules['rseqc_innerdistance'],

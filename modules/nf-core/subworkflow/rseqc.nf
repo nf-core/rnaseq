@@ -2,13 +2,13 @@
  * Run RSeQC modules
  */
 
-include { RSEQC_BAMSTAT            } from '../software/rseqc_bamstat'
-include { RSEQC_INNERDISTANCE      } from '../software/rseqc_innerdistance'
-include { RSEQC_INFEREXPERIMENT    } from '../software/rseqc_inferexperiment'
-include { RSEQC_JUNCTIONANNOTATION } from '../software/rseqc_junctionannotation'
-include { RSEQC_JUNCTIONSATURATION } from '../software/rseqc_junctionsaturation'
-include { RSEQC_READDISTRIBUTION   } from '../software/rseqc_readdistribution'
-include { RSEQC_READDUPLICATION    } from '../software/rseqc_readduplication'
+include { RSEQC_BAMSTAT            } from '../software/rseqc/bamstat/main'
+include { RSEQC_INNERDISTANCE      } from '../software/rseqc/innerdistance/main'
+include { RSEQC_INFEREXPERIMENT    } from '../software/rseqc/inferexperiment/main'
+include { RSEQC_JUNCTIONANNOTATION } from '../software/rseqc/junctionannotation/main'
+include { RSEQC_JUNCTIONSATURATION } from '../software/rseqc/junctionsaturation/main'
+include { RSEQC_READDISTRIBUTION   } from '../software/rseqc/readdistribution/main'
+include { RSEQC_READDUPLICATION    } from '../software/rseqc/readduplication/main'
 
 workflow RSEQC {
     take:

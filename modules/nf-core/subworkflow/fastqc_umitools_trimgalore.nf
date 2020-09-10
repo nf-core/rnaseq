@@ -3,7 +3,7 @@
  */
 
 include { FASTQC           } from '../software/fastqc/main'
-include { UMITOOLS_EXTRACT } from '../../local/process/umitools_extract.nf'
+include { UMITOOLS_EXTRACT } from '../software/umitools/extract/main'
 include { TRIMGALORE       } from '../software/trimgalore/main'
 
 workflow FASTQC_UMITOOLS_TRIMGALORE {

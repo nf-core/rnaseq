@@ -15,12 +15,12 @@ process FASTQC {
 
     input:
     tuple val(meta), path(reads)
-    val options
+    val   options
 
     output:
     tuple val(meta), path("*.html"), emit: html
-    tuple val(meta), path("*.zip"), emit: zip
-    path "*.version.txt", emit: version
+    tuple val(meta), path("*.zip") , emit: zip
+    path  "*.version.txt"          , emit: version
 
     script:
     // Add soft-links to original FastQs for consistent naming in pipeline

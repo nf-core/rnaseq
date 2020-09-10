@@ -1,24 +1,25 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-process SAMTOOLS_SORT {
+process UMITOOLS_DEDUP {
     tag "$meta.id"
-    label 'process_medium'
+    label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/samtools:1.10--h9402c20_2"
-    //container " https://depot.galaxyproject.org/singularity/samtools:1.10--h9402c20_2"
+    container "quay.io/biocontainers/umi_tools:1.0.1--py37h516909a_1"
+    //container "https://depot.galaxyproject.org/singularity/umi_tools:1.0.1--py37h516909a_1"
 
-    conda (params.conda ? "bioconda::samtools=1.10" : null)
+    conda (params.conda ? "bioconda::umi_tools=1.0.1" : null)
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     val   options
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
+    tuple val(meta), path("*.tsv"), emit: tsv
     path  "*.version.txt"         , emit: version
 
     script:
@@ -26,7 +27,12 @@ process SAMTOOLS_SORT {
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
     """
-    samtools sort $ioptions.args -@ $task.cpus -o ${prefix}.bam -T $prefix $bam
-    echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
+    umi_tools dedup \\
+        -I $bam \\
+        -S ${prefix}.bam \\
+        --output-stats=$prefix \\
+        $ioptions.args \\
+
+    umi_tools --version | sed -e "s/UMI-tools version: //g" > ${software}.version.txt
     """
 }

@@ -1,32 +1,37 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-process SAMTOOLS_SORT {
+process RSEQC_READDISTRIBUTION {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/samtools:1.10--h9402c20_2"
-    //container " https://depot.galaxyproject.org/singularity/samtools:1.10--h9402c20_2"
+    container "quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1"
+    //container "https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1"
 
-    conda (params.conda ? "bioconda::samtools=1.10" : null)
+    conda (params.conda ? "bioconda::rseqc=3.0.1" : null)
 
     input:
     tuple val(meta), path(bam)
+    path  bed
     val   options
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
-    path  "*.version.txt"         , emit: version
+    tuple val(meta), path("*.read_distribution.txt"), emit: txt
+    path  "*.version.txt"                           , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
     def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
     """
-    samtools sort $ioptions.args -@ $task.cpus -o ${prefix}.bam -T $prefix $bam
-    echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
+    read_distribution.py \\
+        -i $bam \\
+        -r $bed \\
+         > ${prefix}.read_distribution.txt
+
+    read_distribution.py --version | sed -e "s/read_distribution.py //g" > ${software}.version.txt
     """
 }

@@ -16,23 +16,23 @@ process PRESEQ_LCEXTRAP {
 
     input:
     tuple val(meta), path(bam)
-    val options
+    val   options
 
     output:
     tuple val(meta), path("*.ccurve.txt"), emit: ccurve
-    tuple val(meta), path("*.log"), emit: log
-    path "*.version.txt", emit: version
+    tuple val(meta), path("*.log")       , emit: log
+    path  "*.version.txt"                , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
-    def pe       = meta.single_end ? '' : '-pe'
+    def software   = getSoftwareName(task.process)
+    def ioptions   = initOptions(options)
+    def prefix     = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def paired_end = meta.single_end ? '' : '-pe'
     """
     preseq \\
         lc_extrap \\
         $ioptions.args \\
-        $pe \\
+        $paired_end \\
         -output ${prefix}.ccurve.txt \\
         $bam
     cp .command.err ${prefix}.command.log

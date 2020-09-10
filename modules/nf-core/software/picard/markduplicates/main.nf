@@ -15,12 +15,12 @@ process PICARD_MARKDUPLICATES {
 
     input:
     tuple val(meta), path(bam)
-    val options
+    val   options
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
+    tuple val(meta), path("*.bam")        , emit: bam
     tuple val(meta), path("*.metrics.txt"), emit: metrics
-    path "*.version.txt", emit: version
+    path  "*.version.txt"                 , emit: version
 
     script:
     def software  = getSoftwareName(task.process)

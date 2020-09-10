@@ -15,14 +15,15 @@ process TRIMGALORE {
 
     input:
     tuple val(meta), path(reads)
-    val options
+    val   options
 
     output:
-    tuple val(meta), path("*.fq.gz"), emit: reads
-    tuple val(meta), path("*.html"), emit: html optional true
-    tuple val(meta), path("*.zip"), emit: zip optional true
+    tuple val(meta), path("*.fq.gz")    , emit: reads
     tuple val(meta), path("*report.txt"), emit: log
-    path "*.version.txt", emit: version
+    path "*.version.txt"                , emit: version
+
+    tuple val(meta), path("*.html"), emit: html optional true
+    tuple val(meta), path("*.zip") , emit: zip optional true
 
     script:
     // Calculate number of --cores for TrimGalore based on value of task.cpus
@@ -37,8 +38,8 @@ process TRIMGALORE {
     }
 
     // Clipping presets have to be evaluated in the context of SE/PE
-    def c_r1   = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
-    def c_r2   = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
+    def c_r1   = params.clip_r1 > 0             ? "--clip_r1 ${params.clip_r1}"                         : ''
+    def c_r2   = params.clip_r2 > 0             ? "--clip_r2 ${params.clip_r2}"                         : ''
     def tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
     def tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
 

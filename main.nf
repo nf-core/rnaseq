@@ -156,22 +156,22 @@ include { OUTPUT_DOCUMENTATION       } from './modules/local/process/output_docu
 include { GET_SOFTWARE_VERSIONS      } from './modules/local/process/get_software_versions'
 include { MULTIQC                    } from './modules/local/process/multiqc'
 
-include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'
-include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'
-include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'
-include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'
-include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'
-include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon'
+include { INPUT_CHECK                } from './modules/local/subworkflow/input_check'
+include { PREPARE_GENOME             } from './modules/local/subworkflow/prepare_genome'
+include { ALIGN_STAR                 } from './modules/local/subworkflow/align_star'
+include { ALIGN_HISAT2               } from './modules/local/subworkflow/align_hisat2'
+include { QUANTIFY_RSEM              } from './modules/local/subworkflow/quantify_rsem'
+include { QUANTIFY_SALMON            } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
 ////////////////////////////////////////////////////
 
-include { SAMTOOLS_INDEX   } from './modules/nf-core/software/samtools/index/main'
-include { PRESEQ_LCEXTRAP  } from './modules/nf-core/software/preseq/lcextrap/main'
-include { SORTMERNA        } from './modules/nf-core/software/sortmerna/main'
-include { STRINGTIE        } from './modules/nf-core/software/stringtie/main'
-include { QUALIMAP_RNASEQ  } from './modules/nf-core/software/qualimap/rnaseq/main'
+include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
+include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
+include { SORTMERNA                  } from './modules/nf-core/software/sortmerna/main'
+include { STRINGTIE                  } from './modules/nf-core/software/stringtie/main'
+include { QUALIMAP_RNASEQ            } from './modules/nf-core/software/qualimap/rnaseq/main'
 include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
           UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME         } from './modules/nf-core/software/umitools/dedup/main'
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS

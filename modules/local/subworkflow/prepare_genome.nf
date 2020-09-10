@@ -6,7 +6,7 @@ include {
     GUNZIP as GUNZIP_FASTA
     GUNZIP as GUNZIP_GTF
     GUNZIP as GUNZIP_GFF
-    GUNZIP as GUNZIP_BED12
+    GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_ADDITIONAL_FASTA
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../process/gunzip'
 include { GFFREAD                     } from '../process/gffread'
@@ -18,8 +18,9 @@ workflow PREPARE_GENOME {
     fasta             // file: /path/to/genome.fasta
     gtf               // file: /path/to/genome.gtf
     gff               // file: /path/to/genome.gff
-    bed12             // file: /path/to/genome.bed12
+    gene_bed          // file: /path/to/gene.bed
     additional_fasta  // file: /path/to/additional.fasta
+    gffread_options   //  map: module options for gffread module
     options           //  map: module options for additional arguments and publishing files
 
     main:
@@ -48,7 +49,7 @@ workflow PREPARE_GENOME {
         } else {
             ch_gff = file(gff)
         }
-        ch_gtf = GFFREAD ( ch_gff, options ).gtf
+        ch_gtf = GFFREAD ( ch_gff, gffread_options ).gtf
         gffread_version = GFFREAD.out.version
     }
 
@@ -67,21 +68,21 @@ workflow PREPARE_GENOME {
     }
 
     /*
-     * Uncompress BED12 annotation file or create from GTF if required
+     * Uncompress gene BED annotation file or create from GTF if required
      */
-    if (bed12) {
-        if (bed12.endsWith('.gz')) {
-            ch_bed12 = GUNZIP_BED12 ( bed12, options ).gunzip
+    if (gene_bed) {
+        if (gene_bed.endsWith('.gz')) {
+            ch_gene_bed = GUNZIP_GENE_BED ( gene_bed, options ).gunzip
         } else {
-            ch_bed12 = file(bed12)
+            ch_gene_bed = file(gene_bed)
         }
     } else {
-        ch_bed12 = GTF2BED ( ch_gtf, options )
+        ch_gene_bed = GTF2BED ( ch_gtf, options )
     }
 
     emit:
-    fasta           = ch_fasta // path: genome.fasta
-    gtf             = ch_gtf   // path: genome.gtf
-    bed12           = ch_bed12 // path: genome.bed12
-    gffread_version            // path: *.version.txt
+    fasta           = ch_fasta     // path: genome.fasta
+    gtf             = ch_gtf       // path: genome.gtf
+    gene_bed        = ch_gene_bed  // path: gene.bed
+    gffread_version                // path: *.version.txt
 }

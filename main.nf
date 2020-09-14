@@ -187,7 +187,7 @@ include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc
 ////////////////////////////////////////////////////
 
 // Info required for completion email and summary
-def ch_multiqc_report     = []
+def multiqc_report        = []
 def good_alignment_scores = [:]
 def poor_alignment_scores = [:]
 
@@ -608,7 +608,7 @@ workflow {
             ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             params.modules['multiqc']
         )
-        ch_multiqc_report = MULTIQC.out.report.toList()
+        multiqc_report = MULTIQC.out.report.toList()
     }
 }
 
@@ -617,7 +617,7 @@ workflow {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, summary, run_name, baseDir, ch_multiqc_report, log, poor_alignment_scores)
+    Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, poor_alignment_scores)
     Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)
 }
 

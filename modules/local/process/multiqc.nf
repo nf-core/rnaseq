@@ -1,13 +1,6 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-// Has the run name been specified by the user?
-// this has the bonus effect of catching both -name and --name
-custom_runName = params.name
-if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
-    custom_runName = workflow.runName
-}
-
 process MULTIQC {
     label 'process_medium'
     publishDir "${params.outdir}",
@@ -58,10 +51,8 @@ process MULTIQC {
     script:
     def software      = getSoftwareName(task.process)
     def ioptions      = initOptions(options)
-    def rtitle        = custom_runName ? "--title \"$custom_runName\"" : ''
-    def rfilename     = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     def custom_config = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
-    multiqc -f $ioptions.args $rtitle $rfilename $custom_config .
+    multiqc -f $ioptions.args $custom_config .
     """
 }

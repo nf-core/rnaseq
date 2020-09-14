@@ -574,6 +574,9 @@ workflow {
     if (!params.skip_multiqc) {
         workflow_summary    = Schema.params_mqc_summary(summary)
         ch_workflow_summary = Channel.value(workflow_summary)
+        def rtitle          = run_name ? " --title \"$run_name\"" : ''
+        def rfilename       = run_name ? " --filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+        params.modules['multiqc'].args += "$rtitle $rfilename"
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
@@ -613,6 +616,7 @@ workflow {
 /* --              COMPLETION EMAIL            -- */
 ////////////////////////////////////////////////////
 
+ch_multiqc_report.view()
 workflow.onComplete {
     Completion.email(workflow, params, summary, run_name, baseDir, ch_multiqc_report, log, poor_alignment_scores)
     Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)

@@ -10,21 +10,22 @@ process FEATURECOUNTS_MERGE_COUNTS {
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 
     input:
-    path counts
+    path ('counts/*')
     val  options
 
     output:
-    path "*.txt", emit: counts
+    path "*.counts.tsv", emit: counts
 
     script:
     """
     mkdir tmp_counts
-    cut -f 1,7 ${counts[0]} | grep -v "^#" | tail -n+1 > ids.tsv
-    for fileid in $counts; do
-        basename \$fileid | sed s/\\.featureCounts.txt\$//g > tmp_counts/\$fileid
-        grep -v "^#" \${fileid} | cut -f 8 | tail -n+2 >> tmp_counts/\$fileid
+    cut -f 1,7 `ls ./counts/* | head -n 1` | grep -v "^#" | tail -n+1 > ids.tsv
+    for fileid in `ls ./counts/*`; do
+        samplename=`basename \$fileid | sed s/\\.featureCounts.txt\$//g`
+        echo \$samplename > tmp_counts/\$samplename.featureCounts.txt
+        grep -v "^#" \${fileid} | cut -f 8 | tail -n+2 >> tmp_counts/\$samplename.featureCounts.txt
     done
 
-    paste ids.tsv tmp_counts/* > featurecounts.merged.counts.txt
+    paste ids.tsv tmp_counts/* > featurecounts.merged.counts.tsv
     """
 }

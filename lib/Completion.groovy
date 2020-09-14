@@ -43,42 +43,17 @@ class Completion {
         def mqc_report = null
         try {
             if (workflow.success && !params.skip_multiqc) {
-                // mqc_report = multiqc_report.toString()
-                mqc_report = multiqc_report.toString().getVal()
-                if (mqc_report.getClass() == ArrayList) {
-                    log.warn "[$workflow.manifest.name] Found multiple reports from process 'MULTIQC', will use only one"
+                mqc_report = multiqc_report.getVal()
+                if (mqc_report.getClass() == ArrayList && mqc_report.size() >= 1) {
+                    if (mqc_report.size() > 1) {
+                        log.warn "[$workflow.manifest.name] Found multiple reports from process 'MULTIQC', will use only one"
+                    }
                     mqc_report = mqc_report[0]
                 }
             }
-        //} //catch (all) {
-        //   log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
-        //}
-        } catch(Exception e) {
-            log.warn "Exception: ${e}"
-            log.warn "${multiqc_report}"
-            log.warn "${multiqc_report.getClass()}"
-            log.warn "${multiqc_report.properties.collect{it}.join('\n')}"
+        } catch (all) {
+            log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
         }
-        // } catch(Exception e) {
-        //     log.warn "Exception: ${e} $multiqc_report"
-        // }
-
-        // def mqc_report = null
-        // try {
-        //     if (workflow.success && !params.skip_multiqc) {
-        //         //mqc_report = multiqc_report.getVal()
-        //         mqc_report = multiqc_report
-        //         if (mqc_report.getClass() == ArrayList) {
-        //             log.warn "[$workflow.manifest.name] Found multiple reports from process 'MULTIQC', will use only one"
-        //             mqc_report = mqc_report[0]
-        //         }
-        //     }
-        // //} //catch (all) {
-        // //    log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
-        // //}
-        // } catch(Exception e) {
-        //     log.warn "Exception: ${e} $multiqc_report"
-        // }
 
         // Check if we are only sending emails on failure
         def email_address = params.email

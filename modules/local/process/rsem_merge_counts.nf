@@ -10,8 +10,8 @@ process RSEM_MERGE_COUNTS {
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 
     input:
-    path gene_counts
-    path isoform_counts
+    path ('genes/*')
+    path ('isoforms/*')
     val  options
 
     output:
@@ -24,22 +24,24 @@ process RSEM_MERGE_COUNTS {
     """
     mkdir tmp_genes
     echo "gene_id\tgene_symbol" > gene_ids.txt
-    cut -f 1 ${gene_counts[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
-    for fileid in $gene_counts; do
-        basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.tpm.txt
-        grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_genes/\${fileid}.tpm.txt
-        basename \$fileid | sed s/\\.genes.results\$//g > tmp_genes/\${fileid}.counts.txt
-        grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${fileid}.counts.txt
+    cut -f 1 `ls ./genes/* | head -n 1` | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
+    for fileid in `ls ./genes/*`; do
+        samplename=`basename \$fileid | sed s/\\.genes.results\$//g`
+        echo \$samplename > tmp_genes/\${samplename}.tpm.txt
+        grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_genes/\${samplename}.tpm.txt
+        echo \$samplename > tmp_genes/\${samplename}.counts.txt
+        grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_genes/\${samplename}.counts.txt
     done
 
     mkdir tmp_isoforms
     echo "transcript_id\tgene_symbol" > transcript_ids.txt
-    cut -f 1 ${isoform_counts[0]} | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
-    for fileid in $isoform_counts; do
-        basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.tpm.txt
-        grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_isoforms/\${fileid}.tpm.txt
-        basename \$fileid | sed s/\\.isoforms.results\$//g > tmp_isoforms/\${fileid}.counts.txt
-        grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${fileid}.counts.txt
+    cut -f 1 `ls ./isoforms/* | head -n 1` | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
+    for fileid in `ls ./isoforms/*`; do
+        samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
+        echo \$samplename > tmp_isoforms/\${samplename}.tpm.txt
+        grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp_isoforms/\${samplename}.tpm.txt
+        echo \$samplename > tmp_isoforms/\${samplename}.counts.txt
+        grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp_isoforms/\${samplename}.counts.txt
     done
 
     paste gene_ids.txt tmp_genes/*.tpm.txt > rsem.merged.gene_tpm.tsv

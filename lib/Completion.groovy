@@ -8,7 +8,7 @@ class Completion {
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
         if (poor_alignment_scores.size() > 0) {
-            subject = "[nf-core/rnaseq] Partially Successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
+            subject = "[$workflow.manifest.name] Partially successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
         }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
@@ -43,15 +43,42 @@ class Completion {
         def mqc_report = null
         try {
             if (workflow.success && !params.skip_multiqc) {
-                mqc_report = multiqc_report.getVal()
+                // mqc_report = multiqc_report.toString()
+                mqc_report = multiqc_report.toString().getVal()
                 if (mqc_report.getClass() == ArrayList) {
                     log.warn "[$workflow.manifest.name] Found multiple reports from process 'MULTIQC', will use only one"
                     mqc_report = mqc_report[0]
                 }
             }
-        } catch (all) {
-            log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
+        //} //catch (all) {
+        //   log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
+        //}
+        } catch(Exception e) {
+            log.warn "Exception: ${e}"
+            log.warn "${multiqc_report}"
+            log.warn "${multiqc_report.getClass()}"
+            log.warn "${multiqc_report.properties.collect{it}.join('\n')}"
         }
+        // } catch(Exception e) {
+        //     log.warn "Exception: ${e} $multiqc_report"
+        // }
+
+        // def mqc_report = null
+        // try {
+        //     if (workflow.success && !params.skip_multiqc) {
+        //         //mqc_report = multiqc_report.getVal()
+        //         mqc_report = multiqc_report
+        //         if (mqc_report.getClass() == ArrayList) {
+        //             log.warn "[$workflow.manifest.name] Found multiple reports from process 'MULTIQC', will use only one"
+        //             mqc_report = mqc_report[0]
+        //         }
+        //     }
+        // //} //catch (all) {
+        // //    log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
+        // //}
+        // } catch(Exception e) {
+        //     log.warn "Exception: ${e} $multiqc_report"
+        // }
 
         // Check if we are only sending emails on failure
         def email_address = params.email
@@ -77,12 +104,13 @@ class Completion {
         def sendmail_html = sendmail_template.toString()
 
         // Send the HTML e-mail
+        Map colors = Headers.log_colours(params.monochrome_logs)
         if (email_address) {
             try {
                 if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
                 // Try to send HTML e-mail using sendmail
                 [ 'sendmail', '-t' ].execute() << sendmail_html
-                log.info "[$workflow.manifest.name] Sent summary e-mail to $email_address (sendmail)"
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Sent summary e-mail to $email_address (sendmail)-"
             } catch (all) {
                 // Catch failures and try with plaintext
                 def mail_cmd = [ 'mail', '-s', subject, '--content-type=text/html', email_address ]
@@ -90,7 +118,7 @@ class Completion {
                     mail_cmd += [ '-A', mqc_report ]
                 }
                 mail_cmd.execute() << email_html
-                log.info "[$workflow.manifest.name] Sent summary e-mail to $email_address (mail)"
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Sent summary e-mail to $email_address (mail)-"
             }
         }
 
@@ -113,30 +141,29 @@ class Completion {
             def samp_aln = ''
             def total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
             for (samp in good_alignment_scores) {
-                samp_aln += "    ${samp.key}: ${samp.value}%\n"
+                samp_aln += "    ${samp.value}%: ${samp.key}\n"
                 idx += 1
                 if (idx > 5) {
                     samp_aln += "    ..see pipeline reports for full list\n"
                     break;
                 }
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} ${good_alignment_scores.size()}/$total_aln_count samples passed minimum ${params.percent_aln_skip}% aligned check\n${samp_aln}${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} ${good_alignment_scores.size()}/$total_aln_count samples passed STAR ${params.percent_aln_skip}% mapped threshold:\n${samp_aln}${colors.reset}-"
         }
         if (poor_alignment_scores.size() > 0) {
             def samp_aln = ''
-            poor_alignment_scores.each { samp, value ->
-                samp_aln += "    ${samp}: ${value}%\n"
+            for (samp in poor_alignment_scores) {
+                samp_aln += "    ${samp.value}%: ${samp.key}\n"
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} WARNING - ${poor_alignment_scores.size()} samples skipped due to poor mapping percentages!\n${samp_aln}${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${poor_alignment_scores.size()} samples skipped since they failed STAR ${params.percent_aln_skip}% mapped threshold:\n${samp_aln}${colors.reset}-"
         }
 
-        if (workflow.stats.ignoredCount > 0 && workflow.success) {
-            log.info "-${colors.purple}Warning, pipeline completed, but with errored process(es) ${colors.reset}-"
-            log.info "-${colors.red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${colors.reset}-"
-            log.info "-${colors.green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${colors.reset}-"
-        }
         if (workflow.success) {
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
+            if (workflow.stats.ignoredCount == 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
+            } else {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed successfully, but with errored process(es) ${colors.reset}-"
+            }
         } else {
             Checks.hostname(workflow, params, log)
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"

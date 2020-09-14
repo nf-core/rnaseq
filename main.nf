@@ -52,7 +52,7 @@ anno_readme         = params.genomes[ params.genome ]?.readme
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
-if (params.gtf && params.gff)   { log.info "WARN: Both GTF and GFF have been provided: Using GTF as priority." }
+if (params.gtf && params.gff)   { log.warn "Both GTF and GFF have been provided: Using GTF as priority." }
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
@@ -72,10 +72,10 @@ if (!params.skip_alignment) {
         exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
     }
     if (params.aligner != "star" && !params.skip_rsem) {
-        log.info "WARN: RSEM only works when '--aligner star' is set. Disabling RSEM."
+        log.warn "RSEM only works when '--aligner star' is set. Disabling RSEM."
     }
 } else {
-    log.info "WARN: Skipping alignment processes..."
+    log.warn "Skipping alignment processes..."
     if (!params.pseudo_aligner) {
         exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
     }
@@ -187,7 +187,7 @@ include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc
 ////////////////////////////////////////////////////
 
 // Info required for completion email and summary
-def ch_multiqc_report     = []
+def ch_multiqc_report     = null
 def good_alignment_scores = [:]
 def poor_alignment_scores = [:]
 
@@ -608,7 +608,7 @@ workflow {
             ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             params.modules['multiqc']
         )
-        ch_multiqc_report = MULTIQC.out.report.collect()
+        ch_multiqc_report = MULTIQC.out.report
     }
 }
 
@@ -616,7 +616,6 @@ workflow {
 /* --              COMPLETION EMAIL            -- */
 ////////////////////////////////////////////////////
 
-ch_multiqc_report.view()
 workflow.onComplete {
     Completion.email(workflow, params, summary, run_name, baseDir, ch_multiqc_report, log, poor_alignment_scores)
     Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)

@@ -14,7 +14,7 @@ process MULTIQC {
 
     input:
     path multiqc_config
-    path mqc_custom_config
+    path multiqc_custom_config
     path software_versions
     path workflow_summary
     path ('fastqc/*')
@@ -51,7 +51,7 @@ process MULTIQC {
     script:
     def software      = getSoftwareName(task.process)
     def ioptions      = initOptions(options)
-    def custom_config = params.multiqc_config ? "--config $mqc_custom_config" : ''
+    def custom_config = params.multiqc_config ? "--config $multiqc_custom_config" : ''
     """
     multiqc -f $ioptions.args $custom_config .
     """

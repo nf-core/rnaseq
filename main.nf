@@ -187,7 +187,7 @@ include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc
 ////////////////////////////////////////////////////
 
 // Info required for completion email and summary
-def ch_multiqc_report     = null
+def ch_multiqc_report     = []
 def good_alignment_scores = [:]
 def poor_alignment_scores = [:]
 
@@ -311,7 +311,7 @@ workflow {
         // Filter channels to get samples that passed minimum mapping percentage
         ch_star_multiqc
             .map { meta, align_log ->
-                def percent_aligned = Checks.get_star_percent_mapped(params, log, align_log)
+                def percent_aligned = Checks.get_star_percent_mapped(workflow, params, log, align_log)
                 if (percent_aligned <= params.percent_aln_skip.toFloat()) {
                     poor_alignment_scores[meta.id] = percent_aligned
                     [ meta, true ]
@@ -608,7 +608,7 @@ workflow {
             ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             params.modules['multiqc']
         )
-        ch_multiqc_report = MULTIQC.out.report
+        ch_multiqc_report = MULTIQC.out.report.toList()
     }
 }
 

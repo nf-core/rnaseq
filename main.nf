@@ -83,11 +83,11 @@ if (!params.skip_alignment) {
 if (params.pseudo_aligner) {
     if (params.pseudo_aligner != 'salmon') {
         exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
-    } //else {
-        // if (!params.salmon_index || !params.transcript_fasta || (!params.fasta || !(params.gff || params.gtf))) {
-        //     exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
-        // }
-    //}
+    } else {
+        if (!params.salmon_index || !params.transcript_fasta || !(params.fasta && (params.gff || params.gtf))) {
+            exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
+        }
+    }
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -225,7 +225,7 @@ workflow {
     /*
      * MODULE: Concatenate FastQ files from same sample if required
      */
-    if (!params.save_merged_fastq) { params.modules['cat_fastq'].publish_files == null }
+    if (!params.save_merged_fastq) { params.modules['cat_fastq'].publish_files = false }
     CAT_FASTQ ( ch_cat_fastq, params.modules['cat_fastq'] )
 
     /*

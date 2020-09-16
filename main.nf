@@ -107,6 +107,15 @@ if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size())
     exit 1, "Invalid RSeqC module options: ${params.rseqc_modules}. Valid options: ${rseqcModuleList.join(', ')}"
 }
 
+// Show a big warning message if we are using GRCh38 NCBI assembly
+def skip_biotype_qc = params.skip_biotype_qc
+if (params.genome == 'GRCh38') {
+    if (params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
+        Checks.genome_warn(log)
+        skip_biotype_qc = true
+    }
+}
+
 /*
  * Check other parameters
  */
@@ -477,7 +486,7 @@ workflow {
                 ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
                 ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
             }
-            if (!params.skip_biotype_qc) {
+            if (!skip_biotype_qc) {
                 def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
                 params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
                 SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )

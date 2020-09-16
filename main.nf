@@ -67,22 +67,21 @@ ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
+def alignerList       = ['star', 'hisat2', 'star_rsem']
+def pseudoAlignerList = ['salmon']
 if (!params.skip_alignment) {
-    if (params.aligner != 'star' && params.aligner != 'hisat2') {
-        exit 1, "Invalid aligner option: ${params.aligner}. Valid options: 'star', 'hisat2'"
-    }
-    if (params.aligner != "star" && !params.skip_rsem) {
-        log.warn "RSEM only works when '--aligner star' is set. Disabling RSEM."
+    if (!alignerList.contains(params.aligner)) {
+        exit 1, "Invalid aligner option: ${params.aligner}. Valid options: ${alignerList.join(', ')}"
     }
 } else {
     log.warn "Skipping alignment processes..."
     if (!params.pseudo_aligner) {
-        exit 1, "--skip_alignment specified without --pseudo_aligner .. did you mean to specify --pseudo_aligner salmon"
+        exit 1, "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${pseudoAlignerList[0]}"
     }
 }
 if (params.pseudo_aligner) {
-    if (params.pseudo_aligner != 'salmon') {
-        exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
+    if (!pseudoAlignerList.contains(params.pseudo_aligner)) {
+        exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: ${pseudoAlignerList.join(', ')}"
     } else {
         if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
             exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
@@ -380,6 +379,25 @@ workflow {
     }
 
     /*
+     * SUBWORKFLOW: Gene/transcript quantification with RSEM using STAR
+     */
+    ch_rsem_multiqc = Channel.empty()
+    if (!params.skip_alignment && params.aligner == 'star' && !params.skip_rsem) {
+        if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
+        QUANTIFY_RSEM (
+            ch_transcriptome_bam,
+            params.rsem_index,
+            PREPARE_GENOME.out.fasta,
+            PREPARE_GENOME.out.gtf,
+            params.modules['rsem_preparereference'],
+            params.modules['rsem_calculateexpression'],
+            params.modules['rsem_merge_counts']
+        )
+        ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.version.first().ifEmpty(null))
+    }
+
+    /*
      * MODULE: Run Preseq
      */
     ch_preseq_multiqc = Channel.empty()
@@ -431,25 +449,6 @@ workflow {
         ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
         ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
         ch_software_versions      = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
-    }
-
-    /*
-     * SUBWORKFLOW: Gene/transcript quantification with RSEM
-     */
-    ch_rsem_multiqc = Channel.empty()
-    if (!params.skip_alignment && params.aligner == 'star' && !params.skip_rsem) {
-        if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
-        QUANTIFY_RSEM (
-            ch_transcriptome_bam,
-            params.rsem_index,
-            PREPARE_GENOME.out.fasta,
-            PREPARE_GENOME.out.gtf,
-            params.modules['rsem_preparereference'],
-            params.modules['rsem_calculateexpression'],
-            params.modules['rsem_merge_counts']
-        )
-        ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.version.first().ifEmpty(null))
     }
 
     /*

@@ -84,7 +84,7 @@ if (params.pseudo_aligner) {
     if (params.pseudo_aligner != 'salmon') {
         exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: 'salmon'"
     } else {
-        if (!params.salmon_index || !params.transcript_fasta || !(params.fasta && (params.gff || params.gtf))) {
+        if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
             exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
         }
     }

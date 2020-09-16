@@ -180,8 +180,7 @@ include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/l
 include { SORTMERNA                  } from './modules/nf-core/software/sortmerna/main'
 include { STRINGTIE                  } from './modules/nf-core/software/stringtie/main'
 include { QUALIMAP_RNASEQ            } from './modules/nf-core/software/qualimap/rnaseq/main'
-include { UMITOOLS_DEDUP as UMITOOLS_DEDUP_GENOME
-          UMITOOLS_DEDUP as UMITOOLS_DEDUP_TRANSCRIPTOME         } from './modules/nf-core/software/umitools/dedup/main'
+include { UMITOOLS_DEDUP             } from './modules/nf-core/software/umitools/dedup/main'
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS
           SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/nf-core/software/subread/featurecounts/main'
 
@@ -204,7 +203,8 @@ workflow {
     /*
      * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
-    def publish_genome_options  = params.save_reference ? [publish_dir: 'genome'] : [publish_files: false]
+    def publish_genome_options  = params.save_reference ? [publish_dir: 'genome']       : [publish_files: false]
+    def publish_index_options   = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
     if (!params.save_reference) { params.modules['gffread']['publish_files'] = false }
     PREPARE_GENOME (
         params.fasta,
@@ -280,7 +280,6 @@ workflow {
      */
     ch_genome_bam        = Channel.empty()
     ch_genome_bai        = Channel.empty()
-    ch_transcriptome_bam = Channel.empty()
     ch_samtools_stats    = Channel.empty()
     ch_samtools_flagstat = Channel.empty()
     ch_samtools_idxstats = Channel.empty()
@@ -307,7 +306,6 @@ workflow {
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bai        = ALIGN_STAR.out.bai
-        ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
         ch_samtools_stats    = ALIGN_STAR.out.stats
         ch_samtools_flagstat = ALIGN_STAR.out.flagstat
         ch_samtools_idxstats = ALIGN_STAR.out.idxstats
@@ -338,18 +336,13 @@ workflow {
             .join(ch_sample_filter, by: [0])
             .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
             .set { ch_genome_bai }
-
-        ch_transcriptome_bam
-            .join(ch_sample_filter, by: [0])
-            .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
-            .set { ch_transcriptome_bam }
     }
 
     /*
      * SUBWORKFLOW: Alignment with HISAT2
      */
     ch_hisat2_multiqc = Channel.empty()
-    if (!params.skip_alignment && params.aligner == 'hisat2' && params.aligner != 'star') {
+    if (!params.skip_alignment && params.aligner == 'hisat2') {
         if (!params.save_reference)      { params.modules['hisat2_build']['publish_files'] = false }
         if (params.save_align_intermeds) {
             params.modules['hisat2_align'].publish_files.put('bam','')
@@ -379,22 +372,35 @@ workflow {
     }
 
     /*
-     * SUBWORKFLOW: Gene/transcript quantification with RSEM using STAR
+     * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
      */
     ch_rsem_multiqc = Channel.empty()
-    if (!params.skip_alignment && params.aligner == 'star' && !params.skip_rsem) {
+    if (!params.skip_alignment && params.aligner == 'star_rsem') {
         if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
+        if (params.save_align_intermeds) {
+            params.modules['rsem_calculateexpression'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_dir += '/rsem'
+            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
+        }
         QUANTIFY_RSEM (
-            ch_transcriptome_bam,
+            ch_trimmed_reads,
             params.rsem_index,
             PREPARE_GENOME.out.fasta,
             PREPARE_GENOME.out.gtf,
+            publish_index_options,
             params.modules['rsem_preparereference'],
             params.modules['rsem_calculateexpression'],
+            params.modules['samtools_sort'],
             params.modules['rsem_merge_counts']
         )
+        ch_genome_bam        = QUANTIFY_RSEM.out.bam
+        ch_genome_bai        = QUANTIFY_RSEM.out.bai
+        ch_samtools_stats    = QUANTIFY_RSEM.out.stats
+        ch_samtools_flagstat = QUANTIFY_RSEM.out.flagstat
+        ch_samtools_idxstats = QUANTIFY_RSEM.out.idxstats
         ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
     }
 
     /*
@@ -410,26 +416,15 @@ workflow {
     /*
      * MODULE: Remove duplicate reads based on UMIs
      */
-    if (!params.skip_alignment && params.with_umi) {
+    if (!params.skip_alignment && !params.aligner == 'star_rsem' && params.with_umi) {
         if (params.save_umi_intermeds) {
-            params.modules['umitools_dedup_genome'].publish_files.put('bam','')
-            params.modules['umitools_dedup_genome'].publish_files.put('bai','')
+            params.modules['umitools_dedup'].publish_files.put('bam','')
+            params.modules['umitools_dedup'].publish_files.put('bai','')
         }
-        UMITOOLS_DEDUP_GENOME ( ch_genome_bam.join(ch_genome_bai, by: [0]), params.modules['umitools_dedup_genome'] )
-        SAMTOOLS_INDEX ( UMITOOLS_DEDUP_GENOME.out.bam, params.modules['umitools_dedup_genome'] )
-        ch_genome_bam = UMITOOLS_DEDUP_GENOME.out.bam
+        UMITOOLS_DEDUP ( ch_genome_bam.join(ch_genome_bai, by: [0]), params.modules['umitools_dedup'] )
+        SAMTOOLS_INDEX ( UMITOOLS_DEDUP.out.bam, params.modules['umitools_dedup'] )
+        ch_genome_bam = UMITOOLS_DEDUP.out.bam
         ch_genome_bai = SAMTOOLS_INDEX.out.bai
-
-        if (params.aligner == 'star' && !params.skip_rsem) {
-            BAM_SORT_SAMTOOLS ( ch_transcriptome_bam, params.modules['samtools_sort_umitools_dedup'] )
-
-            if (params.save_umi_intermeds) { params.modules['umitools_dedup_transcriptome'].publish_files.put('bam','') }
-            UMITOOLS_DEDUP_TRANSCRIPTOME (
-                BAM_SORT_SAMTOOLS.out.bam.join(BAM_SORT_SAMTOOLS.out.bai, by: [0]),
-                params.modules['umitools_dedup_transcriptome']
-            )
-            ch_transcriptome_bam = UMITOOLS_DEDUP_TRANSCRIPTOME.out.bam
-        }
     }
 
     /*
@@ -547,7 +542,6 @@ workflow {
      */
     ch_salmon_multiqc = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
-        def publish_index_options   = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
         if (!params.save_reference) { params.modules['salmon_index']['publish_files'] = false }
         def gencode = params.gencode  ? " --gencode" : ""
         params.modules['salmon_index'].args += gencode

@@ -60,15 +60,14 @@ jobs:
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
+        aligner: ["--aligner 'star'", "--aligner 'hisat2'", "--aligner 'star_rsem'", "--pseudo_aligner 'salmon'"]
         parameters:
           - '--skip_qc'
           - '--remove_ribo_rna'
           - '--skip_trimming'
           - '--star_index false'
-          - '--skip_rsem'
           - '--with_umi'
-          - '--with_umi --skip_trimming --save_umi_intermeds --skip_rsem'
+          - '--with_umi --skip_trimming --save_umi_intermeds'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

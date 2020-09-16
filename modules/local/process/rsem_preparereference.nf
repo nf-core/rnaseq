@@ -8,10 +8,7 @@ process RSEM_PREPAREREFERENCE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/rsem:1.3.3--pl526ha52163a_0"
-    //container "https://depot.galaxyproject.org/singularity/rsem:1.3.3--pl526ha52163a_0"
-
-    conda (params.conda ? "bioconda::rsem=1.3.3" : null)
+    conda (params.conda ? "${baseDir}/environment.yml" : null)
 
     input:
     path fasta

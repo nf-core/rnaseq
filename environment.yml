@@ -28,3 +28,8 @@ dependencies:
 
   ### modules/local/process/transcripts2fasta.nf
   - bioconda::gffread=0.12.1
+
+  ### modules/local/process/rsem_calculateexpression.nf
+  - bioconda::star=2.6.1d ## Don't upgrade me - 2.7X indices incompatible with iGenomes.
+  - bioconda::rsem=1.3.3
+

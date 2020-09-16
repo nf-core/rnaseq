@@ -205,8 +205,8 @@ workflow {
     /*
      * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
-    def publish_genome_options = params.save_reference ? [publish_dir : 'genome']       : [publish_files : false]
-    def publish_index_options  = params.save_reference ? [publish_dir : 'genome/index'] : [publish_files : false]
+    def publish_genome_options  = params.save_reference ? [publish_dir: 'genome'] : [publish_files: false]
+    if (!params.save_reference) { params.modules['gffread']['publish_files'] = false }
     PREPARE_GENOME (
         params.fasta,
         params.gtf,
@@ -240,15 +240,14 @@ workflow {
     /*
      * SUBWORKFLOW: Read QC, extract UMI and trim adapters
      */
-    def method = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
-    def pattern = params.umitools_bc_pattern ? "--bc-pattern='${params.umitools_bc_pattern}'" : ''
+    def method  = params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : ''
+    def pattern = params.umitools_bc_pattern     ? "--bc-pattern='${params.umitools_bc_pattern}'"       : ''
     params.modules['umitools_extract'].args += " $method $pattern"
     if (params.save_umi_intermeds) { params.modules['umitools_extract'].publish_files.put('fastq.gz','') }
 
     def nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
     params.modules['trimgalore'].args += nextseq
     if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
-
     FASTQC_UMITOOLS_TRIMGALORE (
         CAT_FASTQ.out.reads,
         params.skip_fastqc,
@@ -549,6 +548,7 @@ workflow {
      */
     ch_salmon_multiqc = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
+        def publish_index_options   = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
         if (!params.save_reference) { params.modules['salmon_index']['publish_files'] = false }
         def gencode = params.gencode  ? " --gencode" : ""
         params.modules['salmon_index'].args += gencode

@@ -134,6 +134,7 @@ ch_output_docs_images    = file("$baseDir/docs/images/", checkIfExists: true)
 ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
 ch_heatmap_header        = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
 ch_biotypes_header       = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_fail_mapped_header    = file("$baseDir/assets/multiqc/fail_mapped_header.txt", checkIfExists: true)
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER SUMMARY               -- */
@@ -157,11 +158,13 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 
 include { CAT_FASTQ                  } from './modules/local/process/cat_fastq'
 include { MULTIQC_CUSTOM_BIOTYPE     } from './modules/local/process/multiqc_custom_biotype'
+include { MULTIQC_CUSTOM_FAIL_MAPPED } from './modules/local/process/multiqc_custom_fail_mapped'
 include { FEATURECOUNTS_MERGE_COUNTS } from './modules/local/process/featurecounts_merge_counts'
 include { EDGER_CORRELATION          } from './modules/local/process/edger_correlation'
 include { DUPRADAR                   } from './modules/local/process/dupradar'
 include { OUTPUT_DOCUMENTATION       } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS      } from './modules/local/process/get_software_versions'
+
 include { MULTIQC                    } from './modules/local/process/multiqc'
 
 include { INPUT_CHECK                } from './modules/local/subworkflow/input_check'
@@ -312,30 +315,39 @@ workflow {
         ch_star_multiqc      = ALIGN_STAR.out.log_final
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
+    }
 
-        // Filter channels to get samples that passed minimum mapping percentage
-        ch_star_multiqc
-            .map { meta, align_log ->
-                def percent_aligned = Checks.get_star_percent_mapped(workflow, params, log, align_log)
-                if (percent_aligned <= params.min_mapped_reads.toFloat()) {
-                    fail_percent_mapped[meta.id] = percent_aligned
-                    [ meta, true ]
-                } else {
-                    pass_percent_mapped[meta.id] = percent_aligned
-                    [ meta, false ]
-                }
-            }
-            .set { ch_sample_filter }
-
-        ch_genome_bam
-            .join(ch_sample_filter, by: [0])
-            .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
-            .set { ch_genome_bam }
-
-        ch_genome_bai
-            .join(ch_sample_filter, by: [0])
-            .map { meta, ofile, filter -> if (!filter) [ meta, ofile ] }
-            .set { ch_genome_bai }
+    /*
+     * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
+     */
+    ch_rsem_multiqc = Channel.empty()
+    if (!params.skip_alignment && params.aligner == 'star_rsem') {
+        if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
+        if (params.save_align_intermeds) {
+            params.modules['rsem_calculateexpression'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_dir += '/rsem'
+            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
+        }
+        QUANTIFY_RSEM (
+            ch_trimmed_reads,
+            params.rsem_index,
+            PREPARE_GENOME.out.fasta,
+            PREPARE_GENOME.out.gtf,
+            publish_index_options,
+            params.modules['rsem_preparereference'],
+            params.modules['rsem_calculateexpression'],
+            params.modules['samtools_sort'],
+            params.modules['rsem_merge_counts']
+        )
+        ch_genome_bam        = QUANTIFY_RSEM.out.bam
+        ch_genome_bai        = QUANTIFY_RSEM.out.bai
+        ch_samtools_stats    = QUANTIFY_RSEM.out.stats
+        ch_samtools_flagstat = QUANTIFY_RSEM.out.flagstat
+        ch_samtools_idxstats = QUANTIFY_RSEM.out.idxstats
+        ch_star_multiqc      = QUANTIFY_RSEM.out.logs
+        ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
     }
 
     /*
@@ -372,35 +384,36 @@ workflow {
     }
 
     /*
-     * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
+     * Filter channels to get samples that passed STAR minimum mapping percentage
      */
-    ch_rsem_multiqc = Channel.empty()
-    if (!params.skip_alignment && params.aligner == 'star_rsem') {
-        if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
-        if (params.save_align_intermeds) {
-            params.modules['rsem_calculateexpression'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_dir += '/rsem'
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
-        }
-        QUANTIFY_RSEM (
-            ch_trimmed_reads,
-            params.rsem_index,
-            PREPARE_GENOME.out.fasta,
-            PREPARE_GENOME.out.gtf,
-            publish_index_options,
-            params.modules['rsem_preparereference'],
-            params.modules['rsem_calculateexpression'],
-            params.modules['samtools_sort'],
-            params.modules['rsem_merge_counts']
-        )
-        ch_genome_bam        = QUANTIFY_RSEM.out.bam
-        ch_genome_bai        = QUANTIFY_RSEM.out.bai
-        ch_samtools_stats    = QUANTIFY_RSEM.out.stats
-        ch_samtools_flagstat = QUANTIFY_RSEM.out.flagstat
-        ch_samtools_idxstats = QUANTIFY_RSEM.out.idxstats
-        ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
+    ch_fail_mapping = Channel.empty()
+    if (!params.skip_alignment && params.aligner.contains('star')) {
+        ch_star_multiqc
+            .map { meta, align_log -> [ meta ] + Checks.get_star_percent_mapped(workflow, params, log, align_log) }
+            .set { ch_percent_mapped }
+
+        ch_genome_bam
+            .join(ch_percent_mapped, by: [0])
+            .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
+            .set { ch_genome_bam }
+
+        ch_genome_bai
+            .join(ch_percent_mapped, by: [0])
+            .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
+            .set { ch_genome_bai }
+
+        ch_percent_mapped
+            .branch { meta, mapped, pass ->
+                pass: pass
+                    pass_percent_mapped[meta.id] = mapped
+                    return [ "$meta.id\t$mapped" ]
+                fail: !pass
+                    fail_percent_mapped[meta.id] = mapped
+                    return [ "$meta.id\t$mapped" ]
+            }
+            .set { ch_pass_fail_mapped }
+
+        ch_fail_mapping = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect().sort(), ch_fail_mapped_header, [:] )
     }
 
     /*
@@ -574,8 +587,9 @@ workflow {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = Schema.params_summary_multiqc(summary)
-        ch_workflow_summary = Channel.value(workflow_summary)
+        workflow_summary     = Schema.params_summary_multiqc(summary)
+        ch_workflow_summary  = Channel.value(workflow_summary)
+
         def rtitle          = run_name ? " --title \"$run_name\"" : ''
         def rfilename       = run_name ? " --filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
         params.modules['multiqc'].args += "$rtitle $rfilename"
@@ -584,6 +598,7 @@ workflow {
             ch_multiqc_custom_config.collect().ifEmpty([]),
             GET_SOFTWARE_VERSIONS.out.yaml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+            ch_fail_mapping.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),

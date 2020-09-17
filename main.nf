@@ -134,7 +134,6 @@ ch_output_docs_images    = file("$baseDir/docs/images/", checkIfExists: true)
 ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
 ch_heatmap_header        = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
 ch_biotypes_header       = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-ch_fail_mapped_header    = file("$baseDir/assets/multiqc/fail_mapped_header.txt", checkIfExists: true)
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER SUMMARY               -- */
@@ -413,7 +412,7 @@ workflow {
             }
             .set { ch_pass_fail_mapped }
 
-        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), ch_fail_mapped_header, [:] )
+        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [:] )
     }
 
     /*

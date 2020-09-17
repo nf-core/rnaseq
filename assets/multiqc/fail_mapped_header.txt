@@ -4,3 +4,4 @@
 # section_href: 'https://github.com/nf-core/rnaseq'
 # format: 'tsv'
 # plot_type: 'table'
+Sample  STAR uniquely mapped reads (%)

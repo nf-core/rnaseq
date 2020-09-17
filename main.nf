@@ -386,7 +386,7 @@ workflow {
     /*
      * Filter channels to get samples that passed STAR minimum mapping percentage
      */
-    ch_fail_mapping = Channel.empty()
+    ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
             .map { meta, align_log -> [ meta ] + Checks.get_star_percent_mapped(workflow, params, log, align_log) }
@@ -413,7 +413,7 @@ workflow {
             }
             .set { ch_pass_fail_mapped }
 
-        ch_fail_mapping = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect().sort(), ch_fail_mapped_header, [:] )
+        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect().sort(), ch_fail_mapped_header, [:] )
     }
 
     /*
@@ -598,7 +598,7 @@ workflow {
             ch_multiqc_custom_config.collect().ifEmpty([]),
             GET_SOFTWARE_VERSIONS.out.yaml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-            ch_fail_mapping.ifEmpty([]),
+            ch_fail_mapping_multiqc.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),

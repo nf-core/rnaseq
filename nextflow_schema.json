@@ -274,10 +274,6 @@
                 "star_ignore_sjdbgtf": {
                     "type": "boolean"
                 },
-                "skip_rsem": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
                 "skip_alignment": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward"
@@ -286,7 +282,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-save"
                 },
-                "percent_aln_skip": {
+                "min_mapped_reads": {
                     "type": "integer",
                     "default": 5,
                     "fa_icon": "fas fa-percentage"

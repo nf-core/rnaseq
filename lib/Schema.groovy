@@ -170,7 +170,7 @@ class Schema {
         return summary
     }
 
-    static String params_mqc_summary(summary) {
+    static String params_summary_multiqc(summary) {
         String yaml_file_text  = """
         id: 'nf-core-rnaseq-summary'
         description: " - this information is collected when the pipeline is started."
@@ -182,7 +182,6 @@ class Schema {
             ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
             </dl>
         """.stripIndent()
-
         return yaml_file_text
     }
 }

@@ -56,11 +56,28 @@ class Checks {
         }
         def logname = align_log.getBaseName() - '.Log.final'
         Map colors = Headers.log_colours(params.monochrome_logs)
-        if (percent_aligned <= params.percent_aln_skip.toFloat()) {
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} [FAIL] STAR ${params.percent_aln_skip}% mapped threshold. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS: ${percent_aligned}% - $logname${colors.reset}."
+        if (percent_aligned <= params.min_mapped_reads.toFloat()) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} [FAIL] STAR ${params.min_mapped_reads}% mapped threshold. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS: ${percent_aligned}% - $logname${colors.reset}."
         } else {
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} [PASS] STAR ${params.percent_aln_skip}% mapped threshold: ${percent_aligned}% - $logname${colors.reset}."
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} [PASS] STAR ${params.min_mapped_reads}% mapped threshold: ${percent_aligned}% - $logname${colors.reset}."
         }
         return percent_aligned
     }
+
+    static String fail_star_percent_mapped_multiqc(failed_samples) {
+        String yaml_file_text  = """
+        id: 'nf-core-rnaseq-fail-alignment'
+        description: " - this information is collected when the pipeline is started."
+        section_name: 'nf-core/rnaseq Samples Failed Alignment'
+        section_href: 'https://github.com/nf-core/rnaseq'
+        plot_type: 'html'
+        data: |
+            <dl class=\"dl-horizontal\">
+            ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+            </dl>
+        """.stripIndent()
+
+        return yaml_file_text
+    }
+
 }

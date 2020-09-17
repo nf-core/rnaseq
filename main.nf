@@ -194,9 +194,9 @@ include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc
 ////////////////////////////////////////////////////
 
 // Info required for completion email and summary
-def multiqc_report        = []
-def good_alignment_scores = [:]
-def poor_alignment_scores = [:]
+def multiqc_report      = []
+def pass_percent_mapped = [:]
+def fail_percent_mapped = [:]
 
 workflow {
 
@@ -317,11 +317,11 @@ workflow {
         ch_star_multiqc
             .map { meta, align_log ->
                 def percent_aligned = Checks.get_star_percent_mapped(workflow, params, log, align_log)
-                if (percent_aligned <= params.percent_aln_skip.toFloat()) {
-                    poor_alignment_scores[meta.id] = percent_aligned
+                if (percent_aligned <= params.min_mapped_reads.toFloat()) {
+                    fail_percent_mapped[meta.id] = percent_aligned
                     [ meta, true ]
                 } else {
-                    good_alignment_scores[meta.id] = percent_aligned
+                    pass_percent_mapped[meta.id] = percent_aligned
                     [ meta, false ]
                 }
             }
@@ -574,7 +574,7 @@ workflow {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = Schema.params_mqc_summary(summary)
+        workflow_summary    = Schema.params_summary_multiqc(summary)
         ch_workflow_summary = Channel.value(workflow_summary)
         def rtitle          = run_name ? " --title \"$run_name\"" : ''
         def rfilename       = run_name ? " --filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
@@ -619,8 +619,8 @@ workflow {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, poor_alignment_scores)
-    Completion.summary(workflow, params, log, poor_alignment_scores, good_alignment_scores)
+    Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, fail_percent_mapped)
+    Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 
 ////////////////////////////////////////////////////

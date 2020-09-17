@@ -3,12 +3,12 @@
  */
 
 class Completion {
-    static void email(workflow, params, summary, run_name, baseDir, multiqc_report, log, poor_alignment_scores) {
+    static void email(workflow, params, summary, run_name, baseDir, multiqc_report, log, fail_percent_mapped) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
-        if (poor_alignment_scores.size() > 0) {
-            subject = "[$workflow.manifest.name] Partially successful (${poor_alignment_scores.size()} skipped): $workflow.runName"
+        if (fail_percent_mapped.size() > 0) {
+            subject = "[$workflow.manifest.name] Partially successful (${fail_percent_mapped.size()} skipped): $workflow.runName"
         }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
@@ -33,8 +33,8 @@ class Completion {
         if (workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
         if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
         if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-        email_fields['skipped_poor_alignment'] = poor_alignment_scores.keySet()
-        email_fields['percent_aln_skip'] = params.percent_aln_skip
+        email_fields['fail_percent_mapped'] = fail_percent_mapped.keySet()
+        email_fields['min_mapped_reads'] = params.min_mapped_reads
         email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
         email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
         email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
@@ -108,14 +108,14 @@ class Completion {
         output_tf.withWriter { w -> w << email_txt }
     }
 
-    static void summary(workflow, params, log, poor_alignment_scores, good_alignment_scores) {
+    static void summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped) {
         Map colors = Headers.log_colours(params.monochrome_logs)
 
-        if (good_alignment_scores.size() > 0) {
+        if (pass_percent_mapped.size() > 0) {
             def idx = 0
             def samp_aln = ''
-            def total_aln_count = good_alignment_scores.size() + poor_alignment_scores.size()
-            for (samp in good_alignment_scores) {
+            def total_aln_count = pass_percent_mapped.size() + fail_percent_mapped.size()
+            for (samp in pass_percent_mapped) {
                 samp_aln += "    ${samp.value}%: ${samp.key}\n"
                 idx += 1
                 if (idx > 5) {
@@ -123,14 +123,14 @@ class Completion {
                     break;
                 }
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} ${good_alignment_scores.size()}/$total_aln_count samples passed STAR ${params.percent_aln_skip}% mapped threshold:\n${samp_aln}${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} ${pass_percent_mapped.size()}/$total_aln_count samples passed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
         }
-        if (poor_alignment_scores.size() > 0) {
+        if (fail_percent_mapped.size() > 0) {
             def samp_aln = ''
-            for (samp in poor_alignment_scores) {
+            for (samp in fail_percent_mapped) {
                 samp_aln += "    ${samp.value}%: ${samp.key}\n"
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${poor_alignment_scores.size()} samples skipped since they failed STAR ${params.percent_aln_skip}% mapped threshold:\n${samp_aln}${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${fail_percent_mapped.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
         }
 
         if (workflow.success) {

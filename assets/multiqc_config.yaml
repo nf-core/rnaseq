@@ -22,7 +22,7 @@ run_modules:
 
 # Order of modules
 top_modules:
-    - 'nf-core-rnaseq-fail-mapping'
+    - 'fail_mapped_samples'
     - 'edgeR-sample-distances'
     - 'sample-similarity'
     - 'DupRadar'
@@ -130,3 +130,15 @@ sp:
         skip: true
     picard/wgs_metrics:
         skip: true
+
+# See https://github.com/ewels/MultiQC_TestData/blob/master/data/custom_content/with_config/table_headerconfig/multiqc_config.yaml
+custom_data:
+    fail_mapped_samples:
+        section_name: 'Failed Samples'
+        description: "List of samples that failed the STAR minimum mapped reads threshold specified via the '--min_mapped_reads' parameter, and hence were ignored for the downstream processing steps."
+        plot_type: 'table'
+        pconfig:
+            id: 'fail_mapped_samples_table'
+            table_title: 'Samples failed mapping threshold'
+            namespace: 'Samples failed mapping threshold'
+            format: '{:.2f}'

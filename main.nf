@@ -291,7 +291,7 @@ workflow {
         if (params.save_align_intermeds) {
             params.modules['star_align'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_dir += '/star'
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
+            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'']
         }
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''

@@ -66,6 +66,7 @@ jobs:
           - '--remove_ribo_rna'
           - '--skip_trimming'
           - '--star_index false'
+          - '--min_mapped_reads 90'
           - '--with_umi'
           - '--with_umi --skip_trimming --save_umi_intermeds'
     steps:

@@ -1,6 +1,0 @@
-# id: 'nf-core-rnaseq-fail-mapping'
-# section_name: 'Samples Failed Mapping Threshold'
-# description: "List of samples that failed the STAR MIN_MAPPED_READS% mapped threshold, and hence were ignored for the downstream processing steps."
-# section_href: 'https://github.com/nf-core/rnaseq'
-# format: 'tsv'
-# plot_type: 'table'

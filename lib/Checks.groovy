@@ -45,7 +45,7 @@ class Checks {
     }
 
     // Function that parses and returns the alignment rate from the STAR log output
-    static Float get_star_percent_mapped(workflow, params, log, align_log) {
+    static ArrayList get_star_percent_mapped(workflow, params, log, align_log) {
         def percent_aligned = 0
         def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
         align_log.eachLine { line ->
@@ -54,30 +54,16 @@ class Checks {
                 percent_aligned = matcher[0][1].toFloat()
             }
         }
+
+        def pass = false
         def logname = align_log.getBaseName() - '.Log.final'
         Map colors = Headers.log_colours(params.monochrome_logs)
         if (percent_aligned <= params.min_mapped_reads.toFloat()) {
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} [FAIL] STAR ${params.min_mapped_reads}% mapped threshold. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS: ${percent_aligned}% - $logname${colors.reset}."
         } else {
+            pass = true
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} [PASS] STAR ${params.min_mapped_reads}% mapped threshold: ${percent_aligned}% - $logname${colors.reset}."
         }
-        return percent_aligned
+        return [ percent_aligned, pass ]
     }
-
-    static String fail_star_percent_mapped_multiqc(failed_samples) {
-        String yaml_file_text  = """
-        id: 'nf-core-rnaseq-fail-alignment'
-        description: " - this information is collected when the pipeline is started."
-        section_name: 'nf-core/rnaseq Samples Failed Alignment'
-        section_href: 'https://github.com/nf-core/rnaseq'
-        plot_type: 'html'
-        data: |
-            <dl class=\"dl-horizontal\">
-            ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-            </dl>
-        """.stripIndent()
-
-        return yaml_file_text
-    }
-
 }

@@ -39,7 +39,7 @@ process HISAT2_ALIGN {
     } else if (meta.strandedness == 'reverse') {
         strandedness = meta.single_end ? '--rna-strandness R' : '--rna-strandness RF'
     }
-    def seq_center = params.seq_center ? "--rg-id ${prefix} --rg CN:${params.seq_center.replaceAll('\\s','_')} SM:$prefix" : "--rg-id ${prefix} --rg SM:$prefix"
+    def seq_center = params.seq_center ? "--rg-id ${prefix} --rg SM:$prefix --rg CN:${params.seq_center.replaceAll('\\s','_')}" : "--rg-id ${prefix} --rg SM:$prefix"
     if (meta.single_end) {
         def unaligned = params.save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
         """

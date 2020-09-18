@@ -68,7 +68,7 @@ class Checks {
     }
 
     // Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
-    static ArrayList get_inferexperiment_strandedness(inferexperiment_file, sample_strand='', cutoff=0.3) {
+    static ArrayList get_inferexperiment_strandedness(inferexperiment_file, cutoff=0.3) {
         def sense        = 0
         def antisense    = 0
         def undetermined = 0
@@ -90,12 +90,6 @@ class Checks {
         } else if (antisense >= 1-cutoff) {
             strandedness = 'reverse'
         }
-        def strand_match = false
-        if (sample_strand) {
-            if (sample_strand == strandedness) {
-                strand_match = true
-            }
-        }
-        return [ strand_match, strandedness, sense, antisense, undetermined ]
+        return [ strandedness, sense, antisense, undetermined ]
     }
 }

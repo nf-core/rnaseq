@@ -155,41 +155,42 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-include { CAT_FASTQ                  } from './modules/local/process/cat_fastq'
-include { MULTIQC_CUSTOM_BIOTYPE     } from './modules/local/process/multiqc_custom_biotype'
-include { MULTIQC_CUSTOM_FAIL_MAPPED } from './modules/local/process/multiqc_custom_fail_mapped'
-include { FEATURECOUNTS_MERGE_COUNTS } from './modules/local/process/featurecounts_merge_counts'
-include { EDGER_CORRELATION          } from './modules/local/process/edger_correlation'
-include { DUPRADAR                   } from './modules/local/process/dupradar'
-include { OUTPUT_DOCUMENTATION       } from './modules/local/process/output_documentation'
-include { GET_SOFTWARE_VERSIONS      } from './modules/local/process/get_software_versions'
+include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'
+include { MULTIQC_CUSTOM_BIOTYPE      } from './modules/local/process/multiqc_custom_biotype'
+include { MULTIQC_CUSTOM_FAIL_MAPPED  } from './modules/local/process/multiqc_custom_fail_mapped'
+include { MULTIQC_CUSTOM_STRAND_CHECK } from './modules/local/process/multiqc_custom_strand_check'
+include { FEATURECOUNTS_MERGE_COUNTS  } from './modules/local/process/featurecounts_merge_counts'
+include { EDGER_CORRELATION           } from './modules/local/process/edger_correlation'
+include { DUPRADAR                    } from './modules/local/process/dupradar'
+include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
+include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 
-include { MULTIQC                    } from './modules/local/process/multiqc'
+include { MULTIQC                     } from './modules/local/process/multiqc'
 
-include { INPUT_CHECK                } from './modules/local/subworkflow/input_check'
-include { PREPARE_GENOME             } from './modules/local/subworkflow/prepare_genome'
-include { ALIGN_STAR                 } from './modules/local/subworkflow/align_star'
-include { ALIGN_HISAT2               } from './modules/local/subworkflow/align_hisat2'
-include { QUANTIFY_RSEM              } from './modules/local/subworkflow/quantify_rsem'
-include { QUANTIFY_SALMON            } from './modules/local/subworkflow/quantify_salmon'
+include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
+include { PREPARE_GENOME              } from './modules/local/subworkflow/prepare_genome'
+include { ALIGN_STAR                  } from './modules/local/subworkflow/align_star'
+include { ALIGN_HISAT2                } from './modules/local/subworkflow/align_hisat2'
+include { QUANTIFY_RSEM               } from './modules/local/subworkflow/quantify_rsem'
+include { QUANTIFY_SALMON             } from './modules/local/subworkflow/quantify_salmon'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
 ////////////////////////////////////////////////////
 
-include { SAMTOOLS_INDEX             } from './modules/nf-core/software/samtools/index/main'
-include { PRESEQ_LCEXTRAP            } from './modules/nf-core/software/preseq/lcextrap/main'
-include { SORTMERNA                  } from './modules/nf-core/software/sortmerna/main'
-include { STRINGTIE                  } from './modules/nf-core/software/stringtie/main'
-include { QUALIMAP_RNASEQ            } from './modules/nf-core/software/qualimap/rnaseq/main'
-include { UMITOOLS_DEDUP             } from './modules/nf-core/software/umitools/dedup/main'
+include { SAMTOOLS_INDEX              } from './modules/nf-core/software/samtools/index/main'
+include { PRESEQ_LCEXTRAP             } from './modules/nf-core/software/preseq/lcextrap/main'
+include { SORTMERNA                   } from './modules/nf-core/software/sortmerna/main'
+include { STRINGTIE                   } from './modules/nf-core/software/stringtie/main'
+include { QUALIMAP_RNASEQ             } from './modules/nf-core/software/qualimap/rnaseq/main'
+include { UMITOOLS_DEDUP              } from './modules/nf-core/software/umitools/dedup/main'
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS
           SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/nf-core/software/subread/featurecounts/main'
 
-include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
-include { BAM_SORT_SAMTOOLS          } from './modules/nf-core/subworkflow/bam_sort_samtools'
-include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'
-include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc'
+include { FASTQC_UMITOOLS_TRIMGALORE  } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore'
+include { BAM_SORT_SAMTOOLS           } from './modules/nf-core/subworkflow/bam_sort_samtools'
+include { MARK_DUPLICATES_PICARD      } from './modules/nf-core/subworkflow/mark_duplicates_picard'
+include { RSEQC                       } from './modules/nf-core/subworkflow/rseqc'
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -514,6 +515,7 @@ workflow {
     ch_junctionsaturation_multiqc = Channel.empty()
     ch_readdistribution_multiqc   = Channel.empty()
     ch_readduplication_multiqc    = Channel.empty()
+    ch_fail_strand_multiqc        = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc) {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ ( ch_genome_bam, PREPARE_GENOME.out.gtf, params.modules['qualimap_rnaseq'] )
@@ -546,43 +548,17 @@ workflow {
             ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
             ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
             ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
+
+            ch_inferexperiment_multiqc
+                .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 0.3) }
+                .filter { it[0].strandedness != it[1] }
+                .map { meta, strandedness, sense, antisense, undetermined ->
+                    [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
+                }
+                .set { ch_fail_strand }
+
+            ch_fail_strand_multiqc = MULTIQC_CUSTOM_STRAND_CHECK ( ch_fail_strand.collect(), [:] )
         }
-
-        // ch_inferexperiment_multiqc
-        //     .map { meta, strand_log -> [ meta.id ] + Checks.get_inferexperiment_strandedness(strand_log, meta.strandedness, 0.3) }
-        //     .filter(!it[1])
-        //     // [RAP1_UNINDUCED_R2, [true, reverse, 0.0124, 0.8424, 0.1452]]
-        //     // .filter(it[])
-        //     .view()
-        //     // .view()
-        // get_inferexperiment_strandedness(inferexperiment, cutoff=0.3)
-        // ch_star_multiqc
-        //     .map { meta, align_log -> [ meta ] + Checks.get_star_percent_mapped(workflow, params, log, align_log) }
-        //     .set { ch_percent_mapped }
-        //
-        // ch_genome_bam
-        //     .join(ch_percent_mapped, by: [0])
-        //     .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
-        //     .set { ch_genome_bam }
-        //
-        // ch_genome_bai
-        //     .join(ch_percent_mapped, by: [0])
-        //     .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
-        //     .set { ch_genome_bai }
-        //
-        // ch_percent_mapped
-        //     .branch { meta, mapped, pass ->
-        //         pass: pass
-        //             pass_percent_mapped[meta.id] = mapped
-        //             return [ "$meta.id\t$mapped" ]
-        //         fail: !pass
-        //             fail_percent_mapped[meta.id] = mapped
-        //             return [ "$meta.id\t$mapped" ]
-        //     }
-        //     .set { ch_pass_fail_mapped }
-        //
-        // ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [:] )
-
     }
 
     /*
@@ -634,6 +610,7 @@ workflow {
             GET_SOFTWARE_VERSIONS.out.yaml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
             ch_fail_mapping_multiqc.ifEmpty([]),
+            ch_fail_strand_multiqc.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),

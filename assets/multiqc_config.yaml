@@ -23,10 +23,11 @@ run_modules:
 # Order of modules
 top_modules:
     - 'fail_mapped_samples'
-    - 'edgeR-sample-distances'
-    - 'sample-similarity'
+    - 'fail_strand_check'
+    - 'edger_sample_distances'
+    - 'sample_similarity'
     - 'DupRadar'
-    - 'biotype-counts'
+    - 'biotype_counts'
 
 # Move custom-content sections to the bottom of the report
 report_section_order:
@@ -134,11 +135,20 @@ sp:
 # See https://github.com/ewels/MultiQC_TestData/blob/master/data/custom_content/with_config/table_headerconfig/multiqc_config.yaml
 custom_data:
     fail_mapped_samples:
-        section_name: 'Failed Samples'
+        section_name: 'WARNING: Fail Alignment Check'
         description: "List of samples that failed the STAR minimum mapped reads threshold specified via the '--min_mapped_reads' parameter, and hence were ignored for the downstream processing steps."
         plot_type: 'table'
         pconfig:
             id: 'fail_mapped_samples_table'
             table_title: 'Samples failed mapping threshold'
             namespace: 'Samples failed mapping threshold'
+            format: '{:.2f}'
+    fail_strand_check:
+        section_name: 'WARNING: Fail Strand Check'
+        description: "List of samples that failed the strandedness check between that provided in the samplesheet and calculated by the <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> tool."
+        plot_type: 'table'
+        pconfig:
+            id: 'fail_strand_check_table'
+            table_title: 'Samples failed strandedness check'
+            namespace: 'Samples failed strandedness check'
             format: '{:.2f}'

@@ -547,6 +547,42 @@ workflow {
             ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
             ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
         }
+
+        // ch_inferexperiment_multiqc
+        //     .map { meta, strand_log -> [ meta.id ] + Checks.get_inferexperiment_strandedness(strand_log, meta.strandedness, 0.3) }
+        //     .filter(!it[1])
+        //     // [RAP1_UNINDUCED_R2, [true, reverse, 0.0124, 0.8424, 0.1452]]
+        //     // .filter(it[])
+        //     .view()
+        //     // .view()
+        // get_inferexperiment_strandedness(inferexperiment, cutoff=0.3)
+        // ch_star_multiqc
+        //     .map { meta, align_log -> [ meta ] + Checks.get_star_percent_mapped(workflow, params, log, align_log) }
+        //     .set { ch_percent_mapped }
+        //
+        // ch_genome_bam
+        //     .join(ch_percent_mapped, by: [0])
+        //     .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
+        //     .set { ch_genome_bam }
+        //
+        // ch_genome_bai
+        //     .join(ch_percent_mapped, by: [0])
+        //     .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
+        //     .set { ch_genome_bai }
+        //
+        // ch_percent_mapped
+        //     .branch { meta, mapped, pass ->
+        //         pass: pass
+        //             pass_percent_mapped[meta.id] = mapped
+        //             return [ "$meta.id\t$mapped" ]
+        //         fail: !pass
+        //             fail_percent_mapped[meta.id] = mapped
+        //             return [ "$meta.id\t$mapped" ]
+        //     }
+        //     .set { ch_pass_fail_mapped }
+        //
+        // ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [:] )
+
     }
 
     /*

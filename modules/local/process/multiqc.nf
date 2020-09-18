@@ -18,6 +18,7 @@ process MULTIQC {
     path software_versions
     path workflow_summary
     path fail_mapping_summary
+    path fail_strand_check
     path ('fastqc/*')
     path ('trimgalore/*')
     path ('sortmerna/*')

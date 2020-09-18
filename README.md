@@ -23,9 +23,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 3. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
 4. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
 5. Choice of multiple alignment and quantification routes:
-    1. [`STAR`](https://github.com/alexdobin/STAR) and [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
-    2. [`STAR`](https://github.com/alexdobin/STAR) and [`RSEM`](https://github.com/deweylab/RSEM)
-    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) and [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
+    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
     4. [`Salmon`](https://combine-lab.github.io/salmon/)
 6. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 7. UMI-based deduplication ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
@@ -37,7 +37,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`edgeR`](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
-11. Present QC for raw read, alignment, gene biotype and sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+11. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 ## Quick Start
 
@@ -67,7 +67,7 @@ The nf-core/rnaseq pipeline comes with documentation about the pipeline which yo
 
 ### Credits
 
-These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). The pipeline has been re-implemented in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
+These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),

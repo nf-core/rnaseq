@@ -66,4 +66,36 @@ class Checks {
         }
         return [ percent_aligned, pass ]
     }
+
+    // Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+    static ArrayList get_inferexperiment_strandedness(inferexperiment_file, sample_strand='', cutoff=0.3) {
+        def sense        = 0
+        def antisense    = 0
+        def undetermined = 0
+        inferexperiment_file.eachLine { line ->
+            def undetermined_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
+            def se_sense_matcher     = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
+            def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
+            def pe_sense_matcher     = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
+            def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
+            if (undetermined_matcher) undetermined = undetermined_matcher[0][1].toFloat()
+            if (se_sense_matcher)     sense        = se_sense_matcher[0][1].toFloat()
+            if (se_antisense_matcher) antisense    = se_antisense_matcher[0][1].toFloat()
+            if (pe_sense_matcher)     sense        = pe_sense_matcher[0][1].toFloat()
+            if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat()
+        }
+        def strandedness = 'unstranded'
+        if (sense >= 1-cutoff) {
+            strandedness = 'forward'
+        } else if (antisense >= 1-cutoff) {
+            strandedness = 'reverse'
+        }
+        def strand_match = false
+        if (sample_strand) {
+            if (sample_strand == strandedness) {
+                strand_match = true
+            }
+        }
+        return [ strand_match, strandedness, sense, antisense, undetermined ]
+    }
 }

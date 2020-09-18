@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Pipeline enhancements & fixes
 
+* Pipeline has now been re-implemented in Nextflow DSL2
+* The primary input for the pipeline has now changed from glob to samplesheet input [#123](https://github.com/nf-core/rnaseq/issues/123). See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
 * Updated template to nf-core/tools `v1.10.2`
+
+* Merge FastQ files from same sample [#91](https://github.com/nf-core/rnaseq/issues/91)
+* Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
+* Optimise MultiQC configuration for faster run-time on huge sample numbers
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
 * Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option [#353](https://github.com/nf-core/rnaseq/issues/353)
@@ -16,12 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
 * Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
 * Fixed issue where featureCounts process fails when setting --fc_count_type to gene [#440](https://github.com/nf-core/rnaseq/issues/440)
-* Optimise MultiQC configuration for faster run-time on huge sample numbers
 * Add option for `--additional_fasta` to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
 * Updates awstest GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
 * Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
-* Fix QualiMap not being passed on correct strand-specificity parameter [#412](https://github.com/nf-core/rnaseq/issues/412)
-* Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Fix Qualimap not being passed on correct strand-specificity parameter [#412](https://github.com/nf-core/rnaseq/issues/412)
 * Fix a bug where gzipped references were not extracted when `--additional_fasta` was not specified [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Fix a bug where merging of RSEM output would fail if only one fastq provided as input [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled) [#435](https://github.com/nf-core/rnaseq/pull/435)
@@ -29,12 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0) [#384](https://github.com/nf-core/rnaseq/issues/384)
 * FastQC uses correct number of threads now [#437](https://github.com/nf-core/rnaseq/issues/434)
 * Fixed MDS plot axis labels [#302](https://github.com/nf-core/rnaseq/issues/302)
-* Change process names to uppercase
-* Replace `set` with `tuple` and `file` with `path`
-* Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
 * Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
 * Fix `--gff` input bug [#452](https://github.com/nf-core/rnaseq/issues/452)
 * Fix `TMP_DIR` for process MarkDuplicates and Qualimap [#458](https://github.com/nf-core/rnaseq/pull/458)
+* Fix error with gzipped annotation file [#362](https://github.com/nf-core/rnaseq/issues/362)
+* Fix STAR unmapped reads not output [#413](https://github.com/nf-core/rnaseq/issues/413)
+* Add option for turning on/off STAR command line option (--sjdbGTFfile) [#338](https://github.com/nf-core/rnaseq/issues/338)
 
 ### Updated Packages
 
@@ -75,28 +80,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
+* `--star_ignore_sjdbgtf` [#338](https://github.com/nf-core/rnaseq/issues/338)
 * `--star_align_options` parameter to pass additional options to the `STAR` alignment process. Fixes [#363](https://github.com/nf-core/rnaseq/issues/363)
 * `--star_index_options` parameter to pass additional options to the `STAR` genome indexing process. Fixes [#276](https://github.com/nf-core/rnaseq/issues/276)
 * `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#368](https://github.com/nf-core/rnaseq/pull/368) and [#371](https://github.com/nf-core/rnaseq/pull/371)
 
-#### Deprecated
+#### Removed
+
+* `--singleEnd` is now auto-detected from the input samplesheet
+* `--readPaths` is not required since these are provided from the input samplesheet
+* `--markdup_java_options` in favour of updating centrally on nf-core/configs
+* `--sampleLevel` not required
+* Strandedness is now specified at the sample-level via the input samplesheet
+  * `--forwardStranded`
+  * `--reverseStranded`
+  * `--unStranded`
+  * `--pico`
+
+#### Replaced
 
 | Deprecated                   | Replacement                |
 |------------------------------|----------------------------|
 | `--reads`                    | `--input`                  |
-| `--readPaths`                | `--input_paths`            |
-| `--singleEnd`                | `--single_end`             |
 | `--saveReference`            | `--save_reference`         |
-| `--forwardStranded`          | `--forward_stranded`       |
-| `--reverseStranded`          | `--reverse_stranded`       |
-| `--unStranded`               | `--unstranded`             |
 | `--skipTrimming`             | `--skip_trimming`          |
 | `--saveTrimmed`              | `--save_trimmed`           |
 | `--removeRiboRNA`            | `--remove_ribo_rna`        |
 | `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
 | `--rRNA_database_manifest`   | `--ribo_database_manifest` |
 | `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
-| `--sampleLevel`              | `--sample_level`           |
 | `--saveAlignedIntermediates` | `--save_align_intermeds`   |
 | `--save_umi_intermediates`   | `--save_umi_intermeds`     |
 | `--saveUnaligned`            | `--save_unaligned`         |

@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['19.10.0', '']
+        nxf_ver: ['20.07.1', '']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -56,20 +56,19 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '19.10.0'
+      NXF_VER: '20.07.1'
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        config: ['test', 'test_gz']
-        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
+        aligner: ["--aligner 'star'", "--aligner 'hisat2'", "--aligner 'star_rsem'", "--pseudo_aligner 'salmon'"]
         parameters:
           - '--skip_qc'
           - '--remove_ribo_rna'
           - '--skip_trimming'
           - '--star_index false'
-          - '--skip_rsem'
+          - '--min_mapped_reads 90'
           - '--with_umi'
-          - '--with_umi --skip_trimming --save_umi_intermeds --skip_rsem'
+          - '--with_umi --skip_trimming --save_umi_intermeds'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -95,4 +94,4 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Run pipeline with various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.config }},docker ${{ matrix.aligner }} ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.parameters }}

@@ -2,7 +2,7 @@
 
 [![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/rnaseq/actions)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.07.1-brightgreen.svg)](https://www.nextflow.io/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1400710.svg)](https://doi.org/10.5281/zenodo.1400710)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
@@ -11,27 +11,33 @@
 
 ## Introduction
 
-**nf-core/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data. The workflow processes raw data from
-FastQ inputs ([FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),
-[Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)),
-aligns the reads
-([STAR](https://github.com/alexdobin/STAR) or
-[HiSAT2](https://ccb.jhu.edu/software/hisat2/index.shtml)),
-generates counts relative to genes
-([featureCounts](http://bioinf.wehi.edu.au/featureCounts/),
-[StringTie](https://ccb.jhu.edu/software/stringtie/)) or transcripts
-([Salmon](https://combine-lab.github.io/salmon/),
-[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) or
-[RSEM](https://github.com/deweylab/RSEM)) and performs extensive quality-control on the results
-([RSeQC](http://rseqc.sourceforge.net/),
-[Qualimap](http://qualimap.bioinfo.cipf.es/),
-[dupRadar](https://bioconductor.org/packages/release/bioc/html/dupRadar.html),
-[Preseq](http://smithlabresearch.org/software/preseq/),
-[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html),
-[umi_tools](https://github.com/CGATOxford/UMI-tools),
-[MultiQC](http://multiqc.info/)).
+**nf-core/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+
+## Pipeline summary
+
+1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html); *if required*)
+2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3. UMI extraction ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
+4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+5. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
+6. Choice of multiple alignment and quantification routes:
+    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
+    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    4. [`Salmon`](https://combine-lab.github.io/salmon/)
+7. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+8. UMI-based deduplication ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
+9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
+10. Assembly and transcript quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
+11. Extensive quality control:
+    1. [`RSeQC`](http://rseqc.sourceforge.net/)
+    2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
+    3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
+    4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
+    5. [`edgeR`](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
+12. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 ## Quick Start
 
@@ -50,7 +56,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
     ```bash
-    nextflow run nf-core/rnaseq -profile <docker/singularity/conda/institute> --input '*_R{1,2}.fastq.gz' --genome GRCh37
+    nextflow run nf-core/rnaseq -profile <docker/singularity/conda/institute> --input samplesheet.csv --genome GRCh37
     ```
 
 See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.
@@ -61,7 +67,7 @@ The nf-core/rnaseq pipeline comes with documentation about the pipeline which yo
 
 ### Credits
 
-These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),
@@ -71,8 +77,7 @@ Many thanks to other who have helped out along the way too, including (but not l
 [@colindaven](https://github.com/colindaven),
 [@lpantano](https://github.com/lpantano),
 [@olgabot](https://github.com/olgabot),
-[@jburos](https://github.com/jburos),
-[@drpatelh](https://github.com/drpatelh).
+[@jburos](https://github.com/jburos).
 
 ## Contributions and Support
 

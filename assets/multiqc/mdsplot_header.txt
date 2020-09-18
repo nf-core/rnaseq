@@ -1,10 +1,10 @@
-# id: 'edgeR-sample-distances'
+# id: 'edger_sample_distances'
 # section_name: 'MDS Plot'
 # description: "show relatedness between samples in a project.
 #             These values are calculated using <a href='https://bioconductor.org/packages/release/bioc/html/edgeR.html'>edgeR</a>
 #             in the <a href='https://github.com/nf-core/rnaseq/blob/master/bin/edgeR_heatmap_MDS.r'><code>edgeR_heatmap_MDS.r</code></a> script."
 # plot_type: 'scatter'
-# anchor: 'ngi_rnaseq-mds_plot'
+# anchor: 'edger_mds_plot'
 # pconfig:
 #     title: 'MDS Plot'
 #     xlab: 'Leading logFC dim 1'

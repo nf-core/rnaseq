@@ -1,0 +1,99 @@
+name: trimgalore
+description: Trim FastQ files using Trim Galore!
+keywords:
+    - trimming
+    - adapters
+    - sequencing adapters
+    - fastq
+tools:
+    - trimgalore:
+        description: |
+            A wrapper tool around Cutadapt and FastQC to consistently apply quality
+            and adapter trimming to FastQ files, with some extra functionality for
+            MspI-digested RRBS-type (Reduced Representation Bisufite-Seq) libraries.
+        homepage: https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
+        documentation: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
+params:
+    - outdir:
+        type: string
+        description: |
+            The pipeline's output directory. By default, the module will
+            output files into `$params.outdir/<SOFTWARE>`
+    - publish_dir_mode:
+        type: string
+        description: |
+            Value for the Nextflow `publishDir` mode parameter.
+            Available: symlink, rellink, link, copy, copyNoFollow, move.
+    - conda:
+        type: boolean
+        description: |
+            Run the module with Conda using the software specified
+            via the `conda` directive
+    - clip_r1:
+        type: integer
+        description: |
+            Instructs Trim Galore to remove bp from the 5' end of read 1
+            (or single-end reads)
+    - clip_r2:
+        type: integer
+        description: |
+            Instructs Trim Galore to remove bp from the 5' end of read 2
+            (paired-end reads only)
+    - three_prime_clip_r1:
+        type: integer
+        description: |
+            Instructs Trim Galore to remove bp from the 3' end of read 1
+            AFTER adapter/quality trimming has been performed
+    - three_prime_clip_r2:
+        type: integer
+        description: |
+            Instructs Trim Galore to re move bp from the 3' end of read 2
+            AFTER adapter/quality trimming has been performed
+input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+            List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+            respectively.
+    - options:
+        type: map
+        description: |
+            Groovy Map containing module options for passing command-line arguments and
+            output file paths.
+output:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+            List of input adapter trimmed FastQ files of size 1 and 2 for
+            single-end and paired-end data, respectively.
+        pattern: "*.{fq.gz}"
+    - html:
+        type: file
+        description: FastQC report (optional)
+        pattern: "*_{fastqc.html}"
+    - zip:
+        type: file
+        description: FastQC report archive (optional)
+        pattern: "*_{fastqc.zip}"
+    - log:
+        type: file
+        description: Trim Galore! trimming report
+        pattern: "*_{report.txt}"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@drpatelh"
+    - "@ewels"
+    - "@FelixKrueger"

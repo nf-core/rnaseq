@@ -9,20 +9,6 @@
 
 Run Name: $runName
 
-<% if (success){
-    out << "## nf-core/rnaseq execution completed successfully! ##"
-} else {
-    out << """####################################################
-## nf-core/rnaseq execution completed unsuccessfully! ##
-####################################################
-The exit status of the task that caused the workflow execution to fail was: $exitStatus.
-The full error message was:
-
-${errorReport}
-"""
-} %>
-
-
 <% if (!success){
     out << """####################################################
 ## nf-core/rnaseq execution completed unsuccessfully! ##
@@ -32,14 +18,14 @@ The full error message was:
 
 ${errorReport}
 """
-} else if(skipped_poor_alignment.size() > 0) {
+} else if (fail_percent_mapped.size() > 0) {
     out << """##################################################
 ## nf-core/rnaseq execution completed with warnings ##
 ##################################################
 The pipeline finished successfully, but the following samples were skipped,
-due to very low alignment (less than ${percent_aln_skip}%):
+due to very low alignment (less than ${min_mapped_reads}%):
 
-  - ${skipped_poor_alignment.join("\n  - ")}
+  - ${fail_percent_mapped.join("\n  - ")}
 """
 } else {
     out << "## nf-core/rnaseq execution completed successfully! ##"

@@ -34,6 +34,42 @@
 
 * [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
 
+* [GffRead](https://www.ncbi.nlm.nih.gov/pubmed/32489650/)
+  > Pertea G, Pertea M. GFF Utilities: GffRead and GffCompare. F1000Res. 2020 Apr 28;9:ISCB Comm J-304. doi: 10.12688/f1000research.23297.2. eCollection 2020. PubMed PMID: 32489650; PubMed Central PMCID: PMC7222033.
+
+* [HISAT2](https://www.ncbi.nlm.nih.gov/pubmed/31375807/)
+  > Kim D, Paggi JM, Park C, Bennett C, Salzberg SL. Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype. Nat Biotechnol. 2019 Aug;37(8):907-915. doi: 10.1038/s41587-019-0201-4. Epub 2019 Aug 2. PubMed PMID: 31375807.
+
+* [Qualimap 2](https://www.ncbi.nlm.nih.gov/pubmed/26428292/)
+  > Okonechnikov K, Conesa A, García-Alcalde F. Qualimap 2: advanced multi-sample quality control for high-throughput sequencing data Bioinformatics. 2016 Jan 15;32(2):292-4. doi: 10.1093/bioinformatics/btv566. Epub 2015 Oct 1. PubMed PMID: 26428292; PubMed Central PMCID: PMC4708105.
+
+* [RSeQC](https://www.ncbi.nlm.nih.gov/pubmed/22743226/)
+  > Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments Bioinformatics. 2012 Aug 15;28(16):2184-5. doi: 10.1093/bioinformatics/bts356. Epub 2012 Jun 27. PubMed PMID: 22743226.
+
+* [Salmon](https://www.ncbi.nlm.nih.gov/pubmed/28263959/)
+  > Patro R, Duggal G, Love MI, Irizarry RA, Kingsford C. Salmon provides fast and bias-aware quantification of transcript expression Nat Methods. 2017 Apr;14(4):417-419. doi: 10.1038/nmeth.4197. Epub 2017 Mar 6. PubMed PMID: 28263959; PubMed Central PMCID: PMC5600148.
+
+* [SortMeRNA](https://www.ncbi.nlm.nih.gov/pubmed/23071270/)
+  > Kopylova E, Noé L, Touzet H. SortMeRNA: fast and accurate filtering of ribosomal RNAs in metatranscriptomic data Bioinformatics. 2012 Dec 15;28(24):3211-7. doi: 10.1093/bioinformatics/bts611. Epub 2012 Oct 15. PubMed PMID: 23071270.
+
+* [STAR](https://www.ncbi.nlm.nih.gov/pubmed/23104886/)
+  > Dobin A, Davis CA, Schlesinger F, Drenkow J, Zaleski C, Jha S, Batut P, Chaisson M, Gingeras TR. STAR: ultrafast universal RNA-seq aligner Bioinformatics. 2013 Jan 1;29(1):15-21. doi: 10.1093/bioinformatics/bts635. Epub 2012 Oct 25. PubMed PMID: 23104886; PubMed Central PMCID: PMC3530905.
+
+* [StringTie2](https://www.ncbi.nlm.nih.gov/pubmed/31842956/)
+  > Kovaka S, Zimin AV, Pertea GM, Razaghi R, Salzberg SL, Pertea M. Transcriptome assembly from long-read RNA-seq alignments with StringTie2 Genome Biol. 2019 Dec 16;20(1):278. doi: 10.1186/s13059-019-1910-1. PubMed PMID: 31842956; PubMed Central PMCID: PMC6912988.
+
+* [UMI-tools](https://www.ncbi.nlm.nih.gov/pubmed/28100584/)
+  > Smith T, Heger A, Sudbery I. UMI-tools: modeling sequencing errors in Unique Molecular Identifiers to improve quantification accuracy Genome Res. 2017 Mar;27(3):491-499. doi: 10.1101/gr.209601.116. Epub 2017 Jan 18. PubMed PMID: 28100584; PubMed Central PMCID: PMC5340976.
+
+* [RSEM](https://www.ncbi.nlm.nih.gov/pubmed/21816040/)
+  > Li B, Dewey CN. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome BMC Bioinformatics. 2011 Aug 4;12:323. doi: 10.1186/1471-2105-12-323. PubMed PMID: 21816040; PubMed Central PMCID: PMC3163565.
+
+* [edgeR](https://www.ncbi.nlm.nih.gov/pubmed/19910308/)
+  > Robinson MD, McCarthy DJ, Smyth GK. edgeR: a Bioconductor package for differential expression analysis of digital gene expression data Bioinformatics. 2010 Jan 1;26(1):139-40. doi: 10.1093/bioinformatics/btp616. Epub 2009 Nov 11. PubMed PMID: 19910308; PubMed Central PMCID: PMC2796818.
+
+* [dupRadar](https://www.ncbi.nlm.nih.gov/pubmed/27769170/)
+  > Sayols S, Scherzinger D, Klein H. dupRadar: a Bioconductor package for the assessment of PCR artifacts in RNA-Seq data BMC Bioinformatics. 2016 Oct 21;17(1):428. doi: 10.1186/s12859-016-1276-2. PubMed PMID: 27769170; PubMed Central PMCID: PMC5073875.
+
 ## Software packaging/containerisation tools
 
 * [Anaconda](https://anaconda.com)

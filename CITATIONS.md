@@ -13,12 +13,6 @@
 * [BEDTools](https://www.ncbi.nlm.nih.gov/pubmed/20110278/)
   > Quinlan AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics. 2010 Mar 15;26(6):841-2. doi: 10.1093/bioinformatics/btq033. Epub 2010 Jan 28. PubMed PMID: 20110278; PubMed Central PMCID: PMC2832824.
 
-* [dupRadar](https://www.ncbi.nlm.nih.gov/pubmed/27769170/)
-  > Sayols S, Scherzinger D, Klein H. dupRadar: a Bioconductor package for the assessment of PCR artifacts in RNA-Seq data BMC Bioinformatics. 2016 Oct 21;17(1):428. doi: 10.1186/s12859-016-1276-2. PubMed PMID: 27769170; PubMed Central PMCID: PMC5073875.
-
-* [edgeR](https://www.ncbi.nlm.nih.gov/pubmed/19910308/)
-  > Robinson MD, McCarthy DJ, Smyth GK. edgeR: a Bioconductor package for differential expression analysis of digital gene expression data Bioinformatics. 2010 Jan 1;26(1):139-40. doi: 10.1093/bioinformatics/btp616. Epub 2009 Nov 11. PubMed PMID: 19910308; PubMed Central PMCID: PMC2796818.
-
 * [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 * [featureCounts](https://www.ncbi.nlm.nih.gov/pubmed/24227677/)
@@ -40,9 +34,6 @@
 
 * [Qualimap 2](https://www.ncbi.nlm.nih.gov/pubmed/26428292/)
   > Okonechnikov K, Conesa A, García-Alcalde F. Qualimap 2: advanced multi-sample quality control for high-throughput sequencing data Bioinformatics. 2016 Jan 15;32(2):292-4. doi: 10.1093/bioinformatics/btv566. Epub 2015 Oct 1. PubMed PMID: 26428292; PubMed Central PMCID: PMC4708105.
-
-* [R](https://www.R-project.org/)
-  > R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.
 
 * [RSEM](https://www.ncbi.nlm.nih.gov/pubmed/21816040/)
   > Li B, Dewey CN. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome BMC Bioinformatics. 2011 Aug 4;12:323. doi: 10.1186/1471-2105-12-323. PubMed PMID: 21816040; PubMed Central PMCID: PMC3163565.
@@ -70,6 +61,23 @@
 * [UMI-tools](https://www.ncbi.nlm.nih.gov/pubmed/28100584/)
   > Smith T, Heger A, Sudbery I. UMI-tools: modeling sequencing errors in Unique Molecular Identifiers to improve quantification accuracy Genome Res. 2017 Mar;27(3):491-499. doi: 10.1101/gr.209601.116. Epub 2017 Jan 18. PubMed PMID: 28100584; PubMed Central PMCID: PMC5340976.
 
+## R packages
+
+* [R](https://www.R-project.org/)
+  > R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.
+
+* [dupRadar](https://www.ncbi.nlm.nih.gov/pubmed/27769170/)
+  > Sayols S, Scherzinger D, Klein H. dupRadar: a Bioconductor package for the assessment of PCR artifacts in RNA-Seq data BMC Bioinformatics. 2016 Oct 21;17(1):428. doi: 10.1186/s12859-016-1276-2. PubMed PMID: 27769170; PubMed Central PMCID: PMC5073875.
+
+* [edgeR](https://www.ncbi.nlm.nih.gov/pubmed/19910308/)
+  > Robinson MD, McCarthy DJ, Smyth GK. edgeR: a Bioconductor package for differential expression analysis of digital gene expression data Bioinformatics. 2010 Jan 1;26(1):139-40. doi: 10.1093/bioinformatics/btp616. Epub 2009 Nov 11. PubMed PMID: 19910308; PubMed Central PMCID: PMC2796818.
+
+* [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html)
+  > Morgan M, Obenchain V, Hester J and Pagès H (2020). SummarizedExperiment: SummarizedExperiment container.
+
+* [Tximeta](https://www.ncbi.nlm.nih.gov/pubmed/32097405/)
+  > Love MI, Soneson C, Hickey PF, Johnson LK, Pierce NT, Shepherd L, Morgan M, Patro R. Tximeta: Reference sequence checksums for provenance identification in RNA-seq PLoS Comput Biol. 2020 Feb 25;16(2):e1007664. doi: 10.1371/journal.pcbi.1007664. eCollection 2020 Feb. PubMed PMID: 32097405; PubMed Central PMCID: PMC7059966.
+  
 ## Software packaging/containerisation tools
 
 * [Anaconda](https://anaconda.com)

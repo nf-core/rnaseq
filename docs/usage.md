@@ -2,48 +2,67 @@
 
 ## Introduction
 
-### Library strandedness
+You will need to create a samplesheet file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row as shown in the examples below.
 
-Three command line flags / config parameters set the library strandedness for a run:
-
-* `--forward_stranded`
-* `--reverse_stranded`
-* `--unstranded`
-
-If not set, the pipeline will be run as unstranded.
-
-You can set a default in a custom Nextflow configuration file such as one saved in `~/.nextflow/config` (see the [nextflow docs](https://www.nextflow.io/docs/latest/config.html) for more). For example:
-
-```nextflow
-params {
-    reverse_stranded = true
-}
+```bash
+--input '[path to samplesheet file]'
 ```
 
-If you have a default strandedness set in your personal config file you can use `--unstranded` to overwrite it for a given run.
+### Multiple replicates
 
-These flags affect the commands used for several steps in the pipeline * namely HISAT2, featureCounts, RSeQC (`RPKM_saturation.py`), Qualimap and StringTie:
+The `group` identifier is the same when you have multiple replicates from the same experimental group, just increment the `replicate` identifier appropriately. The first replicate value for any given experimental group must be 1. Below is an example for a single experimental group in triplicate:
 
-* `--forward_stranded`
-  * HISAT2: `--rna-strandness F` / `--rna-strandness FR`
-  * featureCounts: `-s 1`
-  * RSeQC: `-d ++,--` / `-d 1++,1--,2+-,2-+`
-  * Qualimap: `-pe strand-specific-forward`
-  * StringTie: `--fr`
-* `--reverse_stranded`
-  * HISAT2: `--rna-strandness R` / `--rna-strandness RF`
-  * featureCounts: `-s 2`
-  * RSeQC: `-d +-,-+` / `-d 1+-,1-+,2++,2--`
-  * Qualimap: `-pe strand-specific-reverse`
-  * StringTie: `--rf`
+```bash
+group,replicate,fastq_1,fastq_2,strandedness
+control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reverse
+control,2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
+control,3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
+```
 
-### FeatureCounts Extra Gene Names
+### Multiple runs of the same library
 
-#### Default "`gene_name`" Attribute Type
+The `group` and `replicate` identifiers are the same when you have re-sequenced the same sample more than once (e.g. to increase sequencing depth). The pipeline will concatenate the raw reads before alignment. Below is an example for two samples sequenced across multiple lanes:
+
+```bash
+group,replicate,fastq_1,fastq_2,strandedness
+control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,unstranded
+control,1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,unstranded
+treatment,1,AEG588A4_S4_L003_R1_001.fastq.gz,AEG588A4_S4_L003_R2_001.fastq.gz,unstranded
+treatment,1,AEG588A4_S4_L004_R1_001.fastq.gz,AEG588A4_S4_L004_R2_001.fastq.gz,unstranded
+```
+
+### Full design
+
+A final design file consisting of both single- and paired-end data may look something like the one below. This is for two experimental groups in triplicate, where the last replicate of the `treatment` group has been sequenced twice.
+
+```bash
+group,replicate,fastq_1,fastq_2,strandedness
+control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,forward
+control,2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,forward
+control,3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,forward
+treatment,1,AEG588A4_S4_L003_R1_001.fastq.gz,,forward
+treatment,2,AEG588A5_S5_L003_R1_001.fastq.gz,,forward
+treatment,3,AEG588A6_S6_L003_R1_001.fastq.gz,,forward
+treatment,3,AEG588A6_S6_L004_R1_001.fastq.gz,,forward
+```
+
+| Column         | Description                                                                                                 |
+|----------------|-------------------------------------------------------------------------------------------------------------|
+| `group`        | Group identifier for sample. This will be identical for replicate samples from the same experimental group. |
+| `replicate`    | Integer representing replicate number. Must start from `1..<number of replicates>`.                         |
+| `fastq_1`      | Full path to FastQ file for read 1. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
+| `fastq_2`      | Full path to FastQ file for read 2. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
+| `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward` or `reverse`.                             |
+
+An example samplesheet has been provided with the [pipeline](https://github.com/nf-core/rnaseq/blob/master/assets/samplesheet.csv).
+
+## featureCounts Extra Gene Names
+
+### Default "`gene_name`" Attribute Type
 
 By default, the pipeline uses `gene_name` as the default gene identifier group. In case you need to adjust this, specify using the option `--fc_group_features` to use a different category present in your provided GTF file. Please also take care to use a suitable attribute to categorize the `biotype` of the selected features in your GTF then, using the option `--fc_group_features_type` (default: `gene_biotype`).
 
-#### Extra Gene Names or IDs
+### Extra Gene Names or IDs
 
 By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline.
 This behaviour can be modified by specifying `--fc_extra_attributes` when running the pipeline, which is passed on to featureCounts as an `--extraAttributes` parameter.
@@ -133,17 +152,6 @@ nextflow run nf-core/rnaseq --input samplesheet.csv \
 ```
 
 This assumes that ALL of the reference files are compressed, including the reference indices, e.g. for STAR, HiSat2 or Salmon. For instructions on how to create your own compressed reference files, see the instructions below. This also includes any files specified with `--additional_fasta`, which are assumed to be compressed as well when the `--fasta` file is compressed. The pipeline auto-detects `gz` input for reference files. Mixing of `gz` and non-compressed input is not possible!
-
-## Stand-alone scripts
-
-The `bin/` directory contains some scripts used by the pipeline which may also be run manually:
-
-* `gtf2bed`
-  * Script used to generate the BED12 reference files used by RSeQC. Takes a `.gtf` file as input
-* `dupRadar.r`
-  * dupRadar script used in the _dupRadar_ pipeline process.
-* `edgeR_heatmap_MDS.r`
-  * edgeR script used in the _Sample Correlation_ process
 
 ## Running the pipeline
 

@@ -138,14 +138,7 @@ ch_biotypes_header       = file("$baseDir/assets/multiqc/biotypes_header.txt", c
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-// Has the run name been specified by the user?
-// this has the bonus effect of catching both -name and --name
-run_name = params.name
-if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
-    run_name = workflow.runName
-}
-
-summary = Schema.params_summary(workflow, params, run_name)
+summary = Schema.params_summary(workflow, params)
 log.info Headers.nf_core(workflow, params.monochrome_logs)
 log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
@@ -599,10 +592,8 @@ workflow {
     if (!params.skip_multiqc) {
         workflow_summary     = Schema.params_summary_multiqc(summary)
         ch_workflow_summary  = Channel.value(workflow_summary)
-
-        def rtitle          = run_name ? " --title \"$run_name\"" : ''
-        def rfilename       = run_name ? " --filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-        params.modules['multiqc'].args += "$rtitle $rfilename"
+        def multiqc_title = params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
+        params.modules['multiqc'].args += "$multiqc_title"
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
@@ -645,7 +636,7 @@ workflow {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, fail_percent_mapped)
+    Completion.email(workflow, params, summary, baseDir, multiqc_report, log, fail_percent_mapped)
     Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 

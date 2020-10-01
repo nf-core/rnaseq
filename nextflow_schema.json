@@ -21,11 +21,6 @@
                     "fa_icon": "fas fa-file-csv",
                     "default": "./samplesheet.csv"
                 },
-                "seq_center": {
-                    "type": "string",
-                    "description": "Sequencing center information to be added to read group of BAM files.",
-                    "fa_icon": "fas fa-synagogue"
-                },
                 "outdir": {
                     "type": "string",
                     "description": "Path to the output directory where the results will be saved.",
@@ -43,12 +38,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
                     "description": "Save FastQ files after merging re-sequenced libraries in the results directory."
-                },
-                "rseqc_modules": {
-                    "type": "string",
-                    "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
-                    "fa_icon": "fas fa-chart-pie",
-                    "description": "Specify the RSeQC modules to run."
                 }
             }
         },
@@ -60,20 +49,26 @@
             "properties": {
                 "with_umi": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-barcode"
+                    "fa_icon": "fas fa-barcode",
+                    "description": "Enable UMI-based read deduplication."
                 },
                 "umitools_extract_method": {
                     "type": "string",
                     "default": "string",
-                    "fa_icon": "fas fa-barcode"
+                    "fa_icon": "fas fa-barcode",
+                    "description": "UMI pattern to use. Can be either 'string' (default) or 'regex'.",
+                    "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).\n"
                 },
                 "umitools_bc_pattern": {
                     "type": "string",
-                    "fa_icon": "fas fa-barcode"
+                    "fa_icon": "fas fa-barcode",
+                    "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
+                    "description": "The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI."
                 },
                 "save_umi_intermeds": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-save"
+                    "fa_icon": "fas fa-save",
+                    "description": "If this option is specified, intermediate FastQ and BAM files produced by UMI-tools are also saved in the results directory."
                 }
             },
             "fa_icon": "fas fa-barcode"
@@ -86,16 +81,20 @@
             "properties": {
                 "remove_ribo_rna": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-trash-alt"
+                    "fa_icon": "fas fa-trash-alt",
+                    "description": "Enable the removal of reads derived from ribosomal RNA (or any patterns found in the sequences defined by '--ribo_database_manifest') using SortMeRNA."
                 },
                 "ribo_database_manifest": {
                     "type": "string",
-                    "default": "/camp/stp/babs/working/patelh/code/nextflow/nfcore/rnaseq/assets/rrna-db-defaults.txt",
-                    "fa_icon": "fas fa-database"
+                    "default": "$baseDir/assets/rrna-db-defaults.txt",
+                    "fa_icon": "fas fa-database",
+                    "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
+                    "help_text": "By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline Github repository in `assets/rrna-default-dbs.txt`.\nPlease note that commercial/non-academic entities require [`licensing for SILVA`](https://www.arb-silva.de/silva-license-information) for these default databases."
                 },
                 "save_non_ribo_reads": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-save"
+                    "fa_icon": "fas fa-save",
+                    "description": "If this option is specified, intermediate FastQ files containing non-rRNA reads will be saved in the results directory."
                 }
             },
             "fa_icon": "fas fa-trash-alt"
@@ -257,38 +256,54 @@
             "fa_icon": "fas fa-map-signs",
             "description": "Options to adjust parameters and filtering criteria for read alignments.",
             "properties": {
+                "aligner": {
+                    "type": "string",
+                    "default": "star",
+                    "description": "Specifies the alignment algorithm to use - available options are 'star', 'star_rsem' and 'hisat2'.",
+                    "fa_icon": "fas fa-map-signs"
+                },
+                "pseudo_aligner": {
+                    "type": "string",
+                    "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
+                    "fa_icon": "fas fa-hamburger"
+                },
+                "star_ignore_sjdbgtf": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-ban",
+                    "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
+                },
+                "min_mapped_reads": {
+                    "type": "integer",
+                    "default": 5,
+                    "fa_icon": "fas fa-percentage",
+                    "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low."
+                },
+                "seq_center": {
+                    "type": "string",
+                    "description": "Sequencing center information to be added to read group of BAM files.",
+                    "fa_icon": "fas fa-synagogue"
+                },
+                "save_unaligned": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
+                    "help_text": "This may either be in the form of FastQ or BAM files depending on the options available for that particular tool."
+                },
                 "save_align_intermeds": {
                     "type": "boolean",
                     "description": "Save the intermediate BAM files from the alignment step.",
                     "help_text": "By default, intermediate BAM files will not be saved. The final BAM files created after the appropriate filtering step are always saved to limit storage usage. Set this parameter to also save other intermediate BAM files.",
                     "fa_icon": "fas fa-save"
                 },
-                "aligner": {
-                    "type": "string",
-                    "default": "star"
-                },
-                "pseudo_aligner": {
-                    "type": "string"
-                },
                 "skip_markduplicates": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
-                "star_ignore_sjdbgtf": {
-                    "type": "boolean"
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip picard MarkDuplicates step."
                 },
                 "skip_alignment": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
-                "save_unaligned": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-save"
-                },
-                "min_mapped_reads": {
-                    "type": "integer",
-                    "default": 5,
-                    "fa_icon": "fas fa-percentage"
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip all of the alignment-based processes within the pipeline."
                 }
             }
         },
@@ -301,30 +316,42 @@
             "properties": {
                 "fc_extra_attributes": {
                     "type": "string",
-                    "default": "gene_name"
+                    "default": "gene_name",
+                    "fa_icon": "fas fa-plus-square",
+                    "description": "'--extraAtributes' parameter passed to featureCounts."
                 },
                 "fc_group_features": {
                     "type": "string",
-                    "default": "gene_id"
-                },
-                "fc_count_type": {
-                    "type": "string",
-                    "default": "exon"
+                    "default": "gene_id",
+                    "description": "Define the attribute type used to group features in the GTF file.",
+                    "fa_icon": "fas fa-layer-group"
                 },
                 "fc_group_features_type": {
                     "type": "string",
-                    "default": "gene_biotype"
+                    "default": "gene_biotype",
+                    "fa_icon": "fas fa-layer-group",
+                    "description": "Define the attribute type used to group feature types in the GTF file."
                 },
-                "skip_featurecounts": {
+                "fc_count_type": {
+                    "type": "string",
+                    "default": "exon",
+                    "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file. You can change this parameter for example, for nuclear RNA-seq where you may want to count reads in introns as well as exons using '--fc_count_type transcript'.",
+                    "fa_icon": "fas fa-indent"
+                },
+                "stringtie_ignore_gtf": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
+                    "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
+                    "fa_icon": "fas fa-ban"
                 },
                 "skip_biotype_qc": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip additional featureCounts process for biotype QC."
                 },
-                "stringtie_ignore_gtf": {
-                    "type": "string"
+                "skip_featurecounts": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip featureCounts."
                 }
             }
         },
@@ -334,6 +361,17 @@
             "fa_icon": "fas fa-fast-forward",
             "description": "Options to skip various steps within the workflow.",
             "properties": {
+                "rseqc_modules": {
+                    "type": "string",
+                    "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
+                    "fa_icon": "fas fa-chart-pie",
+                    "description": "Specify the RSeQC modules to run."
+                },
+                "skip_stringtie": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip StringTie."
+                },
                 "skip_fastqc": {
                     "type": "boolean",
                     "description": "Skip FastQC.",
@@ -344,34 +382,35 @@
                     "description": "Skip Preseq.",
                     "fa_icon": "fas fa-fast-forward"
                 },
+                "skip_dupradar": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip dupRadar."
+                },
+                "skip_qualimap": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip Qualimap."
+                },
+                "skip_rseqc": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip RSeQC."
+                },
+                "skip_edger": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip edgeR correlation plotting."
+                },
                 "skip_multiqc": {
                     "type": "boolean",
                     "description": "Skip MultiQC.",
                     "fa_icon": "fas fa-fast-forward"
                 },
-                "skip_stringtie": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
                 "skip_qc": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
-                "skip_dupradar": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
-                "skip_qualimap": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
-                "skip_rseqc": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
-                },
-                "skip_edger": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward"
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip all QC steps except for MultiQC."
                 }
             }
         },
@@ -485,13 +524,6 @@
                     ],
                     "hidden": true
                 },
-                "name": {
-                    "type": "string",
-                    "description": "Workflow name.",
-                    "fa_icon": "fas fa-address-card",
-                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles.",
-                    "hidden": true
-                },
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",
@@ -541,7 +573,8 @@
                 "conda": {
                     "type": "boolean",
                     "description": "Run this workflow with Conda.",
-                    "hidden": true
+                    "hidden": true,
+                    "fa_icon": "fas fa-bacon"
                 }
             }
         }

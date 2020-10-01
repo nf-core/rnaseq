@@ -97,9 +97,8 @@ if (anno_readme && file(anno_readme).exists()) {
 
 // Check which RSeQC modules we are running
 def rseqcModuleList = [
-    'bam_stat', 'inner_distance', 'infer_experiment',
-    'junction_annotation', 'junction_saturation',
-    'read_distribution', 'read_duplication'
+    'bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation',
+    'junction_saturation', 'read_distribution', 'read_duplication'
 ]
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size()) {

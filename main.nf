@@ -550,7 +550,7 @@ workflow {
             ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 0.3) }
+                .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 30) }
                 .filter { it[0].strandedness != it[1] }
                 .map { meta, strandedness, sense, antisense, undetermined ->
                     [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]

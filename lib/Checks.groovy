@@ -68,7 +68,7 @@ class Checks {
     }
 
     // Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
-    static ArrayList get_inferexperiment_strandedness(inferexperiment_file, cutoff=0.3) {
+    static ArrayList get_inferexperiment_strandedness(inferexperiment_file, cutoff=30) {
         def sense        = 0
         def antisense    = 0
         def undetermined = 0
@@ -78,16 +78,16 @@ class Checks {
             def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
             def pe_sense_matcher     = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
             def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
-            if (undetermined_matcher) undetermined = undetermined_matcher[0][1].toFloat()
-            if (se_sense_matcher)     sense        = se_sense_matcher[0][1].toFloat()
-            if (se_antisense_matcher) antisense    = se_antisense_matcher[0][1].toFloat()
-            if (pe_sense_matcher)     sense        = pe_sense_matcher[0][1].toFloat()
-            if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat()
+            if (undetermined_matcher) undetermined = undetermined_matcher[0][1].toFloat() * 100
+            if (se_sense_matcher)     sense        = se_sense_matcher[0][1].toFloat() * 100
+            if (se_antisense_matcher) antisense    = se_antisense_matcher[0][1].toFloat() * 100
+            if (pe_sense_matcher)     sense        = pe_sense_matcher[0][1].toFloat() * 100
+            if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat() * 100
         }
         def strandedness = 'unstranded'
-        if (sense >= 1-cutoff) {
+        if (sense >= 100-cutoff) {
             strandedness = 'forward'
-        } else if (antisense >= 1-cutoff) {
+        } else if (antisense >= 100-cutoff) {
             strandedness = 'reverse'
         }
         return [ strandedness, sense, antisense, undetermined ]

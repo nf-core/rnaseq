@@ -29,7 +29,7 @@
                 "outdir": {
                     "type": "string",
                     "description": "Path to the output directory where the results will be saved.",
-                    "default": ".&#x2F;results",
+                    "default": "./results",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "email": {
@@ -41,11 +41,14 @@
                 },
                 "save_merged_fastq": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-save"
+                    "fa_icon": "fas fa-save",
+                    "description": "Save FastQ files after merging re-sequenced libraries in the results directory."
                 },
                 "rseqc_modules": {
                     "type": "string",
-                    "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication"
+                    "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
+                    "fa_icon": "fas fa-chart-pie",
+                    "description": "Specify the RSeQC modules to run."
                 }
             }
         },
@@ -87,7 +90,7 @@
                 },
                 "ribo_database_manifest": {
                     "type": "string",
-                    "default": "&#x2F;camp&#x2F;stp&#x2F;babs&#x2F;working&#x2F;patelh&#x2F;code&#x2F;nextflow&#x2F;nfcore&#x2F;rnaseq&#x2F;assets&#x2F;rrna-db-defaults.txt",
+                    "default": "/camp/stp/babs/working/patelh/code/nextflow/nfcore/rnaseq/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database"
                 },
                 "save_non_ribo_reads": {
@@ -189,7 +192,7 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3:&#x2F;&#x2F;ngi-igenomes&#x2F;igenomes&#x2F;",
+                    "default": "s3://ngi-igenomes/igenomes/",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -389,7 +392,7 @@
                 "custom_config_base": {
                     "type": "string",
                     "description": "Base directory for Institutional configs.",
-                    "default": "https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;nf-core&#x2F;configs&#x2F;master",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
                     "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
                     "fa_icon": "fas fa-users-cog"
@@ -525,7 +528,7 @@
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}&#x2F;pipeline_info",
+                    "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-cogs",
                     "hidden": true
                 },

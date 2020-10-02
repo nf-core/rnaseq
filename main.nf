@@ -89,10 +89,10 @@ if (params.pseudo_aligner) {
     }
 }
 
-// Save AWS IGenomes file containing annotation version
-if (anno_readme && file(anno_readme).exists()) {
-    file("${params.outdir}/genome/").mkdirs()
-    file(anno_readme).copyTo("${params.outdir}/genome/")
+// Check and exit if we are using '--aligner star_rsem' and '--with_umi'
+if (!params.skip_alignment && params.aligner == 'star_rsem' && params.with_umi) {
+    Checks.rsem_umi_error(log)
+    exit 1
 }
 
 // Check which RSeQC modules we are running
@@ -112,6 +112,12 @@ if (params.genome == 'GRCh38') {
         Checks.genome_warn(log)
         skip_biotype_qc = true
     }
+}
+
+// Save AWS IGenomes file containing annotation version
+if (anno_readme && file(anno_readme).exists()) {
+    file("${params.outdir}/genome/").mkdirs()
+    file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
 /*

@@ -44,6 +44,16 @@ class Checks {
                  "==================================================================================="
     }
 
+    // Print a warning if using '--aligner star_rsem' and '--with_umi'
+    static void rsem_umi_error(log) {
+        log.error "=============================================================================\n" +
+                  "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
+                  "  not possible to remove UMIs before the quantification.\n\n" +
+                  "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
+                  "  please use either '--aligner star' or '--aligner hisat2'.\n" +
+                  "============================================================================="
+    }
+
     // Function that parses and returns the alignment rate from the STAR log output
     static ArrayList get_star_percent_mapped(workflow, params, log, align_log) {
         def percent_aligned = 0

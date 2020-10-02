@@ -51,8 +51,8 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
-  parameters:
-    name: Test workflow parameters
+  star:
+    name: Test STAR with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
@@ -60,7 +60,6 @@ jobs:
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        aligner: ["--aligner 'star'", "--aligner 'hisat2'", "--aligner 'star_rsem'", "--pseudo_aligner 'salmon'"]
         parameters:
           - '--skip_qc'
           - '--remove_ribo_rna'
@@ -68,7 +67,7 @@ jobs:
           - '--star_index false'
           - '--min_mapped_reads 90'
           - '--with_umi'
-          - '--with_umi --skip_trimming --save_umi_intermeds'
+          - '--with_umi --skip_trimming'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -92,6 +91,123 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Run pipeline with various parameters
+      - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star ${{ matrix.parameters }}
+
+  star_rsem:
+    name: Test STAR RSEM with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc'
+          - '--rsem_index false'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
+
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Run pipeline with RSEM STAR and various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }}
+
+  hisat2:
+    name: Test HISAT2 with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc'
+          - '--hisat2_index false'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
+
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Run pipeline with HISAT2 and various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }}
+
+  salmon:
+    name: Test Salmon with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc --skip_alignment'
+          - '--salmon_index false --transcript_fasta false'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/rnaseq:dev
+
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/rnaseq:dev
+          docker tag nfcore/rnaseq:dev nfcore/rnaseq:dev
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Run pipeline with Salmon and various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }}

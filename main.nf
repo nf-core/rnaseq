@@ -286,13 +286,14 @@ workflow {
     ch_star_multiqc      = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
         if (!params.save_reference)      { params.modules['star_genomegenerate']['publish_files'] = false }
-        if (params.save_align_intermeds) {
-            params.modules['star_align'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'']
-        }
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
         params.modules['star_align'].args += unaligned
+        if (params.save_align_intermeds) {
+            params.modules['star_align'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
+        }
 
         ALIGN_STAR (
             ch_trimmed_reads,
@@ -321,7 +322,8 @@ workflow {
         if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
         if (params.save_align_intermeds) {
             params.modules['rsem_calculateexpression'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
         }
         QUANTIFY_RSEM (
             ch_trimmed_reads,
@@ -351,11 +353,12 @@ workflow {
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         if (!params.save_reference)      { params.modules['hisat2_build']['publish_files'] = false }
+        if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
         if (params.save_align_intermeds) {
             params.modules['hisat2_align'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
         }
-        if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
 
         ALIGN_HISAT2 (
             ch_trimmed_reads,

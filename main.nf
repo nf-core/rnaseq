@@ -467,12 +467,11 @@ workflow {
     }
 
     /*
-     * MODULE: FEATURECOUNTS
+     * MODULE: Count reads relative to features using featureCounts
      */
     ch_edger_multiqc = Channel.empty()
     ch_featurecounts_multiqc = Channel.empty()
-    ch_featurecounts_biotype_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_featurecounts) {
+    if (!params.skip_alignment && !params.aligner == 'star_rsem' && !params.skip_featurecounts) {
         def fc_extra_attributes = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
         params.modules['subread_featurecounts'].args += fc_extra_attributes
         params.modules['subread_featurecounts'].args += " -g $params.fc_group_features -t $params.fc_count_type"
@@ -483,21 +482,24 @@ workflow {
 
         FEATURECOUNTS_MERGE_COUNTS ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, params.modules['featurecounts_merge_counts'] )
 
-        if (!params.skip_qc) {
-            if (!params.skip_edger) {
-                EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
-                ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
-                ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
-            }
-            if (!skip_biotype_qc) {
-                def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
-                params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
-                SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
-
-                MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
-                ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
-            }
+        if (!params.skip_qc & !params.skip_edger) {    
+            EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
+            ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
+            ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
         }
+    }
+
+    /*
+     * MODULE: Feature biotype QC using featureCounts
+     */
+    ch_featurecounts_biotype_multiqc = Channel.empty()
+    if (!params.skip_alignment && !params.skip_featurecounts && !skip_biotype_qc) {
+        def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
+        params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
+        SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
+
+        MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
+        ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
     }
 
     /*

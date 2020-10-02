@@ -289,12 +289,12 @@ workflow {
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
         params.modules['star_align'].args += unaligned
-        if (params.save_align_intermeds) {
-            params.modules['star_align'].publish_files.put('bam','')
+        if (params.save_align_intermeds) { params.modules['star_align'].publish_files.put('bam','') }
+        if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
             params.modules['samtools_sort'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_files.put('bai','')
         }
-
+        
         ALIGN_STAR (
             ch_trimmed_reads,
             params.star_index,
@@ -320,11 +320,12 @@ workflow {
     ch_rsem_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
-        if (params.save_align_intermeds) {
-            params.modules['rsem_calculateexpression'].publish_files.put('bam','')
+        if (params.save_align_intermeds) { params.modules['rsem_calculateexpression'].publish_files.put('bam','') }
+        if (params.save_align_intermeds || params.skip_markduplicates) {
             params.modules['samtools_sort'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_files.put('bai','')
         }
+
         QUANTIFY_RSEM (
             ch_trimmed_reads,
             params.rsem_index,
@@ -354,8 +355,8 @@ workflow {
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         if (!params.save_reference)      { params.modules['hisat2_build']['publish_files'] = false }
         if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
-        if (params.save_align_intermeds) {
-            params.modules['hisat2_align'].publish_files.put('bam','')
+        if (params.save_align_intermeds) { params.modules['hisat2_align'].publish_files.put('bam','') }
+        if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
             params.modules['samtools_sort'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_files.put('bai','')
         }
@@ -427,10 +428,11 @@ workflow {
      * MODULE: Remove duplicate reads from BAM file based on UMIs
      */
     if (!params.skip_alignment && params.aligner != 'star_rsem' && params.with_umi) {
-        if (params.save_umi_intermeds) {
+        if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
             params.modules['umitools_dedup'].publish_files.put('bam','')
             params.modules['umitools_dedup'].publish_files.put('bai','')
         }
+
         UMITOOLS_DEDUP ( ch_genome_bam.join(ch_genome_bai, by: [0]), params.modules['umitools_dedup'] )
         SAMTOOLS_INDEX ( UMITOOLS_DEDUP.out.bam, params.modules['umitools_dedup'] )
         ch_genome_bam = UMITOOLS_DEDUP.out.bam
@@ -442,6 +444,9 @@ workflow {
      */
     ch_markduplicates_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_markduplicates) {
+        if (params.save_align_intermeds) {
+            params.modules['picard_markduplicates'].publish_files.put('bam','')
+        }
         MARK_DUPLICATES_PICARD (
             ch_genome_bam,
             params.modules['picard_markduplicates'],

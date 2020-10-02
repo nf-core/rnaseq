@@ -52,7 +52,7 @@ anno_readme         = params.genomes[ params.genome ]?.readme
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
-if (params.gtf && params.gff)   { log.warn "Both GTF and GFF have been provided: Using GTF as priority." }
+if (params.gtf && params.gff)   { Checks.gtf_gff_warn(log) }
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
@@ -74,10 +74,10 @@ if (!params.skip_alignment) {
         exit 1, "Invalid aligner option: ${params.aligner}. Valid options: ${alignerList.join(', ')}"
     }
 } else {
-    log.warn "Skipping alignment processes..."
     if (!params.pseudo_aligner) {
         exit 1, "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${pseudoAlignerList[0]}"
     }
+    Checks.skip_alignment_warn(log)
 }
 if (params.pseudo_aligner) {
     if (!pseudoAlignerList.contains(params.pseudo_aligner)) {

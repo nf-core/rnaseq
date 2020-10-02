@@ -43,7 +43,7 @@ workflow QUANTIFY_SALMON {
         } else {
             ch_fasta = TRANSCRIPTS2FASTA ( fasta, gtf, publish_genome_options ).fasta
         }
-        ch_index = SALMON_INDEX ( ch_fasta, salmon_index_options )
+        ch_index = SALMON_INDEX ( ch_fasta, salmon_index_options ).index
     }
 
     /*

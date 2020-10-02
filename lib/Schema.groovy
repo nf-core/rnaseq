@@ -124,8 +124,6 @@ class Schema {
             summary["With UMI"]                           = params.with_umi
             summary["umi_tools extract-method"]           = params.umitools_extract_method
             summary["umi_tools bc-pattern"]               = params.umitools_bc_pattern
-            summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
-            summary["umi_tools dedup extra parameters"]   = params.umitools_dedup_extra
         }
         if (params.save_trimmed)           summary['Save Trimmed'] = 'Yes'
         if (params.aligner == 'star') {

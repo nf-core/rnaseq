@@ -48,7 +48,7 @@ process MULTIQC {
     output:
     path "*multiqc_report.html", emit: report
     path "*_data"              , emit: data
-    path "multiqc_plots"       , emit: plots
+    path "*_plots"             , emit: plots
 
     script:
     def software      = getSoftwareName(task.process)

@@ -99,10 +99,10 @@ class Schema {
           output += params_beautify(params_get(path))
     }
 
-    private static LinkedHashMap params_summary(workflow, params, run_name) {
+    private static LinkedHashMap params_summary(workflow, params) {
         def Map summary = [:]
         if (workflow.revision)             summary['Pipeline Release'] = workflow.revision
-        summary['Run Name']                = run_name ?: workflow.runName
+        summary['Run Name']                = workflow.runName
         summary['Design File']             = params.input
         summary['Genome']                  = params.genome ?: 'Not supplied'
         summary['Fasta File']              = params.fasta
@@ -124,8 +124,6 @@ class Schema {
             summary["With UMI"]                           = params.with_umi
             summary["umi_tools extract-method"]           = params.umitools_extract_method
             summary["umi_tools bc-pattern"]               = params.umitools_bc_pattern
-            summary["umi_tools extract extra parameters"] = params.umitools_extract_extra
-            summary["umi_tools dedup extra parameters"]   = params.umitools_dedup_extra
         }
         if (params.save_trimmed)           summary['Save Trimmed'] = 'Yes'
         if (params.aligner == 'star') {

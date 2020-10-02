@@ -7,8 +7,7 @@ include {
     GUNZIP as GUNZIP_GTF
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA
-    GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../process/gunzip'
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../process/gunzip'
 include { GTF2BED                     } from '../process/gtf2bed'
 include { CAT_ADDITIONAL_FASTA        } from '../process/cat_additional_fasta'
 include { GFFREAD                     } from '../../nf-core/software/gffread/main'

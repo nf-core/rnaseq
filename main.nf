@@ -52,7 +52,7 @@ anno_readme         = params.genomes[ params.genome ]?.readme
 if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
-if (params.gtf && params.gff)   { log.warn "Both GTF and GFF have been provided: Using GTF as priority." }
+if (params.gtf && params.gff)   { Checks.gtf_gff_warn(log) }
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
@@ -74,10 +74,10 @@ if (!params.skip_alignment) {
         exit 1, "Invalid aligner option: ${params.aligner}. Valid options: ${alignerList.join(', ')}"
     }
 } else {
-    log.warn "Skipping alignment processes..."
     if (!params.pseudo_aligner) {
         exit 1, "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${pseudoAlignerList[0]}"
     }
+    Checks.skip_alignment_warn(log)
 }
 if (params.pseudo_aligner) {
     if (!pseudoAlignerList.contains(params.pseudo_aligner)) {
@@ -89,17 +89,16 @@ if (params.pseudo_aligner) {
     }
 }
 
-// Save AWS IGenomes file containing annotation version
-if (anno_readme && file(anno_readme).exists()) {
-    file("${params.outdir}/genome/").mkdirs()
-    file(anno_readme).copyTo("${params.outdir}/genome/")
+// Check and exit if we are using '--aligner star_rsem' and '--with_umi'
+if (!params.skip_alignment && params.aligner == 'star_rsem' && params.with_umi) {
+    Checks.rsem_umi_error(log)
+    exit 1
 }
 
 // Check which RSeQC modules we are running
 def rseqcModuleList = [
-    'bam_stat', 'inner_distance', 'infer_experiment',
-    'junction_annotation', 'junction_saturation',
-    'read_distribution', 'read_duplication'
+    'bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation',
+    'junction_saturation', 'read_distribution', 'read_duplication'
 ]
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size()) {
@@ -113,6 +112,12 @@ if (params.genome == 'GRCh38') {
         Checks.genome_warn(log)
         skip_biotype_qc = true
     }
+}
+
+// Save AWS IGenomes file containing annotation version
+if (anno_readme && file(anno_readme).exists()) {
+    file("${params.outdir}/genome/").mkdirs()
+    file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
 /*
@@ -139,14 +144,7 @@ ch_biotypes_header       = file("$baseDir/assets/multiqc/biotypes_header.txt", c
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-// Has the run name been specified by the user?
-// this has the bonus effect of catching both -name and --name
-run_name = params.name
-if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
-    run_name = workflow.runName
-}
-
-summary = Schema.params_summary(workflow, params, run_name)
+summary = Schema.params_summary(workflow, params)
 log.info Headers.nf_core(workflow, params.monochrome_logs)
 log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
@@ -164,7 +162,6 @@ include { EDGER_CORRELATION           } from './modules/local/process/edger_corr
 include { DUPRADAR                    } from './modules/local/process/dupradar'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
-
 include { MULTIQC                     } from './modules/local/process/multiqc'
 
 include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'
@@ -289,15 +286,15 @@ workflow {
     ch_star_multiqc      = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star') {
         if (!params.save_reference)      { params.modules['star_genomegenerate']['publish_files'] = false }
-        if (params.save_align_intermeds) {
-            params.modules['star_align'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_dir += '/star'
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'']
-        }
         if (params.save_unaligned)       { params.modules['star_align'].publish_files.put('fastq.gz','unmapped') }
         def unaligned = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
         params.modules['star_align'].args += unaligned
-
+        if (params.save_align_intermeds) { params.modules['star_align'].publish_files.put('bam','') }
+        if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
+        }
+        
         ALIGN_STAR (
             ch_trimmed_reads,
             params.star_index,
@@ -323,11 +320,12 @@ workflow {
     ch_rsem_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         if (!params.save_reference) { params.modules['rsem_preparereference']['publish_files'] = false }
-        if (params.save_align_intermeds) {
-            params.modules['rsem_calculateexpression'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_dir += '/rsem'
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
+        if (params.save_align_intermeds) { params.modules['rsem_calculateexpression'].publish_files.put('bam','') }
+        if (params.save_align_intermeds || params.skip_markduplicates) {
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
         }
+
         QUANTIFY_RSEM (
             ch_trimmed_reads,
             params.rsem_index,
@@ -356,12 +354,12 @@ workflow {
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         if (!params.save_reference)      { params.modules['hisat2_build']['publish_files'] = false }
-        if (params.save_align_intermeds) {
-            params.modules['hisat2_align'].publish_files.put('bam','')
-            params.modules['samtools_sort'].publish_dir += '/hisat2'
-            params.modules['samtools_sort'].publish_files = ['bam':'', 'bai':'', 'stats':'samtools_stats', 'flagstat':'samtools_stats', 'idxstats':'samtools_stats']
-        }
         if (params.save_unaligned)       { params.modules['hisat2_align'].publish_files.put('fastq.gz','unmapped') }
+        if (params.save_align_intermeds) { params.modules['hisat2_align'].publish_files.put('bam','') }
+        if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
+            params.modules['samtools_sort'].publish_files.put('bam','')
+            params.modules['samtools_sort'].publish_files.put('bai','')
+        }
 
         ALIGN_HISAT2 (
             ch_trimmed_reads,
@@ -413,7 +411,7 @@ workflow {
             }
             .set { ch_pass_fail_mapped }
 
-        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [:] )
+        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [publish_files: false] )
     }
 
     /*
@@ -427,13 +425,14 @@ workflow {
     }
 
     /*
-     * MODULE: Remove duplicate reads based on UMIs
+     * MODULE: Remove duplicate reads from BAM file based on UMIs
      */
-    if (!params.skip_alignment && !params.aligner == 'star_rsem' && params.with_umi) {
-        if (params.save_umi_intermeds) {
+    if (!params.skip_alignment && params.aligner != 'star_rsem' && params.with_umi) {
+        if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
             params.modules['umitools_dedup'].publish_files.put('bam','')
             params.modules['umitools_dedup'].publish_files.put('bai','')
         }
+
         UMITOOLS_DEDUP ( ch_genome_bam.join(ch_genome_bai, by: [0]), params.modules['umitools_dedup'] )
         SAMTOOLS_INDEX ( UMITOOLS_DEDUP.out.bam, params.modules['umitools_dedup'] )
         ch_genome_bam = UMITOOLS_DEDUP.out.bam
@@ -470,12 +469,11 @@ workflow {
     }
 
     /*
-     * MODULE: FEATURECOUNTS
+     * MODULE: Count reads relative to features using featureCounts
      */
     ch_edger_multiqc = Channel.empty()
     ch_featurecounts_multiqc = Channel.empty()
-    ch_featurecounts_biotype_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_featurecounts) {
+    if (!params.skip_alignment && params.aligner != 'star_rsem' && !params.skip_featurecounts) {
         def fc_extra_attributes = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
         params.modules['subread_featurecounts'].args += fc_extra_attributes
         params.modules['subread_featurecounts'].args += " -g $params.fc_group_features -t $params.fc_count_type"
@@ -486,21 +484,24 @@ workflow {
 
         FEATURECOUNTS_MERGE_COUNTS ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, params.modules['featurecounts_merge_counts'] )
 
-        if (!params.skip_qc) {
-            if (!params.skip_edger) {
-                EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
-                ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
-                ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
-            }
-            if (!skip_biotype_qc) {
-                def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
-                params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
-                SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
-
-                MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
-                ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
-            }
+        if (!params.skip_qc & !params.skip_edger) {    
+            EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
+            ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
+            ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
         }
+    }
+
+    /*
+     * MODULE: Feature biotype QC using featureCounts
+     */
+    ch_featurecounts_biotype_multiqc = Channel.empty()
+    if (!params.skip_alignment && !params.skip_featurecounts && !skip_biotype_qc) {
+        def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
+        params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
+        SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
+
+        MULTIQC_CUSTOM_BIOTYPE ( SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, ch_biotypes_header, params.modules['multiqc_custom_biotype'] )
+        ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
     }
 
     /*
@@ -550,14 +551,14 @@ workflow {
             ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 0.3) }
+                .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 30) }
                 .filter { it[0].strandedness != it[1] }
                 .map { meta, strandedness, sense, antisense, undetermined ->
                     [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
                 }
                 .set { ch_fail_strand }
 
-            ch_fail_strand_multiqc = MULTIQC_CUSTOM_STRAND_CHECK ( ch_fail_strand.collect(), [:] )
+            ch_fail_strand_multiqc = MULTIQC_CUSTOM_STRAND_CHECK ( ch_fail_strand.collect(), [publish_files: false] )
         }
     }
 
@@ -576,6 +577,7 @@ workflow {
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             params.salmon_index,
+            params.transcript_fasta,
             PREPARE_GENOME.out.fasta,
             PREPARE_GENOME.out.gtf,
             publish_index_options,
@@ -601,9 +603,9 @@ workflow {
         workflow_summary     = Schema.params_summary_multiqc(summary)
         ch_workflow_summary  = Channel.value(workflow_summary)
 
-        def rtitle          = run_name ? " --title \"$run_name\"" : ''
-        def rfilename       = run_name ? " --filename " + run_name.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-        params.modules['multiqc'].args += "$rtitle $rfilename"
+        if (params.skip_alignment) { params.modules['multiqc']['publish_dir'] = '' }
+        def multiqc_title = params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
+        params.modules['multiqc'].args += "$multiqc_title"
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
@@ -646,7 +648,7 @@ workflow {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log, fail_percent_mapped)
+    Completion.email(workflow, params, summary, baseDir, multiqc_report, log, fail_percent_mapped)
     Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 

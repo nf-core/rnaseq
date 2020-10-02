@@ -1,13 +1,14 @@
 # ![nf-core/rnaseq](docs/images/nf-core-rnaseq_logo.png)
 
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.07.1-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow DSL2](https://img.shields.io/badge/nextflow-DSL2-brightgreen.svg)](https://www.nextflow.io/docs/latest/dsl2.html)
 [![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/rnaseq/actions)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.07.1-brightgreen.svg)](https://www.nextflow.io/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1400710.svg)](https://doi.org/10.5281/zenodo.1400710)
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
+[![install with conda](https://img.shields.io/badge/install%20with-conda-brightgreen.svg)](https://conda.io/en/latest/index.html)
 [![Docker](https://img.shields.io/docker/automated/nfcore/rnaseq.svg)](https://hub.docker.com/r/nfcore/rnaseq)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23rnaseq-4A154B?logo=slack)](https://nfcore.slack.com/channels/rnaseq)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1400710.svg)](https://doi.org/10.5281/zenodo.1400710)
 
 ## Introduction
 
@@ -30,7 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 7. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 8. UMI-based deduplication ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
 9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
-10. Assembly and transcript quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
+10. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
 11. Extensive quality control:
     1. [`RSeQC`](http://rseqc.sourceforge.net/)
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
@@ -67,7 +68,9 @@ The nf-core/rnaseq pipeline comes with documentation about the pipeline which yo
 
 ### Credits
 
-These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)). The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
+These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+
+The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),
@@ -88,6 +91,8 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 ## Citation
 
 If you use  nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.1400710](https://doi.org/10.5281/zenodo.1400710)
+
+An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 You can cite the `nf-core` publication as follows:
 

@@ -568,6 +568,7 @@ workflow {
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             params.salmon_index,
+            params.transcript_fasta,
             PREPARE_GENOME.out.fasta,
             PREPARE_GENOME.out.gtf,
             publish_index_options,

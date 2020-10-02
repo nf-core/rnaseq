@@ -411,7 +411,7 @@ workflow {
             }
             .set { ch_pass_fail_mapped }
 
-        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [:] )
+        ch_fail_mapping_multiqc = MULTIQC_CUSTOM_FAIL_MAPPED ( ch_pass_fail_mapped.fail.collect(), [publish_files: false] )
     }
 
     /*
@@ -444,9 +444,6 @@ workflow {
      */
     ch_markduplicates_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_markduplicates) {
-        if (params.save_align_intermeds) {
-            params.modules['picard_markduplicates'].publish_files.put('bam','')
-        }
         MARK_DUPLICATES_PICARD (
             ch_genome_bam,
             params.modules['picard_markduplicates'],

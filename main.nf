@@ -424,9 +424,9 @@ workflow {
     }
 
     /*
-     * MODULE: Remove duplicate reads based on UMIs
+     * MODULE: Remove duplicate reads from BAM file based on UMIs
      */
-    if (!params.skip_alignment && !params.aligner == 'star_rsem' && params.with_umi) {
+    if (!params.skip_alignment && params.aligner != 'star_rsem' && params.with_umi) {
         if (params.save_umi_intermeds) {
             params.modules['umitools_dedup'].publish_files.put('bam','')
             params.modules['umitools_dedup'].publish_files.put('bai','')
@@ -471,7 +471,7 @@ workflow {
      */
     ch_edger_multiqc = Channel.empty()
     ch_featurecounts_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.aligner == 'star_rsem' && !params.skip_featurecounts) {
+    if (!params.skip_alignment && params.aligner != 'star_rsem' && !params.skip_featurecounts) {
         def fc_extra_attributes = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
         params.modules['subread_featurecounts'].args += fc_extra_attributes
         params.modules['subread_featurecounts'].args += " -g $params.fc_group_features -t $params.fc_count_type"
@@ -556,7 +556,7 @@ workflow {
                 }
                 .set { ch_fail_strand }
 
-            ch_fail_strand_multiqc = MULTIQC_CUSTOM_STRAND_CHECK ( ch_fail_strand.collect(), [:] )
+            ch_fail_strand_multiqc = MULTIQC_CUSTOM_STRAND_CHECK ( ch_fail_strand.collect(), [publish_files: false] )
         }
     }
 
@@ -600,6 +600,8 @@ workflow {
     if (!params.skip_multiqc) {
         workflow_summary     = Schema.params_summary_multiqc(summary)
         ch_workflow_summary  = Channel.value(workflow_summary)
+
+        if (params.skip_alignment) { params.modules['multiqc']['publish_dir'] = '' }
         def multiqc_title = params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
         params.modules['multiqc'].args += "$multiqc_title"
         MULTIQC (

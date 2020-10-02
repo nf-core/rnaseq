@@ -15,7 +15,8 @@ workflow QUANTIFY_SALMON {
     take:
     reads                  // channel: [ val(meta), [ reads ] ]
     index                  //    file: /path/to/salmon/index/
-    fasta                  //    file: /path/to/transcripts.fasta
+    transcript_fasta       //    file: /path/to/transcript.fasta
+    genome_fasta           //    file: /path/to/genome.fasta
     gtf                    //    file: /path/to/genome.gtf
     publish_index_options  //     map: options for publishing index
     publish_genome_options //     map: options for publishing genome files
@@ -34,16 +35,16 @@ workflow QUANTIFY_SALMON {
             ch_index = file(index)
         }
     } else {
-        if (fasta) {
-            if (fasta.endsWith('.gz')) {
-                ch_fasta = GUNZIP ( fasta, publish_genome_options ).gunzip
+        if (transcript_fasta) {
+            if (transcript_fasta.endsWith('.gz')) {
+                ch_transcript_fasta = GUNZIP ( transcript_fasta, publish_genome_options ).gunzip
             } else {
-                ch_fasta = file(fasta)
+                ch_transcript_fasta = file(transcript_fasta)
             }
         } else {
-            ch_fasta = TRANSCRIPTS2FASTA ( fasta, gtf, publish_genome_options ).fasta
+            ch_transcript_fasta = TRANSCRIPTS2FASTA ( genome_fasta, gtf, publish_genome_options ).fasta
         }
-        ch_index = SALMON_INDEX ( ch_fasta, salmon_index_options ).index
+        ch_index = SALMON_INDEX ( ch_transcript_fasta, salmon_index_options ).index
     }
 
     /*

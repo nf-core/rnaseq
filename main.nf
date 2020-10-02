@@ -162,7 +162,6 @@ include { EDGER_CORRELATION           } from './modules/local/process/edger_corr
 include { DUPRADAR                    } from './modules/local/process/dupradar'
 include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
-
 include { MULTIQC                     } from './modules/local/process/multiqc'
 
 include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'

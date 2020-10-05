@@ -132,8 +132,6 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 
 ch_multiqc_config        = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs           = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images    = file("$baseDir/docs/images/", checkIfExists: true)
 
 // Header files for MultiQC
 ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
@@ -160,7 +158,6 @@ include { MULTIQC_CUSTOM_STRAND_CHECK } from './modules/local/process/multiqc_cu
 include { FEATURECOUNTS_MERGE_COUNTS  } from './modules/local/process/featurecounts_merge_counts'
 include { EDGER_CORRELATION           } from './modules/local/process/edger_correlation'
 include { DUPRADAR                    } from './modules/local/process/dupradar'
-include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 include { MULTIQC                     } from './modules/local/process/multiqc'
 
@@ -594,7 +591,6 @@ workflow {
      * MODULE: Pipeline reporting
      */
     GET_SOFTWARE_VERSIONS ( ch_software_versions.map { it }.collect(), [publish_files : ['csv':'']] )
-    OUTPUT_DOCUMENTATION  ( ch_output_docs, ch_output_docs_images, [:] )
 
     /*
      * MultiQC

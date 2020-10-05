@@ -7,8 +7,10 @@ process FEATURECOUNTS_MERGE_COUNTS {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.conda ? "${baseDir}/environment.yml" : null)
+    container "biocontainers/biocontainers:v1.2.0_cv1"
 
+    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    
     input:
     path ('counts/*')
     val  options

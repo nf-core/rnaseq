@@ -11,18 +11,18 @@ coldata = args[1]
 counts_fn = args[2]
 tpm_fn = args[3]
 
-tx2gene = "salmon_tx2gene.csv"
+tx2gene = "salmon_tx2gene.tsv"
 info = file.info(tx2gene)
 if (info$size == 0){
   tx2gene = NULL
 }else{
-  rowdata = read.csv(tx2gene, header = FALSE)
+  rowdata = read.csv(tx2gene, sep="\t", header = FALSE)
   colnames(rowdata) = c("tx", "gene_id", "gene_name")
   tx2gene = rowdata[,1:2]
 }
 
-counts = read.csv(counts_fn, row.names=1)
-tpm = read.csv(tpm_fn, row.names=1)
+counts = read.csv(counts_fn, row.names=1, sep="\t")
+tpm = read.csv(tpm_fn, row.names=1, sep="\t")
 
 if (length(intersect(rownames(counts), rowdata[["tx"]])) > length(intersect(rownames(counts), rowdata[["gene_id"]]))){
     by_what = "tx"
@@ -32,7 +32,7 @@ if (length(intersect(rownames(counts), rowdata[["tx"]])) > length(intersect(rown
 }
 
 if (file.exists(coldata)){
-    coldata = read.csv(coldata)
+    coldata = read.csv(coldata, sep="\t")
     coldata = coldata[match(colnames(counts), coldata[,1]),]
     coldata = cbind(files = fns, coldata)
 }else{

@@ -1,30 +1,31 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-process GUNZIP {
-    tag "$archive"
+process GFFREAD {
+    tag "$gff"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "biocontainers/biocontainers:v1.2.0_cv1"
+    container "quay.io/biocontainers/gffread:0.11.7--h8b12597_0"
+    //container https://depot.galaxyproject.org/singularity/gffread:0.11.7--h8b12597_0
 
-    conda (params.conda ? "conda-forge::sed=4.7" : null)
-    
+    conda (params.conda ? "bioconda::gffread=0.11.7" : null)
+
     input:
-    path archive
+    path fasta
+    path gff
     val  options
 
     output:
-    path "$gunzip",       emit: gunzip
+    path "*.fa"         , emit: fasta
     path "*.version.txt", emit: version
-    
+
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
-    gunzip       = archive.toString() - '.gz'
     """
-    gunzip --force $ioptions.args $archive
-    echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//' > ${software}.version.txt
+    gffread $ioptions.args -F -w transcripts.fa -g $fasta $gff
+    echo \$(gffread --version 2>&1) > ${software}.version.txt
     """
 }

@@ -8,7 +8,11 @@ process DUPRADAR {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.conda ? "${baseDir}/environment.yml" : null)
+    //conda (params.conda ? "${baseDir}/environment.yml" : null)
+    container "quay.io/biocontainers/bioconductor-dupradar:1.8.0--r3.4.1_1"
+    //container  https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.8.0--r3.4.1_1
+
+    conda (params.conda ? "bioconda::bioconductor-dupradar=1.8.0" : null)
 
     input:
     tuple val(meta), path(bam)

@@ -12,12 +12,12 @@ sample_name = args[3]
 
 prefix = paste(c(sample_name, "salmon"), sep=".")
 
-tx2gene = "salmon_tx2gene.csv"
+tx2gene = "salmon_tx2gene.tsv"
 info = file.info(tx2gene)
 if (info$size == 0){
   tx2gene = NULL
 }else{
-  rowdata = read.csv(tx2gene, header = FALSE)
+  rowdata = read.csv(tx2gene, sep="\t", header = FALSE)
   colnames(rowdata) = c("tx", "gene_id", "gene_name")
   tx2gene = rowdata[,1:2]
 }
@@ -27,7 +27,7 @@ names = basename(dirname(fns))
 names(fns) = names
 
 if (file.exists(coldata)){
-    coldata = read.csv(coldata)
+    coldata = read.csv(coldata, sep="\t")
     coldata = coldata[match(names, coldata[,1]),]
     coldata = cbind(files = fns, coldata)
 }else{
@@ -67,12 +67,12 @@ if (!is.null(tx2gene)){
 }
 
 if(exists("gse")){
-  write.csv(assays(gse)[["abundance"]], paste(c(prefix, "gene_tpm.csv"), collapse="."), quote=FALSE)
-  write.csv(assays(gse)[["counts"]], paste(c(prefix, "gene_counts.csv"), collapse="."), quote=FALSE)
+  write.table(assays(gse)[["abundance"]], paste(c(prefix, "gene_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)
+  write.table(assays(gse)[["counts"]], paste(c(prefix, "gene_counts.tsv"), collapse="."), sep="\t", quote=FALSE)
 }
 
-write.csv(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.csv"), collapse="."), quote=FALSE)
-write.csv(assays(se)[["counts"]], paste(c(prefix, "transcript_counts.csv"), collapse="."), quote=FALSE)
+write.table(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)
+write.table(assays(se)[["counts"]], paste(c(prefix, "transcript_counts.tsv"), collapse="."), sep="\t", quote=FALSE)
 
 # Print sessioninfo to standard out
 citation("tximeta")

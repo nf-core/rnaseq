@@ -584,7 +584,9 @@ workflow {
             params.modules['salmon_merge_counts']
         )
         ch_salmon_multiqc    = QUANTIFY_SALMON.out.results
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.first().ifEmpty(null))
     }
 
     /*

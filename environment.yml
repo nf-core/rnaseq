@@ -10,4 +10,3 @@ dependencies:
   - conda-forge::r-data.table=1.12.8
   - conda-forge::r-gplots=3.0.4
   - bioconda::bioconductor-edger=3.30.0
-  - bioconda::bioconductor-dupradar=1.18.0

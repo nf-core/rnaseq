@@ -132,8 +132,6 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 
 ch_multiqc_config        = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs           = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images    = file("$baseDir/docs/images/", checkIfExists: true)
 
 // Header files for MultiQC
 ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
@@ -160,7 +158,6 @@ include { MULTIQC_CUSTOM_STRAND_CHECK } from './modules/local/process/multiqc_cu
 include { FEATURECOUNTS_MERGE_COUNTS  } from './modules/local/process/featurecounts_merge_counts'
 include { EDGER_CORRELATION           } from './modules/local/process/edger_correlation'
 include { DUPRADAR                    } from './modules/local/process/dupradar'
-include { OUTPUT_DOCUMENTATION        } from './modules/local/process/output_documentation'
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'
 include { MULTIQC                     } from './modules/local/process/multiqc'
 
@@ -203,6 +200,7 @@ workflow {
     /*
      * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
+    ch_software_versions        = Channel.empty()
     def publish_genome_options  = params.save_reference ? [publish_dir: 'genome']       : [publish_files: false]
     def publish_index_options   = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
     if (!params.save_reference) { params.modules['gffread']['publish_files'] = false }
@@ -215,7 +213,6 @@ workflow {
         params.modules['gffread'],
         publish_genome_options
     )
-    ch_software_versions = Channel.empty()
     ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.gffread_version.ifEmpty(null))
 
     /*
@@ -247,9 +244,10 @@ workflow {
     def nextseq = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
     params.modules['trimgalore'].args += nextseq
     if (params.save_trimmed) { params.modules['trimgalore'].publish_files.put('fq.gz','') }
+
     FASTQC_UMITOOLS_TRIMGALORE (
         CAT_FASTQ.out.reads,
-        params.skip_fastqc,
+        params.skip_fastqc || params.skip_qc,
         params.with_umi,
         params.skip_trimming,
         params.modules['fastqc'],
@@ -268,11 +266,12 @@ workflow {
     if (params.remove_ribo_rna) {
         if (params.save_non_ribo_reads) { params.modules['sortmerna'].publish_files.put('fastq.gz','') }
         ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
+
         SORTMERNA ( ch_trimmed_reads, ch_sortmerna_fasta, params.modules['sortmerna'] )
             .reads
             .set { ch_trimmed_reads }
         ch_sortmerna_multiqc = SORTMERNA.out.log
-        ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null)) 
     }
 
     /*
@@ -294,7 +293,7 @@ workflow {
             params.modules['samtools_sort'].publish_files.put('bam','')
             params.modules['samtools_sort'].publish_files.put('bai','')
         }
-        
+
         ALIGN_STAR (
             ch_trimmed_reads,
             params.star_index,
@@ -495,7 +494,7 @@ workflow {
      * MODULE: Feature biotype QC using featureCounts
      */
     ch_featurecounts_biotype_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_featurecounts && !skip_biotype_qc) {
+    if (!params.skip_alignment && !params.skip_qc && !skip_biotype_qc) {
         def biotype = params.gencode ? "gene_type" : params.fc_group_features_type
         params.modules['subread_featurecounts_biotype'].args += " -g $biotype -t $params.fc_count_type"
         SUBREAD_FEATURECOUNTS_BIOTYPE ( ch_genome_bam.combine(PREPARE_GENOME.out.gtf), params.modules['subread_featurecounts_biotype'] )
@@ -587,14 +586,15 @@ workflow {
             params.modules['salmon_merge_counts']
         )
         ch_salmon_multiqc    = QUANTIFY_SALMON.out.results
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.ifEmpty(null))
     }
 
     /*
      * MODULE: Pipeline reporting
      */
     GET_SOFTWARE_VERSIONS ( ch_software_versions.map { it }.collect(), [publish_files : ['csv':'']] )
-    OUTPUT_DOCUMENTATION  ( ch_output_docs, ch_output_docs_images, [:] )
 
     /*
      * MultiQC

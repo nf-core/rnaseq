@@ -7,8 +7,10 @@ process UNTAR {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.conda ? "${baseDir}/environment.yml" : null)
-
+    container "biocontainers/biocontainers:v1.2.0_cv1"
+    
+    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    
     input:
     path archive
     val  options
@@ -16,7 +18,7 @@ process UNTAR {
     output:
     path "$untar"       , emit: untar
     path "*.version.txt", emit: version
-
+    
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)

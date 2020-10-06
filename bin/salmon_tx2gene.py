@@ -64,7 +64,7 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
                         extra_id = gene
                     else:
                         extra_id = row[extra]
-                    print("%s,%s,%s" % (row[txid], gene, extra_id), file=outh)
+                    print("%s\t%s\t%s" % (row[txid], gene, extra_id), file=outh)
 
 
 if __name__ == "__main__":
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     parser.add_argument("--salmon", type=str, help="output of salmon")
     parser.add_argument("--id", type=str, help="gene id in the gtf file")
     parser.add_argument("--extra", type=str, help="extra id in the gtf file")
-    parser.add_argument("-o", "--output", dest='output', default='tx2gene.csv', type=str, help="file with output")
+    parser.add_argument("-o", "--output", dest='output', default='tx2gene.tsv', type=str, help="file with output")
 
     args = parser.parse_args()
     tx2gene(args.gtf, args.salmon, args.id, args.extra, args.output)

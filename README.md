@@ -5,8 +5,10 @@
 [![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 
-[![install with conda](https://img.shields.io/badge/install%20with-conda-brightgreen.svg)](https://conda.io/en/latest/index.html)
-[![Docker](https://img.shields.io/docker/automated/nfcore/rnaseq.svg)](https://hub.docker.com/r/nfcore/rnaseq)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
+[![install with docker](https://img.shields.io/badge/install%20with-docker-orange.svg)](https://www.docker.com/)
+[![install with singularity](https://img.shields.io/badge/install%20with-singularity-blue.svg)](https://sylabs.io/docs/)
+
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23rnaseq-4A154B?logo=slack)](https://nfcore.slack.com/channels/rnaseq)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1400710.svg)](https://doi.org/10.5281/zenodo.1400710)
 
@@ -27,7 +29,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
     2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
     3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
-    4. [`Salmon`](https://combine-lab.github.io/salmon/)
 7. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 8. UMI-based deduplication ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
 9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
@@ -38,7 +39,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`edgeR`](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
-12. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+12. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
+13. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 ## Quick Start
 

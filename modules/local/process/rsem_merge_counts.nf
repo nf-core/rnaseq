@@ -29,9 +29,9 @@ process RSEM_MERGE_COUNTS {
     for fileid in `ls ./genes/*`; do
         samplename=`basename \$fileid | sed s/\\.genes.results\$//g`
         echo \$samplename > tmp/genes/\${samplename}.counts.txt
-        grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp/genes/\${samplename}.counts.txt
+        cut -f 5 \${fileid} | tail -n+2 >> tmp/genes/\${samplename}.counts.txt
         echo \$samplename > tmp/genes/\${samplename}.tpm.txt
-        grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp/genes/\${samplename}.tpm.txt
+        cut -f 6 \${fileid} | tail -n+2 >> tmp/genes/\${samplename}.tpm.txt
     done
 
     mkdir -p tmp/isoforms
@@ -39,9 +39,9 @@ process RSEM_MERGE_COUNTS {
     for fileid in `ls ./isoforms/*`; do
         samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
         echo \$samplename > tmp/isoforms/\${samplename}.counts.txt
-        grep -v "^#" \${fileid} | cut -f 5 | tail -n+2 >> tmp/isoforms/\${samplename}.counts.txt
+        cut -f 5 \${fileid} | tail -n+2 >> tmp/isoforms/\${samplename}.counts.txt
         echo \$samplename > tmp/isoforms/\${samplename}.tpm.txt
-        grep -v "^#" \${fileid} | cut -f 6 | tail -n+2 >> tmp/isoforms/\${samplename}.tpm.txt
+        cut -f 6 \${fileid} | tail -n+2 >> tmp/isoforms/\${samplename}.tpm.txt
     done
 
     paste gene_ids.txt tmp/genes/*.counts.txt > rsem.merged.gene_counts.tsv

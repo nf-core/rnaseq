@@ -25,8 +25,7 @@ process RSEM_MERGE_COUNTS {
     script:
     """
     mkdir -p tmp/genes
-    echo "gene_id" > gene_ids.txt
-    cut -f 1 `ls ./genes/* | head -n 1` | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> gene_ids.txt
+    cut -f 1,2 `ls ./genes/* | head -n 1` > gene_ids.txt
     for fileid in `ls ./genes/*`; do
         samplename=`basename \$fileid | sed s/\\.genes.results\$//g`
         echo \$samplename > tmp/genes/\${samplename}.counts.txt
@@ -36,8 +35,7 @@ process RSEM_MERGE_COUNTS {
     done
 
     mkdir -p tmp/isoforms
-    echo "transcript_id" > transcript_ids.txt
-    cut -f 1 `ls ./isoforms/* | head -n 1` | grep -v "^#" | tail -n+2 | sed -E "s/(_PAR_Y)?(_|\$)/\\1\\t/" >> transcript_ids.txt
+    cut -f 1,2 `ls ./isoforms/* | head -n 1` > transcript_ids.txt
     for fileid in `ls ./isoforms/*`; do
         samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
         echo \$samplename > tmp/isoforms/\${samplename}.counts.txt

@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix error with gzipped annotation file [#362](https://github.com/nf-core/rnaseq/issues/362)
 * Fix STAR unmapped reads not output [#413](https://github.com/nf-core/rnaseq/issues/413)
 * Add option for turning on/off STAR command line option (--sjdbGTFfile) [#338](https://github.com/nf-core/rnaseq/issues/338)
+* Add trigger for AWS fulltests on workflow dispatch and after Docker push workflow.
 
 ### Updated Packages
 

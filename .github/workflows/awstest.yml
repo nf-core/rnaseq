@@ -3,9 +3,7 @@ name: nf-core AWS test
 # It runs the -profile 'test' on AWS batch
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   run-awstest:

@@ -20,7 +20,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 ## Pipeline summary
 
-1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html); *if required*)
+1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
 2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 3. UMI extraction ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
 4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))

@@ -12,7 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [cat](#cat) - Merge re-sequenced FastQ files
   * [FastQC](#fastqc) - Raw read QC
   * [umi_tools extract](#umi_tools-extract) - UMI barcode extraction
-  * [TrimGalore!](#trimgalore) - Adapter and quality trimming
+  * [TrimGalore](#trimgalore) - Adapter and quality trimming
   * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment](#alignment)
   * [STAR](#star) - Fast spliced aware alignment to a reference
@@ -34,7 +34,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 * [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
   * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
 * [Other steps](#other-steps)
-  * [StringTie](#stringtie) - Transcript assembly and quantification 
+  * [StringTie](#stringtie) - Transcript assembly and quantification
 * [Workflow reporting and genomes](#workflow-reporting-and-genomes)
   * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
   * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -77,7 +77,7 @@ If multiple libraries/runs have been provided for the same sample in the input s
 
 TODO
 
-### TrimGalore!
+### TrimGalore
 
 <details>
 <summary>Output files</summary>
@@ -107,11 +107,11 @@ MultiQC reports the percentage of bases removed by TrimGalore in the _General St
 
 Contains FastQ files with quality and adapter trimmed reads for each sample, along with a log file describing the trimming.
 
-* `sample_val_1.fq.gz`, `sample_val_2.fq.gz`
+*`sample_val_1.fq.gz`, `sample_val_2.fq.gz`
   * Trimmed FastQ data, reads 1 and 2.
-  * NB: Only saved if `--save_trimmed` has been specified.
+  *NB: Only saved if `--save_trimmed` has been specified.
 * `logs/sample_val_1.fq.gz_trimming_report.txt`
-  * Trimming report (describes which parameters that were used)
+  *Trimming report (describes which parameters that were used)
 * `fastqc/sample_val_1_fastqc.zip`
   * FastQC report for trimmed reads
 
@@ -559,7 +559,7 @@ DupRadar documentation: [dupRadar docs](https://www.bioconductor.org/packages/de
 **Output directory: `results/preseq`**
 
 * `bwa/mergedLibrary/preseq/`
-    * `*.ccurve.txt`: Preseq expected future yield file.
+  * `*.ccurve.txt`: Preseq expected future yield file.
 
 </details>
 

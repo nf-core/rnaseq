@@ -11,28 +11,28 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 * [Preprocessing](#preprocessing)
     * [cat](#cat) - Merge re-sequenced FastQ files
     * [FastQC](#fastqc) - Raw read QC
-    * [umi_tools extract](#umi-tools-extract) - UMI barcode extraction
+    * [umi_tools extract](#umi_tools-extract) - UMI barcode extraction
     * [TrimGalore!](#trimgalore) - Adapter and quality trimming
     * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment](#alignment)
-    * [STAR](#star)
-    * [RSEM STAR](#rsem-star)
-    * [HISAT2](#hisat2)
+    * [STAR](#star) - Fast spliced aware alignment to a reference
+    * [RSEM STAR](#rsem-star) - Alignment and quantification of expression levels
+    * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
 * [Alignment post-processing](#alignment-post-processing)
     * [SAMtools](#samtools) - Sort and index alignments
-    * [umi_tools](https://github.com/CGATOxford/UMI-tools) - UMI-based deduplication
+    * [umi_tools dedup](#umi_tools-dedup) - UMI-based deduplication
     * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
 * [Quantification](#quantification)
-    * [featureCounts](#featurecounts)
+    * [featureCounts](#featurecounts) - Read counting relative to gene and biotype
 * [Quality control](#quality-control)
-    * [RSeQC](#rseqc)
-    * [Qualimap](#qualimap)
-    * [dupRadar](#dupradar)
-    * [Preseq](#preseq)
-    * [edgeR](#edger) -
-    * [MultiQC](#multiqc) - Present QC for raw reads, alignment, assembly and variant calling
+    * [RSeQC](#rseqc) - Various RNA-seq QC metrics
+    * [Qualimap](#qualimap) - Various RNA-seq QC metrics
+    * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
+    * [Preseq](#preseq) - Estimation of library complexity
+    * [edgeR](#edger) - MDS plot and sample pairwise distance heatmap and dendrogram
+    * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
 * [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
-    * [Salmon](#salmon)
+    * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
 * [Other steps](#other-steps)
     * [StringTie](#stringtie) - Transcript assembly and quantification 
 * [Workflow reporting and genomes](#workflow-reporting-and-genomes)
@@ -173,6 +173,8 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 ### HISAT2
 
+TODO
+
 ## Alignment post-processing
 
 ### SAMtools
@@ -194,7 +196,7 @@ Bowtie 2 BAM files are further processed with [SAMtools](http://samtools.sourcef
 
 ![MultiQC - SAMtools alignment scores plot](images/mqc_samtools_stats_plot.png)
 
-### umi_tools deduplication
+### umi_tools dedup
 
 UMI-tools deduplicates reads based on unique molecular identifiers (UMIs) to
 address PCR-bias. UMI-tools performs two independent steps:

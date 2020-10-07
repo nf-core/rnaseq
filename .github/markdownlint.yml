@@ -5,5 +5,3 @@ no-duplicate-header:
     siblings_only: true
 MD033:
     allowed_elements: [details, summary, p, img]
-MD007:
-    indent: 4

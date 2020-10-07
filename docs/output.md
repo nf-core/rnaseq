@@ -9,35 +9,35 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * [Preprocessing](#preprocessing)
-    * [cat](#cat) - Merge re-sequenced FastQ files
-    * [FastQC](#fastqc) - Raw read QC
-    * [umi_tools extract](#umi_tools-extract) - UMI barcode extraction
-    * [TrimGalore!](#trimgalore) - Adapter and quality trimming
-    * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
+  * [cat](#cat) - Merge re-sequenced FastQ files
+  * [FastQC](#fastqc) - Raw read QC
+  * [umi_tools extract](#umi_tools-extract) - UMI barcode extraction
+  * [TrimGalore!](#trimgalore) - Adapter and quality trimming
+  * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment](#alignment)
-    * [STAR](#star) - Fast spliced aware alignment to a reference
-    * [RSEM STAR](#rsem-star) - Alignment and quantification of expression levels
-    * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
+  * [STAR](#star) - Fast spliced aware alignment to a reference
+  * [RSEM STAR](#rsem-star) - Alignment and quantification of expression levels
+  * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
 * [Alignment post-processing](#alignment-post-processing)
-    * [SAMtools](#samtools) - Sort and index alignments
-    * [umi_tools dedup](#umi_tools-dedup) - UMI-based deduplication
-    * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
+  * [SAMtools](#samtools) - Sort and index alignments
+  * [umi_tools dedup](#umi_tools-dedup) - UMI-based deduplication
+  * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
 * [Quantification](#quantification)
-    * [featureCounts](#featurecounts) - Read counting relative to gene and biotype
+  * [featureCounts](#featurecounts) - Read counting relative to gene and biotype
 * [Quality control](#quality-control)
-    * [RSeQC](#rseqc) - Various RNA-seq QC metrics
-    * [Qualimap](#qualimap) - Various RNA-seq QC metrics
-    * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
-    * [Preseq](#preseq) - Estimation of library complexity
-    * [edgeR](#edger) - MDS plot and sample pairwise distance heatmap and dendrogram
-    * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
+  * [RSeQC](#rseqc) - Various RNA-seq QC metrics
+  * [Qualimap](#qualimap) - Various RNA-seq QC metrics
+  * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
+  * [Preseq](#preseq) - Estimation of library complexity
+  * [edgeR](#edger) - MDS plot and sample pairwise distance heatmap and dendrogram
+  * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
 * [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
-    * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
+  * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
 * [Other steps](#other-steps)
-    * [StringTie](#stringtie) - Transcript assembly and quantification 
+  * [StringTie](#stringtie) - Transcript assembly and quantification 
 * [Workflow reporting and genomes](#workflow-reporting-and-genomes)
-    * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
-    * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+  * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
+  * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Preprocessing
 
@@ -56,9 +56,9 @@ If multiple libraries/runs have been provided for the same sample in the input s
 <summary>Output files</summary>
 
 * `fastqc/`
-    * `*_fastqc.html`: FastQC report containing quality metrics.
+  * `*_fastqc.html`: FastQC report containing quality metrics.
 * `fastqc/zips/`
-    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+  * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 > **NB:** The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look after adapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
 
@@ -83,13 +83,13 @@ TODO
 <summary>Output files</summary>
 
 * `trimgalore/`
-    * `*fastq.gz`: If `--save_trimmed` is specified, FastQ files **after** adapter trimming will be placed in this directory.
+  * `*fastq.gz`: If `--save_trimmed` is specified, FastQ files **after** adapter trimming will be placed in this directory.
 * `trimgalore/logs/`
-    * `*.log`: Log file generated by Trim Galore!.
+  * `*.log`: Log file generated by Trim Galore!.
 * `trimgalore/fastqc/`
-    * `*_fastqc.html`: FastQC report containing quality metrics for read 1 (*and read2 if paired-end*) **after** adapter trimming.
+  * `*_fastqc.html`: FastQC report containing quality metrics for read 1 (*and read2 if paired-end*) **after** adapter trimming.
 * `trimgalore/fastqc/zips/`
-    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+  * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 > **NB:** Post-trimmed FastQ files will only be saved in the results directory if the `--save_trimmed` parameter is supplied.
 
@@ -156,6 +156,7 @@ When `--remove_ribo_rna` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](h
   * Filtered splice junctions detected in the mapping
 * `unaligned/...`
   * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--save_unaligned` output.
+
 </details>
 
 STAR is a read aligner designed for RNA sequencing. STAR stands for Spliced Transcripts Alignment to a Reference, it produces results comparable to TopHat (the aligned previously used by NGI for RNA alignments) but is much faster.
@@ -207,10 +208,10 @@ TODO
 <summary>Output files</summary>
 
 * `variants/bam/`
-    * `<SAMPLE>.sorted.bam`: Coordinate sorted BAM file containing read alignment information.
-    * `<SAMPLE>.sorted.bam.bai`: Index file for coordinate sorted BAM file.
+  * `<SAMPLE>.sorted.bam`: Coordinate sorted BAM file containing read alignment information.
+  * `<SAMPLE>.sorted.bam.bai`: Index file for coordinate sorted BAM file.
 * `variants/bam/samtools_stats/`
-    * SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
+  * SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
 
 > **NB:** BAM files and their associated indices will only be saved in the results directory if the `--save_align_intermeds` parameter is supplied.
 
@@ -260,12 +261,12 @@ address PCR-bias. UMI-tools performs two independent steps:
 <summary>Output files</summary>
 
 * `variants/bam/`
-    * `<SAMPLE>.<SUFFIX>.sorted.bam`: Coordinate sorted BAM file after duplicate marking.
-    * `<SAMPLE>.<SUFFIX>.sorted.bam.bai`: Index file for coordinate sorted BAM file after duplicate marking.
+  * `<SAMPLE>.<SUFFIX>.sorted.bam`: Coordinate sorted BAM file after duplicate marking.
+  * `<SAMPLE>.<SUFFIX>.sorted.bam.bai`: Index file for coordinate sorted BAM file after duplicate marking.
 * `variants/bam/samtools_stats/`
-    * SAMtools `<SAMPLE>.<SUFFIX>.flagstat`, `<SAMPLE>.<SUFFIX>.idxstats` and `<SAMPLE>.<SUFFIX>.stats` files generated from the duplicate marked alignment files.
+  * SAMtools `<SAMPLE>.<SUFFIX>.flagstat`, `<SAMPLE>.<SUFFIX>.idxstats` and `<SAMPLE>.<SUFFIX>.stats` files generated from the duplicate marked alignment files.
 * `variants/bam/picard_metrics/`
-    * `<SAMPLE>.<SUFFIX>.MarkDuplicates.metrics.txt`: Metrics file from MarkDuplicates.
+  * `<SAMPLE>.<SUFFIX>.MarkDuplicates.metrics.txt`: Metrics file from MarkDuplicates.
 
 > **NB:** The value of `<SUFFIX>` in the output file names above will depend on the preceeding steps that were run in the pipeline. If `--protocol amplicon` is specified then this process will be run on the iVar trimmed alignments and the value of `<SUFFIX>` will be `trim.mkD`. However, if `--protocol metagenomic` is specified then the process will be run on the alignments obtained directly from Bowtie 2 and the value of `<SUFFIX>` will be `mkD`; where `mkD` is an abbreviation for MarkDuplicates.
 
@@ -604,9 +605,9 @@ Note that these are predictive numbers only, not absolute. The MultiQC plot can 
 <summary>Output files</summary>
 
 * `multiqc/`  
-    * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
-    * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
-    * `multiqc_plots/`: directory containing static images from the report in various formats.
+  * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
+  * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  * `multiqc_plots/`: directory containing static images from the report in various formats.
 
 </details>
 
@@ -771,13 +772,13 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 <summary>Output files</summary>
 
 * `genome/`  
-    * `BlastDB/`: BLAST database for viral genome.
-    * `Bowtie2Index/`: Bowtie 2 index for viral genome.
-    * `kraken2_<KRAKEN2_DB_NAME>/`: Kraken 2 database for host genome.
-    * `SnpEffDB/`: SnpEff database for viral genome.
-    * `snpeff.config`: SnpEff config file for viral genome.
-    * Unzipped genome fasta file for viral genome
-    * Unzipped genome annotation GFF file for viral genome
+  * `BlastDB/`: BLAST database for viral genome.
+  * `Bowtie2Index/`: Bowtie 2 index for viral genome.
+  * `kraken2_<KRAKEN2_DB_NAME>/`: Kraken 2 database for host genome.
+  * `SnpEffDB/`: SnpEff database for viral genome.
+  * `snpeff.config`: SnpEff config file for viral genome.
+  * Unzipped genome fasta file for viral genome
+  * Unzipped genome annotation GFF file for viral genome
 
 </details>
 
@@ -789,10 +790,10 @@ A number of genome-specific files are generated by the pipeline because they are
 <summary>Output files</summary>
 
 * `pipeline_info/`
-    * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-    * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
-    * Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
-    * Documentation for interpretation of results in HTML format: `results_description.html`.
+  * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
+  * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
+  * Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+  * Documentation for interpretation of results in HTML format: `results_description.html`.
 
 </details>
 

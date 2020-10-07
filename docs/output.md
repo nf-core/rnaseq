@@ -1,4 +1,4 @@
-# nf-core/rnaseq: Output
+# ![nf-core/rnaseq](images/nf-core-rnaseq_logo.png)
 
 This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
 
@@ -6,55 +6,67 @@ The directories listed below will be created in the results directory after the 
 
 ## Pipeline overview
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/)
-and processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-* [FastQC](#fastqc)
-* [TrimGalore](#trimgalore)
-* [SortMeRNA](#sortmerna)
-* [STAR](#star)
-* [UMI tools](#umi-tools)
-* [RSeQC](#rseqc)
-  * [BAM stat](#bam-stat)
-  * [Infer experiment](#infer-experiment)
-  * [Junction saturation](#junction-saturation)
-  * [RPKM saturation](#rpkm-saturation)
-  * [Read duplication](#read-duplication)
-  * [Inner distance](#inner-distance)
-  * [Read distribution](#read-distribution)
-  * [Junction annotation](#junction-annotation)
-* [Qualimap](#qualimap)
-* [dupRadar](#dupradar)
-* [Preseq](#preseq)
-* [featureCounts](#featurecounts)
-* [RSEM](#rsem)
-* [Salmon](#salmon)
-* [tximport](#tximport)
-  * [Index files](#index-files)
-  * [Quantification output](#quantification-output)
-* [StringTie](#stringtie)
-* [Sample Correlation](#sample-correlation)
-* [MultiQC](#multiqc)
-* [Pipeline information](#pipeline-information)
+* [Preprocessing](#Preprocessing)
+    * [cat](#cat) - Merge re-sequenced FastQ files
+    * [FastQC](#fastqc) - Raw read QC
+    * [umi_tools](#umi-tools) - UMI barcode extraction
+    * [TrimGalore!](#trimgalore) - Adapter and quality trimming
+    * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
+* [Alignment and quantification](#alignment-and-quantification)
+    * [STAR with featureCounts](#bowtie-2)
+    * [STAR with RSEM](#bowtie-2)
+    * [HISAT2 with featureCounts](#samtools)
+* [Alignment post-processing](#alignment-post-processing)
+    * [SAMtools](https://sourceforge.net/projects/samtools/files/samtools/) - Sort and index alignments
+    * [umi_tools](https://github.com/CGATOxford/UMI-tools) - UMI-based deduplication
+    * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
+* [Quality control](#quality-control)
+    * [`RSeQC`](#rseqc)
+    * [`Qualimap`](#qualimap)
+    * [`dupRadar`](#dupradar)
+    * [`Preseq`](#preseq)
+    * [`edgeR`](#edger) -
+    * [MultiQC](#multiqc) - Present QC for raw reads, alignment, assembly and variant calling
+* [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
+    * [Salmon](#salmon)
+* [Other steps](#other-steps)
+    * [`StringTie`](#stringtie) - Transcript assembly and quantification 
+* [Workflow reporting and genomes](#workflow-reporting-and-genomes)
+    * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
+    * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-## FastQC
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences.
+## Preprocessing
 
-For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+### cat
 
-**Output files:**
+If multiple libraries/runs have been provided for the same sample in the input samplesheet (e.g. to increase sequencing depth) then these will be merged at the very beginning of the pipeline in order to have consistent sample naming throughout the pipeline. Please refer to the [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction) to see how to specify these samples in the input samplesheet.
+
+### FastQC
+
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+
+<details markdown="1">
+  <summary>Output files</summary>
 
 * `fastqc/`
-  * `*_fastqc.html`: FastQC report containing quality metrics for your untrimmed raw fastq files.
+    * `*_fastqc.html`: FastQC report containing quality metrics.
 * `fastqc/zips/`
-  * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
-> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+> **NB:** The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look afteradapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
 
-## TrimGalore
+</details>
 
-The nfcore/rnaseq pipeline uses [TrimGalore](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for removal of adapter contamination and trimming of low quality regions. TrimGalore uses [Cutadapt](https://github.com/marcelm/cutadapt) for adapter trimming and runs FastQC after it finishes.
+![MultiQC - FastQC per base sequence plot](images/mqc_fastqc_plot.png)
+
+### umi_tools
+
+### TrimGalore!
+
+<!-- The nfcore/rnaseq pipeline uses [TrimGalore](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for removal of adapter contamination and trimming of low quality regions. TrimGalore uses [Cutadapt](https://github.com/marcelm/cutadapt) for adapter trimming and runs FastQC after it finishes.
 
 MultiQC reports the percentage of bases removed by TrimGalore in the _General Statistics_ table, along with a line plot showing where reads were trimmed.
 
@@ -70,9 +82,33 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 * `fastqc/sample_val_1_fastqc.zip`
   * FastQC report for trimmed reads
 
-Single-end data will have slightly different file names and only one FastQ file per sample.
+Single-end data will have slightly different file names and only one FastQ file per sample. -->
 
-## SortMeRNA
+<details markdown="1">
+    <summary>Output files</summary>
+
+* `trim_galore/`
+    * `*fastq.gz`: If `--save_trimmed` is specified, FastQ files **after** adapter trimming will be placed in this directory.
+* `trim_galore/logs/`
+    * `*.log`: Log file generated by Trim Galore!.
+* `trim_galore/fastqc/`
+    * `*_fastqc.html`: FastQC report containing quality metrics for read 1 (*and read2 if paired-end*) **after** adapter trimming.
+* `trim_galore/fastqc/zips/`
+    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+
+</details>
+
+[Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) is a wrapper tool around Cutadapt and FastQC to consistently apply quality and adapter trimming to FastQ files. By default, Trim Galore! will automatically detect and trim the appropriate adapter sequence. See [`usage.md`](usage.md) for more details about the trimming options.
+
+![MultiQC - Cutadapt trimmed sequence plot](images/mqc_cutadapt_plot.png)
+
+> **NB:** Post-trimmed FastQ files will only be saved in the results directory if the `--save_trimmed` parameter is supplied.
+
+</details>
+
+![MultiQC - fastp filtered reads plot](images/mqc_fastp_plot.png)
+
+### SortMeRNA
 
 When `--remove_ribo_rna` is specified, nfcore/rnaseq pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for removal of rRNA. SortMeRNA requires reference sequences and these are by default from the [SILVA database](https://www.arb-silva.de/).
 
@@ -88,7 +124,9 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 
 Single-end data will have slightly different file names (`reads/sample.fq.gz`) and only one FastQ file per sample.
 
-## STAR
+## Alignment and quantification
+
+### STAR with featureCounts
 
 STAR is a read aligner designed for RNA sequencing. STAR stands for Spliced Transcripts Alignment to a Reference, it produces results comparable to TopHat (the aligned previously used by NGI for RNA alignments) but is much faster.
 
@@ -109,7 +147,70 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 * `unaligned/...`
   * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--save_unaligned` output.
 
-## UMI tools
+[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the subread package summarises the read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations.
+RNA reads should mostly overlap genes, so be assigned.
+
+![featureCounts](images/featureCounts_assignment_plot.png)
+
+We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
+![biotypes](images/featureCounts_biotype_plot.png)
+
+**Output directory: `results/featurecounts`**
+
+* `Sample.bam_biotype_counts.txt`
+  * Read counts for the different gene biotypes that featureCounts distinguishes.
+* `Sample.featureCounts.txt`
+  * Read counts for each gene provided in the reference `gtf` file
+* `Sample.featureCounts.txt.summary`
+  * Summary file, containing statistics about the counts
+* `merged_gene_counts.txt`
+  * Read count table for all samples
+
+### STAR with RSEM
+
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
+
+**Output directory: `results/rsem`**
+
+* `rsem_tpm_gene.txt`
+  * Main gene-level TPM matrix including all genes
+* `rsem_tpm_isoform.txt`
+  * Main isoform-level TPM matrix
+* `rsem_transcript_counts_gene.txt`
+  * Main gene-level count matrix including all genes
+* `rsem_transcript_counts_isoform.txt`
+  * Main isoform-level count matrix
+* `*.stat`
+  * RSEM statistics for each sample
+* `*.genes.results`
+  * RSEM gene-level output for each sample
+* `*.isoforms.results`
+  * RSEM isoform-level output for each sample
+
+### HISAT2 with featureCounts
+
+## Alignment post-processing
+
+### SAMtools
+
+Bowtie 2 BAM files are further processed with [SAMtools](http://samtools.sourceforge.net/) to sort them by coordinate, for indexing, as well as to generate read mapping statistics.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+* `variants/bam/`
+    * `<SAMPLE>.sorted.bam`: Coordinate sorted BAM file containing read alignment information.
+    * `<SAMPLE>.sorted.bam.bai`: Index file for coordinate sorted BAM file.
+* `variants/bam/samtools_stats/`
+    * SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
+
+> **NB:** BAM files and their associated indices will only be saved in the results directory if the `--save_align_intermeds` parameter is supplied.
+
+</details>
+
+![MultiQC - SAMtools alignment scores plot](images/mqc_samtools_stats_plot.png)
+
+### umi_tools
 
 UMI-tools deduplicates reads based on unique molecular identifiers (UMIs) to
 address PCR-bias. UMI-tools performs two independent steps:
@@ -138,7 +239,30 @@ The content of these files is explained [in the UMI tools documentation](https:/
 If `--save_umi_intermeds` is specified, this directory additionally contains
 the deduplicated BAM file and its associated index.
 
-## RSeQC
+### picard MarkDuplicates
+
+Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-explorer/kits-and-arrays/umi.html) it is not possible to establish whether the fragments you have sequenced from your sample were derived via true biological duplication (i.e. sequencing independent template fragments) or as a result of PCR biases introduced during the library preparation. By default, the pipeline uses picard MarkDuplicates to *mark* the duplicate reads identified amongst the alignments to allow you to guage the overall level of duplication in your samples. However, you can also choose to remove any reads identified as duplicates via the `--filter_dups` parameter.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+* `variants/bam/`
+    * `<SAMPLE>.<SUFFIX>.sorted.bam`: Coordinate sorted BAM file after duplicate marking.
+    * `<SAMPLE>.<SUFFIX>.sorted.bam.bai`: Index file for coordinate sorted BAM file after duplicate marking.
+* `variants/bam/samtools_stats/`
+    * SAMtools `<SAMPLE>.<SUFFIX>.flagstat`, `<SAMPLE>.<SUFFIX>.idxstats` and `<SAMPLE>.<SUFFIX>.stats` files generated from the duplicate marked alignment files.
+* `variants/bam/picard_metrics/`
+    * `<SAMPLE>.<SUFFIX>.MarkDuplicates.metrics.txt`: Metrics file from MarkDuplicates.
+
+> **NB:** The value of `<SUFFIX>` in the output file names above will depend on the preceeding steps that were run in the pipeline. If `--protocol amplicon` is specified then this process will be run on the iVar trimmed alignments and the value of `<SUFFIX>` will be `trim.mkD`. However, if `--protocol metagenomic` is specified then the process will be run on the alignments obtained directly from Bowtie 2 and the value of `<SUFFIX>` will be `mkD`; where `mkD` is an abbreviation for MarkDuplicates.
+
+</details>
+
+![MultiQC - Picard MarkDuplicates metrics plot](images/mqc_picard_duplicates_plot.png)
+
+## Quality control
+
+### RSeQC
 
 RSeQC is a package of scripts designed to evaluate the quality of RNA seq data. You can find out more about the package at the [RSeQC website](http://rseqc.sourceforge.net/).
 
@@ -148,7 +272,7 @@ This pipeline runs several, but not all RSeQC scripts. All of these results are 
 
 These are all quality metrics files and contains the raw data used for the plots in the MultiQC report. In general, the `.r` files are R scripts for generating the figures, the `.txt` are summary files, the `.xls` are data tables and the `.pdf` files are summary figures.
 
-### BAM stat
+#### BAM stat
 
 **Output: `Sample_bam_stat.txt`**
 
@@ -179,7 +303,7 @@ MultiQC plots each of these statistics in a dot plot. Each sample in the project
 
 RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 
-### Infer experiment
+#### Infer experiment
 
 **Output: `Sample_infer_experiment.txt`**
 
@@ -200,7 +324,7 @@ Fraction of reads explained by "1+-,1-+,2++,2--": 0.4752
 
 RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
 
-### Junction saturation
+#### Junction saturation
 
 **Output:**
 
@@ -215,7 +339,7 @@ None of the lines in this example have plateaued and thus these samples could re
 
 RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junction-saturation-py)
 
-### RPKM saturation
+#### RPKM saturation
 
 **Output:**
 
@@ -235,7 +359,7 @@ This data is not currently reported in the MultiQC report.
 
 RSeQC documentation: [RPKM_saturation.py](http://rseqc.sourceforge.net/#rpkm-saturation-py)
 
-### Read duplication
+#### Read duplication
 
 **Output:**
 
@@ -250,7 +374,7 @@ This plot shows the number of reads (y-axis) with a given number of exact duplic
 
 RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-duplication-py)
 
-### Inner distance
+#### Inner distance
 
 **Output:**
 
@@ -271,7 +395,7 @@ This plot will not be generated for single-end data. Very short inner distances 
 
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
 
-### Read distribution
+#### Read distribution
 
 **Output: `Sample_read_distribution.txt`**
 
@@ -281,7 +405,7 @@ This tool calculates how mapped reads are distributed over genomic features. A g
 
 RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-distribution-py)
 
-### Junction annotation
+#### Junction annotation
 
 **Output:**
 
@@ -297,7 +421,7 @@ Junction annotation compares detected splice junctions to a reference gene model
 
 RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
 
-## Qualimap
+### Qualimap
 
 [Qualimap](http://qualimap.bioinfo.cipf.es/) is a standalone package written in java. It calculates read alignment assignment, transcript coverage, read genomic origin, junction analysis and 3'-5' bias.
 
@@ -311,7 +435,7 @@ RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junc
 
 Qualimap RNAseq documentation: [Qualimap docs](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#rna-seq-qc).
 
-## dupRadar
+### dupRadar
 
 [dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library for R. It plots the duplication rate against expression (RPKM) for every gene. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
 
@@ -330,7 +454,7 @@ Qualimap RNAseq documentation: [Qualimap docs](http://qualimap.bioinfo.cipf.es/d
 
 DupRadar documentation: [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html)
 
-## Preseq
+### Preseq
 
 [Preseq](http://smithlabresearch.org/software/preseq/) estimates the complexity of a library, showing how many additional unique reads are sequenced for increasing the total read count. A shallow curve indicates that the library has reached complexity saturation and further sequencing would likely not add further unique reads. The dashed line shows a perfectly complex library where total reads = unique reads.
 
@@ -343,144 +467,7 @@ Note that these are predictive numbers only, not absolute. The MultiQC plot can 
 * `sample_ccurve.txt`
   * This file contains plot values for the complexity curve, plotted in the MultiQC report.
 
-## featureCounts
-
-[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the subread package summarises the read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations.
-RNA reads should mostly overlap genes, so be assigned.
-
-![featureCounts](images/featureCounts_assignment_plot.png)
-
-We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
-![biotypes](images/featureCounts_biotype_plot.png)
-
-**Output directory: `results/featurecounts`**
-
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
-  * Read counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
-* `merged_gene_counts.txt`
-  * Read count table for all samples
-
-## RSEM
-
-[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
-
-**Output directory: `results/rsem`**
-
-* `rsem_tpm_gene.txt`
-  * Main gene-level TPM matrix including all genes
-* `rsem_tpm_isoform.txt`
-  * Main isoform-level TPM matrix
-* `rsem_transcript_counts_gene.txt`
-  * Main gene-level count matrix including all genes
-* `rsem_transcript_counts_isoform.txt`
-  * Main isoform-level count matrix
-* `*.stat`
-  * RSEM statistics for each sample
-* `*.genes.results`
-  * RSEM gene-level output for each sample
-* `*.isoforms.results`
-  * RSEM isoform-level output for each sample
-
-## Salmon
-
-[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.
-
-**Output directory: `results/salmon`**
-
-* `Sample/quant.sf`
-  * Read counts for the different transcripts.
-* `Sample/quant.genes.sf`
-  * Read the counts for each gene provided in the reference `gtf` file
-* `Sample/logs`
-  * Summary file with information about the process
-* `unaligned/`
-  * Contains a list of unmapped reads that can be used to generate a FastQ of unmapped reads for downstream analysis.
-
-## tximport
-
-[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts.
-
-**Output directory: `results/salmon`**
-
-* `salmon_merged_transcript_tpm.csv`
-  * TPM counts for the different transcripts.
-* `salmon_merged_gene_tpm.csv`
-  * TPM counts for the different genes.
-* `salmon_merged_transcript_counts.csv`
-  * estimated counts for the different transcripts.
-* `salmon_merged_gene_counts.csv`
-  * estimated counts for the different genes.
-* `tx2gene.csv`
-  * CSV file with transcript and genes (`params.fc_group_features`) and extra name (`params.fc_extra_attributes`) in each column.
-* `salmon_merged_transcript_counts.rds`
-  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
-* `salmon_merged_gene_counts.rds`
-  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-
-### Index files
-
-**Output directory: `results/reference/genome/salmon_index`**
-
-* `duplicate_clusters.tsv`
-  * Stores which transcripts are duplicates of one another
-* `hash.bin`
-* `header.json`
-  * Information about k-mer size, uniquely identifying hashes for the reference
-* `indexing.log`
-  * Time log for creating transcriptome index
-* `quasi_index.log`
-  * Step-by-step log for making transcriptome index
-* `refInfo.json`
-  * Information about file used for the reference
-* `rsd.bin`
-* `sa.bin`
-* `txpInfo.bin`
-* `versionInfo.json`
-  * Salmon and indexing version sed to make the index
-
-### Quantification output
-
-**Output directory: `results/salmon`**
-
-* `aux_info/`
-  * Auxiliary info e.g. versions and number of mapped reads
-* `cmd_info.json`
-  * Information about the Salmon quantification command, version, and options
-* `lib_format_counts.json`
-  * Number of fragments assigned, unassigned and incompatible
-* `libParams/`
-  * Contains the file `flenDist.txt` for the fragment length distribution
-* `logs/`
-  * Contains the file `salmon_quant.log` giving a record of Salmon's quantification
-* `quant.sf`
-  * _Transcript_-level quantification of the sample, including gene length, effective length, TPM, and number of reads
-* `quant.genes.sf`
-  * _Gene_-level quantification of the sample, including gene length, effective length, TPM, and number of reads
-* `Sample.transcript.tpm.txt`
-  * Subset of `quant.sf`, only containing the transcript id and TPM values
-* `Sample.gene.tpm.txt`
-  * Subset of `quant.genes.sf`, only containing the gene id and TPM values
-
-## StringTie
-
-[StringTie](https://ccb.jhu.edu/software/stringtie/) assembles RNA-Seq alignments into potential transcripts. It assembles and quantitates full-length transcripts representing multiple splice variants for each gene locus.
-
-StringTie outputs FPKM metrics for genes and transcripts as well as the transcript features that it generates.
-
-**Output directory: `results/stringtie`**
-
-* `<sample>_Aligned.sortedByCoord.out.bam.gene_abund.txt`
-  * Gene aboundances, FPKM values
-* `<sample>_Aligned.sortedByCoord.out.bam_transcripts.gtf`
-  * This `.gtf` file contains all of the assembled transcipts from StringTie
-* `<sample>_Aligned.sortedByCoord.out.bam.cov_refs.gtf`
-  * This `.gtf` file contains the transcripts that are fully covered by reads.
-
-## Sample Correlation
+### edgeR
 
 [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap showing Pearson's correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
 
@@ -507,9 +494,9 @@ StringTie outputs FPKM metrics for genes and transcripts as well as the transcri
 * `log2CPM_sample_correlation_mqc.csv`
   * Raw data from Pearsons correlation heatmap, used for MultiQC report
 
-## MultiQC
+### MultiQC
 
-[MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
+<!-- [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
 The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability.
 
@@ -520,15 +507,167 @@ For more information about how to use MultiQC reports, see [https://multiqc.info
 * `multiqc/`  
   * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
-  * `multiqc_plots/`: directory containing static images from the report in various formats.
+  * `multiqc_plots/`: directory containing static images from the report in various formats. -->
 
-## Pipeline information
+[MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+Results generated by MultiQC collate pipeline QC from FastQC, fastp, Cutadapt, Bowtie 2, Kraken 2, VarScan 2, iVar, samtools flagstat, samtools idxstats, samtools stats, picard CollectMultipleMetrics and CollectWgsMetrics, BCFTools, SnpEff and QUAST.
+
+The default [`multiqc config file`](https://github.com/nf-core/viralrecon/blob/master/assets/multiqc_config.yaml) has been written in a way in which to structure these QC metrics to make them more interpretable in the final report.
+
+The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
+
+Please click [here](https://raw.githack.com/nf-core/viralrecon/master/docs/html/multiqc_report.html) to see an example MultiQC report generated using the parameters defined in [this configuration file](https://github.com/nf-core/viralrecon/blob/master/conf/test_full.config) to run the pipeline on [samples](https://zenodo.org/record/3735111) which were prepared from the [ncov-2019 ARTIC Network V1 amplicon set](https://artic.network/ncov-2019) and sequenced on the Illumina MiSeq platform in 301bp paired-end format.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+* `multiqc/`  
+    * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
+    * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+    * `multiqc_plots/`: directory containing static images from the report in various formats.
+
+</details>
+
+## Pseudo-alignment and quantification
+
+### Salmon
+
+[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) quasi-maps and quantifies expression relative to the transcriptome.
+
+**Output directory: `results/salmon`**
+
+* `Sample/quant.sf`
+  * Read counts for the different transcripts.
+* `Sample/quant.genes.sf`
+  * Read the counts for each gene provided in the reference `gtf` file
+* `Sample/logs`
+  * Summary file with information about the process
+* `unaligned/`
+  * Contains a list of unmapped reads that can be used to generate a FastQ of unmapped reads for downstream analysis.
+
+#### tximport
+
+[tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts.
+
+**Output directory: `results/salmon`**
+
+* `salmon_merged_transcript_tpm.csv`
+  * TPM counts for the different transcripts.
+* `salmon_merged_gene_tpm.csv`
+  * TPM counts for the different genes.
+* `salmon_merged_transcript_counts.csv`
+  * estimated counts for the different transcripts.
+* `salmon_merged_gene_counts.csv`
+  * estimated counts for the different genes.
+* `tx2gene.csv`
+  * CSV file with transcript and genes (`params.fc_group_features`) and extra name (`params.fc_extra_attributes`) in each column.
+* `salmon_merged_transcript_counts.rds`
+  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+* `salmon_merged_gene_counts.rds`
+  * RDS object to be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+
+#### Index files
+
+**Output directory: `results/reference/genome/salmon_index`**
+
+* `duplicate_clusters.tsv`
+  * Stores which transcripts are duplicates of one another
+* `hash.bin`
+* `header.json`
+  * Information about k-mer size, uniquely identifying hashes for the reference
+* `indexing.log`
+  * Time log for creating transcriptome index
+* `quasi_index.log`
+  * Step-by-step log for making transcriptome index
+* `refInfo.json`
+  * Information about file used for the reference
+* `rsd.bin`
+* `sa.bin`
+* `txpInfo.bin`
+* `versionInfo.json`
+  * Salmon and indexing version sed to make the index
+
+#### Quantification output
+
+**Output directory: `results/salmon`**
+
+* `aux_info/`
+  * Auxiliary info e.g. versions and number of mapped reads
+* `cmd_info.json`
+  * Information about the Salmon quantification command, version, and options
+* `lib_format_counts.json`
+  * Number of fragments assigned, unassigned and incompatible
+* `libParams/`
+  * Contains the file `flenDist.txt` for the fragment length distribution
+* `logs/`
+  * Contains the file `salmon_quant.log` giving a record of Salmon's quantification
+* `quant.sf`
+  * _Transcript_-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `quant.genes.sf`
+  * _Gene_-level quantification of the sample, including gene length, effective length, TPM, and number of reads
+* `Sample.transcript.tpm.txt`
+  * Subset of `quant.sf`, only containing the transcript id and TPM values
+* `Sample.gene.tpm.txt`
+  * Subset of `quant.genes.sf`, only containing the gene id and TPM values
+
+## Other steps
+
+### StringTie
+
+[StringTie](https://ccb.jhu.edu/software/stringtie/) assembles RNA-Seq alignments into potential transcripts. It assembles and quantitates full-length transcripts representing multiple splice variants for each gene locus.
+
+StringTie outputs FPKM metrics for genes and transcripts as well as the transcript features that it generates.
+
+**Output directory: `results/stringtie`**
+
+* `<sample>_Aligned.sortedByCoord.out.bam.gene_abund.txt`
+  * Gene aboundances, FPKM values
+* `<sample>_Aligned.sortedByCoord.out.bam_transcripts.gtf`
+  * This `.gtf` file contains all of the assembled transcipts from StringTie
+* `<sample>_Aligned.sortedByCoord.out.bam.cov_refs.gtf`
+  * This `.gtf` file contains the transcripts that are fully covered by reads.
+
+## Workflow reporting and genomes
+
+### Reference genome files
+
+A number of genome-specific files are generated by the pipeline because they are required for the downstream processing of the results. If the `--save_reference` parameter is provided then the Bowtie 2 alignment indices, BLAST and Kraken 2 databases downloaded/generated by the pipeline will be saved in the `genome/` directory. It is recommended to use the `--save_reference` parameter if you are using the pipeline to build a Kraken 2 database for the host genome. This can be quite a time-consuming process and it permits their reuse for future runs of the pipeline or for other purposes.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+* `genome/`  
+    * `BlastDB/`: BLAST database for viral genome.
+    * `Bowtie2Index/`: Bowtie 2 index for viral genome.
+    * `kraken2_<KRAKEN2_DB_NAME>/`: Kraken 2 database for host genome.
+    * `SnpEffDB/`: SnpEff database for viral genome.
+    * `snpeff.config`: SnpEff config file for viral genome.
+    * Unzipped genome fasta file for viral genome
+    * Unzipped genome annotation GFF file for viral genome
+
+</details>
+
+### Pipeline information
+
+<!-- [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
 
 **Output files:**
 
 * `pipeline_info/`
   * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
-  * Documentation for interpretation of results in HTML format: `results_description.html`.
+  * Documentation for interpretation of results in HTML format: `results_description.html`. --> -->
+
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+* `pipeline_info/`
+    * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
+    * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
+    * Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+    * Documentation for interpretation of results in HTML format: `results_description.html`.
+
+</details>

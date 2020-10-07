@@ -8,35 +8,36 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-* [Preprocessing](#Preprocessing)
+* [Preprocessing](#preprocessing)
     * [cat](#cat) - Merge re-sequenced FastQ files
     * [FastQC](#fastqc) - Raw read QC
-    * [umi_tools](#umi-tools) - UMI barcode extraction
+    * [umi_tools extract](#umi-tools-extract) - UMI barcode extraction
     * [TrimGalore!](#trimgalore) - Adapter and quality trimming
     * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
-* [Alignment and quantification](#alignment-and-quantification)
-    * [STAR with featureCounts](#bowtie-2)
-    * [STAR with RSEM](#bowtie-2)
-    * [HISAT2 with featureCounts](#samtools)
+* [Alignment](#alignment)
+    * [STAR](#star)
+    * [RSEM STAR](#rsem-star)
+    * [HISAT2](#hisat2)
 * [Alignment post-processing](#alignment-post-processing)
-    * [SAMtools](https://sourceforge.net/projects/samtools/files/samtools/) - Sort and index alignments
+    * [SAMtools](#samtools) - Sort and index alignments
     * [umi_tools](https://github.com/CGATOxford/UMI-tools) - UMI-based deduplication
     * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
+* [Quantification](#quantification)
+    * [featureCounts](#featurecounts)
 * [Quality control](#quality-control)
-    * [`RSeQC`](#rseqc)
-    * [`Qualimap`](#qualimap)
-    * [`dupRadar`](#dupradar)
-    * [`Preseq`](#preseq)
-    * [`edgeR`](#edger) -
+    * [RSeQC](#rseqc)
+    * [Qualimap](#qualimap)
+    * [dupRadar](#dupradar)
+    * [Preseq](#preseq)
+    * [edgeR](#edger) -
     * [MultiQC](#multiqc) - Present QC for raw reads, alignment, assembly and variant calling
 * [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
     * [Salmon](#salmon)
 * [Other steps](#other-steps)
-    * [`StringTie`](#stringtie) - Transcript assembly and quantification 
+    * [StringTie](#stringtie) - Transcript assembly and quantification 
 * [Workflow reporting and genomes](#workflow-reporting-and-genomes)
     * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
     * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
-
 
 ## Preprocessing
 
@@ -62,7 +63,9 @@ If multiple libraries/runs have been provided for the same sample in the input s
 
 ![MultiQC - FastQC per base sequence plot](images/mqc_fastqc_plot.png)
 
-### umi_tools
+### umi_tools extract
+
+TODO
 
 ### TrimGalore!
 
@@ -124,9 +127,9 @@ Contains FastQ files with quality and adapter trimmed reads for each sample, alo
 
 Single-end data will have slightly different file names (`reads/sample.fq.gz`) and only one FastQ file per sample.
 
-## Alignment and quantification
+## Alignment
 
-### STAR with featureCounts
+### STAR
 
 STAR is a read aligner designed for RNA sequencing. STAR stands for Spliced Transcripts Alignment to a Reference, it produces results comparable to TopHat (the aligned previously used by NGI for RNA alignments) but is much faster.
 
@@ -147,26 +150,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 * `unaligned/...`
   * Contains the unmapped reads that couldn't be mapped against the reference genome chosen. This is only available when the user specifically asks for `--save_unaligned` output.
 
-[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the subread package summarises the read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations.
-RNA reads should mostly overlap genes, so be assigned.
-
-![featureCounts](images/featureCounts_assignment_plot.png)
-
-We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
-![biotypes](images/featureCounts_biotype_plot.png)
-
-**Output directory: `results/featurecounts`**
-
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
-  * Read counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
-* `merged_gene_counts.txt`
-  * Read count table for all samples
-
-### STAR with RSEM
+### RSEM STAR
 
 [RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
 
@@ -187,7 +171,7 @@ We also use featureCounts to count overlaps with different classes of features. 
 * `*.isoforms.results`
   * RSEM isoform-level output for each sample
 
-### HISAT2 with featureCounts
+### HISAT2
 
 ## Alignment post-processing
 
@@ -210,7 +194,7 @@ Bowtie 2 BAM files are further processed with [SAMtools](http://samtools.sourcef
 
 ![MultiQC - SAMtools alignment scores plot](images/mqc_samtools_stats_plot.png)
 
-### umi_tools
+### umi_tools deduplication
 
 UMI-tools deduplicates reads based on unique molecular identifiers (UMIs) to
 address PCR-bias. UMI-tools performs two independent steps:
@@ -241,6 +225,8 @@ the deduplicated BAM file and its associated index.
 
 ### picard MarkDuplicates
 
+<!-- Read duplicate marking is carried out using the Picard MarkDuplicates command. Duplicate reads are generally removed from the aligned reads to mitigate for fragments in the library that may have been sequenced more than once due to PCR biases. There is an option to keep duplicate reads with the --keep_dups parameter but its generally recommended to remove them to avoid the wrong interpretation of the results. A similar option has been provided to keep reads that are multi-mapped - --keep_multi_map. Other steps have been incorporated into the pipeline to filter the resulting alignments - see main README.md for a more comprehensive listing, and the tools used at each step. A selection of alignment-based QC metrics generated by Picard CollectMultipleMetrics and MarkDuplicates will be included in the MultiQC report. -->
+
 Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-explorer/kits-and-arrays/umi.html) it is not possible to establish whether the fragments you have sequenced from your sample were derived via true biological duplication (i.e. sequencing independent template fragments) or as a result of PCR biases introduced during the library preparation. By default, the pipeline uses picard MarkDuplicates to *mark* the duplicate reads identified amongst the alignments to allow you to guage the overall level of duplication in your samples. However, you can also choose to remove any reads identified as duplicates via the `--filter_dups` parameter.
 
 <details markdown="1">
@@ -259,6 +245,31 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 </details>
 
 ![MultiQC - Picard MarkDuplicates metrics plot](images/mqc_picard_duplicates_plot.png)
+
+## Quantification
+
+### featureCounts
+
+<!-- The featureCounts tool is used to count the number of reads relative to the consensus peak-set across all of the samples. This essentially generates a file containing a matrix where the rows represent the consensus intervals, the columns represent all of the samples in the experiment, and the values represent the raw read counts. -->
+
+[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the subread package summarises the read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations.
+RNA reads should mostly overlap genes, so be assigned.
+
+![featureCounts](images/featureCounts_assignment_plot.png)
+
+We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
+![biotypes](images/featureCounts_biotype_plot.png)
+
+**Output directory: `results/featurecounts`**
+
+* `Sample.bam_biotype_counts.txt`
+  * Read counts for the different gene biotypes that featureCounts distinguishes.
+* `Sample.featureCounts.txt`
+  * Read counts for each gene provided in the reference `gtf` file
+* `Sample.featureCounts.txt.summary`
+  * Summary file, containing statistics about the counts
+* `merged_gene_counts.txt`
+  * Read count table for all samples
 
 ## Quality control
 
@@ -456,6 +467,8 @@ DupRadar documentation: [dupRadar docs](https://www.bioconductor.org/packages/de
 
 ### Preseq
 
+<!-- The Preseq package is aimed at predicting and estimating the complexity of a genomic sequencing library, equivalent to predicting and estimating the number of redundant reads from a given sequencing depth and how many will be expected from additional sequencing using an initial sequencing experiment. The estimates can then be used to examine the utility of further sequencing, optimize the sequencing depth, or to screen multiple libraries to avoid low complexity samples. The dashed line shows a perfectly complex library where total reads = unique reads. Note that these are predictive numbers only, not absolute. The MultiQC plot can sometimes give extreme sequencing depth on the X axis - click and drag from the left side of the plot to zoom in on more realistic numbers. -->
+
 [Preseq](http://smithlabresearch.org/software/preseq/) estimates the complexity of a library, showing how many additional unique reads are sequenced for increasing the total read count. A shallow curve indicates that the library has reached complexity saturation and further sequencing would likely not add further unique reads. The dashed line shows a perfectly complex library where total reads = unique reads.
 
 Note that these are predictive numbers only, not absolute. The MultiQC plot can sometimes give extreme sequencing depth on the X axis - click and drag from the left side of the plot to zoom in on more realistic numbers.
@@ -508,6 +521,12 @@ For more information about how to use MultiQC reports, see [https://multiqc.info
   * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
   * `multiqc_plots/`: directory containing static images from the report in various formats. -->
+
+<!-- MultiQC is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available within the report data directory.
+
+Results generated by MultiQC collate pipeline QC from FastQC, TrimGalore, samtools flagstat, samtools idxstats, samtools stats, picard CollectMultipleMetrics, picard MarkDuplicates, Preseq, deepTools plotProfile, deepTools plotFingerprint, phantompeakqualtools and featureCounts. The default multiqc config file also contains the provision for loading custom-content to report peak counts, FRiP scores, peak-to-gene annnotation proportions, spp NSC coefficient, spp RSC coefficient, PCA plots and sample-similarity heatmaps.
+
+The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see http://multiqc.info. -->
 
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 

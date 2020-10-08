@@ -170,6 +170,10 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 
 > **NB:** Since RSEM performs the mapping as well as quantification there is no point in performing an additional quantification step with featureCounts when using `--aligner star_rsem`.
 
+![MultiQC - RSEM alignment scores plot](images/mqc_rsem_mapped.png)
+
+![MultiQC - RSEM uniquely mapped plot](images/mqc_rsem_multimapped.png)
+
 ### HISAT2
 
 <details>
@@ -256,27 +260,21 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 <details>
 <summary>Output files</summary>
 
-**Output directory: `results/featurecounts`**
-
-* `Sample.bam_biotype_counts.txt`
-  * Read counts for the different gene biotypes that featureCounts distinguishes.
-* `Sample.featureCounts.txt`
-  * Read counts for each gene provided in the reference `gtf` file
-* `Sample.featureCounts.txt.summary`
-  * Summary file, containing statistics about the counts
-* `merged_gene_counts.txt`
-  * Read count table for all samples
+* `<ALIGNER>/`
+  * `featurecounts.merged.counts.tsv`: Matrix of gene-level raw counts across all samples.
+* `<ALIGNER>/featurecounts/`
+  * `*.featureCounts.txt`: featureCounts gene-level quantification results for each sample.
+  * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
+* `<ALIGNER>/featurecounts/biotype/`
+  * `*.featureCounts.txt`: featureCounts biotype-level quantification results for each sample.
+  * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
+  * `*_mqc.tsv`: MultiQC custom content files used to plot biotypes in report.
 
 </details>
 
-<!-- The featureCounts tool is used to count the number of reads relative to the consensus peak-set across all of the samples. This essentially generates a file containing a matrix where the rows represent the consensus intervals, the columns represent all of the samples in the experiment, and the values represent the raw read counts. -->
-
-[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the subread package summarises the read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations.
-RNA reads should mostly overlap genes, so be assigned.
+[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the [Subread](http://subread.sourceforge.net/) package is a quantification tool used to summarise the mapped read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations. We can also use featureCounts to count overlaps with different classes of genomic features. This provides an additional QC to check which features are most abundant in the sample, and to highlight potential problems such as rRNA contamination.
 
 ![MultiQC - featureCounts read assignment plot](images/mqc_featurecounts_assignment.png)
-
-We also use featureCounts to count overlaps with different classes of features. This gives a good idea of where aligned reads are ending up and can show potential problems such as rRNA contamination.
 
 ![MultiQC - featureCounts biotypes plot](images/mqc_featurecounts_biotype.png)
 

@@ -137,7 +137,7 @@ When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://git
 
 </details>
 
-STAR is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive.
+[STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive.
 
 The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as _Uniquely mapped_ and few _Unmapped_ reads.
 
@@ -235,7 +235,7 @@ After extracting the UMI information from the read sequence (see [UMI-tools extr
 
 </details>
 
-Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-explorer/kits-and-arrays/umi.html) it is not possible to establish whether the fragments you have sequenced from your sample were derived via true biological duplication (i.e. sequencing independent template fragments) or as a result of PCR biases introduced during the library preparation. By default, the pipeline uses picard MarkDuplicates to *mark* the duplicate reads identified amongst the alignments to allow you to guage the overall level of duplication in your samples. However, for RNA-seq data it is not recommended to physically remove duplicate reads from the alignments (unless you are using UMIs) because you expect a significant level of true biological duplication that arises from the same fragments being sequenced from for example highly expressed genes. You can skip this step via the `--skip_markduplicates` parameter.
+Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-explorer/kits-and-arrays/umi.html) it is not possible to establish whether the fragments you have sequenced from your sample were derived via true biological duplication (i.e. sequencing independent template fragments) or as a result of PCR biases introduced during the library preparation. By default, the pipeline uses [picard MarkDuplicates](https://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates) to *mark* the duplicate reads identified amongst the alignments to allow you to guage the overall level of duplication in your samples. However, for RNA-seq data it is not recommended to physically remove duplicate reads from the alignments (unless you are using UMIs) because you expect a significant level of true biological duplication that arises from the same fragments being sequenced from for example highly expressed genes. You can skip this step via the `--skip_markduplicates` parameter.
 
 ![MultiQC - Picard MarkDuplicates metrics plot](images/mqc_picard_markduplicates.png)
 
@@ -274,23 +274,23 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 ### RSeQC
 
-RSeQC is a package of scripts designed to evaluate the quality of RNA seq data. You can find out more about the package at the [RSeQC website](http://rseqc.sourceforge.net/).
+RSeQC is a package of scripts designed to evaluate the quality of RNA-seq data. You can find out more about the package on the [RSeQC website](http://rseqc.sourceforge.net/).
 
-This pipeline runs several, but not all RSeQC scripts. All of these results are summarised within the MultiQC report and described below.
+This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat`, `inner_distance`, `infer_experiment`, `junction_annotation`, `junction_saturation`,`read_distribution` and `read_duplication`.
 
-These are all quality metrics files and contains the raw data used for the plots in the MultiQC report. In general, the `.r` files are R scripts for generating the figures, the `.txt` are summary files, the `.xls` are data tables and the `.pdf` files are summary figures.
+The outputs of RSeQC are quality metrics files that are supported by MultiQC and hence can be plotted and summarised in the MultiQC report.
 
 #### BAM stat
 
 <details>
 <summary>Output files</summary>
 
-**Output directory: `results/rseqc`**
-**Output: `Sample_bam_stat.txt`**
+* `<ALIGNER>/rseqc/bam_stat/`
+  * `*.bam_stat.txt`: Mapping statistics for the BAM file.
 
 </details>
 
-This script gives numerous statistics about the aligned BAM files produced by STAR. A typical output looks as follows:
+This script gives numerous statistics about the aligned BAM files. A typical output looks as follows:
 
 ```txt
 #Output (all numbers are read count)
@@ -322,25 +322,18 @@ RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 <details>
 <summary>Output files</summary>
 
-**Output: `Sample_infer_experiment.txt`**
+* `<ALIGNER>/rseqc/infer_experiment/`
+  * `*.infer_experiment.txt`: Mapping statistics for the BAM file.
 
 </details>
 
-This script predicts the mode of library preparation (sense-stranded or antisense-stranded) according to how aligned reads overlay gene features in the reference genome.
-Example output from an unstranded (~50% sense/antisense) library of paired end data:
-
-![MultiQC - RSeQC infer experiment plot](images/mqc_rseqc_inferexperiment.png)
-
-**From the `infer_experiment.txt` file:**
-
-```txt
-This is PairEnd Data
-Fraction of reads failed to determine: 0.0409
-Fraction of reads explained by "1++,1--,2+-,2-+": 0.4839
-Fraction of reads explained by "1+-,1-+,2++,2--": 0.4752
-```
+This script predicts the "strandedness" of the protocol (i.e. unstranded, sense or antisense) that was used to prepare the sample for sequencing by assessing the orientation in which aligned reads overlay gene features in the reference genome. The strandedness of each sample has to be provided to the pipeline in the input samplesheet (see [usage docs](https://nf-co.re/rnaseq/usage#introduction)). However, this information is not always available, especially for public datasets. As a result, additional features have been incorporated into this pipeline to auto-detect whether you have provided the correct information in the samplesheet, and if this is not the case then a warning table will be placed at the top of the MultiQC report highlighting the offending samples. If required, this will allow you to correct the input samplesheet and rerun the pipeline with the accurate strand information. Note, it is important to get this information right because it can affect the final results.
 
 RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
+
+The MultiQC image below shows samples that were prepared using an antisense stranded protocol:
+
+![MultiQC - RSeQC infer experiment plot](images/mqc_rseqc_inferexperiment.png)
 
 #### Junction saturation
 

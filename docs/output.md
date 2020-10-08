@@ -482,8 +482,6 @@ See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/d
 
 </details>
 
- The dupRadar package gives an insight into the duplication problem by graphically relating the gene expression level and the duplication rate present on it. Thus, failed experiments can be easily identified at a glance.
-
 [dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library written in the R programming language. It generates various QC metrics and plots that relate duplication rate with gene expression levels in order to identify experiments with high technical duplication. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
 
 ![dupRadar - Example good and bad experiment plot](images/dupradar_example_plot.png)
@@ -511,24 +509,17 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
 <details>
 <summary>Output files</summary>
 
-**Output directory: `results/sample_correlation`**
-
-* `edgeR_MDS_plot.pdf`
-  * MDS scatter plot showing sample similarity
-* `edgeR_MDS_distance_matrix.csv`
-  * Distance matrix containing raw data from MDS analysis
-* `edgeR_MDS_Aplot_coordinates_mqc.csv`
-  * Scatter plot coordinates from MDS plot, used for MultiQC report
-* `log2CPM_sample_distances_dendrogram.pdf`
-  * Dendrogram showing the Euclidean distance between your samples
-* `log2CPM_sample_correlation_heatmap.pdf`
-  * Heatmap showing the Pearsons correlation between your samples
-* `log2CPM_sample_correlation_mqc.csv`
-  * Raw data from Pearsons correlation heatmap, used for MultiQC report
+* `<ALIGNER>/edger_correlation/`
+  * `edger_mds_aplot_coordinates_mqc.csv`: Scatter plot coordinates from MDS plot, used in the MultiQC report.
+  * `edger_mds_distance_matrix.csv`: Distance matrix containing raw data from the MDS analysis.
+  * `edger_mds_plot.pdf`: MDS scatter plot showing sample similarity.
+  * `log2cpm_sample_correlation_heatmap.pdf`: Heatmap showing the Pearsons correlation between your samples.
+  * `log2cpm_sample_correlation_mqc.csv`: Raw data from the Pearsons correlation heatmap, used in the MultiQC report.
+  * `log2cpm_sample_distances_dendrogram.pdf`: Dendrogram showing the Euclidean distance between your samples.
 
 </details>
 
-[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package for R used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and create a heatmap showing Pearson's correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and sample groupings.
+[edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is a Bioconductor package written in the R programming language and used for RNA-seq data analysis. The script included in the pipeline uses edgeR to normalise read counts and to create a heatmap showing Pearson's correlation and a dendrogram showing pairwise Euclidean distances between the samples in the experiment. It also creates a 2D MDS scatter plot showing sample grouping. These help to show sample similarity and can reveal batch effects and other potential issues with the experiment.
 
 ![MultiQC - edgeR heatmap plot](images/mqc_edger_heatmap.png)
 

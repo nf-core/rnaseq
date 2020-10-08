@@ -469,26 +469,26 @@ The [Qualimap RNA-seq QC module](http://qualimap.bioinfo.cipf.es/doc_html/analys
 <details>
 <summary>Output files</summary>
 
-**Output directory: `results/dupradar`**
+* `<ALIGNER>/dupradar/box_plot/`
+  * `*_duprateExpBoxplot.pdf`: PDF file containing box plot for duplicate rate relative to mean expression.
+* `<ALIGNER>/dupradar/gene_data/`
+  * `*_dupMatrix.txt`: Text file containing duplicate metrics per gene.
+* `<ALIGNER>/dupradar/histogram/`
+  * `*_expressionHist.pdf`: PDF file containing histogram of reads per kilobase values per gene.
+* `<ALIGNER>/dupradar/intercepts_slope/`
+  * `*_intercept_slope.txt`: Text file containing intercept slope values.
+* `<ALIGNER>/dupradar/scatter_plot/`
+  * `*_duprateExpDens.pdf`: PDF file containing typical dupRadar 2D density scatter plot.
 
-* `Sample_markDups.bam_duprateExpDens.pdf`
-* `Sample_markDups.bam_duprateExpBoxplot.pdf`
-* `Sample_markDups.bam_expressionHist.pdf`
-* `Sample_markDups.bam_dupMatrix.txt`
-* `Sample_markDups.bam_duprateExpDensCurve.txt`
-* `Sample_markDups.bam_intercept_slope.txt`
+See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html) for further information regarding the content of these files.
 
 </details>
 
-[dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library for R. It plots the duplication rate against expression (RPKM) for every gene. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
+[dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library written in the R programming language. It plots the duplication rate against expression (RPKM) for every gene. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
 
-![MultiQC - dupRadar linear model plot](images/mqc_dupradar.png)
-
-![dupRadar](images/dupRadar_plot.png)
+![dupRadar - Example good and bad experiment plot](images/dupradar_example_plot.png)
 
 > _Credit: [dupRadar documentation](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html)_
-
-DupRadar documentation: [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html)
 
 ### Preseq
 

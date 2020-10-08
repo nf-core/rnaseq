@@ -280,6 +280,128 @@ This pipeline runs several, but not all RSeQC scripts. You can tweak the support
 
 The outputs of RSeQC are quality metrics files that are supported by MultiQC and hence can be plotted and summarised in the MultiQC report.
 
+#### Infer experiment
+
+<details>
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/infer_experiment/`
+  * `*.infer_experiment.txt`: File containing fraction of reads mapping to given strandedness configurations.
+
+</details>
+
+This script predicts the "strandedness" of the protocol (i.e. unstranded, sense or antisense) that was used to prepare the sample for sequencing by assessing the orientation in which aligned reads overlay gene features in the reference genome. The strandedness of each sample has to be provided to the pipeline in the input samplesheet (see [usage docs](https://nf-co.re/rnaseq/usage#introduction)). However, this information is not always available, especially for public datasets. As a result, additional features have been incorporated into this pipeline to auto-detect whether you have provided the correct information in the samplesheet, and if this is not the case then a warning table will be placed at the top of the MultiQC report highlighting the offending samples. If required, this will allow you to correct the input samplesheet and rerun the pipeline with the accurate strand information. Note, it is important to get this information right because it can affect the final results.
+
+RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
+
+The MultiQC image below shows samples that were prepared using an antisense stranded protocol:
+
+![MultiQC - RSeQC infer experiment plot](images/mqc_rseqc_inferexperiment.png)
+
+#### Inner distance
+
+<details>
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/inner_distance/pdf/`
+  * `*.inner_distance_plot.pdf`: PDF file containing inner distance plot.
+* `<ALIGNER>/rseqc/inner_distance/rscript/`
+  * `*.inner_distance_plot.r`: R script used to generate pdf plot above.
+* `<ALIGNER>/rseqc/inner_distance/txt/`
+  * `*.inner_distance_freq.txt`: File containing frequency of insert sizes.
+  * `*.inner_distance_mean.txt`: File containing mean, median and standard deviation of insert sizes.
+
+</details>
+
+The inner distance script tries to calculate the inner distance between two paired-end reads. It is the distance between the end of read 1 to the start of read 2, and it is sometimes confused with the insert size (see [this blog post](http://thegenomefactory.blogspot.com.au/2013/08/paired-end-read-confusion-library.html) for disambiguation):
+
+This plot will not be generated for single-end data. Very short inner distances are often seen in old or degraded samples (_eg._ FFPE) and values can be negative if the reads overlap consistently.
+
+RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
+
+![MultiQC - RSeQC inner distance plot](images/mqc_rseqc_innerdistance.png)
+
+#### Junction saturation
+
+<details>
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/junction_saturation/pdf/`
+  * `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
+* `<ALIGNER>/rseqc/junction_saturation/rscript/`
+  * `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
+
+</details>
+
+This script shows the number of splice sites detected within the data at various levels of subsampling. A sample that reaches a plateau before getting to 100% data indicates that all junctions in the library have been detected, and that further sequencing will not yield any more observations. A good sample should approach such a plateau of _Known junctions_, however, very deep sequencing is typically required to saturate all _Novel Junctions_ in a sample.
+
+RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junction-saturation-py)
+
+![MultiQC - RSeQC junction saturation plot](images/mqc_rseqc_junctionsaturation.png)
+
+#### Read distribution
+
+<details>
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/read_distribution/`
+  * `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions etc.
+
+</details>
+
+This tool calculates how mapped reads are distributed over genomic features. A good result for a standard RNA-seq experiments is generally to have as many exonic reads as possible (`CDS_Exons`). A large amount of intronic reads could be indicative of DNA contamination in your sample but may be expected for a total RNA preparation.
+
+RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-distribution-py)
+
+![MultiQC - RSeQC read distribution plot](images/mqc_rseqc_readdistribution.png)
+
+#### Read duplication
+
+<details>
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/read_duplication/pdf/`
+  * `*.DupRate_plot.pdf`: PDF file containing read duplication plot.
+* `<ALIGNER>/rseqc/read_duplication/rscript/`
+  * `*.DupRate_plot.r`: R script used to generate pdf plot above.
+* `<ALIGNER>/rseqc/read_duplication/xls/`
+  * `*.pos.DupRate.xls`: Read duplication rate determined from mapping position of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
+  * `*.seq.DupRate.xls`: Read duplication rate determined from sequence of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
+
+</details>
+
+This plot shows the number of reads (y-axis) with a given number of exact duplicates (x-axis). Most reads in an RNA-seq library should have a low number of exact duplicates. Samples which have many reads with many duplicates (a large area under the curve) may be suffering excessive technical duplication.
+
+RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-duplication-py)
+
+![MultiQC - RSeQC read duplication plot](images/mqc_rseqc_readduplication.png)
+
+#### Junction annotation
+
+<details>
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/junction_annotation/bed/`
+  * `*.junction.bed`: BED file containing splice junctions.
+  * `*.junction.Interact.bed`: BED file containing interacting splice junctions.
+* `<ALIGNER>/rseqc/junction_annotation/log/`
+  * `*.junction_annotation.log`: Log file generated by the program.
+* `<ALIGNER>/rseqc/junction_annotation/pdf/`
+  * `*.splice_events.pdf`: PDF file containing splicing events plot.
+  * `*.splice_junction.pdf`: PDF file containing splice junctions plot.
+* `<ALIGNER>/rseqc/junction_annotation/rscript/`
+  * `*.junction_plot.r`: R script used to generate pdf plots above.
+* `<ALIGNER>/rseqc/junction_annotation/xls/`
+  * `*.junction.xls`: Excel spreadsheet with junction information.
+
+</details>
+
+Junction annotation compares detected splice junctions to a reference gene model. Splicing annotation is performed in two levels: splice event level and splice junction level.
+
+RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
+
+![MultiQC - RSeQC junction annotation plot](images/mqc_rseqc_junctionannotation.png)
+
 #### BAM stat
 
 <details>
@@ -316,123 +438,6 @@ Proper-paired reads map to different chrom:    7648
 MultiQC plots each of these statistics in a dot plot. Each sample in the project is a dot - hover to see the sample highlighted across all fields.
 
 RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
-
-#### Infer experiment
-
-<details>
-<summary>Output files</summary>
-
-* `<ALIGNER>/rseqc/infer_experiment/`
-  * `*.infer_experiment.txt`: File containing fraction of reads mapping to given strandedness configurations.
-
-</details>
-
-This script predicts the "strandedness" of the protocol (i.e. unstranded, sense or antisense) that was used to prepare the sample for sequencing by assessing the orientation in which aligned reads overlay gene features in the reference genome. The strandedness of each sample has to be provided to the pipeline in the input samplesheet (see [usage docs](https://nf-co.re/rnaseq/usage#introduction)). However, this information is not always available, especially for public datasets. As a result, additional features have been incorporated into this pipeline to auto-detect whether you have provided the correct information in the samplesheet, and if this is not the case then a warning table will be placed at the top of the MultiQC report highlighting the offending samples. If required, this will allow you to correct the input samplesheet and rerun the pipeline with the accurate strand information. Note, it is important to get this information right because it can affect the final results.
-
-RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
-
-The MultiQC image below shows samples that were prepared using an antisense stranded protocol:
-
-![MultiQC - RSeQC infer experiment plot](images/mqc_rseqc_inferexperiment.png)
-
-#### Junction saturation
-
-<details>
-<summary>Output files</summary>
-
-* `<ALIGNER>/rseqc/junction_saturation/pdf/`
-  * `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
-* `<ALIGNER>/rseqc/junction_saturation/rscript/`
-  * `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
-
-</details>
-
-This script shows the number of splice sites detected within the data at various levels of subsampling. A sample that reaches a plateau before getting to 100% data indicates that all junctions in the library have been detected, and that further sequencing will not yield any more observations. A good sample should approach such a plateau of _Known junctions_, however, very deep sequencing is typically required to saturate all _Novel Junctions_ in a sample.
-
-RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junction-saturation-py)
-
-![MultiQC - RSeQC junction saturation plot](images/mqc_rseqc_junctionsaturation.png)
-
-#### Read duplication
-
-<details>
-<summary>Output files</summary>
-
-* `<ALIGNER>/rseqc/read_duplication/pdf/`
-  * `*.DupRate_plot.pdf`: PDF file containing read duplication plot.
-* `<ALIGNER>/rseqc/read_duplication/rscript/`
-  * `*.DupRate_plot.r`: R script used to generate pdf plot above.
-* `<ALIGNER>/rseqc/read_duplication/xls/`
-  * `*.pos.DupRate.xls`: Read duplication rate determined from mapping position of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
-  * `*.seq.DupRate.xls`: Read duplication rate determined from sequence of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
-
-</details>
-
-This plot shows the number of reads (y-axis) with a given number of exact duplicates (x-axis). Most reads in an RNA-seq library should have a low number of exact duplicates. Samples which have many reads with many duplicates (a large area under the curve) may be suffering excessive technical duplication.
-
-RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-duplication-py)
-
-![MultiQC - RSeQC read duplication plot](images/mqc_rseqc_readduplication.png)
-
-#### Inner distance
-
-<details>
-<summary>Output files</summary>
-
-* `<ALIGNER>/rseqc/inner_distance/pdf/`
-  * `*.inner_distance_plot.pdf`: PDF file containing inner distance plot.
-* `<ALIGNER>/rseqc/inner_distance/rscript/`
-  * `*.inner_distance_plot.r`: R script used to generate pdf plot above.
-* `<ALIGNER>/rseqc/inner_distance/txt/`
-  * `*.inner_distance_freq.txt`: File containing frequency of insert sizes.
-  * `*.inner_distance_mean.txt`: File containing mean, median and standard deviation of insert sizes.
-
-</details>
-
-The inner distance script tries to calculate the inner distance between two paired-end reads. It is the distance between the end of read 1 to the start of read 2, and it is sometimes confused with the insert size (see [this blog post](http://thegenomefactory.blogspot.com.au/2013/08/paired-end-read-confusion-library.html) for disambiguation):
-
-This plot will not be generated for single-end data. Very short inner distances are often seen in old or degraded samples (_eg._ FFPE) and values can be negative if the reads overlap consistently.
-
-RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
-
-![MultiQC - RSeQC inner distance plot](images/mqc_rseqc_innerdistance.png)
-
-#### Read distribution
-
-<details>
-<summary>Output files</summary>
-
-* `<ALIGNER>/rseqc/read_distribution/`
-  * `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions etc.
-
-</details>
-
-This tool calculates how mapped reads are distributed over genomic features. A good result for a standard RNA-seq experiments is generally to have as many exonic reads as possible (`CDS_Exons`). A large amount of intronic reads could be indicative of DNA contamination in your sample but may be expected for a total RNA preparation.
-
-RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-distribution-py)
-
-![MultiQC - RSeQC read distribution plot](images/mqc_rseqc_readdistribution.png)
-
-#### Junction annotation
-
-<details>
-<summary>Output files</summary>
-
-**Output:**
-
-* `Sample_junction_annotation_log.txt`
-* `Sample_rseqc.junction.xls`
-* `Sample_rseqc.junction_plot.r`
-* `Sample_rseqc.splice_events.pdf`
-* `Sample_rseqc.splice_junction.pdf`
-
-</details>
-
-Junction annotation compares detected splice junctions to a reference gene model. An read can be spliced 2 or more times, each time is called a splicing event.
-
-RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
-
-![MultiQC - RSeQC junction annotation plot](images/mqc_rseqc_junctionannotation.png)
 
 ### Qualimap
 

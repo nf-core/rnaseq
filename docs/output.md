@@ -323,7 +323,7 @@ RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/infer_experiment/`
-  * `*.infer_experiment.txt`: Mapping statistics for the BAM file.
+  * `*.infer_experiment.txt`: File containing fraction of reads mapping to given strandedness configurations.
 
 </details>
 
@@ -340,20 +340,18 @@ The MultiQC image below shows samples that were prepared using an antisense stra
 <details>
 <summary>Output files</summary>
 
-**Output:**
-
-* `Sample_rseqc.junctionSaturation_plot.pdf`
-* `Sample_rseqc.junctionSaturation_plot.r`
+* `<ALIGNER>/rseqc/junction_saturation/pdf/`
+  * `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
+* `<ALIGNER>/rseqc/junction_saturation/rscript/`
+  * `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
 
 </details>
 
-This script shows the number of splice sites detected at the data at various levels of subsampling. A sample that reaches a plateau before getting to 100% data indicates that all junctions in the library have been detected, and that further sequencing will not yield more observations. A good sample should approach such a plateau of _Known junctions_, very deep sequencing is typically requires to saturate all _Novel Junctions_ in a sample.
-
-None of the lines in this example have plateaued and thus these samples could reveal more alternative splicing information if they were sequenced deeper.
-
-![MultiQC - RSeQC junction saturation plot](images/mqc_rseqc_junctionsaturation.png)
+This script shows the number of splice sites detected within the data at various levels of subsampling. A sample that reaches a plateau before getting to 100% data indicates that all junctions in the library have been detected, and that further sequencing will not yield any more observations. A good sample should approach such a plateau of _Known junctions_, however, very deep sequencing is typically required to saturate all _Novel Junctions_ in a sample.
 
 RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junction-saturation-py)
+
+![MultiQC - RSeQC junction saturation plot](images/mqc_rseqc_junctionsaturation.png)
 
 #### RPKM saturation
 

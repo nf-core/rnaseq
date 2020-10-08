@@ -274,11 +274,9 @@ We also use featureCounts to count overlaps with different classes of features. 
 
 ### RSeQC
 
-RSeQC is a package of scripts designed to evaluate the quality of RNA-seq data. You can find out more about the package on the [RSeQC website](http://rseqc.sourceforge.net/).
+[RSeQC]((http://rseqc.sourceforge.net/)) is a package of scripts designed to evaluate the quality of RNA-seq data. This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat.py`, `inner_distance.py`, `infer_experiment.py`, `junction_annotation.py`, `junction_saturation.py`,`read_distribution.py` and `read_duplication.py`.
 
-This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat`, `inner_distance`, `infer_experiment`, `junction_annotation`, `junction_saturation`,`read_distribution` and `read_duplication`.
-
-The outputs of RSeQC are quality metrics files that are supported by MultiQC and hence can be plotted and summarised in the MultiQC report.
+The majority of RSeQC scripts generate output files which can be plotted and summarised in the MultiQC report.
 
 #### Infer experiment
 
@@ -484,7 +482,9 @@ See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/d
 
 </details>
 
-[dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library written in the R programming language. It plots the duplication rate against expression (RPKM) for every gene. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
+ The dupRadar package gives an insight into the duplication problem by graphically relating the gene expression level and the duplication rate present on it. Thus, failed experiments can be easily identified at a glance.
+
+[dupRadar](https://www.bioconductor.org/packages/release/bioc/html/dupRadar.html) is a Bioconductor library written in the R programming language. It generates various QC metrics and plots that relate duplication rate with gene expression levels in order to identify experiments with high technical duplication. A good sample with little technical duplication will only show high numbers of duplicates for highly expressed genes. Samples with technical duplication will have high duplication for all genes, irrespective of transcription level.
 
 ![dupRadar - Example good and bad experiment plot](images/dupradar_example_plot.png)
 

@@ -16,7 +16,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment](#alignment)
   * [STAR](#star) - Fast spliced aware alignment to a reference
-  * [RSEM STAR](#rsem-star) - Alignment and quantification of expression levels
+  * [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
   * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
 * [Alignment post-processing](#alignment-post-processing)
   * [SAMtools](#samtools) - Sort and index alignments
@@ -137,37 +137,36 @@ When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://git
 
 </details>
 
-[STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive.
+[STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive. STAR is the default `--aligner` option.
 
 The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as _Uniquely mapped_ and few _Unmapped_ reads.
 
 ![MultiQC - STAR alignment scores plot](images/mqc_star.png)
 
-### RSEM STAR
+### STAR via RSEM
 
 <details>
 <summary>Output files</summary>
 
-**Output directory: `results/rsem`**
-
-* `rsem_tpm_gene.txt`
-  * Main gene-level TPM matrix including all genes
-* `rsem_tpm_isoform.txt`
-  * Main isoform-level TPM matrix
-* `rsem_transcript_counts_gene.txt`
-  * Main gene-level count matrix including all genes
-* `rsem_transcript_counts_isoform.txt`
-  * Main isoform-level count matrix
-* `*.stat`
-  * RSEM statistics for each sample
-* `*.genes.results`
-  * RSEM gene-level output for each sample
-* `*.isoforms.results`
-  * RSEM isoform-level output for each sample
+* `star_rsem/`
+  * `rsem.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+  * `rsem.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  * `rsem.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  * `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  * `*.genes.results`: RSEM gene-level quantification results for each sample.
+  * `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
+  * `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+  * `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+* `star_rsem/<SAMPLE>.stat/`
+  * `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
+* `star_rsem/log/`
+  * `*log`: STAR alignment report containing the mapping results summary.
 
 </details>
 
-[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-Seq data.
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads. You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
+
+> **NB:** Since RSEM performs the mapping as well as quantification there is no point in performing an additional quantification step with featureCounts when using `--aligner star_rsem`.
 
 ### HISAT2
 
@@ -176,7 +175,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 </details>
 
-TODO
+You can choose to align and quantify your data with RSEM by providing the `--aligner hisat2` parameter.
 
 ## Alignment post-processing
 

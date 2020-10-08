@@ -160,11 +160,13 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 * `star_rsem/<SAMPLE>.stat/`
   * `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
 * `star_rsem/log/`
-  * `*log`: STAR alignment report containing the mapping results summary.
+  * `*.log`: STAR alignment report containing the mapping results summary.
 
 </details>
 
-[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads. You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads.
+
+You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
 
 > **NB:** Since RSEM performs the mapping as well as quantification there is no point in performing an additional quantification step with featureCounts when using `--aligner star_rsem`.
 
@@ -173,9 +175,18 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 <details>
 <summary>Output files</summary>
 
+* `hisat2/`
+  * `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+* `hisat2/log/`
+  * `*.log`: HISAT2 alignment report containing the mapping results summary.
+* `hisat2/unmapped/`
+  * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
+
 </details>
 
-You can choose to align and quantify your data with RSEM by providing the `--aligner hisat2` parameter.
+[HISAT2](http://daehwankimlab.github.io/hisat2/) is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes as well as to a single reference genome. It introduced a new indexing scheme called a Hierarchical Graph FM index (HGFM) which when combined with several alignment strategies, enable rapid and accurate alignment of sequencing reads. The HISAT2 route through the pipeline is a good option if you have memory limitations on your compute.
+
+You can choose to align and quantify your data with HISAT2 by providing the `--aligner hisat2` parameter.
 
 ## Alignment post-processing
 

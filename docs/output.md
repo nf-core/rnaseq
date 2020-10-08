@@ -379,27 +379,23 @@ RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-du
 <details>
 <summary>Output files</summary>
 
-**Output:**
-
-* `Sample_rseqc.inner_distance.txt`
-* `Sample_rseqc.inner_distance_freq.txt`
-* `Sample_rseqc.inner_distance_plot.r`
+* `<ALIGNER>/rseqc/inner_distance/pdf/`
+  * `*.inner_distance_plot.pdf`: PDF file containing inner distance plot.
+* `<ALIGNER>/rseqc/inner_distance/rscript/`
+  * `*.inner_distance_plot.r`: R script used to generate pdf plot above.
+* `<ALIGNER>/rseqc/inner_distance/txt/`
+  * `*.inner_distance_freq.txt`: File containing frequency of insert sizes.
+  * `*.inner_distance_mean.txt`: File containing mean, median and standard deviation of insert sizes.
 
 </details>
 
-The inner distance script tries to calculate the inner distance between two paired RNA reads. It is the distance between the end of read 1 to the start of read 2,
-and it is sometimes confused with the insert size (see [this blog post](http://thegenomefactory.blogspot.com.au/2013/08/paired-end-read-confusion-library.html) for disambiguation):
-![inner distance concept](images/inner_distance_concept.png)
+The inner distance script tries to calculate the inner distance between two paired-end reads. It is the distance between the end of read 1 to the start of read 2, and it is sometimes confused with the insert size (see [this blog post](http://thegenomefactory.blogspot.com.au/2013/08/paired-end-read-confusion-library.html) for disambiguation):
 
-> _Credit: modified from RSeQC documentation._
-
-Note that values can be negative if the reads overlap. A typical set of samples may look like this:
-
-![MultiQC - RSeQC inner distance plot](images/mqc_rseqc_innerdistance.png)
-
-This plot will not be generated for single-end data. Very short inner distances are often seen in old or degraded samples (_eg._ FFPE).
+This plot will not be generated for single-end data. Very short inner distances are often seen in old or degraded samples (_eg._ FFPE) and values can be negative if the reads overlap consistently.
 
 RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-distance-py)
+
+![MultiQC - RSeQC inner distance plot](images/mqc_rseqc_innerdistance.png)
 
 #### Read distribution
 

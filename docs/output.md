@@ -353,50 +353,26 @@ RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junc
 
 ![MultiQC - RSeQC junction saturation plot](images/mqc_rseqc_junctionsaturation.png)
 
-#### RPKM saturation
-
-<details>
-<summary>Output files</summary>
-
-**Output:**
-
-* `Sample_RPKM_saturation.eRPKM.xls`
-* `Sample_RPKM_saturation.rawCount.xls`
-* `Sample_RPKM_saturation.saturation.pdf`
-* `Sample_RPKM_saturation.saturation.r`
-
-</details>
-
-This tool resamples a subset of the total RNA reads and calculates the RPKM value for each subset. We use the default subsets of every 5% of the total reads.
-A percent relative error is then calculated based on the subsamples; this is the y-axis in the graph. A typical PDF figure looks as follows:
-
-![RPKM saturation](images/saturation.png)
-
-A complex library will have low resampling error in well expressed genes.
-
-This data is not currently reported in the MultiQC report.
-
-RSeQC documentation: [RPKM_saturation.py](http://rseqc.sourceforge.net/#rpkm-saturation-py)
-
 #### Read duplication
 
 <details>
 <summary>Output files</summary>
 
-**Output:**
-
-* `Sample_read_duplication.DupRate_plot.pdf`
-* `Sample_read_duplication.DupRate_plot.r`
-* `Sample_read_duplication.pos.DupRate.xls`
-* `Sample_read_duplication.seq.DupRate.xls`
+* `<ALIGNER>/rseqc/read_duplication/pdf/`
+  * `*.DupRate_plot.pdf`: PDF file containing read duplication plot.
+* `<ALIGNER>/rseqc/read_duplication/rscript/`
+  * `*.DupRate_plot.r`: R script used to generate pdf plot above.
+* `<ALIGNER>/rseqc/read_duplication/xls/`
+  * `*.pos.DupRate.xls`: Read duplication rate determined from mapping position of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
+  * `*.seq.DupRate.xls`: Read duplication rate determined from sequence of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
 
 </details>
 
 This plot shows the number of reads (y-axis) with a given number of exact duplicates (x-axis). Most reads in an RNA-seq library should have a low number of exact duplicates. Samples which have many reads with many duplicates (a large area under the curve) may be suffering excessive technical duplication.
 
-![MultiQC - RSeQC read duplication plot](images/mqc_rseqc_readduplication.png)
-
 RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-duplication-py)
+
+![MultiQC - RSeQC read duplication plot](images/mqc_rseqc_readduplication.png)
 
 #### Inner distance
 

@@ -402,15 +402,16 @@ RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-dis
 <details>
 <summary>Output files</summary>
 
-**Output: `Sample_read_distribution.txt`**
+* `<ALIGNER>/rseqc/read_distribution/`
+  * `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions etc.
 
 </details>
 
-This tool calculates how mapped reads are distributed over genomic features. A good result for a standard RNA seq experiments is generally to have as many exonic reads as possible (`CDS_Exons`). A large amount of intronic reads could be indicative of DNA contamination in your sample or some other problem.
-
-![MultiQC - RSeQC read distribution plot](images/mqc_rseqc_readdistribution.png)
+This tool calculates how mapped reads are distributed over genomic features. A good result for a standard RNA-seq experiments is generally to have as many exonic reads as possible (`CDS_Exons`). A large amount of intronic reads could be indicative of DNA contamination in your sample but may be expected for a total RNA preparation.
 
 RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-distribution-py)
+
+![MultiQC - RSeQC read distribution plot](images/mqc_rseqc_readdistribution.png)
 
 #### Junction annotation
 
@@ -427,11 +428,11 @@ RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-d
 
 </details>
 
-Junction annotation compares detected splice junctions to a reference gene model. An RNA read can be spliced 2 or more times, each time is called a splicing event.
-
-![MultiQC - RSeQC junction annotation plot](images/mqc_rseqc_junctionannotation.png)
+Junction annotation compares detected splice junctions to a reference gene model. An read can be spliced 2 or more times, each time is called a splicing event.
 
 RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junction-annotation-py)
+
+![MultiQC - RSeQC junction annotation plot](images/mqc_rseqc_junctionannotation.png)
 
 ### Qualimap
 

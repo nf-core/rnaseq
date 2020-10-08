@@ -22,7 +22,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
 2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-3. UMI extraction ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
+3. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
 5. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
 6. Choice of multiple alignment and quantification routes:
@@ -30,7 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
     3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
 7. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
-8. UMI-based deduplication ([`umi_tools`](https://github.com/CGATOxford/UMI-tools))
+8. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
 10. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
 11. Extensive quality control:

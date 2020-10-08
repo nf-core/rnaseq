@@ -686,20 +686,15 @@ The pipeline has special steps which also allow the software versions to be repo
 <details>
 <summary>Output files</summary>
 
-**Output directory: `results/stringtie`**
-
-* `<sample>_Aligned.sortedByCoord.out.bam.gene_abund.txt`
-  * Gene aboundances, FPKM values
-* `<sample>_Aligned.sortedByCoord.out.bam_transcripts.gtf`
-  * This `.gtf` file contains all of the assembled transcipts from StringTie
-* `<sample>_Aligned.sortedByCoord.out.bam.cov_refs.gtf`
-  * This `.gtf` file contains the transcripts that are fully covered by reads.
+* `<ALIGNER>/stringtie`
+  * `*.coverage.gtf`: GTF file containing transcripts that are fully covered by reads.
+  * `*.transcripts.gtf`: GTF file containing all of the assembled transcipts from StringTie.
+  * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.  
+* `<ALIGNER>/stringtie/<SAMPLE>.ballgown/`: Ballgown output directory.
 
 </details>
 
-[StringTie](https://ccb.jhu.edu/software/stringtie/) assembles RNA-Seq alignments into potential transcripts. It assembles and quantitates full-length transcripts representing multiple splice variants for each gene locus.
-
-StringTie outputs FPKM metrics for genes and transcripts as well as the transcript features that it generates.
+[StringTie](https://ccb.jhu.edu/software/stringtie/) is a fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. It uses a novel network flow algorithm as well as an optional de novo assembly step to assemble and quantitate full-length transcripts representing multiple splice variants for each gene locus. In order to identify differentially expressed genes between experiments, StringTie's output can be processed by specialized software like [Ballgown](https://github.com/alyssafrazee/ballgown), [Cuffdiff](http://cole-trapnell-lab.github.io/cufflinks/cuffdiff/index.html) or other programs ([DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), etc.).
 
 ## Workflow reporting and genomes
 

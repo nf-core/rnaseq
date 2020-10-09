@@ -192,6 +192,8 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 
 You can choose to align and quantify your data with HISAT2 by providing the `--aligner hisat2` parameter.
 
+![MultiQC - HISAT2 alignment scores plot](images/mqc_hisat2.png)
+
 ## Alignment post-processing
 
 The pipeline has been written in a way where all the files generated downstream of the alignment are placed in the same directory as specified by `--aligner` e.g. if `--aligner star` is specified then all the downstream results will be placed in the `star/` directory. This helps with organising the directory structure and more importantly, allows the end-user to get the results from multiple aligners by simply re-running the pipeline with a different `--aligner` option along the `-resume` parameter. It also means that results won't be overwritten when resuming the pipeline and can be used for benchmarking between alignment algorithms if required.

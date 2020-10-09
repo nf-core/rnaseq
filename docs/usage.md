@@ -1,6 +1,6 @@
 # nf-core/rnaseq: Usage
 
-## Introduction
+## Samplesheet input
 
 You will need to create a samplesheet file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row as shown in the examples below.
 
@@ -54,7 +54,24 @@ treatment,3,AEG588A6_S6_L004_R1_001.fastq.gz,,forward
 | `fastq_2`      | Full path to FastQ file for read 2. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
 | `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward` or `reverse`.                             |
 
-An example samplesheet has been provided with the [pipeline](https://github.com/nf-core/rnaseq/blob/master/assets/samplesheet.csv).
+An [example samplesheet]((https://github.com/nf-core/rnaseq/blob/master/assets/samplesheet.csv)) has been provided with the pipeline.
+
+## Alignment options
+
+By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) (i.e. `--aligner star`) to align the raw FastQ reads to the reference genome. STAR is fast but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome. Since the [RSEM](https://github.com/deweylab/RSEM) (i.e. `--aligner star_rsem`) workflow in the pipeline also uses STAR you should use the [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) aligner (i.e. `--aligner hisat2`) if you have memory limitations.
+
+You also have the option to pseudo-align and quantify your data with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) by providing the `--pseudo_aligner salmon` parameter. Salmon will then be run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon in isolation. By default, the pipeline will use the genome fasta and gtf file to generate the transcripts fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index` parameters, respectively.
+
+## Reference genome files
+
+The minimum reference genome requirements are a FASTA and GTF file, all other files required to run the pipeline can be generated from these files. However, it is more storage and compute friendly if you are able to re-use reference genome files as efficiently as possible. It is recommended to use the `--save_reference` parameter if you are using the pipeline to build new indices (e.g. those unavailable on [AWS iGenomes](https://nf-co.re/usage/reference_genomes)) so that you can save them somewhere locally. The index building step can be quite a time-consuming process and it permits their reuse for future runs of the pipeline to save disk space. You can then either provide the appropriate reference genome files on the command-line via the appropriate parameters (e.g. `--star_index '/path/to/STAR/index/'`) or via a custom config file.
+
+* If `--genome` is provided then the FASTA and GTF files (and existing indices) will be automatically obtained from AWS-iGenomes unless these have already been downloaded locally in the path specified by `--igenomes_base`.
+* If `--gff` is provided as input then this will be converted to a GTF file, or the latter will be used if both are provided.
+* If `--gene_bed` is not provided then it will be generated from the GTF file.
+* If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
+
+Compressed reference files are also supported by the pipeline i.e. standard files with the `.gz` extension and indices folders with the `tar.gz` extension.
 
 ## featureCounts Extra Gene Names
 
@@ -73,37 +90,6 @@ Note that you can also specify more than one desired value, separated by a comma
 #### Default "`exon`" Type
 
 By default, the pipeline uses `exon` as the default to assign reads. In case you need to adjust this, specify using the option `--fc_count_type` to use a different category present in your provided GTF file (3rd column). For example, for nuclear RNA-seq, one could count reads in introns in addition to exons using `--fc_count_type transcript`.
-
-### Transcriptome mapping with Salmon
-
-Use the `--pseudo_aligner salmon` option to perform additional quantification at the transcript- and gene-level using [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). This will be run in addition to either STAR or HiSat2 and cannot be run in isolation, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. By default, the pipeline will use the genome fasta and gtf file to generate the transcript fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index`, respectively.
-
-The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
-
-### Alignment tool
-
-By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) to align the raw FastQ reads to the reference genome. STAR is fast and common, but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome.
-
-If you prefer, you can use [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) as the alignment tool instead. Developed by the same group behind the popular Tophat aligner, HISAT2 has a much smaller memory footprint.
-
-To use HISAT2, use the parameter `--aligner hisat2` or set `params.aligner = 'hisat2'` in your config file.
-
-### Reference genome paths
-
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---star_index '/path/to/STAR/index' \
---hisat2_index '/path/to/HISAT2/index' \
---fasta '/path/to/reference.fasta' \
---gtf '/path/to/gene_annotation.gtf' \
---gff '/path/to/gene_annotation.gff' \
---bed12 '/path/to/gene_annotation.bed'
-```
-
-Note that only one of `--star_index` / `--hisat2_index` are needed depending on which aligner you are using (see below).
-
-The minimum requirements are a Fasta and GTF file. Note that `--gff` and `--bed` are auto-derived from the `--gtf` where needed and are not required. If these are provided and no others, then all other reference files will be automatically generated by the pipeline. If you specify a `--gff` file, it will be converted to GTF format automatically by the pipeline. If you specify both, the GTF is preferred over the GFF by the pipeline.
 
 ### "Type" of gene
 
@@ -140,18 +126,6 @@ GENCODE version:
 ```
 
 This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
-
-### Compressed Reference File Input
-
-By default, the pipeline assumes that the reference genome files are all uncompressed, i.e. raw fasta or gtf files. If instead you intend to use compressed or gzipped references, like directly from ENSEMBL:
-
-```bash
-nextflow run nf-core/rnaseq --input samplesheet.csv \
-    --genome ftp://ftp.ensembl.org/pub/release-97/fasta/microcebus_murinus/dna_index/Microcebus_murinus.Mmur_3.0.dna.toplevel.fa.gz \
-    --gtf ftp://ftp.ensembl.org/pub/release-97/gtf/microcebus_murinus/Microcebus_murinus.Mmur_3.0.97.gtf.gz
-```
-
-This assumes that ALL of the reference files are compressed, including the reference indices, e.g. for STAR, HiSat2 or Salmon. For instructions on how to create your own compressed reference files, see the instructions below. This also includes any files specified with `--additional_fasta`, which are assumed to be compressed as well when the `--fasta` file is compressed. The pipeline auto-detects `gz` input for reference files. Mixing of `gz` and non-compressed input is not possible!
 
 ## Running the pipeline
 

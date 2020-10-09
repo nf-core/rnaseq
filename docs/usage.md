@@ -73,6 +73,9 @@ The minimum reference genome requirements are a FASTA and GTF file, all other fi
 
 Compressed reference files are also supported by the pipeline i.e. standard files with the `.gz` extension and indices folders with the `tar.gz` extension.
 
+
+> **NB:** If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files please specify the `--gencode` parameter because the format of these files is slightly different to ENSEMBL genome files. The `--fc_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively. If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
+
 ## featureCounts Extra Gene Names
 
 ### Default "`gene_name`" Attribute Type
@@ -86,46 +89,6 @@ This behaviour can be modified by specifying `--fc_extra_attributes` when runnin
 See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
 Note that you can also specify more than one desired value, separated by a comma:
 `--fc_extra_attributes gene_id,...`
-
-#### Default "`exon`" Type
-
-By default, the pipeline uses `exon` as the default to assign reads. In case you need to adjust this, specify using the option `--fc_count_type` to use a different category present in your provided GTF file (3rd column). For example, for nuclear RNA-seq, one could count reads in introns in addition to exons using `--fc_count_type transcript`.
-
-### "Type" of gene
-
-The `gene_biotype` field which is typically found in Ensembl GTF files contains a key word description regarding the type of gene e.g. `protein_coding`, `lincRNA`, `rRNA`. In GENCODE GTF files this field has been renamed to `gene_type`.
-
-ENSEMBL version:
-
-```bash
-8       havana  transcript      70635318        70669174        .       -       .       gene_id "ENSG00000147592"; gene_version "9"; transcript_id "ENST00000522447"; transcript_version "5"; gene_name "LACTB2"; gene_source "ensembl_havana"; gene_biotype "protein_coding"; transcript_name "LACTB2-203"; transcript_source "havana"; transcript_biotype "protein_coding"; tag "CCDS"; ccds_id "CCDS6208"; tag "basic"; transcript_support_level "2";
-```
-
-GENCODE version:
-
-```bash
-chr8    HAVANA  transcript      70635318        70669174        .       -       .       gene_id "ENSG00000147592.9"; transcript_id "ENST00000522447.5"; gene_type "protein_coding"; gene_name "LACTB2"; transcript_type "protein_coding"; transcript_name "LACTB2-203"; level 2; protein_id "ENSP00000428801.1"; transcript_support_level "2"; tag "alternative_3_UTR"; tag "basic"; tag "appris_principal_1"; tag "CCDS"; ccdsid "CCDS6208.1"; havana_gene "OTTHUMG00000164430.2"; havana_transcript "OTTHUMT00000378747.1";
-```
-
-Therefore, for `featureCounts` to correctly count the different biotypes when using a GENCODE annotation the `fc_group_features_type` is automatically set to `gene_type` when the `--gencode` flag is specified.
-
-### Transcript IDs in FASTA files
-
-The transcript IDs in GENCODE fasta files are separated by vertical pipes (`|`) rather than spaces.
-
-ENSEMBL version:
-
-```bash
->ENST00000522447.5 cds chromosome:GRCh38:8:70635318:70669174:-1 gene:ENSG00000147592.9 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:LACTB2 description:lactamase beta 2 [Source:HGNC Symbol;Acc:HGNC:18512]
-```
-
-GENCODE version:
-
-```bash
->ENST00000522447.5|ENSG00000147592.9|OTTHUMG00000164430.2|OTTHUMT00000378747.1|LACTB2-203|LACTB2|1034|protein_coding|
-```
-
-This [issue](https://github.com/COMBINE-lab/salmon/issues/15) can be overcome by specifying the `--gencode` flag when building the Salmon index.
 
 ## Running the pipeline
 

@@ -323,7 +323,8 @@
                     "type": "string",
                     "default": "gene_name",
                     "fa_icon": "fas fa-plus-square",
-                    "description": "'--extraAtributes' parameter passed to featureCounts."
+                    "description": "'--extraAtributes' parameter passed to featureCounts.",
+                    "help_text": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file. This behaviour can be modified by specifying `--fc_extra_attributes` when running the pipeline which is passed on to featureCounts as the `--extraAttributes` parameter. Note that you can also specify more than one desired value, separated by a comma e.g. `--fc_extra_attributes gene_id,...`.\n"
                 },
                 "fc_group_features": {
                     "type": "string",

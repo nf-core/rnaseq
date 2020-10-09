@@ -71,24 +71,12 @@ The minimum reference genome requirements are a FASTA and GTF file, all other fi
 * If `--gene_bed` is not provided then it will be generated from the GTF file.
 * If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
 
-Compressed reference files are also supported by the pipeline i.e. standard files with the `.gz` extension and indices folders with the `tar.gz` extension.
+> **NB:** Compressed reference files are also supported by the pipeline i.e. standard files with the `.gz` extension and indices folders with the `tar.gz` extension.
 
+If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files please specify the `--gencode` parameter because the format of these files is slightly different to ENSEMBL genome files:
 
-> **NB:** If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files please specify the `--gencode` parameter because the format of these files is slightly different to ENSEMBL genome files. The `--fc_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively. If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
-
-## featureCounts Extra Gene Names
-
-### Default "`gene_name`" Attribute Type
-
-By default, the pipeline uses `gene_name` as the default gene identifier group. In case you need to adjust this, specify using the option `--fc_group_features` to use a different category present in your provided GTF file. Please also take care to use a suitable attribute to categorize the `biotype` of the selected features in your GTF then, using the option `--fc_group_features_type` (default: `gene_biotype`).
-
-### Extra Gene Names or IDs
-
-By default, the pipeline uses `gene_names` as additional gene identifiers apart from ENSEMBL identifiers in the pipeline.
-This behaviour can be modified by specifying `--fc_extra_attributes` when running the pipeline, which is passed on to featureCounts as an `--extraAttributes` parameter.
-See the user guide of the [Subread package here](http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf).
-Note that you can also specify more than one desired value, separated by a comma:
-`--fc_extra_attributes gene_id,...`
+* The `--fc_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively. 
+* If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
 
 ## Running the pipeline
 

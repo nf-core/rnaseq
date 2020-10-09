@@ -1,6 +1,10 @@
 # ![nf-core/rnaseq](images/nf-core-rnaseq_logo.png)
 
-This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report generated from the [full-sized test dataset](https://github.com/nf-core/test-datasets/tree/rnaseq#full-test-dataset-origin) for the pipeline using a command similar to the one below:
+
+```console
+nextflow run nf-core/rnaseq -profile test_full,<docker/singularity/institute>
+```
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 

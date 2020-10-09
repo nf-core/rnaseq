@@ -55,7 +55,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-If multiple libraries/runs have been provided for the same sample in the input samplesheet (e.g. to increase sequencing depth) then these will be merged at the very beginning of the pipeline in order to have consistent sample naming throughout the pipeline. Please refer to the [usage docs](https://nf-co.re/rnaseq/usage#introduction) to see how to specify these samples in the input samplesheet.
+If multiple libraries/runs have been provided for the same sample in the input samplesheet (e.g. to increase sequencing depth) then these will be merged at the very beginning of the pipeline in order to have consistent sample naming throughout the pipeline. Please refer to the [usage documentation](https://nf-co.re/rnaseq/usage#introduction) to see how to specify these samples in the input samplesheet.
 
 ### FastQC
 
@@ -80,8 +80,8 @@ If multiple libraries/runs have been provided for the same sample in the input s
 
 ### UMI-tools extract
 
-<details>
-<summary>Output files</summary>
+<details markdown="1">
+  <summary>Output files</summary>
 
 * `umitools/`
   * `*.fastq.gz`: If `--save_umi_intermeds` is specified, FastQ files **after** UMI extraction will be placed in this directory.
@@ -94,7 +94,7 @@ If multiple libraries/runs have been provided for the same sample in the input s
 ### TrimGalore
 
 <details>
-<summary>Output files</summary>
+  <summary>Output files</summary>
 
 * `trimgalore/`
   * `*.fq.gz`: If `--save_trimmed` is specified, FastQ files **after** adapter trimming will be placed in this directory.

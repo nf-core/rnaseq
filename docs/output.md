@@ -59,7 +59,7 @@ If multiple libraries/runs have been provided for the same sample in the input s
 
 ### FastQC
 
-<details>
+<details markdown="1">
 <summary>Output files</summary>
 
 * `fastqc/`

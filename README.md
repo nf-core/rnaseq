@@ -1,15 +1,18 @@
 # ![nf-core/rnaseq](docs/images/nf-core-rnaseq_logo.png)
 
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.07.1-brightgreen.svg)](https://www.nextflow.io/)
-[![Nextflow DSL2](https://img.shields.io/badge/nextflow-DSL2-brightgreen.svg)](https://www.nextflow.io/docs/latest/dsl2.html)
 [![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 [![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/rnaseq/actions)
 
-[![run with conda](http://img.shields.io/badge/run%20with-conda-brightgreen?logo=anaconda)](https://docs.conda.io/en/latest/)
-[![run with docker](https://img.shields.io/badge/run%20with-docker-orange?logo=docker)](https://www.docker.com/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.07.1-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow DSL2](https://img.shields.io/badge/nextflow-DSL2-brightgreen.svg)](https://www.nextflow.io/docs/latest/dsl2.html)
+
+[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
+[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-blue.svg)](https://sylabs.io/docs/)
 
+[![Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?logo=twitter)](https://twitter.com/nf_core)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23rnaseq-4A154B?logo=slack)](https://nfcore.slack.com/channels/rnaseq)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1400710.svg)](https://doi.org/10.5281/zenodo.1400710)
 
 ## Introduction

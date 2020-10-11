@@ -1,6 +1,6 @@
 # ![nf-core/rnaseq](docs/images/nf-core-rnaseq_logo.png)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A520.07.1-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A520.07.1-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-blue.svg)](https://sylabs.io/docs/)

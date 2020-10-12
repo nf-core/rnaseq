@@ -8,10 +8,10 @@ process STRINGTIE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/stringtie:2.1.2--h7e0af3c_1"
-    //container "https://depot.galaxyproject.org/singularity/stringtie:2.1.2--h7e0af3c_1"
+    container "quay.io/biocontainers/stringtie:2.1.4--h7e0af3c_0"
+    //container "https://depot.galaxyproject.org/singularity/stringtie:2.1.4--h7e0af3c_0"
 
-    conda (params.conda ? "bioconda::stringtie=2.1.2" : null)
+    conda (params.conda ? "bioconda::stringtie=2.1.4" : null)
 
     input:
     tuple val(meta), path(bam)

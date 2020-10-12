@@ -8,10 +8,10 @@ process RSEQC_BAMSTAT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/rseqc:4.0.0--py38h0213d0e_0"
-    //container "https://depot.galaxyproject.org/singularity/rseqc:4.0.0--py38h0213d0e_0"
+    container "quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1"
+    //container "https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1"
 
-    conda (params.conda ? "bioconda::rseqc=4.0.0" : null)
+    conda (params.conda ? "bioconda::rseqc=3.0.1" : null)
 
     input:
     tuple val(meta), path(bam)

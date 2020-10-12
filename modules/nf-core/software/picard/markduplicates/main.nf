@@ -8,10 +8,10 @@ process PICARD_MARKDUPLICATES {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/picard:2.23.2--0"
-    //container "https://depot.galaxyproject.org/singularity/picard:2.23.2--0"
+    container "quay.io/biocontainers/picard:2.23.6--0"
+    //container "https://depot.galaxyproject.org/singularity/picard:2.23.6--0"
 
-    conda (params.conda ? "bioconda::picard=2.23.2" : null)
+    conda (params.conda ? "bioconda::picard=2.23.6" : null)
 
     input:
     tuple val(meta), path(bam)

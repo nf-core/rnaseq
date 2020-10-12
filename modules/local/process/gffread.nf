@@ -7,10 +7,10 @@ process GFFREAD {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/gffread:0.11.7--h8b12597_0"
-    //container https://depot.galaxyproject.org/singularity/gffread:0.11.7--h8b12597_0
+    container "quay.io/biocontainers/gffread:0.12.1--h8b12597_0"
+    //container https://depot.galaxyproject.org/singularity/gffread:0.12.1--h8b12597_0
 
-    conda (params.conda ? "bioconda::gffread=0.11.7" : null)
+    conda (params.conda ? "bioconda::gffread=0.12.1" : null)
 
     input:
     path fasta

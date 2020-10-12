@@ -483,11 +483,11 @@ workflow {
 
         FEATURECOUNTS_MERGE_COUNTS ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, params.modules['featurecounts_merge_counts'] )
 
-        if (!params.skip_qc & !params.skip_edger) {    
-            EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
-            ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
-            ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
-        }
+        // if (!params.skip_qc & !params.skip_edger) {    
+        //     EDGER_CORRELATION ( SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, ch_mdsplot_header, ch_heatmap_header, params.modules['edger_correlation'] )
+        //     ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
+        //     ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
+        // }
     }
 
     /*

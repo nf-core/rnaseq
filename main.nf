@@ -689,6 +689,7 @@ workflow {
             salmon_quant_options,
             params.modules['salmon_merge_counts']
         )
+
         ch_salmon_multiqc    = QUANTIFY_SALMON.out.results
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
@@ -698,7 +699,10 @@ workflow {
     /*
      * MODULE: Pipeline reporting
      */
-    GET_SOFTWARE_VERSIONS ( ch_software_versions.map { it }.collect(), [publish_files : ['csv':'']] )
+    GET_SOFTWARE_VERSIONS ( 
+        ch_software_versions.map { it }.collect(), 
+        [publish_files : ['csv':'']] 
+    )
 
     /*
      * MultiQC
@@ -711,6 +715,7 @@ workflow {
         def multiqc_title = params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
         multiqc_options.args += "$multiqc_title"
         if (params.skip_alignment) { multiqc_options['publish_dir'] = '' }
+
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
@@ -744,6 +749,7 @@ workflow {
             ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             multiqc_options
         )
+        
         multiqc_report = MULTIQC.out.report.toList()
     }
 }

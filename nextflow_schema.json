@@ -265,12 +265,20 @@
                     "type": "string",
                     "default": "star",
                     "description": "Specifies the alignment algorithm to use - available options are 'star', 'star_rsem' and 'hisat2'.",
-                    "fa_icon": "fas fa-map-signs"
+                    "fa_icon": "fas fa-map-signs",
+                    "enum": [
+                        "star",
+                        "star_rsem",
+                        "hisat2"
+                    ]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
-                    "fa_icon": "fas fa-hamburger"
+                    "fa_icon": "fas fa-hamburger",
+                    "enum": [
+                        "salmon"
+                    ]
                 },
                 "star_ignore_sjdbgtf": {
                     "type": "boolean",

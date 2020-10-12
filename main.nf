@@ -49,21 +49,23 @@ anno_readme         = params.genomes[ params.genome ]?.readme
 ////////////////////////////////////////////////////
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'Input samplesheet not specified!' }
-if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) } else { exit 1, 'Genome fasta file not specified!' }
+if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.fasta) { ch_fasta = file(params.fasta) } else { exit 1, 'Genome fasta file not specified!' }
 if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
 if (params.gtf && params.gff)   { Checks.gtf_gff_warn(log) }
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
-    params.gtf, params.gff, params.gene_bed, params.additional_fasta, params.transcript_fasta,
-    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index,
-    params.splicesites, params.ribo_database_manifest
+    params.input, params.multiqc_config,
+    params.fasta, params.transcript_fasta, params.additional_fasta,
+    params.gtf, params.gff, params.gene_bed, 
+    params.ribo_database_manifest, params.splicesites,
+    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index
 ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check rRNA databases for sortmerna
-ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
+ch_ribo_db = file(params.ribo_database_manifest)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
@@ -131,7 +133,7 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 ////////////////////////////////////////////////////
 
 ch_multiqc_config        = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 // Header files for MultiQC
 ch_mdsplot_header        = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)

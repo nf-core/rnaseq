@@ -325,7 +325,7 @@ This script predicts the "strandedness" of the protocol (i.e. unstranded, sense 
 
 RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
 
-The MultiQC image below shows samples that were prepared using an antisense stranded protocol:
+![MultiQC - Strand check table](images/mqc_strand_check.png)
 
 ![MultiQC - RSeQC infer experiment plot](images/mqc_rseqc_inferexperiment.png)
 

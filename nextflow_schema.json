@@ -17,7 +17,7 @@
                 "input": {
                     "type": "string",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv",
                     "default": "./samplesheet.csv"
                 },
@@ -265,12 +265,20 @@
                     "type": "string",
                     "default": "star",
                     "description": "Specifies the alignment algorithm to use - available options are 'star', 'star_rsem' and 'hisat2'.",
-                    "fa_icon": "fas fa-map-signs"
+                    "fa_icon": "fas fa-map-signs",
+                    "enum": [
+                        "star",
+                        "star_rsem",
+                        "hisat2"
+                    ]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
-                    "fa_icon": "fas fa-hamburger"
+                    "fa_icon": "fas fa-hamburger",
+                    "enum": [
+                        "salmon"
+                    ]
                 },
                 "star_ignore_sjdbgtf": {
                     "type": "boolean",

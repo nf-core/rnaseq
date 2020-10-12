@@ -8,10 +8,10 @@ process TRIMGALORE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/trim-galore:0.6.5--0"
-    //container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.5--0"
+    container "quay.io/biocontainers/trim-galore:0.6.6--0"
+    //container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.6--0"
 
-    conda (params.conda ? "bioconda::trim-galore=0.6.5" : null)
+    conda (params.conda ? "bioconda::trim-galore=0.6.6" : null)
 
     input:
     tuple val(meta), path(reads)

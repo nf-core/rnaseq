@@ -54,7 +54,7 @@ treatment,3,AEG588A6_S6_L004_R1_001.fastq.gz,,forward
 | `fastq_2`      | Full path to FastQ file for read 2. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
 | `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward` or `reverse`.                             |
 
-An [example samplesheet]((https://github.com/nf-core/rnaseq/blob/master/assets/samplesheet.csv)) has been provided with the pipeline.
+An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 ## Alignment options
 

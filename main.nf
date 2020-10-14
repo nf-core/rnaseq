@@ -153,8 +153,8 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
 ////////////////////////////////////////////////////
 
-// Don't overwrite global params.modules , create a copy instead and use that within the main script.
-def modules = new LinkedHashMap(params.modules)
+// Don't overwrite global params.modules, create a copy instead and use that within the main script.
+def modules = params.modules.clone()
 
 def cat_fastq_options          = modules['cat_fastq']
 if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
@@ -221,12 +221,12 @@ def salmon_quant_options  = modules['salmon_quant']
 def unmapped              = params.save_unaligned ? " --writeUnmappedNames" : ''
 salmon_quant_options.args += unmapped
         
-include { INPUT_CHECK                 } from './modules/local/subworkflow/input_check'     addParams( options: [:] )
-include { PREPARE_GENOME              } from './modules/local/subworkflow/prepare_genome'  addParams( gffread_options: gffread_options, genome_options: publish_genome_options )
-include { ALIGN_STAR                  } from './modules/local/subworkflow/align_star'      addParams( index_options: star_genomegenerate_options, align_options: star_align_options, samtools_options: samtools_sort_options )
-include { ALIGN_HISAT2                } from './modules/local/subworkflow/align_hisat2'    addParams( index_options: hisat2_build_options, align_options: hisat2_align_options, samtools_options: samtools_sort_options )
-include { QUANTIFY_RSEM               } from './modules/local/subworkflow/quantify_rsem'   addParams( index_options: publish_index_options, preparereference_options: rsem_preparereference_options, calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
-include { QUANTIFY_SALMON             } from './modules/local/subworkflow/quantify_salmon' addParams( index_options: publish_index_options, genome_options: publish_genome_options, salmon_index_options: salmon_index_options, salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
+include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'     addParams( options: [:] )
+include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'  addParams( gffread_options: gffread_options, genome_options: publish_genome_options )
+include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'      addParams( index_options: star_genomegenerate_options, align_options: star_align_options, samtools_options: samtools_sort_options )
+include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'    addParams( index_options: hisat2_build_options, align_options: hisat2_align_options, samtools_options: samtools_sort_options )
+include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'   addParams( index_options: publish_index_options, preparereference_options: rsem_preparereference_options, calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon' addParams( index_options: publish_index_options, genome_options: publish_genome_options, salmon_index_options: salmon_index_options, salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -280,9 +280,9 @@ def nextseq              = params.trim_nextseq > 0 ? " --nextseq ${params.trim_n
 trimgalore_options.args  += nextseq
 if (params.save_trimmed) { trimgalore_options.publish_files.put('fq.gz','') }
 
-include { FASTQC_UMITOOLS_TRIMGALORE  } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore' addParams( fastqc_options: modules['fastqc'], umitools_options: umitools_extract_options, trimgalore_options: trimgalore_options               )
-include { MARK_DUPLICATES_PICARD      } from './modules/nf-core/subworkflow/mark_duplicates_picard'     addParams( markduplicates_options: modules['picard_markduplicates'], samtools_options: modules['picard_markduplicates_samtools'] )
-include { RSEQC                       } from './modules/nf-core/subworkflow/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
+include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore' addParams( fastqc_options: modules['fastqc'], umitools_options: umitools_extract_options, trimgalore_options: trimgalore_options               )
+include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'     addParams( markduplicates_options: modules['picard_markduplicates'], samtools_options: modules['picard_markduplicates_samtools'] )
+include { RSEQC                      } from './modules/nf-core/subworkflow/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */

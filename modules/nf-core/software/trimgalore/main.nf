@@ -11,10 +11,12 @@ process TRIMGALORE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/trim-galore:0.6.6--0"
-    //container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.6--0"
-
-    conda (params.conda ? "bioconda::trim-galore=0.6.6" : null)
+    conda (params.enable_conda ? "bioconda::trim-galore=0.6.6" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.6--0"
+    } else {
+        container "quay.io/biocontainers/trim-galore:0.6.6--0"
+    }
 
     input:
     tuple val(meta), path(reads)

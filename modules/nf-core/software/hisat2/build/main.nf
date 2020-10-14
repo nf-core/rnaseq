@@ -12,10 +12,12 @@ process HISAT2_BUILD {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/hisat2:2.2.0--py37hfa133b6_4"
-    //container "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37hfa133b6_4"
-
-    conda (params.conda ? "bioconda::hisat2=2.2.0" : null)
+    conda (params.enable_conda ? "bioconda::hisat2=2.2.0" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37hfa133b6_4"
+    } else {
+        container "quay.io/biocontainers/hisat2:2.2.0--py37hfa133b6_4"
+    }
 
     input:
     path fasta

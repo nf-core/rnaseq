@@ -11,11 +11,13 @@ process STAR_ALIGN {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    // Don't upgrade me - 2.7X indices incompatible with iGenomes.
-    container "quay.io/biocontainers/star:2.6.1d--0"
-    //container "https://depot.galaxyproject.org/singularity/star:2.6.1d--0"
-
-    conda (params.conda ? "bioconda::star=2.6.1d" : null)
+    // Note: 2.7X indices incompatible with AWS iGenomes.
+    conda (params.enable_conda ? "bioconda::star=2.6.1d" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "https://depot.galaxyproject.org/singularity/star:2.6.1d--0"
+    } else {
+        container "quay.io/biocontainers/star:2.6.1d--0"
+    }
 
     input:
     tuple val(meta), path(reads)

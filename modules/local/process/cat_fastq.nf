@@ -13,9 +13,12 @@ process CAT_FASTQ {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'merged_fastq', publish_id:meta.id) }
 
-    container "biocontainers/biocontainers:v1.2.0_cv1"
-
-    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    } else {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    }
     
     input:
     tuple val(meta), path(reads)

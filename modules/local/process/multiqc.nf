@@ -10,10 +10,12 @@ process MULTIQC {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/multiqc:1.9--pyh9f0ad1d_0"
-    //container "https://depot.galaxyproject.org/singularity/multiqc:1.9--pyh9f0ad1d_0"
-
-    conda (params.conda ? "bioconda::multiqc=1.9" : null)
+    conda (params.enable_conda ? "bioconda::multiqc=1.9" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "https://depot.galaxyproject.org/singularity/multiqc:1.9--pyh9f0ad1d_0"
+    } else {
+        container "quay.io/biocontainers/multiqc:1.9--pyh9f0ad1d_0"
+    }
 
     input:
     path multiqc_config

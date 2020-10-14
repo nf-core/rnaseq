@@ -10,10 +10,12 @@ process SALMON_TX2GENE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/python:3.8.3"
-    //container  https://depot.galaxyproject.org/singularity/python:3.8.3
-
-    conda (params.conda ? "conda-forge::python=3.8.3" : null)
+    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "https://depot.galaxyproject.org/singularity/python:3.8.3"
+    } else {
+        container "quay.io/biocontainers/python:3.8.3"
+    }
 
     input:
     path ("salmon/*")

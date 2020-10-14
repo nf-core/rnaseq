@@ -9,9 +9,12 @@ process RSEM_MERGE_COUNTS {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "biocontainers/biocontainers:v1.2.0_cv1"
-    
-    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    if (workflow.containerEngine == 'singularity') {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    } else {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    }
     
     input:
     path ('genes/*')

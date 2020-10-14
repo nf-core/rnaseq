@@ -1,12 +1,14 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process SALMON_TX2GENE {
     tag "$gtf"
     label "process_low"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     container "quay.io/biocontainers/python:3.8.3"
     //container  https://depot.galaxyproject.org/singularity/python:3.8.3
@@ -16,8 +18,7 @@ process SALMON_TX2GENE {
     input:
     path ("salmon/*")
     path gtf
-    val  options
-
+    
     output:
     path "*.tsv"
 

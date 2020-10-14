@@ -1,10 +1,12 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process MULTIQC_CUSTOM_FAIL_MAPPED {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     container "biocontainers/biocontainers:v1.2.0_cv1"
     
@@ -12,8 +14,7 @@ process MULTIQC_CUSTOM_FAIL_MAPPED {
     
     input:
     val fail_mapped
-    val options
-
+    
     output:
     path "*.tsv"
 

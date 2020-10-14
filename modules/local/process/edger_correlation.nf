@@ -1,11 +1,13 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process EDGER_CORRELATION {
     label 'process_low'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     conda (params.conda ? "${baseDir}/environment.yml" : null)
 
@@ -13,8 +15,7 @@ process EDGER_CORRELATION {
     path counts
     path mdsplot_header
     path heatmap_header
-    val  options
-
+    
     output:
     path "*.pdf"         , optional:true, emit: pdf
     path "*_matrix.csv"  , optional:true, emit: matrix

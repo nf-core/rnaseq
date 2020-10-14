@@ -1,13 +1,15 @@
 // Import generic module functions
 include { saveFiles } from './functions'
 
+params.options = [:]
+
 /*
  * Parse software version numbers
  */
 process GET_SOFTWARE_VERSIONS {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:'pipeline_info', publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', publish_id:'') }
 
     container "quay.io/biocontainers/python:3.8.3"
     //container  https://depot.galaxyproject.org/singularity/python:3.8.3
@@ -16,8 +18,7 @@ process GET_SOFTWARE_VERSIONS {
 
     input:
     path versions
-    val  options
-
+    
     output:
     path "software_versions.csv"     , emit: csv
     path 'software_versions_mqc.yaml', emit: yaml

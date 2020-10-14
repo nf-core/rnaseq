@@ -1,10 +1,13 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process MULTIQC_CUSTOM_STRAND_CHECK {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     container "biocontainers/biocontainers:v1.2.0_cv1"
     
@@ -12,8 +15,7 @@ process MULTIQC_CUSTOM_STRAND_CHECK {
     
     input:
     val fail_strand
-    val options
-
+    
     output:
     path "*.tsv"
 

@@ -1,11 +1,13 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process FEATURECOUNTS_MERGE_COUNTS {
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     container "biocontainers/biocontainers:v1.2.0_cv1"
 
@@ -13,8 +15,7 @@ process FEATURECOUNTS_MERGE_COUNTS {
     
     input:
     path ('counts/*')
-    val  options
-
+    
     output:
     path "*.counts.tsv", emit: counts
 

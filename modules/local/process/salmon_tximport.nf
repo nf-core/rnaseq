@@ -1,12 +1,14 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process SALMON_TXIMPORT {
     tag "$meta.id"
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/bioconductor-tximeta:1.6.3--r40_0"
     //container https://depot.galaxyproject.org/singularity/bioconductor-tximeta:1.6.3--r40_0
@@ -16,8 +18,7 @@ process SALMON_TXIMPORT {
     input:
     tuple val(meta), path("salmon/*")
     path  tx2gene
-    val   options
-
+    
     output:
     tuple val(meta), path("*gene_tpm.tsv")         , emit: tpm_gene
     tuple val(meta), path("*gene_counts.tsv")      , emit: counts_gene

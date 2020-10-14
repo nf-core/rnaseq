@@ -1,12 +1,15 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process DUPRADAR {
     tag "$meta.id"
     label 'process_long'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_1"
     //container https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.18.0--r40_1
@@ -16,7 +19,6 @@ process DUPRADAR {
     input:
     tuple val(meta), path(bam)
     path  gtf
-    val   options
 
     output:
     tuple val(meta), path("*.pdf")    , emit: pdf
@@ -26,8 +28,7 @@ process DUPRADAR {
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def strandedness = 0
     if (meta.strandedness == 'forward') {

@@ -1,11 +1,13 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process SALMON_MERGE_COUNTS {
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     container "biocontainers/biocontainers:v1.2.0_cv1"
     
@@ -16,8 +18,7 @@ process SALMON_MERGE_COUNTS {
     path ('genes_tpm/*')
     path ('isoforms_counts/*')
     path ('isoforms_tpm/*')
-    val  options
-
+    
     output:
     path "salmon.merged.gene_counts.tsv"      , emit: counts_gene
     path "salmon.merged.gene_tpm.tsv"         , emit: tpm_gene

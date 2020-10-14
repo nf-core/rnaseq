@@ -1,12 +1,15 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process SUBREAD_FEATURECOUNTS {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/subread:2.0.1--hed695b0_0"
     //container "https://depot.galaxyproject.org/singularity/subread:2.0.1--hed695b0_0"
@@ -15,8 +18,7 @@ process SUBREAD_FEATURECOUNTS {
 
     input:
     tuple val(meta), path(bams), path(annotation)
-    val   options
-
+    
     output:
     tuple val(meta), path("*featureCounts.txt")        , emit: counts
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
@@ -24,8 +26,7 @@ process SUBREAD_FEATURECOUNTS {
 
     script:
     def software   = getSoftwareName(task.process)
-    def ioptions   = initOptions(options)
-    def prefix     = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def paired_end = meta.single_end ? '' : '-p'
 
     def strandedness = 0
@@ -36,7 +37,7 @@ process SUBREAD_FEATURECOUNTS {
     }
     """
     featureCounts \\
-        $ioptions.args \\
+        $options.args \\
         $paired_end \\
         -T $task.cpus \\
         -a $annotation \\

@@ -1,13 +1,15 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 def VERSION = '2.2.0'
 
 process HISAT2_EXTRACTSPLICESITES {
     tag "$gtf"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     container "quay.io/biocontainers/hisat2:2.2.0--py37hfa133b6_4"
     //container "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37hfa133b6_4"
@@ -16,7 +18,6 @@ process HISAT2_EXTRACTSPLICESITES {
 
     input:
     path gtf
-    val  options
 
     output:
     path "*.splice_sites.txt", emit: txt

@@ -1,12 +1,15 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process SORTMERNA {
     tag "$meta.id"
     label "process_high"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/sortmerna:4.2.0--0"
     //container "https://depot.galaxyproject.org/singularity/sortmerna:4.2.0--0"
@@ -16,8 +19,7 @@ process SORTMERNA {
     input:
     tuple val(meta), path(reads)
     path  fasta
-    val   options
-
+    
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
@@ -25,8 +27,7 @@ process SORTMERNA {
 
     script:
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def Refs = ""
     for (i=0; i<fasta.size(); i++) { Refs+= " --ref ${fasta[i]}" }
@@ -39,7 +40,7 @@ process SORTMERNA {
             --workdir . \\
             --aligned rRNA_reads \\
             --other non_rRNA_reads \\
-            $ioptions.args
+            $options.args
 
         gzip -f < non_rRNA_reads.fq > ${prefix}.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
@@ -58,7 +59,7 @@ process SORTMERNA {
             --other non_rRNA_reads \\
             --paired_in \\
             --out2 \\
-            $ioptions.args
+            $options.args
 
         gzip -f < non_rRNA_reads_fwd.fq > ${prefix}_1.fastq.gz
         gzip -f < non_rRNA_reads_rev.fq > ${prefix}_2.fastq.gz

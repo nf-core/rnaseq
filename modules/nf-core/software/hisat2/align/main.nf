@@ -1,6 +1,9 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 def VERSION = '2.2.0'
 
 process HISAT2_ALIGN {
@@ -8,7 +11,7 @@ process HISAT2_ALIGN {
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
     //container "https://depot.galaxyproject.org/singularity/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
@@ -19,8 +22,7 @@ process HISAT2_ALIGN {
     tuple val(meta), path(reads)
     path  index
     path  splicesites
-    val   options
-
+    
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.log"), emit: summary
@@ -30,8 +32,7 @@ process HISAT2_ALIGN {
 
     script:
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -53,7 +54,7 @@ process HISAT2_ALIGN {
             --threads $task.cpus \\
             $seq_center \\
             $unaligned \\
-            $ioptions.args \\
+            $options.args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
         echo $VERSION > ${software}.version.txt
@@ -74,7 +75,7 @@ process HISAT2_ALIGN {
             $unaligned \\
             --no-mixed \\
             --no-discordant \\
-            $ioptions.args \\
+            $options.args \\
             | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
 
         if [ -f ${prefix}.unmapped.fastq.1.gz ]; then

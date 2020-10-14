@@ -1,12 +1,15 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process UMITOOLS_EXTRACT {
     tag "$meta.id"
     label "process_low"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/umi_tools:1.0.1--py37h516909a_1"
     //container "https://depot.galaxyproject.org/singularity/umi_tools:1.0.1--py37h516909a_1"
@@ -15,7 +18,6 @@ process UMITOOLS_EXTRACT {
 
     input:
     tuple val(meta), path(reads)
-    val   options
 
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
@@ -24,15 +26,14 @@ process UMITOOLS_EXTRACT {
 
     script:
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     if (meta.single_end) {
         """
         umi_tools \\
             extract \\
             -I $reads \\
             -S ${prefix}.umi_extract.fastq.gz \\
-            $ioptions.args \\
+            $options.args \\
             > ${prefix}.umi_extract.log
 
         umi_tools --version | sed -e "s/UMI-tools version: //g" > ${software}.version.txt
@@ -45,7 +46,7 @@ process UMITOOLS_EXTRACT {
             --read2-in=${reads[1]} \\
             -S ${prefix}.umi_extract_1.fastq.gz \\
             --read2-out=${prefix}.umi_extract_2.fastq.gz \\
-            $ioptions.args \\
+            $options.args \\
             > ${prefix}.umi_extract.log
 
         umi_tools --version | sed -e "s/UMI-tools version: //g" > ${software}.version.txt

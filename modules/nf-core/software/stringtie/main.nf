@@ -1,12 +1,15 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process STRINGTIE {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     container "quay.io/biocontainers/stringtie:2.1.4--h7e0af3c_0"
     //container "https://depot.galaxyproject.org/singularity/stringtie:2.1.4--h7e0af3c_0"
@@ -16,8 +19,7 @@ process STRINGTIE {
     input:
     tuple val(meta), path(bam)
     path  gtf
-    val   options
-
+    
     output:
     tuple val(meta), path("*.coverage.gtf")   , emit: coverage_gtf
     tuple val(meta), path("*.transcripts.gtf"), emit: transcript_gtf
@@ -27,8 +29,7 @@ process STRINGTIE {
 
     script:
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -45,7 +46,7 @@ process STRINGTIE {
         -A ${prefix}.gene_abundance.txt \\
         -C ${prefix}.coverage.gtf \\
         -b ${prefix}.ballgown \\
-        $ioptions.args
+        $options.args
 
     stringtie --version > ${software}.version.txt
     """

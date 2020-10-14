@@ -2,7 +2,6 @@
 include { saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
 
 process MULTIQC_CUSTOM_STRAND_CHECK {
     publishDir "${params.outdir}",

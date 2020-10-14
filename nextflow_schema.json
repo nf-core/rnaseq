@@ -584,9 +584,9 @@
                     "fa_icon": "fas fa-network-wired",
                     "hidden": true
                 },
-                "conda": {
+                "enable_conda": {
                     "type": "boolean",
-                    "description": "Run this workflow with Conda.",
+                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
                 }

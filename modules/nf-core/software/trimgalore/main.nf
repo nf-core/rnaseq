@@ -12,7 +12,7 @@ process TRIMGALORE {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::trim-galore=0.6.6" : null)
-    if (workflow.containerEngine == 'singularity') {
+    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.6--0"
     } else {
         container "quay.io/biocontainers/trim-galore:0.6.6--0"

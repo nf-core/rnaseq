@@ -12,7 +12,7 @@ process PICARD_MARKDUPLICATES {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::picard=2.23.6" : null)
-    if (workflow.containerEngine == 'singularity') {
+    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/picard:2.23.6--0"
     } else {
         container "quay.io/biocontainers/picard:2.23.6--0"

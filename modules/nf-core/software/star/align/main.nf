@@ -13,7 +13,7 @@ process STAR_ALIGN {
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda (params.enable_conda ? "bioconda::star=2.6.1d" : null)
-    if (workflow.containerEngine == 'singularity') {
+    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/star:2.6.1d--0"
     } else {
         container "quay.io/biocontainers/star:2.6.1d--0"

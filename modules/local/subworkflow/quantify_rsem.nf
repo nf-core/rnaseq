@@ -68,7 +68,7 @@ workflow QUANTIFY_RSEM {
     stats                    = BAM_SORT_SAMTOOLS.out.stats                    // channel: [ val(meta), [ stats ] ]
     flagstat                 = BAM_SORT_SAMTOOLS.out.flagstat                 // channel: [ val(meta), [ flagstat ] ]
     idxstats                 = BAM_SORT_SAMTOOLS.out.idxstats                 // channel: [ val(meta), [ idxstats ] ]
-    samtools_version         = BAM_SORT_SAMTOOLS.out.samtools_version         //    path: *.version.txt
+    samtools_version         = BAM_SORT_SAMTOOLS.out.version                  //    path: *.version.txt
 
     merged_counts_gene       = RSEM_MERGE_COUNTS.out.counts_gene              //    path: *.gene_counts.tsv
     merged_tpm_gene          = RSEM_MERGE_COUNTS.out.tpm_gene                 //    path: *.gene_tpm.tsv

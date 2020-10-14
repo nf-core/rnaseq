@@ -2,50 +2,50 @@
  * Read QC, UMI extraction and trimming
  */
 
-include { FASTQC           } from '../software/fastqc/main'
-include { UMITOOLS_EXTRACT } from '../software/umitools/extract/main'
-include { TRIMGALORE       } from '../software/trimgalore/main'
+params.fastqc_options     = [:]
+params.umitools_options   = [:]
+params.trimgalore_options = [:]
+
+include { FASTQC           } from '../software/fastqc/main'           addParams( options: params.fastqc_options     )
+include { UMITOOLS_EXTRACT } from '../software/umitools/extract/main' addParams( options: params.umitools_options   )
+include { TRIMGALORE       } from '../software/trimgalore/main'       addParams( options: params.trimgalore_options )
 
 workflow FASTQC_UMITOOLS_TRIMGALORE {
     take:
-    reads              // channel: [ val(meta), [ reads ] ]
-    skip_fastqc        // boolean: true/false
-    umi_extract        // boolean: true/false
-    skip_trimming      // boolean: true/false
-
-    fastqc_options     // map: options for FastQC module
-    umitools_options   // map: options for UMI-tools extract module
-    trimgalore_options // map: options for TrimGalore! module
+    reads         // channel: [ val(meta), [ reads ] ]
+    skip_fastqc   // boolean: true/false
+    umi_extract   // boolean: true/false
+    skip_trimming // boolean: true/false
 
     main:
-    fastqc_html = Channel.empty()
-    fastqc_zip = Channel.empty()
+    fastqc_html    = Channel.empty()
+    fastqc_zip     = Channel.empty()
     fastqc_version = Channel.empty()
     if (!skip_fastqc) {
-        FASTQC ( reads, fastqc_options ).html.set { fastqc_html }
-        fastqc_zip = FASTQC.out.zip
+        FASTQC ( reads ).html.set { fastqc_html }
+        fastqc_zip     = FASTQC.out.zip
         fastqc_version = FASTQC.out.version
     }
 
-    umi_reads = reads
-    umi_log = Channel.empty()
+    umi_reads        = reads
+    umi_log          = Channel.empty()
     umitools_version = Channel.empty()
     if (umi_extract) {
-        UMITOOLS_EXTRACT ( reads, umitools_options ).reads.set { umi_reads }
-        umi_log = UMITOOLS_EXTRACT.out.log
+        UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
+        umi_log          = UMITOOLS_EXTRACT.out.log
         umitools_version = UMITOOLS_EXTRACT.out.version
     }
 
     trim_reads = umi_reads
-    trim_html = Channel.empty()
-    trim_zip = Channel.empty()
-    trim_log = Channel.empty()
+    trim_html  = Channel.empty()
+    trim_zip   = Channel.empty()
+    trim_log   = Channel.empty()
     trimgalore_version = Channel.empty()
     if (!skip_trimming) {
-        TRIMGALORE ( umi_reads, trimgalore_options ).reads.set { trim_reads }
-        trim_html = TRIMGALORE.out.html
-        trim_zip = TRIMGALORE.out.zip
-        trim_log = TRIMGALORE.out.log
+        TRIMGALORE ( umi_reads ).reads.set { trim_reads }
+        trim_html  = TRIMGALORE.out.html
+        trim_zip   = TRIMGALORE.out.zip
+        trim_log   = TRIMGALORE.out.log
         trimgalore_version = TRIMGALORE.out.version
     }
 

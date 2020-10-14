@@ -2,26 +2,27 @@
  * Run RSeQC modules
  */
 
-include { RSEQC_BAMSTAT            } from '../software/rseqc/bamstat/main'
-include { RSEQC_INNERDISTANCE      } from '../software/rseqc/innerdistance/main'
-include { RSEQC_INFEREXPERIMENT    } from '../software/rseqc/inferexperiment/main'
-include { RSEQC_JUNCTIONANNOTATION } from '../software/rseqc/junctionannotation/main'
-include { RSEQC_JUNCTIONSATURATION } from '../software/rseqc/junctionsaturation/main'
-include { RSEQC_READDISTRIBUTION   } from '../software/rseqc/readdistribution/main'
-include { RSEQC_READDUPLICATION    } from '../software/rseqc/readduplication/main'
+params.bamstat_options            = [:]
+params.innerdistance_options      = [:]
+params.inferexperiment_options    = [:]
+params.junctionannotation_options = [:]
+params.junctionsaturation_options = [:]
+params.readdistribution_options   = [:]
+params.readduplication_options    = [:]
+
+include { RSEQC_BAMSTAT            } from '../software/rseqc/bamstat/main'            addParams( options: params.bamstat_options            )
+include { RSEQC_INNERDISTANCE      } from '../software/rseqc/innerdistance/main'      addParams( options: params.innerdistance_options      )
+include { RSEQC_INFEREXPERIMENT    } from '../software/rseqc/inferexperiment/main'    addParams( options: params.inferexperiment_options    )
+include { RSEQC_JUNCTIONANNOTATION } from '../software/rseqc/junctionannotation/main' addParams( options: params.junctionannotation_options )
+include { RSEQC_JUNCTIONSATURATION } from '../software/rseqc/junctionsaturation/main' addParams( options: params.junctionsaturation_options )
+include { RSEQC_READDISTRIBUTION   } from '../software/rseqc/readdistribution/main'   addParams( options: params.readdistribution_options   )
+include { RSEQC_READDUPLICATION    } from '../software/rseqc/readduplication/main'    addParams( options: params.readduplication_options    )
 
 workflow RSEQC {
     take:
-    bam                        // channel: [ val(meta), [ ban ] ]
-    bed                        //    file: /path/to/genome.bed
-    rseqc_modules              //    list: rseqc modules to run
-    bamstat_options            //     map: options for rseqc_bamstat module
-    innerdistance_options      //     map: options for rseqc_innerdistance module
-    inferexperiment_options    //     map: options for rseqc_inferexperiment module
-    junctionannotation_options //     map: options for rseqc_junctionannotation module
-    junctionsaturation_options //     map: options for rseqc_junctionsaturation module
-    readdistribution_options   //     map: options for rseqc_readdistribution module
-    readduplication_options    //     map: options for rseqc_readduplication module
+    bam           // channel: [ val(meta), [ ban ] ]
+    bed           //    file: /path/to/genome.bed
+    rseqc_modules //    list: rseqc modules to run
 
     main:
     /*
@@ -30,7 +31,7 @@ workflow RSEQC {
     version       = Channel.empty()
     bamstat_txt   = Channel.empty()
     if ('bam_stat' in rseqc_modules) {
-        RSEQC_BAMSTAT ( bam, bamstat_options )
+        RSEQC_BAMSTAT ( bam )
         bamstat_txt = RSEQC_BAMSTAT.out.txt
         version     = RSEQC_BAMSTAT.out.version
     }
@@ -44,7 +45,7 @@ workflow RSEQC {
     innerdistance_pdf      = Channel.empty()
     innerdistance_rscript  = Channel.empty()
     if ('inner_distance' in rseqc_modules) {
-        RSEQC_INNERDISTANCE ( bam, bed,  innerdistance_options)
+        RSEQC_INNERDISTANCE ( bam, bed )
         innerdistance_distance = RSEQC_INNERDISTANCE.out.distance
         innerdistance_freq     = RSEQC_INNERDISTANCE.out.freq
         innerdistance_mean     = RSEQC_INNERDISTANCE.out.mean
@@ -58,7 +59,7 @@ workflow RSEQC {
      */
     inferexperiment_txt   = Channel.empty()
     if ('infer_experiment' in rseqc_modules) {
-        RSEQC_INFEREXPERIMENT ( bam, bed, inferexperiment_options )
+        RSEQC_INFEREXPERIMENT ( bam, bed )
         inferexperiment_txt = RSEQC_INFEREXPERIMENT.out.txt
         version             = RSEQC_INFEREXPERIMENT.out.version
     }
@@ -74,7 +75,7 @@ workflow RSEQC {
     junctionannotation_rscript      = Channel.empty()
     junctionannotation_log          = Channel.empty()
     if ('junction_annotation' in rseqc_modules) {
-        RSEQC_JUNCTIONANNOTATION ( bam, bed, junctionannotation_options )
+        RSEQC_JUNCTIONANNOTATION ( bam, bed )
         junctionannotation_bed          = RSEQC_JUNCTIONANNOTATION.out.bed
         junctionannotation_interact_bed = RSEQC_JUNCTIONANNOTATION.out.interact_bed
         junctionannotation_xls          = RSEQC_JUNCTIONANNOTATION.out.xls
@@ -91,7 +92,7 @@ workflow RSEQC {
     junctionsaturation_pdf     = Channel.empty()
     junctionsaturation_rscript = Channel.empty()
     if ('junction_saturation' in rseqc_modules) {
-        RSEQC_JUNCTIONSATURATION ( bam, bed, junctionsaturation_options )
+        RSEQC_JUNCTIONSATURATION ( bam, bed )
         junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.pdf
         junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.rscript
         version                    = RSEQC_JUNCTIONSATURATION.out.version
@@ -102,7 +103,7 @@ workflow RSEQC {
      */
     readdistribution_txt = Channel.empty()
     if ('read_distribution' in rseqc_modules) {
-        RSEQC_READDISTRIBUTION ( bam, bed, readdistribution_options )
+        RSEQC_READDISTRIBUTION ( bam, bed )
         readdistribution_txt = RSEQC_READDISTRIBUTION.out.txt
         version              = RSEQC_READDISTRIBUTION.out.version
     }
@@ -115,7 +116,7 @@ workflow RSEQC {
     readduplication_pdf     = Channel.empty()
     readduplication_rscript = Channel.empty()
     if ('read_duplication' in rseqc_modules) {
-        RSEQC_READDUPLICATION ( bam, readduplication_options )
+        RSEQC_READDUPLICATION ( bam )
         readduplication_seq_xls = RSEQC_READDUPLICATION.out.seq_xls
         readduplication_pos_xls = RSEQC_READDUPLICATION.out.pos_xls
         readduplication_pdf     = RSEQC_READDUPLICATION.out.pdf

@@ -14,10 +14,8 @@ process SAMPLESHEET_CHECK {
 
     conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
     if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        println("Singularity")
         container "https://depot.galaxyproject.org/singularity/python:3.8.3"
     } else {
-        println("Docker")
         container "quay.io/biocontainers/python:3.8.3"
     }
 

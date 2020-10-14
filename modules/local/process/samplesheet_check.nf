@@ -13,9 +13,11 @@ process SAMPLESHEET_CHECK {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', publish_id:'') }
 
     conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
-    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        println("Singularity")
         container "https://depot.galaxyproject.org/singularity/python:3.8.3"
     } else {
+        println("Docker")
         container "quay.io/biocontainers/python:3.8.3"
     }
 

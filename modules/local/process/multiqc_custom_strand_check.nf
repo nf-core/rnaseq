@@ -9,7 +9,7 @@ process MULTIQC_CUSTOM_STRAND_CHECK {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
-    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
         container "biocontainers/biocontainers:v1.2.0_cv1"
     } else {
         container "biocontainers/biocontainers:v1.2.0_cv1"

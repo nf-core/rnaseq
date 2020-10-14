@@ -11,7 +11,7 @@ process SALMON_TXIMPORT {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::bioconductor-tximeta=1.6.3" : null)
-    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bioconductor-tximeta:1.6.3--r40_0"
     } else {
         container "quay.io/biocontainers/bioconductor-tximeta:1.6.3--r40_0"

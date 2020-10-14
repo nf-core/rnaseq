@@ -11,7 +11,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     conda (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.18.1" : null)
-    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.18.1--r40_0"
     } else {
         container "quay.io/biocontainers/bioconductor-summarizedexperiment:1.18.1--r40_0"

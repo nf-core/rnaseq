@@ -12,7 +12,7 @@ process QUALIMAP_RNASEQ {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::qualimap=2.2.2d" : null)
-    if (workflow.containerEngine == 'singularity' || !params.pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1"
     } else {
         container "quay.io/biocontainers/qualimap:2.2.2d--1"

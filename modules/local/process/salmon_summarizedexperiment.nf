@@ -1,24 +1,27 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process SALMON_SUMMARIZEDEXPERIMENT {
     tag "$tx2gene"
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/bioconductor-summarizedexperiment:1.18.1--r40_0"
-    //container https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.18.1--r40_0
-
-    conda (params.conda ? "bioconda::bioconductor-summarizedexperiment=1.18.1" : null)
+    conda (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.18.1" : null)
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.18.1--r40_0"
+    } else {
+        container "quay.io/biocontainers/bioconductor-summarizedexperiment:1.18.1--r40_0"
+    }
 
     input:
     path counts
     path tpm
     path tx2gene
-    val  options
-
+    
     output:
     path "*.rds"         , emit: rds
     path  "*.version.txt", emit: version

@@ -1,23 +1,27 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process STAR_GENOMEGENERATE {
     tag "$fasta"
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    // Don't upgrade me - 2.7X indices incompatible with iGenomes.
-    container "quay.io/biocontainers/star:2.6.1d--0"
-    //container "https://depot.galaxyproject.org/singularity/star:2.6.1d--0"
-
-    conda (params.conda ? "bioconda::star=2.6.1d" : null)
+    // Note: 2.7X indices incompatible with AWS iGenomes.
+    conda (params.enable_conda ? "bioconda::star=2.6.1d" : null)
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/star:2.6.1d--0"
+    } else {
+        container "quay.io/biocontainers/star:2.6.1d--0"
+    }
 
     input:
     path fasta
     path gtf
-    val  options
 
     output:
     path "star"         , emit: index
@@ -25,7 +29,6 @@ process STAR_GENOMEGENERATE {
 
     script:
     def software  = getSoftwareName(task.process)
-    def ioptions  = initOptions(options)
     def memory    = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     """
     mkdir star
@@ -36,7 +39,7 @@ process STAR_GENOMEGENERATE {
         --sjdbGTFfile $gtf \\
         --runThreadN $task.cpus \\
         $memory \\
-        $ioptions.args
+        $options.args
 
     STAR --version | sed -e "s/STAR_//g" > ${software}.version.txt
     """

@@ -2,27 +2,28 @@
  * Picard MarkDuplicates, sort, index BAM file and run samtools stats, flagstat and idxstats
  */
 
-include { PICARD_MARKDUPLICATES } from '../software/picard/markduplicates/main'
-include { SAMTOOLS_INDEX        } from '../software/samtools/index/main'
-include { BAM_STATS_SAMTOOLS    } from './bam_stats_samtools'
+params.markduplicates_options = [:]
+params.samtools_options       = [:]
+
+include { PICARD_MARKDUPLICATES } from '../software/picard/markduplicates/main' addParams( options: params.markduplicates_options )
+include { SAMTOOLS_INDEX        } from '../software/samtools/index/main'        addParams( options: params.samtools_options       )
+include { BAM_STATS_SAMTOOLS    } from './bam_stats_samtools'                   addParams( options: params.samtools_options       )
 
 workflow MARK_DUPLICATES_PICARD {
     take:
-    bam                    // channel: [ val(meta), [ bam ] ]
-    markduplicates_options //     map: options for picard markduplicates module
-    samtools_options       //     map: options for bam_stats_samtools subworkflow
+    bam // channel: [ val(meta), [ bam ] ]
 
     main:
     /*
      * Picard MarkDuplicates
      */
-    PICARD_MARKDUPLICATES (bam, markduplicates_options )
+    PICARD_MARKDUPLICATES ( bam )
 
     /*
      * Index BAM file and run samtools stats, flagstat and idxstats
      */
-    SAMTOOLS_INDEX ( PICARD_MARKDUPLICATES.out.bam, samtools_options )
-    BAM_STATS_SAMTOOLS ( PICARD_MARKDUPLICATES.out.bam.join(SAMTOOLS_INDEX.out.bai, by: [0]), samtools_options )
+    SAMTOOLS_INDEX     ( PICARD_MARKDUPLICATES.out.bam )
+    BAM_STATS_SAMTOOLS ( PICARD_MARKDUPLICATES.out.bam.join(SAMTOOLS_INDEX.out.bai, by: [0]) )
 
     emit:
     bam              = PICARD_MARKDUPLICATES.out.bam     // channel: [ val(meta), [ bam ] ]

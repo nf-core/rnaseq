@@ -1,21 +1,25 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 process TRIMGALORE {
     tag "$meta.id"
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/trim-galore:0.6.6--0"
-    //container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.6--0"
-
-    conda (params.conda ? "bioconda::trim-galore=0.6.6" : null)
+    conda (params.enable_conda ? "bioconda::trim-galore=0.6.6" : null)
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.6--0"
+    } else {
+        container "quay.io/biocontainers/trim-galore:0.6.6--0"
+    }
 
     input:
     tuple val(meta), path(reads)
-    val   options
 
     output:
     tuple val(meta), path("*.fq.gz")    , emit: reads
@@ -45,13 +49,12 @@ process TRIMGALORE {
 
     // Added soft-links to original fastqs for consistent naming in MultiQC
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         trim_galore \\
-            $ioptions.args \\
+            $options.args \\
             --cores $cores \\
             --gzip \\
             $c_r1 \\
@@ -64,7 +67,7 @@ process TRIMGALORE {
         [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         trim_galore \\
-            $ioptions.args \\
+            $options.args \\
             --cores $cores \\
             --paired \\
             --gzip \\

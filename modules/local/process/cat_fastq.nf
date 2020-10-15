@@ -1,6 +1,9 @@
 // Import generic module functions
 include { initOptions; saveFiles } from './functions'
 
+params.options = [:]
+def options    = initOptions(params.options)
+
 /*
  * Concatenate FastQ files
  */
@@ -8,22 +11,23 @@ process CAT_FASTQ {
     tag "$meta.id"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:'merged_fastq', publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'merged_fastq', publish_id:meta.id) }
 
-    container "biocontainers/biocontainers:v1.2.0_cv1"
-
-    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    } else {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    }
     
     input:
     tuple val(meta), path(reads)
-    val   options
-
+    
     output:
     tuple val(meta), path("*.merged.fastq.gz"), emit: reads
 
     script:
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "${meta.id}${ioptions.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     readList     = reads.collect{it.toString()}
     if (!meta.single_end) {
         if (readList.size > 2) {

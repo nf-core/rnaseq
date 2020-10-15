@@ -2,31 +2,31 @@
  * Pseudo-alignment and quantification with Salmon
  */
 
-include { GUNZIP              } from '../process/gunzip'
-include { UNTAR               } from '../process/untar'
-include { GTF_GENE_FILTER     } from '../process/gtf_gene_filter'
-include { GFFREAD             } from '../process/gffread'
-include { SALMON_TX2GENE      } from '../process/salmon_tx2gene'
-include { SALMON_TXIMPORT     } from '../process/salmon_tximport'
-include { SALMON_MERGE_COUNTS } from '../process/salmon_merge_counts'
-include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE 
-          SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT } from '../process/salmon_summarizedexperiment'
+params.index_options        = [:]
+params.genome_options       = [:]
+params.salmon_index_options = [:]
+params.salmon_quant_options = [:]
+params.merge_counts_options = [:]
 
-include { SALMON_INDEX        } from '../../nf-core/software/salmon/index/main'
-include { SALMON_QUANT        } from '../../nf-core/software/salmon/quant/main'
+include { GUNZIP              } from '../process/gunzip'                        addParams( options: params.genome_options       )
+include { UNTAR               } from '../process/untar'                         addParams( options: params.index_options        )
+include { GTF_GENE_FILTER     } from '../process/gtf_gene_filter'               addParams( options: params.genome_options       )
+include { GFFREAD             } from '../process/gffread'                       addParams( options: params.genome_options       )
+include { SALMON_INDEX        } from '../../nf-core/software/salmon/index/main' addParams( options: params.salmon_index_options )
+include { SALMON_QUANT        } from '../../nf-core/software/salmon/quant/main' addParams( options: params.salmon_quant_options )
+include { SALMON_TX2GENE      } from '../process/salmon_tx2gene'                addParams( options: params.genome_options       )
+include { SALMON_TXIMPORT     } from '../process/salmon_tximport'               addParams( options: [publish_by_id : true]      )
+include { SALMON_MERGE_COUNTS } from '../process/salmon_merge_counts'           addParams( options: params.merge_counts_options )
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE 
+          SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT } from '../process/salmon_summarizedexperiment' addParams( options: params.merge_counts_options )
 
 workflow QUANTIFY_SALMON {
     take:
-    reads                  // channel: [ val(meta), [ reads ] ]
-    index                  //    file: /path/to/salmon/index/
-    transcript_fasta       //    file: /path/to/transcript.fasta
-    genome_fasta           //    file: /path/to/genome.fasta
-    gtf                    //    file: /path/to/genome.gtf
-    publish_index_options  //     map: options for publishing index
-    publish_genome_options //     map: options for publishing genome files
-    salmon_index_options   //     map: options for salmon_index module
-    salmon_quant_options   //     map: options for salmon_quant module
-    merge_counts_options   //     map: options for merge_counts_salmon module
+    reads            // channel: [ val(meta), [ reads ] ]
+    index            //    file: /path/to/salmon/index/
+    transcript_fasta //    file: /path/to/transcript.fasta
+    genome_fasta     //    file: /path/to/genome.fasta
+    gtf              //    file: /path/to/genome.gtf
 
     main:
     /*
@@ -34,47 +34,44 @@ workflow QUANTIFY_SALMON {
      */
     if (index) {
         if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index, publish_index_options ).untar
+            ch_index = UNTAR ( index ).untar
         } else {
             ch_index = file(index)
         }
     } else {
         if (transcript_fasta) {
             if (transcript_fasta.endsWith('.gz')) {
-                ch_transcript_fasta = GUNZIP ( transcript_fasta, publish_genome_options ).gunzip
+                ch_transcript_fasta = GUNZIP ( transcript_fasta ).gunzip
             } else {
                 ch_transcript_fasta = file(transcript_fasta)
             }
         } else {
-            ch_transcript_fasta = GFFREAD ( genome_fasta, GTF_GENE_FILTER ( genome_fasta, gtf, publish_genome_options ), publish_genome_options).fasta
+            ch_transcript_fasta = GFFREAD ( genome_fasta, GTF_GENE_FILTER ( genome_fasta, gtf ) ).fasta
         }
-        ch_index = SALMON_INDEX ( ch_transcript_fasta, salmon_index_options ).index
+        ch_index = SALMON_INDEX ( ch_transcript_fasta ).index
     }
 
     /*
      * Quantify and merge counts across samples
      */
-    SALMON_QUANT        ( reads, ch_index, gtf, salmon_quant_options )
-    SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf, publish_genome_options )
-    SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect(), [publish_by_id : true] )
+    SALMON_QUANT        ( reads, ch_index, gtf )
+    SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
+    SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect() )
     SALMON_MERGE_COUNTS (
         SALMON_TXIMPORT.out.counts_gene.collect{it[1]},
         SALMON_TXIMPORT.out.tpm_gene.collect{it[1]},
         SALMON_TXIMPORT.out.counts_transcript.collect{it[1]},
         SALMON_TXIMPORT.out.tpm_transcript.collect{it[1]},
-        merge_counts_options
     )
     SALMON_SE_GENE ( 
         SALMON_MERGE_COUNTS.out.counts_gene,
         SALMON_MERGE_COUNTS.out.tpm_gene,
         SALMON_TX2GENE.out.collect(),
-        merge_counts_options
     )
     SALMON_SE_TRANSCRIPT ( 
         SALMON_MERGE_COUNTS.out.counts_transcript,
         SALMON_MERGE_COUNTS.out.tpm_transcript,
         SALMON_TX2GENE.out.collect(),
-        merge_counts_options
     )
 
     emit:

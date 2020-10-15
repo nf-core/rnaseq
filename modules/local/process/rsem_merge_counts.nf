@@ -1,21 +1,25 @@
 // Import generic module functions
 include { saveFiles; getSoftwareName } from './functions'
 
+params.options = [:]
+
 process RSEM_MERGE_COUNTS {
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "biocontainers/biocontainers:v1.2.0_cv1"
-    
-    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    } else {
+        container "biocontainers/biocontainers:v1.2.0_cv1"
+    }
     
     input:
     path ('genes/*')
     path ('isoforms/*')
-    val  options
-
+    
     output:
     path "rsem.merged.gene_counts.tsv"      , emit: counts_gene
     path "rsem.merged.gene_tpm.tsv"         , emit: tpm_gene

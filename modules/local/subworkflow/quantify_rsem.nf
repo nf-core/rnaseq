@@ -2,24 +2,24 @@
  * Gene/transcript quantification with RSEM
  */
 
-include { UNTAR                    } from '../process/untar'
-include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'
+params.index_options               = [:]
+params.preparereference_options    = [:]
+params.calculateexpression_options = [:]
+params.samtools_options            = [:]
+params.merge_counts_options        = [:]
 
-include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'
-include { RSEM_CALCULATEEXPRESSION } from '../../nf-core/software/rsem/calculateexpression/main'
-include { BAM_SORT_SAMTOOLS        } from '../../nf-core/subworkflow/bam_sort_samtools'
+include { UNTAR                    } from '../process/untar'                                     addParams( options: params.index_options               )
+include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'    addParams( options: params.preparereference_options    )
+include { RSEM_CALCULATEEXPRESSION } from '../../nf-core/software/rsem/calculateexpression/main' addParams( options: params.calculateexpression_options )
+include { BAM_SORT_SAMTOOLS        } from '../../nf-core/subworkflow/bam_sort_samtools'          addParams( options: params.samtools_options            )
+include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'                         addParams( options: params.merge_counts_options        )
 
 workflow QUANTIFY_RSEM {
     take:
-    reads                       // channel: [ val(meta), [ reads ] ]
-    index                       //    file: /path/to/rsem/index/
-    fasta                       //    file: /path/to/genome.fasta
-    gtf                         //    file: /path/to/genome.gtf
-    publish_index_options       //     map: options for publishing index
-    preparereference_options    //     map: options for rsem_preparereference module
-    calculateexpression_options //     map: options for rsem_calculateexpression module
-    samtools_options            //     map: options for bam_sort_samtools subworkflow
-    merge_counts_options        //     map: options for merge_counts_rsem module
+    reads // channel: [ val(meta), [ reads ] ]
+    index //    file: /path/to/rsem/index/
+    fasta //    file: /path/to/genome.fasta
+    gtf   //    file: /path/to/genome.gtf
 
     main:
     /*
@@ -27,31 +27,30 @@ workflow QUANTIFY_RSEM {
     */
     if (index) {
         if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index, publish_index_options ).untar
+            ch_index = UNTAR ( index ).untar
         } else {
             ch_index = file(index)
         }
     } else {
-        ch_index = RSEM_PREPAREREFERENCE ( fasta, gtf, preparereference_options ).index
+        ch_index = RSEM_PREPAREREFERENCE ( fasta, gtf ).index
     }
 
     /*
      * Quantify reads with RSEM
      */
-    RSEM_CALCULATEEXPRESSION ( reads, ch_index, calculateexpression_options )
+    RSEM_CALCULATEEXPRESSION ( reads, ch_index )
 
     /*
      * Sort, index BAM file and run samtools stats, flagstat and idxstats
      */
-    BAM_SORT_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star, samtools_options )
+    BAM_SORT_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star )
 
     /*
      * Merge counts across samples
      */
     RSEM_MERGE_COUNTS (
         RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},
-        RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]},
-        merge_counts_options
+        RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]}
     )
 
     emit:
@@ -69,7 +68,7 @@ workflow QUANTIFY_RSEM {
     stats                    = BAM_SORT_SAMTOOLS.out.stats                    // channel: [ val(meta), [ stats ] ]
     flagstat                 = BAM_SORT_SAMTOOLS.out.flagstat                 // channel: [ val(meta), [ flagstat ] ]
     idxstats                 = BAM_SORT_SAMTOOLS.out.idxstats                 // channel: [ val(meta), [ idxstats ] ]
-    samtools_version         = BAM_SORT_SAMTOOLS.out.samtools_version         //    path: *.version.txt
+    samtools_version         = BAM_SORT_SAMTOOLS.out.version                  //    path: *.version.txt
 
     merged_counts_gene       = RSEM_MERGE_COUNTS.out.counts_gene              //    path: *.gene_counts.tsv
     merged_tpm_gene          = RSEM_MERGE_COUNTS.out.tpm_gene                 //    path: *.gene_tpm.tsv

@@ -25,7 +25,7 @@ params:
         description: |
             Value for the Nextflow `publishDir` mode parameter.
             Available: symlink, rellink, link, copy, copyNoFollow, move.
-    - conda:
+    - enable_conda:
         type: boolean
         description: |
             Run the module with Conda using the software specified
@@ -40,11 +40,6 @@ input:
         type: file
         description: BAM file
         pattern: "*.{bam}"
-    - options:
-        type: map
-        description: |
-            Groovy Map containing module options for passing command-line arguments and
-            output file paths.
 output:
     - meta:
         type: map

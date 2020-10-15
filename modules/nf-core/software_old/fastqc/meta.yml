@@ -26,7 +26,7 @@ params:
         description: |
             Value for the Nextflow `publishDir` mode parameter.
             Available: symlink, rellink, link, copy, copyNoFollow, move.
-    - enable_conda:
+    - conda:
         type: boolean
         description: |
             Run the module with Conda using the software specified
@@ -42,6 +42,11 @@ input:
         description: |
             List of input FastQ files of size 1 and 2 for single-end and paired-end data,
             respectively.
+    - options:
+        type: map
+        description: |
+            Groovy Map containing module options for passing command-line arguments and
+            output file paths.
 output:
     - meta:
         type: map

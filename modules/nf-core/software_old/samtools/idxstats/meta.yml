@@ -1,20 +1,22 @@
-name: fastqc
-description: Run FastQC on sequenced reads
+name: samtools_idxstats
+description: Reports alignment summary statistics for a BAM/CRAM/SAM file
 keywords:
-    - quality control
-    - qc
-    - adapters
-    - fastq
+    - stats
+    - mapping
+    - counts
+    - chromosome
+    - bam
+    - sam
+    - cram
 tools:
-    - fastqc:
+    - samtools:
         description: |
-            FastQC gives general quality metrics about your reads.
-            It provides information about the quality score distribution
-            across your reads, the per base sequence content (%A/C/G/T).
-            You get information about adapter contamination and other
-            overrepresented sequences.
-        homepage: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-        documentation: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
+            SAMtools is a set of utilities for interacting with and post-processing
+            short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+            These files are generated as output by short read aligners like BWA.
+        homepage: http://www.htslib.org/
+        documentation: hhttp://www.htslib.org/doc/samtools.html
+        doi: 10.1093/bioinformatics/btp352
 params:
     - outdir:
         type: string
@@ -26,7 +28,7 @@ params:
         description: |
             Value for the Nextflow `publishDir` mode parameter.
             Available: symlink, rellink, link, copy, copyNoFollow, move.
-    - enable_conda:
+    - conda:
         type: boolean
         description: |
             Run the module with Conda using the software specified
@@ -37,31 +39,32 @@ input:
         description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-    - reads:
+    - bam:
         type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+    - bai:
+        type: file
+        description: Index for BAM/CRAM/SAM file
+        pattern: "*.{bai,crai,sai}"
+    - options:
+        type: map
         description: |
-            List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-            respectively.
+            Groovy Map containing module options for passing command-line arguments and
+            output file paths.
 output:
     - meta:
         type: map
         description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-    - html:
+    - idxstats:
         type: file
-        description: FastQC report
-        pattern: "*_{fastqc.html}"
-    - zip:
-        type: file
-        description: FastQC report archive
-        pattern: "*_{fastqc.zip}"
+        description: File containing samtools idxstats output
+        pattern: "*.{idxstats}"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
     - "@drpatelh"
-    - "@grst"
-    - "@ewels"
-    - "@FelixKrueger"

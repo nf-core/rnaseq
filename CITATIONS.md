@@ -61,6 +61,9 @@
 * [UMI-tools](https://www.ncbi.nlm.nih.gov/pubmed/28100584/)
   > Smith T, Heger A, Sudbery I. UMI-tools: modeling sequencing errors in Unique Molecular Identifiers to improve quantification accuracy Genome Res. 2017 Mar;27(3):491-499. doi: 10.1101/gr.209601.116. Epub 2017 Jan 18. PubMed PMID: 28100584; PubMed Central PMCID: PMC5340976.
 
+* [UCSC tools](https://www.ncbi.nlm.nih.gov/pubmed/20639541/)
+  > Kent WJ, Zweig AS, Barber G, Hinrichs AS, Karolchik D. BigWig and BigBed: enabling browsing of large distributed datasets. Bioinformatics. 2010 Sep 1;26(17):2204-7. doi: 10.1093/bioinformatics/btq351. Epub 2010 Jul 17. PubMed PMID: 20639541; PubMed Central PMCID: PMC2922891.
+
 ## R packages
 
 * [R](https://www.R-project.org/)

@@ -29,6 +29,19 @@ top_modules:
     - 'DupRadar'
     - 'biotype_counts'
 
+module_order:
+    - fastqc:
+        name: 'FastQC (raw)'
+        info: 'This section of the report shows FastQC results before adapter trimming.'
+        path_filters:
+            - './fastqc/*.zip'
+    - cutadapt
+    - fastqc:
+        name: 'FastQC (trimmed)'
+        info: 'This section of the report shows FastQC results after adapter trimming.'
+        path_filters:
+            - './trimgalore/fastqc/*.zip'
+
 # Move custom-content sections to the bottom of the report
 report_section_order:
     software_versions:
@@ -41,13 +54,11 @@ table_columns_visible:
     FastQC:
         percent_duplicates: False
 
-# Generate flat versions of each plot and save
-export_plots: true
-
 extra_fn_clean_exts:
     - '.ccurve'
     - '.hisat2'
     - '_2_val_2'
+    - '_val_1'
     - '_duprate'
     - '.markdup'
     - '.read_distribution'

@@ -25,6 +25,7 @@ process MULTIQC {
     path fail_mapping_summary
     path fail_strand_check
     path ('fastqc/*')
+    path ('trimgalore/fastqc/*')
     path ('trimgalore/*')
     path ('sortmerna/*')
     path ('star/*')
@@ -52,7 +53,7 @@ process MULTIQC {
     output:
     path "*multiqc_report.html", emit: report
     path "*_data"              , emit: data
-    path "*_plots"             , emit: plots
+    path "*_plots"             , optional:true, emit: plots
 
     script:
     def software      = getSoftwareName(task.process)

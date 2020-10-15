@@ -30,6 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [featureCounts](#featurecounts) - Read counting relative to gene and biotype
 * [Other steps](#other-steps)
   * [StringTie](#stringtie) - Transcript assembly and quantification
+  * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
 * [Quality control](#quality-control)
   * [RSeQC](#rseqc) - Various RNA-seq QC metrics
   * [Qualimap](#qualimap) - Various RNA-seq QC metrics
@@ -293,7 +294,7 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 <details markdown="1">
 <summary>Output files</summary>
 
-* `<ALIGNER>/stringtie`
+* `<ALIGNER>/stringtie/`
   * `*.coverage.gtf`: GTF file containing transcripts that are fully covered by reads.
   * `*.transcripts.gtf`: GTF file containing all of the assembled transcipts from StringTie.
   * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.  
@@ -302,6 +303,18 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 </details>
 
 [StringTie](https://ccb.jhu.edu/software/stringtie/) is a fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. It uses a novel network flow algorithm as well as an optional de novo assembly step to assemble and quantitate full-length transcripts representing multiple splice variants for each gene locus. In order to identify differentially expressed genes between experiments, StringTie's output can be processed by specialized software like [Ballgown](https://github.com/alyssafrazee/ballgown), [Cuffdiff](http://cole-trapnell-lab.github.io/cufflinks/cuffdiff/index.html) or other programs ([DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), etc.).
+
+### BEDTools and bedGraphToBigWig
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `<ALIGNER>/bigwig/`
+  * `*.bigWig`: bigWig coverage files.
+
+</details>
+
+The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an indexed binary format useful for displaying dense, continuous data in Genome Browsers such as the [UCSC](https://genome.ucsc.edu/cgi-bin/hgTracks) and [IGV](http://software.broadinstitute.org/software/igv/). This mitigates the need to load the much larger BAM files for data visualisation purposes which will be slower and result in memory issues. The coverage values represented in the bigWig file can also be normalised in order to be able to compare the coverage across multiple samples - this is not possible with BAM files. The bigWig format is also supported by various bioinformatics software for downstream processing such as meta-profile plotting.
 
 ## Quality control
 
@@ -566,7 +579,6 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
 * `multiqc/<ALIGNER>/`  
   * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
-  * `multiqc_plots/`: directory containing static images from the report in various formats.
 
 </details>
 

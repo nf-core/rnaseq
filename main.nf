@@ -402,7 +402,9 @@ workflow {
     /*
      * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
      */
-    ch_rsem_multiqc = Channel.empty()
+    ch_rsem_multiqc               = Channel.empty()
+    ch_aligner_pca_multiqc        = Channel.empty()
+    ch_aligner_clustering_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         QUANTIFY_RSEM (
             ch_trimmed_reads,
@@ -425,7 +427,9 @@ workflow {
             ch_pca_header_multiqc,
             ch_clustering_header_multiqc
         )
-        ch_software_versions = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))        
+        ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
+        ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
+        ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))        
     }
 
     /*
@@ -544,8 +548,7 @@ workflow {
     /*
      * MODULE: Count reads relative to features using featureCounts
      */
-    ch_edger_multiqc = Channel.empty()
-    ch_featurecounts_multiqc = Channel.empty()
+    ch_featurecounts_multiqc      = Channel.empty()
     if (!params.skip_alignment && params.aligner != 'star_rsem' && !params.skip_featurecounts) {
         SUBREAD_FEATURECOUNTS ( 
             ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
@@ -562,7 +565,9 @@ workflow {
             ch_pca_header_multiqc,
             ch_clustering_header_multiqc
         )
-        ch_software_versions = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))        
+        ch_aligner_pca_multiqc        = DESEQ2_QC_FEATURECOUNTS.out.pca_multiqc
+        ch_aligner_clustering_multiqc = DESEQ2_QC_FEATURECOUNTS.out.dists_multiqc
+        ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))        
     }
 
     /*
@@ -665,7 +670,9 @@ workflow {
     /*
      * SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
      */
-    ch_salmon_multiqc = Channel.empty()
+    ch_salmon_multiqc                   = Channel.empty()
+    ch_pseudoaligner_pca_multiqc        = Channel.empty()
+    ch_pseudoaligner_clustering_multiqc = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
 
         QUANTIFY_SALMON (
@@ -685,14 +692,18 @@ workflow {
             ch_pca_header_multiqc,
             ch_clustering_header_multiqc
         )
-        ch_software_versions = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
+        ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
+        ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
+        if (params.skip_alignment) {
+            ch_software_versions            = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
+        }
     }
 
     /*
      * MODULE: Pipeline reporting
      */
     GET_SOFTWARE_VERSIONS ( 
-        ch_software_versions.map { it }.collect().unique()
+        ch_software_versions.map { it }.collect()
     )
 
     /*
@@ -724,7 +735,10 @@ workflow {
             ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
             ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
             ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_edger_multiqc.collect().ifEmpty([]),
+            ch_aligner_pca_multiqc.collect().ifEmpty([]),
+            ch_aligner_clustering_multiqc.collect().ifEmpty([]),
+            ch_pseudoaligner_pca_multiqc.collect().ifEmpty([]),
+            ch_pseudoaligner_clustering_multiqc.collect().ifEmpty([]),
             ch_bamstat_multiqc.collect{it[1]}.ifEmpty([]),
             ch_inferexperiment_multiqc.collect{it[1]}.ifEmpty([]),
             ch_innerdistance_multiqc.collect{it[1]}.ifEmpty([]),

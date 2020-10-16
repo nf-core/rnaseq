@@ -18,12 +18,10 @@
 
 library(optparse)
 library(DESeq2)
-library(vsn)
-# library(ggplot2)
-# library(RColorBrewer)
-# library(pheatmap)
-# library(lattice)
 library(BiocParallel)
+library(ggplot2)
+library(RColorBrewer)
+library(pheatmap)
 
 ################################################
 ################################################
@@ -32,26 +30,22 @@ library(BiocParallel)
 ################################################
 
 option_list <- list(
-    make_option(c("-i", "--count_file")        , type="character", default=NULL    , metavar="path"   , help="Count file matrix where rows are genes and columns are samples."                       ),
-    make_option(c("-f", "--first_count_column"), type="integer"  , default=2       , metavar="integer", help="First column containing sample count data"                                             ),
-    make_option(c("-b", "--sample_suffix")     , type="character", default=''      , metavar="string" , help="Suffix to remove after sample name in columns e.g. '.rmDup.bam' if 'DRUG_R1.rmDup.bam'"),
-    make_option(c("-o", "--outdir")            , type="character", default='./'    , metavar="path"   , help="Output directory"                                                                      ),
-    make_option(c("-p", "--outprefix")         , type="character", default='deseq2', metavar="string" , help="Output prefix"                                                                         ),
-    make_option(c("-s", "--outsuffix")         , type="character", default=''      , metavar="string" , help="Output suffix for comparison-level results"                                            ),
-    make_option(c("-v", "--vst")               , type="logical"  , default=FALSE   , metavar="boolean", help="Run vst transform instead of rlog"                                                     ),
-    make_option(c("-c", "--cores")             , type="integer"  , default=1       , metavar="integer", help="Number of cores"                                                                       )
+    make_option(c("-i", "--count_file"    ), type="character", default=NULL    , metavar="path"   , help="Count file matrix where rows are genes and columns are samples."                        ),
+    make_option(c("-f", "--count_col"     ), type="integer"  , default=2       , metavar="integer", help="First column containing sample count data."                                             ),
+    make_option(c("-d", "--id_col"        ), type="integer"  , default=1       , metavar="integer", help="Column containing identifiers to be used."                                              ),
+    make_option(c("-r", "--sample_suffix" ), type="character", default=''      , metavar="string" , help="Suffix to remove after sample name in columns e.g. '.rmDup.bam' if 'DRUG_R1.rmDup.bam'."),
+    make_option(c("-o", "--outdir"        ), type="character", default='./'    , metavar="path"   , help="Output directory."                                                                      ),
+    make_option(c("-p", "--outprefix"     ), type="character", default='deseq2', metavar="string" , help="Output prefix."                                                                         ),
+    make_option(c("-v", "--vst"           ), type="logical"  , default=FALSE   , metavar="boolean", help="Run vst transform instead of rlog."                                                     ),
+    make_option(c("-c", "--cores"         ), type="integer"  , default=1       , metavar="integer", help="Number of cores."                                                                       )
 )
 
 opt_parser <- OptionParser(option_list=option_list)
-opt <- parse_args(opt_parser)
+opt        <- parse_args(opt_parser)
 
 if (is.null(opt$count_file)){
     print_help(opt_parser)
     stop("Please provide a counts file.", call.=FALSE)
-}
-if (is.null(opt$sample_suffix)){
-    print_help(opt_parser)
-    stop("Please provide bam suffix in header of featurecount file.", call.=FALSE)
 }
 
 ################################################
@@ -60,12 +54,11 @@ if (is.null(opt$sample_suffix)){
 ################################################
 ################################################
 
-count.table           <- read.delim(file=opt$count_file,header=TRUE,skip=1)
-colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
-colnames(count.table) <- as.character(lapply(colnames(count.table), function (x) tail(strsplit(x,'.',fixed=TRUE)[[1]],1)))
-rownames(count.table) <- count.table$Geneid
-interval.table        <- count.table[,1:6]
-count.table           <- count.table[,7:ncol(count.table),drop=FALSE]
+count.table             <- read.delim(file=opt$count_file,header=TRUE)
+rownames(count.table)   <- count.table[,opt$id_col]
+count.table             <- count.table[,opt$count_col:ncol(count.table),drop=FALSE]
+colnames(count.table)   <- gsub(opt$sample_suffix,"",colnames(count.table))
+colnames(count.table)   <- as.character(lapply(colnames(count.table), function (x) tail(strsplit(x,'.',fixed=TRUE)[[1]],1)))
 
 ################################################
 ################################################
@@ -87,15 +80,17 @@ if (length(unique(groups)) == 1) {
 DDSFile <- paste(opt$outprefix,".dds.rld.RData",sep="")
 if (file.exists(DDSFile) == FALSE) {
     counts  <- count.table[,samples.vec,drop=FALSE]
-    coldata <- data.frame(row.names=colnames(counts),condition=groups)
-    dds     <- DESeqDataSetFromMatrix(countData = round(counts), colData = coldata, design = ~ condition)
+    coldata <- data.frame(row.names=colnames(counts), condition=groups)
+    dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ condition)
     dds     <- DESeq(dds, parallel=TRUE, BPPARAM=MulticoreParam(opt$cores))
     if (!opt$vst) {
         rld <- rlog(dds)
     } else {
-        rld <- vst(dds)
+        rld <- varianceStabilizingTransformation(dds)
     }
     save(dds,rld,file=DDSFile)
+} else {
+    load(DDSFile)
 }
 
 ################################################
@@ -145,18 +140,18 @@ if (file.exists(PlotFile) == FALSE) {
 ################################################
 ################################################
 
-SizeFactorsDir <- "sizeFactors/"
+SizeFactorsDir <- "size_factors/"
 if (file.exists(SizeFactorsDir) == FALSE) {
     dir.create(SizeFactorsDir,recursive=TRUE)
 }
 
-NormFactorsFile <- paste(SizeFactorsDir,opt$outprefix,".sizeFactors.RData",sep="")
+NormFactorsFile <- paste(SizeFactorsDir,opt$outprefix,".size_factors.RData",sep="")
 if (file.exists(NormFactorsFile) == FALSE) {
     normFactors <- sizeFactors(dds)
     save(normFactors,file=NormFactorsFile)
 
     for (name in names(sizeFactors(dds))) {
-        sizeFactorFile <- paste(SizeFactorsDir,name,opt$outsuffix,".sizeFactor.txt",sep="")
+        sizeFactorFile <- paste(SizeFactorsDir,name,".txt",sep="")
         if (file.exists(sizeFactorFile) == FALSE) {
             write(as.numeric(sizeFactors(dds)[name]),file=sizeFactorFile)
         }
@@ -169,7 +164,12 @@ if (file.exists(NormFactorsFile) == FALSE) {
 ################################################
 ################################################
 
-RLogFile <- "R_sessionInfo.log"
+LogDir <- "log/"
+if (file.exists(LogDir) == FALSE) {
+    dir.create(LogDir,recursive=TRUE)
+}
+
+RLogFile <- paste(LogDir,"r_sessionInfo.log",sep="")
 if (file.exists(RLogFile) == FALSE) {
     sink(RLogFile)
     a <- sessionInfo()

@@ -381,6 +381,11 @@
                     "fa_icon": "fas fa-chart-pie",
                     "description": "Specify the RSeQC modules to run."
                 },
+                "skip_bigwig": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip bigWig file creation."
+                },
                 "skip_stringtie": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",

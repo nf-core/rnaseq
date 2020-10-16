@@ -156,20 +156,27 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
 
+def publish_genome_options     = params.save_reference ? [publish_dir: 'genome']       : [publish_files: false]
+def publish_index_options      = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
+
 def cat_fastq_options          = modules['cat_fastq']
 if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
 
-def multiqc_options        = modules['multiqc']
-def multiqc_title          = params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
-multiqc_options.args       += "$multiqc_title"
-if (params.skip_alignment) { multiqc_options['publish_dir'] = '' }
+def get_chrom_sizes_options    = !params.save_reference ? [publish_files: false] : [:]
+
+def multiqc_options            = modules['multiqc']
+def multiqc_title              = params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
+multiqc_options.args           += "$multiqc_title"
+if (params.skip_alignment)     { multiqc_options['publish_dir'] = '' }
 
 include { CAT_FASTQ                   } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                     )
+include { GET_CHROM_SIZES             } from './modules/local/process/get_chrom_sizes'             addParams( options: get_chrom_sizes_options               )
 include { MULTIQC                     } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                       )
 include { MULTIQC_CUSTOM_BIOTYPE      } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']     )
 include { MULTIQC_CUSTOM_FAIL_MAPPED  } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                )
 include { MULTIQC_CUSTOM_STRAND_CHECK } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                )
 include { FEATURECOUNTS_MERGE_COUNTS  } from './modules/local/process/featurecounts_merge_counts'  addParams( options: modules['featurecounts_merge_counts'] )
+include { BEDTOOLS_GENOMECOV          } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']         )
 include { EDGER_CORRELATION           } from './modules/local/process/edger_correlation'           addParams( options: modules['edger_correlation']          )
 include { DUPRADAR                    } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                   )
 include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
@@ -177,49 +184,46 @@ include { GET_SOFTWARE_VERSIONS       } from './modules/local/process/get_softwa
 /*
  * SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
  */
-def publish_genome_options  = params.save_reference ? [publish_dir: 'genome']       : [publish_files: false]
-def publish_index_options   = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
+def gffread_options                  = modules['gffread']
+if (!params.save_reference)          { gffread_options['publish_files'] = false }
 
-def gffread_options         = modules['gffread']
-if (!params.save_reference) { gffread_options['publish_files'] = false }
+def star_genomegenerate_options      = modules['star_genomegenerate']
+if (!params.save_reference)          { star_genomegenerate_options['publish_files'] = false }
 
-def star_genomegenerate_options = modules['star_genomegenerate']
-if (!params.save_reference)     { star_genomegenerate_options['publish_files'] = false }
+def star_align_options               = modules['star_align']
+def unaligned                        = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
+star_align_options.args              += unaligned
+if (params.save_align_intermeds)     { star_align_options.publish_files.put('bam','') }
+if (params.save_unaligned)           { star_align_options.publish_files.put('fastq.gz','unmapped') }
 
-def star_align_options           = modules['star_align']
-def unaligned                    = params.save_unaligned ? " --outReadsUnmapped Fastx" : ''
-star_align_options.args          += unaligned
-if (params.save_align_intermeds) { star_align_options.publish_files.put('bam','') }
-if (params.save_unaligned)       { star_align_options.publish_files.put('fastq.gz','unmapped') }
+def hisat2_build_options             = modules['hisat2_build']
+if (!params.save_reference)          { hisat2_build_options['publish_files'] = false }
 
-def hisat2_build_options    = modules['hisat2_build']
-if (!params.save_reference) { hisat2_build_options['publish_files'] = false }
+def hisat2_align_options             = modules['hisat2_align']
+if (params.save_align_intermeds)     { hisat2_align_options.publish_files.put('bam','') }
+if (params.save_unaligned)           { hisat2_align_options.publish_files.put('fastq.gz','unmapped') }
 
-def hisat2_align_options         = modules['hisat2_align']
-if (params.save_align_intermeds) { hisat2_align_options.publish_files.put('bam','') }
-if (params.save_unaligned)       { hisat2_align_options.publish_files.put('fastq.gz','unmapped') }
-
-def rsem_preparereference_options = modules['rsem_preparereference']
-if (!params.save_reference)       { rsem_preparereference_options['publish_files'] = false }
+def rsem_preparereference_options    = modules['rsem_preparereference']
+if (!params.save_reference)          { rsem_preparereference_options['publish_files'] = false }
 
 def rsem_calculateexpression_options = modules['rsem_calculateexpression']
 if (params.save_align_intermeds)     { rsem_calculateexpression_options.publish_files.put('bam','') }
 
+def salmon_index_options             = modules['salmon_index']
+def gencode                          = params.gencode  ? " --gencode" : ""
+salmon_index_options.args            += gencode
+if (!params.save_reference)          { salmon_index_options['publish_files'] = false }
+
+def salmon_quant_options             = modules['salmon_quant']
+def unmapped                         = params.save_unaligned ? " --writeUnmappedNames" : ''
+salmon_quant_options.args            += unmapped
+
 // TODO: Sort out logic where these files will be published differently based on aligner
-def samtools_sort_options = modules['samtools_sort']
+def samtools_sort_options            = modules['samtools_sort']
 if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
     samtools_sort_options.publish_files.put('bam','')
     samtools_sort_options.publish_files.put('bai','')
 }
-
-def salmon_index_options    = modules['salmon_index']
-def gencode                 = params.gencode  ? " --gencode" : ""
-salmon_index_options.args   += gencode
-if (!params.save_reference) { salmon_index_options['publish_files'] = false }
-
-def salmon_quant_options  = modules['salmon_quant']
-def unmapped              = params.save_unaligned ? " --writeUnmappedNames" : ''
-salmon_quant_options.args += unmapped
         
 include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'     addParams( options: [:] )
 include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'  addParams( gffread_options: gffread_options, genome_options: publish_genome_options )
@@ -235,34 +239,35 @@ include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon' a
 /*
  * MODULE: Installed directly from nf-core/modules
  */
-def sortmerna_options           = modules['sortmerna']
-if (params.save_non_ribo_reads) { sortmerna_options.publish_files.put('fastq.gz','') }
+def sortmerna_options                      = modules['sortmerna']
+if (params.save_non_ribo_reads)            { sortmerna_options.publish_files.put('fastq.gz','') }
 
-def stringtie_options  = modules['stringtie']
-def ignore_gtf         = params.stringtie_ignore_gtf ? "" : " -e"
-stringtie_options.args += ignore_gtf
+def stringtie_options                      = modules['stringtie']
+def ignore_gtf                             = params.stringtie_ignore_gtf ? "" : " -e"
+stringtie_options.args                     += ignore_gtf
 
-def umitools_dedup_options = modules['umitools_dedup']
+def umitools_dedup_options                 = modules['umitools_dedup']
 if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
     umitools_dedup_options.publish_files.put('bam','')
     umitools_dedup_options.publish_files.put('bai','')
 }
 
-def subread_featurecounts_options  = modules['subread_featurecounts']
-def fc_extra_attributes            = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
-subread_featurecounts_options.args += fc_extra_attributes
-subread_featurecounts_options.args += " -g $params.fc_group_features -t $params.fc_count_type"
+def subread_featurecounts_options          = modules['subread_featurecounts']
+def fc_extra_attributes                    = params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
+subread_featurecounts_options.args         += fc_extra_attributes
+subread_featurecounts_options.args         += " -g $params.fc_group_features -t $params.fc_count_type"
 
 def subread_featurecounts_biotype_options  = modules['subread_featurecounts_biotype']
 def biotype                                = params.gencode ? "gene_type" : params.fc_group_features_type
 subread_featurecounts_biotype_options.args += " -g $biotype -t $params.fc_count_type"
 
-include { PRESEQ_LCEXTRAP } from './modules/nf-core/software/preseq/lcextrap/main' addParams( options: modules['preseq_lcextrap'] )
-include { QUALIMAP_RNASEQ } from './modules/nf-core/software/qualimap/rnaseq/main' addParams( options: modules['qualimap_rnaseq'] )
-include { SORTMERNA       } from './modules/nf-core/software/sortmerna/main'       addParams( options: sortmerna_options          )
-include { STRINGTIE       } from './modules/nf-core/software/stringtie/main'       addParams( options: stringtie_options          )
-include { UMITOOLS_DEDUP  } from './modules/nf-core/software/umitools/dedup/main'  addParams( options: umitools_dedup_options     )
-include { SAMTOOLS_INDEX  } from './modules/nf-core/software/samtools/index/main'  addParams( options: umitools_dedup_options     )
+include { UCSC_BEDRAPHTOBIGWIG } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
+include { PRESEQ_LCEXTRAP      } from './modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )
+include { QUALIMAP_RNASEQ      } from './modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']       )
+include { SORTMERNA            } from './modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                )
+include { STRINGTIE            } from './modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                )
+include { UMITOOLS_DEDUP       } from './modules/nf-core/software/umitools/dedup/main'        addParams( options: umitools_dedup_options           )
+include { SAMTOOLS_INDEX       } from './modules/nf-core/software/samtools/index/main'        addParams( options: umitools_dedup_options           )
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS         } from './modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options         )
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_biotype_options )
 
@@ -275,10 +280,10 @@ def pattern                    = params.umitools_bc_pattern     ? "--bc-pattern=
 umitools_extract_options.args  += " $method $pattern"
 if (params.save_umi_intermeds) { umitools_extract_options.publish_files.put('fastq.gz','') }
 
-def trimgalore_options   = modules['trimgalore']
-def nextseq              = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
-trimgalore_options.args  += nextseq
-if (params.save_trimmed) { trimgalore_options.publish_files.put('fq.gz','') }
+def trimgalore_options         = modules['trimgalore']
+def nextseq                    = params.trim_nextseq > 0 ? " --nextseq ${params.trim_nextseq}" : ''
+trimgalore_options.args        += nextseq
+if (params.save_trimmed)       { trimgalore_options.publish_files.put('fq.gz','') }
 
 include { FASTQC_UMITOOLS_TRIMGALORE } from './modules/nf-core/subworkflow/fastqc_umitools_trimgalore' addParams( fastqc_options: modules['fastqc'], umitools_options: umitools_extract_options, trimgalore_options: trimgalore_options               )
 include { MARK_DUPLICATES_PICARD     } from './modules/nf-core/subworkflow/mark_duplicates_picard'     addParams( markduplicates_options: modules['picard_markduplicates'], samtools_options: modules['picard_markduplicates_samtools'] )
@@ -568,6 +573,26 @@ workflow {
     }
 
     /*
+     * MODULE: Coverage tracks
+     */
+    if (!params.skip_alignment && !params.skip_bigwig) {
+        GET_CHROM_SIZES (
+            PREPARE_GENOME.out.fasta
+        )
+
+        BEDTOOLS_GENOMECOV (
+            ch_genome_bam
+        )
+        ch_software_versions = ch_software_versions.mix(BEDTOOLS_GENOMECOV.out.version.first().ifEmpty(null))
+        
+        UCSC_BEDRAPHTOBIGWIG (
+            BEDTOOLS_GENOMECOV.out.bedgraph,
+            GET_CHROM_SIZES.out.sizes
+        )
+        ch_software_versions = ch_software_versions.mix(UCSC_BEDRAPHTOBIGWIG.out.version.first().ifEmpty(null))
+    }
+
+    /*
      * MODULE: Downstream QC steps
      */
     ch_qualimap_multiqc           = Channel.empty()
@@ -668,6 +693,7 @@ workflow {
             ch_fail_mapping_multiqc.ifEmpty([]),
             ch_fail_strand_multiqc.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
+            FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),

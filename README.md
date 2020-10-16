@@ -35,14 +35,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 8. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
 10. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
-11. Extensive quality control:
+11. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
+12. Extensive quality control:
     1. [`RSeQC`](http://rseqc.sourceforge.net/)
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`edgeR`](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
-12. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
-13. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+13. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
+14. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 ## Quick Start
 

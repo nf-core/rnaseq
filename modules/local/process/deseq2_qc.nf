@@ -19,15 +19,19 @@ process DESEQ2_QC {
     
     input:
     path counts
+    path pca_header_multiqc
+    path clustering_header_multiqc
     
     output:    
-    path "*.pdf"            , emit: pdf
-    path "*.RData"          , emit: rdata
-    path "*pca.vals.txt"    , emit: pca_txt
-    path "*sample.dists.txt", emit: dists_txt
-    path "*log"             , emit: log
-    path "size_factors"     , emit: size_factors
-    path  "*.version.txt"   , emit: version
+    path "*.pdf"                , emit: pdf
+    path "*.RData"              , emit: rdata
+    path "*pca.vals.txt"        , emit: pca_txt
+    path "*pca.vals_mqc.tsv"    , emit: pca_multiqc
+    path "*sample.dists.txt"    , emit: dists_txt
+    path "*sample.dists_mqc.tsv", emit: dists_multiqc
+    path "*.log"                , emit: log
+    path "size_factors"         , emit: size_factors
+    path  "*.version.txt"       , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -37,6 +41,9 @@ process DESEQ2_QC {
         --outdir ./ \\
         --cores $task.cpus \\
         $options.args
+    
+    cat $pca_header_multiqc *.pca.vals.txt > multiqc.pca.vals_mqc.tsv
+    cat $clustering_header_multiqc *.sample.dists.txt > multiqc.sample.dists_mqc.tsv
 
     Rscript -e "library(DESeq2); write(x=as.character(packageVersion('DESeq2')), file='${software}.version.txt')"
     """

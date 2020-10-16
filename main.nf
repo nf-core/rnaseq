@@ -419,6 +419,11 @@ workflow {
         ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
+
+        DESEQ2_QC_RSEM (
+            QUANTIFY_RSEM.out.merged_counts_gene
+        )
+        ch_software_versions = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))        
     }
 
     /*
@@ -550,16 +555,10 @@ workflow {
             SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}
         )
 
-        // if (!params.skip_qc & !params.skip_edger) {    
-        //     EDGER_CORRELATION ( 
-        //         SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}, 
-        //         ch_mdsplot_header,
-        //         ch_heatmap_header
-        //     )
-
-        //     ch_edger_multiqc = EDGER_CORRELATION.out.multiqc
-        //     ch_software_versions = ch_software_versions.mix(EDGER_CORRELATION.out.version.ifEmpty(null))
-        // }
+        DESEQ2_QC_FEATURECOUNTS (
+            FEATURECOUNTS_MERGE_COUNTS.out.counts
+        )
+        ch_software_versions = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))        
     }
 
     /*
@@ -676,6 +675,11 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.ifEmpty(null))
+
+        DESEQ2_QC_SALMON (
+            QUANTIFY_SALMON.out.merged_counts_gene
+        )
+        ch_software_versions = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
     }
 
     /*

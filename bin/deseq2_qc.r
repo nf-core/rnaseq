@@ -164,12 +164,7 @@ if (file.exists(NormFactorsFile) == FALSE) {
 ################################################
 ################################################
 
-LogDir <- "log/"
-if (file.exists(LogDir) == FALSE) {
-    dir.create(LogDir,recursive=TRUE)
-}
-
-RLogFile <- paste(LogDir,"r_sessionInfo.log",sep="")
+RLogFile <- "R_sessionInfo.log"
 if (file.exists(RLogFile) == FALSE) {
     sink(RLogFile)
     a <- sessionInfo()

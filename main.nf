@@ -136,9 +136,9 @@ ch_multiqc_config        = file("$baseDir/assets/multiqc_config.yaml", checkIfEx
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 // Header files for MultiQC
-ch_mdsplot_header  = file("$baseDir/assets/multiqc/mdsplot_header.txt", checkIfExists: true)
-ch_heatmap_header  = file("$baseDir/assets/multiqc/heatmap_header.txt", checkIfExists: true)
-ch_biotypes_header = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_pca_header_multiqc        = file("$baseDir/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
+ch_clustering_header_multiqc = file("$baseDir/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
+ch_biotypes_header_multiqc   = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER SUMMARY               -- */
@@ -421,7 +421,9 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
 
         DESEQ2_QC_RSEM (
-            QUANTIFY_RSEM.out.merged_counts_gene
+            QUANTIFY_RSEM.out.merged_counts_gene,
+            ch_pca_header_multiqc,
+            ch_clustering_header_multiqc
         )
         ch_software_versions = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))        
     }
@@ -556,7 +558,9 @@ workflow {
         )
 
         DESEQ2_QC_FEATURECOUNTS (
-            FEATURECOUNTS_MERGE_COUNTS.out.counts
+            FEATURECOUNTS_MERGE_COUNTS.out.counts,
+            ch_pca_header_multiqc,
+            ch_clustering_header_multiqc
         )
         ch_software_versions = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))        
     }
@@ -573,7 +577,7 @@ workflow {
 
         MULTIQC_CUSTOM_BIOTYPE ( 
             SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, 
-            ch_biotypes_header
+            ch_biotypes_header_multiqc
         )
         ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
     }
@@ -677,7 +681,9 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.ifEmpty(null))
 
         DESEQ2_QC_SALMON (
-            QUANTIFY_SALMON.out.merged_counts_gene
+            QUANTIFY_SALMON.out.merged_counts_gene,
+            ch_pca_header_multiqc,
+            ch_clustering_header_multiqc
         )
         ch_software_versions = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
     }
@@ -686,7 +692,7 @@ workflow {
      * MODULE: Pipeline reporting
      */
     GET_SOFTWARE_VERSIONS ( 
-        ch_software_versions.map { it }.collect()
+        ch_software_versions.map { it }.collect().unique()
     )
 
     /*

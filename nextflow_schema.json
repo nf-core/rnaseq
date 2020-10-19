@@ -416,10 +416,10 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip RSeQC."
                 },
-                "skip_edger": {
+                "skip_deseq2_qc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip edgeR correlation plotting."
+                    "description": "Skip DESeq2 PCA and heatmap plotting."
                 },
                 "skip_multiqc": {
                     "type": "boolean",

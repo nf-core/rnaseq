@@ -1,8 +1,9 @@
 // Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-params.options = [:]
-def options    = initOptions(params.options)
+params.options       = [:]
+params.multiqc_label = ''
+def options          = initOptions(params.options)
 
 process DESEQ2_QC {
     label "process_medium"
@@ -34,7 +35,9 @@ process DESEQ2_QC {
     path  "*.version.txt"       , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
+    def software    = getSoftwareName(task.process)
+    def label_lower = params.multiqc_label.toLowerCase()
+    def label_upper = params.multiqc_label.toUpperCase()
     """
     deseq2_qc.r \\
         --count_file $counts \\
@@ -42,8 +45,13 @@ process DESEQ2_QC {
         --cores $task.cpus \\
         $options.args
     
-    cat $pca_header_multiqc *.pca.vals.txt > multiqc.pca.vals_mqc.tsv
-    cat $clustering_header_multiqc *.sample.dists.txt > multiqc.sample.dists_mqc.tsv
+    sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc >tmp.txt
+    sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" tmp.txt
+    cat tmp.txt *.pca.vals.txt > ${label_lower}.pca.vals_mqc.tsv
+
+    sed "s/deseq2_clustering/${label_lower}_deseq2_clustering/g" <$clustering_header_multiqc >tmp.txt
+    sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" tmp.txt
+    cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
 
     Rscript -e "library(DESeq2); write(x=as.character(packageVersion('DESeq2')), file='${software}.version.txt')"
     """

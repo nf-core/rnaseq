@@ -31,7 +31,7 @@ top_modules:
     - 'salmon_deseq2_pca'
     - 'salmon_deseq2_clustering'
     - 'biotype_counts'
-    - 'DupRadar'
+    - 'dupradar'
 
 module_order:
     - fastqc:

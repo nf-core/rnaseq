@@ -167,7 +167,7 @@ multiqc_options.args       += params.multiqc_title ? " --title \"$params.multiqc
 if (params.skip_alignment)  { multiqc_options['publish_dir'] = '' }
 
 def deseq2_qc_options                 = modules['deseq2_qc']
-deseq2_qc_options.args                += params.deseq2_vst ? '--vst TRUE' : ''
+deseq2_qc_options.args               += params.deseq2_vst ? '--vst TRUE' : ''
 def deseq2_qc_featurecounts_options   = deseq2_qc_options.clone()
 def deseq2_qc_rsem_options            = deseq2_qc_options.clone()
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
@@ -175,19 +175,19 @@ deseq2_qc_featurecounts_options.args += " --count_col 3"
 deseq2_qc_rsem_options.args          += " --count_col 3"
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
-include { GET_CHROM_SIZES                      } from './modules/local/process/get_chrom_sizes'             addParams( options: publish_genome_options                )
-include { CAT_FASTQ                            } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                     ) 
-include { MULTIQC                              } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                       )
-include { MULTIQC_CUSTOM_BIOTYPE               } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']     )
-include { MULTIQC_CUSTOM_FAIL_MAPPED           } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                )
-include { MULTIQC_CUSTOM_STRAND_CHECK          } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                )
-include { FEATURECOUNTS_MERGE_COUNTS           } from './modules/local/process/featurecounts_merge_counts'  addParams( options: modules['featurecounts_merge_counts'] )
-include { BEDTOOLS_GENOMECOV                   } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']         )
-include { DUPRADAR                             } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                   )
-include { GET_SOFTWARE_VERSIONS                } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
-include { DESEQ2_QC as DESEQ2_QC_FEATURECOUNTS } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_featurecounts_options       )
-include { DESEQ2_QC as DESEQ2_QC_RSEM          } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_rsem_options                )
-include { DESEQ2_QC as DESEQ2_QC_SALMON        } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options              )
+include { GET_CHROM_SIZES                      } from './modules/local/process/get_chrom_sizes'             addParams( options: publish_genome_options                                          )
+include { CAT_FASTQ                            } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                                               ) 
+include { MULTIQC                              } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                                                 )
+include { MULTIQC_CUSTOM_BIOTYPE               } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                               )
+include { MULTIQC_CUSTOM_FAIL_MAPPED           } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                          )
+include { MULTIQC_CUSTOM_STRAND_CHECK          } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                          )
+include { FEATURECOUNTS_MERGE_COUNTS           } from './modules/local/process/featurecounts_merge_counts'  addParams( options: modules['featurecounts_merge_counts']                           )
+include { BEDTOOLS_GENOMECOV                   } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                                   )
+include { DUPRADAR                             } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                                             )
+include { GET_SOFTWARE_VERSIONS                } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                    )
+include { DESEQ2_QC as DESEQ2_QC_FEATURECOUNTS } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_featurecounts_options, multiqc_label: 'featurecounts' )
+include { DESEQ2_QC as DESEQ2_QC_RSEM          } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_rsem_options, multiqc_label: 'rsem'                   )
+include { DESEQ2_QC as DESEQ2_QC_SALMON        } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon'               )
 
 /*
  * SUBWORKFLOW: Consisting of a mix of local and nf-core/modules

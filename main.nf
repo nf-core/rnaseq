@@ -738,22 +738,22 @@ workflow {
             ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
             ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
             ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             ch_aligner_pca_multiqc.collect().ifEmpty([]),
             ch_aligner_clustering_multiqc.collect().ifEmpty([]),
             ch_pseudoaligner_pca_multiqc.collect().ifEmpty([]),
             ch_pseudoaligner_clustering_multiqc.collect().ifEmpty([]),
+            ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
             ch_bamstat_multiqc.collect{it[1]}.ifEmpty([]),
             ch_inferexperiment_multiqc.collect{it[1]}.ifEmpty([]),
             ch_innerdistance_multiqc.collect{it[1]}.ifEmpty([]),
             ch_junctionannotation_multiqc.collect{it[1]}.ifEmpty([]),
             ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
             ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_readduplication_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([])
+            ch_readduplication_multiqc.collect{it[1]}.ifEmpty([])
         )
         multiqc_report = MULTIQC.out.report.toList()
     }

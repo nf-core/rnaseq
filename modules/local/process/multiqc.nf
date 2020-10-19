@@ -36,13 +36,15 @@ process MULTIQC {
     path ('samtools/flagstat/*')
     path ('samtools/idxstats/*')
     path ('picard/markduplicates/*')
+    path ('featurecounts/*')
+    path ('featurecounts/biotype/*')
+    path ('deseq2/aligner/*')
+    path ('deseq2/aligner/*')
+    path ('deseq2/pseudoaligner/*')
+    path ('deseq2/pseudoaligner/*')
     path ('preseq/*')
     path ('qualimap/*')
     path ('dupradar/*')
-    path ('deseq2/aligner/*')
-    path ('deseq2/aligner/*')
-    path ('deseq2/pseudoaligner/*')
-    path ('deseq2/pseudoaligner/*')
     path ('rseqc/bam_stat/*')
     path ('rseqc/infer_experiment/*')
     path ('rseqc/inner_distance/*')
@@ -50,8 +52,6 @@ process MULTIQC {
     path ('rseqc/junction_saturation/*')
     path ('rseqc/read_distribution/*')
     path ('rseqc/read_duplication/*')
-    path ('featurecounts/*')
-    path ('featurecounts/biotype/*')
     
     output:
     path "*multiqc_report.html", emit: report

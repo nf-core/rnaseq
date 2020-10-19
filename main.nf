@@ -109,14 +109,15 @@ if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size())
 
 // Show a big warning message if we are using a NCBI / UCSC assembly
 def skip_biotype_qc = params.skip_biotype_qc
-if (params.genome == 'GRCh38') {
-    if (params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
+if (params.gtf) {
+    if (params.genome == 'GRCh38' && params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
         Checks.ncbi_genome_warn(log)
         skip_biotype_qc = true
     }
-} else if (params.gtf.contains('/UCSC/') && params.gtf.contains('Annotation/Genes/genes.gtf')) {
-    Checks.ucsc_genome_warn(log)
-    skip_biotype_qc = true
+    if (params.gtf.contains('/UCSC/') && params.gtf.contains('Annotation/Genes/genes.gtf')) {
+        Checks.ucsc_genome_warn(log)
+        skip_biotype_qc = true
+    }
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -426,6 +427,7 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
+            ch_genome_bam.collect{it[1]}.view()
             DESEQ2_QC_RSEM (
                 QUANTIFY_RSEM.out.merged_counts_gene,
                 ch_pca_header_multiqc,

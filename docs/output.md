@@ -562,8 +562,8 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
   * `*sample.dists.txt`: Sample distance matrix.
   * `R_sessionInfo.log`: File containing information about R, the OS and attached or loaded packages.
 * `<ALIGNER/PSEUDOALIGNER>/deseq2/size_factors/`
-    * `*.txt`, `*.RData`: Files containing DESeq2 sizeFactors per sample.
-    
+  * `*.txt`, `*.RData`: Files containing DESeq2 sizeFactors per sample.
+
 </details>
 
 [DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) is one of the most commonly used software packages to perform differential expression analysis for RNA-seq datasets.

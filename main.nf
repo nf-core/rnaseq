@@ -427,7 +427,6 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
-            ch_genome_bam.collect{it[1]}.view()
             DESEQ2_QC_RSEM (
                 QUANTIFY_RSEM.out.merged_counts_gene,
                 ch_pca_header_multiqc,

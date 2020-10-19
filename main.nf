@@ -422,14 +422,16 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
 
-        DESEQ2_QC_RSEM (
-            QUANTIFY_RSEM.out.merged_counts_gene,
-            ch_pca_header_multiqc,
-            ch_clustering_header_multiqc
-        )
-        ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
-        ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
-        ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))        
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_RSEM (
+                QUANTIFY_RSEM.out.merged_counts_gene,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
+            ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
+            ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))
+        }
     }
 
     /*
@@ -560,14 +562,16 @@ workflow {
             SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}
         )
 
-        DESEQ2_QC_FEATURECOUNTS (
-            FEATURECOUNTS_MERGE_COUNTS.out.counts,
-            ch_pca_header_multiqc,
-            ch_clustering_header_multiqc
-        )
-        ch_aligner_pca_multiqc        = DESEQ2_QC_FEATURECOUNTS.out.pca_multiqc
-        ch_aligner_clustering_multiqc = DESEQ2_QC_FEATURECOUNTS.out.dists_multiqc
-        ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))        
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_FEATURECOUNTS (
+                FEATURECOUNTS_MERGE_COUNTS.out.counts,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_aligner_pca_multiqc        = DESEQ2_QC_FEATURECOUNTS.out.pca_multiqc
+            ch_aligner_clustering_multiqc = DESEQ2_QC_FEATURECOUNTS.out.dists_multiqc
+            ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))
+        }
     }
 
     /*
@@ -687,15 +691,17 @@ workflow {
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.ifEmpty(null))
 
-        DESEQ2_QC_SALMON (
-            QUANTIFY_SALMON.out.merged_counts_gene,
-            ch_pca_header_multiqc,
-            ch_clustering_header_multiqc
-        )
-        ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
-        ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
-        if (params.skip_alignment) {
-            ch_software_versions            = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_SALMON (
+                QUANTIFY_SALMON.out.merged_counts_gene,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
+            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
+            if (params.skip_alignment) {
+                ch_software_versions            = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
+            }
         }
     }
 

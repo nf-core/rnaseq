@@ -107,13 +107,16 @@ if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size())
     exit 1, "Invalid RSeqC module options: ${params.rseqc_modules}. Valid options: ${rseqcModuleList.join(', ')}"
 }
 
-// Show a big warning message if we are using GRCh38 NCBI assembly
+// Show a big warning message if we are using a NCBI / UCSC assembly
 def skip_biotype_qc = params.skip_biotype_qc
 if (params.genome == 'GRCh38') {
     if (params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
-        Checks.genome_warn(log)
+        Checks.ncbi_genome_warn(log)
         skip_biotype_qc = true
     }
+} else if (params.gtf.contains('/UCSC/') && params.gtf.contains('Annotation/Genes/genes.gtf')) {
+    Checks.ucsc_genome_warn(log)
+    skip_biotype_qc = true
 }
 
 // Save AWS IGenomes file containing annotation version

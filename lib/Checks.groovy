@@ -34,10 +34,21 @@ class Checks {
     }
 
     // Print a warning if using GRCh38 assembly from igenomes.config
-    static void genome_warn(log) {
+    static void ncbi_genome_warn(log) {
         log.warn "=============================================================================\n" +
                  "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
-                 "  Auto-activating --skip_biotype_qc parameter to circumvent the issue below:\n" +
+                 "  Auto-activating '--skip_biotype_qc' parameter to circumvent the issue below:\n" +
+                 "  https://github.com/nf-core/rnaseq/issues/460.\n\n" +
+                 "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
+                 "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
+                 "==================================================================================="
+    }
+
+    // Print a warning if using a UCSC assembly from igenomes.config
+    static void ucsc_genome_warn(log) {
+        log.warn "=============================================================================\n" +
+                 "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
+                 "  Auto-activating '--skip_biotype_qc' parameter to circumvent the issue below:\n" +
                  "  https://github.com/nf-core/rnaseq/issues/460.\n\n" +
                  "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
                  "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +

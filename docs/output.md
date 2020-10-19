@@ -574,9 +574,11 @@ The script included in the pipeline uses DESeq2 to normalise read counts across 
 
 For larger experiments, it may be recommended to use the `vst` transformation instead of the default `rlog` option. You can do this by providing the `--deseq2_vst` parameter to the pipeline. See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) for a more detailed explanation.
 
-![MultiQC - DESeq2 heatmap plot](images/mqc_deseq2_heatmap.png)
+![MultiQC - DESeq2 PCA plot](images/mqc_deseq2_pca.png)
 
-![MultiQC - DESeq2 PCA plot](images/mqc_deseq2_mdsplot.png)
+<p markdown="1" align="center">
+    <img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600">
+</p>
 
 ### MultiQC
 

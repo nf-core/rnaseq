@@ -11,11 +11,11 @@ process PICARD_MARKDUPLICATES {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::picard=2.23.6" : null)
+    conda (params.enable_conda ? "bioconda::picard=2.23.8" : null)
     if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/picard:2.23.6--0"
+        container "https://depot.galaxyproject.org/singularity/picard:2.23.8--0"
     } else {
-        container "quay.io/biocontainers/picard:2.23.6--0"
+        container "quay.io/biocontainers/picard:2.23.8--0"
     }
 
     input:
@@ -44,6 +44,6 @@ process PICARD_MARKDUPLICATES {
         OUTPUT=${prefix}.bam \\
         METRICS_FILE=${prefix}.MarkDuplicates.metrics.txt
 
-    echo \$(picard MarkDuplicates --version 2>&1) | awk -F' ' '{print \$NF}' > ${software}.version.txt
+    echo \$(picard MarkDuplicates --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d: > ${software}.version.txt
     """
 }

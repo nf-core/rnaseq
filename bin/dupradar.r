@@ -90,7 +90,7 @@ curve_y <- curve_y[seq(1, length(curve_y), 10)]
 # Convert x values back to real counts
 curve_x = 10^curve_x
 # Write to file
-line="#id: DupRadar
+line="#id: dupradar
 #section_name: 'DupRadar'
 #section_href: 'bioconductor.org/packages/release/bioc/html/dupRadar.html'
 #description: \"provides duplication rate quality control for RNA-Seq datasets. Highly expressed genes can be expected to have a lot of duplicate reads, but high numbers of duplicates at low read counts can indicate low library complexity with technical duplication.

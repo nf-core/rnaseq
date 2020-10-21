@@ -41,7 +41,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
-    5. [`edgeR`](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
+    5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
 13. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
 14. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 

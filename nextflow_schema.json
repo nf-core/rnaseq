@@ -381,6 +381,13 @@
                     "fa_icon": "fas fa-chart-pie",
                     "description": "Specify the RSeQC modules to run."
                 },
+                "deseq2_vst": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Use vst transformation instead of rlog with DESeq2.",
+                    "help_text": "See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization).",
+                    "fa_icon": "fas fa-dolly"
+                },
                 "skip_bigwig": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
@@ -416,10 +423,10 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip RSeQC."
                 },
-                "skip_edger": {
+                "skip_deseq2_qc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip edgeR correlation plotting."
+                    "description": "Skip DESeq2 PCA and heatmap plotting."
                 },
                 "skip_multiqc": {
                     "type": "boolean",

@@ -1,58 +1,45 @@
 // Import generic module functions
-include { initOptions; saveFiles } from './functions'
+include { saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
 
 /*
- * Concatenate FastQ files
+ * Download SRA data via parallel-fastq-dump
  */
-process CAT_FASTQ {
+process SRA_FASTQ_DUMP {
     tag "$meta.id"
+    label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'merged_fastq', publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    conda (params.enable_conda ? "bioconda::parallel-fastq-dump=0.6.6" : null)
     if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
+        container "https://depot.galaxyproject.org/singularity/parallel-fastq-dump:0.6.6--py_1"
     } else {
-        container "biocontainers/biocontainers:v1.2.0_cv1"
+        container "quay.io/biocontainers/parallel-fastq-dump:0.6.6--py_1"
     }
     
     input:
-    tuple val(meta), path(reads)
-    
+    tuple val(meta), val(fastq)
+
     output:
-    tuple val(meta), path("*.merged.fastq.gz"), emit: reads
+    tuple val(meta), path("*fastq.gz"), emit: fastq
+    tuple val(meta), path("*log")     , emit: log
 
     script:
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    readList     = reads.collect{it.toString()}
-    if (!meta.single_end) {
-        if (readList.size > 2) {
-            def read1 = []
-            def read2 = []
-            readList.eachWithIndex{ v, ix -> ( ix & 1 ? read2 : read1 ) << v }
-            """
-            cat ${read1.sort().join(' ')} > ${prefix}_1.merged.fastq.gz
-            cat ${read2.sort().join(' ')} > ${prefix}_2.merged.fastq.gz
-            """
-        } else {
-            """
-            ln -s ${reads[0]} ${prefix}_1.merged.fastq.gz
-            ln -s ${reads[1]} ${prefix}_2.merged.fastq.gz
-            """
-        }
-    } else {
-        if (readList.size > 1) {
-            """
-            cat ${readList.sort().join(' ')} > ${prefix}.merged.fastq.gz
-            """
-        } else {
-            """
-            ln -s $reads ${prefix}.merged.fastq.gz
-            """
-        }
-    }
+    id         = "${meta.id.split('_')[0..-1].join('_')}"
+    paired_end = meta.single_end ? "" : "--readids --split-e"
+    rm_orphan  = meta.single_end ? "" : "[ -f  ${id}.fastq.gz ] && rm ${id}.fastq.gz"    
+    """
+    parallel-fastq-dump \\
+        --sra-id $id \\
+        --threads $task.cpus \\
+        --outdir ./ \\
+        --tmpdir ./ \\
+        --gzip \\
+        $paired_end \\
+        > ${id}.fastq_dump.log
+    $rm_orphan
+    """
 }

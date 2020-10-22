@@ -23,7 +23,7 @@ if (params.help) {
 }
 
 ////////////////////////////////////////////////////
-/* --          PARAMETER SUMMARY               -- */
+/* --          PARAMETER CHECKS                -- */
 ////////////////////////////////////////////////////
 
 Checks.aws_batch(workflow, params)     // Check AWS batch settings
@@ -39,19 +39,26 @@ log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
 
 ////////////////////////////////////////////////////
-/* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
+/* --          IMPORT SUBWORKFLOWS             -- */
 ////////////////////////////////////////////////////
 
-// Workflow to run the main pipeline
+include { SRA_DOWNLOAD } from './sra_download'
 include { RNASEQ       } from './rnaseq' addParams( summary: summary )
 
-// Workflow to auto-create the input samplesheet for the pipeline from public database ids
-include { SRA_DOWNLOAD } from './sra_download'
+////////////////////////////////////////////////////
+/* --           RUN MAIN WORKFLOW              -- */
+////////////////////////////////////////////////////
 
 workflow {
     if (params.public_data_ids) {
+        /*
+         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, create samplesheet
+         */
         SRA_DOWNLOAD()
     } else {
+        /*
+         * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
+         */
         RNASEQ ()
     }
 }

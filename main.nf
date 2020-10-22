@@ -51,10 +51,21 @@ include { RNASEQ                  } from './rnaseq' addParams( summary: summary 
 include { SRA_IDS_TO_RUNINFO } from './modules/local/process/sra_ids_to_runinfo' addParams( options: [:] )
 include { SRA_RUNINFO_TO_FTP } from './modules/local/process/sra_runinfo_to_ftp' addParams( options: [:] )
 include { SRA_FASTQ_FTP      } from './modules/local/process/sra_fastq_ftp'      addParams( options: [:] )
+include { SRA_FASTQ_DUMP     } from './modules/local/process/sra_fastq_dump'     addParams( options: [:] )
+
+// if (params.public_data_ids) { 
+//     Channel
+//         .from(file(params.public_data_ids).readLines())
+//         .set { ch_public_data_ids }
+// } else { 
+//     exit 1, 'Input file with public database ids not specified!' 
+// }
 
 if (params.public_data_ids) { 
     Channel
-        .from(file(params.public_data_ids).readLines())
+        .from(file(params.public_data_ids))
+        .splitCsv(header:false, sep:'', strip:true)
+        .map { it[0] }
         .set { ch_public_data_ids }
 } else { 
     exit 1, 'Input file with public database ids not specified!' 
@@ -81,9 +92,13 @@ workflow {
                 ]
             }
             .set { ch_sra_reads }
-
+        
         SRA_FASTQ_FTP (
-            ch_sra_reads
+            ch_sra_reads.map { meta, reads -> if (meta.is_ftp)  [ meta, reads ] }
+        )
+
+        SRA_FASTQ_DUMP (
+            ch_sra_reads.map { meta, reads -> if (!meta.is_ftp) [ meta, reads ] }    
         )
         
 

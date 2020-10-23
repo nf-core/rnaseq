@@ -110,7 +110,7 @@ def fetch_sra_runinfo(file_in,file_out,platform_list=[],library_layout_list=[]):
                 prefix = match.group()
                 if prefix in PREFIX_LIST:
                     if not db_id in seen_ids:
-
+                        
                         ids = [db_id]
                         ## Resolve/expand these ids against GEO URL
                         if prefix in ['GSE']:
@@ -143,15 +143,20 @@ def fetch_sra_runinfo(file_in,file_out,platform_list=[],library_layout_list=[]):
                                     if write_id:
                                         if total_out == 0:
                                             header = sorted(row.keys())
-                                            fout.write('{}\n'.format(','.join(sorted(header))))
+                                            fout.write('{}\n'.format('\t'.join(sorted(header))))
                                         else:
                                             if header != sorted(row.keys()):
                                                 print("ERROR: Metadata columns do not match for id {}!\nLine: '{}'".format(run_id,line.strip()))
                                                 sys.exit(1)
-                                        fout.write('{}\n'.format(','.join([row[x] for x in header])))
+                                        fout.write('{}\n'.format('\t'.join([row[x] for x in header])))
                                         total_out += 1
                                     run_ids.append(run_id)
                         seen_ids.append(db_id)
+
+                        if not ids:
+                            print("ERROR: No matches found for database id {}!\nLine: '{}'".format(db_id,line.strip()))
+                            sys.exit(1)
+
                 else:
                     id_str = ', '.join([x + "*" for x in PREFIX_LIST])
                     print("ERROR: Please provide a valid database id starting with {}!\nLine: '{}'".format(id_str,line.strip()))

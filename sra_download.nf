@@ -20,10 +20,10 @@ if (params.public_data_ids) {
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
 
-include { SRA_IDS_TO_RUNINFO } from './modules/local/process/sra_ids_to_runinfo' addParams( options: [:] )
-include { SRA_RUNINFO_TO_FTP } from './modules/local/process/sra_runinfo_to_ftp' addParams( options: [:] )
-include { SRA_FASTQ_FTP      } from './modules/local/process/sra_fastq_ftp'      addParams( options: [:] )
-include { SRA_FASTQ_DUMP     } from './modules/local/process/sra_fastq_dump'     addParams( options: [:] )
+include { SRA_IDS_TO_RUNINFO } from './modules/local/process/sra_ids_to_runinfo' addParams( options: modules['sra_ids_to_runinfo'] )
+include { SRA_RUNINFO_TO_FTP } from './modules/local/process/sra_runinfo_to_ftp' addParams( options: modules['sra_runinfo_to_ftp'] )
+include { SRA_FASTQ_FTP      } from './modules/local/process/sra_fastq_ftp'      addParams( options: modules['sra_fastq_ftp']      )
+include { SRA_FASTQ_DUMP     } from './modules/local/process/sra_fastq_dump'     addParams( options: modules['sra_fastq_dump']     )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -38,12 +38,13 @@ workflow SRA_DOWNLOAD {
         ch_public_data_ids
     )
 
-    /*
-     * MODULE: Parse SRA run information, create file containing FTP links and read into workflow as [ meta, [reads] ]
-     */
-    SRA_RUNINFO_TO_FTP (
-        SRA_IDS_TO_RUNINFO.out.tsv.collect()
-    )
+    // /*
+    //  * MODULE: Parse SRA run information, create file containing FTP links and read into workflow as [ meta, [reads] ]
+    //  */
+    // SRA_RUNINFO_TO_FTP (
+    //     SRA_IDS_TO_RUNINFO.out.csv
+    //     //SRA_IDS_TO_RUNINFO.out.tsv.collect()
+    // )
 
     // SRA_RUNINFO_TO_FTP
     //     .out

@@ -175,5 +175,6 @@ def main(args=None):
     libraryLayoutList = validate_csv_param(args.LIBRARY_LAYOUT,validVals=['SINGLE', 'PAIRED'],param_desc='--library_layout')
     fetch_sra_runinfo(args.FILE_IN,args.FILE_OUT,platformList,libraryLayoutList)
 
+
 if __name__ == '__main__':
     sys.exit(main())

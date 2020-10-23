@@ -58,34 +58,39 @@ workflow SRA_DOWNLOAD {
         }
         .set { ch_sra_reads }
     
-    /*
-     * MODULE: If FTP link is provided in run information then download FastQ directly via FTP and validate with md5sums
-     */
-    SRA_FASTQ_FTP (
-        ch_sra_reads.map { meta, reads -> if (meta.fastq_1)  [ meta, reads ] }
-    )
+    if (!params.skip_sra_fastq_download) {
+        /*
+        * MODULE: If FTP link is provided in run information then download FastQ directly via FTP and validate with md5sums
+        */
+        SRA_FASTQ_FTP (
+            ch_sra_reads.map { meta, reads -> if (meta.fastq_1)  [ meta, reads ] }
+        )
 
-    // /*
-    //  * MODULE: If FTP link is NOT provided in run information then download FastQ directly via parallel-fastq-dump
-    //  */
-    // SRA_FASTQ_DUMP (
-    //     // ch_sra_reads.map { meta, reads -> if (!meta.is_ftp) [ meta, reads ] }
-    //     ch_sra_reads.map { meta, reads -> if (meta.is_ftp) meta }
-    // )
+        // /*
+        //  * MODULE: If FTP link is NOT provided in run information then download FastQ directly via parallel-fastq-dump
+        //  */
+        // SRA_FASTQ_DUMP (
+        //     // ch_sra_reads.map { meta, reads -> if (!meta.is_ftp) [ meta, reads ] }
+        //     ch_sra_reads.map { meta, reads -> if (meta.is_ftp) meta }
+        // )
 
-    /*
-     * MODULE: Stage FastQ files downloaded by SRA together and auto-create a samplesheet for the pipeline
-     */
-    SRA_TO_SAMPLESHEET (
-        SRA_FASTQ_FTP.out.fastq
-    )
+        /*
+        * MODULE: Stage FastQ files downloaded by SRA together and auto-create a samplesheet for the pipeline
+        */
+        SRA_TO_SAMPLESHEET (
+            SRA_FASTQ_FTP.out.fastq
+        )
 
-    /*
-     * MODULE: Create a merged samplesheet across all samples for the pipeline
-     */
-    SRA_MERGE_SAMPLESHEET (
-        SRA_TO_SAMPLESHEET.out.csv.collect{it[1]}
-    )
+        /*
+        * MODULE: Create a merged samplesheet across all samples for the pipeline
+        */
+        SRA_MERGE_SAMPLESHEET (
+            SRA_TO_SAMPLESHEET.out.csv.collect{it[1]}
+        )
+
+        // Print a warning to screen to check samplesheet before running pipeline
+        Checks.sra_download(log)
+    }
 }
 
 ////////////////////////////////////////////////////

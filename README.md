@@ -68,11 +68,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.
 
-### Documentation
+## Documentation
 
 The nf-core/rnaseq pipeline comes with documentation about the pipeline which you can read on the [nf-core website](https://nf-co.re/rnaseq) or find in the [`docs/` directory](docs).
 
-### Credits
+## Credits
 
 These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
 

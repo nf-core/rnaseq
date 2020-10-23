@@ -12,26 +12,22 @@ process SRA_IDS_TO_RUNINFO {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "conda-forge::requests=2.24.0" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/requests:2.24.0"
+        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
     } else {
-        // container "quay.io/biocontainers/requests:2.24.0"
-        // container "quay.io/biocontainers/requests:2.19.1"
-        // Python and requests
-        // container "quay.io/biocontainers/mulled-v2-ffdffc678ef7e057a54c6e2a990ebda211c39d9c:62ed692956f96d8218414426148c868f259f179c-0"
-        container "nfcore/viralrecon:1.1.0"
+        container "biocontainers/biocontainers:v1.2.0_cv1"
     }
     
     input:
     val id
     
     output:
-    path "*.tsv", emit: tsv
+    path "*.csv", emit: csv
     
     script:
     """
     echo $id > id.txt
-    sra_ids_to_runinfo.py id.txt ${id}_run_info.tsv
+    sra_ids_to_runinfo.py id.txt ${id}.run_info.csv
     """
 }

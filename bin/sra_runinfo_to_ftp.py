@@ -4,6 +4,7 @@ import os
 import sys
 import errno
 import argparse
+import collections
 
 
 def parse_args(args=None):
@@ -31,6 +32,7 @@ def parse_sra_runinfo(file_in):
         header = fin.readline().strip().split('\t')
         for line in fin:
             line_dict   = dict(zip(header,line.strip().split('\t')))
+            line_dict   = collections.OrderedDict(sorted(list(line_dict.items())))
             run_id      = line_dict['run_accession']
             exp_id      = line_dict['experiment_accession']
             library     = line_dict['library_layout']
@@ -38,41 +40,43 @@ def parse_sra_runinfo(file_in):
             fastq_md5   = line_dict['fastq_md5']
 
             db_id = exp_id
-            sample_dict = {}
+            sample_dict = collections.OrderedDict()
             if library == 'SINGLE':
-                sample_dict = {'single_end':True, 'is_ftp':False, 'fastq':[], 'md5':[]}
+                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','1'), ('is_ftp','0')])
                 if fastq_files:
-                    sample_dict['is_ftp'] = True
-                    sample_dict['fastq']  = [fastq_files, '']
-                    sample_dict['md5']    = [fastq_md5, '']
+                    sample_dict['is_ftp']   = '1'
+                    sample_dict['fastq_1']  = fastq_files
+                    sample_dict['md5_1']    = fastq_md5
                 else:
-                    ## In some instances fastq files don't exist for an entry and have to be downloaded via parallel-fastq-dump
+                    ## In some instances FTP links don't exist for FastQ files 
+                    ## These have to be downloaded via fastq-dump / fasterq-dump / parallel-fastq-dump via the run id
                     db_id = run_id
             
             elif library == 'PAIRED':
-                sample_dict = {'single_end':False, 'is_ftp':False, 'fastq':[], 'md5':[]}
+                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','0'), ('is_ftp','0')])
                 if fastq_files:
                     fq_files = fastq_files.split(';')[-2:]
+                    fq_md5   = fastq_md5.split(';')[-2:]
                     if fq_files[0].find('_1.fastq.gz') != -1 and fq_files[1].find('_2.fastq.gz') != -1:
-                        sample_dict['is_ftp'] = True
-                        sample_dict['fastq']  = fq_files
-                        sample_dict['md5']    = fastq_md5.split(';')[-2:]
+                        sample_dict['is_ftp']  = '1'
+                        sample_dict['fastq_1'] = fq_files[0]
+                        sample_dict['fastq_2'] = fq_files[1]
+                        sample_dict['md5_1']   = fq_md5[0]
+                        sample_dict['md5_2']   = fq_md5[1]
                     else:
                         print("Invalid FastQ files found for database id:'{}'!.".format(run_id))
                 else:
                     db_id = run_id
-
+            
             if sample_dict:
-                sample_info  = [str(int(sample_dict['single_end'])), str(int(sample_dict['is_ftp']))]
-                sample_info += sample_dict['fastq']
-                sample_info += sample_dict['md5']
+                sample_dict.update(line_dict)
                 if db_id not in runinfo_dict:
-                    runinfo_dict[db_id] = [sample_info]
+                    runinfo_dict[db_id] = [sample_dict]
                 else:
-                    if sample_info in runinfo_dict[db_id]:
+                    if sample_dict in runinfo_dict[db_id]:
                         print("Input run info file contains duplicate rows!\nLine: '{}'".format(line))
                     else:
-                        runinfo_dict[db_id].append(sample_info)
+                        runinfo_dict[db_id].append(sample_dict)
     return runinfo_dict
 
 
@@ -87,14 +91,15 @@ def sra_runinfo_to_ftp(files_in,file_out):
                 print("Duplicate sample identifier found!\nID: '{}'".format(db_id))
     
     ## Write samplesheet with paths to FastQ files and md5 sums
-    if len(samplesheet_dict) != 0:
+    if samplesheet_dict:
         out_dir = os.path.dirname(file_out)
         make_dir(out_dir)
         with open(file_out, "w") as fout:
-            fout.write(",".join(['id', 'single_end', 'is_ftp', 'fastq_1', 'fastq_2', 'md5_1', 'md5_2']) + "\n")
+            header = ['id'] + list(samplesheet_dict[list(samplesheet_dict.keys())[0]][0].keys())
+            fout.write(",".join(header) + "\n")
             for db_id in sorted(samplesheet_dict.keys()):
                 for idx,val in enumerate(samplesheet_dict[db_id]):
-                    fout.write(','.join(["{}_T{}".format(db_id,idx+1)] + val) + '\n')
+                    fout.write(','.join(["{}_T{}".format(db_id,idx+1)] + [val[x] for x in header[1:]]) + '\n')
 
 
 def main(args=None):

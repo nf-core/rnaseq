@@ -26,6 +26,6 @@ process SRA_RUNINFO_TO_FTP {
     
     script:
     """
-    sra_runinfo_to_ftp.py ${runinfo.join(',')} sra_ftp.tsv
+    sra_runinfo_to_ftp.py ${runinfo.join(',')} ${runinfo.toString().tokenize(".")[0]}.runinfo_ftp.tsv
     """
 }

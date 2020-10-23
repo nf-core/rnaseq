@@ -8,6 +8,7 @@ params.options = [:]
  */
 process SRA_IDS_TO_RUNINFO {
     tag "$id"
+    label 'error_retry'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
@@ -23,11 +24,11 @@ process SRA_IDS_TO_RUNINFO {
     val id
     
     output:
-    path "*.csv", emit: csv
+    path "*.tsv", emit: tsv
     
     script:
     """
     echo $id > id.txt
-    sra_ids_to_runinfo.py id.txt ${id}.run_info.csv
+    sra_ids_to_runinfo.py id.txt ${id}.runinfo.tsv
     """
 }

@@ -29,17 +29,17 @@ def parse_args(args=None):
     return parser.parse_args(args)
 
 
-def validate_csv_param(param,validVals,param_desc):
-    validList = []
+def validate_csv_param(param,valid_vals,param_desc):
+    valid_list = []
     if param:
-        userVals = param.split(',')
-        intersect = list(set(userVals) & set(validVals))
-        if len(intersect) == len(userVals):
-            validList = intersect
+        user_vals = param.split(',')
+        intersect = list(set(user_vals) & set(valid_vals))
+        if len(intersect) == len(user_vals):
+            valid_list = intersect
         else:
             print("ERROR: Please provide a valid {} parameter!\nProvided values = {}\nAccepted values = {}".format(param_desc,param,','.join(validVals)))
             sys.exit(1)
-    return validList
+    return valid_list
 
 
 def make_dir(path):
@@ -96,17 +96,14 @@ def get_ena_fields():
     return fields
 
 
-def fetch_sra_runinfo(FileIn,FileOut,platformList=[],libraryLayoutList=[]):
+def fetch_sra_runinfo(file_in,file_out,platform_list=[],library_layout_list=[]):
     total_out = 0
     seen_ids = []; run_ids = []
     header = []
-    make_dir(os.path.dirname(FileOut))
+    make_dir(os.path.dirname(file_out))
     ena_fields = get_ena_fields()
-    fin = open(FileIn,'r')
-    fout = open(FileOut,'w')
-    while True:
-        line = fin.readline()
-        if line:
+    with open(file_in,"r") as fin, open(file_out,"w") as fout:
+        for line in fin:
             db_id = line.strip()
             match = re.search(ID_REGEX, db_id)
             if match:
@@ -135,15 +132,15 @@ def fetch_sra_runinfo(FileIn,FileOut,platformList=[],libraryLayoutList=[]):
                                 run_id = row['run_accession']
                                 if not run_id in run_ids:
 
-                                    writeID = True
-                                    if platformList:
-                                        if row['instrument_platform'] not in platformList:
-                                            writeID = False
-                                    if libraryLayoutList:
-                                        if row['library_layout'] not in libraryLayoutList:
-                                            writeID = False
+                                    write_id = True
+                                    if platform_list:
+                                        if row['instrument_platform'] not in platform_list:
+                                            write_id = False
+                                    if library_layout_list:
+                                        if row['library_layout'] not in library_layout_list:
+                                            write_id = False
 
-                                    if writeID:
+                                    if write_id:
                                         if total_out == 0:
                                             header = sorted(row.keys())
                                             fout.write('{}\n'.format('\t'.join(sorted(header))))
@@ -163,17 +160,13 @@ def fetch_sra_runinfo(FileIn,FileOut,platformList=[],libraryLayoutList=[]):
                 id_str = ', '.join([x + "*" for x in PREFIX_LIST])
                 print("ERROR: Please provide a valid database id starting with {}!\nLine: '{}'".format(id_str,line.strip()))
                 sys.exit(1)
-        else:
-            break
-            fin.close()
-            fout.close()
 
 
 def main(args=None):
     args = parse_args(args)
-    platformList = validate_csv_param(args.PLATFORM,validVals=['ILLUMINA'],param_desc='--platform')
-    libraryLayoutList = validate_csv_param(args.LIBRARY_LAYOUT,validVals=['SINGLE', 'PAIRED'],param_desc='--library_layout')
-    fetch_sra_runinfo(args.FILE_IN,args.FILE_OUT,platformList,libraryLayoutList)
+    platform_list = validate_csv_param(args.PLATFORM,valid_vals=['ILLUMINA'],param_desc='--platform')
+    library_layout_list = validate_csv_param(args.LIBRARY_LAYOUT,valid_vals=['SINGLE', 'PAIRED'],param_desc='--library_layout')
+    fetch_sra_runinfo(args.FILE_IN,args.FILE_OUT,platform_list,library_layout_list)
 
 
 if __name__ == '__main__':

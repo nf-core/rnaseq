@@ -38,13 +38,13 @@ def parse_sra_runinfo(file_in):
             library     = line_dict['library_layout']
             fastq_files = line_dict['fastq_ftp']
             fastq_md5   = line_dict['fastq_md5']
+            print(line_dict)
 
             db_id = exp_id
             sample_dict = collections.OrderedDict()
             if library == 'SINGLE':
-                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','1'), ('is_ftp','0')])
+                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','true')])
                 if fastq_files:
-                    sample_dict['is_ftp']   = '1'
                     sample_dict['fastq_1']  = fastq_files
                     sample_dict['md5_1']    = fastq_md5
                 else:
@@ -53,12 +53,11 @@ def parse_sra_runinfo(file_in):
                     db_id = run_id
             
             elif library == 'PAIRED':
-                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','0'), ('is_ftp','0')])
+                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','true')])
                 if fastq_files:
                     fq_files = fastq_files.split(';')[-2:]
                     fq_md5   = fastq_md5.split(';')[-2:]
                     if fq_files[0].find('_1.fastq.gz') != -1 and fq_files[1].find('_2.fastq.gz') != -1:
-                        sample_dict['is_ftp']  = '1'
                         sample_dict['fastq_1'] = fq_files[0]
                         sample_dict['fastq_2'] = fq_files[1]
                         sample_dict['md5_1']   = fq_md5[0]
@@ -77,6 +76,7 @@ def parse_sra_runinfo(file_in):
                         print("Input run info file contains duplicate rows!\nLine: '{}'".format(line))
                     else:
                         runinfo_dict[db_id].append(sample_dict)
+    
     return runinfo_dict
 
 
@@ -96,10 +96,10 @@ def sra_runinfo_to_ftp(files_in,file_out):
         make_dir(out_dir)
         with open(file_out, "w") as fout:
             header = ['id'] + list(samplesheet_dict[list(samplesheet_dict.keys())[0]][0].keys())
-            fout.write(",".join(header) + "\n")
+            fout.write("\t".join(header) + "\n")
             for db_id in sorted(samplesheet_dict.keys()):
                 for idx,val in enumerate(samplesheet_dict[db_id]):
-                    fout.write(','.join(["{}_T{}".format(db_id,idx+1)] + [val[x] for x in header[1:]]) + '\n')
+                    fout.write('\t'.join(["{}_T{}".format(db_id,idx+1)] + [val[x] for x in header[1:]]) + '\n')
 
 
 def main(args=None):

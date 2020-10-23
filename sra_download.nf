@@ -7,6 +7,7 @@ if (params.public_data_ids) {
         .from(file(params.public_data_ids, checkIfExists: true))
         .splitCsv(header:false, sep:'', strip:true)
         .map { it[0] }
+        .unique()
         .set { ch_public_data_ids }
 } else { 
     exit 1, 'Input file with public database ids not specified!' 
@@ -44,31 +45,32 @@ workflow SRA_DOWNLOAD {
         SRA_IDS_TO_RUNINFO.out.tsv.collect()
     )
 
-    SRA_RUNINFO_TO_FTP
-        .out
-        .tsv
-        .splitCsv(header:true, sep:',')
-        .map { 
-            row -> [
-                [ id:row.id, single_end:row.single_end.toBoolean(), is_ftp:row.is_ftp.toBoolean(), md5_1:row.md5_1, md5_2:row.md5_2 ],
-                [ row.fastq_1, row.fastq_2 ],
-            ]
-        }
-        .set { ch_sra_reads }
+    // SRA_RUNINFO_TO_FTP
+    //     .out
+    //     .tsv
+    //     .splitCsv(header:true, sep:',')
+    //     .map { 
+    //         row -> [
+    //             [ id:row.id, single_end:row.single_end.toBoolean(), is_ftp:row.is_ftp.toBoolean(), md5_1:row.md5_1, md5_2:row.md5_2 ],
+    //             [ row.fastq_1, row.fastq_2 ],
+    //         ]
+    //     }
+    //     .set { ch_sra_reads }
     
-    /*
-     * MODULE: If FTP link is provided in run information then download FastQ directly via FTP and validate with md5sums
-     */
-    SRA_FASTQ_FTP (
-        ch_sra_reads.map { meta, reads -> if (meta.is_ftp)  [ meta, reads ] }
-    )
+    // /*
+    //  * MODULE: If FTP link is provided in run information then download FastQ directly via FTP and validate with md5sums
+    //  */
+    // SRA_FASTQ_FTP (
+    //     ch_sra_reads.map { meta, reads -> if (meta.is_ftp)  [ meta, reads ] }
+    // )
 
-    /*
-     * MODULE: If FTP link is NOT provided in run information then download FastQ directly via parallel-fastq-dump
-     */
-    SRA_FASTQ_DUMP (
-        ch_sra_reads.map { meta, reads -> if (!meta.is_ftp) [ meta, reads ] }    
-    )
+    // /*
+    //  * MODULE: If FTP link is NOT provided in run information then download FastQ directly via parallel-fastq-dump
+    //  */
+    // SRA_FASTQ_DUMP (
+    //     // ch_sra_reads.map { meta, reads -> if (!meta.is_ftp) [ meta, reads ] }
+    //     ch_sra_reads.map { meta, reads -> if (meta.is_ftp) meta }
+    // )
 }
 
 ////////////////////////////////////////////////////

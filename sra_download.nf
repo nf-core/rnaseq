@@ -38,32 +38,30 @@ workflow SRA_DOWNLOAD {
         ch_public_data_ids
     )
 
-    // /*
-    //  * MODULE: Parse SRA run information, create file containing FTP links and read into workflow as [ meta, [reads] ]
-    //  */
-    // SRA_RUNINFO_TO_FTP (
-    //     SRA_IDS_TO_RUNINFO.out.csv
-    //     //SRA_IDS_TO_RUNINFO.out.tsv.collect()
-    // )
+    /*
+     * MODULE: Parse SRA run information, create file containing FTP links and read into workflow as [ meta, [reads] ]
+     */
+    SRA_RUNINFO_TO_FTP (
+        SRA_IDS_TO_RUNINFO.out.tsv
+    )
 
-    // SRA_RUNINFO_TO_FTP
-    //     .out
-    //     .tsv
-    //     .splitCsv(header:true, sep:',')
-    //     .map { 
-    //         row -> [
-    //             [ id:row.id, single_end:row.single_end.toBoolean(), is_ftp:row.is_ftp.toBoolean(), md5_1:row.md5_1, md5_2:row.md5_2 ],
-    //             [ row.fastq_1, row.fastq_2 ],
-    //         ]
-    //     }
-    //     .set { ch_sra_reads }
+    SRA_RUNINFO_TO_FTP
+        .out
+        .tsv
+        .splitCsv(header:true, sep:'\t')
+        .map { 
+            meta -> 
+                meta.single_end = meta.single_end.toBoolean()
+                [ meta, [ meta.fastq_1, meta.fastq_2 ] ]
+        }
+        .set { ch_sra_reads }
     
-    // /*
-    //  * MODULE: If FTP link is provided in run information then download FastQ directly via FTP and validate with md5sums
-    //  */
-    // SRA_FASTQ_FTP (
-    //     ch_sra_reads.map { meta, reads -> if (meta.is_ftp)  [ meta, reads ] }
-    // )
+    /*
+     * MODULE: If FTP link is provided in run information then download FastQ directly via FTP and validate with md5sums
+     */
+    SRA_FASTQ_FTP (
+        ch_sra_reads.map { meta, reads -> if (meta.fastq_1)  [ meta, reads ] }
+    )
 
     // /*
     //  * MODULE: If FTP link is NOT provided in run information then download FastQ directly via parallel-fastq-dump

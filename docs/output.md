@@ -13,7 +13,7 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * [Preprocessing](#preprocessing)
-  * [ENA FTP / parallel-fastq-dump](#ena-ftp-parallel-fastq-dump) - Download samples from SRA / ENA / GEO
+  * [ENA FTP / parallel-fastq-dump](#ena-ftp--parallel-fastq-dump) - Download FastQ files via SRA / ENA / GEO ids
   * [cat](#cat) - Merge re-sequenced FastQ files
   * [FastQC](#fastqc) - Raw read QC
   * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction

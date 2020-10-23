@@ -50,14 +50,14 @@ def check_samplesheet(file_in, file_out):
         ## Check header
         MIN_COLS = 4
         HEADER = ['group', 'replicate', 'fastq_1', 'fastq_2', 'strandedness']
-        header = fin.readline().strip().split(",")
+        header = [x.strip('"') for x in fin.readline().strip().split(",")]
         if header[:len(HEADER)] != HEADER:
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
             sys.exit(1)
 
         ## Check sample entries
         for line in fin:
-            lspl = [x.strip() for x in line.strip().split(",")]
+            lspl = [x.strip().strip('"') for x in line.strip().split(",")]
 
             ## Check valid number of columns per row
             if len(lspl) < len(HEADER):

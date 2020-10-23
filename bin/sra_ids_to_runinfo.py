@@ -143,12 +143,12 @@ def fetch_sra_runinfo(file_in,file_out,platform_list=[],library_layout_list=[]):
                                     if write_id:
                                         if total_out == 0:
                                             header = sorted(row.keys())
-                                            fout.write('{}\n'.format('\t'.join(sorted(header))))
+                                            fout.write('{}\n'.format(','.join(sorted(header))))
                                         else:
                                             if header != sorted(row.keys()):
                                                 print("ERROR: Metadata columns do not match for id {}!\nLine: '{}'".format(run_id,line.strip()))
                                                 sys.exit(1)
-                                        fout.write('{}\n'.format('\t'.join([row[x] for x in header])))
+                                        fout.write('{}\n'.format(','.join([row[x] for x in header])))
                                         total_out += 1
                                     run_ids.append(run_id)
                         seen_ids.append(db_id)

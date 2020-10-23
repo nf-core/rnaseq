@@ -22,28 +22,29 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 ## Pipeline summary
 
-1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
-2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-3. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
-4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
-5. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
-6. Choice of multiple alignment and quantification routes:
+1. Download FastQ files via SRA, ENA or GEO ids and auto-create input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html), [`parallel-fastq-dump`](https://github.com/rvalieris/parallel-fastq-dump); *if required*)
+2. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
+3. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+4. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
+7. Choice of multiple alignment and quantification routes:
     1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
     2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
     3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
-7. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
-8. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
-9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
-10. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
-11. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
-12. Extensive quality control:
+8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+10. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
+11. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
+12. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
+13. Extensive quality control:
     1. [`RSeQC`](http://rseqc.sourceforge.net/)
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
-13. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
-14. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
+15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 ## Quick Start
 

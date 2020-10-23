@@ -54,7 +54,7 @@ workflow {
         /*
          * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, create samplesheet
          */
-        SRA_DOWNLOAD()
+        SRA_DOWNLOAD ()
     } else {
         /*
          * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline

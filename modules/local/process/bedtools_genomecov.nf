@@ -36,6 +36,7 @@ process BEDTOOLS_GENOMECOV {
         strandedness = '-strand - -du'
     }
     """
+    export LC_COLLATE=C
     bedtools \\
         genomecov \\
         -ibam $bam \\

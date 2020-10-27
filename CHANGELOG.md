@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Pipeline has now been re-implemented in Nextflow DSL2
 * The primary input for the pipeline has now changed from glob to samplesheet input [#123](https://github.com/nf-core/rnaseq/issues/123). See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
-* Updated template to nf-core/tools `v1.10.2`
+* Update pipeline template to nf-core/tools `1.11`
 
 * Merge FastQ files from same sample [#91](https://github.com/nf-core/rnaseq/issues/91)
 * Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)

@@ -36,7 +36,7 @@ Steps to reproduce the behaviour:
 
 ## Container engine
 
-- Engine: <!-- [e.g. Conda, Docker or Singularity] -->
+- Engine: <!-- [e.g. Conda, Docker, Singularity or Podman] -->
 - version: <!-- [e.g. 1.0.0] -->
 - Image tag: <!-- [e.g. nfcore/rnaseq:1.0.0] -->
 

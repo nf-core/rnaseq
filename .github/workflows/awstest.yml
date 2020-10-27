@@ -1,11 +1,10 @@
 name: nf-core AWS test
 # This workflow is triggered on push to the master branch.
-# It runs the -profile 'test' on AWS batch
+# It can be additionally triggered manually with GitHub actions workflow dispatch.
+# It runs the -profile 'test' on AWS batch.
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   run-awstest:

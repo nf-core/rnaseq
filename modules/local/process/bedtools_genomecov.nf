@@ -42,7 +42,7 @@ process BEDTOOLS_GENOMECOV {
         -bg \\
         $strandedness \\
         -split \\
-        | sort -T '.' -k1,1 -k2,2n > ${prefix}.bedGraph
+        | bedtools sort > ${prefix}.bedGraph
 
     bedtools --version | sed -e "s/bedtools v//g" > ${software}.version.txt
     """

@@ -77,7 +77,16 @@ workflow SRA_DOWNLOAD {
          */
         SRA_MERGE_SAMPLESHEET (
             SRA_TO_SAMPLESHEET.out.csv.collect{it[1]}
-        )        
+        )
+
+        /*
+         * If ids don't have a direct FTP download link write them to file for download outside of the pipeline
+         */
+        def no_ids_file = ["${params.outdir}", "${modules['sra_fastq_ftp'].publish_dir}", "IDS_NOT_DOWNLOADED.txt" ].join(File.separator)
+        ch_sra_reads
+            .map { meta, reads -> if (!meta.fastq_1) "${meta.id.split('_')[0..-2].join('_')}" }
+            .unique()
+            .collectFile(name: no_ids_file, sort: true, newLine: true)
     }
 }
 

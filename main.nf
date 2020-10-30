@@ -52,7 +52,7 @@ include { RNASEQ       } from './rnaseq' addParams( summary: summary )
 workflow {
     if (params.public_data_ids) {
         /*
-         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, create samplesheet
+         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
          */
         SRA_DOWNLOAD ()
     } else {

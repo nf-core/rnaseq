@@ -53,7 +53,7 @@ def parse_sra_runinfo(file_in):
                     db_id = run_id
             
             elif library == 'PAIRED':
-                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','true')])
+                sample_dict = collections.OrderedDict([('fastq_1',''), ('fastq_2',''), ('md5_1',''), ('md5_2',''), ('single_end','false')])
                 if fastq_files:
                     fq_files = fastq_files.split(';')[-2:]
                     fq_md5   = fastq_md5.split(';')[-2:]

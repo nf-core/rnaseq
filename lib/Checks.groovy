@@ -33,6 +33,20 @@ class Checks {
         }
     }
 
+    // Print a warning after SRA download has completed
+    static void sra_download(log) {
+        log.warn "=============================================================================\n" +
+                 "  THIS IS AN EXPERIMENTAL FEATURE!\n\n" + 
+                 "  Please double-check the samplesheet that has been auto-created using the\n" +
+                 "  public database ids provided via the '--public_data_ids' parameter.\n\n" +
+                 "  Public databases don't reliably hold information such as experimental group,\n" +
+                 "  replicate identifiers or strandedness information.\n\n" +  
+                 "  All of the sample metadata obtained from the ENA has been appended\n" +
+                 "  as additional columns to help you manually curate the samplesheet before\n" +
+                 "  you run the pipeline.\n" +
+                 "==================================================================================="
+    }
+
     // Print a warning if using GRCh38 assembly from igenomes.config
     static void ncbi_genome_warn(log) {
         log.warn "=============================================================================\n" +

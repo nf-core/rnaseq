@@ -107,9 +107,9 @@ class Schema {
         summary['Genome']                  = params.genome ?: 'Not supplied'
         summary['Fasta File']              = params.fasta
         if (params.additional_fasta)       summary["Additional Fasta File"] = params.additional_fasta
-        if (params.gtf)                    summary['GTF Annotation'] = params.gtf
+        //if (params.gtf)                    summary['GTF Annotation'] = params.gtf
         if (params.gff)                    summary['GFF3 Annotation'] = params.gff
-        if (params.gene_bed)               summary['Gene BED Annotation'] = params.gene_bed
+        //if (params.gene_bed)               summary['Gene BED Annotation'] = params.gene_bed
         if (params.gencode)                summary['GENCODE'] = params.gencode
         if (params.stringtie_ignore_gtf)   summary['StringTie Ignore GTF'] = params.stringtie_ignore_gtf
         if (params.fc_group_features_type) summary['Biotype GTF field'] = params.gencode ? "gene_type" : params.fc_group_features_type

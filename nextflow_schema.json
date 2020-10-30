@@ -27,6 +27,11 @@
                     "default": "./results",
                     "fa_icon": "fas fa-folder-open"
                 },
+                "public_data_ids": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files."
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
@@ -38,6 +43,11 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                },
+                "skip_sra_fastq_download": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Only download metadata for public data database ids and don't download the FastQ files."
                 },
                 "save_merged_fastq": {
                     "type": "boolean",
@@ -383,7 +393,6 @@
                 },
                 "deseq2_vst": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Use vst transformation instead of rlog with DESeq2.",
                     "help_text": "See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization).",
                     "fa_icon": "fas fa-dolly"

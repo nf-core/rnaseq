@@ -19,6 +19,7 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * [Preprocessing](#preprocessing)
+  * [ENA FTP](#ena-ftp) - Download FastQ files via SRA / ENA / GEO ids
   * [cat](#cat) - Merge re-sequenced FastQ files
   * [FastQC](#fastqc) - Raw read QC
   * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
@@ -51,6 +52,24 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Preprocessing
+
+### ENA FTP
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `public_data/`
+  * `samplesheet.csv`: Auto-created samplesheet that can be used to run the pipeline.
+  * `*.fastq.gz`: Paired-end/single-end reads downloaded from the ENA / SRA.
+* `public_data/md5/`
+  * `*.md5`: Files containing `md5` sum for FastQ files downloaded from the ENA / SRA.
+* `public_data/runinfo/`
+  * `*.runinfo.tsv`: Original metadata file downloaded from the ENA
+  * `*.runinfo_ftp.tsv`: Re-formatted metadata file downloaded from the ENA
+
+</details>
+
+Please see the [usage documentation](https://nf-co.re/rnaseq/usage#direct-download-of-public-repository-data) for a list of supported public repository identifiers and how to provide them to the pipeline. The final sample information for all identifiers is obtained from the ENA which provides direct download links for FastQ files as well as their associated md5sums. If download links exist, the files will be downloaded in parallel by FTP otherwise they will NOT be downloaded. This is intentional because the tools such as `parallel-fastq-dump`, `fasterq-dump`, `prefetch` etc require pre-existing configuration files in the users home directory which makes automation tricky across different platforms and containerisation.
 
 ### cat
 

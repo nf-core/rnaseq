@@ -39,13 +39,6 @@ log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
 
 ////////////////////////////////////////////////////
-/* --          IMPORT SUBWORKFLOWS             -- */
-////////////////////////////////////////////////////
-
-include { SRA_DOWNLOAD } from './sra_download'
-include { RNASEQ       } from './rnaseq' addParams( summary: summary )
-
-////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
@@ -54,11 +47,13 @@ workflow {
         /*
          * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
          */
+        include { SRA_DOWNLOAD } from './sra_download'
         SRA_DOWNLOAD ()
     } else {
         /*
          * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
          */
+        include { RNASEQ } from './rnaseq' addParams( summary: summary )
         RNASEQ ()
     }
 }

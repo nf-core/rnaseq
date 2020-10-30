@@ -86,15 +86,22 @@ workflow SRA_DOWNLOAD {
         */
         SRA_MERGE_SAMPLESHEET (
             SRA_TO_SAMPLESHEET.out.csv.collect{it[1]}
-        )
-
-        /*
-        * WARNING: To check samplesheet before running pipeline for real
-        */
-        Checks.sra_download(log)
+        )        
     }
+}
+
+////////////////////////////////////////////////////
+/* --            COMPLETION MESSAGE            -- */
+////////////////////////////////////////////////////
+
+/*
+ * WARNING: To check samplesheet before running pipeline for real
+ */
+workflow.onComplete {
+    Checks.sra_download(log)
 }
 
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */
 ////////////////////////////////////////////////////
+

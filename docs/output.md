@@ -19,7 +19,7 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * [Preprocessing](#preprocessing)
-  * [ENA FTP / parallel-fastq-dump](#ena-ftp--parallel-fastq-dump) - Download FastQ files via SRA / ENA / GEO ids
+  * [ENA FTP](#ena-ftp) - Download FastQ files via SRA / ENA / GEO ids
   * [cat](#cat) - Merge re-sequenced FastQ files
   * [FastQC](#fastqc) - Raw read QC
   * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
@@ -53,7 +53,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ## Preprocessing
 
-### ENA FTP / parallel-fastq-dump
+### ENA FTP
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -69,7 +69,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-Please see the [usage documentation](https://nf-co.re/rnaseq/usage#direct-download-of-public-repository-data) for a list of supported public repository identifiers and how to provide them to the pipeline. The final sample information for all identifiers is obtained from the ENA which provides direct download links for FastQ files as well as their associated md5sums. If a download link exists, the files will be downloaded by FTP otherwise they will be downloaded using [parallel-fastq-dump](https://github.com/rvalieris/parallel-fastq-dump).
+Please see the [usage documentation](https://nf-co.re/rnaseq/usage#direct-download-of-public-repository-data) for a list of supported public repository identifiers and how to provide them to the pipeline. The final sample information for all identifiers is obtained from the ENA which provides direct download links for FastQ files as well as their associated md5sums. If download links exist, the files will be downloaded in parallel by FTP otherwise they will NOT be downloaded. This is intentional because the tools such as `parallel-fastq-dump`, `fasterq-dump`, `prefetch` etc require pre-existing configuration files in the users home directory which makes automation tricky across different platforms and containerisation.
 
 ### cat
 

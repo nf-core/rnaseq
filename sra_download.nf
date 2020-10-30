@@ -23,7 +23,6 @@ def modules = params.modules.clone()
 include { SRA_IDS_TO_RUNINFO    } from './modules/local/process/sra_ids_to_runinfo'    addParams( options: modules['sra_ids_to_runinfo']    )
 include { SRA_RUNINFO_TO_FTP    } from './modules/local/process/sra_runinfo_to_ftp'    addParams( options: modules['sra_runinfo_to_ftp']    )
 include { SRA_FASTQ_FTP         } from './modules/local/process/sra_fastq_ftp'         addParams( options: modules['sra_fastq_ftp']         )
-include { PARALLELFASTQDUMP     } from './modules/local/process/parallelfastqdump'     addParams( options: modules['parallelfastqdump']     )
 include { SRA_TO_SAMPLESHEET    } from './modules/local/process/sra_to_samplesheet'    addParams( options: modules['sra_to_samplesheet'], results_dir: modules['sra_fastq_ftp'].publish_dir )
 include { SRA_MERGE_SAMPLESHEET } from './modules/local/process/sra_merge_samplesheet' addParams( options: modules['sra_merge_samplesheet'] )
 
@@ -64,13 +63,6 @@ workflow SRA_DOWNLOAD {
          */
         SRA_FASTQ_FTP (
             ch_sra_reads.map { meta, reads -> if (meta.fastq_1)  [ meta, reads ] }
-        )
-
-        /*
-         * MODULE: If FTP link is NOT provided in run information then download FastQ directly via parallel-fastq-dump
-         */
-        PARALLELFASTQDUMP (
-            ch_sra_reads.map { meta, reads -> if (!meta.fastq_1) meta }
         )
 
         /*

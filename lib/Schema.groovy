@@ -8,10 +8,10 @@ class Schema {
     /*
      * This method tries to read a JSON params file
      */
-    private static LinkedHashMap params_load(String schema_path) {
+    private static LinkedHashMap params_load(String json_schema) {
         def params_map = new LinkedHashMap()
         try {
-            params_map = params_read(schema_path)
+            params_map = params_read(json_schema)
         } catch (Exception e) {
             println "Could not read parameters settings from JSON. $e"
             params_map = new LinkedHashMap()
@@ -28,8 +28,8 @@ class Schema {
     Group
         -
     */
-    private static LinkedHashMap params_read(String schema_path) throws Exception {
-        def json = new File(schema_path).text
+    private static LinkedHashMap params_read(String json_schema) throws Exception {
+        def json = new File(json_schema).text
         def Map json_params = (Map) new JsonSlurper().parseText(json).get('definitions')
         /* Tree looks like this in nf-core schema
          * definitions <- this is what the first get('definitions') gets us
@@ -83,32 +83,33 @@ class Schema {
     /*
      * Beautify parameters for --help
      */
-    private static String params_help_string(schema_path, command, monochrome_logs) {
-        String output = "Typical pipeline command:\n\n"
-        output += "    ${command}\n\n"
-        def params_map = params_load(schema_path)
-        def max_chars = params_max_chars(params_map) + 1
+    private static String params_help(workflow, params, json_schema, command) {
+        String output  = Headers.nf_core(workflow, params.monochrome_logs)
+        output        += "Typical pipeline command:\n\n"
+        output        += "    ${command}\n\n"
+        def params_map = params_load(json_schema)
+        def max_chars  = params_max_chars(params_map) + 1
         for (group in params_map.keySet()) {
             output += group + "\n"
             def group_params = params_map.get(group)  // This gets the parameters of that particular group
             for (param in group_params.keySet()) {
                 def type = "[" + group_params.get(param).type + "]"
                 def description = group_params.get(param).description
-                output+= "    \u001B[1m" +  param.padRight(max_chars) + "\u001B[1m" + type.padRight(10) + description + "\n"
+                output += "    \u001B[1m" +  param.padRight(max_chars) + "\u001B[1m" + type.padRight(10) + description + "\n"
             }
             output += "\n"
         }
-        output += Headers.dashed_line(monochrome_logs)
+        output += Headers.dashed_line(params.monochrome_logs)
         return output
     }
 
     /*
      * Groovy Map summarising parameters/workflow options used by the pipeline
      */
-    private static LinkedHashMap params_summary_map(workflow, params, schema_path, force_params=[]) {
+    private static LinkedHashMap params_summary_map(workflow, params, json_schema, force_params=[]) {
         // Get pipeline parameters defined in JSON Schema
         def Map params_summary = [:]
-        def params_map = params_load(schema_path)
+        def params_map = params_load(json_schema)
         for (group in params_map.keySet()) {
             def sub_params = new LinkedHashMap()
             def group_params = params_map.get(group)  // This gets the parameters of that particular group

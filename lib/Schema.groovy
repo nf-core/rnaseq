@@ -171,12 +171,12 @@ class Schema {
         return output
     }
 
-    static String params_summary_multiqc(summary) {
+    static String params_summary_multiqc(workflow, summary) {
         String yaml_file_text  = """
-        id: 'nf-core-rnaseq-summary'
+        id: 'nf-core-${workflow.manifest.name}-summary'
         description: " - this information is collected when the pipeline is started."
-        section_name: 'nf-core/rnaseq Workflow Summary'
-        section_href: 'https://github.com/nf-core/rnaseq'
+        section_name: 'nf-core/${workflow.manifest.name} Workflow Summary'
+        section_href: 'https://github.com/nf-core/${workflow.manifest.name}'
         plot_type: 'html'
         data: |
             <dl class=\"dl-horizontal\">

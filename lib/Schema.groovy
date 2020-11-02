@@ -105,12 +105,13 @@ class Schema {
         def params_map = params_get(path)
         println(params.keySet())
         for (group in params_map.keySet()) {
-            //output += group + "\n"
             def group_params = params_map.get(group)  // This gets the parameters of that particular group
             for (param in group_params.keySet()) {
-                if (params.containsKey(param.toString())) {
-                    def val = params.get(param.toString())
-                    println("${param}\t${val}")
+                if (params.containsKey(param)) {
+                    def val = params.get(param)
+                    if (!group_params.get(param).hidden) {
+                        println("${param}\t${val}\t${group_params.get(param)}")
+                    }
                 }
             }
         //     //     println("${param}\t${params.containsKey(param)}")

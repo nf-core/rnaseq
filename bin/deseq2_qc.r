@@ -203,6 +203,7 @@ if (file.exists(PlotFile) == FALSE) {
               panel.grid.minor = element_blank(),
               panel.background = element_blank(),
               panel.border = element_rect(colour = "black", fill=NA, size=1))
+      print(pl)
     } # at end of loop, we'll be using the user-defined ntop if any, else all genes
     
     ## WRITE PC1 vs PC2 VALUES TO FILE

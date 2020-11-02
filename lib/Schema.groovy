@@ -147,9 +147,10 @@ class Schema {
     /*
      * Beautify parameters for summary and return as string
      */
-    private static String params_summary_string(params_map, monochrome_logs) {
-        String output = ""
-        def max_chars = params_max_chars(params_map)
+    private static String params_summary_log(workflow, params, json_schema, force_params=[]) {
+        String output  = Headers.nf_core(workflow, params.monochrome_logs)
+        def params_map = params_summary_map(workflow, params, json_schema, force_params)
+        def max_chars  = params_max_chars(params_map)
         for (group in params_map.keySet()) {
             def group_params = params_map.get(group)  // This gets the parameters of that particular group
             if (group_params) {
@@ -160,7 +161,7 @@ class Schema {
                 output += "\n"
             }
         }
-        output += Headers.dashed_line(monochrome_logs)
+        output += Headers.dashed_line(params.monochrome_logs)
         return output
     }
 

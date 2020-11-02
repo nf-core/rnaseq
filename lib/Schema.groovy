@@ -8,10 +8,10 @@ class Schema {
     /*
      * This method tries to read a JSON params file
      */
-    private static LinkedHashMap params_get(String schema_path) {
+    private static LinkedHashMap params_load(String schema_path) {
         def params_map = new LinkedHashMap()
         try {
-            params_map = params_load(schema_path)
+            params_map = params_read(schema_path)
         } catch (Exception e) {
             println "Could not read parameters settings from JSON. $e"
             params_map = new LinkedHashMap()
@@ -28,7 +28,7 @@ class Schema {
     Group
         -
     */
-    private static LinkedHashMap params_load(String schema_path) throws Exception {
+    private static LinkedHashMap params_read(String schema_path) throws Exception {
         def json = new File(schema_path).text
         def Map json_params = (Map) new JsonSlurper().parseText(json).get('definitions')
         /* Tree looks like this in nf-core schema
@@ -83,8 +83,10 @@ class Schema {
     /*
      * Beautify parameters for --help
      */
-    private static String params_help_beautify(params_map) {
-        String output = ""
+    private static String params_help_string(schema_path, command, monochrome_logs) {
+        String output = "Typical pipeline command:\n\n"
+        output += "    ${command}\n\n"
+        def params_map = params_load(schema_path)
         def max_chars = params_max_chars(params_map) + 1
         for (group in params_map.keySet()) {
             output += group + "\n"
@@ -96,31 +98,23 @@ class Schema {
             }
             output += "\n"
         }
+        output += Headers.dashed_line(monochrome_logs)
         return output
-    }
-
-    /*
-     * Get --help string
-     */
-    private static String params_help(schema_path, command) {
-        String output = "Typical pipeline command:\n\n"
-        output += "    ${command}\n\n"
-        output += params_help_beautify(params_get(schema_path))
     }
 
     /*
      * Groovy Map of parameters to print as summary
      */
-    private static LinkedHashMap params_summary_map(schema_path, workflow, params) {
+    private static LinkedHashMap params_summary_map(schema_path, params, force_params=[]) {
         def Map summary = [:]
-        def params_map = params_get(schema_path)
+        def params_map = params_load(schema_path)
         for (group in params_map.keySet()) {
             def sub_params = new LinkedHashMap()
             def group_params = params_map.get(group)  // This gets the parameters of that particular group
             for (param in group_params.keySet()) {
                 if (params.containsKey(param)) {
                     def value = params.get(param)
-                    if (!group_params.get(param).hidden) {
+                    if (!group_params.get(param).hidden || force_params.contains(param)) {
                         sub_params.put("$param", value)
                     }
                 }
@@ -131,9 +125,9 @@ class Schema {
     }
 
     /*
-     * Beautify parameters for summary
+     * Beautify parameters for summary and return as string
      */
-    private static String params_summary_beautify(params_map) {
+    private static String params_summary_string(params_map) {
         String output = ""
         def max_chars = params_max_chars(params_map)
         for (group in params_map.keySet()) {
@@ -149,34 +143,16 @@ class Schema {
         return output
     }
 
-    // private static LinkedHashMap params_summary(workflow, params) {
-    //     def Map summary = [:]
+
     //     if (workflow.revision)             summary['Pipeline Release'] = workflow.revision
     //     summary['Run Name']                = workflow.runName
-    //     summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
     //     if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-    //     summary['Output dir']       = params.outdir
     //     summary['Launch dir']       = workflow.launchDir
     //     summary['Working dir']      = workflow.workDir
     //     summary['Script dir']       = workflow.projectDir
     //     summary['User']             = workflow.userName
-    //     if (workflow.profile.contains('awsbatch')) {
-    //         summary['AWS Region']   = params.awsregion
-    //         summary['AWS Queue']    = params.awsqueue
-    //         summary['AWS CLI']      = params.awscli
-    //     }
     //     summary['Config Profile'] = workflow.profile
-    //     if (params.config_profile_description) summary['Config Profile Descr']   = params.config_profile_description
-    //     if (params.config_profile_contact)     summary['Config Profile Contact'] = params.config_profile_contact
-    //     if (params.config_profile_url)         summary['Config Profile URL']     = params.config_profile_url
     //     summary['Config Files'] = workflow.configFiles.join(', ')
-    //     if (params.email || params.email_on_fail) {
-    //         summary['E-mail Address']    = params.email
-    //         summary['E-mail on failure'] = params.email_on_fail
-    //         summary['MultiQC maxsize']   = params.max_multiqc_email_size
-    //     }
-    //     return summary
-    // }
 
     static String params_summary_multiqc(summary) {
         String yaml_file_text  = """

@@ -103,10 +103,11 @@ class Schema {
     }
 
     /*
-     * Groovy Map of parameters to print as summary
+     * Groovy Map summarising parameters/workflow options used by the pipeline
      */
-    private static LinkedHashMap params_summary_map(schema_path, params, force_params=[]) {
-        def Map summary = [:]
+    private static LinkedHashMap params_summary_map(workflow, params, schema_path, force_params=[]) {
+        // Get pipeline parameters defined in JSON Schema
+        def Map params_summary = [:]
         def params_map = params_load(schema_path)
         for (group in params_map.keySet()) {
             def sub_params = new LinkedHashMap()
@@ -119,15 +120,33 @@ class Schema {
                     }
                 }
             }
-            summary.put(group, sub_params)
+            params_summary.put(group, sub_params)
         }
-        return summary
+
+        // Get a selection of core Nextflow workflow options
+        def Map workflow_summary = [:]        
+        if (workflow.revision) {
+            workflow_summary['revision'] = workflow.revision
+        }
+        workflow_summary['runName']      = workflow.runName
+        if (workflow.containerEngine) {
+            workflow_summary['containerEngine'] = "$workflow.containerEngine"
+            workflow_summary['container']       = "$workflow.container"
+        }
+        workflow_summary['launchDir']    = workflow.launchDir
+        workflow_summary['workDir']      = workflow.workDir
+        workflow_summary['projectDir']   = workflow.projectDir
+        workflow_summary['userName']     = workflow.userName
+        workflow_summary['profile']      = workflow.profile
+        workflow_summary['configFiles']  = workflow.configFiles.join(', ')
+        
+        return [ 'Nextflow workflow options' : workflow_summary ] << params_summary
     }
 
     /*
      * Beautify parameters for summary and return as string
      */
-    private static String params_summary_string(params_map) {
+    private static String params_summary_string(params_map, monochrome_logs) {
         String output = ""
         def max_chars = params_max_chars(params_map)
         for (group in params_map.keySet()) {
@@ -140,19 +159,9 @@ class Schema {
                 output += "\n"
             }
         }
+        output += Headers.dashed_line(monochrome_logs)
         return output
     }
-
-
-    //     if (workflow.revision)             summary['Pipeline Release'] = workflow.revision
-    //     summary['Run Name']                = workflow.runName
-    //     if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-    //     summary['Launch dir']       = workflow.launchDir
-    //     summary['Working dir']      = workflow.workDir
-    //     summary['Script dir']       = workflow.projectDir
-    //     summary['User']             = workflow.userName
-    //     summary['Config Profile'] = workflow.profile
-    //     summary['Config Files'] = workflow.configFiles.join(', ')
 
     static String params_summary_multiqc(summary) {
         String yaml_file_text  = """

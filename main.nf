@@ -23,43 +23,44 @@ if (params.help) {
 }
 
 ////////////////////////////////////////////////////
-/* --          PARAMETER CHECKS                -- */
-////////////////////////////////////////////////////
-
-Checks.aws_batch(workflow, params)     // Check AWS batch settings
-Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
-
-////////////////////////////////////////////////////
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-// Force print these hidden parameters in the JSON Schema
-def force_params = [
-    'max_memory', 'max_cpus', 'max_time',
-    'config_profile_description', 'config_profile_contact', 'config_profile_url'
-]
-summary = Schema.params_summary_map(workflow, params, json_schema, force_params)
-log.info  Schema.params_summary_log(workflow, params, json_schema, force_params)
+// Pipeline parameter summary as a Groovy Map
+def summary = Schema.params_summary_map(workflow, params, json_schema)
+
+// Print pipeline parameter summary to screen
+log.info      Schema.params_summary_log(workflow, params, json_schema)
+
+////////////////////////////////////////////////////
+/* --          PARAMETER CHECKS                -- */
+////////////////////////////////////////////////////
+
+// Check AWS batch settings
+Checks.aws_batch(workflow, params)
+
+// Check the hostnames against configured profiles
+Checks.hostname(workflow, params, log) 
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
-// workflow {
-//     if (params.public_data_ids) {
-//         /*
-//          * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
-//          */
-//         include { SRA_DOWNLOAD } from './sra_download'
-//         SRA_DOWNLOAD ()
-//     } else {
-//         /*
-//          * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
-//          */
-//         include { RNASEQ } from './rnaseq' addParams( summary: summary )
-//         RNASEQ ()
-//     }
-// }
+workflow {
+    if (params.public_data_ids) {
+        /*
+         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
+         */
+        include { SRA_DOWNLOAD } from './sra_download'
+        SRA_DOWNLOAD ()
+    } else {
+        /*
+         * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
+         */
+        include { RNASEQ } from './rnaseq' addParams( summary: summary )
+        RNASEQ ()
+    }
+}
 
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */

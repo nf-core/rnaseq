@@ -162,7 +162,7 @@ class Schema {
             if (group_params) {
                 output += group + "\n"
                 for (param in group_params.keySet()) {
-                    output+= "    \u001B[1m" +  param.padRight(max_chars) + ": \u001B[1m" + group_params.get(param) + "\n"
+                    output += "    \u001B[1m" +  param.padRight(max_chars) + ": \u001B[1m" + group_params.get(param) + "\n"
                 }
                 output += "\n"
             }
@@ -172,15 +172,27 @@ class Schema {
     }
 
     static String params_summary_multiqc(workflow, summary) {
+        String summary_section = ''
+        for (group in summary.keySet()) {
+            def group_params = summary.get(group)  // This gets the parameters of that particular group
+            if (group_params) {
+                summary_section += "            <dt>$group</dt>\n"
+                for (param in group_params.keySet()) {
+                    summary_section += "            <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
+                }
+                summary_section += "\n"
+            }
+        }
+
         String yaml_file_text  = """
-        id: 'nf-core-${workflow.manifest.name}-summary'
+        id: '${workflow.manifest.name}-summary'
         description: " - this information is collected when the pipeline is started."
-        section_name: 'nf-core/${workflow.manifest.name} Workflow Summary'
-        section_href: 'https://github.com/nf-core/${workflow.manifest.name}'
+        section_name: '${workflow.manifest.name} Workflow Summary'
+        section_href: 'https://github.com/${workflow.manifest.name}'
         plot_type: 'html'
         data: |
-            <dl class=\"dl-horizontal\">
-            ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+            <dl class=\"dl-horizontal\">            
+            ${summary_section}
             </dl>
         """.stripIndent()
         return yaml_file_text

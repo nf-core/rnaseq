@@ -15,11 +15,10 @@ nextflow.enable.dsl = 2
 /* --               PRINT HELP                 -- */
 ////////////////////////////////////////////////////
 
-def parameter_schema = "$baseDir/nextflow_schema.json"
+def json_schema = "$baseDir/nextflow_schema.json"
 if (params.help) {
     def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
-    log.info Headers.nf_core(workflow, params.monochrome_logs)
-    log.info Schema.params_help_string(parameter_schema, command, params.monochrome_logs)
+    log.info Schema.params_help(workflow, params, json_schema, command)
     exit 0
 }
 
@@ -34,14 +33,14 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-// Force print these hidden parameters in the JSON Schema
-def force_params = [
-    'max_memory', 'max_cpus', 'max_time',
-    'config_profile_description', 'config_profile_contact', 'config_profile_url'
-]
-summary = Schema.params_summary_map(workflow, params, parameter_schema, force_params)
-log.info Headers.nf_core(workflow, params.monochrome_logs)
-log.info Schema.params_summary_string(summary, params.monochrome_logs)
+// // Force print these hidden parameters in the JSON Schema
+// def force_params = [
+//     'max_memory', 'max_cpus', 'max_time',
+//     'config_profile_description', 'config_profile_contact', 'config_profile_url'
+// ]
+// summary = Schema.params_summary_map(workflow, params, json_schema, force_params)
+// log.info Headers.nf_core(workflow, params.monochrome_logs)
+// log.info Schema.params_summary_string(summary, params.monochrome_logs)
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */

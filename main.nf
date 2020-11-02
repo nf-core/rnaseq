@@ -15,10 +15,11 @@ nextflow.enable.dsl = 2
 /* --               PRINT HELP                 -- */
 ////////////////////////////////////////////////////
 
+def parameter_schema = "$baseDir/nextflow_schema.json"
 if (params.help) {
     def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
     log.info Headers.nf_core(workflow, params.monochrome_logs)
-    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
+    log.info Schema.params_help_string(parameter_schema, command, params.monochrome_logs)
     exit 0
 }
 
@@ -33,30 +34,36 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-summary  = Schema.params_summary(workflow, params)
+// Force print these hidden parameters in the JSON Schema
+def force_params = [
+    'max_memory', 'max_cpus', 'max_time',
+    'config_profile_description', 'config_profile_contact', 'config_profile_url',
+    'email', 'email_on_fail'
+]
+summary = Schema.params_summary_map("$baseDir/nextflow_schema.json", params, force_params)
 log.info Headers.nf_core(workflow, params.monochrome_logs)
-log.info summary.collect { k,v -> "${k.padRight(26)}: $v" }.join("\n")
-log.info "-\033[2m----------------------------------------------------\033[0m-"
+log.info Schema.params_summary_string(summary)
+log.info Headers.dash_line(params.monochrome_logs)
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
-workflow {
-    if (params.public_data_ids) {
-        /*
-         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
-         */
-        include { SRA_DOWNLOAD } from './sra_download'
-        SRA_DOWNLOAD ()
-    } else {
-        /*
-         * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
-         */
-        include { RNASEQ } from './rnaseq' addParams( summary: summary )
-        RNASEQ ()
-    }
-}
+// workflow {
+//     if (params.public_data_ids) {
+//         /*
+//          * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
+//          */
+//         include { SRA_DOWNLOAD } from './sra_download'
+//         SRA_DOWNLOAD ()
+//     } else {
+//         /*
+//          * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
+//          */
+//         include { RNASEQ } from './rnaseq' addParams( summary: summary )
+//         RNASEQ ()
+//     }
+// }
 
 ////////////////////////////////////////////////////
 /* --                  THE END                 -- */

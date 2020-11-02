@@ -30,7 +30,7 @@ if (params.help) {
 def summary = Schema.params_summary_map(workflow, params, json_schema)
 
 // Print pipeline parameter summary to screen
-log.info      Schema.params_summary_log(workflow, params, json_schema)
+log.info Schema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
@@ -40,7 +40,7 @@ log.info      Schema.params_summary_log(workflow, params, json_schema)
 Checks.aws_batch(workflow, params)
 
 // Check the hostnames against configured profiles
-Checks.hostname(workflow, params, log) 
+Checks.hostname(workflow, params, log)
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */

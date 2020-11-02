@@ -688,7 +688,7 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary     = Schema.params_summary_multiqc(params.summary)
+        workflow_summary     = Schema.params_summary_multiqc(workflow, params.summary)
         ch_workflow_summary  = Channel.value(workflow_summary)
 
         MULTIQC (

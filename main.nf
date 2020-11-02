@@ -33,14 +33,13 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 /* --          PARAMETER SUMMARY               -- */
 ////////////////////////////////////////////////////
 
-// // Force print these hidden parameters in the JSON Schema
-// def force_params = [
-//     'max_memory', 'max_cpus', 'max_time',
-//     'config_profile_description', 'config_profile_contact', 'config_profile_url'
-// ]
-// summary = Schema.params_summary_map(workflow, params, json_schema, force_params)
-// log.info Headers.nf_core(workflow, params.monochrome_logs)
-// log.info Schema.params_summary_string(summary, params.monochrome_logs)
+// Force print these hidden parameters in the JSON Schema
+def force_params = [
+    'max_memory', 'max_cpus', 'max_time',
+    'config_profile_description', 'config_profile_contact', 'config_profile_url'
+]
+summary = Schema.params_summary_map(workflow, params, json_schema, force_params)
+log.info  Schema.params_summary_log(workflow, params, json_schema, force_params)
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */

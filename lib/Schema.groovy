@@ -106,7 +106,13 @@ class Schema {
     /*
      * Groovy Map summarising parameters/workflow options used by the pipeline
      */
-    private static LinkedHashMap params_summary_map(workflow, params, json_schema, force_params=[]) {
+    private static LinkedHashMap params_summary_map(workflow, params, json_schema) {
+        // Force print these hidden parameters in the JSON Schema
+        def force_params = [
+            'max_memory', 'max_cpus', 'max_time',
+            'config_profile_description', 'config_profile_contact', 'config_profile_url'
+        ]
+
         // Get pipeline parameters defined in JSON Schema
         def Map params_summary = [:]
         def params_map = params_load(json_schema)
@@ -147,9 +153,9 @@ class Schema {
     /*
      * Beautify parameters for summary and return as string
      */
-    private static String params_summary_log(workflow, params, json_schema, force_params=[]) {
+    private static String params_summary_log(workflow, params, json_schema) {
         String output  = Headers.nf_core(workflow, params.monochrome_logs)
-        def params_map = params_summary_map(workflow, params, json_schema, force_params)
+        def params_map = params_summary_map(workflow, params, json_schema)
         def max_chars  = params_max_chars(params_map)
         for (group in params_map.keySet()) {
             def group_params = params_map.get(group)  // This gets the parameters of that particular group

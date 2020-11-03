@@ -148,6 +148,9 @@ class Schema {
                             schema_value = 0
                         }
                     }
+                    if (schema_value.contains('$baseDir')) {
+                        println("${param}\t${schema_value}")
+                    }
                     if (params_value != schema_value) {
                         sub_params.put("$param", params_value)
                     }

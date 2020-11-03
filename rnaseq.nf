@@ -2,7 +2,9 @@
 /* --         LOCAL PARAMETER VALUES           -- */
 ////////////////////////////////////////////////////
 
-params.summary = [:]
+// Pipeline parameter summary as a Groovy Map
+def json_schema = "$baseDir/nextflow_schema.json"
+def summary = Schema.params_summary_map(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
 /* --         DEFAULT PARAMETER VALUES         -- */
@@ -688,7 +690,7 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary     = Schema.params_summary_multiqc(workflow, params.summary)
+        workflow_summary     = Schema.params_summary_multiqc(workflow, summary)
         ch_workflow_summary  = Channel.value(workflow_summary)
 
         MULTIQC (
@@ -736,7 +738,7 @@ workflow RNASEQ {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary, baseDir, multiqc_report, log, fail_percent_mapped)
+    Completion.email(workflow, params, summary, baseDir, multiqc_report, log, fail_percent_mapped)
     Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 

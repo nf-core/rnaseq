@@ -99,7 +99,8 @@ class Schema {
             }
             output += "\n"
         }
-        output += Headers.dashed_line(params.monochrome_logs)
+        output  = output.strip()
+        output += "\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 
@@ -174,7 +175,8 @@ class Schema {
                 output += "\n"
             }
         }
-        output += Headers.dashed_line(params.monochrome_logs)
+        output  = output.strip()
+        output += "\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 

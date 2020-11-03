@@ -85,18 +85,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * `--star_ignore_sjdbgtf` [#338](https://github.com/nf-core/rnaseq/issues/338)
 
-#### Removed
-
-* `--singleEnd` is now auto-detected from the input samplesheet
-* `--readPaths` is not required since these are provided from the input samplesheet
-* `--markdup_java_options` in favour of updating centrally on nf-core/configs
-* `--sampleLevel` not required
-* Strandedness is now specified at the sample-level via the input samplesheet
-  * `--forwardStranded`
-  * `--reverseStranded`
-  * `--unStranded`
-  * `--pico`
-
 #### Replaced
 
 | Deprecated                   | Replacement                |
@@ -121,6 +109,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--skipRseQC`                | `--skip_rseqc`             |
 | `--skipTrimming`             | `--skip_trimming`          |
 | `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
+
+#### Removed
+
+* Strandedness is now specified at the sample-level via the input samplesheet
+  * `--forwardStranded`
+  * `--reverseStranded`
+  * `--unStranded`
+  * `--pico`
+* `--awsqueue` can now be provided via nf-core/configs if using AWS
+* `--awsregion` can now be provided via nf-core/configs if using AWS
+* `--compressedReference` now auto-detected
+* `--markdup_java_options` in favour of updating centrally on nf-core/modules
+* `--project` parameter from old NGI template
+* `--readPaths` is not required since these are provided from the input samplesheet
+* `--sampleLevel` not required
+* `--singleEnd` is now auto-detected from the input samplesheet
+* `--skipEdgeR` qc not performed by DESeq2 instead
+* `--star_memory` in favour of updating centrally on nf-core/modules if required
 
 ## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 

@@ -37,7 +37,6 @@ option_list <- list(
     make_option(c("-o", "--outdir"        ), type="character", default='./'    , metavar="path"   , help="Output directory."                                                                      ),
     make_option(c("-p", "--outprefix"     ), type="character", default='deseq2', metavar="string" , help="Output prefix."                                                                         ),
     make_option(c("-v", "--vst"           ), type="logical"  , default=FALSE   , metavar="boolean", help="Run vst transform instead of rlog."                                                     ),
-    make_option(c("-n", "--ntop"          ), type="integer"  , default=NA      , metavar="integer", help="Limit PCA to most variable genes. Defaults to all genes, to detect batch effects."      ),
     make_option(c("-c", "--cores"         ), type="integer"  , default=1       , metavar="integer", help="Number of cores."                                                                       )
 )
 
@@ -78,7 +77,7 @@ if (length(unique(groups)) == 1) {
     quit(save = "no", status = 0, runLast = FALSE)
 }
 
-DDSFile <- paste(opt$outprefix,".dds.rld.RData",sep="")
+DDSFile <- paste(opt$outprefix,".dds.RData",sep="")
 if (file.exists(DDSFile) == FALSE) {
     counts  <- count.table[,samples.vec,drop=FALSE]
     coldata <- data.frame(row.names=colnames(counts), condition=groups)
@@ -161,11 +160,7 @@ if (file.exists(PlotFile) == FALSE) {
     pdf(file=PlotFile,onefile=TRUE,width=7,height=7)
 
     ## PCA
-    if (is.na(opt$ntop)) {
-      ntop <- Inf
-    } else {
-      ntop <- c(Inf, ntop)
-    }
+    ntop <- c(500, Inf)
     for (n_top_var in ntop) {
       pca.data <- plotPCA_vst(dds, assay=vst_name,intgroup=c("condition"),ntop=n_top_var)
       percentVar <- round(attr(pca.data, "percentVar")$percentVar)
@@ -184,7 +179,7 @@ if (file.exists(PlotFile) == FALSE) {
       pl <- ggplot(attr(pca.data, "percentVar"), aes(x=PC, y=percentVar)) +
         geom_line(aes(colour="explained by PC")) +
         geom_line(aes(y=groupR, colour="of PC explained by condition")) +
-        scale_x_continuous(breaks=plotFrame$PC, minor_breaks=NULL)  +
+        scale_x_continuous(breaks=seq(along=percentVar), minor_breaks=NULL)  +
         labs(title="Diagnostics of PCs",
              subtitle=plot_subtitle,
              x="Component", y="Percentage explaned",
@@ -208,15 +203,16 @@ if (file.exists(PlotFile) == FALSE) {
     
     ## WRITE PC1 vs PC2 VALUES TO FILE
     pca.vals           <- pca.data[,1:2]
-    colnames(pca.vals) <- paste(colnames(pca.vals),paste(percentVar,'% variance',sep=""), sep=": ")
+    colnames(pca.vals) <- paste0(colnames(pca.vals), ": ", percentVar[1:2], '% variance')
     pca.vals           <- cbind(sample = rownames(pca.vals), pca.vals)
     write.table(pca.vals,file=paste(opt$outprefix,".pca.vals.txt",sep=""),row.names=FALSE,col.names=TRUE,sep="\t",quote=TRUE)
 
     ## SAMPLE CORRELATION HEATMAP
-    sampleDists      <- dist(t(assay(rld, vst_name)))
+    sampleDists      <- dist(t(assay(dds, vst_name)))
     sampleDistMatrix <- as.matrix(sampleDists)
     colors           <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-    pheatmap(sampleDistMatrix,clustering_distance_rows=sampleDists,clustering_distance_cols=sampleDists,col=colors)
+    pheatmap(sampleDistMatrix,clustering_distance_rows=sampleDists,clustering_distance_cols=sampleDists,col=colors,
+             main=paste("Euclidean distance between", vst_name, "of samples"))
 
     ## WRITE SAMPLE DISTANCES TO FILE
     write.table(cbind(sample = rownames(sampleDistMatrix), sampleDistMatrix),file=paste(opt$outprefix,".sample.dists.txt",sep=""),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)

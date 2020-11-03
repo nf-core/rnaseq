@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Version 1.5](https://github.com/nf-core/rnaseq/releases/tag/1.5) - 2020-08-28
+## [Version 2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0) - 2020-11-13
 
 ### Major changes
 
@@ -17,9 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Merge FastQ files from same sample [#91](https://github.com/nf-core/rnaseq/issues/91)
 * Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)
 * Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
-* Optimise MultiQC configuration for faster run-time on huge sample numbers
-* Add information about SILVA licensing when removing rRNA to `usage.md`
-* Fixed ansi colours for pipeline summary, added summary logs of alignment results
 * Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option [#353](https://github.com/nf-core/rnaseq/issues/353)
 * Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
@@ -43,43 +40,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix error with gzipped annotation file [#362](https://github.com/nf-core/rnaseq/issues/362)
 * Fix STAR unmapped reads not output [#413](https://github.com/nf-core/rnaseq/issues/413)
 * Add option for turning on/off STAR command line option (--sjdbGTFfile) [#338](https://github.com/nf-core/rnaseq/issues/338)
+* Optimise MultiQC configuration for faster run-time on huge sample numbers
+* Add information about SILVA licensing when removing rRNA to `usage.md`
+* Fixed ansi colours for pipeline summary, added summary logs of alignment results
 
-### Updated Packages
+### Software dependencies
 
-* Update `r-base` `3.6.1` -> `4.0.2`
-* Update `r-data.table` `1.12.4` -> `1.12.8`
-* Update `r-gplots` `3.0.1.1` -> `3.0.4`
-* Update `fastqc` `0.11.8` -> `0.11.9`
-* Update `trim-galore` `0.6.4` -> `0.6.5`
-* Update `gffread` `0.11.4` -> `0.12.1`
-* Update `hisat2` `2.1.0` -> `2.2.1`
-* Update `stringtie` `2.0` -> `2.1.2`
-* Update `salmon` `0.14.2` -> `1.3.0`
-* Update `subread` `1.6.4` -> `2.0.1`
-* Update `sortmerna` `2.1b` -> `4.2.0`
-* Update `samtools` `1.9` -> `1.10`
-* Update `deeptools` `3.3.1` -> `3.4.3`
-* Update `picard` `2.21.1` -> `2.23.3`
-* Update `qualimap` `2.2.2c`-> `2.2.2d`
-* Update `multiqc` `1.7` -> `1.9`
-* Update `bioconductor-dupradar` `1.14.0` -> `1.18.0`
-* Update `bioconductor-edger` `3.26.5` -> `3.30.0`
-* Update `bioconductor-tximeta` `1.2.2` -> `1.6.2`
-* Update `bioconductor-summarizedexperiment` `1.14.0` -> `1.18.1`
+Note, since the pipeline is now using Nextflow DSL2 modules, each process will be be run with its own Biocontainer. This means that on occasion the pipeline will be using different versions of the same tool. However, the overall software dependency changes have been listed below for transparency.
 
-### Added / Removed Packages
+#### Updated
 
-* Add `python` `3.7.8`
-* Add `markdown` `3.2.2`
-* Add `pymdown-extensions` `8.0`
-* Add `pygments` `2.6.1`
-* Add `pigz` `2.3.4`
-* Add `rsem` `1.3.3`
-* Add `umi_tools` `1.0.1`
-* Remove `matplotlib`
-* Remove `r-markdown`
+* `bioconductor-dupradar` `1.14.0` -> `1.18.0`
+* `bioconductor-summarizedexperiment` `1.14.0` -> `1.18.1`
+* `bioconductor-tximeta` `1.2.2` -> `1.6.3`
+* `fastqc` `0.11.8` -> `0.11.9`
+* `gffread` `0.11.4` -> `0.12.1`
+* `hisat2` `2.1.0` -> `2.2.0`
+* `multiqc` `1.7` -> `1.9`
+* `picard` `2.21.1` -> `2.23.8`
+* `qualimap` `2.2.2c`-> `2.2.2d`
+* `r-base` `3.6.1` -> `4.0.3`
+* `salmon` `0.14.2` -> `1.3.0`
+* `samtools` `1.9` -> `1.10`
+* `sortmerna` `2.1b` -> `4.2.0`
+* `stringtie` `2.0` -> `2.1.4`
+* `subread` `1.6.4` -> `2.0.1`
+* `trim-galore` `0.6.4` -> `0.6.6`
+
+#### Added
+
+* `bedtools` `2.29.2`
+* `bioconductor-complexheatmap` `2.4.2`
+* `bioconductor-deseq2` `1.28.0`
+* `bioconductor-tximport` `1.16.0`
+* `perl` `5.26.2`
+* `python` `3.8.3`
+* `rsem` `1.3.3`
+* `ucsc-bedgraphtobigwig` `377`
+* `umi_tools` `1.0.1`
+
+#### Removed
+
+* `bioconductor-edger`
+* `deeptools`
+* `matplotlib`
+* `r-data.table`
+* `r-gplots`
+* `r-markdown`
 
 ### Parameters
+
+#### Updated
+
+| Deprecated                   | Replacement                |
+|------------------------------|----------------------------|
+| `--reads`                    | `--input`                  |
+| `--igenomesIgnore`           | `--igenomes_ignore`        |
+| `--removeRiboRNA`            | `--remove_ribo_rna`        |
+| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
+| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
+| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
+| `--saveReference`            | `--save_reference`         |
+| `--saveTrimmed`              | `--save_trimmed`           |
+| `--saveUnaligned`            | `--save_unaligned`         |
+| `--skipAlignment`            | `--skip_alignment`         |
+| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
+| `--skipDupRadar`             | `--skip_dupradar`          |
+| `--skipFastQC`               | `--skip_fastqc`            |
+| `--skipMultiQC`              | `--skip_multiqc`           |
+| `--skipPreseq`               | `--skip_preseq`            |
+| `--skipQC`                   | `--skip_qc`                |
+| `--skipQualimap`             | `--skip_qualimap`          |
+| `--skipRseQC`                | `--skip_rseqc`             |
+| `--skipTrimming`             | `--skip_trimming`          |
+| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
 
 #### Added
 
@@ -105,31 +139,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `--umitools_bc_pattern` - The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI
 * `--umitools_extract_method` - UMI pattern to use. Can be either 'string' (default) or 'regex'
 * `--with_umi` - Enable UMI-based read deduplication
-
-#### Replaced
-
-| Deprecated                   | Replacement                |
-|------------------------------|----------------------------|
-| `--reads`                    | `--input`                  |
-| `--igenomesIgnore`           | `--igenomes_ignore`        |
-| `--removeRiboRNA`            | `--remove_ribo_rna`        |
-| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
-| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
-| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
-| `--saveReference`            | `--save_reference`         |
-| `--saveTrimmed`              | `--save_trimmed`           |
-| `--saveUnaligned`            | `--save_unaligned`         |
-| `--skipAlignment`            | `--skip_alignment`         |
-| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
-| `--skipDupRadar`             | `--skip_dupradar`          |
-| `--skipFastQC`               | `--skip_fastqc`            |
-| `--skipMultiQC`              | `--skip_multiqc`           |
-| `--skipPreseq`               | `--skip_preseq`            |
-| `--skipQC`                   | `--skip_qc`                |
-| `--skipQualimap`             | `--skip_qualimap`          |
-| `--skipRseQC`                | `--skip_rseqc`             |
-| `--skipTrimming`             | `--skip_trimming`          |
-| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
 
 #### Removed
 

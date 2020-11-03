@@ -70,11 +70,16 @@ Note, since the pipeline is now using Nextflow DSL2 modules, each process will b
 #### Added
 
 * `bedtools` `2.29.2`
+* `bioconductor-biocparallel` `1.22.0`
 * `bioconductor-complexheatmap` `2.4.2`
 * `bioconductor-deseq2` `1.28.0`
 * `bioconductor-tximport` `1.16.0`
 * `perl` `5.26.2`
 * `python` `3.8.3`
+* `r-ggplot2` `3.3.2`
+* `r-optparse` `1.6.6`
+* `r-pheatmap` `1.0.12`
+* `r-rcolorbrewer` `1.1_2`
 * `rsem` `1.3.3`
 * `ucsc-bedgraphtobigwig` `377`
 * `umi_tools` `1.0.1`

@@ -15,7 +15,6 @@ nextflow.enable.dsl = 2
 /* --               PRINT HELP                 -- */
 ////////////////////////////////////////////////////
 
-// Print help
 def json_schema = "$baseDir/nextflow_schema.json"
 if (params.help) {
     def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
@@ -24,10 +23,9 @@ if (params.help) {
 }
 
 ////////////////////////////////////////////////////
-/* --          PARAMETER SUMMARY               -- */
+/* --         PRINT PARAMETER SUMMARY          -- */
 ////////////////////////////////////////////////////
 
-// Print pipeline parameter summary to screen
 log.info Schema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////

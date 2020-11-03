@@ -141,7 +141,7 @@ multiqc_options.args       += params.multiqc_title ? " --title \"$params.multiqc
 if (params.skip_alignment)  { multiqc_options['publish_dir'] = '' }
 
 def deseq2_qc_options                 = modules['deseq2_qc']
-deseq2_qc_options.args               += params.deseq2_vst ? '--vst TRUE' : ''
+deseq2_qc_options.args               += params.deseq2_vst ? " --vst TRUE" : ''
 def deseq2_qc_featurecounts_options   = deseq2_qc_options.clone()
 def deseq2_qc_rsem_options            = deseq2_qc_options.clone()
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()

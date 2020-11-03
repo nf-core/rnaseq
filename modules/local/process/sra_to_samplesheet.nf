@@ -33,14 +33,14 @@ process SRA_TO_SAMPLESHEET {
     pipeline_map = [
         group       : "${meta.id.split('_')[0..-2].join('_')}",
         replicate   : 1,
-        fastq_1     : [ "${params.outdir}", "${params.results_dir}", "${fastq[0]}" ].join(File.separator),
-        fastq_2     : meta.single_end ? '' : [ "${params.outdir}", "${params.results_dir}", "${fastq[1]}" ].join(File.separator),
+        fastq_1     : "${params.outdir}/${params.results_dir}/${fastq[0]}",
+        fastq_2     : meta.single_end ? '' : "${params.outdir}/${params.results_dir}/${fastq[1]}",
         strandedness: 'unstranded'
     ]
     pipeline_map << meta_map
 
     // Write to file
-    File file = new File(["${task.workDir}", "${meta.id}.samplesheet.csv"].join(File.separator))
+    def file = file("${task.workDir}/${meta.id}.samplesheet.csv")
     file.write pipeline_map.keySet().collect{ '"' + it + '"'}.join(",") + '\n'
     file.append(pipeline_map.values().collect{ '"' + it + '"'}.join(",")) + '\n'
 }

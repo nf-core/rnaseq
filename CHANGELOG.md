@@ -5,11 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Version 1.5](https://github.com/nf-core/rnaseq/releases/tag/1.5) - 2020-08-28
 
-### Pipeline enhancements & fixes
+### Major changes
 
 * Pipeline has now been re-implemented in Nextflow DSL2
-* The primary input for the pipeline has now changed from glob to samplesheet input [#123](https://github.com/nf-core/rnaseq/issues/123). See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
-* Update pipeline template to nf-core/tools `1.11`
+* The primary input for the pipeline has changed from glob to samplesheet input [#123](https://github.com/nf-core/rnaseq/issues/123). See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
+* Added a separate workflow to download FastQ files via SRA, ENA or GEO ids and to auto-create the input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); see [`--public_data_ids`](https://nf-co.re/rnaseq/parameters#public_data_ids) parameter)
+* Updated pipeline template to nf-core/tools `1.11`
+
+### Pipeline enhancements & fixes
 
 * Merge FastQ files from same sample [#91](https://github.com/nf-core/rnaseq/issues/91)
 * Implement UMI-based read deduplication [#435](https://github.com/nf-core/rnaseq/pull/435)
@@ -81,9 +84,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 * `--star_ignore_sjdbgtf` [#338](https://github.com/nf-core/rnaseq/issues/338)
-* `--star_align_options` parameter to pass additional options to the `STAR` alignment process. Fixes [#363](https://github.com/nf-core/rnaseq/issues/363)
-* `--star_index_options` parameter to pass additional options to the `STAR` genome indexing process. Fixes [#276](https://github.com/nf-core/rnaseq/issues/276)
-* `--hisat2_align_options` parameter to pass additional options to the `HISAT2` alignment process. Fixes [#368](https://github.com/nf-core/rnaseq/pull/368) and [#371](https://github.com/nf-core/rnaseq/pull/371)
 
 #### Removed
 
@@ -102,26 +102,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Deprecated                   | Replacement                |
 |------------------------------|----------------------------|
 | `--reads`                    | `--input`                  |
-| `--saveReference`            | `--save_reference`         |
-| `--skipTrimming`             | `--skip_trimming`          |
-| `--saveTrimmed`              | `--save_trimmed`           |
-| `--removeRiboRNA`            | `--remove_ribo_rna`        |
-| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
-| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
-| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
-| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
-| `--save_umi_intermediates`   | `--save_umi_intermeds`     |
-| `--saveUnaligned`            | `--save_unaligned`         |
-| `--skipAlignment`            | `--skip_alignment`         |
-| `--skipQC`                   | `--skip_qc`                |
-| `--skipFastQC`               | `--skip_fastqc`            |
-| `--skipPreseq`               | `--skip_preseq`            |
-| `--skipDupRadar`             | `--skip_dupradar`          |
-| `--skipQualimap`             | `--skip_qualimap`          |
-| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
-| `--skipRseQC`                | `--skip_rseqc`             |
-| `--skipEdgeR`                | `--skip_edger`             |
-| `--skipMultiQC`              | `--skip_multiqc`           |
+| `--igenomesIgnore`           | `--igenomes_ignore`        |
+| `--removeRiboRNA`            | `--remove_ribo_rna`        |
+| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
+| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
+| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
+| `--saveReference`            | `--save_reference`         |
+| `--saveTrimmed`              | `--save_trimmed`           |
+| `--saveUnaligned`            | `--save_unaligned`         |
+| `--skipAlignment`            | `--skip_alignment`         |
+| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
+| `--skipDupRadar`             | `--skip_dupradar`          |
+| `--skipFastQC`               | `--skip_fastqc`            |
+| `--skipMultiQC`              | `--skip_multiqc`           |
+| `--skipPreseq`               | `--skip_preseq`            |
+| `--skipQC`                   | `--skip_qc`                |
+| `--skipQualimap`             | `--skip_qualimap`          |
+| `--skipRseQC`                | `--skip_rseqc`             |
+| `--skipTrimming`             | `--skip_trimming`          |
+| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
 
 ## [Version 1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
 

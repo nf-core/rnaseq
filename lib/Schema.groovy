@@ -135,15 +135,17 @@ class Schema {
                 if (params.containsKey(param) && !blacklist.contains(param)) {
                     def params_value = params.get(param)
                     def schema_value = group_params.get(param).default
-                    def param_type   = group_params.get(param).type
-                    if (param_type == 'boolean' && schema_value == null) {
-                        schema_value = false
-                    }
-                    if (param_type == 'string' && schema_value == null) {
-                        schema_value = ''
-                    }
-                    if (param_type == 'integer' && schema_value == null) {
-                        schema_value = 0
+                    if (schema_value == null) {
+                        def param_type   = group_params.get(param).type
+                        if (param_type == 'boolean') {
+                            schema_value = false
+                        }
+                        if (param_type == 'string') {
+                            schema_value = ''
+                        }
+                        if (param_type == 'integer') {
+                            schema_value = 0
+                        }
                     }
                     if (params_value != schema_value) {
                         sub_params.put("$param", params_value)

@@ -83,7 +83,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-* `--star_ignore_sjdbgtf` [#338](https://github.com/nf-core/rnaseq/issues/338)
+* `--additional_fasta` - FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences
+* `--deseq2_vst` - Use vst transformation instead of rlog with DESeq2
+* `--enable_conda` - Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter
+* `--min_mapped_reads` - Minimum percentage of uniquely mapped reads below which samples are removed from further processing
+* `--multiqc_title` - MultiQC report title. Printed as page header, used for filename if not otherwise specified
+* `--public_data_ids` - File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files
+* `--publish_dir_mode` - Method used to save pipeline results to output directory
+* `--pull_docker_container` - Force the workflow to pull and use Docker containers if they have been provided
+* `--rsem_index` - Path to directory or tar.gz archive for pre-built RSEM index
+* `--rseqc_modules` - Specify the RSeQC modules to run
+* `--save_merged_fastq` - Save FastQ files after merging re-sequenced libraries in the results directory
+* `--save_umi_intermeds` - If this option is specified, intermediate FastQ and BAM files produced by UMI-tools are also saved in the results directory
+* `--skip_bigwig` - Skip bigWig file creation
+* `--skip_deseq2_qc` - Skip DESeq2 PCA and heatmap plotting
+* `--skip_featurecounts` - Skip featureCounts
+* `--skip_markduplicates` - Skip picard MarkDuplicates step
+* `--skip_sra_fastq_download` - Only download metadata for public data database ids and don't download the FastQ files
+* `--skip_stringtie` - Skip StringTie
+* `--star_ignore_sjdbgtf` - See [#338](https://github.com/nf-core/rnaseq/issues/338)
+* `--umitools_bc_pattern` - The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI
+* `--umitools_extract_method` - UMI pattern to use. Can be either 'string' (default) or 'regex'
+* `--with_umi` - Enable UMI-based read deduplication
 
 #### Replaced
 

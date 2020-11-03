@@ -107,29 +107,6 @@ class Schema {
      * Groovy Map summarising parameters/workflow options used by the pipeline
      */
     private static LinkedHashMap params_summary_map(workflow, params, json_schema) {
-        // Force print these hidden parameters in the JSON Schema
-        def force_params = [
-            'max_memory', 'max_cpus', 'max_time',
-            'config_profile_description', 'config_profile_contact', 'config_profile_url'
-        ]
-
-        // Get pipeline parameters defined in JSON Schema
-        def Map params_summary = [:]
-        def params_map = params_load(json_schema)
-        for (group in params_map.keySet()) {
-            def sub_params = new LinkedHashMap()
-            def group_params = params_map.get(group)  // This gets the parameters of that particular group
-            for (param in group_params.keySet()) {
-                if (params.containsKey(param)) {
-                    def value = params.get(param)
-                    if (!group_params.get(param).hidden || force_params.contains(param)) {
-                        sub_params.put("$param", value)
-                    }
-                }
-            }
-            params_summary.put(group, sub_params)
-        }
-
         // Get a selection of core Nextflow workflow options
         def Map workflow_summary = [:]        
         if (workflow.revision) {
@@ -147,7 +124,37 @@ class Schema {
         workflow_summary['profile']      = workflow.profile
         workflow_summary['configFiles']  = workflow.configFiles.join(', ')
         
-        return [ 'Nextflow workflow options' : workflow_summary ] << params_summary
+        // Get pipeline parameters defined in JSON Schema
+        def Map params_summary = [:]
+        def blacklist  = [ 'tracedir', 'hostnames' ]
+        def params_map = params_load(json_schema)
+        for (group in params_map.keySet()) {
+            def sub_params = new LinkedHashMap()
+            def group_params = params_map.get(group)  // This gets the parameters of that particular group
+            for (param in group_params.keySet()) {
+                if (params.containsKey(param) && !blacklist.contains(param)) {
+                    def params_value = params.get(param)
+                    def schema_value = group_params.get(param).default
+                    def param_type   = group_params.get(param).type
+                    if (param_type == 'boolean' && schema_value == null) {
+                        schema_value = false
+                    }
+                    if (param_type == 'string' && schema_value == null) {
+                        schema_value = ''
+                    }
+                    if (param_type == 'integer' && schema_value == null) {
+                        schema_value = 0
+                    }
+                    if (params_value != schema_value) {
+                        sub_params.put("$param", value)
+                        //println("${param}\t${param_type}\t${group_params.get(param).default}\t${schema_value}\t${params_value}")
+                    }
+                }
+            }
+            params_summary.put(group, sub_params)
+        }
+
+        return [ 'Core Nextflow workflow options' : workflow_summary ] << params_summary
     }
 
     /*
@@ -176,25 +183,22 @@ class Schema {
         for (group in summary.keySet()) {
             def group_params = summary.get(group)  // This gets the parameters of that particular group
             if (group_params) {
-                summary_section += "            <dt>$group</dt>\n"
+                summary_section += "    <p style=\"font-size:110%\"><b>$group</b></p>\n"
+                summary_section += "    <dl class=\"dl-horizontal\">\n"
                 for (param in group_params.keySet()) {
-                    summary_section += "            <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
+                    summary_section += "        <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
                 }
-                summary_section += "\n"
+                summary_section += "    </dl>\n"
             }
         }
 
-        String yaml_file_text  = """
-        id: '${workflow.manifest.name}-summary'
-        description: " - this information is collected when the pipeline is started."
-        section_name: '${workflow.manifest.name} Workflow Summary'
-        section_href: 'https://github.com/${workflow.manifest.name}'
-        plot_type: 'html'
-        data: |
-            <dl class=\"dl-horizontal\">            
-            ${summary_section}
-            </dl>
-        """.stripIndent()
+        String yaml_file_text  = "id: '${workflow.manifest.name.replaceAll('/','-')}-summary'\n"
+        yaml_file_text        += "description: ' - this information is collected when the pipeline is started.'\n"
+        yaml_file_text        += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
+        yaml_file_text        += "section_href: 'https://github.com/${workflow.manifest.name}'\n"
+        yaml_file_text        += "plot_type: 'html'\n"
+        yaml_file_text        += "data: |\n"
+        yaml_file_text        += "${summary_section}"
         return yaml_file_text
     }
 }

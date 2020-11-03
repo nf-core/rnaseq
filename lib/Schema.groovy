@@ -146,14 +146,12 @@ class Schema {
                         schema_value = 0
                     }
                     if (params_value != schema_value) {
-                        sub_params.put("$param", value)
-                        //println("${param}\t${param_type}\t${group_params.get(param).default}\t${schema_value}\t${params_value}")
+                        sub_params.put("$param", params_value)
                     }
                 }
             }
             params_summary.put(group, sub_params)
         }
-
         return [ 'Core Nextflow workflow options' : workflow_summary ] << params_summary
     }
 

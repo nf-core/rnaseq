@@ -127,7 +127,7 @@ class Schema {
         
         // Get pipeline parameters defined in JSON Schema
         def Map params_summary = [:]
-        def blacklist  = [ 'tracedir', 'hostnames' ]
+        def blacklist  = ['hostnames']
         def params_map = params_load(json_schema)
         for (group in params_map.keySet()) {
             def sub_params = new LinkedHashMap()
@@ -136,8 +136,8 @@ class Schema {
                 if (params.containsKey(param) && !blacklist.contains(param)) {
                     def params_value = params.get(param)
                     def schema_value = group_params.get(param).default
+                    def param_type   = group_params.get(param).type
                     if (schema_value == null) {
-                        def param_type   = group_params.get(param).type
                         if (param_type == 'boolean') {
                             schema_value = false
                         }
@@ -147,10 +147,25 @@ class Schema {
                         if (param_type == 'integer') {
                             schema_value = 0
                         }
+                    } else {
+                        if (param_type == 'string') {
+                            if (schema_value.contains('$baseDir') || schema_value.contains('${baseDir}')) {
+                                def sub_string = schema_value.replace('\$baseDir','')
+                                sub_string     = sub_string.replace('\${baseDir}','')
+                                if (params_value.contains(sub_string)) {
+                                    schema_value = params_value
+                                }
+                            }
+                            if (schema_value.contains('$params.outdir') || schema_value.contains('${params.outdir}')) {
+                                def sub_string = schema_value.replace('\$params.outdir','')
+                                sub_string     = sub_string.replace('\${params.outdir}','')
+                                if ("${params.outdir}${sub_string}" == params_value) {
+                                    schema_value = params_value
+                                }
+                            }
+                        }
                     }
-                    if (schema_value.contains('$baseDir')) {
-                        println("${param}\t${schema_value}")
-                    }
+
                     if (params_value != schema_value) {
                         sub_params.put("$param", params_value)
                     }
@@ -197,7 +212,7 @@ class Schema {
             }
         }
 
-        String yaml_file_text  = "id: '${workflow.manifest.name.replaceAll('/','-')}-summary'\n"
+        String yaml_file_text  = "id: '${workflow.manifest.name.replace('/','-')}-summary'\n"
         yaml_file_text        += "description: ' - this information is collected when the pipeline is started.'\n"
         yaml_file_text        += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
         yaml_file_text        += "section_href: 'https://github.com/${workflow.manifest.name}'\n"

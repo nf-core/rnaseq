@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0) - 2020-11-13
+## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-13
 
 ### Major enhancements
 
@@ -167,12 +167,12 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 > **NB:** Dependency has been __added__ if just the new version information is present.  
 > **NB:** Dependency has been __removed__ if version information isn't present.  
 
-## [1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2) - 2019-10-18
+## [[1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2)] - 2019-10-18
 
 * Minor version release for keeping Git History in sync
 * No changes with respect to 1.4.1 on pipeline level
 
-## [1.4.1](https://github.com/nf-core/rnaseq/releases/tag/1.4.1) - 2019-10-17
+## [[1.4.1](https://github.com/nf-core/rnaseq/releases/tag/1.4.1)] - 2019-10-17
 
 Major novel changes include:
 
@@ -184,7 +184,7 @@ Major novel changes include:
 * Fixed parameter warnings [#316](https://github.com/nf-core/rnaseq/issues/316) and [318](https://github.com/nf-core/rnaseq/issues/318)
 * Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) - Confusing Info Printout about GFF and GTF
 
-## [1.4](https://github.com/nf-core/rnaseq/releases/tag/1.4) - 2019-10-15
+## [[1.4](https://github.com/nf-core/rnaseq/releases/tag/1.4)] - 2019-10-15
 
 Major novel changes include:
 
@@ -257,7 +257,7 @@ Major novel changes include:
 * Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
 * Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
 
-## [1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
+## [[1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3)] - 2019-03-26
 
 ### Pipeline Updates
 
@@ -295,7 +295,7 @@ Major novel changes include:
 * matplotlib 3.0.3
 * r-base 3.5.1
 
-## [1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
+## [[1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2)] - 2018-12-12
 
 ### Pipeline updates
 
@@ -314,7 +314,7 @@ Major novel changes include:
 * Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
 * Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
 
-## [1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
+## [[1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1)] - 2018-10-05
 
 ### Pipeline updates
 
@@ -330,7 +330,7 @@ Major novel changes include:
 * [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
 * [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
 
-## [1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
+## [[1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0)] - 2018-08-20
 
 This release marks the point where the pipeline was moved from [SciLifeLab/NGI-RNAseq](https://github.com/SciLifeLab/NGI-RNAseq)
 over to the new [nf-core](http://nf-co.re/) community, at [nf-core/rnaseq](https://github.com/nf-core/rnaseq).

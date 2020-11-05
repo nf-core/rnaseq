@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Major enhancements
 
-* Pipeline has now been re-implemented in Nextflow DSL2
+* Pipeline has now been re-implemented in [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html)
+* All software containers are now exclusively obtained from [Biocontainers](https://biocontainers.pro/#/registry)
 * The primary input for the pipeline has changed from glob to samplesheet input [#123](https://github.com/nf-core/rnaseq/issues/123). See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
 * Ability to concatenate multiple runs of the same samples via the input samplesheet [#91](https://github.com/nf-core/rnaseq/issues/91)
 * Added a separate workflow to download FastQ files via SRA, ENA or GEO ids and to auto-create the input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); see [`--public_data_ids`](https://nf-co.re/rnaseq/parameters#public_data_ids) parameter)

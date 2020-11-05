@@ -95,7 +95,7 @@ class Schema {
             for (param in group_params.keySet()) {
                 def type = "[" + group_params.get(param).type + "]"
                 def description = group_params.get(param).description
-                output += "    \u001B[1m" +  param.padRight(max_chars) + "\u001B[1m" + type.padRight(10) + description + "\n"
+                output += "    \u001B[1m--" +  param.padRight(max_chars) + "\u001B[1m" + type.padRight(10) + description + "\n"
             }
             output += "\n"
         }

@@ -96,7 +96,8 @@
                 "remove_ribo_rna": {
                     "type": "boolean",
                     "fa_icon": "fas fa-trash-alt",
-                    "description": "Enable the removal of reads derived from ribosomal RNA (or any patterns found in the sequences defined by '--ribo_database_manifest') using SortMeRNA."
+                    "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
+                    "help_text": "Any patterns found in the sequences defined by the '--ribo_database_manifest' parameter will be used."
                 },
                 "ribo_database_manifest": {
                     "type": "string",
@@ -298,7 +299,8 @@
                     "type": "integer",
                     "default": 5,
                     "fa_icon": "fas fa-percentage",
-                    "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low."
+                    "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
+                    "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
                 },
                 "seq_center": {
                     "type": "string",
@@ -358,8 +360,9 @@
                 "fc_count_type": {
                     "type": "string",
                     "default": "exon",
-                    "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file. You can change this parameter for example, for nuclear RNA-seq where you may want to count reads in introns as well as exons using '--fc_count_type transcript'.",
-                    "fa_icon": "fas fa-indent"
+                    "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file.",
+                    "fa_icon": "fas fa-indent",
+                    "help_text": "You can change this parameter for example, for nuclear RNA-seq where you may want to count reads in introns as well as exons using '--fc_count_type transcript'."
                 },
                 "stringtie_ignore_gtf": {
                     "type": "boolean",

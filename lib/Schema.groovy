@@ -84,7 +84,7 @@ class Schema {
      * Beautify parameters for --help
      */
     private static String params_help(workflow, params, json_schema, command) {
-        String output  = Headers.nf_core(workflow, params.monochrome_logs)
+        String output  = Headers.nf_core(workflow, params.monochrome_logs) + "\n"
         output        += "Typical pipeline command:\n\n"
         output        += "    ${command}\n\n"
         def params_map = params_load(json_schema)
@@ -99,8 +99,9 @@ class Schema {
             }
             output += "\n"
         }
-        output  = output.strip()
-        output += "\n" + Headers.dashed_line(params.monochrome_logs)
+        output += Headers.dashed_line(params.monochrome_logs)
+        output += "\n\n" + Checks.citation()
+        output += "\n\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 
@@ -173,7 +174,7 @@ class Schema {
             }
             params_summary.put(group, sub_params)
         }
-        return [ 'Core Nextflow workflow options' : workflow_summary ] << params_summary
+        return [ 'Core Nextflow options' : workflow_summary ] << params_summary
     }
 
     /*

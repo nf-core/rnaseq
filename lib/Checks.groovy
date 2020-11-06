@@ -34,15 +34,13 @@ class Checks {
     }
 
     // Citation string
-    private static String citation() {
-        return "If you use nf-core/rnaseq for your analysis please cite:\n\n" +
+    private static String citation(workflow) {
+        return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
                "* The pipeline\n" + 
-               "  DOI     : https://doi.org/10.5281/zenodo.1400710\n\n" +
-               "* The nf-core framework for community-curated bioinformatics pipelines.\n" +
-               "  Ewels P, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P & Nahnsen S.\n" +
-               "  Nat Biotechnol. 2020 Feb 13.\n" +
-               "  DOI     : https://dx.doi.org/10.1038/s41587-020-0439-x\n" +
-               "  ReadCube: https://rdcu.be/b1GjZ"
+               "  https://doi.org/10.5281/zenodo.1400710\n\n" +
+               "* The nf-core framework\n" +
+               "  https://dx.doi.org/10.1038/s41587-020-0439-x\n" +
+               "  https://rdcu.be/b1GjZ"
     }
 
     // Print a warning after SRA download has completed

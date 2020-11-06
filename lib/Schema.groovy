@@ -180,7 +180,7 @@ class Schema {
      * Beautify parameters for summary and return as string
      */
     private static String params_summary_log(workflow, params, json_schema) {
-        String output  = Headers.nf_core(workflow, params.monochrome_logs)
+        String output  = Headers.nf_core(workflow, params.monochrome_logs) + "\n"
         def params_map = params_summary_map(workflow, params, json_schema)
         def max_chars  = params_max_chars(params_map)
         for (group in params_map.keySet()) {
@@ -193,8 +193,9 @@ class Schema {
                 output += "\n"
             }
         }
-        output  = output.strip()
-        output += "\n" + Headers.dashed_line(params.monochrome_logs)
+        output += Headers.dashed_line(params.monochrome_logs)
+        output += "\n\n" + Checks.citation()
+        output += "\n\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 

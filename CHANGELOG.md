@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Updated pipeline template to nf-core/tools `1.11`
 * Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
+* Add nag to cite the pipeline in summary [#281](https://github.com/nf-core/rnaseq/issues/281)
 * Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option [#353](https://github.com/nf-core/rnaseq/issues/353)
 * Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
 * Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)

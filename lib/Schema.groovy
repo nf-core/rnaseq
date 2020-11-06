@@ -84,7 +84,7 @@ class Schema {
      * Beautify parameters for --help
      */
     private static String params_help(workflow, params, json_schema, command) {
-        String output  = Headers.nf_core(workflow, params.monochrome_logs)
+        String output  = Headers.nf_core(workflow, params.monochrome_logs) + "\n"
         output        += "Typical pipeline command:\n\n"
         output        += "    ${command}\n\n"
         def params_map = params_load(json_schema)
@@ -99,8 +99,9 @@ class Schema {
             }
             output += "\n"
         }
-        output  = output.strip()
-        output += "\n" + Headers.dashed_line(params.monochrome_logs)
+        output += Headers.dashed_line(params.monochrome_logs)
+        output += "\n\n" + Checks.citation(workflow)
+        output += "\n\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 
@@ -173,14 +174,14 @@ class Schema {
             }
             params_summary.put(group, sub_params)
         }
-        return [ 'Core Nextflow workflow options' : workflow_summary ] << params_summary
+        return [ 'Core Nextflow options' : workflow_summary ] << params_summary
     }
 
     /*
      * Beautify parameters for summary and return as string
      */
     private static String params_summary_log(workflow, params, json_schema) {
-        String output  = Headers.nf_core(workflow, params.monochrome_logs)
+        String output  = Headers.nf_core(workflow, params.monochrome_logs) + "\n"
         def params_map = params_summary_map(workflow, params, json_schema)
         def max_chars  = params_max_chars(params_map)
         for (group in params_map.keySet()) {
@@ -193,8 +194,9 @@ class Schema {
                 output += "\n"
             }
         }
-        output  = output.strip()
-        output += "\n" + Headers.dashed_line(params.monochrome_logs)
+        output += Headers.dashed_line(params.monochrome_logs)
+        output += "\n\n" + Checks.citation(workflow)
+        output += "\n\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 

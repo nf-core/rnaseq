@@ -1,4 +1,4 @@
-# nf-core/chipseq: Citations
+# nf-core/rnaseq: Citations
 
 ## [nf-core](https://www.ncbi.nlm.nih.gov/pubmed/32055031/)
 

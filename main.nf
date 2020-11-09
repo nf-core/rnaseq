@@ -28,8 +28,6 @@ if (params.help) {
 
 def summary_params = Schema.params_summary_map(workflow, params, json_schema)
 log.info Schema.params_summary_log(workflow, params, json_schema)
-//log.info summary_params
-println(summary_params.collect{ it.value.collect { it2 -> ["$it.key.$it2.key", it2.value] } }.flatten())
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */

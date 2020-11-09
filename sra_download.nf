@@ -2,7 +2,7 @@
 /* --         LOCAL PARAMETER VALUES           -- */
 ////////////////////////////////////////////////////
 
-params.summary = [:]
+params.summary_params = [:]
 
 ////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
@@ -103,7 +103,7 @@ workflow SRA_DOWNLOAD {
 
 workflow.onComplete {
     Checks.sra_download(log)
-    Completion.email(workflow, params, params.summary, baseDir, log)
+    Completion.email(workflow, params, params.summary_params, baseDir, log)
     Completion.summary(workflow, params, log)
 }
 

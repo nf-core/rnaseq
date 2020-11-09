@@ -3,7 +3,7 @@
  */
 
 class Completion {
-    static void email(workflow, params, summary, baseDir, multiqc_report, log, fail_percent_mapped) {
+    static void email(workflow, params, summary, baseDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
@@ -109,7 +109,7 @@ class Completion {
         output_tf.withWriter { w -> w << email_txt }
     }
 
-    static void summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped) {
+    static void summary(workflow, params, log, fail_percent_mapped=[:], pass_percent_mapped=[:]) {
         Map colors = Headers.log_colours(params.monochrome_logs)
 
         if (pass_percent_mapped.size() > 0) {

@@ -26,8 +26,8 @@ if (params.help) {
 /* --         PRINT PARAMETER SUMMARY          -- */
 ////////////////////////////////////////////////////
 
-def summary = Schema.params_summary_map(workflow, params, json_schema)
-log.info      Schema.params_summary_log(workflow, params, json_schema)
+def params_summary = Schema.params_summary_map(workflow, params, json_schema)
+log.info Schema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
@@ -48,14 +48,14 @@ workflow {
         /*
          * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
          */
-        include { SRA_DOWNLOAD } from './sra_download'
-        SRA_DOWNLOAD () addParams( summary: summary )
+        include { SRA_DOWNLOAD } from './sra_download' addParams( params_summary: params_summary )
+        SRA_DOWNLOAD ()
     } else {
         /*
          * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
          */
-        include { RNASEQ } from './rnaseq'
-        RNASEQ () addParams( summary: summary )
+        include { RNASEQ } from './rnaseq' addParams( params_summary: params_summary )
+        RNASEQ ()
     }
 }
 

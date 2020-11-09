@@ -66,9 +66,22 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 
 4. Start running your own analysis!
 
-    ```bash
-    nextflow run nf-core/rnaseq -profile <docker/singularity/podman/conda/institute> --input samplesheet.csv --genome GRCh37
-    ```
+    * Typical command for RNA-seq analysis:
+
+        ```bash
+        nextflow run nf-core/rnaseq \
+            --input samplesheet.csv \
+            --genome GRCh37 \
+            -profile <docker/singularity/podman/conda/institute>
+        ```
+
+    * Typical command for downloading public data:
+
+        ```bash
+        nextflow run nf-core/rnaseq \
+            --public_data_ids ids.txt \
+            -profile <docker/singularity/podman/conda/institute>
+        ```
 
 See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.
 

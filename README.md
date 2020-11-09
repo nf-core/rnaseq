@@ -60,7 +60,7 @@ On release, automated continuous integration tests run the pipeline on a [full-s
     nextflow run nf-core/rnaseq -profile test,<docker/singularity/podman/conda/institute>
     ```
 
-    > Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
+    > Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.  
     > If you are using `singularity` then the pipeline will auto-detect this and attempt to pull Singularity images directly as opposed to converting them from Docker images. If you are persistently observing issues downloading the Singularity images due to timeout or network issues then please use the `--pull_docker_container` parameter to pull and convert the Docker image instead.
 
 4. Start running your own analysis!

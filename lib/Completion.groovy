@@ -3,7 +3,7 @@
  */
 
 class Completion {
-    static void email(workflow, params, summary, baseDir, multiqc_report, log, fail_percent_mapped) {
+    static void email(workflow, params, summary_params, baseDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
@@ -14,31 +14,38 @@ class Completion {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
 
-        def email_fields = [:]
-        email_fields['version'] = workflow.manifest.version
-        email_fields['runName'] = workflow.runName
-        email_fields['success'] = workflow.success
-        email_fields['dateComplete'] = workflow.complete
-        email_fields['duration'] = workflow.duration
-        email_fields['exitStatus'] = workflow.exitStatus
-        email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-        email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-        email_fields['commandLine'] = workflow.commandLine
-        email_fields['projectDir'] = workflow.projectDir
-        email_fields['summary'] = summary
-        email_fields['summary']['Date Started'] = workflow.start
-        email_fields['summary']['Date Completed'] = workflow.complete
-        email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-        email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-        if (workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-        if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-        if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-        email_fields['fail_percent_mapped'] = fail_percent_mapped.keySet()
-        email_fields['min_mapped_reads'] = params.min_mapped_reads
-        email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
-        email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
-        email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+        def summary = [:]
+        for (group in summary_params.keySet()) {
+            summary << summary_params[group]
+        }
+        
+        def misc_fields = [:]
+        misc_fields['Date Started']              = workflow.start
+        misc_fields['Date Completed']            = workflow.complete
+        misc_fields['Pipeline script file path'] = workflow.scriptFile
+        misc_fields['Pipeline script hash ID']   = workflow.scriptId
+        if (workflow.repository) misc_fields['Pipeline repository Git URL']    = workflow.repository
+        if (workflow.commitId)   misc_fields['Pipeline repository Git Commit'] = workflow.commitId
+        if (workflow.revision)   misc_fields['Pipeline Git branch/tag']        = workflow.revision
+        misc_fields['Nextflow Version']           = workflow.nextflow.version
+        misc_fields['Nextflow Build']             = workflow.nextflow.build
+        misc_fields['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
+        def email_fields = [:]
+        email_fields['version']             = workflow.manifest.version
+        email_fields['runName']             = workflow.runName
+        email_fields['success']             = workflow.success
+        email_fields['dateComplete']        = workflow.complete
+        email_fields['duration']            = workflow.duration
+        email_fields['exitStatus']          = workflow.exitStatus
+        email_fields['errorMessage']        = (workflow.errorMessage ?: 'None')
+        email_fields['errorReport']         = (workflow.errorReport ?: 'None')
+        email_fields['commandLine']         = workflow.commandLine
+        email_fields['projectDir']          = workflow.projectDir
+        email_fields['summary']             = summary << misc_fields
+        email_fields['fail_percent_mapped'] = fail_percent_mapped.keySet()
+        email_fields['min_mapped_reads']    = params.min_mapped_reads
+        
         // On success try attach the multiqc report
         def mqc_report = null
         try {
@@ -62,22 +69,22 @@ class Completion {
         }
 
         // Render the TXT template
-        def engine = new groovy.text.GStringTemplateEngine()
-        def tf = new File("$baseDir/assets/email_template.txt")
+        def engine       = new groovy.text.GStringTemplateEngine()
+        def tf           = new File("$baseDir/assets/email_template.txt")
         def txt_template = engine.createTemplate(tf).make(email_fields)
-        def email_txt = txt_template.toString()
+        def email_txt    = txt_template.toString()
 
         // Render the HTML template
-        def hf = new File("$baseDir/assets/email_template.html")
+        def hf            = new File("$baseDir/assets/email_template.html")
         def html_template = engine.createTemplate(hf).make(email_fields)
-        def email_html = html_template.toString()
+        def email_html    = html_template.toString()
 
         // Render the sendmail template
         def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit 
-        def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize:  max_multiqc_email_size.toBytes()]
-        def sf = new File("$baseDir/assets/sendmail_template.txt")
-        def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-        def sendmail_html = sendmail_template.toString()
+        def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize:  max_multiqc_email_size.toBytes()]
+        def sf                     = new File("$baseDir/assets/sendmail_template.txt")
+        def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
+        def sendmail_html          = sendmail_template.toString()
 
         // Send the HTML e-mail
         Map colors = Headers.log_colours(params.monochrome_logs)
@@ -109,7 +116,7 @@ class Completion {
         output_tf.withWriter { w -> w << email_txt }
     }
 
-    static void summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped) {
+    static void summary(workflow, params, log, fail_percent_mapped=[:], pass_percent_mapped=[:]) {
         Map colors = Headers.log_colours(params.monochrome_logs)
 
         if (pass_percent_mapped.size() > 0) {

@@ -3,7 +3,7 @@
  */
 
 class Completion {
-    static void email(workflow, params, summary, baseDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
+    static void email(workflow, params, summary_params, baseDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
@@ -14,6 +14,11 @@ class Completion {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
 
+        def summary = [:]
+        for (group in summary_params.keySet()) {
+            summary << summary_params[group]
+        }
+        
         def misc_fields = [:]
         misc_fields['Date Started']              = workflow.start
         misc_fields['Date Completed']            = workflow.complete

@@ -84,11 +84,11 @@ if (file.exists(DDSFile) == FALSE) {
     dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ condition)
     dds     <- DESeq(dds, parallel=TRUE, BPPARAM=MulticoreParam(opt$cores))
     if (!opt$vst) {
-      vst_name <- "rlog"
-      rld <- rlog(dds)
+        vst_name <- "rlog"
+        rld      <- rlog(dds)
     } else {
-      vst_name <- "vst"
-      rld <- varianceStabilizingTransformation(dds)
+        vst_name <- "vst"
+        rld      <- varianceStabilizingTransformation(dds)
     }
     assay(dds, vst_name) <- assay(rld)
     save(dds,file=DDSFile)
@@ -96,10 +96,10 @@ if (file.exists(DDSFile) == FALSE) {
     load(DDSFile)
     vst_name <- intersect(assayNames(dds), c("vst", "rlog"))
     if (length(vst_name)==0) { # legacy might mean vst was saved as a separate object called rld
-      vst_name <- "loaded_rld"
-      assay(dds, vst_name) <- assay(rld)
+        vst_name <- "loaded_rld"
+        assay(dds, vst_name) <- assay(rld)
     } else {
-      vst_name==vst_name[1]
+        vst_name==vst_name[1]
     }
 }
 
@@ -126,33 +126,27 @@ if (file.exists(DDSFile) == FALSE) {
 ##' and additionally how much the variation within that PC is explained by the grouping variable.
 ##' @author Gavin Kelly
 plotPCA_vst <- function (object, intgroup = "condition", ntop = 500, assay=length(assays(object))) {
-  rv <- rowVars(assay(object, assay))
-  select <- order(rv, decreasing = TRUE)[seq_len(min(ntop, 
-                                                    length(rv)))]
-  pca <- prcomp(t(assay(object, assay)[select, ]))
-  percentVar <- pca$sdev^2/sum(pca$sdev^2)
-  if (!all(intgroup %in% names(colData(object)))) {
-    stop("the argument 'intgroup' should specify columns of colData(dds)")
-  }
-  intgroup.df <- as.data.frame(colData(object)[, intgroup, 
-                                              drop = FALSE])
-  group <- if (length(intgroup) > 1) {
-    factor(apply(intgroup.df, 1, paste, collapse = ":"))
-  }  else {
-    colData(object)[[intgroup]]
-  }
-  d <- cbind(pca$x, group = group, 
-            intgroup.df,
-            name = colnames(object))
-  percentFrame <- data.frame(PC=seq(along=percentVar),
-                            percentVar=100*percentVar,
-                            groupR=0.0)
-  for (ipc in seq(along=percentVar)) {
-    fit1 <- lm(pca$x[,ipc]  ~ group)
-    percentFrame$groupR[ipc] <- 100*summary(fit1)$r.squared
-  }
-  attr(d, "percentVar") <- percentFrame
-  return(d)
+    rv         <- rowVars(assay(object, assay))
+    select     <- order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
+    pca        <- prcomp(t(assay(object, assay)[select, ]))
+    percentVar <- pca$sdev^2/sum(pca$sdev^2)
+    if (!all(intgroup %in% names(colData(object)))) {
+        stop("the argument 'intgroup' should specify columns of colData(dds)")
+    }
+    intgroup.df <- as.data.frame(colData(object)[, intgroup, drop = FALSE])
+    group <- if (length(intgroup) > 1) {
+        factor(apply(intgroup.df, 1, paste, collapse = ":"))
+    }  else {
+        colData(object)[[intgroup]]
+    }
+    d <- cbind(pca$x, group = group, intgroup.df, name = colnames(object))
+    percentFrame <- data.frame(PC=seq(along=percentVar), percentVar=100*percentVar, groupR=0.0)
+    for (ipc in seq(along=percentVar)) {
+        fit1 <- lm(pca$x[,ipc]  ~ group)
+        percentFrame$groupR[ipc] <- 100*summary(fit1)$r.squared
+    }
+    attr(d, "percentVar") <- percentFrame
+    return(d)
 }
 
 PlotFile <- paste(opt$outprefix,".plots.pdf",sep="")
@@ -162,45 +156,42 @@ if (file.exists(PlotFile) == FALSE) {
     ## PCA
     ntop <- c(500, Inf)
     for (n_top_var in ntop) {
-      pca.data <- plotPCA_vst(dds, assay=vst_name,intgroup=c("condition"),ntop=n_top_var)
-      percentVar <- round(attr(pca.data, "percentVar")$percentVar)
-      plot_subtitle <- ifelse(n_top_var==Inf, "All genes", paste("Top", n_top_var, "genes"))
-      pl <- ggplot(pca.data, aes(PC1, PC2, color=condition)) +
-            geom_point(size=3) +
-            xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-        ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-        labs(title = paste0("First PCs on ", vst_name, "-transformed data"),
-              subtitle = plot_subtitle) + 
-        theme(legend.position="top",
-              panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              panel.border = element_rect(colour = "black", fill=NA, size=1))
-      print(pl)
-      pl <- ggplot(attr(pca.data, "percentVar"), aes(x=PC, y=percentVar)) +
-        geom_line(aes(colour="explained by PC")) +
-        geom_line(aes(y=groupR, colour="of PC explained by condition")) +
-        scale_x_continuous(breaks=seq(along=percentVar), minor_breaks=NULL)  +
-        labs(title="Diagnostics of PCs",
-             subtitle=plot_subtitle,
-             x="Component", y="Percentage explaned",
-             colour="Percentage variation") +
-        theme_bw() +
-        theme(legend.position="top")
-      print(pl)
-      pc_r <- order(attr(pca.data, "percentVar")$groupR, decreasing=TRUE)
-      pl <- ggplot(pca.data, aes_string(paste0("PC", pc_r[1]), paste0("PC", pc_r[2]), color="condition")) +
-        geom_point(size=3) +
-        xlab(paste0("PC", pc_r[1], ": ",percentVar[pc_r[1]],"% variance")) +
-        ylab(paste0("PC", pc_r[2], ": ",percentVar[pc_r[2]],"% variance")) +
-        labs(title = paste0("Group-Explanatory PCs of ", vst_name, "-tranformed data"),
-             subtitle = plot_subtitle) + 
-        theme(legend.position="top",
-              panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              panel.border = element_rect(colour = "black", fill=NA, size=1))
-      print(pl)
+        pca.data      <- plotPCA_vst(dds, assay=vst_name,intgroup=c("condition"),ntop=n_top_var)
+        percentVar    <- round(attr(pca.data, "percentVar")$percentVar)
+        plot_subtitle <- ifelse(n_top_var==Inf, "All genes", paste("Top", n_top_var, "genes"))
+        pl <- ggplot(pca.data, aes(PC1, PC2, color=condition)) +
+              geom_point(size=3) +
+              xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+              ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+              labs(title = paste0("First PCs on ", vst_name, "-transformed data"), subtitle = plot_subtitle) + 
+              theme(legend.position="top",
+                    panel.grid.major = element_blank(),
+                    panel.grid.minor = element_blank(),
+                    panel.background = element_blank(),
+                    panel.border = element_rect(colour = "black", fill=NA, size=1))
+        print(pl)
+
+        pl <- ggplot(attr(pca.data, "percentVar"), aes(x=PC, y=percentVar)) +
+              geom_line(aes(colour="explained by PC")) +
+              geom_line(aes(y=groupR, colour="of PC explained by condition")) +
+              scale_x_continuous(breaks=seq(along=percentVar), minor_breaks=NULL)  +
+              labs(title="Diagnostics of PCs", subtitle=plot_subtitle, x="Component", y="Percentage explaned", colour="Percentage variation") +
+              theme_bw() +
+              theme(legend.position="top")
+        print(pl)
+
+        pc_r <- order(attr(pca.data, "percentVar")$groupR, decreasing=TRUE)
+        pl <- ggplot(pca.data, aes_string(paste0("PC", pc_r[1]), paste0("PC", pc_r[2]), color="condition")) +
+              geom_point(size=3) +
+              xlab(paste0("PC", pc_r[1], ": ",percentVar[pc_r[1]],"% variance")) +
+              ylab(paste0("PC", pc_r[2], ": ",percentVar[pc_r[2]],"% variance")) +
+              labs(title = paste0("Group-Explanatory PCs of ", vst_name, "-tranformed data"), subtitle = plot_subtitle) + 
+              theme(legend.position="top",
+                    panel.grid.major = element_blank(),
+                    panel.grid.minor = element_blank(),
+                    panel.background = element_blank(),
+                    panel.border = element_rect(colour = "black", fill=NA, size=1))
+        print(pl)
     } # at end of loop, we'll be using the user-defined ntop if any, else all genes
     
     ## WRITE PC1 vs PC2 VALUES TO FILE
@@ -213,8 +204,13 @@ if (file.exists(PlotFile) == FALSE) {
     sampleDists      <- dist(t(assay(dds, vst_name)))
     sampleDistMatrix <- as.matrix(sampleDists)
     colors           <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-    pheatmap(sampleDistMatrix,clustering_distance_rows=sampleDists,clustering_distance_cols=sampleDists,col=colors,
-             main=paste("Euclidean distance between", vst_name, "of samples"))
+    pheatmap(
+        sampleDistMatrix,
+        clustering_distance_rows=sampleDists,
+        clustering_distance_cols=sampleDists,
+        col=colors,
+        main=paste("Euclidean distance between", vst_name, "of samples")
+    )
 
     ## WRITE SAMPLE DISTANCES TO FILE
     write.table(cbind(sample = rownames(sampleDistMatrix), sampleDistMatrix),file=paste(opt$outprefix,".sample.dists.txt",sep=""),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)

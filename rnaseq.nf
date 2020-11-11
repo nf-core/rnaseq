@@ -2,7 +2,7 @@
 /* --         LOCAL PARAMETER VALUES           -- */
 ////////////////////////////////////////////////////
 
-params.summary = [:]
+params.summary_params = [:]
 
 ////////////////////////////////////////////////////
 /* --         DEFAULT PARAMETER VALUES         -- */
@@ -139,7 +139,7 @@ multiqc_options.args       += params.multiqc_title ? " --title \"$params.multiqc
 if (params.skip_alignment)  { multiqc_options['publish_dir'] = '' }
 
 def deseq2_qc_options                 = modules['deseq2_qc']
-deseq2_qc_options.args               += params.deseq2_vst ? '--vst TRUE' : ''
+deseq2_qc_options.args               += params.deseq2_vst ? " --vst TRUE" : ''
 def deseq2_qc_featurecounts_options   = deseq2_qc_options.clone()
 def deseq2_qc_rsem_options            = deseq2_qc_options.clone()
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
@@ -688,7 +688,7 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary     = Schema.params_summary_multiqc(params.summary)
+        workflow_summary     = Schema.params_summary_multiqc(workflow, params.summary_params)
         ch_workflow_summary  = Channel.value(workflow_summary)
 
         MULTIQC (
@@ -736,7 +736,7 @@ workflow RNASEQ {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary, baseDir, multiqc_report, log, fail_percent_mapped)
+    Completion.email(workflow, params, params.summary_params, baseDir, log, multiqc_report, fail_percent_mapped)
     Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 

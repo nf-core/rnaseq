@@ -1,4 +1,10 @@
 ////////////////////////////////////////////////////
+/* --         LOCAL PARAMETER VALUES           -- */
+////////////////////////////////////////////////////
+
+params.summary_params = [:]
+
+////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
@@ -92,14 +98,13 @@ workflow SRA_DOWNLOAD {
 }
 
 ////////////////////////////////////////////////////
-/* --            COMPLETION MESSAGE            -- */
+/* --            COMPLETION EMAIL              -- */
 ////////////////////////////////////////////////////
 
-/*
- * WARNING: To check samplesheet before running pipeline for real
- */
 workflow.onComplete {
     Checks.sra_download(log)
+    Completion.email(workflow, params, params.summary_params, baseDir, log)
+    Completion.summary(workflow, params, log)
 }
 
 ////////////////////////////////////////////////////

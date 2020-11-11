@@ -18,8 +18,7 @@
                     "type": "string",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
-                    "fa_icon": "fas fa-file-csv",
-                    "default": "./samplesheet.csv"
+                    "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
                     "type": "string",
@@ -97,11 +96,12 @@
                 "remove_ribo_rna": {
                     "type": "boolean",
                     "fa_icon": "fas fa-trash-alt",
-                    "description": "Enable the removal of reads derived from ribosomal RNA (or any patterns found in the sequences defined by '--ribo_database_manifest') using SortMeRNA."
+                    "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
+                    "help_text": "Any patterns found in the sequences defined by the '--ribo_database_manifest' parameter will be used."
                 },
                 "ribo_database_manifest": {
                     "type": "string",
-                    "default": "$baseDir/assets/rrna-db-defaults.txt",
+                    "default": "${baseDir}/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database",
                     "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
                     "help_text": "By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline Github repository in `assets/rrna-default-dbs.txt`.\nPlease note that commercial/non-academic entities require [`licensing for SILVA`](https://www.arb-silva.de/silva-license-information) for these default databases."
@@ -165,12 +165,6 @@
                     "fa_icon": "fas fa-hand-scissors",
                     "description": "Splice sites file required for HISAT2."
                 },
-                "gencode": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-code-branch",
-                    "description": "Specify if your GTF annotation is in GENCODE format.",
-                    "help_text": "If your GTF file is in GENCODE format and you would like to run Salmon i.e. `--pseudo_aligner salmon`, you will need to provide this parameter in order to build the Salmon index appropriately."
-                },
                 "star_index": {
                     "type": "string",
                     "fa_icon": "fas fa-bezier-curve",
@@ -196,6 +190,12 @@
                     "default": 200,
                     "fa_icon": "fas fa-memory",
                     "description": "Memory passed to HISAT2 build process."
+                },
+                "gencode": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-code-branch",
+                    "description": "Specify if your GTF annotation is in GENCODE format.",
+                    "help_text": "If your GTF file is in GENCODE format and you would like to run Salmon i.e. `--pseudo_aligner salmon`, you will need to provide this parameter in order to build the Salmon index appropriately."
                 },
                 "save_reference": {
                     "type": "boolean",
@@ -299,7 +299,8 @@
                     "type": "integer",
                     "default": 5,
                     "fa_icon": "fas fa-percentage",
-                    "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low."
+                    "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
+                    "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
                 },
                 "seq_center": {
                     "type": "string",
@@ -359,8 +360,9 @@
                 "fc_count_type": {
                     "type": "string",
                     "default": "exon",
-                    "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file. You can change this parameter for example, for nuclear RNA-seq where you may want to count reads in introns as well as exons using '--fc_count_type transcript'.",
-                    "fa_icon": "fas fa-indent"
+                    "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file.",
+                    "fa_icon": "fas fa-indent",
+                    "help_text": "You can change this parameter for example, for nuclear RNA-seq where you may want to count reads in introns as well as exons using '--fc_count_type transcript'."
                 },
                 "stringtie_ignore_gtf": {
                     "type": "boolean",

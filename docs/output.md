@@ -601,27 +601,13 @@ The script included in the pipeline uses DESeq2 to normalise read counts across 
 
 For larger experiments, it may be recommended to use the `vst` transformation instead of the default `rlog` option. You can do this by providing the `--deseq2_vst` parameter to the pipeline. See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) for a more detailed explanation.
 
+The PCA plots are generated based alternately on the top five hundred most variable genes, or all genes. The former is the conventional approach that is more likely to pick up strong effects (ie the biological signal) and the latter, when different, is picking up a weaker but consistent effect that is synchronised across many transcripts.  We project both of these onto the first two PCs (shown in the top row of the figure below), which is where most of the information about the samples is captured, but we elso evaluate other components' in light of their predicitity of a samples _condition_: we plot (bottom left, below) the proportion of variability due to condition that is explained by each component, and do an additional PC plot on the two components that best explain _condition_ (bottom right, below - where both the first two PCs happened to be the best explanations of variability in _condition_). If _condition_ was arbitrary, or a compromise to capture a multivariable design, then this mightn't be optimal, but in simple cases might reveal a more complex picture than simply the first two PCs.
+
+<p markdown="1" align="center">
+    <img src="images/deseq2_plots.png" alt="PCA plots" width="600">
+</p>
+
 ![MultiQC - DESeq2 PCA plot](images/mqc_deseq2_pca.png)
-
-The PCA plots are generated based alternately on the top five hundred
-most variable genes, or all genes. The former is the conventional
-approach that is more likely to pick up strong effects (ie the
-biological signal) and the latter, when different, is picking up a
-weaker but consistent effect that is synchronised across many
-transcripts.  We project both of these onto the first two PCs (shown
-in the top row of the figure below), which is where most of the
-information about the samples is captured, but we elso evaluate other
-components' in light of their predicitity of a samples _condition_: we
-plot (bottom left, below) the proportion of variability due to
-condition that is explained by each component, and do an additional PC
-plot on the two components that best explain _condition_ (bottom
-right, below - where both the first two PCs happened to be the best
-explanations of variability in _condition_). If _condition_ was
-arbitrary, or a compromise to capture a multivariable design, then
-this mightn't be optimal, but in simple cases might reveal a more
-complex picture than simply the first two PCs.
-
-![DESeq2 PCA plot](images/deseq2_plots.png)
 
 <p markdown="1" align="center">
     <img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600">

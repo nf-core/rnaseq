@@ -171,10 +171,11 @@ if (file.exists(PlotFile) == FALSE) {
         ylab(paste0("PC2: ",percentVar[2],"% variance")) +
         labs(title = paste0("First PCs on ", vst_name, "-transformed data"),
               subtitle = plot_subtitle) + 
-            theme(panel.grid.major = element_blank(),
-                  panel.grid.minor = element_blank(),
-                  panel.background = element_blank(),
-                  panel.border = element_rect(colour = "black", fill=NA, size=1))
+        theme(legend.position="top",
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              panel.border = element_rect(colour = "black", fill=NA, size=1))
       print(pl)
       pl <- ggplot(attr(pca.data, "percentVar"), aes(x=PC, y=percentVar)) +
         geom_line(aes(colour="explained by PC")) +
@@ -185,7 +186,7 @@ if (file.exists(PlotFile) == FALSE) {
              x="Component", y="Percentage explaned",
              colour="Percentage variation") +
         theme_bw() +
-        theme(legend.position=c(0.75, 0.8))
+        theme(legend.position="top")
       print(pl)
       pc_r <- order(attr(pca.data, "percentVar")$groupR, decreasing=TRUE)
       pl <- ggplot(pca.data, aes_string(paste0("PC", pc_r[1]), paste0("PC", pc_r[2]), color="condition")) +
@@ -194,7 +195,8 @@ if (file.exists(PlotFile) == FALSE) {
         ylab(paste0("PC", pc_r[2], ": ",percentVar[pc_r[2]],"% variance")) +
         labs(title = paste0("Group-Explanatory PCs of ", vst_name, "-tranformed data"),
              subtitle = plot_subtitle) + 
-        theme(panel.grid.major = element_blank(),
+        theme(legend.position="top",
+              panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),
               panel.background = element_blank(),
               panel.border = element_rect(colour = "black", fill=NA, size=1))

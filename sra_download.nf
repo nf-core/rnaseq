@@ -102,9 +102,9 @@ workflow SRA_DOWNLOAD {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Checks.sra_download(log)
     Completion.email(workflow, params, params.summary_params, baseDir, log)
     Completion.summary(workflow, params, log)
+    Checks.sra_download(log)
 }
 
 ////////////////////////////////////////////////////

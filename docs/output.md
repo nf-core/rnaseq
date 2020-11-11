@@ -604,13 +604,13 @@ For larger experiments, it may be recommended to use the `vst` transformation in
 The PCA plots are generated based alternately on the top five hundred most variable genes, or all genes. The former is the conventional approach that is more likely to pick up strong effects (ie the biological signal) and the latter, when different, is picking up a weaker but consistent effect that is synchronised across many transcripts.  We project both of these onto the first two PCs (shown in the top row of the figure below), which is where most of the information about the samples is captured, but we elso evaluate other components' in light of their predicitity of a samples _condition_: we plot (bottom left, below) the proportion of variability due to condition that is explained by each component, and do an additional PC plot on the two components that best explain _condition_ (bottom right, below - where both the first two PCs happened to be the best explanations of variability in _condition_). If _condition_ was arbitrary, or a compromise to capture a multivariable design, then this mightn't be optimal, but in simple cases might reveal a more complex picture than simply the first two PCs.
 
 <p markdown="1" align="center">
-    <img src="images/deseq2_qc_plots.png" alt="DESeq2 PCA plots">
+<img src="images/deseq2_qc_plots.png" alt="DESeq2 PCA plots">
 </p>
 
 ![MultiQC - DESeq2 PCA plot](images/mqc_deseq2_pca.png)
 
 <p markdown="1" align="center">
-    <img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600">
+<img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600">
 </p>
 
 ### MultiQC

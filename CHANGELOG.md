@@ -3,54 +3,55 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-13
+## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12
 
 ### Major enhancements
 
-* Pipeline has now been re-implemented in [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html)
+* Pipeline has been re-implemented in [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html)
 * All software containers are now exclusively obtained from [Biocontainers](https://biocontainers.pro/#/registry)
-* The primary input for the pipeline has changed from glob to samplesheet input [#123](https://github.com/nf-core/rnaseq/issues/123). See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
-* Ability to concatenate multiple runs of the same samples via the input samplesheet [#91](https://github.com/nf-core/rnaseq/issues/91)
 * Added a separate workflow to download FastQ files via SRA, ENA or GEO ids and to auto-create the input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); see [`--public_data_ids`](https://nf-co.re/rnaseq/parameters#public_data_ids) parameter)
-* Added new genome mapping and quantification route with [RSEM](https://github.com/deweylab/RSEM) via the `--aligner star_rsem` parameter [#70](https://github.com/nf-core/rnaseq/issues/70)
-* Samples failing strand-specificity checks reported in the MultiQC report [#197](https://github.com/nf-core/rnaseq/issues/197#issuecomment-694929414)
-* Samples skipped due to low alignment reported in the MultiQC report [#72](https://github.com/nf-core/rnaseq/issues/72)
-* UMI barcode support [#73](https://github.com/nf-core/rnaseq/issues/73) [#435](https://github.com/nf-core/rnaseq/pull/435)
+* Added and refined a Groovy `lib/` of functions that include the automatic rendering of parameters defined in the JSON schema for the help and summary log information
 * Replace [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) with [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) for the generation of PCA and heatmaps (also included in the MultiQC report)
 * Creation of bigWig coverage files using [BEDTools](https://github.com/arq5x/bedtools2/) and [bedGraphToBigWig](http://hgdownload.soe.ucsc.edu/admin/exe/)
-* Removal of ribosomal RNA via [SortMeRNA](https://github.com/biocore/sortmerna) [#227](https://github.com/nf-core/rnaseq/issues/227)
-* Add `--additional_fasta` parameter to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to [#419](https://github.com/nf-core/rnaseq/pull/419)
+* [[#70](https://github.com/nf-core/rnaseq/issues/70)] - Added new genome mapping and quantification route with [RSEM](https://github.com/deweylab/RSEM) via the `--aligner star_rsem` parameter
+* [[#72](https://github.com/nf-core/rnaseq/issues/72)] - Samples skipped due to low alignment reported in the MultiQC report
+* [[#73](https://github.com/nf-core/rnaseq/issues/73), [#435](https://github.com/nf-core/rnaseq/pull/435)] - UMI barcode support
+* [[#91](https://github.com/nf-core/rnaseq/issues/91)] - Ability to concatenate multiple runs of the same samples via the input samplesheet
+* [[#123](https://github.com/nf-core/rnaseq/issues/123)] - The primary input for the pipeline has changed from `--reads` glob to samplesheet `--input`. See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction).
+* [[#197](https://github.com/nf-core/rnaseq/issues/197)] - Samples failing strand-specificity checks reported in the MultiQC report
+* [[#227](https://github.com/nf-core/rnaseq/issues/227)] - Removal of ribosomal RNA via [SortMeRNA](https://github.com/biocore/sortmerna)
+* [[#419](https://github.com/nf-core/rnaseq/pull/419)] - Add `--additional_fasta` parameter to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to
 
 ### Other enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.11`
-* Added multi-core TrimGalore support [#344](https://github.com/nf-core/rnaseq/issues/344)
-* Add nag to cite the pipeline in summary [#281](https://github.com/nf-core/rnaseq/issues/281)
-* Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option [#353](https://github.com/nf-core/rnaseq/issues/353)
-* Fixes missing Qualimap parameter `-p` [#351](https://github.com/nf-core/rnaseq/issues/351)
-* Fixes broken links [#357](https://github.com/nf-core/rnaseq/issues/357)
-* Fixes label name in FastQC process [#345](https://github.com/nf-core/rnaseq/pull/345)
-* Make publishDir mode configurable [#391](https://github.com/nf-core/rnaseq/pull/391)
-* Fixed issue where featureCounts process fails when setting `--fc_count_type` to gene [#440](https://github.com/nf-core/rnaseq/issues/440)
-* Update AWS GitHub actions workflow with organization level secrets [#431](https://github.com/nf-core/rnaseq/pull/431/files)
-* Fix a bug where the RSEM reference could not be built [#436](https://github.com/nf-core/rnaseq/pull/436)
-* Fix Qualimap not being passed on correct strand-specificity parameter [#412](https://github.com/nf-core/rnaseq/issues/412)
-* Fix a bug where gzipped references were not extracted when `--additional_fasta` was not specified [#435](https://github.com/nf-core/rnaseq/pull/435)
-* Fix a bug where merging of RSEM output would fail if only one fastq provided as input [#435](https://github.com/nf-core/rnaseq/pull/435)
-* Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled) [#435](https://github.com/nf-core/rnaseq/pull/435)
-* Fix typo reported for work-dir [#434](https://github.com/nf-core/rnaseq/issues/434)
-* Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0) [#384](https://github.com/nf-core/rnaseq/issues/384)
-* FastQC uses correct number of threads now [#437](https://github.com/nf-core/rnaseq/issues/434)
-* Fixed MDS plot axis labels [#302](https://github.com/nf-core/rnaseq/issues/302)
-* Deterministic mapping for STAR aligner [#396](https://github.com/nf-core/rnaseq/issues/396)
-* Fix `--gff` input bug [#452](https://github.com/nf-core/rnaseq/issues/452)
-* Fix `TMP_DIR` for process MarkDuplicates and Qualimap [#458](https://github.com/nf-core/rnaseq/pull/458)
-* Fix error with gzipped annotation file [#362](https://github.com/nf-core/rnaseq/issues/362)
-* Fix STAR unmapped reads not output [#413](https://github.com/nf-core/rnaseq/issues/413)
-* Add option for turning on/off STAR command line option (--sjdbGTFfile) [#338](https://github.com/nf-core/rnaseq/issues/338)
 * Optimise MultiQC configuration for faster run-time on huge sample numbers
 * Add information about SILVA licensing when removing rRNA to `usage.md`
 * Fixed ansi colours for pipeline summary, added summary logs of alignment results
+* [[#281](https://github.com/nf-core/rnaseq/issues/281)] - Add nag to cite the pipeline in summary
+* [[#302](https://github.com/nf-core/rnaseq/issues/302)] - Fixed MDS plot axis labels
+* [[#338](https://github.com/nf-core/rnaseq/issues/338)] - Add option for turning on/off STAR command line option (--sjdbGTFfile)
+* [[#344](https://github.com/nf-core/rnaseq/issues/344)] - Added multi-core TrimGalore support
+* [[#351](https://github.com/nf-core/rnaseq/issues/351)] - Fixes missing Qualimap parameter `-p`
+* [[#353](https://github.com/nf-core/rnaseq/issues/353)] - Fixes an issue where MultiQC fails to run with `--skip_biotype_qc` option
+* [[#357](https://github.com/nf-core/rnaseq/issues/357)] - Fixes broken links
+* [[#362](https://github.com/nf-core/rnaseq/issues/362)] - Fix error with gzipped annotation file
+* [[#384](https://github.com/nf-core/rnaseq/issues/384)] - Changed SortMeRNA reference dbs path to use stable URLs (v4.2.0)
+* [[#396](https://github.com/nf-core/rnaseq/issues/396)] - Deterministic mapping for STAR aligner
+* [[#412](https://github.com/nf-core/rnaseq/issues/412)] - Fix Qualimap not being passed on correct strand-specificity parameter
+* [[#413](https://github.com/nf-core/rnaseq/issues/413)] - Fix STAR unmapped reads not output
+* [[#434](https://github.com/nf-core/rnaseq/issues/434)] - Fix typo reported for work-dir
+* [[#437](https://github.com/nf-core/rnaseq/issues/434)] - FastQC uses correct number of threads now
+* [[#440](https://github.com/nf-core/rnaseq/issues/440)] - Fixed issue where featureCounts process fails when setting `--fc_count_type` to gene
+* [[#452](https://github.com/nf-core/rnaseq/issues/452)] - Fix `--gff` input bug
+* [[#345](https://github.com/nf-core/rnaseq/pull/345)] - Fixes label name in FastQC process
+* [[#391](https://github.com/nf-core/rnaseq/pull/391)] - Make publishDir mode configurable
+* [[#431](https://github.com/nf-core/rnaseq/pull/431)] - Update AWS GitHub actions workflow with organization level secrets
+* [[#435](https://github.com/nf-core/rnaseq/pull/435)] - Fix a bug where gzipped references were not extracted when `--additional_fasta` was not specified
+* [[#435](https://github.com/nf-core/rnaseq/pull/435)] - Fix a bug where merging of RSEM output would fail if only one fastq provided as input
+* [[#435](https://github.com/nf-core/rnaseq/pull/435)] - Correct RSEM output name (was saving counts but calling them TPMs; now saving both properly labelled)
+* [[#436](https://github.com/nf-core/rnaseq/pull/436)] - Fix a bug where the RSEM reference could not be built
+* [[#458](https://github.com/nf-core/rnaseq/pull/458)] - Fix `TMP_DIR` for process MarkDuplicates and Qualimap
 
 ### Parameters
 

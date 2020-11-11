@@ -58,9 +58,9 @@ workflow QUANTIFY_SALMON {
     SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
     SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect() )
     SALMON_MERGE_COUNTS (
-        SALMON_TXIMPORT.out.counts_gene.collect{it[1]},
+        SALMON_TXIMPORT.out.counts_gene.collect{it[1]},         // [meta, counts]: Collect the second element (counts files) in the channel across all samples
         SALMON_TXIMPORT.out.tpm_gene.collect{it[1]},
-        SALMON_TXIMPORT.out.counts_transcript.collect{it[1]},
+        SALMON_TXIMPORT.out.counts_transcript.collect{it[1]},   
         SALMON_TXIMPORT.out.tpm_transcript.collect{it[1]},
     )
     SALMON_SE_GENE ( 

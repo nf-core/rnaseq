@@ -73,7 +73,7 @@ setwd(opt$outdir)
 
 samples.vec <- sort(colnames(count.table))
 groups      <- sub("_[^_]+$", "", samples.vec)
-if (length(unique(groups)) == 1) {
+if (length(unique(groups)) == 1 || length(unique(groups)) == length(samples.vec)) {
     quit(save = "no", status = 0, runLast = FALSE)
 }
 

@@ -7,22 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Major enhancements
 
-| Issue / PR        | Description              |
-|------------------------------|----------------------------|
-| | Pipeline has been re-implemented in [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) |
-| | All software containers are now exclusively obtained from [Biocontainers](https://biocontainers.pro/#/registry) |
-| [#123](https://github.com/nf-core/rnaseq/issues/123) | The primary input for the pipeline has changed from `--reads` glob to samplesheet `--input`. See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction). |
-| | Added a separate workflow to download FastQ files via SRA, ENA or GEO ids and to auto-create the input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); see [`--public_data_ids`](https://nf-co.re/rnaseq/parameters#public_data_ids) parameter) |
-| | Updated pipeline template to nf-core/tools `1.11` |
-| [#91](https://github.com/nf-core/rnaseq/issues/91) | Ability to concatenate multiple runs of the same samples via the input samplesheet |
-| [#70](https://github.com/nf-core/rnaseq/issues/70) | Added new genome mapping and quantification route with [RSEM](https://github.com/deweylab/RSEM) via the `--aligner star_rsem` parameter |
-| [#197](https://github.com/nf-core/rnaseq/issues/197#issuecomment-694929414) | Samples failing strand-specificity checks reported in the MultiQC report |
-| [#72](https://github.com/nf-core/rnaseq/issues/72) | Samples skipped due to low alignment reported in the MultiQC report |
-| [#73](https://github.com/nf-core/rnaseq/issues/73), [#435](https://github.com/nf-core/rnaseq/pull/435) | UMI barcode support |
-| | Replace [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) with [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) for the generation of PCA and heatmaps (also included in the MultiQC report) |
-| | Creation of bigWig coverage files using [BEDTools](https://github.com/arq5x/bedtools2/) and [bedGraphToBigWig](http://hgdownload.soe.ucsc.edu/admin/exe/) |
-| [#227](https://github.com/nf-core/rnaseq/issues/227) | Removal of ribosomal RNA via [SortMeRNA](https://github.com/biocore/sortmerna) |
-| [#419](https://github.com/nf-core/rnaseq/pull/419)   | Add `--additional_fasta` parameter to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to |
+| Descriptio                                           | Issue / PR               |
+|------------------------------------------------------|--------------------------|
+| Pipeline has been re-implemented in [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) |  |
+| All software containers are now exclusively obtained from [Biocontainers](https://biocontainers.pro/#/registry) | |
+| The primary input for the pipeline has changed from `--reads` glob to samplesheet `--input`. See [usage docs](https://nf-co.re/rnaseq/docs/usage#introduction). | [#123](https://github.com/nf-core/rnaseq/issues/123) |
+| Added a separate workflow to download FastQ files via SRA, ENA or GEO ids and to auto-create the input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); see [`--public_data_ids`](https://nf-co.re/rnaseq/parameters#public_data_ids) parameter) | |
+| Updated pipeline template to nf-core/tools `1.11` | |
+| Replace [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) with [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) for the generation of PCA and heatmaps (also included in the MultiQC report) | |
+| Creation of bigWig coverage files using [BEDTools](https://github.com/arq5x/bedtools2/) and [bedGraphToBigWig](http://hgdownload.soe.ucsc.edu/admin/exe/) | |
+| Ability to concatenate multiple runs of the same samples via the input samplesheet | [#91](https://github.com/nf-core/rnaseq/issues/91) |
+| Added new genome mapping and quantification route with [RSEM](https://github.com/deweylab/RSEM) via the `--aligner star_rsem` parameter | [#70](https://github.com/nf-core/rnaseq/issues/70) |
+| Samples failing strand-specificity checks reported in the MultiQC report | [#197](https://github.com/nf-core/rnaseq/issues/197#issuecomment-694929414) |
+| Samples skipped due to low alignment reported in the MultiQC report | [#72](https://github.com/nf-core/rnaseq/issues/72) |
+| UMI barcode support | [#73](https://github.com/nf-core/rnaseq/issues/73), [#435](https://github.com/nf-core/rnaseq/pull/435) |
+| Removal of ribosomal RNA via [SortMeRNA](https://github.com/biocore/sortmerna) | [#227](https://github.com/nf-core/rnaseq/issues/227) |
+| Add `--additional_fasta` parameter to provide ERCC spike-ins, transgenes such as GFP or CAR-T as additional sequences to align to | [#419](https://github.com/nf-core/rnaseq/pull/419)   |
 
 * Pipeline has been re-implemented in [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html)
 * All software containers are now exclusively obtained from [Biocontainers](https://biocontainers.pro/#/registry)

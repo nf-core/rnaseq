@@ -117,6 +117,8 @@ class Schema {
         workflow_summary['runName']      = workflow.runName
         if (workflow.containerEngine) {
             workflow_summary['containerEngine'] = "$workflow.containerEngine"
+        }
+        if (workflow.container) {
             workflow_summary['container']       = "$workflow.container"
         }
         workflow_summary['launchDir']    = workflow.launchDir

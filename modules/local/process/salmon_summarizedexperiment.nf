@@ -10,12 +10,8 @@ process SALMON_SUMMARIZEDEXPERIMENT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.18.1" : null)
-    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.18.1--r40_0"
-    } else {
-        container "quay.io/biocontainers/bioconductor-summarizedexperiment:1.18.1--r40_0"
-    }
+    conda     (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.18.1" : null)
+    container "quay.io/biocontainers/bioconductor-summarizedexperiment:1.18.1--r40_0"
 
     input:
     path counts

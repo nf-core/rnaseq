@@ -11,12 +11,8 @@ process DESEQ2_QC {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "conda-forge::r-base=4.0.3 conda-forge::r-optparse=1.6.6 conda-forge::r-ggplot2=3.3.2 conda-forge::r-rcolorbrewer=1.1_2 conda-forge::r-pheatmap=1.0.12 bioconda::bioconductor-deseq2=1.28.0 bioconda::bioconductor-biocparallel=1.22.0 bioconda::bioconductor-tximport=1.16.0 bioconda::bioconductor-complexheatmap=2.4.2" : null)
-    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0"
-    } else {
-        container "quay.io/biocontainers/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0"
-    }
+    conda     (params.enable_conda ? "conda-forge::r-base=4.0.3 conda-forge::r-optparse=1.6.6 conda-forge::r-ggplot2=3.3.2 conda-forge::r-rcolorbrewer=1.1_2 conda-forge::r-pheatmap=1.0.12 bioconda::bioconductor-deseq2=1.28.0 bioconda::bioconductor-biocparallel=1.22.0 bioconda::bioconductor-tximport=1.16.0 bioconda::bioconductor-complexheatmap=2.4.2" : null)
+    container "quay.io/biocontainers/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0"
     
     input:
     path counts

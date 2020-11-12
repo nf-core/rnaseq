@@ -612,13 +612,6 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
-                },
-                "pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Force the workflow to pull and use Docker containers if they have been provided.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         }

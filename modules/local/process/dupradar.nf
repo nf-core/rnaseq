@@ -11,12 +11,8 @@ process DUPRADAR {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::bioconductor-dupradar=1.18.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.18.0--r40_1"
-    } else {
-        container "quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_1"
-    }
+    conda     (params.enable_conda ? "bioconda::bioconductor-dupradar=1.18.0" : null)
+    container "quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_1"
 
     input:
     tuple val(meta), path(bam)

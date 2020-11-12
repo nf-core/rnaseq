@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12
+## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-13
 
 ### Major enhancements
 
@@ -89,7 +89,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `--multiqc_title` - MultiQC report title. Printed as page header, used for filename if not otherwise specified
 * `--public_data_ids` - File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files
 * `--publish_dir_mode` - Method used to save pipeline results to output directory
-* `--pull_docker_container` - Force the workflow to pull and use Docker containers if they have been provided
 * `--rsem_index` - Path to directory or tar.gz archive for pre-built RSEM index
 * `--rseqc_modules` - Specify the RSeQC modules to run
 * `--save_merged_fastq` - Save FastQ files after merging re-sequenced libraries in the results directory

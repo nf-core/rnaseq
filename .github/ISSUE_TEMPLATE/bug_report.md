@@ -1,31 +1,45 @@
+<!--
+# nf-core/rnaseq bug report
+
 Hi there!
 
-Thanks for telling us about a problem with the pipeline. Please delete this text and anything that's not relevant from the template below:
+Thanks for telling us about a problem with the pipeline.
 
-#### Describe the bug
-A clear and concise description of what the bug is.
+Please delete this text and anything that's not relevant from the template below:
+-->
 
-#### Steps to reproduce
+## Description of the bug
+
+<!-- A clear and concise description of what the bug is. -->
+
+## Steps to reproduce
+
 Steps to reproduce the behaviour:
-1. Command line: `nextflow run ...`
-2. See error: _Please provide your error message_
 
-#### Expected behaviour
-A clear and concise description of what you expected to happen.
+1. Command line: <!-- [e.g. `nextflow run ...`] -->
+2. See error: <!-- [Please provide your error message] -->
 
-#### System:
- - Hardware: [e.g. HPC, Desktop, Cloud...]
- - Executor: [e.g. slurm, local, awsbatch...]
- - OS: [e.g. CentOS Linux, macOS, Linux Mint...]
- - Version [e.g. 7, 10.13.6, 18.3...]
+## Expected behaviour
 
-#### Nextflow Installation:
- - Version: [e.g. 0.31.0]
+<!-- A clear and concise description of what you expected to happen. -->
 
-#### Container engine:
- - Engine: [e.g. Conda, Docker or Singularity]
- - version: [e.g. 1.0.0]
- - Image tag: [e.g. nfcore/rnaseq:1.0.0]
+## System
 
-#### Additional context
-Add any other context about the problem here.
+- Hardware: <!-- [e.g. HPC, Desktop, Cloud...] -->
+- Executor: <!-- [e.g. slurm, local, awsbatch...] -->
+- OS: <!-- [e.g. CentOS Linux, macOS, Linux Mint...] -->
+- Version <!-- [e.g. 7, 10.13.6, 18.3...] -->
+
+## Nextflow Installation
+
+- Version: <!-- [e.g. 19.10.0] -->
+
+## Container engine
+
+- Engine: <!-- [e.g. Conda, Docker, Singularity or Podman] -->
+- version: <!-- [e.g. 1.0.0] -->
+- Image tag: <!-- [e.g. nfcore/rnaseq:1.0.0] -->
+
+## Additional context
+
+<!-- Add any other context about the problem here. -->

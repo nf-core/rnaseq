@@ -1,21 +1,26 @@
-name: nf-core/rnaseq linting
+name: nf-core linting
 # This workflow is triggered on pushes and PRs to the repository.
-on: [push, pull_request]  
+# It runs the `nf-core lint` and markdown lint tests to ensure that the code meets the nf-core guidelines
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
 
 jobs:
+
   Markdown:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: '10'
       - name: Install markdownlint
-        run: |
-          npm install -g markdownlint-cli
+        run: npm install -g markdownlint-cli
       - name: Run Markdownlint
-        run: |
-          markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
+        run: markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
+
   YAML:
     runs-on: ubuntu-latest
     steps:
@@ -23,31 +28,44 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '10'
-      - name: Install yamllint
-        run: |
-          npm install -g yaml-lint
-      - name: Run yamllint
-        run: |
-          yamllint $(find ${GITHUB_WORKSPACE} -type f -name "*.yml")
+      - name: Install yaml-lint
+        run: npm install -g yaml-lint
+      - name: Run yaml-lint
+        run: yamllint $(find ${GITHUB_WORKSPACE} -type f -name "*.yml")
+
   nf-core:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+
       - uses: actions/setup-python@v1
         with:
           python-version: '3.6'
           architecture: 'x64'
-      - name: Install pip
+
+      - name: Install dependencies
         run: |
-          sudo apt install python3-pip
-          pip install --upgrade pip
-      - name: Install nf-core tools
-        run: |
+          python -m pip install --upgrade pip
           pip install nf-core
+
       - name: Run nf-core lint
-        run: |
-          nf-core lint ${GITHUB_WORKSPACE}
+        env:
+          GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: nf-core -l lint_log.txt lint ${GITHUB_WORKSPACE}
+
+      - name: Upload linting log file artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: linting-log-file
+          path: lint_log.txt
+

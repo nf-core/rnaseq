@@ -1,72 +1,98 @@
 # ![nf-core/rnaseq](docs/images/nf-core-rnaseq_logo.png)
 
-[![Build Status](https://travis-ci.org/nf-core/rnaseq.svg?branch=master)](https://travis-ci.org/nf-core/rnaseq)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen.svg)](https://www.nextflow.io/)
-[![DOI](https://zenodo.org/badge/127293091.svg)](https://zenodo.org/badge/latestdoi/127293091)
+[![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/rnaseq/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/rnaseq/actions?query=workflow%3A%22nf-core+linting%22)
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/rnaseq/results)
+[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.1400710-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.1400710)
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
-[![Docker](https://img.shields.io/docker/automated/nfcore/rnaseq.svg)](https://hub.docker.com/r/nfcore/rnaseq/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A520.07.1-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
+[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 
-### Introduction
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23rnaseq-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/rnaseq)
+[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
+[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+
+## Introduction
 
 **nf-core/rnaseq** is a bioinformatics analysis pipeline used for RNA sequencing data.
 
-The workflow processes raw data from
- FastQ inputs ([FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),
- [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)),
-  aligns the reads
-   ([STAR](https://github.com/alexdobin/STAR) or
-    [HiSAT2](https://ccb.jhu.edu/software/hisat2/index.shtml)),
-     generates counts relative to genes
-      ([featureCounts](http://bioinf.wehi.edu.au/featureCounts/),
-       [StringTie](https://ccb.jhu.edu/software/stringtie/)) or transcripts
-        ([Salmon](https://combine-lab.github.io/salmon/),
-         [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html)) and performs extensive quality-control on the results
-          ([RSeQC](http://rseqc.sourceforge.net/),
-           [Qualimap](http://qualimap.bioinfo.cipf.es/),
-            [dupRadar](https://bioconductor.org/packages/release/bioc/html/dupRadar.html),
-             [Preseq](http://smithlabresearch.org/software/preseq/),
-              [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html),
-               [MultiQC](http://multiqc.info/)). See the [output documentation](docs/output.md) for more details of the results.
-
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+
+On release, automated continuous integration tests run the pipeline on a [full-sized dataset](https://github.com/nf-core/test-datasets/tree/rnaseq#full-test-dataset-origin) obtained from the ENCODE Project Consortium on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/rnaseq/results).
+
+## Pipeline summary
+
+1. Download FastQ files via SRA, ENA or GEO ids and auto-create input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); *if required*)
+2. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
+3. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+4. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
+7. Choice of multiple alignment and quantification routes:
+    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
+    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+10. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
+11. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
+12. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
+13. Extensive quality control:
+    1. [`RSeQC`](http://rseqc.sourceforge.net/)
+    2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
+    3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
+    4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
+    5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
+14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
+15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 ## Quick Start
 
-i. Install [`nextflow`](https://nf-co.re/usage/installation)
+1. Install [`nextflow`](https://nf-co.re/usage/installation)
 
-ii. Install one of [`docker`](https://docs.docker.com/engine/installation/), [`singularity`](https://www.sylabs.io/guides/3.0/user-guide/) or [`conda`](https://conda.io/miniconda.html)
+2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) or [`Podman`](https://podman.io/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_. Note: This pipeline does not currently support running with Conda on macOS because the latest version of the SortMeRNA package is not available for this platform.
 
-iii. Download the pipeline and test it on a minimal dataset with a single command
+3. Download the pipeline and test it on a minimal dataset with a single command:
 
-```bash
-nextflow run nf-core/rnaseq -profile test,<docker/singularity/conda>
-```
+    ```bash
+    nextflow run nf-core/rnaseq -profile test,<docker/singularity/podman/conda/institute>
+    ```
 
-iv. Start running your own analysis!
+    > * Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
+    > * If you are using `singularity`, it is highly recommended to use the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) settings to store the images in a central location for future pipeline runs.
 
-```bash
-nextflow run nf-core/rnaseq -profile <docker/singularity/conda> --reads '*_R{1,2}.fastq.gz' --genome GRCh37
-```
+4. Start running your own analysis!
 
-See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
+    * Typical command for RNA-seq analysis:
 
-### Documentation
+        ```bash
+        nextflow run nf-core/rnaseq \
+            --input samplesheet.csv \
+            --genome GRCh37 \
+            -profile <docker/singularity/podman/conda/institute>
+        ```
 
-The nf-core/rnaseq pipeline comes with documentation about the pipeline, found in the `docs/` directory:
+    * Typical command for downloading public data:
 
-1. [Installation](https://nf-co.re/usage/installation)
-2. Pipeline configuration
-    * [Local installation](https://nf-co.re/usage/local_installation)
-    * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
-    * [Reference genomes](https://nf-co.re/usage/reference_genomes)
-3. [Running the pipeline](docs/usage.md)
-4. [Output and how to interpret the results](docs/output.md)
-5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
+        ```bash
+        nextflow run nf-core/rnaseq \
+            --public_data_ids ids.txt \
+            -profile <docker/singularity/podman/conda/institute>
+        ```
 
-### Credits
+See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.
 
-These scripts were originally written for use at the [National Genomics Infrastructure](https://portal.scilifelab.se/genomics/), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+## Documentation
+
+The nf-core/rnaseq pipeline comes with documentation about the pipeline: [usage](https://nf-co.re/rnaseq/usage) and [output](https://nf-co.re/rnaseq/output).
+
+## Credits
+
+These scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammarén ([@Hammarn](https://github.com/Hammarn)).
+
+The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),
@@ -76,19 +102,25 @@ Many thanks to other who have helped out along the way too, including (but not l
 [@colindaven](https://github.com/colindaven),
 [@lpantano](https://github.com/lpantano),
 [@olgabot](https://github.com/olgabot),
-[@jburos](https://github.com/jburos),
-[@drpatelh](https://github.com/drpatelh).
+[@jburos](https://github.com/jburos).
 
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on [Slack](https://nfcore.slack.com/channels/rnaseq) (you can join with [this invite](https://nf-co.re/join/slack)).
+For further information or help, don't hesitate to get in touch on the [Slack `#rnaseq` channel](https://nfcore.slack.com/channels/rnaseq) (you can join with [this invite](https://nf-co.re/join/slack)).
 
 ## Citation
 
-If you use nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.1400710](https://doi.org/10.5281/zenodo.1400710)
+If you use  nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.1400710](https://doi.org/10.5281/zenodo.1400710)
 
-You can cite the `nf-core` pre-print as follows:  
+An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
-> Ewels PA, Peltzer A, Fillinger S, Alneberg JA, Patel H, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. **nf-core: Community curated bioinformatics pipelines**. *bioRxiv*. 2019. p. 610741. [doi: 10.1101/610741](https://www.biorxiv.org/content/10.1101/610741v1).
+You can cite the `nf-core` publication as follows:
+
+> **The nf-core framework for community-curated bioinformatics pipelines.**
+>
+> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
+>
+> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
+> ReadCube: [Full Access Link](https://rdcu.be/b1GjZ)

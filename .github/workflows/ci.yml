@@ -1,28 +1,162 @@
-name: nf-core/rnaseq CI
-# This workflow is triggered on pushes and PRs to the repository.
-on: [push, pull_request]
+name: nf-core CI
+# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
 
 jobs:
   test:
+    name: Run workflow tests
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
+    env:
+      NXF_VER: ${{ matrix.nxf_ver }}
+      NXF_ANSI_LOG: false
     strategy:
       matrix:
-        nxf_ver: ['19.04.0', '']
-        aligner: ["--aligner 'hisat2'", "--aligner 'star'", "--pseudo_aligner 'salmon'"]
-        options: ['--skipQC', '--remove_rRNA', '--saveUnaligned', '--skipTrimming', '--star_index false']
+        # Nextflow versions: check pipeline minimum and current latest
+        nxf_ver: ['20.07.1', '']
     steps:
-      - uses: actions/checkout@v1
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
       - name: Install Nextflow
         run: |
-          export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Download image
+
+      - name: Run pipeline with test data
         run: |
-          docker pull nfcore/rnaseq:dev && docker tag nfcore/rnaseq:dev nfcore/rnaseq:1.4.2
-      - name: Basic workflow tests
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+
+  star:
+    name: Test STAR with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc'
+          - '--remove_ribo_rna'
+          - '--skip_trimming'
+          - '--gtf false'
+          - '--star_index false'
+          - '--min_mapped_reads 90'
+          - '--with_umi'
+          - '--with_umi --skip_trimming'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.aligner }} ${{ matrix.options }}
-      - name: Basic workflow, gzipped input
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_gz,docker ${{ matrix.aligner }} ${{ matrix.options }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star ${{ matrix.parameters }}
+
+  star_rsem:
+    name: Test STAR RSEM with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc'
+          - '--rsem_index false'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      
+      - name: Run pipeline with RSEM STAR and various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }}
+
+  hisat2:
+    name: Test HISAT2 with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc'
+          - '--hisat2_index false'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run pipeline with HISAT2 and various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }}
+
+  salmon:
+    name: Test Salmon with workflow parameters
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        parameters:
+          - '--skip_qc --skip_alignment'
+          - '--salmon_index false --transcript_fasta false'
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run pipeline with Salmon and various parameters
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }}
+
+  sra_download:
+    name: Test downloading of public data
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.07.1'
+      NXF_ANSI_LOG: false
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run pipeline to download public data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_sra,docker
+

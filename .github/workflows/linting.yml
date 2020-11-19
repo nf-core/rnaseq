@@ -38,6 +38,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
@@ -57,12 +59,19 @@ jobs:
           GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
-        run: nf-core -l lint_log.txt lint ${GITHUB_WORKSPACE}
+        run: nf-core -l lint_log.txt lint ${GITHUB_WORKSPACE} --markdown lint_results.md
+
+      - name: Save PR number
+        if: ${{ always() }}
+        run: echo ${{ github.event.pull_request.number }} > PR_number.txt
 
       - name: Upload linting log file artifact
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: linting-log-file
-          path: lint_log.txt
+          path: |
+            lint_log.txt
+            lint_results.md
+            PR_number.txt
 

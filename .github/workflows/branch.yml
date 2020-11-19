@@ -2,7 +2,7 @@ name: nf-core branch protection
 # This workflow is triggered on PRs to master branch on the repository
 # It fails when someone tries to make a PR against the nf-core `master` branch instead of `dev`
 on:
-  pull_request:
+  pull_request_target:
     branches: [master]
 
 jobs:

@@ -4,8 +4,9 @@ name: nf-core AWS full size tests
 # It runs the -profile 'test_full' on AWS batch
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["nf-core Docker push (release)"]
+    types: [completed]
   workflow_dispatch:
 
 jobs:
@@ -15,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Miniconda
-        uses: goanpeca/setup-miniconda@v1.0.2
+        uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: 3.7

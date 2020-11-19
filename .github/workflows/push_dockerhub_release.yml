@@ -1,0 +1,29 @@
+name: nf-core Docker push (release)
+# This builds the docker image and pushes it to DockerHub
+# Runs on nf-core repo releases and push event to 'dev' branch (PR merges)
+on:
+  release:
+    types: [published]
+
+jobs:
+  push_dockerhub:
+    name: Push new Docker image to Docker Hub (release)
+    runs-on: ubuntu-latest
+    # Only run for the nf-core repo, for releases and merged PRs
+    if: ${{ github.repository == 'nf-core/rnaseq' }}
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Build new docker image
+        run: docker build --no-cache . -t nfcore/rnaseq:latest
+
+      - name: Push Docker image to DockerHub (release)
+        run: |
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push nfcore/rnaseq:latest
+          docker tag nfcore/rnaseq:latest nfcore/rnaseq:${{ github.event.release.tag_name }}
+          docker push nfcore/rnaseq:${{ github.event.release.tag_name }}

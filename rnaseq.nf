@@ -13,7 +13,7 @@ params.summary_params = [:]
  */
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-    exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+    exit 1, "Genome '${params.genome}' was not found in any config files made available to the pipeline. Currently, the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
 // Auto-load genome files from genome config

@@ -1,3 +1,9 @@
+---
+name: Feature request
+about: Suggest an idea for the nf-core website
+labels: enhancement
+---
+
 <!--
 # nf-core/rnaseq feature request
 

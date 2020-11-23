@@ -1,10 +1,15 @@
+---
+name: Bug report
+about: Report something that is broken or incorrect
+labels: bug
+---
+
 <!--
 # nf-core/rnaseq bug report
 
 Hi there!
 
 Thanks for telling us about a problem with the pipeline.
-
 Please delete this text and anything that's not relevant from the template below:
 -->
 

@@ -113,13 +113,13 @@ if (anno_readme && file(anno_readme).exists()) {
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
 
-ch_multiqc_config        = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 // Header files for MultiQC
-ch_pca_header_multiqc        = file("$baseDir/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
-ch_clustering_header_multiqc = file("$baseDir/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
-ch_biotypes_header_multiqc   = file("$baseDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_pca_header_multiqc        = file("$projectDir/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
+ch_clustering_header_multiqc = file("$projectDir/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
+ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 
 ////////////////////////////////////////////////////
 /* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
@@ -736,7 +736,7 @@ workflow RNASEQ {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary_params, baseDir, log, multiqc_report, fail_percent_mapped)
+    Completion.email(workflow, params, params.summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
     Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 

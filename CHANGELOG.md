@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.12`
+* [[#500](https://github.com/nf-core/rnaseq/issues/500), [#509](https://github.com/nf-core/rnaseq/issues/509)] - Error with AWS batch params
 
 ## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12
 

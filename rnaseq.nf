@@ -299,9 +299,9 @@ workflow RNASEQ {
         ch_input
     )
     .map {
-        meta, bam ->
+        meta, fastq ->
             meta.id = meta.id.split('_')[0..-2].join('_')
-            [ meta, bam ] }
+            [ meta, fastq ] }
     .groupTuple(by: [0])
     .map { it ->  [ it[0], it[1].flatten() ] }
     .set { ch_cat_fastq }

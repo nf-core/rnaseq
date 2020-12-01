@@ -24,15 +24,41 @@ process RSEM_PREPAREREFERENCE {
 
     script:
     def software = getSoftwareName(task.process)
-    """
-    mkdir rsem
-    rsem-prepare-reference \\
-        --gtf $gtf \\
-        --num-threads $task.cpus \\
-        $options.args \\
-        $fasta \\
-        rsem/genome
+    def args     = options.args.tokenize()
+    if (args.contains('--star')) {
+        args.removeIf { it.contains('--star') }
+        def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
+        """
+        mkdir rsem
+        STAR \\
+            --runMode genomeGenerate \\
+            --genomeDir rsem/ \\
+            --genomeFastaFiles $fasta \\
+            --sjdbGTFfile $gtf \\
+            --runThreadN $task.cpus \\
+            $memory \\
+            $options.args2
+        
+        rsem-prepare-reference \\
+            --gtf $gtf \\
+            --num-threads $task.cpus \\
+            ${args.join(' ')} \\
+            $fasta \\
+            rsem/genome
 
-    rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
-    """
+        rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+        """
+    } else {
+        """
+        mkdir rsem
+        rsem-prepare-reference \\
+            --gtf $gtf \\
+            --num-threads $task.cpus \\
+            $options.args \\
+            $fasta \\
+            rsem/genome
+
+        rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+        """
+    }
 }

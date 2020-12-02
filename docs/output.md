@@ -26,8 +26,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [TrimGalore](#trimgalore) - Adapter and quality trimming
   * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment](#alignment)
-  * [STAR](#star) - Fast spliced aware alignment to a reference
   * [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
+  * [STAR](#star) - Fast spliced aware alignment to a reference
   * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
 * [Alignment post-processing](#alignment-post-processing)
   * [SAMtools](#samtools) - Sort and index alignments
@@ -152,29 +152,6 @@ When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://git
 
 ## Alignment
 
-### STAR
-
-<details markdown="1">
-<summary>Output files</summary>
-
-* `star/`
-  * `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
-  * `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
-* `star/log/`
-  * `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
-  * `*.Log.final.out`: STAR alignment report containing the mapping results summary.
-  * `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
-* `star/unmapped/`
-  * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
-
-</details>
-
-[STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive. STAR is the default `--aligner` option.
-
-The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as _Uniquely mapped_ and few _Unmapped_ reads.
-
-![MultiQC - STAR alignment scores plot](images/mqc_star.png)
-
 ### STAR via RSEM
 
 <details markdown="1">
@@ -196,15 +173,38 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 </details>
 
-[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads.
-
-You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads. `--aligner star_rsem` is the default alignment option.
 
 > **NB:** Since RSEM performs the mapping as well as quantification there is no point in performing an additional quantification step with featureCounts when using `--aligner star_rsem`.
 
 ![MultiQC - RSEM alignment scores plot](images/mqc_rsem_mapped.png)
 
 ![MultiQC - RSEM uniquely mapped plot](images/mqc_rsem_multimapped.png)
+
+### STAR
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `star/`
+  * `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+  * `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+* `star/log/`
+  * `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
+  * `*.Log.final.out`: STAR alignment report containing the mapping results summary.
+  * `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
+* `star/unmapped/`
+  * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
+
+</details>
+
+[STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive.
+
+You can choose to align your data with STAR by providing the `--aligner star` parameter.
+
+The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as _Uniquely mapped_ and few _Unmapped_ reads.
+
+![MultiQC - STAR alignment scores plot](images/mqc_star.png)
 
 ### HISAT2
 

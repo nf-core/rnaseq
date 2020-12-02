@@ -52,7 +52,7 @@ ch_ribo_db = file(params.ribo_database_manifest)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
-def alignerList       = ['star', 'hisat2', 'star_rsem']
+def alignerList       = ['star_rsem', 'star', 'hisat2']
 def pseudoAlignerList = ['salmon']
 if (!params.skip_alignment) {
     if (!alignerList.contains(params.aligner)) {

@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.1dev - [date]
 
+* Fix tximport ingestion data to use lengthScaled and Scaled parameters: [#499][https://github.com/nf-core/rnaseq/issues/499]
+
 ### Enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.12`

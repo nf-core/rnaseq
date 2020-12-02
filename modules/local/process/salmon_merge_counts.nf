@@ -15,12 +15,20 @@ process SALMON_MERGE_COUNTS {
     input:
     path ('genes_counts/*')
     path ('genes_tpm/*')
+    path ('genes_counts_ls/*')
+    path ('genes_tpm_ls/*')
+    path ('genes_counts_s/*')
+    path ('genes_tpm_s/*')
     path ('isoforms_counts/*')
     path ('isoforms_tpm/*')
     
     output:
     path "salmon.merged.gene_counts.tsv"      , emit: counts_gene
     path "salmon.merged.gene_tpm.tsv"         , emit: tpm_gene
+    path "salmon.merged.gene_counts_lengthScaled.tsv"      , emit: ls_counts_gene
+    path "salmon.merged.gene_tpm_lengthScaled.tsv"         , emit: ls_tpm_gene
+    path "salmon.merged.gene_counts_scaled.tsv"      , emit: s_counts_gene
+    path "salmon.merged.gene_tpm_scaled.tsv"         , emit: s_tpm_gene
     path "salmon.merged.transcript_counts.tsv", emit: counts_transcript
     path "salmon.merged.transcript_tpm.tsv"   , emit: tpm_transcript
 
@@ -40,6 +48,32 @@ process SALMON_MERGE_COUNTS {
         cut -f 2 \${fileid} > tmp/genes_tpm/\${filename}
     done
 
+    mkdir -p tmp/genes_counts_ls
+    cut -f 1 `ls ./genes_counts_ls/* | head -n 1` | tail -n +2 >> gene_ids.txt
+    for fileid in `ls ./genes_counts_ls/*`; do
+        filename=`basename \$fileid`
+        cut -f 2 \${fileid} > tmp/genes_counts_ls/\${filename}
+    done
+
+    mkdir -p tmp/genes_tpm_ls
+    for fileid in `ls ./genes_tpm_ls/*`; do
+        filename=`basename \$fileid`
+        cut -f 2 \${fileid} > tmp/genes_tpm_ls/\${filename}
+    done
+
+    mkdir -p tmp/genes_counts_s
+    cut -f 1 `ls ./genes_counts_s/* | head -n 1` | tail -n +2 >> gene_ids.txt
+    for fileid in `ls ./genes_counts_s/*`; do
+        filename=`basename \$fileid`
+        cut -f 2 \${fileid} > tmp/genes_counts_s/\${filename}
+    done
+
+    mkdir -p tmp/genes_tpm_s
+    for fileid in `ls ./genes_tpm_s/*`; do
+        filename=`basename \$fileid`
+        cut -f 2 \${fileid} > tmp/genes_tpm_s/\${filename}
+    done
+
     mkdir -p tmp/isoforms_counts
     echo "transcript_id" > transcript_ids.txt
     cut -f 1 `ls ./isoforms_counts/* | head -n 1` | tail -n +2 >> transcript_ids.txt
@@ -56,6 +90,10 @@ process SALMON_MERGE_COUNTS {
 
     paste gene_ids.txt tmp/genes_counts/* > salmon.merged.gene_counts.tsv
     paste gene_ids.txt tmp/genes_tpm/* > salmon.merged.gene_tpm.tsv
+    paste gene_ids.txt tmp/genes_counts_ls/* > salmon.merged.gene_counts_lengthScaled.tsv
+    paste gene_ids.txt tmp/genes_tpm_ls/* > salmon.merged.gene_tpm_lengthScaled.tsv
+    paste gene_ids.txt tmp/genes_counts_s/* > salmon.merged.gene_counts_scaled.tsv
+    paste gene_ids.txt tmp/genes_tpm_s/* > salmon.merged.gene_tpm_scaled.tsv
     paste transcript_ids.txt tmp/isoforms_counts/* > salmon.merged.transcript_counts.tsv
     paste transcript_ids.txt tmp/isoforms_tpm/* > salmon.merged.transcript_tpm.tsv
     """

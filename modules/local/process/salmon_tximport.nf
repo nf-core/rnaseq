@@ -20,6 +20,10 @@ process SALMON_TXIMPORT {
     output:
     tuple val(meta), path("*gene_tpm.tsv")         , emit: tpm_gene
     tuple val(meta), path("*gene_counts.tsv")      , emit: counts_gene
+    tuple val(meta), path("*gene_tpm_length_scaled.tsv")         , emit: ls_tpm_gene
+    tuple val(meta), path("*gene_counts_length_scaled.tsv")      , emit: ls_counts_gene
+    tuple val(meta), path("*gene_tpm_scaled.tsv")         , emit: s_tpm_gene
+    tuple val(meta), path("*gene_counts_scaled.tsv")      , emit: s_counts_gene
     tuple val(meta), path("*transcript_tpm.tsv")   , emit: tpm_transcript
     tuple val(meta), path("*transcript_counts.tsv"), emit: counts_transcript
     path  "*.version.txt"                          , emit: version

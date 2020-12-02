@@ -31,8 +31,8 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
 6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
 7. Choice of multiple alignment and quantification routes:
-    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
-    2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
+    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
+    2. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
     3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
 8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
@@ -47,6 +47,9 @@ On release, automated continuous integration tests run the pipeline on a [full-s
     5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
 14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
 15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+
+
+> **NB:** By default, the pipeline uses [RSEM](https://github.com/deweylab/RSEM) (i.e. `--aligner star_rsem`) to align the raw FastQ reads to the reference genome. RSEM has the ability to run STAR to perform the mapping followed by downstream gene/isoform quantification. RSEM has been widely reported to be one of the most accurate quantification methods for gene expression data and should be used in all possible instances. Alternative options have been provided to run [STAR](https://github.com/alexdobin/STAR) (i.e. `--aligner star`) and [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) (i.e. `--aligner hisat2`) followed by quantification with [featureCounts](http://bioinf.wehi.edu.au/featureCounts/) but please use these options with caution as they may not give you the most accurate results due to the way in which the reads are counted (please see [Zhao et al., 2015](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141910#pone-0141910-t001) and [Soneson et al., 2015](https://f1000research.com/articles/4-1521/v1)).
 
 ## Quick Start
 

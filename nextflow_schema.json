@@ -273,12 +273,12 @@
             "properties": {
                 "aligner": {
                     "type": "string",
-                    "default": "star",
-                    "description": "Specifies the alignment algorithm to use - available options are 'star', 'star_rsem' and 'hisat2'.",
+                    "default": "star_rsem",
+                    "description": "Specifies the alignment algorithm to use - available options are 'star_rsem', 'star' and 'hisat2'.",
                     "fa_icon": "fas fa-map-signs",
                     "enum": [
-                        "star",
                         "star_rsem",
+                        "star",
                         "hisat2"
                     ]
                 },

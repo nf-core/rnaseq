@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.1dev - [date]
 
+### Major enhancements
+
+* The default genome alignment and quantification method has now been changed to `--aligner star_rsem`. This decision was made primarily because RSEM has been widely reported to be one of the most accurate quantification methods for gene expression data.
+
 ### Enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.12`

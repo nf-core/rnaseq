@@ -35,16 +35,10 @@ def get_samplesheet_paths(LinkedHashMap row) {
     meta.strandedness = row.strandedness
 
     def array = []
-    if (!file(row.fastq_1).exists()) {
-        exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${row.fastq_1}"
-    }
     if (meta.single_end) {
-        array = [ meta, [ file(row.fastq_1) ] ]
+        array = [ meta, [ file(row.fastq_1, checkIfExists: true) ] ]
     } else {
-        if (!file(row.fastq_2).exists()) {
-            exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${row.fastq_2}"
-        }
-        array = [ meta, [ file(row.fastq_1), file(row.fastq_2) ] ]
+        array = [ meta, [ file(row.fastq_1, checkIfExists: true), file(row.fastq_2, checkIfExists: true) ] ]
     }
     return array
 }

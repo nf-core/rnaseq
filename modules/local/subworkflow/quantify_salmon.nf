@@ -74,12 +74,12 @@ workflow QUANTIFY_SALMON {
         SALMON_MERGE_COUNTS.out.tpm_gene,
         SALMON_TX2GENE.out.collect(),
     )
-    SALMON_SE_GENE_LS ( 
+    SALMON_SE_GENE_LENGTH_SCALED ( 
         SALMON_MERGE_COUNTS.out.counts_gene_length_scaled,
         SALMON_MERGE_COUNTS.out.tpm_gene_length_scaled,
         SALMON_TX2GENE.out.collect(),
     )
-    SALMON_SE_GENE_S ( 
+    SALMON_SE_GENE_SCALED ( 
         SALMON_MERGE_COUNTS.out.counts_gene_scaled,
         SALMON_MERGE_COUNTS.out.tpm_gene_scaled,
         SALMON_TX2GENE.out.collect(),

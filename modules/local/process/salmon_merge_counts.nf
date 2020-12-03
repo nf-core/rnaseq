@@ -25,8 +25,8 @@ process SALMON_MERGE_COUNTS {
     output:
     path "salmon.merged.gene_counts.tsv"                   , emit: counts_gene
     path "salmon.merged.gene_tpm.tsv"                      , emit: tpm_gene
-    path "salmon.merged.gene_counts_lengthScaled.tsv"      , emit: counts_gene_length_scaled
-    path "salmon.merged.gene_tpm_lengthScaled.tsv"         , emit: tpm_gene_length_scaled
+    path "salmon.merged.gene_counts_length_scaled.tsv"      , emit: counts_gene_length_scaled
+    path "salmon.merged.gene_tpm_length_scaled.tsv"         , emit: tpm_gene_length_scaled
     path "salmon.merged.gene_counts_scaled.tsv"            , emit: counts_gene_scaled
     path "salmon.merged.gene_tpm_scaled.tsv"               , emit: tpm_gene_scaled
     path "salmon.merged.transcript_counts.tsv"             , emit: counts_transcript
@@ -88,8 +88,8 @@ process SALMON_MERGE_COUNTS {
 
     paste gene_ids.txt tmp/genes_counts/* > salmon.merged.gene_counts.tsv
     paste gene_ids.txt tmp/genes_tpm/* > salmon.merged.gene_tpm.tsv
-    paste gene_ids.txt tmp/genes_counts_length_scaled/* > salmon.merged.gene_counts_lengthScaled.tsv
-    paste gene_ids.txt tmp/genes_tpm_length_scaled/* > salmon.merged.gene_tpm_lengthScaled.tsv
+    paste gene_ids.txt tmp/genes_counts_length_scaled/* > salmon.merged.gene_counts_length_scaled.tsv
+    paste gene_ids.txt tmp/genes_tpm_length_scaled/* > salmon.merged.gene_tpm_length_scaled.tsv
     paste gene_ids.txt tmp/genes_counts_scaled/* > salmon.merged.gene_counts_scaled.tsv
     paste gene_ids.txt tmp/genes_tpm_scaled/* > salmon.merged.gene_tpm_scaled.tsv
     paste transcript_ids.txt tmp/isoforms_counts/* > salmon.merged.transcript_counts.tsv

@@ -38,7 +38,7 @@ if (file.exists(coldata)){
 library(SummarizedExperiment)
 library(tximport)
 
-txi = tximport(fns, type = "salmon", txOut = TRUE, countsFromAbundance = "dtuScaledTPM")
+txi = tximport(fns, type = "salmon", txOut = TRUE)
 rownames(coldata) = coldata[["names"]]
 extra = setdiff(rownames(txi[[1]]),  as.character(rowdata[["tx"]]))
 if (length(extra) > 0){

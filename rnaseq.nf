@@ -665,7 +665,7 @@ workflow RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_SALMON (
-                QUANTIFY_SALMON.out.merged_counts_gene,
+                QUANTIFY_SALMON.out.merged_counts_gene_length_scaled,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

@@ -18,15 +18,15 @@ process SALMON_TXIMPORT {
     path  tx2gene
     
     output:
-    tuple val(meta), path("*gene_tpm.tsv")                       , emit: tpm_gene
-    tuple val(meta), path("*gene_counts.tsv")                    , emit: counts_gene
-    tuple val(meta), path("*gene_tpm_length_scaled.tsv")         , emit: tpm_gene_length_scaled
-    tuple val(meta), path("*gene_counts_length_scaled.tsv")      , emit: counts_gene_length_scaled
-    tuple val(meta), path("*gene_tpm_scaled.tsv")                , emit: tpm_gene_scaled
-    tuple val(meta), path("*gene_counts_scaled.tsv")             , emit: counts_gene_scaled
-    tuple val(meta), path("*transcript_tpm.tsv")                 , emit: tpm_transcript
-    tuple val(meta), path("*transcript_counts.tsv")              , emit: counts_transcript
-    path  "*.version.txt"                                        , emit: version
+    tuple val(meta), path("*gene_tpm.tsv")                 , emit: tpm_gene
+    tuple val(meta), path("*gene_counts.tsv")              , emit: counts_gene
+    tuple val(meta), path("*gene_tpm_length_scaled.tsv")   , emit: tpm_gene_length_scaled
+    tuple val(meta), path("*gene_counts_length_scaled.tsv"), emit: counts_gene_length_scaled
+    tuple val(meta), path("*gene_tpm_scaled.tsv")          , emit: tpm_gene_scaled
+    tuple val(meta), path("*gene_counts_scaled.tsv")       , emit: counts_gene_scaled
+    tuple val(meta), path("*transcript_tpm.tsv")           , emit: tpm_transcript
+    tuple val(meta), path("*transcript_counts.tsv")        , emit: counts_transcript
+    path  "*.version.txt"                                  , emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

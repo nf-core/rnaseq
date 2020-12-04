@@ -29,34 +29,41 @@ workflow QUANTIFY_SALMON {
     transcript_fasta //    file: /path/to/transcript.fasta
     genome_fasta     //    file: /path/to/genome.fasta
     gtf              //    file: /path/to/genome.gtf
+    alignment_mode   //    bool: Run Salmon in alignment mode
 
     main:
+    // /*
+    //  * Uncompress transcripts fasta or generate from scratch if required
+    //  */
+    // if (transcript_fasta) {
+    //     if (transcript_fasta.toString().endsWith('.gz')) {
+    //         ch_transcript_fasta = GUNZIP ( transcript_fasta ).gunzip
+    //     } else {
+    //         ch_transcript_fasta = file(transcript_fasta)
+    //     }
+    // } else {
+    //     ch_transcript_fasta = GFFREAD ( genome_fasta, GTF_GENE_FILTER ( genome_fasta, gtf ) ).fasta
+    // }
+
     /*
      * Uncompress Salmon index or generate from scratch if required
      */
-    if (index) {
-        if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index ).untar
-        } else {
-            ch_index = file(index)
-        }
-    } else {
-        if (transcript_fasta) {
-            if (transcript_fasta.endsWith('.gz')) {
-                ch_transcript_fasta = GUNZIP ( transcript_fasta ).gunzip
+    if (!alignment_mode) {
+        if (index) {
+            if (index.endsWith('.tar.gz')) {
+                ch_index = UNTAR ( index ).untar
             } else {
-                ch_transcript_fasta = file(transcript_fasta)
+                ch_index = file(index)
             }
-        } else {
-            ch_transcript_fasta = GFFREAD ( genome_fasta, GTF_GENE_FILTER ( genome_fasta, gtf ) ).fasta
+        } else {        
+            ch_index = SALMON_INDEX ( genome_fasta, transcript_fasta ).index
         }
-        ch_index = SALMON_INDEX ( genome_fasta, ch_transcript_fasta ).index
     }
-
+    
     /*
      * Quantify and merge counts across samples
      */
-    SALMON_QUANT        ( reads, ch_index, gtf )
+    SALMON_QUANT        ( reads, ch_index, gtf, transcript_fasta, alignment_mode)
     SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
     SALMON_TXIMPORT     ( SALMON_QUANT.out.results, SALMON_TX2GENE.out.collect() )
     SALMON_MERGE_COUNTS (

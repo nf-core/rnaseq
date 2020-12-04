@@ -140,10 +140,10 @@ if (params.skip_alignment)  { multiqc_options['publish_dir'] = '' }
 
 def deseq2_qc_options                 = modules['deseq2_qc']
 deseq2_qc_options.args               += params.deseq2_vst ? " --vst TRUE" : ''
-def deseq2_qc_featurecounts_options   = deseq2_qc_options.clone()
+//def deseq2_qc_featurecounts_options   = deseq2_qc_options.clone()
 def deseq2_qc_rsem_options            = deseq2_qc_options.clone()
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
-deseq2_qc_featurecounts_options.args += " --count_col 3"
+// deseq2_qc_featurecounts_options.args += " --count_col 3"
 deseq2_qc_rsem_options.args          += " --count_col 3"
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
@@ -153,11 +153,10 @@ include { MULTIQC                              } from './modules/local/process/m
 include { MULTIQC_CUSTOM_BIOTYPE               } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                               )
 include { MULTIQC_CUSTOM_FAIL_MAPPED           } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                          )
 include { MULTIQC_CUSTOM_STRAND_CHECK          } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                          )
-include { FEATURECOUNTS_MERGE_COUNTS           } from './modules/local/process/featurecounts_merge_counts'  addParams( options: modules['featurecounts_merge_counts']                           )
 include { BEDTOOLS_GENOMECOV                   } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                                   )
 include { DUPRADAR                             } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                                             )
 include { GET_SOFTWARE_VERSIONS                } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                    )
-include { DESEQ2_QC as DESEQ2_QC_FEATURECOUNTS } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_featurecounts_options, multiqc_label: 'featurecounts' )
+// include { DESEQ2_QC as DESEQ2_QC_FEATURECOUNTS } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_featurecounts_options, multiqc_label: 'featurecounts' )
 include { DESEQ2_QC as DESEQ2_QC_RSEM          } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_rsem_options, multiqc_label: 'rsem'                   )
 include { DESEQ2_QC as DESEQ2_QC_SALMON        } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon'               )
 
@@ -234,23 +233,18 @@ if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi
     umitools_dedup_options.publish_files.put('bai','')
 }
 
-def subread_featurecounts_options   = modules['subread_featurecounts']
-subread_featurecounts_options.args += params.fc_extra_attributes  ? " --extraAttributes $params.fc_extra_attributes" : ""
-subread_featurecounts_options.args += " -g $params.fc_group_features -t $params.fc_count_type"
+def subread_featurecounts_options  = modules['subread_featurecounts']
+def biotype                        = params.gencode ? "gene_type" : params.fc_group_features_type
+subread_featurecounts_options.args += " -g $biotype -t $params.fc_count_type"
 
-def subread_featurecounts_biotype_options   = modules['subread_featurecounts_biotype']
-def biotype                                 = params.gencode ? "gene_type" : params.fc_group_features_type
-subread_featurecounts_biotype_options.args += " -g $biotype -t $params.fc_count_type"
-
-include { UCSC_BEDRAPHTOBIGWIG } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
-include { PRESEQ_LCEXTRAP      } from './modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )
-include { QUALIMAP_RNASEQ      } from './modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']       )
-include { SORTMERNA            } from './modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                )
-include { STRINGTIE            } from './modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                )
-include { UMITOOLS_DEDUP       } from './modules/nf-core/software/umitools/dedup/main'        addParams( options: umitools_dedup_options           )
-include { SAMTOOLS_INDEX       } from './modules/nf-core/software/samtools/index/main'        addParams( options: umitools_dedup_options           )
-include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS         } from './modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options         )
-include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_BIOTYPE } from './modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_biotype_options )
+include { UCSC_BEDRAPHTOBIGWIG  } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
+include { PRESEQ_LCEXTRAP       } from './modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )
+include { QUALIMAP_RNASEQ       } from './modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']       )
+include { SORTMERNA             } from './modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                )
+include { STRINGTIE             } from './modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                )
+include { UMITOOLS_DEDUP        } from './modules/nf-core/software/umitools/dedup/main'        addParams( options: umitools_dedup_options           )
+include { SAMTOOLS_INDEX        } from './modules/nf-core/software/samtools/index/main'        addParams( options: umitools_dedup_options           )
+include { SUBREAD_FEATURECOUNTS } from './modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options    )
 
 /*
  * SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -521,47 +515,46 @@ workflow RNASEQ {
     }
 
     /*
-     * MODULE: Count reads relative to features using featureCounts
+     * MODULE: Count reads from BAM alignments using Salmon
      */
-    ch_featurecounts_multiqc      = Channel.empty()
-    if (!params.skip_alignment && params.aligner != 'star_rsem' && !params.skip_featurecounts) {
-        SUBREAD_FEATURECOUNTS ( 
-            ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
-        )
-        ch_featurecounts_multiqc = SUBREAD_FEATURECOUNTS.out.summary
-        ch_software_versions     = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
+    // if (!params.skip_alignment && params.aligner != 'star_rsem' && !params.skip_alignment_quant) {
+    //     SUBREAD_FEATURECOUNTS ( 
+    //         ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
+    //     )
+    //     ch_featurecounts_multiqc = SUBREAD_FEATURECOUNTS.out.summary
+    //     ch_software_versions     = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
 
-        FEATURECOUNTS_MERGE_COUNTS (
-            SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}
-        )
+    //     FEATURECOUNTS_MERGE_COUNTS (
+    //         SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}
+    //     )
 
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_FEATURECOUNTS (
-                FEATURECOUNTS_MERGE_COUNTS.out.counts,
-                ch_pca_header_multiqc,
-                ch_clustering_header_multiqc
-            )
-            ch_aligner_pca_multiqc        = DESEQ2_QC_FEATURECOUNTS.out.pca_multiqc
-            ch_aligner_clustering_multiqc = DESEQ2_QC_FEATURECOUNTS.out.dists_multiqc
-            ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))
-        }
-    }
+    //     if (!params.skip_qc & !params.skip_deseq2_qc) {
+    //         DESEQ2_QC_FEATURECOUNTS (
+    //             FEATURECOUNTS_MERGE_COUNTS.out.counts,
+    //             ch_pca_header_multiqc,
+    //             ch_clustering_header_multiqc
+    //         )
+    //         ch_aligner_pca_multiqc        = DESEQ2_QC_FEATURECOUNTS.out.pca_multiqc
+    //         ch_aligner_clustering_multiqc = DESEQ2_QC_FEATURECOUNTS.out.dists_multiqc
+    //         ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))
+    //     }
+    // }
 
     /*
      * MODULE: Feature biotype QC using featureCounts
      */
-    ch_featurecounts_biotype_multiqc = Channel.empty()
+    ch_featurecounts_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc && !skip_biotype_qc) {
         
-        SUBREAD_FEATURECOUNTS_BIOTYPE ( 
+        SUBREAD_FEATURECOUNTS ( 
             ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
         )
 
         MULTIQC_CUSTOM_BIOTYPE ( 
-            SUBREAD_FEATURECOUNTS_BIOTYPE.out.counts, 
+            SUBREAD_FEATURECOUNTS.out.counts, 
             ch_biotypes_header_multiqc
         )
-        ch_featurecounts_biotype_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
+        ch_featurecounts_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
     }
 
     /*
@@ -652,12 +645,14 @@ workflow RNASEQ {
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
     if (params.pseudo_aligner == 'salmon') {
 
+        PREPARE_GENOME.out.transcript_fasta.view()
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             params.salmon_index,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.fasta,
-            PREPARE_GENOME.out.gtf
+            PREPARE_GENOME.out.gtf,
+            false
         )
         ch_salmon_multiqc    = QUANTIFY_SALMON.out.results
         ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
@@ -712,7 +707,6 @@ workflow RNASEQ {
             ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
             ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
             ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_featurecounts_biotype_multiqc.collect{it[1]}.ifEmpty([]),
             ch_aligner_pca_multiqc.collect().ifEmpty([]),
             ch_aligner_clustering_multiqc.collect().ifEmpty([]),
             ch_pseudoaligner_pca_multiqc.collect().ifEmpty([]),

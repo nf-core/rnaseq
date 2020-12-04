@@ -31,9 +31,9 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
 6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
 7. Choice of multiple alignment and quantification routes:
-    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)
     2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
-    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`featureCounts`](http://bioinf.wehi.edu.au/featureCounts/)
+    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`Salmon`](https://combine-lab.github.io/salmon/)
 8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 10. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))

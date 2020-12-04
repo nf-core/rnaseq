@@ -34,7 +34,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
   * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
 * [Quantification](#quantification)
-  * [featureCounts](#featurecounts) - Read counting relative to gene and biotype
+  * [Salmon quant](#salmon-quant) - Gene and isoform quantification from aligned BAM
 * [Other steps](#other-steps)
   * [StringTie](#stringtie) - Transcript assembly and quantification
   * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
@@ -43,6 +43,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Qualimap](#qualimap) - Various RNA-seq QC metrics
   * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
   * [Preseq](#preseq) - Estimation of library complexity
+  * [featureCounts](#featurecounts) - Read counting relative to gene biotype
   * [DESeq2](#deseq2) - PCA plot and sample pairwise distance heatmap and dendrogram
   * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
 * [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
@@ -200,8 +201,6 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
 
-> **NB:** Since RSEM performs the mapping as well as quantification there is no point in performing an additional quantification step with featureCounts when using `--aligner star_rsem`.
-
 ![MultiQC - RSEM alignment scores plot](images/mqc_rsem_mapped.png)
 
 ![MultiQC - RSEM uniquely mapped plot](images/mqc_rsem_multimapped.png)
@@ -289,28 +288,42 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 
 ## Quantification
 
-### featureCounts
+### Salmon quant
 
 <details markdown="1">
 <summary>Output files</summary>
 
-* `<ALIGNER>/`
-  * `featurecounts.merged.counts.tsv`: Matrix of gene-level raw counts across all samples.
-* `<ALIGNER>/featurecounts/`
-  * `*.featureCounts.txt`: featureCounts gene-level quantification results for each sample.
-  * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
-* `<ALIGNER>/featurecounts/biotype/`
-  * `*.featureCounts.txt`: featureCounts biotype-level quantification results for each sample.
-  * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
-  * `*_mqc.tsv`: MultiQC custom content files used to plot biotypes in report.
+* `salmon/`
+  * `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+  * `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  * `salmon.merged.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  * `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  * `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  * `salmon.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+* `salmon/<SAMPLE>/`
+  * `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
+  * `cmd_info.json`: Information about the Salmon quantification command, version and options.
+  * `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
+  * `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
+  * `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
+  * `quant.genes.sf`: Salmon _gene_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+  * `quant.sf`: Salmon _transcript_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+  * `<SAMPLE>.salmon.gene_counts.tsv`: Subset of `quant.genes.sf`, only containing the gene id and raw counts.
+  * `<SAMPLE>.salmon.gene_tpm.tsv`: Subset of `quant.genes.sf`, only containing the gene id and TPM values.
+  * `<SAMPLE>.salmon.transcript_counts.tsv`: Subset of `quant.sf`, only containing the transcript id and raw counts.
+  * `<SAMPLE>.salmon.transcript_tpm.tsv`: Subset of `quant.sf`, only containing the transcript id and TPM values.
 
 </details>
 
-[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the [Subread](http://subread.sourceforge.net/) package is a quantification tool used to summarise the mapped read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations. We can also use featureCounts to count overlaps with different classes of genomic features. This provides an additional QC to check which features are most abundant in the sample, and to highlight potential problems such as rRNA contamination.
+[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) is a tool for wicked-fast transcript quantification from RNA-seq data. It requires a set of target transcripts (either from a reference or de-novo assembly) to quantify. All you need to run Salmon is a FASTA file containing your reference transcripts and a (set of) FASTA/FASTQ file(s) containing your reads.
 
-![MultiQC - featureCounts read assignment plot](images/mqc_featurecounts_assignment.png)
+The [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) package is used in this pipeline to summarise the results generated by Salmon into matrices for use with downstream gene-level analysis packages i.e. transcript-level abundances, estimated counts and transcript lengths. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for differential expression of gene-level counts.
 
-![MultiQC - featureCounts biotypes plot](images/mqc_featurecounts_biotype.png)
+You can choose to pseudo-align and quantify your data with Salmon by providing the `--pseudo_aligner salmon` parameter. By default, Salmon is run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon in isolation.
+
+> **NB:** The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
+
+![MultiQC - Salmon fragment length distribution plot](images/mqc_salmon.png)
 
 ## Other steps
 
@@ -574,6 +587,22 @@ See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/d
 The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at predicting and estimating the complexity of a genomic sequencing library, equivalent to predicting and estimating the number of redundant reads from a given sequencing depth and how many will be expected from additional sequencing using an initial sequencing experiment. The estimates can then be used to examine the utility of further sequencing, optimize the sequencing depth, or to screen multiple libraries to avoid low complexity samples. A shallow curve indicates that the library has reached complexity saturation and further sequencing would likely not add further unique reads. The dashed line shows a perfectly complex library where total reads = unique reads. Note that these are predictive numbers only, not absolute. The MultiQC plot can sometimes give extreme sequencing depth on the X axis - click and drag from the left side of the plot to zoom in on more realistic numbers.
 
 ![MultiQC - Preseq library complexity plot](images/mqc_preseq_plot.png)
+
+### featureCounts
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `<ALIGNER>/featurecounts/`
+  * `*.featureCounts.txt`: featureCounts biotype-level quantification results for each sample.
+  * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
+  * `*_mqc.tsv`: MultiQC custom content files used to plot biotypes in report.
+
+</details>
+
+[featureCounts](http://bioinf.wehi.edu.au/featureCounts/) from the [Subread](http://subread.sourceforge.net/) package is a quantification tool used to summarise the mapped read distribution over genomic features such as genes, exons, promotors, gene bodies, genomic bins and chromosomal locations. We can also use featureCounts to count overlaps with different classes of genomic features. This provides an additional QC to check which features are most abundant in the sample, and to highlight potential problems such as rRNA contamination.
+
+![MultiQC - featureCounts biotypes plot](images/mqc_featurecounts_biotype.png)
 
 ### DESeq2
 

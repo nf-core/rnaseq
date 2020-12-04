@@ -10,10 +10,13 @@ include {
     GUNZIP as GUNZIP_GTF
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
+    GUNZIP as GUNZIP_TRANSCRIPT_FASTA
     GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../process/gunzip'                   addParams( options: params.genome_options  )
 include { GTF2BED                     } from '../process/gtf2bed'                  addParams( options: params.genome_options  )
 include { CAT_ADDITIONAL_FASTA        } from '../process/cat_additional_fasta'     addParams( options: params.genome_options  )
-include { GFFREAD                     } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options )
+include { GFFREAD_GFF                 } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options )
+include { GTF_GENE_FILTER             } from '../process/gtf_gene_filter'          addParams( options: params.genome_options  )
+include { GFFREAD_TRANSCRIPT_FASTA    } from '../process/gffread'                  addParams( options: params.genome_options  )
 
 workflow PREPARE_GENOME {
     take:
@@ -21,6 +24,7 @@ workflow PREPARE_GENOME {
     gtf              // file: /path/to/genome.gtf
     gff              // file: /path/to/genome.gff
     gene_bed         // file: /path/to/gene.bed
+    transcript_fasta // file: /path/to/transcript.fasta
     additional_fasta // file: /path/to/additional.fasta
     
     main:
@@ -49,8 +53,8 @@ workflow PREPARE_GENOME {
         } else {
             ch_gff = file(gff)
         }
-        ch_gtf = GFFREAD ( ch_gff ).gtf
-        gffread_version = GFFREAD.out.version
+        ch_gtf = GFFREAD_GFF ( ch_gff ).gtf
+        gffread_version = GFFREAD_GFF.out.version
     }
 
     /*
@@ -80,9 +84,23 @@ workflow PREPARE_GENOME {
         ch_gene_bed = GTF2BED ( ch_gtf )
     }
 
+    /*
+     * Uncompress transcript fasta file / create if required
+     */
+    if (transcript_fasta) {
+        if (transcript_fasta.endsWith('.gz')) {
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( transcript_fasta ).gunzip
+        } else {
+            ch_transcript_fasta = file(transcript_fasta)
+        }
+    } else {
+        ch_transcript_fasta = GFFREAD_TRANSCRIPT_FASTA ( ch_fasta, GTF_GENE_FILTER ( ch_fasta, ch_gtf ) ).fasta
+    }
+    
     emit:
-    fasta           = ch_fasta     // path: genome.fasta
-    gtf             = ch_gtf       // path: genome.gtf
-    gene_bed        = ch_gene_bed  // path: gene.bed
-    gffread_version                // path: *.version.txt
+    fasta            = ch_fasta            // path: genome.fasta
+    gtf              = ch_gtf              // path: genome.gtf
+    gene_bed         = ch_gene_bed         // path: gene.bed
+    transcript_fasta = ch_transcript_fasta // path: transcript.fasta
+    gffread_version                        // path: *.version.txt
 }

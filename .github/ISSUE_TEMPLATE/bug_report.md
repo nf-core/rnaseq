@@ -13,6 +13,13 @@ Thanks for telling us about a problem with the pipeline.
 Please delete this text and anything that's not relevant from the template below:
 -->
 
+## Check Documentation
+
+I have checked the following places for your error:
+
+- [ ] [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
+- [ ] [nf-core/rnaseq pipeline documentation](https://nf-co.re/nf-core/rnaseq/usage)
+
 ## Description of the bug
 
 <!-- A clear and concise description of what the bug is. -->
@@ -27,6 +34,13 @@ Steps to reproduce the behaviour:
 ## Expected behaviour
 
 <!-- A clear and concise description of what you expected to happen. -->
+
+## Log files
+
+Have you provided the following extra information/files:
+
+- [ ] The command used to run the pipeline
+- [ ] The `.nextflow.log` file <!-- this is a hidden file in the directory where you launched the pipeline -->
 
 ## System
 

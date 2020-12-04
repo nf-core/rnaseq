@@ -287,6 +287,7 @@ workflow RNASEQ {
         params.gtf,
         params.gff,
         params.gene_bed,
+        params.transcript_fasta,
         params.additional_fasta
     )
     ch_software_versions = Channel.empty()
@@ -654,7 +655,7 @@ workflow RNASEQ {
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             params.salmon_index,
-            params.transcript_fasta,
+            PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.fasta,
             PREPARE_GENOME.out.gtf
         )

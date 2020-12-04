@@ -23,14 +23,14 @@ process SALMON_MERGE_COUNTS {
     path ('isoforms_tpm/*')
     
     output:
-    path "salmon.merged.gene_counts.tsv"                   , emit: counts_gene
-    path "salmon.merged.gene_tpm.tsv"                      , emit: tpm_gene
-    path "salmon.merged.gene_counts_length_scaled.tsv"      , emit: counts_gene_length_scaled
-    path "salmon.merged.gene_tpm_length_scaled.tsv"         , emit: tpm_gene_length_scaled
-    path "salmon.merged.gene_counts_scaled.tsv"            , emit: counts_gene_scaled
-    path "salmon.merged.gene_tpm_scaled.tsv"               , emit: tpm_gene_scaled
-    path "salmon.merged.transcript_counts.tsv"             , emit: counts_transcript
-    path "salmon.merged.transcript_tpm.tsv"                , emit: tpm_transcript
+    path "salmon.merged.gene_counts.tsv"              , emit: counts_gene
+    path "salmon.merged.gene_tpm.tsv"                 , emit: tpm_gene
+    path "salmon.merged.gene_counts_length_scaled.tsv", emit: counts_gene_length_scaled
+    path "salmon.merged.gene_tpm_length_scaled.tsv"   , emit: tpm_gene_length_scaled
+    path "salmon.merged.gene_counts_scaled.tsv"       , emit: counts_gene_scaled
+    path "salmon.merged.gene_tpm_scaled.tsv"          , emit: tpm_gene_scaled
+    path "salmon.merged.transcript_counts.tsv"        , emit: counts_transcript
+    path "salmon.merged.transcript_tpm.tsv"           , emit: tpm_transcript
 
     script:
     """

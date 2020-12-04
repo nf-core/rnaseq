@@ -11,12 +11,12 @@ include {
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../process/gunzip'                   addParams( options: params.genome_options  )
-include { GTF2BED                     } from '../process/gtf2bed'                  addParams( options: params.genome_options  )
-include { CAT_ADDITIONAL_FASTA        } from '../process/cat_additional_fasta'     addParams( options: params.genome_options  )
-include { GFFREAD_GFF                 } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options )
-include { GTF_GENE_FILTER             } from '../process/gtf_gene_filter'          addParams( options: params.genome_options  )
-include { GFFREAD_TRANSCRIPT_FASTA    } from '../process/gffread'                  addParams( options: params.genome_options  )
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA         } from '../process/gunzip'                   addParams( options: params.genome_options  )
+include { GTF2BED                             } from '../process/gtf2bed'                  addParams( options: params.genome_options  )
+include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta'     addParams( options: params.genome_options  )
+include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'          addParams( options: params.genome_options  )
+include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'                  addParams( options: params.genome_options  )
+include { GFFREAD as GFFREAD_GFF              } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options )
 
 workflow PREPARE_GENOME {
     take:

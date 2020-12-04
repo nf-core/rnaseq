@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#499][https://github.com/nf-core/rnaseq/issues/499]] - Use of salmon counts for DESeq2
 * [[#500](https://github.com/nf-core/rnaseq/issues/500), [#509](https://github.com/nf-core/rnaseq/issues/509)] - Error with AWS batch params
 * [[#511](https://github.com/nf-core/rnaseq/issues/511)] - rsem/star index fails with large genome
+* [[#515](https://github.com/nf-core/rnaseq/issues/515)] - Add decoy-aware indexing for salmon
 * [[#516](https://github.com/nf-core/rnaseq/issues/516)] - Unexpected error [InvocationTargetException]
 
 ## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12

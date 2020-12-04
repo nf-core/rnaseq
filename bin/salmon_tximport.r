@@ -56,6 +56,8 @@ se = SummarizedExperiment(assays = list(counts = txi[["counts"]],
                           rowData = rowdata)
 if (!is.null(tx2gene)){
     gi = summarizeToGene(txi, tx2gene = tx2gene)
+    gi.ls = summarizeToGene(txi, tx2gene = tx2gene,countsFromAbundance="lengthScaledTPM")
+    gi.s = summarizeToGene(txi, tx2gene = tx2gene,countsFromAbundance="scaledTPM")
     growdata = unique(rowdata[,2:3])
     growdata = growdata[match(rownames(gi[[1]]), growdata[["gene_id"]]),]
     rownames(growdata) = growdata[["tx"]]
@@ -64,11 +66,25 @@ if (!is.null(tx2gene)){
                                              length = gi[["length"]]),
                                colData = DataFrame(coldata),
                                rowData = growdata)
+    gse.ls = SummarizedExperiment(assays = list(counts = gi.ls[["counts"]],
+                                             abundance = gi.ls[["abundance"]],
+                                             length = gi.ls[["length"]]),
+                               colData = DataFrame(coldata),
+                               rowData = growdata)
+    gse.s = SummarizedExperiment(assays = list(counts = gi.s[["counts"]],
+                                             abundance = gi.s[["abundance"]],
+                                             length = gi.s[["length"]]),
+                               colData = DataFrame(coldata),
+                               rowData = growdata)
 }
 
 if(exists("gse")){
   write.table(assays(gse)[["abundance"]], paste(c(prefix, "gene_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)
   write.table(assays(gse)[["counts"]], paste(c(prefix, "gene_counts.tsv"), collapse="."), sep="\t", quote=FALSE)
+  write.table(assays(gse.ls)[["abundance"]], paste(c(prefix, "gene_tpm_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
+  write.table(assays(gse.ls)[["counts"]], paste(c(prefix, "gene_counts_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
+  write.table(assays(gse.s)[["abundance"]], paste(c(prefix, "gene_tpm_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
+  write.table(assays(gse.s)[["counts"]], paste(c(prefix, "gene_counts_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
 }
 
 write.table(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)

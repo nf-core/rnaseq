@@ -50,7 +50,7 @@ workflow QUANTIFY_SALMON {
         } else {
             ch_transcript_fasta = GFFREAD ( genome_fasta, GTF_GENE_FILTER ( genome_fasta, gtf ) ).fasta
         }
-        ch_index = SALMON_INDEX ( ch_transcript_fasta ).index
+        ch_index = SALMON_INDEX ( genome_fasta, ch_transcript_fasta ).index
     }
 
     /*

@@ -5,29 +5,6 @@
 params.summary_params = [:]
 
 ////////////////////////////////////////////////////
-/* --         DEFAULT PARAMETER VALUES         -- */
-////////////////////////////////////////////////////
-
-/*
- * Reference genomes
- */
-// Check if genome exists in the config file
-if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-    exit 1, "Genome '${params.genome}' was not found in any config files made available to the pipeline. Currently, the available genomes are ${params.genomes.keySet().join(", ")}"
-}
-
-// Auto-load genome files from genome config
-params.fasta        = params.genomes[ params.genome ]?.fasta
-params.gtf          = params.genomes[ params.genome ]?.gtf
-params.gff          = params.genomes[ params.genome ]?.gff
-params.gene_bed     = params.genomes[ params.genome ]?.bed12
-params.star_index   = params.genomes[ params.genome ]?.star
-params.hisat2_index = params.genomes[ params.genome ]?.hisat2
-params.rsem_index   = params.genomes[ params.genome ]?.rsem
-params.salmon_index = params.genomes[ params.genome ]?.salmon
-anno_readme         = params.genomes[ params.genome ]?.readme
-
-////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
@@ -104,6 +81,7 @@ if (params.gtf) {
 }
 
 // Save AWS IGenomes file containing annotation version
+def anno_readme = params.genomes[ params.genome ]?.readme
 if (anno_readme && file(anno_readme).exists()) {
     file("${params.outdir}/genome/").mkdirs()
     file(anno_readme).copyTo("${params.outdir}/genome/")

@@ -45,6 +45,7 @@ class Checks {
                "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
 
+    // Exit pipeline if incorrect --genome key provided
     static void genome_exists(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
             log.error "=============================================================================\n" +
@@ -56,11 +57,12 @@ class Checks {
         }
     }
 
+    // Get attribute from genome config file e.g. fasta
     static String get_genome_attribute(params, attribute) {
         def val = ''
         if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
             if (params.genomes[ params.genome ].containsKey(attribute)) {
-            val = params.genomes[ params.genome ][ attribute ]
+                val = params.genomes[ params.genome ][ attribute ]
             }
         }
         return val

@@ -45,6 +45,27 @@ class Checks {
                "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
 
+    static void genome_exists(params, log) {
+        if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
+            log.error "=============================================================================\n" +
+                      "  Genome '${params.genome}' was not found in any config files made available to the pipeline.\n" +
+                      "  Currently, the available genomes are:\n" +
+                      "  ${params.genomes.keySet().join(", ")}\n" +
+                      "============================================================================="
+            System.exit(0)
+        }
+    }
+
+    static String get_genome_attribute(params, attribute) {
+        def val = ''
+        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+            if (params.genomes[ params.genome ].containsKey(attribute)) {
+            val = params.genomes[ params.genome ][ attribute ]
+            }
+        }
+        return val
+    }
+
     // Print a warning after SRA download has completed
     static void sra_download(log) {
         log.warn "=============================================================================\n" +
@@ -105,6 +126,7 @@ class Checks {
                   "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
                   "  please use either '--aligner star' or '--aligner hisat2'.\n" +
                   "============================================================================="
+        System.exit(0)
     }
 
     // Function that parses and returns the alignment rate from the STAR log output

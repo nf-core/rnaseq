@@ -30,7 +30,7 @@ if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
 def prepareToolIndices  = []
-def alignerList         = ['star', 'hisat2', 'star_rsem']
+def alignerList         = ['star_salmon', 'star_rsem', 'hisat2']
 def pseudoAlignerList   = ['salmon']
 if (!params.skip_alignment) {
     if (!alignerList.contains(params.aligner)) {
@@ -175,7 +175,7 @@ def salmon_quant_options   = modules['salmon_quant']
 salmon_quant_options.args += params.save_unaligned ? " --writeUnmappedNames" : ''
 
 def samtools_sort_options = modules['samtools_sort']
-if (['star','hisat2'].contains(params.aligner)) {
+if (['star_salmon','hisat2'].contains(params.aligner)) {
     if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
         samtools_sort_options.publish_files.put('bam','')
         samtools_sort_options.publish_files.put('bai','')
@@ -192,8 +192,8 @@ include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'  a
 include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'      addParams( align_options: star_align_options, samtools_options: samtools_sort_options )
 include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'    addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options )
 include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'   addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
-include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
-include { QUANTIFY_SALMON as QUANTIFY_SALMON_STAR } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
+include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
+include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -328,7 +328,7 @@ workflow RNASEQ {
     }
 
     /*
-     * SUBWORKFLOW: Alignment with STAR
+     * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
      */
     ch_genome_bam                 = Channel.empty()
     ch_genome_bai                 = Channel.empty()
@@ -339,7 +339,7 @@ workflow RNASEQ {
     ch_aligner_salmon_multiqc     = Channel.empty()
     ch_aligner_pca_multiqc        = Channel.empty()
     ch_aligner_clustering_multiqc = Channel.empty()
-    if (!params.skip_alignment && params.aligner == 'star') {
+    if (!params.skip_alignment && params.aligner == 'star_salmon') {
         ALIGN_STAR (
             ch_trimmed_reads,
             PREPARE_GENOME.out.star_index,
@@ -357,51 +357,27 @@ workflow RNASEQ {
         /*
          * MODULE: Count reads from BAM alignments using Salmon
          */
-        QUANTIFY_SALMON_STAR (
+        QUANTIFY_STAR_SALMON (
             ALIGN_STAR.out.bam_transcript,
             PREPARE_GENOME.out.salmon_index,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
             true
         )
-        ch_aligner_salmon_multiqc = QUANTIFY_SALMON_STAR.out.results
-        ch_software_versions      = ch_software_versions.mix(QUANTIFY_SALMON_STAR.out.salmon_version.first().ifEmpty(null))
-        ch_software_versions      = ch_software_versions.mix(QUANTIFY_SALMON_STAR.out.tximeta_version.first().ifEmpty(null))
-        ch_software_versions      = ch_software_versions.mix(QUANTIFY_SALMON_STAR.out.summarizedexperiment_version.ifEmpty(null))
+        ch_aligner_salmon_multiqc = QUANTIFY_STAR_SALMON.out.results
+        ch_software_versions      = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
+        ch_software_versions      = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.first().ifEmpty(null))
+        ch_software_versions      = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_SALMON (
-                QUANTIFY_SALMON_STAR.out.merged_counts_gene_length_scaled,
+            DESEQ2_QC_STAR_SALMON (
+                QUANTIFY_STAR_SALMON.out.merged_counts_gene_length_scaled,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
-            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
-            if (params.skip_alignment) {
-                ch_software_versions            = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
-            }
+            ch_aligner_pca_multiqc        = DESEQ2_QC_STAR_SALMON.out.pca_multiqc
+            ch_aligner_clustering_multiqc = DESEQ2_QC_STAR_SALMON.out.dists_multiqc
         }
-
-        // SUBREAD_FEATURECOUNTS ( 
-        //     ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
-        // )
-        // ch_featurecounts_multiqc = SUBREAD_FEATURECOUNTS.out.summary
-        // ch_software_versions     = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
-
-        // FEATURECOUNTS_MERGE_COUNTS (
-        //     SUBREAD_FEATURECOUNTS.out.counts.collect{it[1]}
-        // )
-
-        // if (!params.skip_qc & !params.skip_deseq2_qc) {
-        //     DESEQ2_QC_FEATURECOUNTS (
-        //         FEATURECOUNTS_MERGE_COUNTS.out.counts,
-        //         ch_pca_header_multiqc,
-        //         ch_clustering_header_multiqc
-        //     )
-        //     ch_aligner_pca_multiqc        = DESEQ2_QC_FEATURECOUNTS.out.pca_multiqc
-        //     ch_aligner_clustering_multiqc = DESEQ2_QC_FEATURECOUNTS.out.dists_multiqc
-        //     ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_FEATURECOUNTS.out.version.ifEmpty(null))
-        // }
     }
 
     /*
@@ -546,22 +522,23 @@ workflow RNASEQ {
     //     ch_software_versions = ch_software_versions.mix(STRINGTIE.out.version.first().ifEmpty(null))
     // }
 
-    // /*
-    //  * MODULE: Feature biotype QC using featureCounts
-    //  */
-    // ch_featurecounts_multiqc = Channel.empty()
-    // if (!params.skip_alignment && !params.skip_qc && !skip_biotype_qc) {
+    /*
+     * MODULE: Feature biotype QC using featureCounts
+     */
+    ch_featurecounts_multiqc = Channel.empty()
+    if (!params.skip_alignment && !params.skip_qc && !skip_biotype_qc) {
         
-    //     SUBREAD_FEATURECOUNTS ( 
-    //         ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
-    //     )
+        SUBREAD_FEATURECOUNTS ( 
+            ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
+        )
+        ch_software_versions = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
 
-    //     MULTIQC_CUSTOM_BIOTYPE ( 
-    //         SUBREAD_FEATURECOUNTS.out.counts, 
-    //         ch_biotypes_header_multiqc
-    //     )
-    //     ch_featurecounts_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
-    // }
+        MULTIQC_CUSTOM_BIOTYPE ( 
+            SUBREAD_FEATURECOUNTS.out.counts, 
+            ch_biotypes_header_multiqc
+        )
+        ch_featurecounts_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
+    }
 
     // /*
     //  * MODULE: Coverage tracks

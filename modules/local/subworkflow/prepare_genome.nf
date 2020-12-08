@@ -2,8 +2,12 @@
  * Uncompress and prepare reference genome files
 */
 
-params.gffread_options = [:]
-params.genome_options  = [:]
+params.gffread_options      = [:]
+params.genome_options       = [:]
+params.star_index_options   = [:]
+params.hisat2_index_options = [:]
+params.rsem_index_options   = [:]
+params.salmon_index_options = [:]
 
 include {
     GUNZIP as GUNZIP_FASTA
@@ -11,12 +15,18 @@ include {
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA         } from '../process/gunzip'                   addParams( options: params.genome_options  )
-include { GTF2BED                             } from '../process/gtf2bed'                  addParams( options: params.genome_options  )
-include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta'     addParams( options: params.genome_options  )
-include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'          addParams( options: params.genome_options  )
-include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'                  addParams( options: params.genome_options  )
-include { GFFREAD as GFFREAD_GFF              } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options )
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA         } from '../process/gunzip'                   addParams( options: params.genome_options       )
+include { GTF2BED                             } from '../process/gtf2bed'                  addParams( options: params.genome_options       )
+include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta'     addParams( options: params.genome_options       )
+include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'          addParams( options: params.genome_options       )
+include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'                  addParams( options: params.genome_options       )
+include { GFFREAD as GFFREAD_GFF              } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options      )
+include { UNTAR as UNTAR_STAR_INDEX           } from '../process/untar'                    addParams( options: params.star_index_options   )
+include { UNTAR as UNTAR_HISAT2_INDEX         } from '../process/untar'                    addParams( options: params.hisat2_index_options )
+include { UNTAR as UNTAR_RSEM_INDEX           } from '../process/untar'                    addParams( options: params.rsem_index_options   )
+include { UNTAR as UNTAR_SALMON_INDEX         } from '../process/untar'                    addParams( options: params.salmon_index_options )
+
+include { STAR_GENOMEGENERATE                 } from '../../nf-core/software/star/genomegenerate/main' addParams( options: params.star_index_options )
 
 workflow PREPARE_GENOME {
     take:
@@ -26,7 +36,11 @@ workflow PREPARE_GENOME {
     gene_bed         // file: /path/to/gene.bed
     transcript_fasta // file: /path/to/transcript.fasta
     additional_fasta // file: /path/to/additional.fasta
-    
+    star_index       // file: /path/to/star/index
+    hisat2_index     // file: /path/to/hisat2/index
+    rsem_index       // file: /path/to/rsem/index
+    salmon_index     // file: /path/to/salmon/index
+
     main:
     /*
      * Uncompress genome fasta file if required
@@ -96,11 +110,29 @@ workflow PREPARE_GENOME {
     } else {
         ch_transcript_fasta = GFFREAD_TRANSCRIPT_FASTA ( ch_fasta, GTF_GENE_FILTER ( ch_fasta, ch_gtf ) ).fasta
     }
+
+    /*
+     * Uncompress STAR index or generate from scratch if required
+     */
+    if (index) {
+        if (index.endsWith('.tar.gz')) {
+            ch_index = UNTAR ( index ).untar
+        } else {
+            ch_index = file(index)
+        }
+    } else {
+        ch_index = STAR_GENOMEGENERATE ( fasta, gtf ).index
+    }
+
     
     emit:
     fasta            = ch_fasta            // path: genome.fasta
     gtf              = ch_gtf              // path: genome.gtf
     gene_bed         = ch_gene_bed         // path: gene.bed
     transcript_fasta = ch_transcript_fasta // path: transcript.fasta
+
+
+
+
     gffread_version                        // path: *.version.txt
 }

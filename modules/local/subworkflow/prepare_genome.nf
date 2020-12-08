@@ -2,8 +2,9 @@
  * Uncompress and prepare reference genome files
 */
 
-params.gffread_options      = [:]
 params.genome_options       = [:]
+params.index_options        = [:]
+params.gffread_options      = [:]
 params.star_index_options   = [:]
 params.hisat2_index_options = [:]
 params.rsem_index_options   = [:]
@@ -15,15 +16,15 @@ include {
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA         } from '../process/gunzip'                   addParams( options: params.genome_options       )
-include { GTF2BED                             } from '../process/gtf2bed'                  addParams( options: params.genome_options       )
-include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta'     addParams( options: params.genome_options       )
-include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'          addParams( options: params.genome_options       )
-include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'                  addParams( options: params.genome_options       )
-include { UNTAR as UNTAR_STAR_INDEX           } from '../process/untar'                    addParams( options: params.star_index_options   )
-include { UNTAR as UNTAR_HISAT2_INDEX         } from '../process/untar'                    addParams( options: params.hisat2_index_options )
-include { UNTAR as UNTAR_RSEM_INDEX           } from '../process/untar'                    addParams( options: params.rsem_index_options   )
-include { UNTAR as UNTAR_SALMON_INDEX         } from '../process/untar'                    addParams( options: params.salmon_index_options )
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA         } from '../process/gunzip'               addParams( options: params.genome_options       )
+include { GTF2BED                             } from '../process/gtf2bed'              addParams( options: params.genome_options       )
+include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta' addParams( options: params.genome_options       )
+include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'      addParams( options: params.genome_options       )
+include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'              addParams( options: params.genome_options       )
+include { UNTAR as UNTAR_STAR_INDEX           } from '../process/untar'                addParams( options: params.star_index_options   )
+include { UNTAR as UNTAR_HISAT2_INDEX         } from '../process/untar'                addParams( options: params.hisat2_index_options )
+include { UNTAR as UNTAR_RSEM_INDEX           } from '../process/untar'                addParams( options: params.index_options        )
+include { UNTAR as UNTAR_SALMON_INDEX         } from '../process/untar'                addParams( options: params.index_options        )
 
 include { GFFREAD as GFFREAD_GFF    } from '../../nf-core/software/gffread/main'                   addParams( options: params.gffread_options      )
 include { STAR_GENOMEGENERATE       } from '../../nf-core/software/star/genomegenerate/main'       addParams( options: params.star_index_options   )
@@ -166,10 +167,6 @@ workflow PREPARE_GENOME {
         ch_rsem_index   = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
         ch_rsem_version = RSEM_PREPAREREFERENCE.out.version
     }
-    // params.index_options               = [:]
-    // params.preparereference_options    = [:]
-    // include { UNTAR                    } from '../process/untar'                                     addParams( options: params.index_options               )
-    // include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'    addParams( options: params.preparereference_options    )
 
     /*
      * Uncompress Salmon index or generate from scratch if required
@@ -185,10 +182,6 @@ workflow PREPARE_GENOME {
         ch_salmon_index   = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
         ch_salmon_version = SALMON_INDEX.out.version
     }
-    // params.index_options        = [:]
-    // params.salmon_index_options = [:]
-    // include { UNTAR               } from '../process/untar'                         addParams( options: params.index_options        )    
-    // include { SALMON_INDEX        } from '../../nf-core/software/salmon/index/main' addParams( options: params.salmon_index_options )
 
     emit:
     fasta            = ch_fasta            // path: genome.fasta

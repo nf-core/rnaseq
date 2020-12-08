@@ -21,12 +21,15 @@ include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_
 include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'          addParams( options: params.genome_options       )
 include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'                  addParams( options: params.genome_options       )
 include { GFFREAD as GFFREAD_GFF              } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options      )
+
 include { UNTAR as UNTAR_STAR_INDEX           } from '../process/untar'                    addParams( options: params.star_index_options   )
 include { UNTAR as UNTAR_HISAT2_INDEX         } from '../process/untar'                    addParams( options: params.hisat2_index_options )
 include { UNTAR as UNTAR_RSEM_INDEX           } from '../process/untar'                    addParams( options: params.rsem_index_options   )
 include { UNTAR as UNTAR_SALMON_INDEX         } from '../process/untar'                    addParams( options: params.salmon_index_options )
 
-include { STAR_GENOMEGENERATE                 } from '../../nf-core/software/star/genomegenerate/main' addParams( options: params.star_index_options )
+include { STAR_GENOMEGENERATE       } from '../../nf-core/software/star/genomegenerate/main'       addParams( options: params.star_index_options )
+include { HISAT2_EXTRACTSPLICESITES } from '../../nf-core/software/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options )
+include { HISAT2_BUILD              } from '../../nf-core/software/hisat2/build/main'              addParams( options: params.hisat2_index_options )
 
 workflow PREPARE_GENOME {
     take:
@@ -36,6 +39,7 @@ workflow PREPARE_GENOME {
     gene_bed         // file: /path/to/gene.bed
     transcript_fasta // file: /path/to/transcript.fasta
     additional_fasta // file: /path/to/additional.fasta
+    splicesites      // file: /path/to/genome.splicesites.txt
     star_index       // file: /path/to/star/index
     hisat2_index     // file: /path/to/hisat2/index
     rsem_index       // file: /path/to/rsem/index
@@ -114,25 +118,43 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress STAR index or generate from scratch if required
      */
-    if (index) {
-        if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index ).untar
+    if (star_index) {
+        if (star_index.endsWith('.tar.gz')) {
+            ch_star_index = UNTAR_STAR_INDEX ( star_index ).untar
         } else {
-            ch_index = file(index)
+            ch_star_index = file(star_index)
         }
     } else {
-        ch_index = STAR_GENOMEGENERATE ( fasta, gtf ).index
+        ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
     }
 
-    
+    /*
+     * Uncompress HISAT2 index or generate from scratch if required
+     */
+    if (!splicesites) {
+        ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
+    } else {
+        ch_splicesites = file(splicesites)
+    }
+    if (hisat2_index) {
+        if (hisat2_index.endsWith('.tar.gz')) {
+            ch_hisat2_index = UNTAR_HISAT2_INDEX ( hisat2_index ).untar
+        } else {
+            ch_hisat2_index = file(hisat2_index)
+        }
+    } else {
+        ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
+    }
+
     emit:
     fasta            = ch_fasta            // path: genome.fasta
     gtf              = ch_gtf              // path: genome.gtf
     gene_bed         = ch_gene_bed         // path: gene.bed
     transcript_fasta = ch_transcript_fasta // path: transcript.fasta
-
-
-
-
+    splicesites      = ch_splicesites      // path: genome.splicesites.txt
+    star_index       = ch_star_index       // path: star/index/
+    hisat2_index     = ch_hisat2_index     // path: hisat2/index/
+    // rsem_index       = ch_rsem_index       // path: rsem/index/
+    // salmon_index     = ch_salmon_index     // path: salmon/index/
     gffread_version                        // path: *.version.txt
 }

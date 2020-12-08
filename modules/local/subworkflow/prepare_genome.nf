@@ -35,17 +35,18 @@ include { SALMON_INDEX              } from '../../nf-core/software/salmon/index/
 
 workflow PREPARE_GENOME {
     take:
-    fasta            // file: /path/to/genome.fasta
-    gtf              // file: /path/to/genome.gtf
-    gff              // file: /path/to/genome.gff
-    gene_bed         // file: /path/to/gene.bed
-    transcript_fasta // file: /path/to/transcript.fasta
-    additional_fasta // file: /path/to/additional.fasta
-    splicesites      // file: /path/to/genome.splicesites.txt
-    star_index       // file: /path/to/star/index
-    hisat2_index     // file: /path/to/hisat2/index
-    rsem_index       // file: /path/to/rsem/index
-    salmon_index     // file: /path/to/salmon/index
+    fasta                // file: /path/to/genome.fasta
+    gtf                  // file: /path/to/genome.gtf
+    gff                  // file: /path/to/genome.gff
+    gene_bed             // file: /path/to/gene.bed
+    transcript_fasta     // file: /path/to/transcript.fasta
+    additional_fasta     // file: /path/to/additional.fasta
+    splicesites          // file: /path/to/genome.splicesites.txt
+    star_index           // file: /path/to/star/index
+    hisat2_index         // file: /path/to/hisat2/index
+    rsem_index           // file: /path/to/rsem/index
+    salmon_index         // file: /path/to/salmon/index
+    prepare_tool_indices // list: tools to prepare indices for
 
     main:
     /*
@@ -120,67 +121,80 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress STAR index or generate from scratch if required
      */
+    ch_star_index   = Channel.empty()
     ch_star_version = Channel.empty()
-    if (star_index) {
-        if (star_index.endsWith('.tar.gz')) {
-            ch_star_index = UNTAR_STAR_INDEX ( star_index ).untar
+    if ('star' in prepare_tool_indices) {
+        if (star_index) {
+            if (star_index.endsWith('.tar.gz')) {
+                ch_star_index = UNTAR_STAR_INDEX ( star_index ).untar
+            } else {
+                ch_star_index = file(star_index)
+            }
         } else {
-            ch_star_index = file(star_index)
+            ch_star_index   = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+            ch_star_version = STAR_GENOMEGENERATE.out.version
         }
-    } else {
-        ch_star_index   = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
-        ch_star_version = STAR_GENOMEGENERATE.out.version
     }
     
     /*
      * Uncompress HISAT2 index or generate from scratch if required
      */
+    ch_splicesites    = Channel.empty()
+    ch_hisat2_index   = Channel.empty()
     ch_hisat2_version = Channel.empty()
-    if (!splicesites) {
-        ch_splicesites    = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
-        ch_hisat2_version = HISAT2_EXTRACTSPLICESITES.out.version
-    } else {
-        ch_splicesites = file(splicesites)
-    }
-    if (hisat2_index) {
-        if (hisat2_index.endsWith('.tar.gz')) {
-            ch_hisat2_index = UNTAR_HISAT2_INDEX ( hisat2_index ).untar
+    if ('hisat2' in prepare_tool_indices) {
+        if (!splicesites) {
+            ch_splicesites    = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
+            ch_hisat2_version = HISAT2_EXTRACTSPLICESITES.out.version
         } else {
-            ch_hisat2_index = file(hisat2_index)
+            ch_splicesites = file(splicesites)
         }
-    } else {
-        ch_hisat2_index   = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
-        ch_hisat2_version = HISAT2_BUILD.out.version
+        if (hisat2_index) {
+            if (hisat2_index.endsWith('.tar.gz')) {
+                ch_hisat2_index = UNTAR_HISAT2_INDEX ( hisat2_index ).untar
+            } else {
+                ch_hisat2_index = file(hisat2_index)
+            }
+        } else {
+            ch_hisat2_index   = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
+            ch_hisat2_version = HISAT2_BUILD.out.version
+        }
     }
 
     /*
      * Uncompress RSEM index or generate from scratch if required
      */
+    ch_rsem_index   = Channel.empty()
     ch_rsem_version = Channel.empty()
-    if (rsem_index) {
-        if (rsem_index.endsWith('.tar.gz')) {
-            ch_rsem_index = UNTAR_RSEM_INDEX ( rsem_index ).untar
+    if ('star_rsem' in prepare_tool_indices) {
+        if (rsem_index) {
+            if (rsem_index.endsWith('.tar.gz')) {
+                ch_rsem_index = UNTAR_RSEM_INDEX ( rsem_index ).untar
+            } else {
+                ch_rsem_index = file(rsem_index)
+            }
         } else {
-            ch_rsem_index = file(rsem_index)
+            ch_rsem_index   = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
+            ch_rsem_version = RSEM_PREPAREREFERENCE.out.version
         }
-    } else {
-        ch_rsem_index   = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
-        ch_rsem_version = RSEM_PREPAREREFERENCE.out.version
     }
 
     /*
      * Uncompress Salmon index or generate from scratch if required
      */  
+    ch_salmon_index   = Channel.empty()
     ch_salmon_version = Channel.empty()  
-    if (salmon_index) {
-        if (salmon_index.endsWith('.tar.gz')) {
-            ch_salmon_index = UNTAR_SALMON_INDEX ( salmon_index ).untar
-        } else {
-            ch_salmon_index = file(salmon_index)
+    if ('salmon' in prepare_tool_indices) {
+        if (salmon_index) {
+            if (salmon_index.endsWith('.tar.gz')) {
+                ch_salmon_index = UNTAR_SALMON_INDEX ( salmon_index ).untar
+            } else {
+                ch_salmon_index = file(salmon_index)
+            }
+        } else {        
+            ch_salmon_index   = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
+            ch_salmon_version = SALMON_INDEX.out.version
         }
-    } else {        
-        ch_salmon_index   = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
-        ch_salmon_version = SALMON_INDEX.out.version
     }
 
     emit:

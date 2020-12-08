@@ -30,6 +30,7 @@ include { STAR_GENOMEGENERATE       } from '../../nf-core/software/star/genomege
 include { HISAT2_EXTRACTSPLICESITES } from '../../nf-core/software/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options )
 include { HISAT2_BUILD              } from '../../nf-core/software/hisat2/build/main'              addParams( options: params.hisat2_index_options )
 include { RSEM_PREPAREREFERENCE     } from '../../nf-core/software/rsem/preparereference/main'     addParams( options: params.rsem_index_options   )
+include { SALMON_INDEX              } from '../../nf-core/software/salmon/index/main'              addParams( options: params.salmon_index_options )
 
 workflow PREPARE_GENOME {
     take:
@@ -170,7 +171,24 @@ workflow PREPARE_GENOME {
     // include { UNTAR                    } from '../process/untar'                                     addParams( options: params.index_options               )
     // include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'    addParams( options: params.preparereference_options    )
 
-
+    /*
+     * Uncompress Salmon index or generate from scratch if required
+     */  
+    ch_salmon_version = Channel.empty()  
+    if (salmon_index) {
+        if (salmon_index.endsWith('.tar.gz')) {
+            ch_salmon_index = UNTAR_SALMON_INDEX ( salmon_index ).untar
+        } else {
+            ch_salmon_index = file(salmon_index)
+        }
+    } else {        
+        ch_salmon_index   = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
+        ch_salmon_version = SALMON_INDEX.out.version
+    }
+    // params.index_options        = [:]
+    // params.salmon_index_options = [:]
+    // include { UNTAR               } from '../process/untar'                         addParams( options: params.index_options        )    
+    // include { SALMON_INDEX        } from '../../nf-core/software/salmon/index/main' addParams( options: params.salmon_index_options )
 
     emit:
     fasta            = ch_fasta            // path: genome.fasta

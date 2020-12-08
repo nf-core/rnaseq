@@ -126,7 +126,7 @@ class Checks {
                   "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
                   "  not possible to remove UMIs before the quantification.\n\n" +
                   "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
-                  "  please use either '--aligner star' or '--aligner hisat2'.\n" +
+                  "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
                   "============================================================================="
         System.exit(0)
     }

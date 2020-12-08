@@ -34,8 +34,8 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
-  star:
-    name: Test STAR with workflow parameters
+  star_salmon:
+    name: Test STAR Salmon with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:

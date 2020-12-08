@@ -118,6 +118,7 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress STAR index or generate from scratch if required
      */
+    ch_star_version = Channel.empty()
     if (star_index) {
         if (star_index.endsWith('.tar.gz')) {
             ch_star_index = UNTAR_STAR_INDEX ( star_index ).untar
@@ -125,14 +126,17 @@ workflow PREPARE_GENOME {
             ch_star_index = file(star_index)
         }
     } else {
-        ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+        ch_star_index   = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+        ch_star_version = STAR_GENOMEGENERATE.out.version
     }
 
     /*
      * Uncompress HISAT2 index or generate from scratch if required
      */
+    ch_hisat2_version = Channel.empty()
     if (!splicesites) {
-        ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
+        ch_splicesites    = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
+        ch_hisat2_version = HISAT2_EXTRACTSPLICESITES.out.version
     } else {
         ch_splicesites = file(splicesites)
     }
@@ -143,7 +147,8 @@ workflow PREPARE_GENOME {
             ch_hisat2_index = file(hisat2_index)
         }
     } else {
-        ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
+        ch_hisat2_index   = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
+        ch_hisat2_version = HISAT2_BUILD.out.version
     }
 
     emit:
@@ -154,7 +159,11 @@ workflow PREPARE_GENOME {
     splicesites      = ch_splicesites      // path: genome.splicesites.txt
     star_index       = ch_star_index       // path: star/index/
     hisat2_index     = ch_hisat2_index     // path: hisat2/index/
-    // rsem_index       = ch_rsem_index       // path: rsem/index/
-    // salmon_index     = ch_salmon_index     // path: salmon/index/
+    rsem_index       = ch_rsem_index       // path: rsem/index/
+    salmon_index     = ch_salmon_index     // path: salmon/index/
+    star_version     = ch_star_version     // path: *.version.txt
+    hisat2_version   = ch_hisat2_version   // path: *.version.txt
+    rsem_version     = ch_rsem_version     // path: *.version.txt
+    salmon_version   = ch_salmon_version   // path: *.version.txt
     gffread_version                        // path: *.version.txt
 }

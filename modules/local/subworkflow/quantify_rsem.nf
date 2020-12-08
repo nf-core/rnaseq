@@ -19,7 +19,7 @@ workflow QUANTIFY_RSEM {
     /*
      * Quantify reads with RSEM
      */
-    RSEM_CALCULATEEXPRESSION ( reads, ch_index )
+    RSEM_CALCULATEEXPRESSION ( reads, index )
 
     /*
      * Sort, index BAM file and run samtools stats, flagstat and idxstats

@@ -14,8 +14,6 @@ workflow QUANTIFY_RSEM {
     take:
     reads // channel: [ val(meta), [ reads ] ]
     index // channel: /path/to/rsem/index/
-    // fasta //    file: /path/to/genome.fasta
-    // gtf   //    file: /path/to/genome.gtf
 
     main:
     /*

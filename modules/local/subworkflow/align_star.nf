@@ -2,40 +2,23 @@
  * Alignment with STAR
  */
 
-params.index_options    = [:]
 params.align_options    = [:]
 params.samtools_options = [:]
 
-include { UNTAR               } from '../process/untar'                                addParams( options: params.index_options    )
-include { STAR_GENOMEGENERATE } from '../../nf-core/software/star/genomegenerate/main' addParams( options: params.index_options    )
 include { STAR_ALIGN          } from '../../nf-core/software/star/align/main'          addParams( options: params.align_options    )
 include { BAM_SORT_SAMTOOLS   } from '../../nf-core/subworkflow/bam_sort_samtools'     addParams( options: params.samtools_options )
 
 workflow ALIGN_STAR {
     take:
     reads // channel: [ val(meta), [ reads ] ]
-    index //    file: /path/to/star/index/
-    fasta //    file: /path/to/genome.fasta
-    gtf   //    file: /path/to/genome.gtf
+    index // channel: /path/to/star/index/
+    gtf   // channel: /path/to/genome.gtf
     
     main:
     /*
-     * Uncompress STAR index or generate from scratch if required
-    */
-    if (index) {
-        if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index ).untar
-        } else {
-            ch_index = file(index)
-        }
-    } else {
-        ch_index = STAR_GENOMEGENERATE ( fasta, gtf ).index
-    }
-
-    /*
      * Map reads with STAR
      */
-    STAR_ALIGN ( reads, ch_index, gtf )
+    STAR_ALIGN ( reads, index, gtf )
 
     /*
      * Sort, index BAM file and run samtools stats, flagstat and idxstats

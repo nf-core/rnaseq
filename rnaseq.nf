@@ -288,102 +288,104 @@ workflow RNASEQ {
     .map { it ->  [ it[0], it[1].flatten() ] }
     .set { ch_cat_fastq }
 
-    // /*
-    //  * MODULE: Concatenate FastQ files from same sample if required
-    //  */
-    // CAT_FASTQ ( 
-    //     ch_cat_fastq
-    // )
+    /*
+     * MODULE: Concatenate FastQ files from same sample if required
+     */
+    CAT_FASTQ ( 
+        ch_cat_fastq
+    )
 
-    // /*
-    //  * SUBWORKFLOW: Read QC, extract UMI and trim adapters
-    //  */
-    // FASTQC_UMITOOLS_TRIMGALORE (
-    //     CAT_FASTQ.out.reads,
-    //     params.skip_fastqc || params.skip_qc,
-    //     params.with_umi,
-    //     params.skip_trimming
-    // )
-    // ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    // ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
-    // ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+    /*
+     * SUBWORKFLOW: Read QC, extract UMI and trim adapters
+     */
+    FASTQC_UMITOOLS_TRIMGALORE (
+        CAT_FASTQ.out.reads,
+        params.skip_fastqc || params.skip_qc,
+        params.with_umi,
+        params.skip_trimming
+    )
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 
-    // /*
-    //  * MODULE: Remove ribosomal RNA reads
-    //  */
-    // ch_trimmed_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
-    // ch_sortmerna_multiqc = Channel.empty()
-    // if (params.remove_ribo_rna) {
-    //     ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
+    /*
+     * MODULE: Remove ribosomal RNA reads
+     */
+    ch_trimmed_reads     = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    ch_sortmerna_multiqc = Channel.empty()
+    if (params.remove_ribo_rna) {
+        ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
 
-    //     SORTMERNA ( 
-    //         ch_trimmed_reads, 
-    //         ch_sortmerna_fasta
-    //     )
-    //     .reads
-    //     .set { ch_trimmed_reads }
+        SORTMERNA ( 
+            ch_trimmed_reads, 
+            ch_sortmerna_fasta
+        )
+        .reads
+        .set { ch_trimmed_reads }
 
-    //     ch_sortmerna_multiqc = SORTMERNA.out.log
-    //     ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
-    // }
+        ch_sortmerna_multiqc = SORTMERNA.out.log
+        ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
+    }
 
-    // /*
-    //  * SUBWORKFLOW: Alignment with STAR
-    //  */
-    // ch_genome_bam        = Channel.empty()
-    // ch_genome_bai        = Channel.empty()
-    // ch_samtools_stats    = Channel.empty()
-    // ch_samtools_flagstat = Channel.empty()
-    // ch_samtools_idxstats = Channel.empty()
-    // ch_star_multiqc      = Channel.empty()
-    // if (!params.skip_alignment && params.aligner == 'star') {
-    //     ALIGN_STAR (
-    //         ch_trimmed_reads,
-    //         PREPARE_GENOME.out.star_index,
-    //         PREPARE_GENOME.out.gtf
-    //     )
-    //     ch_genome_bam        = ALIGN_STAR.out.bam
-    //     ch_genome_bai        = ALIGN_STAR.out.bai
-    //     ch_samtools_stats    = ALIGN_STAR.out.stats
-    //     ch_samtools_flagstat = ALIGN_STAR.out.flagstat
-    //     ch_samtools_idxstats = ALIGN_STAR.out.idxstats
-    //     ch_star_multiqc      = ALIGN_STAR.out.log_final
-    //     ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
-    //     ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
-    // }
+    /*
+     * SUBWORKFLOW: Alignment with STAR
+     */
+    ch_genome_bam        = Channel.empty()
+    ch_genome_bai        = Channel.empty()
+    ch_transcript_bam    = Channel.empty()
+    ch_samtools_stats    = Channel.empty()
+    ch_samtools_flagstat = Channel.empty()
+    ch_samtools_idxstats = Channel.empty()
+    ch_star_multiqc      = Channel.empty()
+    if (!params.skip_alignment && params.aligner == 'star') {
+        ALIGN_STAR (
+            ch_trimmed_reads,
+            PREPARE_GENOME.out.star_index,
+            PREPARE_GENOME.out.gtf
+        )
+        ch_genome_bam        = ALIGN_STAR.out.bam
+        ch_genome_bai        = ALIGN_STAR.out.bai
+        ch_transcript_bam    = ALIGN_STAR.out.bam_transcript
+        ch_samtools_stats    = ALIGN_STAR.out.stats
+        ch_samtools_flagstat = ALIGN_STAR.out.flagstat
+        ch_samtools_idxstats = ALIGN_STAR.out.idxstats
+        ch_star_multiqc      = ALIGN_STAR.out.log_final
+        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
+    }
+    
+    /*
+     * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
+     */
+    ch_rsem_multiqc               = Channel.empty()
+    ch_aligner_pca_multiqc        = Channel.empty()
+    ch_aligner_clustering_multiqc = Channel.empty()
+    if (!params.skip_alignment && params.aligner == 'star_rsem') {
+        QUANTIFY_RSEM (
+            ch_trimmed_reads,
+            PREPARE_GENOME.out.rsem_index
+        )
+        ch_genome_bam        = QUANTIFY_RSEM.out.bam
+        ch_genome_bai        = QUANTIFY_RSEM.out.bai
+        ch_samtools_stats    = QUANTIFY_RSEM.out.stats
+        ch_samtools_flagstat = QUANTIFY_RSEM.out.flagstat
+        ch_samtools_idxstats = QUANTIFY_RSEM.out.idxstats
+        ch_star_multiqc      = QUANTIFY_RSEM.out.logs
+        ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
 
-    // /*
-    //  * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
-    //  */
-    // ch_rsem_multiqc               = Channel.empty()
-    // ch_aligner_pca_multiqc        = Channel.empty()
-    // ch_aligner_clustering_multiqc = Channel.empty()
-    // if (!params.skip_alignment && params.aligner == 'star_rsem') {
-    //     QUANTIFY_RSEM (
-    //         ch_trimmed_reads,
-    //         PREPARE_GENOME.out.rsem_index
-    //     )
-    //     ch_genome_bam        = QUANTIFY_RSEM.out.bam
-    //     ch_genome_bai        = QUANTIFY_RSEM.out.bai
-    //     ch_samtools_stats    = QUANTIFY_RSEM.out.stats
-    //     ch_samtools_flagstat = QUANTIFY_RSEM.out.flagstat
-    //     ch_samtools_idxstats = QUANTIFY_RSEM.out.idxstats
-    //     ch_star_multiqc      = QUANTIFY_RSEM.out.logs
-    //     ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
-    //     ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
-    //     ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
-
-    //     if (!params.skip_qc & !params.skip_deseq2_qc) {
-    //         DESEQ2_QC_RSEM (
-    //             QUANTIFY_RSEM.out.merged_counts_gene,
-    //             ch_pca_header_multiqc,
-    //             ch_clustering_header_multiqc
-    //         )
-    //         ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
-    //         ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
-    //         ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))
-    //     }
-    // }
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_RSEM (
+                QUANTIFY_RSEM.out.merged_counts_gene,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
+            ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
+            ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))
+        }
+    }
 
     // /*
     //  * SUBWORKFLOW: Alignment with HISAT2

@@ -29,12 +29,14 @@ ch_ribo_db = file(params.ribo_database_manifest)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
-def alignerList       = ['star', 'hisat2', 'star_rsem']
-def pseudoAlignerList = ['salmon']
+def prepareToolIndices  = []
+def alignerList         = ['star', 'hisat2', 'star_rsem']
+def pseudoAlignerList   = ['salmon']
 if (!params.skip_alignment) {
     if (!alignerList.contains(params.aligner)) {
         exit 1, "Invalid aligner option: ${params.aligner}. Valid options: ${alignerList.join(', ')}"
     }
+    prepareToolIndices << params.aligner
 } else {
     if (!params.pseudo_aligner) {
         exit 1, "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${pseudoAlignerList[0]}"
@@ -48,6 +50,7 @@ if (params.pseudo_aligner) {
         if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
             exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
         }
+        prepareToolIndices << params.pseudo_aligner
     }
 }
 
@@ -186,17 +189,11 @@ if (['star','hisat2'].contains(params.aligner)) {
 }
         
 include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'     addParams( options: [:] )
-
-include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'  addParams( 
-           gffread_options: gffread_options, genome_options: publish_genome_options, 
-           star_index_options: star_genomegenerate_options, hisat2_index_options: hisat2_build_options, 
-           rsem_index_options: publish_index_options, salmon_index_options: publish_index_options )
-// index_options: publish_index_options, preparereference_options: rsem_preparereference_options, 
-// index_options: publish_index_options, genome_options: publish_genome_options, salmon_index_options: salmon_index_options, 
+include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'  addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: publish_index_options, salmon_index_options: publish_index_options )
 include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'      addParams( align_options: star_align_options, samtools_options: samtools_sort_options )
 include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'    addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options )
-// include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'   addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
-// include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon' addParams( salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
+include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'   addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { QUANTIFY_SALMON } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -271,24 +268,25 @@ workflow RNASEQ {
         params.star_index,
         params.hisat2_index,
         params.rsem_index,
-        params.salmon_index
+        params.salmon_index,
+        prepareToolIndices
     )
     ch_software_versions = Channel.empty()
     ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.gffread_version.ifEmpty(null))
 
-    // /*
-    //  * SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //  */
-    // INPUT_CHECK ( 
-    //     ch_input
-    // )
-    // .map {
-    //     meta, fastq ->
-    //         meta.id = meta.id.split('_')[0..-2].join('_')
-    //         [ meta, fastq ] }
-    // .groupTuple(by: [0])
-    // .map { it ->  [ it[0], it[1].flatten() ] }
-    // .set { ch_cat_fastq }
+    /*
+     * SUBWORKFLOW: Read in samplesheet, validate and stage input files
+     */
+    INPUT_CHECK ( 
+        ch_input
+    )
+    .map {
+        meta, fastq ->
+            meta.id = meta.id.split('_')[0..-2].join('_')
+            [ meta, fastq ] }
+    .groupTuple(by: [0])
+    .map { it ->  [ it[0], it[1].flatten() ] }
+    .set { ch_cat_fastq }
 
     // /*
     //  * MODULE: Concatenate FastQ files from same sample if required
@@ -632,9 +630,8 @@ workflow RNASEQ {
     //     PREPARE_GENOME.out.transcript_fasta.view()
     //     QUANTIFY_SALMON (
     //         ch_trimmed_reads,
-    //         params.salmon_index,
+    //         PREPARE_GENOME.out.salmon_index,
     //         PREPARE_GENOME.out.transcript_fasta,
-    //         PREPARE_GENOME.out.fasta,
     //         PREPARE_GENOME.out.gtf,
     //         false
     //     )

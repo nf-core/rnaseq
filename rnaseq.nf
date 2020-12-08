@@ -187,11 +187,11 @@ if (['star_salmon','hisat2'].contains(params.aligner)) {
     }
 }
         
-include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'     addParams( options: [:] )
-include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome'  addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: publish_index_options, salmon_index_options: publish_index_options )
-include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'      addParams( align_options: star_align_options, samtools_options: samtools_sort_options )
-include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'    addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options )
-include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'   addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'    addParams( options: [:] )
+include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: publish_index_options, salmon_index_options: publish_index_options )
+include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'     addParams( align_options: star_align_options, samtools_options: samtools_sort_options )
+include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'   addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options )
+include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from './modules/local/subworkflow/quantify_salmon' addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
@@ -215,8 +215,8 @@ if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi
 }
 
 def subread_featurecounts_options  = modules['subread_featurecounts']
-def biotype                        = params.gencode ? "gene_type" : params.fc_group_features_type
-subread_featurecounts_options.args += " -g $biotype -t $params.fc_count_type"
+def biotype                        = params.gencode ? "gene_type" : params.gtf_group_features_type
+subread_featurecounts_options.args += " -g $biotype -t $params.gtf_count_type"
 
 include { UCSC_BEDRAPHTOBIGWIG  } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
 include { PRESEQ_LCEXTRAP       } from './modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )

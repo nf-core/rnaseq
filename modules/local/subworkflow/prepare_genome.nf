@@ -20,16 +20,16 @@ include { GTF2BED                             } from '../process/gtf2bed'       
 include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta'     addParams( options: params.genome_options       )
 include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'          addParams( options: params.genome_options       )
 include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'                  addParams( options: params.genome_options       )
-include { GFFREAD as GFFREAD_GFF              } from '../../nf-core/software/gffread/main' addParams( options: params.gffread_options      )
-
 include { UNTAR as UNTAR_STAR_INDEX           } from '../process/untar'                    addParams( options: params.star_index_options   )
 include { UNTAR as UNTAR_HISAT2_INDEX         } from '../process/untar'                    addParams( options: params.hisat2_index_options )
 include { UNTAR as UNTAR_RSEM_INDEX           } from '../process/untar'                    addParams( options: params.rsem_index_options   )
 include { UNTAR as UNTAR_SALMON_INDEX         } from '../process/untar'                    addParams( options: params.salmon_index_options )
 
-include { STAR_GENOMEGENERATE       } from '../../nf-core/software/star/genomegenerate/main'       addParams( options: params.star_index_options )
+include { GFFREAD as GFFREAD_GFF    } from '../../nf-core/software/gffread/main'                   addParams( options: params.gffread_options      )
+include { STAR_GENOMEGENERATE       } from '../../nf-core/software/star/genomegenerate/main'       addParams( options: params.star_index_options   )
 include { HISAT2_EXTRACTSPLICESITES } from '../../nf-core/software/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options )
 include { HISAT2_BUILD              } from '../../nf-core/software/hisat2/build/main'              addParams( options: params.hisat2_index_options )
+include { RSEM_PREPAREREFERENCE     } from '../../nf-core/software/rsem/preparereference/main'     addParams( options: params.rsem_index_options   )
 
 workflow PREPARE_GENOME {
     take:
@@ -129,7 +129,7 @@ workflow PREPARE_GENOME {
         ch_star_index   = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
         ch_star_version = STAR_GENOMEGENERATE.out.version
     }
-
+    
     /*
      * Uncompress HISAT2 index or generate from scratch if required
      */
@@ -150,6 +150,27 @@ workflow PREPARE_GENOME {
         ch_hisat2_index   = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
         ch_hisat2_version = HISAT2_BUILD.out.version
     }
+
+    /*
+     * Uncompress RSEM index or generate from scratch if required
+     */
+    ch_rsem_version = Channel.empty()
+    if (rsem_index) {
+        if (rsem_index.endsWith('.tar.gz')) {
+            ch_rsem_index = UNTAR_RSEM_INDEX ( rsem_index ).untar
+        } else {
+            ch_rsem_index = file(rsem_index)
+        }
+    } else {
+        ch_rsem_index   = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
+        ch_rsem_version = RSEM_PREPAREREFERENCE.out.version
+    }
+    // params.index_options               = [:]
+    // params.preparereference_options    = [:]
+    // include { UNTAR                    } from '../process/untar'                                     addParams( options: params.index_options               )
+    // include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'    addParams( options: params.preparereference_options    )
+
+
 
     emit:
     fasta            = ch_fasta            // path: genome.fasta

@@ -547,11 +547,11 @@ workflow RNASEQ {
         )
         ch_software_versions = ch_software_versions.mix(BEDTOOLS_GENOMECOV.out.version.first().ifEmpty(null))
         
-        UCSC_BEDRAPHTOBIGWIG (
+        UCSC_BEDGRAPHTOBIGWIG (
             BEDTOOLS_GENOMECOV.out.bedgraph,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_software_versions = ch_software_versions.mix(UCSC_BEDRAPHTOBIGWIG.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.version.first().ifEmpty(null))
     }
 
     /*

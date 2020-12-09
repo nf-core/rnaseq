@@ -21,6 +21,7 @@ include { GTF2BED                             } from '../process/gtf2bed'       
 include { CAT_ADDITIONAL_FASTA                } from '../process/cat_additional_fasta' addParams( options: params.genome_options       )
 include { GTF_GENE_FILTER                     } from '../process/gtf_gene_filter'      addParams( options: params.genome_options       )
 include { GFFREAD as GFFREAD_TRANSCRIPT_FASTA } from '../process/gffread'              addParams( options: params.genome_options       )
+include { GET_CHROM_SIZES                     } from '../process/get_chrom_sizes'      addParams( options: params.genome_options       )
 include { UNTAR as UNTAR_STAR_INDEX           } from '../process/untar'                addParams( options: params.star_index_options   )
 include { UNTAR as UNTAR_RSEM_INDEX           } from '../process/untar'                addParams( options: params.index_options        )
 include { UNTAR as UNTAR_HISAT2_INDEX         } from '../process/untar'                addParams( options: params.hisat2_index_options )
@@ -119,6 +120,11 @@ workflow PREPARE_GENOME {
     }
 
     /*
+     * Create chromosome sizes file
+     */
+    ch_chrom_sizes = GET_CHROM_SIZES ( ch_fasta ).sizes
+
+    /*
      * Uncompress STAR index or generate from scratch if required
      */
     ch_star_index   = Channel.empty()
@@ -202,6 +208,7 @@ workflow PREPARE_GENOME {
     gtf              = ch_gtf              // path: genome.gtf
     gene_bed         = ch_gene_bed         // path: gene.bed
     transcript_fasta = ch_transcript_fasta // path: transcript.fasta
+    chrom_sizes      = ch_chrom_sizes      // path: genome.sizes
     splicesites      = ch_splicesites      // path: genome.splicesites.txt
     star_index       = ch_star_index       // path: star/index/
     rsem_index       = ch_rsem_index       // path: rsem/index/

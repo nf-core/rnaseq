@@ -127,7 +127,6 @@ def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_star_rsem_options.args     += " --count_col 3"
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
-include { GET_CHROM_SIZES                    } from './modules/local/process/get_chrom_sizes'             addParams( options: publish_genome_options                                 )
 include { CAT_FASTQ                          } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                                      ) 
 include { MULTIQC                            } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                                        )
 include { MULTIQC_CUSTOM_BIOTYPE             } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                      )
@@ -545,10 +544,6 @@ workflow RNASEQ {
      * MODULE: Coverage tracks
      */
     if (!params.skip_alignment && !params.skip_bigwig) {
-        GET_CHROM_SIZES (
-            PREPARE_GENOME.out.fasta
-        )
-
         BEDTOOLS_GENOMECOV (
             ch_genome_bam
         )
@@ -556,7 +551,7 @@ workflow RNASEQ {
         
         UCSC_BEDRAPHTOBIGWIG (
             BEDTOOLS_GENOMECOV.out.bedgraph,
-            GET_CHROM_SIZES.out.sizes
+            PREPARE_GENOME.out.chrom_sizes
         )
         ch_software_versions = ch_software_versions.mix(UCSC_BEDRAPHTOBIGWIG.out.version.first().ifEmpty(null))
     }

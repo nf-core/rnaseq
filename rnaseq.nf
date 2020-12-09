@@ -188,7 +188,7 @@ if (['star_salmon','hisat2'].contains(params.aligner)) {
 }
         
 include { INPUT_CHECK     } from './modules/local/subworkflow/input_check'    addParams( options: [:] )
-include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: publish_index_options, salmon_index_options: publish_index_options )
+include { PREPARE_GENOME  } from './modules/local/subworkflow/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
 include { ALIGN_STAR      } from './modules/local/subworkflow/align_star'     addParams( align_options: star_align_options, samtools_options: samtools_sort_options )
 include { ALIGN_HISAT2    } from './modules/local/subworkflow/align_hisat2'   addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options )
 include { QUANTIFY_RSEM   } from './modules/local/subworkflow/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )

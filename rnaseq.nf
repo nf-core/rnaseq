@@ -266,8 +266,8 @@ workflow RNASEQ {
         params.additional_fasta,
         params.splicesites,
         params.star_index,
-        params.hisat2_index,
         params.rsem_index,
+        params.hisat2_index,
         params.salmon_index,
         prepareToolIndices
     )

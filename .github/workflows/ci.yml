@@ -49,6 +49,7 @@ jobs:
           - '--skip_trimming'
           - '--gtf false'
           - '--star_index false'
+          - '--transcript_fasta false'
           - '--min_mapped_reads 90'
           - '--with_umi'
           - '--with_umi --skip_trimming'

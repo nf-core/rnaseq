@@ -48,7 +48,8 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
 15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
-> **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to perform accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and downstream analysis provided by HISAT2.
+> **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
+
 ## Quick Start
 
 1. Install [`nextflow`](https://nf-co.re/usage/installation)

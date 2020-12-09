@@ -49,6 +49,7 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 > **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
+> **NB:** The `--aligner star_rsem` option will require STAR indices built from version 2.7.6a or later. However, in order to support legacy usage of genomes hosted on AWS iGenomes the `--aligner star_salmon` option requires indices built with STAR 2.6.1d or earlier. Please refer to this [issue](https://github.com/nf-core/rnaseq/issues/498) for further details.
 
 ## Quick Start
 

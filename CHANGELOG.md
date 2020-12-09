@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.12.1`
-* [[#499][https://github.com/nf-core/rnaseq/issues/499]] - Use of salmon counts for DESeq2
+* [[#498](https://github.com/nf-core/rnaseq/issues/498)] - Significantly different versions of STAR in star_rsem (2.7.6a) and star (2.6.1d)
+* [[#499](https://github.com/nf-core/rnaseq/issues/499)] - Use of salmon counts for DESeq2
 * [[#500](https://github.com/nf-core/rnaseq/issues/500), [#509](https://github.com/nf-core/rnaseq/issues/509)] - Error with AWS batch params
 * [[#511](https://github.com/nf-core/rnaseq/issues/511)] - rsem/star index fails with large genome
 * [[#515](https://github.com/nf-core/rnaseq/issues/515)] - Add decoy-aware indexing for salmon

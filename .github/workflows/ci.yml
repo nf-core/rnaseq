@@ -63,7 +63,7 @@ jobs:
 
       - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }}
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters

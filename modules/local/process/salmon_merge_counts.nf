@@ -35,7 +35,7 @@ process SALMON_MERGE_COUNTS {
     script:
     """
     mkdir -p tmp/genes_counts
-    echo "${params.fc_group_features}" > gene_ids.txt
+    echo "${params.gtf_group_features}" > gene_ids.txt
     cut -f 1 `ls ./genes_counts/* | head -n 1` | tail -n +2 >> gene_ids.txt
     for fileid in `ls ./genes_counts/*`; do
         filename=`basename \$fileid`

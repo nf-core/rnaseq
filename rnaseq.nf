@@ -362,9 +362,9 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf,
             true
         )
-        ch_software_versions   = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
-        ch_software_versions   = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.first().ifEmpty(null))
-        ch_software_versions   = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (
@@ -597,7 +597,7 @@ workflow RNASEQ {
             ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
             ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
             ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
-            ch_software_versions = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
+            ch_software_versions          = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
 
             ch_inferexperiment_multiqc
                 .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 30) }
@@ -628,7 +628,7 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf,
             false
         )
-        ch_salmon_multiqc    = QUANTIFY_SALMON.out.results
+        ch_salmon_multiqc = QUANTIFY_SALMON.out.results
         if (params.skip_alignment && params.aligner != 'star_salmon') {
             ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
             ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
@@ -644,7 +644,7 @@ workflow RNASEQ {
             ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
             ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
             if (params.skip_alignment) {
-                ch_software_versions            = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
+                ch_software_versions = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
             }
         }
     }
@@ -660,8 +660,8 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary     = Schema.params_summary_multiqc(workflow, params.summary_params)
-        ch_workflow_summary  = Channel.value(workflow_summary)
+        workflow_summary    = Schema.params_summary_multiqc(workflow, params.summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
         MULTIQC (
             ch_multiqc_config,

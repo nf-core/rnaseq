@@ -6,7 +6,7 @@ def options    = initOptions(params.options)
 
 def VERSION = '377'
 
-process UCSC_BEDRAPHTOBIGWIG {
+process UCSC_BEDGRAPHTOBIGWIG {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",

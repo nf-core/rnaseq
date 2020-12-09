@@ -127,17 +127,17 @@ def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_star_rsem_options.args     += " --count_col 3"
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
-include { CAT_FASTQ                          } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                                      ) 
-include { MULTIQC                            } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                                        )
-include { MULTIQC_CUSTOM_BIOTYPE             } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                      )
-include { MULTIQC_CUSTOM_FAIL_MAPPED         } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                 )
-include { MULTIQC_CUSTOM_STRAND_CHECK        } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                 )
-include { BEDTOOLS_GENOMECOV                 } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                          )
-include { DUPRADAR                           } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                                    )
-include { GET_SOFTWARE_VERSIONS              } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                           )
-include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_star_salmon_options, multiqc_label: 'salmon' )
-include { DESEQ2_QC as DESEQ2_QC_RSEM        } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_star_rsem_options, multiqc_label: 'rsem'     )
-include { DESEQ2_QC as DESEQ2_QC_SALMON      } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon'      )
+include { CAT_FASTQ                          } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                                           ) 
+include { MULTIQC                            } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                                             )
+include { MULTIQC_CUSTOM_BIOTYPE             } from './modules/local/process/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                           )
+include { MULTIQC_CUSTOM_FAIL_MAPPED         } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                      )
+include { MULTIQC_CUSTOM_STRAND_CHECK        } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                      )
+include { BEDTOOLS_GENOMECOV                 } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                               )
+include { DUPRADAR                           } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                                         )
+include { GET_SOFTWARE_VERSIONS              } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                )
+include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_star_salmon_options, multiqc_label: 'star_salmon' )
+include { DESEQ2_QC as DESEQ2_QC_RSEM        } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_star_rsem_options, multiqc_label: 'star_rsem'     )
+include { DESEQ2_QC as DESEQ2_QC_SALMON      } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon'           )
 
 /*
  * SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -217,7 +217,7 @@ def subread_featurecounts_options  = modules['subread_featurecounts']
 def biotype                        = params.gencode ? "gene_type" : params.gtf_group_features_type
 subread_featurecounts_options.args += " -g $biotype -t $params.gtf_count_type"
 
-include { UCSC_BEDRAPHTOBIGWIG  } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
+include { UCSC_BEDGRAPHTOBIGWIG } from './modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
 include { PRESEQ_LCEXTRAP       } from './modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )
 include { QUALIMAP_RNASEQ       } from './modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']       )
 include { SORTMERNA             } from './modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                )
@@ -335,7 +335,6 @@ workflow RNASEQ {
     ch_samtools_flagstat          = Channel.empty()
     ch_samtools_idxstats          = Channel.empty()
     ch_star_multiqc               = Channel.empty()
-    ch_aligner_salmon_multiqc     = Channel.empty()
     ch_aligner_pca_multiqc        = Channel.empty()
     ch_aligner_clustering_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
@@ -363,10 +362,9 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf,
             true
         )
-        ch_aligner_salmon_multiqc = QUANTIFY_STAR_SALMON.out.results
-        ch_software_versions      = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
-        ch_software_versions      = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.first().ifEmpty(null))
-        ch_software_versions      = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
+        ch_software_versions   = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
+        ch_software_versions   = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.first().ifEmpty(null))
+        ch_software_versions   = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (

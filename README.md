@@ -33,7 +33,7 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 7. Choice of multiple alignment and quantification routes:
     1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)
     2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
-    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> [`Salmon`](https://combine-lab.github.io/salmon/)
+    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> **NO QUANTIFICATION**
 8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 10. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
@@ -48,6 +48,7 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
 15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
+> **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to perform accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and downstream analysis provided by HISAT2.
 ## Quick Start
 
 1. Install [`nextflow`](https://nf-co.re/usage/installation)

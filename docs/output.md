@@ -25,16 +25,14 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
   * [TrimGalore](#trimgalore) - Adapter and quality trimming
   * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
-* [Alignment](#alignment)
-  * [STAR](#star) - Fast spliced aware alignment to a reference
+* [Alignment and quantification](#alignment-and-quantification)
+  * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
   * [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
   * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
 * [Alignment post-processing](#alignment-post-processing)
   * [SAMtools](#samtools) - Sort and index alignments
   * [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
   * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
-* [Quantification](#quantification)
-  * [Salmon quant](#salmon-quant) - Gene and isoform quantification from aligned BAM
 * [Other steps](#other-steps)
   * [StringTie](#stringtie) - Transcript assembly and quantification
   * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
@@ -151,26 +149,50 @@ When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://git
 
 ![MultiQC - SortMeRNA hit count plot](images/mqc_sortmerna.png)
 
-## Alignment
+## Alignment and quantification
 
-### STAR
+### STAR and Salmon
 
 <details markdown="1">
 <summary>Output files</summary>
 
-* `star/`
+* `star_salmon/`
   * `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
   * `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
-* `star/log/`
+  * `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+  * `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  * `salmon.merged.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  * `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  * `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  * `salmon.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+* `star_salmon/<SAMPLE>/`
+  * `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
+  * `cmd_info.json`: Information about the Salmon quantification command, version and options.
+  * `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
+  * `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
+  * `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
+  * `quant.genes.sf`: Salmon _gene_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+  * `quant.sf`: Salmon _transcript_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+  * `<SAMPLE>.salmon.gene_counts.tsv`: Subset of `quant.genes.sf`, only containing the gene id and raw counts.
+  * `<SAMPLE>.salmon.gene_tpm.tsv`: Subset of `quant.genes.sf`, only containing the gene id and TPM values.
+  * `<SAMPLE>.salmon.transcript_counts.tsv`: Subset of `quant.sf`, only containing the transcript id and raw counts.
+  * `<SAMPLE>.salmon.transcript_tpm.tsv`: Subset of `quant.sf`, only containing the transcript id and TPM values.
+* `star_salmon/log/`
   * `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
   * `*.Log.final.out`: STAR alignment report containing the mapping results summary.
   * `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
-* `star/unmapped/`
+* `star_salmon/unmapped/`
   * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
 
 </details>
 
 [STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive. STAR is the default `--aligner` option.
+
+[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) is a tool for wicked-fast transcript quantification from RNA-seq data. It requires a set of target transcripts (either from a reference or de-novo assembly) to quantify. All you need to run Salmon is a FASTA file containing your reference transcripts and a (set of) FASTA/FASTQ/BAM file(s) containing your reads.
+
+The [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) package is used in this pipeline to summarise the results generated by Salmon into matrices for use with downstream gene-level analysis packages i.e. transcript-level abundances, estimated counts and transcript lengths. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for differential expression of gene-level counts.
+
+You can choose to pseudo-align and quantify your data exclusively with Salmon by providing the `--pseudo_aligner salmon` parameter.
 
 The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as _Uniquely mapped_ and few _Unmapped_ reads.
 
@@ -227,7 +249,7 @@ You can choose to align and quantify your data with HISAT2 by providing the `--a
 
 ## Alignment post-processing
 
-The pipeline has been written in a way where all the files generated downstream of the alignment are placed in the same directory as specified by `--aligner` e.g. if `--aligner star` is specified then all the downstream results will be placed in the `star/` directory. This helps with organising the directory structure and more importantly, allows the end-user to get the results from multiple aligners by simply re-running the pipeline with a different `--aligner` option along the `-resume` parameter. It also means that results won't be overwritten when resuming the pipeline and can be used for benchmarking between alignment algorithms if required.
+The pipeline has been written in a way where all the files generated downstream of the alignment are placed in the same directory as specified by `--aligner` e.g. if `--aligner star_salmon` is specified then all the downstream results will be placed in the `star_salmon/` directory. This helps with organising the directory structure and more importantly, allows the end-user to get the results from multiple aligners by simply re-running the pipeline with a different `--aligner` option along the `-resume` parameter. It also means that results won't be overwritten when resuming the pipeline and can be used for benchmarking between alignment algorithms if required.
 
 ### SAMtools
 
@@ -285,45 +307,6 @@ After extracting the UMI information from the read sequence (see [UMI-tools extr
 Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-explorer/kits-and-arrays/umi.html) it is not possible to establish whether the fragments you have sequenced from your sample were derived via true biological duplication (i.e. sequencing independent template fragments) or as a result of PCR biases introduced during the library preparation. By default, the pipeline uses [picard MarkDuplicates](https://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates) to *mark* the duplicate reads identified amongst the alignments to allow you to guage the overall level of duplication in your samples. However, for RNA-seq data it is not recommended to physically remove duplicate reads from the alignments (unless you are using UMIs) because you expect a significant level of true biological duplication that arises from the same fragments being sequenced from for example highly expressed genes. You can skip this step via the `--skip_markduplicates` parameter.
 
 ![MultiQC - Picard MarkDuplicates metrics plot](images/mqc_picard_markduplicates.png)
-
-## Quantification
-
-### Salmon quant
-
-<details markdown="1">
-<summary>Output files</summary>
-
-* `salmon/`
-  * `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
-  * `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  * `salmon.merged.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  * `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  * `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  * `salmon.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
-* `salmon/<SAMPLE>/`
-  * `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
-  * `cmd_info.json`: Information about the Salmon quantification command, version and options.
-  * `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
-  * `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
-  * `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
-  * `quant.genes.sf`: Salmon _gene_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
-  * `quant.sf`: Salmon _transcript_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
-  * `<SAMPLE>.salmon.gene_counts.tsv`: Subset of `quant.genes.sf`, only containing the gene id and raw counts.
-  * `<SAMPLE>.salmon.gene_tpm.tsv`: Subset of `quant.genes.sf`, only containing the gene id and TPM values.
-  * `<SAMPLE>.salmon.transcript_counts.tsv`: Subset of `quant.sf`, only containing the transcript id and raw counts.
-  * `<SAMPLE>.salmon.transcript_tpm.tsv`: Subset of `quant.sf`, only containing the transcript id and TPM values.
-
-</details>
-
-[Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) from [Ocean Genomics](https://oceangenomics.com/) is a tool for wicked-fast transcript quantification from RNA-seq data. It requires a set of target transcripts (either from a reference or de-novo assembly) to quantify. All you need to run Salmon is a FASTA file containing your reference transcripts and a (set of) FASTA/FASTQ file(s) containing your reads.
-
-The [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) package is used in this pipeline to summarise the results generated by Salmon into matrices for use with downstream gene-level analysis packages i.e. transcript-level abundances, estimated counts and transcript lengths. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for differential expression of gene-level counts.
-
-You can choose to pseudo-align and quantify your data with Salmon by providing the `--pseudo_aligner salmon` parameter. By default, Salmon is run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon in isolation.
-
-> **NB:** The default Salmon parameters and a k-mer size of 31 are used to create the index. As [discussed here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)), a k-mer size off 31 works well with reads that are 75bp or longer.
-
-![MultiQC - Salmon fragment length distribution plot](images/mqc_salmon.png)
 
 ## Other steps
 

@@ -36,17 +36,6 @@ include { SALMON_INDEX              } from '../../nf-core/software/salmon/index/
 
 workflow PREPARE_GENOME {
     take:
-    // fasta                // file: /path/to/genome.fasta
-    // gtf                  // file: /path/to/genome.gtf
-    // gff                  // file: /path/to/genome.gff
-    // gene_bed             // file: /path/to/gene.bed
-    // transcript_fasta     // file: /path/to/transcript.fasta
-    // additional_fasta     // file: /path/to/additional.fasta
-    // splicesites          // file: /path/to/genome.splicesites.txt
-    // star_index           // file: /path/to/star/index
-    // rsem_index           // file: /path/to/rsem/index
-    // hisat2_index         // file: /path/to/hisat2/index
-    // salmon_index         // file: /path/to/salmon/index
     prepare_tool_indices // list: tools to prepare indices for
 
     main:

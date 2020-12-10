@@ -257,17 +257,6 @@ workflow RNASEQ {
      * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
     PREPARE_GENOME (
-        params.fasta,
-        params.gtf,
-        params.gff,
-        params.gene_bed,
-        params.transcript_fasta,
-        params.additional_fasta,
-        params.splicesites,
-        params.star_index,
-        params.rsem_index,
-        params.hisat2_index,
-        params.salmon_index,
         prepareToolIndices
     )
     ch_software_versions = Channel.empty()

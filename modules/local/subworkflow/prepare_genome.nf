@@ -36,44 +36,44 @@ include { SALMON_INDEX              } from '../../nf-core/software/salmon/index/
 
 workflow PREPARE_GENOME {
     take:
-    fasta                // file: /path/to/genome.fasta
-    gtf                  // file: /path/to/genome.gtf
-    gff                  // file: /path/to/genome.gff
-    gene_bed             // file: /path/to/gene.bed
-    transcript_fasta     // file: /path/to/transcript.fasta
-    additional_fasta     // file: /path/to/additional.fasta
-    splicesites          // file: /path/to/genome.splicesites.txt
-    star_index           // file: /path/to/star/index
-    rsem_index           // file: /path/to/rsem/index
-    hisat2_index         // file: /path/to/hisat2/index
-    salmon_index         // file: /path/to/salmon/index
+    // fasta                // file: /path/to/genome.fasta
+    // gtf                  // file: /path/to/genome.gtf
+    // gff                  // file: /path/to/genome.gff
+    // gene_bed             // file: /path/to/gene.bed
+    // transcript_fasta     // file: /path/to/transcript.fasta
+    // additional_fasta     // file: /path/to/additional.fasta
+    // splicesites          // file: /path/to/genome.splicesites.txt
+    // star_index           // file: /path/to/star/index
+    // rsem_index           // file: /path/to/rsem/index
+    // hisat2_index         // file: /path/to/hisat2/index
+    // salmon_index         // file: /path/to/salmon/index
     prepare_tool_indices // list: tools to prepare indices for
 
     main:
     /*
      * Uncompress genome fasta file if required
      */
-    if (fasta.endsWith('.gz')) {
-        ch_fasta = GUNZIP_FASTA ( fasta ).gunzip
+    if (params.fasta.endsWith('.gz')) {
+        ch_fasta = GUNZIP_FASTA ( params.fasta ).gunzip
     } else {
-        ch_fasta = file(fasta)
+        ch_fasta = file(params.fasta)
     }
 
     /*
      * Uncompress GTF annotation file or create from GFF3 if required
      */
     gffread_version = Channel.empty()
-    if (gtf) {
-        if (gtf.endsWith('.gz')) {
-            ch_gtf = GUNZIP_GTF ( gtf ).gunzip
+    if (params.gtf) {
+        if (params.gtf.endsWith('.gz')) {
+            ch_gtf = GUNZIP_GTF ( params.gtf ).gunzip
         } else {
-            ch_gtf = file(gtf)
+            ch_gtf = file(params.gtf)
         }
-    } else if (gff) {
-        if (gff.endsWith('.gz')) {
-            ch_gff = GUNZIP_GFF ( gff ).gunzip
+    } else if (params.gff) {
+        if (params.gff.endsWith('.gz')) {
+            ch_gff = GUNZIP_GFF ( params.gff ).gunzip
         } else {
-            ch_gff = file(gff)
+            ch_gff = file(params.gff)
         }
         ch_gtf = GFFREAD_GFF ( ch_gff ).gtf
         gffread_version = GFFREAD_GFF.out.version
@@ -82,11 +82,11 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress additional fasta file and concatenate with reference fasta and gtf files
      */
-    if (additional_fasta) {
-        if (additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( additional_fasta ).gunzip
+    if (params.additional_fasta) {
+        if (params.additional_fasta.endsWith('.gz')) {
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( params.additional_fasta ).gunzip
         } else {
-            ch_add_fasta = file(additional_fasta)
+            ch_add_fasta = file(params.additional_fasta)
         }
         CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta )
         ch_fasta = CAT_ADDITIONAL_FASTA.out.fasta
@@ -96,11 +96,11 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress gene BED annotation file or create from GTF if required
      */
-    if (gene_bed) {
-        if (gene_bed.endsWith('.gz')) {
-            ch_gene_bed = GUNZIP_GENE_BED ( gene_bed ).gunzip
+    if (params.gene_bed) {
+        if (params.gene_bed.endsWith('.gz')) {
+            ch_gene_bed = GUNZIP_GENE_BED ( params.gene_bed ).gunzip
         } else {
-            ch_gene_bed = file(gene_bed)
+            ch_gene_bed = file(params.gene_bed)
         }
     } else {
         ch_gene_bed = GTF2BED ( ch_gtf )
@@ -109,11 +109,11 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress transcript fasta file / create if required
      */
-    if (transcript_fasta) {
-        if (transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( transcript_fasta ).gunzip
+    if (params.transcript_fasta) {
+        if (params.transcript_fasta.endsWith('.gz')) {
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( params.transcript_fasta ).gunzip
         } else {
-            ch_transcript_fasta = file(transcript_fasta)
+            ch_transcript_fasta = file(params.transcript_fasta)
         }
     } else {
         ch_transcript_fasta = GFFREAD_TRANSCRIPT_FASTA ( ch_fasta, GTF_GENE_FILTER ( ch_fasta, ch_gtf ) ).fasta
@@ -130,11 +130,11 @@ workflow PREPARE_GENOME {
     ch_star_index   = Channel.empty()
     ch_star_version = Channel.empty()
     if ('star_salmon' in prepare_tool_indices) {
-        if (star_index) {
-            if (star_index.endsWith('.tar.gz')) {
-                ch_star_index = UNTAR_STAR_INDEX ( star_index ).untar
+        if (params.star_index) {
+            if (params.star_index.endsWith('.tar.gz')) {
+                ch_star_index = UNTAR_STAR_INDEX ( params.star_index ).untar
             } else {
-                ch_star_index = file(star_index)
+                ch_star_index = file(params.star_index)
             }
         } else {
             ch_star_index   = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
@@ -148,11 +148,11 @@ workflow PREPARE_GENOME {
     ch_rsem_index   = Channel.empty()
     ch_rsem_version = Channel.empty()
     if ('star_rsem' in prepare_tool_indices) {
-        if (rsem_index) {
-            if (rsem_index.endsWith('.tar.gz')) {
-                ch_rsem_index = UNTAR_RSEM_INDEX ( rsem_index ).untar
+        if (params.rsem_index) {
+            if (params.rsem_index.endsWith('.tar.gz')) {
+                ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index ).untar
             } else {
-                ch_rsem_index = file(rsem_index)
+                ch_rsem_index = file(params.rsem_index)
             }
         } else {
             ch_rsem_index   = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
@@ -167,17 +167,17 @@ workflow PREPARE_GENOME {
     ch_hisat2_index   = Channel.empty()
     ch_hisat2_version = Channel.empty()
     if ('hisat2' in prepare_tool_indices) {
-        if (!splicesites) {
+        if (!params.splicesites) {
             ch_splicesites    = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
             ch_hisat2_version = HISAT2_EXTRACTSPLICESITES.out.version
         } else {
-            ch_splicesites = file(splicesites)
+            ch_splicesites = file(params.splicesites)
         }
-        if (hisat2_index) {
-            if (hisat2_index.endsWith('.tar.gz')) {
-                ch_hisat2_index = UNTAR_HISAT2_INDEX ( hisat2_index ).untar
+        if (params.hisat2_index) {
+            if (params.hisat2_index.endsWith('.tar.gz')) {
+                ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index ).untar
             } else {
-                ch_hisat2_index = file(hisat2_index)
+                ch_hisat2_index = file(params.hisat2_index)
             }
         } else {
             ch_hisat2_index   = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
@@ -191,11 +191,11 @@ workflow PREPARE_GENOME {
     ch_salmon_index   = Channel.empty()
     ch_salmon_version = Channel.empty()  
     if ('salmon' in prepare_tool_indices) {
-        if (salmon_index) {
-            if (salmon_index.endsWith('.tar.gz')) {
-                ch_salmon_index = UNTAR_SALMON_INDEX ( salmon_index ).untar
+        if (params.salmon_index) {
+            if (params.salmon_index.endsWith('.tar.gz')) {
+                ch_salmon_index = UNTAR_SALMON_INDEX ( params.salmon_index ).untar
             } else {
-                ch_salmon_index = file(salmon_index)
+                ch_salmon_index = file(params.salmon_index)
             }
         } else {        
             ch_salmon_index   = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index

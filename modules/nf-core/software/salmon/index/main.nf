@@ -38,7 +38,7 @@ process SALMON_INDEX {
     salmon \\
         index \\
         --threads $task.cpus \\
-        -t gentrome.fa \\
+        -t $gentrome \\
         -d decoys.txt \\
         $options.args \\
         -i salmon

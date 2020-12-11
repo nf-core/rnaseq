@@ -10,8 +10,12 @@ process GFFREAD {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda     (params.enable_conda ? "bioconda::gffread=0.12.1" : null)
-    container "quay.io/biocontainers/gffread:0.12.1--h8b12597_0"
+    conda (params.enable_conda ? "bioconda::gffread=0.12.1" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/gffread:0.12.1--h8b12597_0"
+    } else {
+        container "quay.io/biocontainers/gffread:0.12.1--h8b12597_0"
+    }
 
     input:
     path fasta

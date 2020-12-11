@@ -11,9 +11,12 @@ process STRINGTIE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    // Note: 2.7X indices incompatible with AWS iGenomes.
-    conda     (params.enable_conda ? "bioconda::stringtie=2.1.4" : null)
-    container "quay.io/biocontainers/stringtie:2.1.4--h7e0af3c_0"
+    conda (params.enable_conda ? "bioconda::stringtie=2.1.4" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/stringtie:2.1.4--h7e0af3c_0"
+    } else {
+        container "quay.io/biocontainers/stringtie:2.1.4--h7e0af3c_0"
+    }
 
     input:
     tuple val(meta), path(bam)

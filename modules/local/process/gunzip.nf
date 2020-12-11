@@ -10,19 +10,12 @@ process GUNZIP {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/python:3.8.3"
+        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
     } else {
-        container "quay.io/biocontainers/python:3.8.3"
+        container "biocontainers/biocontainers:v1.2.0_cv1"
     }
-
-    // conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
-    // if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-    //     container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
-    // } else {
-    //     container "biocontainers/biocontainers:v1.2.0_cv1"
-    // }
     
     input:
     path archive
@@ -35,7 +28,7 @@ process GUNZIP {
     def software = getSoftwareName(task.process)
     gunzip       = archive.toString() - '.gz'
     """
-    gunzip --force $options.args $archive
+    gunzip -f $options.args $archive
     echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//' > ${software}.version.txt
     """
 }

@@ -18,16 +18,15 @@ run_modules:
     - preseq
     - rseqc
     - qualimap
-    - featureCounts
 
 # Order of modules
 top_modules:
     - 'fail_mapped_samples'
     - 'fail_strand_check'
-    - 'featurecounts_deseq2_pca'
-    - 'featurecounts_deseq2_clustering'
-    - 'rsem_deseq2_pca'
-    - 'rsem_deseq2_clustering'
+    - 'star_rsem_deseq2_pca'
+    - 'star_rsem_deseq2_clustering'
+    - 'star_salmon_deseq2_pca'
+    - 'star_salmon_deseq2_clustering'
     - 'salmon_deseq2_pca'
     - 'salmon_deseq2_clustering'
     - 'biotype_counts'
@@ -90,9 +89,6 @@ sp:
 
     preseq:
         fn: '*.ccurve.txt'
-
-    featurecounts:
-        fn: '*.summary'
 
     samtools/stats:
         fn: '*.stats'

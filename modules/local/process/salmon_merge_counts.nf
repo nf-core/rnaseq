@@ -27,19 +27,19 @@ process SALMON_MERGE_COUNTS {
     path ('isoforms_tpm/*')
     
     output:
-    path "salmon.merged.gene_counts.tsv"                   , emit: counts_gene
-    path "salmon.merged.gene_tpm.tsv"                      , emit: tpm_gene
-    path "salmon.merged.gene_counts_length_scaled.tsv"      , emit: counts_gene_length_scaled
-    path "salmon.merged.gene_tpm_length_scaled.tsv"         , emit: tpm_gene_length_scaled
-    path "salmon.merged.gene_counts_scaled.tsv"            , emit: counts_gene_scaled
-    path "salmon.merged.gene_tpm_scaled.tsv"               , emit: tpm_gene_scaled
-    path "salmon.merged.transcript_counts.tsv"             , emit: counts_transcript
-    path "salmon.merged.transcript_tpm.tsv"                , emit: tpm_transcript
+    path "salmon.merged.gene_counts.tsv"              , emit: counts_gene
+    path "salmon.merged.gene_tpm.tsv"                 , emit: tpm_gene
+    path "salmon.merged.gene_counts_length_scaled.tsv", emit: counts_gene_length_scaled
+    path "salmon.merged.gene_tpm_length_scaled.tsv"   , emit: tpm_gene_length_scaled
+    path "salmon.merged.gene_counts_scaled.tsv"       , emit: counts_gene_scaled
+    path "salmon.merged.gene_tpm_scaled.tsv"          , emit: tpm_gene_scaled
+    path "salmon.merged.transcript_counts.tsv"        , emit: counts_transcript
+    path "salmon.merged.transcript_tpm.tsv"           , emit: tpm_transcript
 
     script:
     """
     mkdir -p tmp/genes_counts
-    echo "${params.fc_group_features}" > gene_ids.txt
+    echo "${params.gtf_group_features}" > gene_ids.txt
     cut -f 1 `ls ./genes_counts/* | head -n 1` | tail -n +2 >> gene_ids.txt
     for fileid in `ls ./genes_counts/*`; do
         filename=`basename \$fileid`

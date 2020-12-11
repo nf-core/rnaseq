@@ -2,14 +2,10 @@
  * Gene/transcript quantification with RSEM
  */
 
-params.index_options               = [:]
-params.preparereference_options    = [:]
 params.calculateexpression_options = [:]
 params.samtools_options            = [:]
 params.merge_counts_options        = [:]
 
-include { UNTAR                    } from '../process/untar'                                     addParams( options: params.index_options               )
-include { RSEM_PREPAREREFERENCE    } from '../../nf-core/software/rsem/preparereference/main'    addParams( options: params.preparereference_options    )
 include { RSEM_CALCULATEEXPRESSION } from '../../nf-core/software/rsem/calculateexpression/main' addParams( options: params.calculateexpression_options )
 include { BAM_SORT_SAMTOOLS        } from '../../nf-core/subworkflow/bam_sort_samtools'          addParams( options: params.samtools_options            )
 include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'                         addParams( options: params.merge_counts_options        )
@@ -17,28 +13,13 @@ include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'        
 workflow QUANTIFY_RSEM {
     take:
     reads // channel: [ val(meta), [ reads ] ]
-    index //    file: /path/to/rsem/index/
-    fasta //    file: /path/to/genome.fasta
-    gtf   //    file: /path/to/genome.gtf
+    index // channel: /path/to/rsem/index/
 
     main:
     /*
-     * Uncompress RSEM index or generate from scratch if required
-    */
-    if (index) {
-        if (index.endsWith('.tar.gz')) {
-            ch_index = UNTAR ( index ).untar
-        } else {
-            ch_index = file(index)
-        }
-    } else {
-        ch_index = RSEM_PREPAREREFERENCE ( fasta, gtf ).index
-    }
-
-    /*
      * Quantify reads with RSEM
      */
-    RSEM_CALCULATEEXPRESSION ( reads, ch_index )
+    RSEM_CALCULATEEXPRESSION ( reads, index )
 
     /*
      * Sort, index BAM file and run samtools stats, flagstat and idxstats

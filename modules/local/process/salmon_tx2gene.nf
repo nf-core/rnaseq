@@ -29,8 +29,8 @@ process SALMON_TX2GENE {
     salmon_tx2gene.py \\
         --gtf $gtf \\
         --salmon salmon \\
-        --id $params.fc_group_features \\
-        --extra $params.fc_extra_attributes \\
+        --id $params.gtf_group_features \\
+        --extra $params.gtf_extra_attributes \\
         -o salmon_tx2gene.tsv
     """
 }

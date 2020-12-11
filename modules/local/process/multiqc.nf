@@ -37,7 +37,6 @@ process MULTIQC {
     path ('samtools/idxstats/*')
     path ('picard/markduplicates/*')
     path ('featurecounts/*')
-    path ('featurecounts/biotype/*')
     path ('deseq2/aligner/*')
     path ('deseq2/aligner/*')
     path ('deseq2/pseudoaligner/*')

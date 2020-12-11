@@ -39,9 +39,9 @@ def fasta2gtf(fasta, output):
     # GTF output lines
     lines = []
     attributes = \
-        'gene_id "{name_sanitized}"; gene_name "{name_sanitized}";transcript_id "{name_sanitized}"; gene_biotype "{name_sanitized}"; gene_type "{name_sanitized}"\n'
+        'exon_id "{name}.1"; exon_number "1"; gene_biotype "transgene"; gene_id "{name}_gene"; gene_name "{name}_gene"; gene_source "custom"; transcript_id "{name}_gene"; transcript_name "{name}_gene";\n'
     line_template = \
-        "{name_sanitized}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
+        "{name}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
 
     for ff in fiter:
         name, seq = ff
@@ -49,10 +49,10 @@ def fasta2gtf(fasta, output):
         # (equivalent to "chromosome" in other cases)
         seqname = name.split()[0]
         # Remove all spaces
-        name_sanitized = seqname.replace(' ', '_')
+        name = seqname.replace(' ', '_')
         length = len(seq)
         line = line_template.format(
-            name_sanitized=name_sanitized, length=length)
+            name=name, length=length)
         lines.append(line)
 
     with open(output, 'w') as f:

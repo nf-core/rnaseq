@@ -23,13 +23,6 @@ if (params.help) {
 }
 
 ////////////////////////////////////////////////////
-/* --         PRINT PARAMETER SUMMARY          -- */
-////////////////////////////////////////////////////
-
-def summary_params = Schema.params_summary_map(workflow, params, json_schema)
-log.info Schema.params_summary_log(workflow, params, json_schema)
-
-////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
 ////////////////////////////////////////////////////
 
@@ -38,6 +31,29 @@ Checks.aws_batch(workflow, params)
 
 // Check the hostnames against configured profiles
 Checks.hostname(workflow, params, log)
+
+// Check genome key exists if provided
+Checks.genome_exists(params, log)
+
+////////////////////////////////////////////////////
+/* --        GENOME PARAMETER VALUES           -- */
+////////////////////////////////////////////////////
+
+params.fasta        = Checks.get_genome_attribute(params, 'fasta')
+params.gtf          = Checks.get_genome_attribute(params, 'gtf')
+params.gff          = Checks.get_genome_attribute(params, 'gff')
+params.gene_bed     = Checks.get_genome_attribute(params, 'bed12')
+params.star_index   = Checks.get_genome_attribute(params, 'star')
+params.hisat2_index = Checks.get_genome_attribute(params, 'hisat2')
+params.rsem_index   = Checks.get_genome_attribute(params, 'rsem')
+params.salmon_index = Checks.get_genome_attribute(params, 'salmon')
+
+////////////////////////////////////////////////////
+/* --         PRINT PARAMETER SUMMARY          -- */
+////////////////////////////////////////////////////
+
+def summary_params = Schema.params_summary_map(workflow, params, json_schema)
+log.info Schema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */

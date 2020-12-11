@@ -45,6 +45,29 @@ class Checks {
                "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
 
+    // Exit pipeline if incorrect --genome key provided
+    static void genome_exists(params, log) {
+        if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
+            log.error "=============================================================================\n" +
+                      "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
+                      "  Currently, the available genome keys are:\n" +
+                      "  ${params.genomes.keySet().join(", ")}\n" +
+                      "============================================================================="
+            System.exit(0)
+        }
+    }
+
+    // Get attribute from genome config file e.g. fasta
+    static String get_genome_attribute(params, attribute) {
+        def val = ''
+        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+            if (params.genomes[ params.genome ].containsKey(attribute)) {
+                val = params.genomes[ params.genome ][ attribute ]
+            }
+        }
+        return val
+    }
+
     // Print a warning after SRA download has completed
     static void sra_download(log) {
         log.warn "=============================================================================\n" +
@@ -103,8 +126,9 @@ class Checks {
                   "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
                   "  not possible to remove UMIs before the quantification.\n\n" +
                   "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
-                  "  please use either '--aligner star' or '--aligner hisat2'.\n" +
+                  "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
                   "============================================================================="
+        System.exit(0)
     }
 
     // Function that parses and returns the alignment rate from the STAR log output

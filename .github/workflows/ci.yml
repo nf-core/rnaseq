@@ -34,8 +34,8 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
-  star:
-    name: Test STAR with workflow parameters
+  star_salmon:
+    name: Test STAR Salmon with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
@@ -49,6 +49,7 @@ jobs:
           - '--skip_trimming'
           - '--gtf false'
           - '--star_index false'
+          - '--transcript_fasta false'
           - '--min_mapped_reads 90'
           - '--with_umi'
           - '--with_umi --skip_trimming'
@@ -63,7 +64,7 @@ jobs:
 
       - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }}
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters

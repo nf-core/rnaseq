@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * You will need to install Nextflow `>=20.11.0-edge` to run the pipeline. If you are using Singularity, then features introduced in that release now enable the pipeline to directly download Singularity images hosted by Biocontainers as opposed to performing a conversion from Docker images (see [#496](https://github.com/nf-core/rnaseq/issues/496)).
 * The previous default of aligning BAM files using STAR and quantifying using featureCounts (`--aligner star`) has been removed. The new default is to align with STAR and quantify using Salmon (`--aligner star_salmon`).
   * This decision was made primarily because of the limitations of featureCounts to appropriately quantify gene expression data. Please see [Zhao et al., 2015](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141910#pone-0141910-t001) and [Soneson et al., 2015](https://f1000research.com/articles/4-1521/v1)).
-* For similar reasons, quantification will not be performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
+* For similar reasons, **quantification will not be performed** if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments.
+  * This pipeline option is still available for those who have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2. No gene-level quantification results will be generated.
+  * In a future release we hope to add back quantitation for HISAT2 using different tools.
 
 ### Enhancements & fixes
 

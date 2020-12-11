@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
 
-### :warning: Major enhancements :bell:
+### :warning: Major enhancements
 
 * You will need to install Nextflow `>=20.11.0-edge` to run the pipeline. If you are using Singularity, then features introduced in that release now enable the pipeline to directly download Singularity images hosted by Biocontainers as opposed to performing a conversion from Docker images (see [#496](https://github.com/nf-core/rnaseq/issues/496)).
 * The previous default of aligning BAM files using STAR and quantifying using featureCounts (`--aligner star`) has been removed. The new default is to align with STAR and quantify using Salmon (`--aligner star_salmon`).

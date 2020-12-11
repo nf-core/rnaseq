@@ -51,7 +51,7 @@ workflow PREPARE_GENOME {
     /*
      * Uncompress GTF annotation file or create from GFF3 if required
      */
-    gffread_version = Channel.empty()
+    ch_gffread_version = Channel.empty()
     if (params.gtf) {
         if (params.gtf.endsWith('.gz')) {
             ch_gtf = GUNZIP_GTF ( params.gtf ).gunzip
@@ -65,7 +65,7 @@ workflow PREPARE_GENOME {
             ch_gff = file(params.gff)
         }
         ch_gtf = GFFREAD_GFF ( ch_gff ).gtf
-        gffread_version = GFFREAD_GFF.out.version
+        ch_gffread_version = GFFREAD_GFF.out.version
     }
 
     /*
@@ -207,5 +207,5 @@ workflow PREPARE_GENOME {
     rsem_version     = ch_rsem_version     // path: *.version.txt
     hisat2_version   = ch_hisat2_version   // path: *.version.txt
     salmon_version   = ch_salmon_version   // path: *.version.txt
-    gffread_version                        // path: *.version.txt
+    gffread_version  = ch_gffread_version  // path: *.version.txt
 }

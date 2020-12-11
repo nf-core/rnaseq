@@ -35,8 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--fc_group_features`        | `--gtf_group_features`                |
 | `--fc_count_type`            | `--gtf_count_type`                    |
 | `--fc_group_features_type`   | `--gtf_group_features_type`           |
-| `-`                          | `--singularity_pull_docker_container` |
-| `--skip_featurecounts`       | `-`                                   |
+|                              | `--singularity_pull_docker_container` |
+| `--skip_featurecounts`       |                                       |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
 > **NB:** Parameter has been __added__ if just the new parameter information is present.  

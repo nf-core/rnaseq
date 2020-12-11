@@ -35,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `-`                          | `--singularity_pull_docker_container` |
 | `--skip_featurecounts`       | `-`                                   |
 
-
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
 > **NB:** Parameter has been __added__ if just the new parameter information is present.  
 > **NB:** Parameter has been __removed__ if parameter information isn't present.  

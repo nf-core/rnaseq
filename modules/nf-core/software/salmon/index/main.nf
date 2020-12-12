@@ -11,8 +11,12 @@ process SALMON_INDEX {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda     (params.enable_conda ? "bioconda::salmon=1.3.0" : null)
-    container "quay.io/biocontainers/salmon:1.3.0--hf69c8f4_0"
+    conda (params.enable_conda ? "bioconda::salmon=1.3.0" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/salmon:1.3.0--hf69c8f4_0"
+    } else {
+        container "quay.io/biocontainers/salmon:1.3.0--hf69c8f4_0"
+    }
 
     input:
     path genome_fasta

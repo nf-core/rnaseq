@@ -12,9 +12,13 @@ process PRESEQ_LCEXTRAP {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda     (params.enable_conda ? "bioconda::preseq=2.0.3" : null)
-    container "quay.io/biocontainers/preseq:2.0.3--hf53bd2b_3"
-
+    conda (params.enable_conda ? "bioconda::preseq=2.0.3" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/preseq:2.0.3--hf53bd2b_3"
+    } else {
+        container "quay.io/biocontainers/preseq:2.0.3--hf53bd2b_3"
+    }
+    
     input:
     tuple val(meta), path(bam)
     

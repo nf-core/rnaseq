@@ -52,6 +52,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `bioconductor-summarizedexperiment` | 1.18.1      | 1.20.0      |
 | `bioconductor-tximeta`              | 1.6.3       | 1.8.0       |
 | `picard`                            | 2.23.8      | 2.23.9      |
+| `requests`                          |             | 2.24.0      |
 | `salmon`                            | 1.3.0       | 1.4.0       |
 | `umi_tools`                         | 1.0.1       | 1.1.1       |
 

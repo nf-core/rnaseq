@@ -1,4 +1,4 @@
-# ![nf-core/rnaseq](images/nf-core-rnaseq_logo.png)
+# nf-core/rnaseq: Output
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/rnaseq/output](https://nf-co.re/rnaseq/output)
 

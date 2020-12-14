@@ -26,6 +26,11 @@ if (params.help) {
 /* --          PARAMETER CHECKS                -- */
 ////////////////////////////////////////////////////
 
+// Check that conda channels are set-up correctly
+if (params.enable_conda) {
+    Checks.check_conda_channels(log)
+}
+
 // Check AWS batch settings
 Checks.aws_batch(workflow, params)
 

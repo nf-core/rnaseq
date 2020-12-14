@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#511](https://github.com/nf-core/rnaseq/issues/511)] - rsem/star index fails with large genome
 * [[#515](https://github.com/nf-core/rnaseq/issues/515)] - Add decoy-aware indexing for salmon
 * [[#516](https://github.com/nf-core/rnaseq/issues/516)] - Unexpected error [InvocationTargetException]
+* Check if the bioconda and conda-forge channels are set-up correctly when running with the conda profile.
 
 ### Parameters
 

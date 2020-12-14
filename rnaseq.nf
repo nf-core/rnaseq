@@ -90,6 +90,9 @@ if (anno_readme && file(anno_readme).exists()) {
     file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
+// Stage dummy file to be used as an optional input where required
+ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
+
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
@@ -346,7 +349,7 @@ workflow RNASEQ {
          */
         QUANTIFY_STAR_SALMON (
             ALIGN_STAR.out.bam_transcript,
-            PREPARE_GENOME.out.salmon_index,
+            ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
             true

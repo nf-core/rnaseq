@@ -9,8 +9,8 @@ class Checks {
     static void check_conda_channels() {
         def message = "There's a problem with your conda configuration. " +
                       "Please refer to  https://bioconda.github.io/user/install.html#set-up-channels " + 
-                      "to learn how to set-up the conda-forge and bioconda channels correctly. "
-                      "NB: the order of the channels matters!"
+                      "to learn how to set-up the conda-forge and bioconda channels correctly. " + 
+                      "NB: the order of the channels matters"
 
         Yaml parser = new Yaml()
         def channels = parser.load("conda config --show channels".execute().text).channels

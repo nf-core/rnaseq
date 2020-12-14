@@ -27,7 +27,7 @@ if (params.help) {
 ////////////////////////////////////////////////////
 
 // Check that conda channels are set-up correctly
-if params.enable_conda {
+if (params.enable_conda) {
     Checks.check_conda_channels()
 }
 

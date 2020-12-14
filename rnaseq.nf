@@ -136,6 +136,7 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from './modules/local/process/mul
 include { MULTIQC_CUSTOM_FAIL_MAPPED         } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                      )
 include { MULTIQC_CUSTOM_STRAND_CHECK        } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                      )
 include { BEDTOOLS_GENOMECOV                 } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                               )
+include { UCSC_BEDCLIP                       } from './modules/local/process/ucsc_bedclip'                addParams( options: modules['ucsc_bedclip']                                     )
 include { DUPRADAR                           } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                                         )
 include { GET_SOFTWARE_VERSIONS              } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_star_salmon_options, multiqc_label: 'star_salmon' )
@@ -539,8 +540,13 @@ workflow RNASEQ {
         )
         ch_software_versions = ch_software_versions.mix(BEDTOOLS_GENOMECOV.out.version.first().ifEmpty(null))
         
-        UCSC_BEDGRAPHTOBIGWIG (
+        UCSC_BEDCLIP (
             BEDTOOLS_GENOMECOV.out.bedgraph,
+            PREPARE_GENOME.out.chrom_sizes
+        )
+
+        UCSC_BEDGRAPHTOBIGWIG (
+            UCSC_BEDCLIP.out.bedgraph,
             PREPARE_GENOME.out.chrom_sizes
         )
         ch_software_versions = ch_software_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.version.first().ifEmpty(null))

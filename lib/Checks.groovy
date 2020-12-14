@@ -17,11 +17,11 @@ class Checks {
             return
         }
 
-        // check that all channels are present
+        // Check that all channels are present
         def required_channels = ['conda-forge', 'bioconda', 'defaults']
         def conda_check_failed = !required_channels.every { ch -> ch in channels }
 
-        // check that they are in the right order
+        // Check that they are in the right order
         conda_check_failed |= !(channels.indexOf('conda-forge') < channels.indexOf('bioconda'))
         conda_check_failed |= !(channels.indexOf('bioconda') < channels.indexOf('defaults'))
 
@@ -30,7 +30,7 @@ class Checks {
                      "  There is a problem with your Conda configuration!\n\n" + 
                      "  You will need to set-up the conda-forge and bioconda channels correctly.\n" +
                      "  Please refer to https://bioconda.github.io/user/install.html#set-up-channels\n" +
-                     "  NB: the order of the channels matters!\n" +
+                     "  NB: The order of the channels matters!\n" +
                      "==================================================================================="
         }
     }

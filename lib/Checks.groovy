@@ -6,22 +6,33 @@ import org.yaml.snakeyaml.Yaml
 
 class Checks {
 
-    static void check_conda_channels() {
-        def message = "There's a problem with your conda configuration. " +
-                      "Please refer to  https://bioconda.github.io/user/install.html#set-up-channels " + 
-                      "to learn how to set-up the conda-forge and bioconda channels correctly. " + 
-                      "NB: the order of the channels matters"
-
+    static void check_conda_channels(log) {
         Yaml parser = new Yaml()
-        def channels = parser.load("conda config --show channels".execute().text).channels
+        def channels = []
+        try {
+            def config = parser.load("conda config --show channels".execute().text)
+            channels = config.channels
+        } catch(NullPointerException | IOException e) {
+            log.warn("Could not verify conda channel configuration.")
+            return
+        }
 
         // check that all channels are present
         def required_channels = ['conda-forge', 'bioconda', 'defaults']
-        required_channels.each { ch -> assert ch in channels: message }
+        def conda_check_failed = !required_channels.every { ch -> ch in channels }
 
         // check that they are in the right order
-        assert (channels.indexOf('conda-forge') < channels.indexOf('bioconda')) && 
-               (channels.indexOf('bioconda') < channels.indexOf('defaults')): message      
+        conda_check_failed |= !(channels.indexOf('conda-forge') < channels.indexOf('bioconda'))
+        conda_check_failed |= !(channels.indexOf('bioconda') < channels.indexOf('defaults'))
+
+        if (conda_check_failed) {
+            log.warn(
+                "There's a problem with your conda configuration. " +
+                "Please refer to  https://bioconda.github.io/user/install.html#set-up-channels " + 
+                "to learn how to set-up the conda-forge and bioconda channels correctly. " + 
+                "NB: the order of the channels matters"
+            )
+        }
     }
 
     static void aws_batch(workflow, params) {

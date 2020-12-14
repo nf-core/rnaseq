@@ -28,7 +28,7 @@ if (params.help) {
 
 // Check that conda channels are set-up correctly
 if (params.enable_conda) {
-    Checks.check_conda_channels()
+    Checks.check_conda_channels(log)
 }
 
 // Check AWS batch settings

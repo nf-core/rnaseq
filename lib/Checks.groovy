@@ -26,12 +26,11 @@ class Checks {
         conda_check_failed |= !(channels.indexOf('bioconda') < channels.indexOf('defaults'))
 
         if (conda_check_failed) {
-            log.warn(
-                "There's a problem with your conda configuration. " +
-                "Please refer to  https://bioconda.github.io/user/install.html#set-up-channels " + 
-                "to learn how to set-up the conda-forge and bioconda channels correctly. " + 
-                "NB: the order of the channels matters"
-            )
+log.warn "=============================================================================\n" +
+             "  There is a problem with your Conda configuration!\n\n" + 
+             "  You will need to set-up the conda-forge and bioconda channels correctly.\n" +
+             "  Please refer to https://bioconda.github.io/user/install.html#set-up-channels\n" +
+             "  NB: the order of the channels matters!\n" +      "==================================================================================="```
         }
     }
 

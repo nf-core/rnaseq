@@ -616,7 +616,7 @@ workflow RNASEQ {
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             PREPARE_GENOME.out.salmon_index,
-            PREPARE_GENOME.out.transcript_fasta,
+            ch_dummy_file,
             PREPARE_GENOME.out.gtf,
             false
         )

@@ -64,8 +64,8 @@ workflow PREPARE_GENOME {
         } else {
             ch_gff = file(params.gff)
         }
-        ch_gtf = GFFREAD_GFF ( ch_gff ).gtf
-        ch_gffread_version = GFFREAD_GFF.out.version
+        ch_gtf = GFFREAD ( ch_gff ).gtf
+        ch_gffread_version = GFFREAD.out.version
     }
 
     /*

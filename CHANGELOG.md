@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Bumped Nextflow version `20.07.1` -> `20.11.0-edge`
 * Added UCSC `bedClip` module to restrict bedGraph file coordinates to chromosome boundaries
 * Check if Bioconda and conda-forge channels are set-up correctly when running with `-profile conda`
+* Use `rsem-prepare-reference` and not `gffread` to create transcriptome fasta file
 * [[#494](https://github.com/nf-core/rnaseq/issues/494)] - Issue running rnaseq v2.0 (DSL2) with test profile
 * [[#496](https://github.com/nf-core/rnaseq/issues/496)] - Direct download of Singularity images via HTTPS
 * [[#498](https://github.com/nf-core/rnaseq/issues/498)] - Significantly different versions of STAR in star_rsem (2.7.6a) and star (2.6.1d)

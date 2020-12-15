@@ -132,10 +132,14 @@ def check_samplesheet(file_in, file_out):
 
                 for replicate in sorted(sample_run_dict[sample].keys()):
 
-                    ## Check that multiple runs of the same sample are of the same datatype
+                    ## Check that multiple runs of the same sample are of the same datatype i.e. single- or paired-end
                     if not all(x[0] == sample_run_dict[sample][replicate][0][0] for x in sample_run_dict[sample][replicate]):
                         print_error("Multiple runs of a sample must be of the same datatype!", 'Group', sample)
 
+                    ## Check that multiple runs of the same sample have the same strandedness
+                    if not all(x[-1] == sample_run_dict[sample][replicate][0][-1] for x in sample_run_dict[sample][replicate]):
+                        print_error("Multiple runs of a sample must have the same strandedness!", 'Group', sample)
+                    
                     ## Write to file
                     for idx, sample_info in enumerate(sample_run_dict[sample][replicate]):
                         sample_id = "{}_R{}_T{}".format(sample,replicate,idx+1)

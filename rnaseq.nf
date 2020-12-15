@@ -90,6 +90,9 @@ if (anno_readme && file(anno_readme).exists()) {
     file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
+// Stage dummy file to be used as an optional input where required
+ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
+
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
@@ -133,6 +136,7 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from './modules/local/process/mul
 include { MULTIQC_CUSTOM_FAIL_MAPPED         } from './modules/local/process/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                      )
 include { MULTIQC_CUSTOM_STRAND_CHECK        } from './modules/local/process/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                      )
 include { BEDTOOLS_GENOMECOV                 } from './modules/local/process/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                               )
+include { UCSC_BEDCLIP                       } from './modules/local/process/ucsc_bedclip'                addParams( options: modules['ucsc_bedclip']                                     )
 include { DUPRADAR                           } from './modules/local/process/dupradar'                    addParams( options: modules['dupradar']                                         )
 include { GET_SOFTWARE_VERSIONS              } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from './modules/local/process/deseq2_qc'                   addParams( options: deseq2_qc_star_salmon_options, multiqc_label: 'star_salmon' )
@@ -346,7 +350,7 @@ workflow RNASEQ {
          */
         QUANTIFY_STAR_SALMON (
             ALIGN_STAR.out.bam_transcript,
-            PREPARE_GENOME.out.salmon_index,
+            ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
             true
@@ -536,8 +540,13 @@ workflow RNASEQ {
         )
         ch_software_versions = ch_software_versions.mix(BEDTOOLS_GENOMECOV.out.version.first().ifEmpty(null))
         
-        UCSC_BEDGRAPHTOBIGWIG (
+        UCSC_BEDCLIP (
             BEDTOOLS_GENOMECOV.out.bedgraph,
+            PREPARE_GENOME.out.chrom_sizes
+        )
+
+        UCSC_BEDGRAPHTOBIGWIG (
+            UCSC_BEDCLIP.out.bedgraph,
             PREPARE_GENOME.out.chrom_sizes
         )
         ch_software_versions = ch_software_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.version.first().ifEmpty(null))
@@ -613,7 +622,7 @@ workflow RNASEQ {
         QUANTIFY_SALMON (
             ch_trimmed_reads,
             PREPARE_GENOME.out.salmon_index,
-            PREPARE_GENOME.out.transcript_fasta,
+            ch_dummy_file,
             PREPARE_GENOME.out.gtf,
             false
         )

@@ -17,7 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.12.1`
-* Bump Nextflow version `20.07.1` -> `20.11.0-edge`
+* Bumped Nextflow version `20.07.1` -> `20.11.0-edge`
+* Added UCSC `bedClip` module to restrict bedGraph file coordinates to chromosome boundaries
+* Check if Bioconda and conda-forge channels are set-up correctly when running with `-profile conda`
 * [[#494](https://github.com/nf-core/rnaseq/issues/494)] - Issue running rnaseq v2.0 (DSL2) with test profile
 * [[#496](https://github.com/nf-core/rnaseq/issues/496)] - Direct download of Singularity images via HTTPS
 * [[#498](https://github.com/nf-core/rnaseq/issues/498)] - Significantly different versions of STAR in star_rsem (2.7.6a) and star (2.6.1d)
@@ -26,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#511](https://github.com/nf-core/rnaseq/issues/511)] - rsem/star index fails with large genome
 * [[#515](https://github.com/nf-core/rnaseq/issues/515)] - Add decoy-aware indexing for salmon
 * [[#516](https://github.com/nf-core/rnaseq/issues/516)] - Unexpected error [InvocationTargetException]
-* Check if the bioconda and conda-forge channels are set-up correctly when running with the conda profile.
+* [[#525](https://github.com/nf-core/rnaseq/issues/525)] - sra_ids_to_runinfo.py UnicodeEncodeError
 
 ### Parameters
 
@@ -42,6 +44,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
 > **NB:** Parameter has been __added__ if just the new parameter information is present.  
 > **NB:** Parameter has been __removed__ if parameter information isn't present.  
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency                          | Old version | New version |
+|-------------------------------------|-------------|-------------|
+| `bioconductor-summarizedexperiment` | 1.18.1      | 1.20.0      |
+| `bioconductor-tximeta`              | 1.6.3       | 1.8.0       |
+| `picard`                            | 2.23.8      | 2.23.9      |
+| `requests`                          |             | 2.24.0      |
+| `salmon`                            | 1.3.0       | 1.4.0       |
+| `ucsc-bedclip`                      |             | 377         |
+| `umi_tools`                         | 1.0.1       | 1.1.1       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.  
+> **NB:** Dependency has been __added__ if just the new version information is present.  
+> **NB:** Dependency has been __removed__ if version information isn't present.  
 
 ## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12
 

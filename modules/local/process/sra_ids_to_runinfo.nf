@@ -13,11 +13,11 @@ process SRA_IDS_TO_RUNINFO {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    conda (params.enable_conda ? "conda-forge::requests=2.24.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
+        container "https://depot.galaxyproject.org/singularity/requests:2.24.0"
     } else {
-        container "biocontainers/biocontainers:v1.2.0_cv1"
+        container "quay.io/biocontainers/requests:2.24.0"
     }
     
     input:

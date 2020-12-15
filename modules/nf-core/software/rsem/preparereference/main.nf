@@ -23,8 +23,9 @@ process RSEM_PREPAREREFERENCE {
     path gtf
     
     output:
-    path "rsem"         , emit: index
-    path "*.version.txt", emit: version
+    path "rsem"                , emit: index
+    path "rsem/*transcripts.fa", emit: transcript_fasta
+    path "*.version.txt"       , emit: version
 
     script:
     def software = getSoftwareName(task.process)

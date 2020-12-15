@@ -11,9 +11,13 @@ process SORTMERNA {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda     (params.enable_conda ? "bioconda::sortmerna=4.2.0" : null)
-    container "quay.io/biocontainers/sortmerna:4.2.0--0"
-
+    conda (params.enable_conda ? "bioconda::sortmerna=4.2.0" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/sortmerna:4.2.0--0"
+    } else {
+        container "quay.io/biocontainers/sortmerna:4.2.0--0"
+    }
+    
     input:
     tuple val(meta), path(reads)
     path  fasta

@@ -54,11 +54,11 @@ if (is.null(opt$count_file)){
 ################################################
 ################################################
 
-count.table             <- read.delim(file=opt$count_file,header=TRUE)
-rownames(count.table)   <- count.table[,opt$id_col]
-count.table             <- count.table[,opt$count_col:ncol(count.table),drop=FALSE]
-colnames(count.table)   <- gsub(opt$sample_suffix,"",colnames(count.table))
-colnames(count.table)   <- as.character(lapply(colnames(count.table), function (x) tail(strsplit(x,'.',fixed=TRUE)[[1]],1)))
+count.table           <- read.delim(file=opt$count_file,header=TRUE)
+rownames(count.table) <- count.table[,opt$id_col]
+count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE]
+colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
+colnames(count.table) <- gsub(pattern='\\.$', replacement='', colnames(count.table))
 
 ################################################
 ################################################

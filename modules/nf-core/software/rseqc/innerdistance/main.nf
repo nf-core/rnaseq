@@ -11,8 +11,12 @@ process RSEQC_INNERDISTANCE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda     (params.enable_conda ? "bioconda::rseqc=3.0.1" : null)
-    container "quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1"
+    conda (params.enable_conda ? "bioconda::rseqc=3.0.1" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1"
+    } else {
+        container "quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1"
+    }
 
     input:
     tuple val(meta), path(bam)

@@ -152,9 +152,9 @@ class Schema {
                         }
                     } else {
                         if (param_type == 'string') {
-                            if (schema_value.contains('$baseDir') || schema_value.contains('${baseDir}')) {
-                                def sub_string = schema_value.replace('\$baseDir','')
-                                sub_string     = sub_string.replace('\${baseDir}','')
+                            if (schema_value.contains('$projectDir') || schema_value.contains('${projectDir}')) {
+                                def sub_string = schema_value.replace('\$projectDir','')
+                                sub_string     = sub_string.replace('\${projectDir}','')
                                 if (params_value.contains(sub_string)) {
                                     schema_value = params_value
                                 }

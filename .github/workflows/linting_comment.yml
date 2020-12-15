@@ -1,0 +1,29 @@
+
+name: nf-core linting comment
+# This workflow is triggered after the linting action is complete
+# It posts an automated comment to the PR, even if the PR is coming from a fork
+
+on:
+  workflow_run:
+    workflows: ["nf-core linting"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download lint results
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: linting.yml
+
+      - name: Get PR number
+        id: pr_number
+        run: echo "::set-output name=pr_number::$(cat linting-logs/PR_number.txt)"
+
+      - name: Post PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.pr_number.outputs.pr_number }}
+          path: linting-logs/lint_results.md
+

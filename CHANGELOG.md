@@ -3,6 +3,67 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
+
+### :warning: Major enhancements
+
+* You will need to install Nextflow `>=20.11.0-edge` to run the pipeline. If you are using Singularity, then features introduced in that release now enable the pipeline to directly download Singularity images hosted by Biocontainers as opposed to performing a conversion from Docker images (see [#496](https://github.com/nf-core/rnaseq/issues/496)).
+* The previous default of aligning BAM files using STAR and quantifying using featureCounts (`--aligner star`) has been removed. The new default is to align with STAR and quantify using Salmon (`--aligner star_salmon`).
+  * This decision was made primarily because of the limitations of featureCounts to appropriately quantify gene expression data. Please see [Zhao et al., 2015](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141910#pone-0141910-t001) and [Soneson et al., 2015](https://f1000research.com/articles/4-1521/v1)).
+* For similar reasons, **quantification will not be performed** if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments.
+  * This pipeline option is still available for those who have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2. No gene-level quantification results will be generated.
+  * In a future release we hope to add back quantitation for HISAT2 using different tools.
+
+### Enhancements & fixes
+
+* Updated pipeline template to nf-core/tools `1.12.1`
+* Bumped Nextflow version `20.07.1` -> `20.11.0-edge`
+* Added UCSC `bedClip` module to restrict bedGraph file coordinates to chromosome boundaries
+* Check if Bioconda and conda-forge channels are set-up correctly when running with `-profile conda`
+* Use `rsem-prepare-reference` and not `gffread` to create transcriptome fasta file
+* [[#494](https://github.com/nf-core/rnaseq/issues/494)] - Issue running rnaseq v2.0 (DSL2) with test profile
+* [[#496](https://github.com/nf-core/rnaseq/issues/496)] - Direct download of Singularity images via HTTPS
+* [[#498](https://github.com/nf-core/rnaseq/issues/498)] - Significantly different versions of STAR in star_rsem (2.7.6a) and star (2.6.1d)
+* [[#499](https://github.com/nf-core/rnaseq/issues/499)] - Use of salmon counts for DESeq2
+* [[#500](https://github.com/nf-core/rnaseq/issues/500), [#509](https://github.com/nf-core/rnaseq/issues/509)] - Error with AWS batch params
+* [[#511](https://github.com/nf-core/rnaseq/issues/511)] - rsem/star index fails with large genome
+* [[#515](https://github.com/nf-core/rnaseq/issues/515)] - Add decoy-aware indexing for salmon
+* [[#516](https://github.com/nf-core/rnaseq/issues/516)] - Unexpected error [InvocationTargetException]
+* [[#525](https://github.com/nf-core/rnaseq/issues/525)] - sra_ids_to_runinfo.py UnicodeEncodeError
+
+### Parameters
+
+| Old parameter                | New parameter                         |
+|------------------------------|---------------------------------------|
+| `--fc_extra_attributes`      | `--gtf_extra_attributes`              |
+| `--fc_group_features`        | `--gtf_group_features`                |
+| `--fc_count_type`            | `--gtf_count_type`                    |
+| `--fc_group_features_type`   | `--gtf_group_features_type`           |
+|                              | `--singularity_pull_docker_container` |
+| `--skip_featurecounts`       |                                       |
+
+> **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
+> **NB:** Parameter has been __added__ if just the new parameter information is present.  
+> **NB:** Parameter has been __removed__ if parameter information isn't present.  
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency                          | Old version | New version |
+|-------------------------------------|-------------|-------------|
+| `bioconductor-summarizedexperiment` | 1.18.1      | 1.20.0      |
+| `bioconductor-tximeta`              | 1.6.3       | 1.8.0       |
+| `picard`                            | 2.23.8      | 2.23.9      |
+| `requests`                          |             | 2.24.0      |
+| `salmon`                            | 1.3.0       | 1.4.0       |
+| `ucsc-bedclip`                      |             | 377         |
+| `umi_tools`                         | 1.0.1       | 1.1.1       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.  
+> **NB:** Dependency has been __added__ if just the new version information is present.  
+> **NB:** Dependency has been __removed__ if version information isn't present.  
+
 ## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12
 
 ### Major enhancements

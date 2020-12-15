@@ -11,23 +11,35 @@ process SALMON_QUANT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda     (params.enable_conda ? "bioconda::salmon=1.3.0" : null)
-    container "quay.io/biocontainers/salmon:1.3.0--hf69c8f4_0"
+    conda (params.enable_conda ? "bioconda::salmon=1.4.0" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/salmon:1.4.0--hf69c8f4_0"
+    } else {
+        container "quay.io/biocontainers/salmon:1.4.0--hf69c8f4_0"
+    }
 
     input:
     tuple val(meta), path(reads)
     path  index
     path  gtf
+    path  transcript_fasta
+    val   alignment_mode
     
     output:
     tuple val(meta), path("${prefix}"), emit: results
     path  "*.version.txt"             , emit: version
 
     script:
-    def software  = getSoftwareName(task.process)
-    prefix        = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def endedness = meta.single_end ? "-r $reads" : "-1 ${reads[0]} -2 ${reads[1]}"
+    def software    = getSoftwareName(task.process)
+    prefix          = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
+    def reference   = "--index $index"
+    def input_reads = meta.single_end ? "-r $reads" : "-1 ${reads[0]} -2 ${reads[1]}"
+    if (alignment_mode) {
+        reference   = "-t $transcript_fasta"
+        input_reads = "-a $reads"
+    }
+    
     def strandedness = meta.single_end ? 'U' : 'IU'
     if (meta.strandedness == 'forward') {
         strandedness = meta.single_end ? 'SF' : 'ISF'
@@ -39,8 +51,8 @@ process SALMON_QUANT {
         --geneMap $gtf \\
         --threads $task.cpus \\
         --libType=$strandedness \\
-        --index $index \\
-        $endedness \\
+        $reference \\
+        $input_reads \\
         $options.args \\
         -o $prefix
 

@@ -28,7 +28,7 @@ process GFFREAD {
     script:
     def software = getSoftwareName(task.process)
     """
-    gffread $options.args -F -w transcripts.fa -g $fasta $gff
+    gffread $options.args -E -F -w transcripts.fa -g $fasta $gff
     echo \$(gffread --version 2>&1) > ${software}.version.txt
     """
 }

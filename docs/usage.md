@@ -37,7 +37,7 @@ treatment,1,AEG588A4_S4_L004_R1_001.fastq.gz,AEG588A4_S4_L004_R2_001.fastq.gz,un
 
 ### Full design
 
-A final design file consisting of both single- and paired-end data may look something like the one below. This is for two experimental groups in triplicate, where the last replicate of the `treatment` group has been sequenced twice.
+A final design file consisting of both single- and paired-end data may look something like the one below. The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. This is for two experimental groups in triplicate, where the last replicate of the `treatment` group has been sequenced twice.
 
 ```bash
 group,replicate,fastq_1,fastq_2,strandedness

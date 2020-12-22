@@ -84,7 +84,7 @@ jobs:
 
       # Test the module
       - name: Run pipeline with STAR and various parameters
-      - run: pytest --tag star_salmon --tag ${{ matrix.parameters }} --symlink --wt 2
+      - run: pytest --tag star --tag salmon --tag ${{ matrix.parameters }} --symlink --wt 2
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters

@@ -1,61 +1,61 @@
 - name: Test STAR Salmon with `--skip_qc` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --skip_qc
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --skip_qc
   tags:
     - star_salmon
     - skip_qc
   # TODO files:
 
 - name: Test STAR Salmon with `--remove_ribo_rna` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --remove_ribo_rna
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --remove_ribo_rna
   tags:
     - star_salmon
     - remove_ribo_rna
   # TODO files:
 
 - name: Test STAR Salmon with `--skim_trimming` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --skim_trimming
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --skim_trimming
   tags:
     - star_salmon
     - skim_trimming
   # TODO files:
 
 - name: Test STAR Salmon with `--gtf false` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --gtf false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --gtf false
   tags:
     - star_salmon
   # TODO files:
     - 'gtf false'
 
 - name: Test STAR Salmon with `--star_index false` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --star_index false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --star_index false
   tags:
     - star_salmon
   # TODO files:
     - 'star_index false'
 
 - name: Test STAR Salmon with `--transcript_fasta false` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --transcript_fasta false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --transcript_fasta false
   tags:
     - star_salmon
   # TODO files:
     - 'transcript_fasta false'
 
 - name: Test STAR Salmon with `--min_mapped_reads 90` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --min_mapped_reads 90
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --min_mapped_reads 90
   tags:
     - star_salmon
   # TODO files:
     - 'min_mapped_reads 90'
 
 - name: Test STAR Salmon with `--with_umi` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --with_umi
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --with_umi
   tags:
     - star_salmon
     - with_umi
   # TODO files:
 
 - name: Test STAR Salmon with `--with_umi --skip_trimming` workflow parameters
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon --with_umi --skip_trimming
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --with_umi --skip_trimming
   tags:
     - star_salmon
     - with_umi

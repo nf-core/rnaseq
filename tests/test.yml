@@ -1,5 +1,5 @@
 - name: Run default pipline with test data
-  command: nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+  command: nextflow run main.nf -profile test,docker
   tags:
     - default
   # TODO files:

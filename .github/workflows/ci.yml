@@ -33,9 +33,15 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      - name: Run pipeline with test data
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Run pytest-workflow for pipeline with test data
+      - run: pytest --tag default --symlink --wt 2
 
   star_salmon:
     name: Test STAR Salmon with workflow parameters

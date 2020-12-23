@@ -204,4 +204,4 @@ jobs:
         run: python -m pip install --upgrade pip pytest-workflow
 
       - name: Run pipeline to download public data
-        run: pytest --tag -sra_download --symlink --wt 2
+        run: pytest --tag sra_download --symlink --wt 2

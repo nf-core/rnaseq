@@ -1,4 +1,4 @@
 - name: Run pipeline to download public data
-  command: nextflow run main -profile test_sra,docker
+  command: nextflow run main.nf -profile test_sra,docker
   tags:
     - sra_download

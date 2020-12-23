@@ -1,0 +1,13 @@
+- name: Test STAR RSEM with `--skip_qc` workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner star_rsem --skip_qc
+  tags:
+    - star
+    - rsem
+    - skip_qc
+
+- name: Test STAR RSEM with `--rsem_index false` workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner star_rsem --rsem_index false
+  tags:
+    - star
+    - rsem
+    - 'rsem_index false'

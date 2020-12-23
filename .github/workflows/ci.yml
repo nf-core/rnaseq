@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pytest-workflow for pipeline with test data
+      - name: Run pipeline with default settings
         run: pytest --tag default --symlink --wt 2
 
   star_salmon:
@@ -82,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with STAR and various parameters
+      - name: Run pipeline with STAR Salmon and various parameters
       - run: pytest --tag star --tag salmon --tag ${{ matrix.parameters }} --symlink --wt 2
 
   star_rsem:
@@ -115,7 +115,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with STAR and various parameters
+      - name: Run pipeline with STAR RSEM and various parameters
       - run: pytest --tag star --tag rsem --tag ${{ matrix.parameters }} --symlink --wt 2
 
   hisat2:

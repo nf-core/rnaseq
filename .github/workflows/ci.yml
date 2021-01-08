@@ -95,8 +95,8 @@ jobs:
     strategy:
       matrix:
         parameters:
-          - "--skip_qc"
-          - "--rsem_index false"
+          - "skip_qc"
+          - "rsem_index false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -128,8 +128,8 @@ jobs:
     strategy:
       matrix:
         parameters:
-          - "--skip_qc"
-          - "--hisat2_index false"
+          - "skip_qc"
+          - "hisat2_index false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

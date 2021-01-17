@@ -44,6 +44,9 @@ def check_samplesheet(file_in, file_out):
     KO,1,KO_LIB1_REP1_1.fastq.gz,KO_LIB1_REP1_2.fastq.gz,forward
     """
 
+    config_design_replicate = "optional" # Missing individual or whole column of replicates: set to 0 which means no "_R0" suffix applied, and
+    config_design_replicate = "flexible" # don't check for consecutive replicate numbers.  Zero's allowed, but not missings.
+    config_design_replicate = "strict"   # Default backward-compatible behaviour. Consecutive ids >=1 must be present.
     sample_run_dict = {}
     with open(file_in, "r") as fin:
 
@@ -51,6 +54,10 @@ def check_samplesheet(file_in, file_out):
         MIN_COLS = 4
         HEADER = ['group', 'replicate', 'fastq_1', 'fastq_2', 'strandedness']
         header = [x.strip('"') for x in fin.readline().strip().split(",")]
+        has_replicate = True
+        if config_design_replicate == "optional" and not ("replicate" in header):
+            HEADER = ['group', 'fastq_1', 'fastq_2', 'strandedness']
+            has_replicate = False
         if header[:len(HEADER)] != HEADER:
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
             sys.exit(1)
@@ -68,7 +75,11 @@ def check_samplesheet(file_in, file_out):
                 print_error("Invalid number of populated columns (minimum = {})!".format(MIN_COLS), 'Line', line)
 
             ## Check sample name entries
-            sample, replicate, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
+            if has_replicate:
+                sample, replicate, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
+            else:
+                sample, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
+                replicate = 0
             if sample:
                 if sample.find(" ") != -1:
                     print_error("Group entry contains spaces!", 'Line', line)
@@ -76,6 +87,8 @@ def check_samplesheet(file_in, file_out):
                 print_error("Group entry has not been specified!", 'Line', line)
 
             ## Check replicate entry is integer
+            if config_design_replicate == "optional" and replicate == "":
+                replicate = "0"
             if not replicate.isdigit():
                 print_error("Replicate id not an integer!", 'Line', line)
             replicate = int(replicate)
@@ -127,7 +140,7 @@ def check_samplesheet(file_in, file_out):
 
                 ## Check that replicate ids are in format 1..<NUM_REPS>
                 uniq_rep_ids = set(sample_run_dict[sample].keys())
-                if len(uniq_rep_ids) != max(uniq_rep_ids):
+                if len(uniq_rep_ids) != max(uniq_rep_ids) and config_design_replicate == "Strict":
                     print_error("Replicate ids must start with 1..<num_replicates>!", 'Group', sample)
 
                 for replicate in sorted(sample_run_dict[sample].keys()):
@@ -143,7 +156,7 @@ def check_samplesheet(file_in, file_out):
                     ## Write to file
                     for idx, sample_info in enumerate(sample_run_dict[sample][replicate]):
                         sample_id = "{}_R{}_T{}".format(sample,replicate,idx+1)
-                        if len(uniq_rep_ids) == 1:
+                        if replicate == 0:
                             sample_id = "{}_T{}".format(sample,idx+1)
                         fout.write(','.join([sample_id] + sample_info) + '\n')
 

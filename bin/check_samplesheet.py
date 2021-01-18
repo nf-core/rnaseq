@@ -44,9 +44,9 @@ def check_samplesheet(file_in, file_out):
     KO,1,KO_LIB1_REP1_1.fastq.gz,KO_LIB1_REP1_2.fastq.gz,forward
     """
 
-    config_design_replicate = "optional" # Missing individual or whole column of replicates: set to 0 which means no "_R0" suffix applied, and
-    config_design_replicate = "flexible" # don't check for consecutive replicate numbers.  Zero's allowed, but not missings.
+    config_design_replicate = "optional" # Missing individual or whole column of replicates will be set to 0, then same as 'flexible'. Also, the check for consecutive reps is bypassed
     config_design_replicate = "strict"   # Default backward-compatible behaviour. Consecutive ids >=1 must be present.
+    config_design_replicate = "drop0"    # Zero's allowed, which will omit the "_R0" suffix being added. Consecutive reps checked.
     sample_run_dict = {}
     with open(file_in, "r") as fin:
 
@@ -138,10 +138,15 @@ def check_samplesheet(file_in, file_out):
             fout.write(",".join(['sample', 'single_end', 'fastq_1', 'fastq_2', 'strandedness']) + "\n")
             for sample in sorted(sample_run_dict.keys()):
 
-                ## Check that replicate ids are in format 1..<NUM_REPS>
+                ## Check that replicate ids are in correct format
+                ## 'strict' is 1..<NUM_REPS>
+                ## 'drop0' is 0 or 1 .. <NUM REPS>
+                ## 'optional' is happy with any integers
                 uniq_rep_ids = set(sample_run_dict[sample].keys())
-                if len(uniq_rep_ids) != max(uniq_rep_ids) and config_design_replicate == "Strict":
+                if config_design_replicate == "strict" and len(uniq_rep_ids) != max(uniq_rep_ids):
                     print_error("Replicate ids must start with 1..<num_replicates>!", 'Group', sample)
+                if config_design_replicate == "drop0" and len(uniq_rep_ids) != 1 + max(uniq_rep_ids) - min(uniq_rep_ids):
+                    print_error("Replicate ids must start with 0 or 1 ..<num_replicates>!", 'Group', sample)
 
                 for replicate in sorted(sample_run_dict[sample].keys()):
 

@@ -14,7 +14,13 @@ You will need to create a samplesheet file with information about the samples in
 
 ### Multiple replicates
 
-The `group` identifier is the same when you have multiple replicates from the same experimental group, just increment the `replicate` identifier appropriately. The first replicate value for any given experimental group must be 1. Below is an example for a single experimental group in triplicate:
+The `group` identifier is the same when you have multiple replicates
+from the same experimental group, just increment the `replicate`
+identifier appropriately. The first replicate value for any given
+experimental group must be 0 or 1: any filenames corresponding to
+`replicate 0` samples will be derived purely from the `group` and not
+have a suffix identifying the replicate number appended. Below is an
+example for a single experimental group in triplicate:
 
 ```bash
 group,replicate,fastq_1,fastq_2,strandedness
@@ -22,6 +28,17 @@ control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reve
 control,2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
 control,3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
 ```
+
+resulting in files prefixed `control_R1`...`control_R3`, in contrast to
+
+```bash
+group,replicate,fastq_1,fastq_2,strandedness
+AEG588A1,0,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reverse
+AEG588A2,0,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
+AEG588A3,0,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
+```
+
+preserving the original filenames, without any `_R0` suffix.
 
 ### Multiple runs of the same library
 

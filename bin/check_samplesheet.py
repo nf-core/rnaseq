@@ -44,9 +44,6 @@ def check_samplesheet(file_in, file_out):
     KO,1,KO_LIB1_REP1_1.fastq.gz,KO_LIB1_REP1_2.fastq.gz,forward
     """
 
-    config_design_replicate = "optional" # Missing individual or whole column of replicates will be set to 0, then same as 'flexible'. Also, the check for consecutive reps is bypassed
-    config_design_replicate = "strict"   # Default backward-compatible behaviour. Consecutive ids >=1 must be present.
-    config_design_replicate = "drop0"    # Zero's allowed, which will omit the "_R0" suffix being added. Consecutive reps checked.
     sample_run_dict = {}
     with open(file_in, "r") as fin:
 
@@ -54,10 +51,6 @@ def check_samplesheet(file_in, file_out):
         MIN_COLS = 4
         HEADER = ['group', 'replicate', 'fastq_1', 'fastq_2', 'strandedness']
         header = [x.strip('"') for x in fin.readline().strip().split(",")]
-        has_replicate = True
-        if config_design_replicate == "optional" and not ("replicate" in header):
-            HEADER = ['group', 'fastq_1', 'fastq_2', 'strandedness']
-            has_replicate = False
         if header[:len(HEADER)] != HEADER:
             print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
             sys.exit(1)
@@ -75,11 +68,7 @@ def check_samplesheet(file_in, file_out):
                 print_error("Invalid number of populated columns (minimum = {})!".format(MIN_COLS), 'Line', line)
 
             ## Check sample name entries
-            if has_replicate:
-                sample, replicate, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
-            else:
-                sample, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
-                replicate = 0
+            sample, replicate, fastq_1, fastq_2, strandedness = lspl[:len(HEADER)]
             if sample:
                 if sample.find(" ") != -1:
                     print_error("Group entry contains spaces!", 'Line', line)
@@ -87,7 +76,9 @@ def check_samplesheet(file_in, file_out):
                 print_error("Group entry has not been specified!", 'Line', line)
 
             ## Check replicate entry is integer
-            if config_design_replicate == "optional" and replicate == "":
+            if replicate == "0":
+                print_error("Replicate id not allowed to be zero!", 'Line', line)
+            if replicate == "":
                 replicate = "0"
             if not replicate.isdigit():
                 print_error("Replicate id not an integer!", 'Line', line)
@@ -143,10 +134,8 @@ def check_samplesheet(file_in, file_out):
                 ## 'drop0' is 0 or 1 .. <NUM REPS>
                 ## 'optional' is happy with any integers
                 uniq_rep_ids = set(sample_run_dict[sample].keys())
-                if config_design_replicate == "strict" and len(uniq_rep_ids) != max(uniq_rep_ids):
+                if len(uniq_rep_ids.difference({0})) != max(uniq_rep_ids):
                     print_error("Replicate ids must start with 1..<num_replicates>!", 'Group', sample)
-                if config_design_replicate == "drop0" and len(uniq_rep_ids) != 1 + max(uniq_rep_ids) - min(uniq_rep_ids):
-                    print_error("Replicate ids must start with 0 or 1 ..<num_replicates>!", 'Group', sample)
 
                 for replicate in sorted(sample_run_dict[sample].keys()):
 

@@ -4,7 +4,7 @@
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) < 2) {
-  stop("Usage: salmon_se.r <coldata> <salmon_out>", call.=FALSE)
+  stop("Usage: salmon_se.r <coldata> <counts> <tpm>", call.=FALSE)
 }
 
 coldata = args[1]

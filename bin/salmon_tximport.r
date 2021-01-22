@@ -10,8 +10,8 @@ coldata = args[1]
 
 sample_name = args[3]
 
-prefix = paste(c(sample_name, "salmon"), sep=".")
-
+#prefix = paste(c(sample_name, "salmon"), sep=".")
+prefix = sample_name
 tx2gene = "salmon_tx2gene.tsv"
 info = file.info(tx2gene)
 if (info$size == 0){

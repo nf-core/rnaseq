@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#515](https://github.com/nf-core/rnaseq/issues/515)] - Add decoy-aware indexing for salmon
 * [[#516](https://github.com/nf-core/rnaseq/issues/516)] - Unexpected error [InvocationTargetException]
 * [[#525](https://github.com/nf-core/rnaseq/issues/525)] - sra_ids_to_runinfo.py UnicodeEncodeError
+* [[#550](https://github.com/nf-core/rnaseq/issues/525)] - handle samplesheets with replicate=0
 
 ### Parameters
 

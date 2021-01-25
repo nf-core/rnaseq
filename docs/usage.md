@@ -12,9 +12,22 @@ You will need to create a samplesheet file with information about the samples in
 --input '[path to samplesheet file]'
 ```
 
-### Multiple replicates
+### Experimental groups
 
-The `group` identifier is the same when you have multiple replicates from the same experimental group, just increment the `replicate` identifier appropriately. The first replicate value for any given experimental group must be 1. Below is an example for a single experimental group in triplicate:
+The `group` identifier is the same when you have multiple replicates
+from the same experimental group: just increment the `replicate`
+identifier appropriately to distinguish distinct samples within that
+experimental group. When there is no replication, or you don't want to
+encode it explicitly in the filenames, the `group` should represent
+the sample-name.
+
+The replicate values for any given experimental group must be
+consecutive starting at 1, but it is permitted to omit a replicate id
+for any or all rows (indicated by two consecutive commas, _not_ an
+empty string): filenames corresponding to such samples will be derived
+purely from the `group` and not have a suffix identifying the
+replicate number appended. Below is an example for a single
+experimental group in triplicate:
 
 ```bash
 group,replicate,fastq_1,fastq_2,strandedness
@@ -22,6 +35,17 @@ control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reve
 control,2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
 control,3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
 ```
+
+resulting in files prefixed `control_R1`...`control_R3`, in contrast to
+
+```bash
+group,replicate,fastq_1,fastq_2,strandedness
+AEG588A1,,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reverse
+AEG588A2,,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
+AEG588A3,,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
+```
+
+preserving the sample-names without an '_R' suffix
 
 ### Multiple runs of the same library
 
@@ -34,6 +58,9 @@ control,1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,unst
 treatment,1,AEG588A4_S4_L003_R1_001.fastq.gz,AEG588A4_S4_L003_R2_001.fastq.gz,unstranded
 treatment,1,AEG588A4_S4_L004_R1_001.fastq.gz,AEG588A4_S4_L004_R2_001.fastq.gz,unstranded
 ```
+
+If two rows have the same `group` value and an empty `replicate`
+field, then they will also be concatenated.
 
 ### Full design
 
@@ -53,7 +80,7 @@ treatment,3,AEG588A6_S6_L004_R1_001.fastq.gz,,forward
 | Column         | Description                                                                                                 |
 |----------------|-------------------------------------------------------------------------------------------------------------|
 | `group`        | Group identifier for sample. This will be identical for replicate samples from the same experimental group. |
-| `replicate`    | Integer representing replicate number. Must start from `1..<number of replicates>`.                         |
+| `replicate`    | Integer representing replicate number (optional). Must start from `1..<number of replicates>`.                         |
 | `fastq_1`      | Full path to FastQ file for read 1. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
 | `fastq_2`      | Full path to FastQ file for read 2. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
 | `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward` or `reverse`.                             |

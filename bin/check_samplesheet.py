@@ -64,7 +64,7 @@ def check_samplesheet(file_in, file_out):
                 print_error("Invalid number of columns (minimum = {})!".format(len(HEADER)), 'Line', line)
 
             num_cols = len([x for x in lspl if x])
-            if num_cols < MIN_COLS:
+            if num_cols < MIN_COLS - ( 0 if  lspl[1] else 1):
                 print_error("Invalid number of populated columns (minimum = {})!".format(MIN_COLS), 'Line', line)
 
             ## Check sample name entries
@@ -76,6 +76,10 @@ def check_samplesheet(file_in, file_out):
                 print_error("Group entry has not been specified!", 'Line', line)
 
             ## Check replicate entry is integer
+            if replicate == "0":
+                print_error("Replicate id not allowed to be zero!", 'Line', line)
+            if replicate == "":
+                replicate = "0"
             if not replicate.isdigit():
                 print_error("Replicate id not an integer!", 'Line', line)
             replicate = int(replicate)
@@ -125,9 +129,12 @@ def check_samplesheet(file_in, file_out):
             fout.write(",".join(['sample', 'single_end', 'fastq_1', 'fastq_2', 'strandedness']) + "\n")
             for sample in sorted(sample_run_dict.keys()):
 
-                ## Check that replicate ids are in format 1..<NUM_REPS>
+                ## Check that replicate ids are in correct format
+                ## 'strict' is 1..<NUM_REPS>
+                ## 'drop0' is 0 or 1 .. <NUM REPS>
+                ## 'optional' is happy with any integers
                 uniq_rep_ids = set(sample_run_dict[sample].keys())
-                if len(uniq_rep_ids) != max(uniq_rep_ids):
+                if len(uniq_rep_ids.difference({0})) != max(uniq_rep_ids):
                     print_error("Replicate ids must start with 1..<num_replicates>!", 'Group', sample)
 
                 for replicate in sorted(sample_run_dict[sample].keys()):
@@ -143,6 +150,8 @@ def check_samplesheet(file_in, file_out):
                     ## Write to file
                     for idx, sample_info in enumerate(sample_run_dict[sample][replicate]):
                         sample_id = "{}_R{}_T{}".format(sample,replicate,idx+1)
+                        if replicate == 0:
+                            sample_id = "{}_T{}".format(sample,idx+1)
                         fout.write(','.join([sample_id] + sample_info) + '\n')
 
 

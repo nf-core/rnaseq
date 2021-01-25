@@ -4,7 +4,6 @@ include { saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 
 process SALMON_TXIMPORT {
-    //tag "$meta.id"
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,

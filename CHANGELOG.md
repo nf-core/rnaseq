@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Add gene symbols to merged output (see [#561](https://github.com/nf-core/rnaseq/issues/561)). Thanks to @grst for finding the issue.
 * Make tximport output files using all the samples at the same time since working 1 by 1, will generate different numbers (see [#553](https://github.com/nf-core/rnaseq/issues/553), tximport documentation. First pointed by @j-andrews7.
+* Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
+* Updated Nextflow version to `v21.02.0-edge` (see [#572](https://github.com/nf-core/rnaseq/pull/572#issuecomment-781566422)).
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
 

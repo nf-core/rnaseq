@@ -78,13 +78,17 @@ if (!is.null(tx2gene)){
                                rowData = growdata)
 }
 
+build_table = function(se.obj, slot){
+  cbind(rowData(se.obj), assays(se.obj)[[slot]])
+}
+
 if(exists("gse")){
-  write.table(assays(gse)[["abundance"]], paste(c(prefix, "gene_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)
-  write.table(assays(gse)[["counts"]], paste(c(prefix, "gene_counts.tsv"), collapse="."), sep="\t", quote=FALSE)
-  write.table(assays(gse.ls)[["abundance"]], paste(c(prefix, "gene_tpm_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
-  write.table(assays(gse.ls)[["counts"]], paste(c(prefix, "gene_counts_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
-  write.table(assays(gse.s)[["abundance"]], paste(c(prefix, "gene_tpm_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
-  write.table(assays(gse.s)[["counts"]], paste(c(prefix, "gene_counts_scaled.tsv"), collapse="."), sep="\t", quote=FALSE)
+  write.table(build_table(gse, "abundance"), paste(c(prefix, "gene_tpm.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+  write.table(build_table(gse, "counts"), paste(c(prefix, "gene_counts.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+  write.table(build_table(gse.ls, "abundance"), paste(c(prefix, "gene_tpm_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+  write.table(build_table(gse.ls, "counts"), paste(c(prefix, "gene_counts_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+  write.table(build_table(gse.s, "abundance"), paste(c(prefix, "gene_tpm_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+  write.table(build_table(gse.s, "counts"), paste(c(prefix, "gene_counts_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
 }
 
 write.table(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)

@@ -22,7 +22,9 @@ if (info$size == 0){
 }
 
 counts = read.csv(counts_fn, row.names=1, sep="\t")
+counts = counts[,2:ncol(counts)] # remove gene_name column
 tpm = read.csv(tpm_fn, row.names=1, sep="\t")
+tpm = tpm[,2:ncol(tpm)] # remove gene_name column
 
 if (length(intersect(rownames(counts), rowdata[["tx"]])) > length(intersect(rownames(counts), rowdata[["gene_id"]]))){
     by_what = "tx"

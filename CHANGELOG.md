@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Add gene symbols to merged output (see [#561](https://github.com/nf-core/rnaseq/issues/561)). Thanks to @grst for finding the issue.
 * Make tximport output files using all the samples at the same time since working 1 by 1, will generate different numbers (see [#553](https://github.com/nf-core/rnaseq/issues/553), tximport documentation. First pointed by @j-andrews7.
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15

@@ -128,6 +128,8 @@ def deseq2_qc_star_salmon_options     = deseq2_qc_options.clone()
 def deseq2_qc_star_rsem_options       = deseq2_qc_options.clone()
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_star_rsem_options.args     += " --count_col 3"
+deseq2_qc_star_salmon_options.args   += " --count_col 3"
+deseq2_qc_salmon_options.args        += " --count_col 3"
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
 include { CAT_FASTQ                          } from './modules/local/process/cat_fastq'                   addParams( options: cat_fastq_options                                           ) 

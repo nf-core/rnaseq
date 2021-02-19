@@ -40,15 +40,13 @@ process DESEQ2_QC {
     def software    = getSoftwareName(task.process)
     def label_lower = params.multiqc_label.toLowerCase()
     def label_upper = params.multiqc_label.toUpperCase()
-    def count_col = 2
-    if (task.process =~ /_SALMON/) {count_col = 3}
     """
     deseq2_qc.r \\
-        --count_col $count_col \\
         --count_file $counts \\
         --outdir ./ \\
         --cores $task.cpus \\
         $options.args
+    
     if [ -f "R_sessionInfo.log" ]; then
         sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc >tmp.txt
         sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" tmp.txt

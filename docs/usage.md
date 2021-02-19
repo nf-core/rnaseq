@@ -220,7 +220,8 @@ Whilst these default requirements will hopefully work for most people with most 
 
 ```nextflow
 process {
-  withName: star {
+  // Just the process name not RNASEQ:ALIGN_STAR:STAR_ALIGN
+  withName: STAR_ALIGN {
     memory = 32.GB
   }
 }

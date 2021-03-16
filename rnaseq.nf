@@ -358,7 +358,7 @@ workflow RNASEQ {
             true
         )
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
@@ -631,7 +631,7 @@ workflow RNASEQ {
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
         if (params.skip_alignment && params.aligner != 'star_salmon') {
             ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
-            ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.first().ifEmpty(null))
+            ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.ifEmpty(null))
             ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.ifEmpty(null))
         }
 

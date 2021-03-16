@@ -1,0 +1,48 @@
+name: gunzip
+description: Compresses and decompresses files.
+keywords:
+    - gunzip
+    - compression
+tools:
+    - gunzip:
+        description: |
+            gzip is a file format and a software application used for file compression and decompression.
+        documentation: https://www.gnu.org/software/gzip/manual/gzip.html
+params:
+    - outdir:
+        type: string
+        description: |
+            The pipeline's output directory. By default, the module will
+            output files into `$params.outdir/<SOFTWARE>`
+    - publish_dir_mode:
+        type: string
+        description: |
+            Value for the Nextflow `publishDir` mode parameter.
+            Available: symlink, rellink, link, copy, copyNoFollow, move.
+    - enable_conda:
+        type: boolean
+        description: |
+            Run the module with Conda using the software specified
+            via the `conda` directive
+    - singularity_pull_docker_container:
+        type: boolean
+        description: |
+            Instead of directly downloading Singularity images for use with Singularity,
+            force the workflow to pull and convert Docker containers instead.
+input:
+    - archive:
+        type: file
+        description: File to be compressed/uncompressed
+        pattern: "*.*"
+output:
+    - gunzip:
+        type: file
+        description: Compressed/uncompressed file
+        pattern: "*.*"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@joseespinosa"
+    - "@drpatelh"

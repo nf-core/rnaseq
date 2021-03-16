@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEQC_READDISTRIBUTION {
     tag "$meta.id"
@@ -21,7 +21,7 @@ process RSEQC_READDISTRIBUTION {
     input:
     tuple val(meta), path(bam)
     path  bed
-    
+
     output:
     tuple val(meta), path("*.read_distribution.txt"), emit: txt
     path  "*.version.txt"                           , emit: version
@@ -33,7 +33,7 @@ process RSEQC_READDISTRIBUTION {
     read_distribution.py \\
         -i $bam \\
         -r $bed \\
-         > ${prefix}.read_distribution.txt
+        > ${prefix}.read_distribution.txt
 
     read_distribution.py --version | sed -e "s/read_distribution.py //g" > ${software}.version.txt
     """

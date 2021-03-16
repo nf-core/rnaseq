@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 def VERSION = '2.2.0'
 
@@ -19,12 +19,12 @@ process HISAT2_ALIGN {
     } else {
         container "quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
     }
-    
+
     input:
     tuple val(meta), path(reads)
     path  index
     path  splicesites
-    
+
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.log"), emit: summary

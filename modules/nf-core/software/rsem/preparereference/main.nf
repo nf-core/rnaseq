@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEM_PREPAREREFERENCE {
     tag "$fasta"
@@ -21,11 +21,10 @@ process RSEM_PREPAREREFERENCE {
     input:
     path fasta
     path gtf
-    
+
     output:
-    path "rsem"                , emit: index
-    path "rsem/*transcripts.fa", emit: transcript_fasta
-    path "*.version.txt"       , emit: version
+    path "rsem"         , emit: index
+    path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -43,7 +42,7 @@ process RSEM_PREPAREREFERENCE {
             --runThreadN $task.cpus \\
             $memory \\
             $options.args2
-        
+
         rsem-prepare-reference \\
             --gtf $gtf \\
             --num-threads $task.cpus \\

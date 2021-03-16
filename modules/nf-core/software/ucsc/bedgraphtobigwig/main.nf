@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 def VERSION = '377'
 
@@ -19,11 +19,11 @@ process UCSC_BEDGRAPHTOBIGWIG {
     } else {
         container "quay.io/biocontainers/ucsc-bedgraphtobigwig:377--h446ed27_1"
     }
-    
+
     input:
     tuple val(meta), path(bedgraph)
     path  sizes
-    
+
     output:
     tuple val(meta), path("*.bigWig"), emit: bigwig
     path "*.version.txt"             , emit: version

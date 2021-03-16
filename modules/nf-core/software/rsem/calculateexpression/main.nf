@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEM_CALCULATEEXPRESSION {
     tag "$meta.id"
@@ -21,7 +21,7 @@ process RSEM_CALCULATEEXPRESSION {
     input:
     tuple val(meta), path(reads)
     path  index
-    
+
     output:
     tuple val(meta), path("*.genes.results")   , emit: counts_gene
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript

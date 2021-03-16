@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process UMITOOLS_DEDUP {
     tag "$meta.id"
@@ -20,7 +20,7 @@ process UMITOOLS_DEDUP {
 
     input:
     tuple val(meta), path(bam), path(bai)
-    
+
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.tsv"), emit: tsv

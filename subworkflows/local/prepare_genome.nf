@@ -16,16 +16,11 @@ include {
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../modules/local/gunzip'               addParams( options: params.genome_options       )
-include { GTF2BED                     } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options       )
-include { CAT_ADDITIONAL_FASTA        } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options       )
-include { GTF_GENE_FILTER             } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options       )
-include { GET_CHROM_SIZES             } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options       )
-include { UNTAR as UNTAR_STAR_INDEX   } from '../../modules/local/untar'                addParams( options: params.star_index_options   )
-include { UNTAR as UNTAR_RSEM_INDEX   } from '../../modules/local/untar'                addParams( options: params.index_options        )
-include { UNTAR as UNTAR_HISAT2_INDEX } from '../../modules/local/untar'                addParams( options: params.hisat2_index_options )
-include { UNTAR as UNTAR_SALMON_INDEX } from '../../modules/local/untar'                addParams( options: params.index_options        )
-
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../modules/nf-core/software/gunzip/main'                    addParams( options: params.genome_options       )
+include { UNTAR as UNTAR_STAR_INDEX   } from '../../modules/nf-core/software/untar/main'                     addParams( options: params.star_index_options   )
+include { UNTAR as UNTAR_RSEM_INDEX   } from '../../modules/nf-core/software/untar/main'                     addParams( options: params.index_options        )
+include { UNTAR as UNTAR_HISAT2_INDEX } from '../../modules/nf-core/software/untar/main'                     addParams( options: params.hisat2_index_options )
+include { UNTAR as UNTAR_SALMON_INDEX } from '../../modules/nf-core/software/untar/main'                     addParams( options: params.index_options        )
 include { GFFREAD                     } from '../../modules/nf-core/software/gffread/main'                   addParams( options: params.gffread_options      )
 include { STAR_GENOMEGENERATE         } from '../../modules/nf-core/software/star/genomegenerate/main'       addParams( options: params.star_index_options   )
 include { HISAT2_EXTRACTSPLICESITES   } from '../../modules/nf-core/software/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options )
@@ -33,6 +28,11 @@ include { HISAT2_BUILD                } from '../../modules/nf-core/software/his
 include { SALMON_INDEX                } from '../../modules/nf-core/software/salmon/index/main'              addParams( options: params.salmon_index_options )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/software/rsem/preparereference/main' addParams( options: params.rsem_index_options   )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/software/rsem/preparereference/main' addParams( options: params.genome_options       )
+
+include { GTF2BED                     } from '../../modules/local/gtf2bed'                addParams( options: params.genome_options       )
+include { CAT_ADDITIONAL_FASTA        } from '../../modules/local/cat_additional_fasta'   addParams( options: params.genome_options       )
+include { GTF_GENE_FILTER             } from '../../modules/local/gtf_gene_filter'        addParams( options: params.genome_options       )
+include { GET_CHROM_SIZES             } from '../../modules/local/get_chrom_sizes'        addParams( options: params.genome_options       )
 
 workflow PREPARE_GENOME {
     take:

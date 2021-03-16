@@ -1,0 +1,54 @@
+name: cat_fastq
+description: Concatenates fastq files
+keywords:
+    - fastq
+    - concatenate
+tools:
+    - cat:
+        description: |
+            The cat utility reads files sequentially, writing them to the standard output.
+        documentation: https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html
+params:
+    - outdir:
+        type: string
+        description: |
+            The pipeline's output directory. By default, the module will
+            output files into `$params.outdir/<SOFTWARE>`
+    - publish_dir_mode:
+        type: string
+        description: |
+            Value for the Nextflow `publishDir` mode parameter.
+            Available: symlink, rellink, link, copy, copyNoFollow, move.
+    - enable_conda:
+        type: boolean
+        description: |
+            Run the module with Conda using the software specified
+            via the `conda` directive
+    - singularity_pull_docker_container:
+        type: boolean
+        description: |
+            Instead of directly downloading Singularity images for use with Singularity,
+            force the workflow to pull and convert Docker containers instead.
+input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: list
+        description: |
+            List of input FastQ files to be concatenated.
+output:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: Merged fastq file
+        pattern: "*.{merged.fastq.gz}"
+authors:
+    - "@joseespinosa"
+    - "@drpatelh"

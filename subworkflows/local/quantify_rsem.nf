@@ -6,9 +6,9 @@ params.calculateexpression_options = [:]
 params.samtools_options            = [:]
 params.merge_counts_options        = [:]
 
-include { RSEM_CALCULATEEXPRESSION } from '../../nf-core/software/rsem/calculateexpression/main' addParams( options: params.calculateexpression_options )
-include { BAM_SORT_SAMTOOLS        } from '../../nf-core/subworkflow/bam_sort_samtools'          addParams( options: params.samtools_options            )
-include { RSEM_MERGE_COUNTS        } from '../process/rsem_merge_counts'                         addParams( options: params.merge_counts_options        )
+include { RSEM_CALCULATEEXPRESSION } from '../../modules/nf-core/software/rsem/calculateexpression/main' addParams( options: params.calculateexpression_options )
+include { RSEM_MERGE_COUNTS        } from '../../modules/local/rsem_merge_counts'                        addParams( options: params.merge_counts_options        )
+include { BAM_SORT_SAMTOOLS        } from '../nf-core/bam_sort_samtools'                                 addParams( options: params.samtools_options            )
 
 workflow QUANTIFY_RSEM {
     take:

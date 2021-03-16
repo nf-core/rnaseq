@@ -5,8 +5,8 @@
 params.align_options    = [:]
 params.samtools_options = [:]
 
-include { HISAT2_ALIGN      } from '../../nf-core/software/hisat2/align/main'    addParams( options: params.align_options    )
-include { BAM_SORT_SAMTOOLS } from '../../nf-core/subworkflow/bam_sort_samtools' addParams( options: params.samtools_options )
+include { HISAT2_ALIGN      } from '../../modules/nf-core/software/hisat2/align/main' addParams( options: params.align_options    )
+include { BAM_SORT_SAMTOOLS } from './bam_sort_samtools'                              addParams( options: params.samtools_options )
 
 workflow ALIGN_HISAT2 {
     take:

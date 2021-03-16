@@ -6,7 +6,7 @@ params.options = [:]
 
 include {
     SAMPLESHEET_CHECK;
-    get_samplesheet_paths } from '../process/samplesheet_check' addParams( options: params.options )
+    get_samplesheet_paths } from '../../modules/local/samplesheet_check' addParams( options: params.options )
 
 workflow INPUT_CHECK {
     take:

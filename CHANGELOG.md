@@ -3,14 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unpublished Version / DEV]
+## [[3.1dev](https://github.com/nf-core/rnaseq/releases/tag/3.1)] - 2021-03-26
+
+### :warning: Major enhancements
+
+* Restructure pipeline scripts into `modules/`, `subworkflows/` and `workflows/` directories.
+* Updated Nextflow version to `v21.03.0-edge` (see [#572](https://github.com/nf-core/rnaseq/pull/572#issuecomment-781566422)).
 
 ### Enhancements & fixes
 
-* Add gene symbols to merged output (see [#561](https://github.com/nf-core/rnaseq/issues/561)). Thanks to @grst for finding the issue.
-* Make tximport output files using all the samples at the same time since working 1 by 1, will generate different numbers (see [#553](https://github.com/nf-core/rnaseq/issues/553), tximport documentation. First pointed by @j-andrews7.
+* [[#553](https://github.com/nf-core/rnaseq/issues/553)] - Make tximport output files using all the samples; identified by @j-andrews7.
+* [[#561](https://github.com/nf-core/rnaseq/issues/561)] - Add gene symbols to merged output; identified by @grst.
 * Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
-* Updated Nextflow version to `v21.02.0-edge` (see [#572](https://github.com/nf-core/rnaseq/pull/572#issuecomment-781566422)).
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
 

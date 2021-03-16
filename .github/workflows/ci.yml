@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['21.02.0-edge']
+        nxf_ver: ['21.03.0-edge']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.02.0-edge'
+      NXF_VER: '21.03.0-edge'
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -71,7 +71,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.02.0-edge'
+      NXF_VER: '21.03.0-edge'
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -98,7 +98,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.02.0-edge'
+      NXF_VER: '21.03.0-edge'
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -123,7 +123,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.02.0-edge'
+      NXF_VER: '21.03.0-edge'
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -148,7 +148,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.02.0-edge'
+      NXF_VER: '21.03.0-edge'
       NXF_ANSI_LOG: false
     steps:
       - name: Check out pipeline code

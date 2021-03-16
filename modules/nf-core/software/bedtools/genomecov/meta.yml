@@ -1,0 +1,60 @@
+name: bedtools_genomecov
+description: Computes histograms (default), per-base reports (-d) and BEDGRAPH (-bg) summaries of feature coverage (e.g., aligned sequences) for a given genome.
+keywords:
+    - bed
+    - bam
+    - genomecov
+tools:
+    - bedtools:
+        description: |
+            A set of tools for genomic analysis tasks, specifically enabling genome arithmetic (merge, count, complement) on various file types.
+        documentation: https://bedtools.readthedocs.io/en/latest/content/tools/genomecov.html
+params:
+    - outdir:
+        type: string
+        description: |
+            The pipeline's output directory. By default, the module will
+            output files into `$params.outdir/<SOFTWARE>`
+    - publish_dir_mode:
+        type: string
+        description: |
+            Value for the Nextflow `publishDir` mode parameter.
+            Available: symlink, rellink, link, copy, copyNoFollow, move.
+    - enable_conda:
+        type: boolean
+        description: |
+            Run the module with Conda using the software specified
+            via the `conda` directive
+    - singularity_pull_docker_container:
+        type: boolean
+        description: |
+            Instead of directly downloading Singularity images for use with Singularity,
+            force the workflow to pull and convert Docker containers instead.
+input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: Input BAM file
+        pattern: "*.{bam}"
+output:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - bed:
+        type: file
+        description: Computed genomecov bed file
+        pattern: "*.{bed}"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@Emiller88"
+    - "@sruthipsuresh"
+    - "@drpatelh"

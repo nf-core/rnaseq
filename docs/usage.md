@@ -48,6 +48,7 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 > **NB:** The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 4 columns to match those defined in the table above.
+> **NB:** The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility in instances where replicate information is not required e.g. when sequencing clinical samples.
 
 ## Direct download of public repository data
 

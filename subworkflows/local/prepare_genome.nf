@@ -47,7 +47,7 @@ workflow PREPARE_GENOME {
     } else {
         ch_fasta = file(params.fasta)
     }
-
+    
     /*
      * Uncompress GTF annotation file or create from GFF3 if required
      */
@@ -177,7 +177,7 @@ workflow PREPARE_GENOME {
 
     /*
      * Uncompress Salmon index or generate from scratch if required
-     */  
+     */
     ch_salmon_index   = Channel.empty()
     ch_salmon_version = Channel.empty()  
     if ('salmon' in prepare_tool_indices) {

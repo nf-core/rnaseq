@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEQC_JUNCTIONANNOTATION {
     tag "$meta.id"
@@ -21,7 +21,7 @@ process RSEQC_JUNCTIONANNOTATION {
     input:
     tuple val(meta), path(bam)
     path  bed
-    
+
     output:
     tuple val(meta), path("*.junction.bed"), emit: bed
     tuple val(meta), path("*.Interact.bed"), emit: interact_bed

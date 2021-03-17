@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process PICARD_MARKDUPLICATES {
     tag "$meta.id"
@@ -10,7 +10,7 @@ process PICARD_MARKDUPLICATES {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
-    
+
     conda (params.enable_conda ? "bioconda::picard=2.23.9" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/picard:2.23.9--0"
@@ -20,7 +20,7 @@ process PICARD_MARKDUPLICATES {
 
     input:
     tuple val(meta), path(bam)
-    
+
     output:
     tuple val(meta), path("*.bam")        , emit: bam
     tuple val(meta), path("*.metrics.txt"), emit: metrics

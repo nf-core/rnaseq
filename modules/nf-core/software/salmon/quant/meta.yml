@@ -1,0 +1,73 @@
+name: salmon_quant
+description: gene/transcript quantification with Salmon
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - salmon:
+      description: |
+        Salmon is a tool for wicked-fast transcript quantification from RNA-seq data
+      homepage: https://salmon.readthedocs.io/en/latest/salmon.html
+      manual: https://salmon.readthedocs.io/en/latest/salmon.html
+      doi: 10.1038/nmeth.4197
+params:
+  - outdir:
+      type: string
+      description: |
+        The pipeline's output directory. By default, the module will
+        output files into `$params.outdir/<SOFTWARE>`
+  - publish_dir_mode:
+      type: string
+      description: |
+        Value for the Nextflow `publishDir` mode parameter.
+        Available: symlink, rellink, link, copy, copyNoFollow, move.
+  - enable_conda:
+      type: boolean
+      description: |
+        Run the module with Conda using the software specified
+        via the `conda` directive
+  - singularity_pull_docker_container:
+      type: boolean
+      description: |
+        Instead of directly downloading Singularity images for use with Singularity,
+        force the workflow to pull and convert Docker containers instead.
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - index:
+      type: directory
+      description: Folder containing the star index files
+  - gtf:
+      type: file
+      description: GTF of the reference transcriptome
+  - transcriptome_fasta:
+      type: file
+      description: Fasta file of the reference transcriptome
+  - alignment_mode:
+    type: boolean
+    description: whether to run salmon in alignment mode
+
+output:
+  - sample_output:
+      type: directory
+      description: Folder containing the quantification results for a specific sample
+      pattern: "${prefix}"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "*.{version.txt}"
+
+authors:
+  - "@kevinmenden"
+  - "@drpatelh"

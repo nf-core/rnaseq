@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process QUALIMAP_RNASEQ {
     tag "$meta.id"
@@ -21,7 +21,7 @@ process QUALIMAP_RNASEQ {
     input:
     tuple val(meta), path(bam)
     path  gtf
-    
+
     output:
     tuple val(meta), path("${prefix}"), emit: results
     path  "*.version.txt"             , emit: version

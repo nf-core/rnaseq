@@ -65,17 +65,19 @@ Checks.genome_exists(params, log)
 ////////////////////////////////////////////////////
 
 workflow {
+    
+    /*
+     * WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
+     */
     if (params.public_data_ids) {
-        /*
-         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
-         */
-        include { SRA_DOWNLOAD } from './sra_download' addParams( summary_params: summary_params )
+        include { SRA_DOWNLOAD } from './workflows/sra_download' addParams( summary_params: summary_params )
         SRA_DOWNLOAD ()
+    
+    /*
+     * WORKFLOW: Run main nf-core/rnaseq analysis pipeline
+     */
     } else {
-        /*
-         * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
-         */
-        include { RNASEQ } from './rnaseq' addParams( summary_params: summary_params )
+        include { RNASEQ } from './workflows/rnaseq' addParams( summary_params: summary_params )
         RNASEQ ()
     }
 }

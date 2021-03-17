@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEQC_BAMSTAT {
     tag "$meta.id"
@@ -20,13 +20,13 @@ process RSEQC_BAMSTAT {
 
     input:
     tuple val(meta), path(bam)
-    
+
     output:
     tuple val(meta), path("*.bam_stat.txt"), emit: txt
     path  "*.version.txt"                  , emit: version
 
     script:
-    def software = getSoftwareName(task.process) 
+    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
     bam_stat.py \\

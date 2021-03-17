@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEQC_INNERDISTANCE {
     tag "$meta.id"
@@ -21,7 +21,7 @@ process RSEQC_INNERDISTANCE {
     input:
     tuple val(meta), path(bam)
     path  bed
-    
+
     output:
     tuple val(meta), path("*distance.txt"), optional:true, emit: distance
     tuple val(meta), path("*freq.txt")    , optional:true, emit: freq

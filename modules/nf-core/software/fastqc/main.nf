@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process FASTQC {
     tag "$meta.id"
@@ -17,10 +17,10 @@ process FASTQC {
     } else {
         container "quay.io/biocontainers/fastqc:0.11.9--0"
     }
-    
+
     input:
     tuple val(meta), path(reads)
-    
+
     output:
     tuple val(meta), path("*.html"), emit: html
     tuple val(meta), path("*.zip") , emit: zip

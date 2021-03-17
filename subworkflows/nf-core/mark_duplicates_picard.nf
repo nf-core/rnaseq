@@ -5,9 +5,9 @@
 params.markduplicates_options = [:]
 params.samtools_options       = [:]
 
-include { PICARD_MARKDUPLICATES } from '../software/picard/markduplicates/main' addParams( options: params.markduplicates_options )
-include { SAMTOOLS_INDEX        } from '../software/samtools/index/main'        addParams( options: params.samtools_options       )
-include { BAM_STATS_SAMTOOLS    } from './bam_stats_samtools'                   addParams( options: params.samtools_options       )
+include { PICARD_MARKDUPLICATES } from '../../modules/nf-core/software/picard/markduplicates/main' addParams( options: params.markduplicates_options )
+include { SAMTOOLS_INDEX        } from '../../modules/nf-core/software/samtools/index/main'        addParams( options: params.samtools_options       )
+include { BAM_STATS_SAMTOOLS    } from './bam_stats_samtools'                                      addParams( options: params.samtools_options       )
 
 workflow MARK_DUPLICATES_PICARD {
     take:

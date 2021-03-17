@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEQC_JUNCTIONSATURATION {
     tag "$meta.id"
@@ -21,7 +21,7 @@ process RSEQC_JUNCTIONSATURATION {
     input:
     tuple val(meta), path(bam)
     path  bed
-    
+
     output:
     tuple val(meta), path("*.pdf"), emit: pdf
     tuple val(meta), path("*.r")  , emit: rscript

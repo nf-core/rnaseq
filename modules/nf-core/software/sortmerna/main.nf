@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process SORTMERNA {
     tag "$meta.id"
@@ -17,11 +17,11 @@ process SORTMERNA {
     } else {
         container "quay.io/biocontainers/sortmerna:4.2.0--0"
     }
-    
+
     input:
     tuple val(meta), path(reads)
     path  fasta
-    
+
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log

@@ -53,7 +53,7 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 
 ## Quick Start
 
-1. Install [`nextflow`](https://nf-co.re/usage/installation)
+1. Install [`nextflow`](https://nf-co.re/usage/installation). At the time of release, this version of the pipeline requires an `edge` release of Nextflow (see [usage docs](https://nf-co.re/rnaseq/usage#nextflow-edge-releases) for more information).
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) or [`Podman`](https://podman.io/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_. Note: This pipeline does not currently support running with Conda on macOS because the latest version of the SortMeRNA package is not available for this platform.
 
@@ -88,7 +88,7 @@ On release, automated continuous integration tests run the pipeline on a [full-s
 
     > **NB:** The commands to obtain public data and to run the main arm of the pipeline are completely independent. This is intentional because it allows you to download all of the raw data in an initial pipeline run (`results/public_data/`) and then to curate the auto-created samplesheet based on the available sample metadata before you run the pipeline again properly.
 
-See [usage docs](https://nf-co.re/rnaseq/usage) for all of the available options when running the pipeline.
+See [usage](https://nf-co.re/rnaseq/usage) and [parameter](https://nf-co.re/rnaseq/parameters) docs for all of the available options when running the pipeline.
 
 ## Documentation
 

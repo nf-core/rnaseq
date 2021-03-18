@@ -6,86 +6,50 @@
 
 ## Samplesheet input
 
-You will need to create a samplesheet file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row as shown in the examples below.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
-### Experimental groups
+### Multiple runs of the same sample
 
-The `group` identifier is the same when you have multiple replicates
-from the same experimental group: just increment the `replicate`
-identifier appropriately to distinguish distinct samples within that
-experimental group. When there is no replication, or you don't want to
-encode it explicitly in the filenames, the `group` should represent
-the sample-name.
-
-The replicate values for any given experimental group must be
-consecutive starting at 1, but it is permitted to omit a replicate id
-for any or all rows (indicated by two consecutive commas, _not_ an
-empty string): filenames corresponding to such samples will be derived
-purely from the `group` and not have a suffix identifying the
-replicate number appended. Below is an example for a single
-experimental group in triplicate:
+The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
 
 ```bash
-group,replicate,fastq_1,fastq_2,strandedness
-control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reverse
-control,2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
-control,3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
+sample,fastq_1,fastq_2,strandedness
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,unstranded
+CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,unstranded
+CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,unstranded
 ```
 
-resulting in files prefixed `control_R1`...`control_R3`, in contrast to
+### Full samplesheet
+
+The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 4 columns to match those defined in the table below.
+
+A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
 
 ```bash
-group,replicate,fastq_1,fastq_2,strandedness
-AEG588A1,,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,reverse
-AEG588A2,,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,reverse
-AEG588A3,,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,reverse
+sample,fastq_1,fastq_2,strandedness
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,forward
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,forward
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,forward
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,,reverse
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,,reverse
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,,reverse
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse
 ```
 
-preserving the sample-names without an '_R' suffix
-
-### Multiple runs of the same library
-
-The `group` and `replicate` identifiers are the same when you have re-sequenced the same sample more than once (e.g. to increase sequencing depth). The pipeline will concatenate the raw reads before alignment. Below is an example for two samples sequenced across multiple lanes:
-
-```bash
-group,replicate,fastq_1,fastq_2,strandedness
-control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,unstranded
-control,1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,unstranded
-treatment,1,AEG588A4_S4_L003_R1_001.fastq.gz,AEG588A4_S4_L003_R2_001.fastq.gz,unstranded
-treatment,1,AEG588A4_S4_L004_R1_001.fastq.gz,AEG588A4_S4_L004_R2_001.fastq.gz,unstranded
-```
-
-If two rows have the same `group` value and an empty `replicate`
-field, then they will also be concatenated.
-
-### Full design
-
-A final design file consisting of both single- and paired-end data may look something like the one below. The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. This is for two experimental groups in triplicate, where the last replicate of the `treatment` group has been sequenced twice.
-
-```bash
-group,replicate,fastq_1,fastq_2,strandedness
-control,1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,forward
-control,2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,forward
-control,3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,forward
-treatment,1,AEG588A4_S4_L003_R1_001.fastq.gz,,forward
-treatment,2,AEG588A5_S5_L003_R1_001.fastq.gz,,forward
-treatment,3,AEG588A6_S6_L003_R1_001.fastq.gz,,forward
-treatment,3,AEG588A6_S6_L004_R1_001.fastq.gz,,forward
-```
-
-| Column         | Description                                                                                                 |
-|----------------|-------------------------------------------------------------------------------------------------------------|
-| `group`        | Group identifier for sample. This will be identical for replicate samples from the same experimental group. |
-| `replicate`    | Integer representing replicate number (optional). Must start from `1..<number of replicates>`.                         |
-| `fastq_1`      | Full path to FastQ file for read 1. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
-| `fastq_2`      | Full path to FastQ file for read 2. File has to be zipped and have the extension ".fastq.gz" or ".fq.gz".   |
-| `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward` or `reverse`.                             |
+| Column         | Description                                                                                                                 |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `sample`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample.               |
+| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".  |
+| `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".  |
+| `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward` or `reverse`.                                             |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+
+> **NB:** The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility in instances where replicate information is not required e.g. when sequencing clinical samples.
 
 ## Direct download of public repository data
 
@@ -212,7 +176,7 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 
 Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
 
-#### Custom resource requests
+## Custom resource requests
 
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
 
@@ -233,7 +197,7 @@ If you are likely to be running `nf-core` pipelines regularly it may be a good i
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
-### Running in the background
+## Running in the background
 
 Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
 
@@ -242,7 +206,7 @@ The Nextflow `-bg` flag launches Nextflow in the background, detached from your 
 Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
 Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
 
-#### Nextflow memory requirements
+## Nextflow memory requirements
 
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
@@ -250,3 +214,35 @@ We recommend adding the following line to your environment to limit this (typica
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
+
+## Nextflow edge releases
+
+Stable releases will be becoming more infrequent as Nextflow shifts its development model to becoming more dynamic via the usage of plugins. This will allow functionality to be added as an extension to the core codebase with a release cycle that could potentially be independent to that of Nextflow itself. As a result of the reduction in stable releases, some pipelines may be required to use Nextflow `edge` releases in order to be able to exploit cutting "edge" features e.g. version 3.0 of the nf-core/rnaseq pipeline requires Nextflow `>=20.11.0-edge` in order to be able to directly download Singularity containers over `http` (see [nf-core/rnaseq#496](https://github.com/nf-core/rnaseq/issues/496)).
+
+There are a number of ways you can install Nextflow `edge` releases, the main difference with stable releases being that you have to `export` the version you would like to install before issuing the appropriate installation/execution commands as highlighted below.
+
+* If you have Nextflow installed already, you can issue the version you would like to use on the same line as the pipeline command and it will be fetched if required before the pipeline execution.
+
+```bash
+NXF_VER="20.11.0-edge" nextflow run nf-core/rnaseq -profile test,docker -r 3.0
+```
+
+* If you have Nextflow installed already, another alternative to the option above is to `export` it as an environment variable before you run the pipeline command:
+
+```bash
+export NXF_VER="20.11.0-edge"
+nextflow run nf-core/rnaseq -profile test,docker -r 3.0
+```
+
+* If you would like to download and install a Nextflow `edge` release from scratch with minimal fuss:
+
+```bash
+export NXF_VER="20.11.0-edge"
+wget -qO- get.nextflow.io | bash
+sudo mv nextflow /usr/local/bin/
+nextflow run nf-core/rnaseq -profile test,docker -r 3.0
+```
+
+> Note if you don't have `sudo` privileges required for the last command above then you can move the `nextflow` binary to somewhere else and export that directory to `$PATH` instead. One way of doing that on Linux would be to add `export PATH=$PATH:/path/to/nextflow/binary/` to your `~/.bashrc` file so that it is available every time you login to your system.
+
+* Manually download and install Nextflow from the available [assets](https://github.com/nextflow-io/nextflow/releases) on Github. See [Nextflow installation docs](https://www.nextflow.io/docs/latest/getstarted.html#installation).

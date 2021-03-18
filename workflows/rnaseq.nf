@@ -115,9 +115,6 @@ def modules = params.modules.clone()
 def publish_genome_options = params.save_reference ? [publish_dir: 'genome']       : [publish_files: false]
 def publish_index_options  = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
 
-def cat_fastq_options          = modules['cat_fastq']
-if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
-
 def multiqc_options         = modules['multiqc']
 multiqc_options.args       += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
 if (params.skip_alignment)  { multiqc_options['publish_dir'] = '' }
@@ -132,18 +129,17 @@ deseq2_qc_star_salmon_options.args   += " --count_col 3"
 deseq2_qc_salmon_options.args        += " --count_col 3"
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
-include { CAT_FASTQ                          } from '../modules/local/cat_fastq'                   addParams( options: cat_fastq_options                                           ) 
+include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                               )
+include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_star_salmon_options, multiqc_label: 'star_salmon' )
+include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_star_rsem_options, multiqc_label: 'star_rsem'     )
+include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon'           )
+include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                                         )
+include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                )
 include { MULTIQC                            } from '../modules/local/multiqc'                     addParams( options: multiqc_options                                             )
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                           )
 include { MULTIQC_CUSTOM_FAIL_MAPPED         } from '../modules/local/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                      )
 include { MULTIQC_CUSTOM_STRAND_CHECK        } from '../modules/local/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                      )
-include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                               )
 include { UCSC_BEDCLIP                       } from '../modules/local/ucsc_bedclip'                addParams( options: modules['ucsc_bedclip']                                     )
-include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                                         )
-include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                                )
-include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_star_salmon_options, multiqc_label: 'star_salmon' )
-include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_star_rsem_options, multiqc_label: 'star_rsem'     )
-include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon'           )
 
 /*
  * SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -196,6 +192,9 @@ include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/
 /*
  * MODULE: Installed directly from nf-core/modules
  */
+def cat_fastq_options          = modules['cat_fastq']
+if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
+
 def sortmerna_options           = modules['sortmerna']
 if (params.save_non_ribo_reads) { sortmerna_options.publish_files.put('fastq.gz','') }
 
@@ -212,14 +211,15 @@ def subread_featurecounts_options  = modules['subread_featurecounts']
 def biotype                        = params.gencode ? "gene_type" : params.gtf_group_features_type
 subread_featurecounts_options.args += " -g $biotype -t $params.gtf_count_type"
 
-include { UCSC_BEDGRAPHTOBIGWIG } from '../modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
+include { CAT_FASTQ             } from '../modules/nf-core/software/cat/fastq/main'             addParams( options: cat_fastq_options                ) 
 include { PRESEQ_LCEXTRAP       } from '../modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )
 include { QUALIMAP_RNASEQ       } from '../modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']       )
+include { SAMTOOLS_INDEX        } from '../modules/nf-core/software/samtools/index/main'        addParams( options: umitools_dedup_options           )
 include { SORTMERNA             } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                )
 include { STRINGTIE             } from '../modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                )
-include { UMITOOLS_DEDUP        } from '../modules/nf-core/software/umitools/dedup/main'        addParams( options: umitools_dedup_options           )
-include { SAMTOOLS_INDEX        } from '../modules/nf-core/software/samtools/index/main'        addParams( options: umitools_dedup_options           )
 include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options    )
+include { UMITOOLS_DEDUP        } from '../modules/nf-core/software/umitools/dedup/main'        addParams( options: umitools_dedup_options           )
+include { UCSC_BEDGRAPHTOBIGWIG } from '../modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig'] )
 
 /*
  * SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -279,21 +279,29 @@ workflow RNASEQ {
             meta.id = meta.id.split('_')[0..-2].join('_')
             [ meta, fastq ] }
     .groupTuple(by: [0])
-    .map { it ->  [ it[0], it[1].flatten() ] }
-    .set { ch_cat_fastq }
-
+    .branch {
+        meta, fastq ->
+            single  : fastq.size() == 1
+                return [ meta, fastq.flatten() ]
+            multiple: fastq.size() > 1
+                return [ meta, fastq.flatten() ]
+    }
+    .set { ch_fastq }
+    
     /*
      * MODULE: Concatenate FastQ files from same sample if required
      */
     CAT_FASTQ ( 
-        ch_cat_fastq
+        ch_fastq.multiple
     )
+    .mix(ch_fastq.single)
+    .set { ch_cat_fastq }
 
     /*
      * SUBWORKFLOW: Read QC, extract UMI and trim adapters
      */
     FASTQC_UMITOOLS_TRIMGALORE (
-        CAT_FASTQ.out.reads,
+        ch_cat_fastq,
         params.skip_fastqc || params.skip_qc,
         params.with_umi,
         params.skip_trimming
@@ -652,6 +660,15 @@ workflow RNASEQ {
     /*
      * MODULE: Pipeline reporting
      */
+    // Get unique list of files containing version information
+    ch_software_versions
+        .map { it -> if (it) [ it.baseName, it ] }
+        .groupTuple()
+        .map { it[1][0] }
+        .flatten()
+        .collect()
+        .set { ch_software_versions }
+        
     GET_SOFTWARE_VERSIONS ( 
         ch_software_versions.map { it }.collect()
     )

@@ -6,6 +6,16 @@ name: nf-core AWS test
 on:
   workflow_dispatch:
 
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TOWER_ACCESS_TOKEN: ${{ secrets.AWS_TOWER_TOKEN }}
+  AWS_JOB_DEFINITION: ${{ secrets.AWS_JOB_DEFINITION }}
+  AWS_JOB_QUEUE: ${{ secrets.AWS_JOB_QUEUE }}
+  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+
+
 jobs:
   run-awstest:
     name: Run AWS tests
@@ -23,13 +33,6 @@ jobs:
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TOWER_ACCESS_TOKEN: ${{ secrets.AWS_TOWER_TOKEN }}
-          AWS_JOB_DEFINITION: ${{ secrets.AWS_JOB_DEFINITION }}
-          AWS_JOB_QUEUE: ${{ secrets.AWS_JOB_QUEUE }}
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
           aws batch submit-job \
           --region eu-west-1 \

@@ -69,7 +69,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: linting-log-file
+          name: linting-logs
           path: |
             lint_log.txt
             lint_results.md

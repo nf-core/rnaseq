@@ -1,4 +1,4 @@
-FROM nfcore/base:1.13
+FROM nfcore/base:1.13.1
 LABEL authors="Phil Ewels, Rickard Hammarén" \
       description="Docker image containing all software requirements for the nf-core/rnaseq pipeline"
 

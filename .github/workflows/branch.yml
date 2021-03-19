@@ -23,11 +23,19 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
+            ## This PR is against the `master` branch :x:
+
+            * Do not close this PR
+            * Click _Edit_ and change the `base` to `dev`
+            * This CI test will remain failed until you push a new commit
+
+            ---
+
             Hi @${{ github.event.pull_request.user.login }},
 
-            It looks like this pull-request is has been made against the ${{github.event.pull_request.base.repo.full_name }} `master` branch.
+            It looks like this pull-request is has been made against the [${{github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `master` branch.
             The `master` branch on nf-core repositories should always contain code from the latest release.
-            Because of this, PRs to `master` are only allowed if they come from the ${{github.event.pull_request.base.repo.full_name }} `dev` branch.
+            Because of this, PRs to `master` are only allowed if they come from the [${{github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `dev` branch.
 
             You do not need to close this PR, you can change the target branch to `dev` by clicking the _"Edit"_ button at the top of this page.
             Note that even after this, the test will continue to show as failing until you push a new commit.

@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['20.04.0', '']
+        nxf_ver: ['20.04.0', '21.03.0-edge']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

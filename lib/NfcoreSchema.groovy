@@ -219,7 +219,7 @@ class NfcoreSchema {
                     }
                 }
             }
-            if(rawSchema.keySet().contains('properties') && rawSchema.get('properties').containsKey(ignore_param)) {
+            if(rawSchema.keySet().contains('properties') && rawSchema.get('properties').keySet().contains(ignore_param)) {
                 rawSchema.get("properties").remove(ignore_param)
             }
             if(rawSchema.keySet().contains('required') && rawSchema.required.contains(ignore_param)) {

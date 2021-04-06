@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.1dev](https://github.com/nf-core/rnaseq/releases/tag/3.1)] - 2021-03-26
+## 3.1dev
 
 ### :warning: Major enhancements
 
@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#569](https://github.com/nf-core/rnaseq/issues/569)] - nextflow edge release documentation for running 3.0
 * Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
 * Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process.
+* [[#588](https://github.com/nf-core/rnaseq/pull/588)] - Fix schema for `hisat_build_memory` parameter.
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
 

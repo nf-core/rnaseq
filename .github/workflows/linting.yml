@@ -88,6 +88,8 @@ jobs:
 
   nf-core:
     runs-on: ubuntu-latest
+    env:
+      NXF_VER: 21.03.0-edge
     steps:
 
       - name: Check out pipeline code

@@ -8,6 +8,15 @@ params.summary_params = [:]
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
+def valid_params = [
+    aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
+    pseudoaligners : ['salmon'],
+    rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication']
+]
+
+// Validate input parameters
+Workflow.validateRnaseqParams(params, log, valid_params)
+
 // Check input path parameters to see if they exist
 checkPathParamList = [
     params.input, params.multiqc_config,
@@ -20,9 +29,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-if (params.fasta) { ch_fasta = file(params.fasta) } else { exit 1, 'Genome fasta file not specified!' }
-if (!params.gtf && !params.gff) { exit 1, "No GTF or GFF3 annotation specified!" }
-if (params.gtf && params.gff)   { Checks.gtf_gff_warn(log) }
 
 // Check rRNA databases for sortmerna
 ch_ribo_db = file(params.ribo_database_manifest)
@@ -30,58 +36,22 @@ if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
 
 // Check alignment parameters
 def prepareToolIndices  = []
-def alignerList         = ['star_salmon', 'star_rsem', 'hisat2']
-def pseudoAlignerList   = ['salmon']
-if (!params.skip_alignment) {
-    if (!alignerList.contains(params.aligner)) {
-        exit 1, "Invalid aligner option: ${params.aligner}. Valid options: ${alignerList.join(', ')}"
-    }
-    prepareToolIndices << params.aligner
-} else {
-    if (!params.pseudo_aligner) {
-        exit 1, "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${pseudoAlignerList[0]}"
-    }
-    Checks.skip_alignment_warn(log)
-}
-if (params.pseudo_aligner) {
-    if (!pseudoAlignerList.contains(params.pseudo_aligner)) {
-        exit 1, "Invalid pseudo aligner option: ${params.pseudo_aligner}. Valid options: ${pseudoAlignerList.join(', ')}"
-    } else {
-        if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
-            exit 1, "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff"
-        }
-        prepareToolIndices << params.pseudo_aligner
-    }
-}
-
-// Check and exit if we are using '--aligner star_rsem' and '--with_umi'
-if (!params.skip_alignment && params.aligner == 'star_rsem' && params.with_umi) {
-    Checks.rsem_umi_error(log)
-    exit 1
-}
-
-// Check which RSeQC modules we are running
-def rseqcModuleList = [
-    'bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation',
-    'junction_saturation', 'read_distribution', 'read_duplication'
-]
-def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
-if ((rseqcModuleList + rseqc_modules).unique().size() != rseqcModuleList.size()) {
-    exit 1, "Invalid RSeqC module options: ${params.rseqc_modules}. Valid options: ${rseqcModuleList.join(', ')}"
-}
+if (!params.skip_alignment) { prepareToolIndices << params.aligner        }
+if (params.pseudo_aligner)  { prepareToolIndices << params.pseudo_aligner }
 
 // Show a big warning message if we are using a NCBI / UCSC assembly
 def skip_biotype_qc = params.skip_biotype_qc
 if (params.gtf) {
     if (params.genome == 'GRCh38' && params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
-        Checks.ncbi_genome_warn(log)
         skip_biotype_qc = true
     }
     if (params.gtf.contains('/UCSC/') && params.gtf.contains('Annotation/Genes/genes.gtf')) {
-        Checks.ucsc_genome_warn(log)
         skip_biotype_qc = true
     }
 }
+
+// Get RSeqC modules to run
+def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[ params.genome ]?.readme
@@ -438,7 +408,7 @@ workflow RNASEQ {
     ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
-            .map { meta, align_log -> [ meta ] + Checks.get_star_percent_mapped(workflow, params, log, align_log) }
+            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(workflow, params, log, align_log) }
             .set { ch_percent_mapped }
 
         ch_genome_bam
@@ -608,7 +578,7 @@ workflow RNASEQ {
             ch_software_versions          = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + Checks.get_inferexperiment_strandedness(strand_log, 30) }
+                .map { meta, strand_log -> [ meta ] + Workflow.getInferexperimentStrandedness(strand_log, 30) }
                 .filter { it[0].strandedness != it[1] }
                 .map { meta, strandedness, sense, antisense, undetermined ->
                     [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
@@ -677,7 +647,7 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = Schema.params_summary_multiqc(workflow, params.summary_params)
+        workflow_summary    = Workflow.paramsSummaryMultiqc(workflow, params.summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         MULTIQC (

@@ -7,5 +7,4 @@ files_unchanged:
   - lib/NfcoreSchema.groovy
 files_exist:
   - bin/markdown_to_html.py
-actions_awsfulltest:
-  - .github/workflows/awsfulltest.yml
+actions_awsfulltest: False

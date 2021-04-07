@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.1dev](https://github.com/nf-core/rnaseq/releases/tag/3.1)] - 2021-03-26
+## [[3.1dev](https://github.com/nf-core/rnaseq/releases/tag/3.1)] - 2021-XX-XX
 
 ### :warning: Major enhancements
 
@@ -15,12 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Updated pipeline template to nf-core/tools `1.13.3`
+* Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
+* Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process.
 * [[#553](https://github.com/nf-core/rnaseq/issues/553)] - Make tximport output files using all the samples; identified by @j-andrews7
 * [[#561](https://github.com/nf-core/rnaseq/issues/561)] - Add gene symbols to merged output; identified by @grst
 * [[#567](https://github.com/nf-core/rnaseq/issues/567)] - Update docs to mention trimgalore core usage nuances
 * [[#569](https://github.com/nf-core/rnaseq/issues/569)] - nextflow edge release documentation for running 3.0
-* Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
-* Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process.
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency  | Old version | New version |
+|-------------|-------------|-------------|
+| `multiqc`   | 1.9         | 1.10.1      |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.  
+> **NB:** Dependency has been __added__ if just the new version information is present.  
+> **NB:** Dependency has been __removed__ if version information isn't present.  
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
 

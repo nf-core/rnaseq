@@ -9,7 +9,7 @@ process RSEM_PREPAREREFERENCE {
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'index', publish_id:'') }
 
     conda (params.enable_conda ? "bioconda::rsem=1.3.3 bioconda::star=2.7.6a" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -19,7 +19,7 @@ process RSEM_PREPAREREFERENCE {
     }
 
     input:
-    path fasta
+    path fasta, stageAs: "rsem/*"
     path gtf
 
     output:
@@ -34,7 +34,6 @@ process RSEM_PREPAREREFERENCE {
         args.removeIf { it.contains('--star') }
         def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
-        mkdir rsem
         STAR \\
             --runMode genomeGenerate \\
             --genomeDir rsem/ \\
@@ -55,7 +54,6 @@ process RSEM_PREPAREREFERENCE {
         """
     } else {
         """
-        mkdir rsem
         rsem-prepare-reference \\
             --gtf $gtf \\
             --num-threads $task.cpus \\

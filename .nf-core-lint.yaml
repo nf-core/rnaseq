@@ -1,0 +1,10 @@
+files_unchanged:
+  - .github/PULL_REQUEST_TEMPLATE.md
+  - .github/workflows/linting.yml
+  - assets/email_template.html
+  - assets/email_template.txt
+  - assets/multiqc_config.yaml
+  - lib/NfcoreSchema.groovy
+files_exist:
+  - bin/markdown_to_html.py
+actions_awsfulltest: False

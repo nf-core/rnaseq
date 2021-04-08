@@ -45,8 +45,11 @@ def saveFiles(Map args) {
             def publish_id_list = ioptions.publish_by_meta instanceof List ? ioptions.publish_by_meta : args.publish_by_meta
             for (id in publish_id_list) {
                 if (args.meta && id instanceof String) {
-                    def path = args.meta.containsKey(id) ? args.meta[id] : id
-                    path     = path instanceof String    ? path          : id
+                    def path = id
+                    if (args.meta.containsKey(id)) {
+                        path = args.meta[id] instanceof Boolean ? "${id}_${args.meta[id]}".toString() : args.meta[id]
+                    }
+                    path = path instanceof String ? path : id
                     path_list.add(path)
                 }
             }

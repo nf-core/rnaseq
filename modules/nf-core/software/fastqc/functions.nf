@@ -42,14 +42,14 @@ def saveFiles(Map args) {
         def ioptions  = initOptions(args.options)
         def path_list = [ ioptions.publish_dir ?: args.publish_dir ]
         if (ioptions.publish_by_meta) {
-            def publish_id_list = ioptions.publish_by_meta instanceof List ? ioptions.publish_by_meta : args.publish_by_meta
-            for (id in publish_id_list) {
-                if (args.meta && id instanceof String) {
-                    def path = id
-                    if (args.meta.containsKey(id)) {
-                        path = args.meta[id] instanceof Boolean ? "${id}_${args.meta[id]}".toString() : args.meta[id]
+            def key_list = ioptions.publish_by_meta instanceof List ? ioptions.publish_by_meta : args.publish_by_meta
+            for (key in key_list) {
+                if (args.meta && key instanceof String) {
+                    def path = key
+                    if (args.meta.containsKey(key)) {
+                        path = args.meta[key] instanceof Boolean ? "${key}_${args.meta[key]}".toString() : args.meta[key]
                     }
-                    path = path instanceof String ? path : id
+                    path = path instanceof String ? path : key
                     path_list.add(path)
                 }
             }

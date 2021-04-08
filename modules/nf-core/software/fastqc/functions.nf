@@ -49,7 +49,7 @@ def saveFiles(Map args) {
                     if (args.meta.containsKey(key)) {
                         path = args.meta[key] instanceof Boolean ? "${key}_${args.meta[key]}".toString() : args.meta[key]
                     }
-                    path = path instanceof String ? path : key
+                    path = path instanceof String ? path : ''
                     path_list.add(path)
                 }
             }

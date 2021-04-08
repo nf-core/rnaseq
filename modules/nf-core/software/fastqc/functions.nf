@@ -16,12 +16,12 @@ def getSoftwareName(task_process) {
  */
 def initOptions(Map args) {
     def Map options = [:]
-    options.args          = args.args ?: ''
-    options.args2         = args.args2 ?: ''
-    options.publish_by_id = args.publish_by_id ?: false
-    options.publish_dir   = args.publish_dir ?: ''
-    options.publish_files = args.publish_files
-    options.suffix        = args.suffix ?: ''
+    options.args            = args.args ?: ''
+    options.args2           = args.args2 ?: ''
+    options.publish_by_meta = args.publish_by_meta ?: []
+    options.publish_dir     = args.publish_dir ?: ''
+    options.publish_files   = args.publish_files
+    options.suffix          = args.suffix ?: ''
     return options
 }
 
@@ -29,8 +29,8 @@ def initOptions(Map args) {
  * Tidy up and join elements of a list to return a path string
  */
 def getPathFromList(path_list) {
-    def paths = path_list.findAll { item -> !item?.trim().isEmpty() }  // Remove empty entries
-    paths = paths.collect { it.trim().replaceAll("^[/]+|[/]+\$", "") } // Trim whitespace and trailing slashes
+    def paths = path_list.findAll { item -> !item?.trim().isEmpty() }      // Remove empty entries
+    paths     = paths.collect { it.trim().replaceAll("^[/]+|[/]+\$", "") } // Trim whitespace and trailing slashes
     return paths.join('/')
 }
 
@@ -39,10 +39,17 @@ def getPathFromList(path_list) {
  */
 def saveFiles(Map args) {
     if (!args.filename.endsWith('.version.txt')) {
-        def ioptions = initOptions(args.options)
+        def ioptions  = initOptions(args.options)
         def path_list = [ ioptions.publish_dir ?: args.publish_dir ]
-        if (ioptions.publish_by_id) {
-            path_list.add(args.publish_id)
+        if (ioptions.publish_by_meta) {
+            def publish_id_list = ioptions.publish_by_meta instanceof List ? ioptions.publish_by_meta : args.publish_by_meta
+            for (id in publish_id_list) {
+                if (args.meta && id instanceof String) {
+                    def path = args.meta.containsKey(id) ? args.meta[id] : id
+                    path     = path instanceof String    ? path          : id
+                    path_list.add(path)
+                }
+            }
         }
         if (ioptions.publish_files instanceof Map) {
             for (ext in ioptions.publish_files) {

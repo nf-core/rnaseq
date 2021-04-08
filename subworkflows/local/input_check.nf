@@ -26,6 +26,8 @@ def create_fastq_channels(LinkedHashMap row) {
     meta.id           = row.sample
     meta.single_end   = row.single_end.toBoolean()
     meta.strandedness = row.strandedness
+    meta.test_list    = ['test_list']
+    meta.test_map     = ['test_map']
 
     def array = []
     if (!file(row.fastq_1).exists()) {

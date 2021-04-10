@@ -13,47 +13,6 @@ tools:
             MspI-digested RRBS-type (Reduced Representation Bisufite-Seq) libraries.
         homepage: https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
         documentation: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
-params:
-    - outdir:
-        type: string
-        description: |
-            The pipeline's output directory. By default, the module will
-            output files into `$params.outdir/<SOFTWARE>`
-    - publish_dir_mode:
-        type: string
-        description: |
-            Value for the Nextflow `publishDir` mode parameter.
-            Available: symlink, rellink, link, copy, copyNoFollow, move.
-    - enable_conda:
-        type: boolean
-        description: |
-            Run the module with Conda using the software specified
-            via the `conda` directive
-    - singularity_pull_docker_container:
-        type: boolean
-        description: |
-            Instead of directly downloading Singularity images for use with Singularity,
-            force the workflow to pull and convert Docker containers instead.
-    - clip_r1:
-        type: integer
-        description: |
-            Instructs Trim Galore to remove bp from the 5' end of read 1
-            (or single-end reads)
-    - clip_r2:
-        type: integer
-        description: |
-            Instructs Trim Galore to remove bp from the 5' end of read 2
-            (paired-end reads only)
-    - three_prime_clip_r1:
-        type: integer
-        description: |
-            Instructs Trim Galore to remove bp from the 3' end of read 1
-            AFTER adapter/quality trimming has been performed
-    - three_prime_clip_r2:
-        type: integer
-        description: |
-            Instructs Trim Galore to re move bp from the 3' end of read 2
-            AFTER adapter/quality trimming has been performed
 input:
     - meta:
         type: map

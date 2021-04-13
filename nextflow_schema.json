@@ -182,11 +182,13 @@
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Salmon index."
                 },
-                "hisat_build_memory": {
-                    "type": "integer",
-                    "default": 200,
+                "hisat2_build_memory": {
+                    "type": "string",
+                    "default": "200.GB",
                     "fa_icon": "fas fa-memory",
-                    "description": "Memory passed to HISAT2 build process."
+                    "pattern": "^[\\d\\.]+\\s*.(K|M|G|T)?B$",
+                    "description": "Minimum memory required to use splice sites and exons in the HiSAT2 index build process.",
+                    "help_text": "HiSAT2 requires a huge amount of RAM to build a genome index for larger genomes, if including splice sites and exons e.g. the human genome might typically require 200GB. If you specify less than this threshold for the `HISAT2_BUILD` process then the splice sites and exons will be ignored, meaning that the process will require a lot less memory. If you are working with a small genome, set this parameter to a lower value to reduce the threshold for skipping this check. If using a larger genome, consider supplying more memory to the `HISAT2_BUILD` process."
                 },
                 "gencode": {
                     "type": "boolean",

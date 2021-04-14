@@ -61,6 +61,7 @@ workflow SRA_DOWNLOAD {
                 meta.single_end = meta.single_end.toBoolean()
                 [ meta, [ meta.fastq_1, meta.fastq_2 ] ]
         }
+        .unique()
         .set { ch_sra_reads }
 
     if (!params.skip_sra_fastq_download) {

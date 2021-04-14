@@ -408,7 +408,7 @@ workflow RNASEQ {
     ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
-            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(workflow, params, log, align_log) }
+            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
         ch_genome_bam

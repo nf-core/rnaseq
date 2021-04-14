@@ -119,10 +119,10 @@ class Completion {
     static void summary(workflow, params, log, fail_percent_mapped=[:], pass_percent_mapped=[:]) {
         Map colors = Utils.logColours(params.monochrome_logs)
 
+        def total_aln_count = pass_percent_mapped.size() + fail_percent_mapped.size()
         if (pass_percent_mapped.size() > 0) {
             def idx = 0
             def samp_aln = ''
-            def total_aln_count = pass_percent_mapped.size() + fail_percent_mapped.size()
             for (samp in pass_percent_mapped) {
                 samp_aln += "    ${samp.value}%: ${samp.key}\n"
                 idx += 1
@@ -138,7 +138,7 @@ class Completion {
             for (samp in fail_percent_mapped) {
                 samp_aln += "    ${samp.value}%: ${samp.key}\n"
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${fail_percent_mapped.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${fail_percent_mapped.size()}/$total_aln_count samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
         }
 
         if (workflow.success) {

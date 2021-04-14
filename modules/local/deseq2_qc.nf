@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options       = [:]
 params.multiqc_label = ''
-def options          = initOptions(params.options)
+options              = initOptions(params.options)
 
 process DESEQ2_QC {
     label "process_medium"

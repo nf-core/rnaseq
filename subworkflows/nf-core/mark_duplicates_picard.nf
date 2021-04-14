@@ -1,5 +1,5 @@
 /*
- * Picard MarkDuplicates, sort, index BAM file and run samtools stats, flagstat and idxstats
+ * Picard MarkDuplicates, index BAM file and run samtools stats, flagstat and idxstats
  */
 
 params.markduplicates_options = [:]

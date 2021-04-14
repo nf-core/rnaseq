@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#561](https://github.com/nf-core/rnaseq/issues/561)] - Add gene symbols to merged output; identified by @grst
 * [[#563](https://github.com/nf-core/rnaseq/issues/563)] - samplesheet.csv merge error
 * [[#567](https://github.com/nf-core/rnaseq/issues/567)] - Update docs to mention trimgalore core usage nuances
+* [[#568](https://github.com/nf-core/rnaseq/issues/568)] - `--star_index` argument is ignored with `--aligner star_rsem` option
 * [[#569](https://github.com/nf-core/rnaseq/issues/569)] - nextflow edge release documentation for running 3.0
 * [[#576](https://github.com/nf-core/rnaseq/issues/576)] - umi_tools dedup : Run before salmon to dedup counts
 * [[#582](https://github.com/nf-core/rnaseq/issues/582)] - Generate a separate bigwig tracks for each strand

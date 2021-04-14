@@ -307,7 +307,8 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 <summary>Output files</summary>
 
 * `<ALIGNER>/bigwig/`
-  * `*.bigWig`: bigWig coverage files.
+  * `*.sense.bigWig`: bigWig coverage file relative to genes on the sense strand.
+  * `*.antisense.bigWig`: bigWig coverage file relative to genes on the anti-sense strand.
 
 </details>
 

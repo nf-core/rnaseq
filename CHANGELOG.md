@@ -32,6 +32,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | Dependency  | Old version | New version |
 |-------------|-------------|-------------|
 | `multiqc`   | 1.9         | 1.10.1      |
+| `preseq`    | 2.0.3       | 3.1.2       |
 
 > **NB:** Dependency has been __updated__ if both old and new version information is present.  
 > **NB:** Dependency has been __added__ if just the new version information is present.  

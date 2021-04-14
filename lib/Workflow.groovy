@@ -183,7 +183,7 @@ class Workflow {
     }
 
     // Function that parses and returns the alignment rate from the STAR log output
-    static ArrayList getStarPercentMapped(workflow, params, log, align_log) {
+    static ArrayList getStarPercentMapped(params, align_log) {
         def percent_aligned = 0
         def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
         align_log.eachLine { line ->
@@ -194,13 +194,8 @@ class Workflow {
         }
 
         def pass = false
-        def logname = align_log.getBaseName() - '.Log.final'
-        Map colors = Utils.logColours(params.monochrome_logs)
-        if (percent_aligned <= params.min_mapped_reads.toFloat()) {
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} [FAIL] STAR ${params.min_mapped_reads}% mapped threshold. IGNORING FOR FURTHER DOWNSTREAM ANALYSIS: ${percent_aligned}% - $logname${colors.reset}."
-        } else {
+        if (percent_aligned >= params.min_mapped_reads.toFloat()) {
             pass = true
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} [PASS] STAR ${params.min_mapped_reads}% mapped threshold: ${percent_aligned}% - $logname${colors.reset}."
         }
         return [ percent_aligned, pass ]
     }

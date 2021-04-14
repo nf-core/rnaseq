@@ -18,12 +18,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Updated pipeline template to nf-core/tools `1.13.3`
 * Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
 * Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process.
+* [[#544](https://github.com/nf-core/rnaseq/issues/544)] - Update test-dataset for pipeline
 * [[#553](https://github.com/nf-core/rnaseq/issues/553)] - Make tximport output files using all the samples; identified by @j-andrews7
 * [[#561](https://github.com/nf-core/rnaseq/issues/561)] - Add gene symbols to merged output; identified by @grst
+* [[#563](https://github.com/nf-core/rnaseq/issues/563)] - samplesheet.csv merge error
 * [[#567](https://github.com/nf-core/rnaseq/issues/567)] - Update docs to mention trimgalore core usage nuances
 * [[#569](https://github.com/nf-core/rnaseq/issues/569)] - nextflow edge release documentation for running 3.0
 * [[#576](https://github.com/nf-core/rnaseq/issues/576)] - umi_tools dedup : Run before salmon to dedup counts
+* [[#582](https://github.com/nf-core/rnaseq/issues/582)] - Generate a separate bigwig tracks for each strand
 * [[nf-core/modules#423](https://github.com/nf-core/modules/pull/423)] - Replace `publish_by_id` module option to `publish_by_meta`
+
+### Parameters
+
+| Old parameter                | New parameter                         |
+|------------------------------|---------------------------------------|
+| `--hisat_build_memory`       | `--hisat2_build_memory`               |
+
+> **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
+> **NB:** Parameter has been __added__ if just the new parameter information is present.  
+> **NB:** Parameter has been __removed__ if parameter information isn't present.  
 
 ### Software dependencies
 

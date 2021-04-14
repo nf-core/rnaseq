@@ -109,7 +109,6 @@ include { MULTIQC                            } from '../modules/local/multiqc'  
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                           )
 include { MULTIQC_CUSTOM_FAIL_MAPPED         } from '../modules/local/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                                      )
 include { MULTIQC_CUSTOM_STRAND_CHECK        } from '../modules/local/multiqc_custom_strand_check' addParams( options: [publish_files: false]                                      )
-include { UCSC_BEDCLIP                       } from '../modules/local/ucsc_bedclip'                addParams( options: modules['ucsc_bedclip']                                     )
 
 /*
  * SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -149,11 +148,13 @@ if (['star_salmon','hisat2'].contains(params.aligner)) {
     }
 }
         
-include { INPUT_CHECK     } from '../subworkflows/local/input_check'    addParams( options: [:] )
-include { PREPARE_GENOME  } from '../subworkflows/local/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
-include { QUANTIFY_RSEM   } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
-include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon' addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
-include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon' addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
+include { INPUT_CHECK    } from '../subworkflows/local/input_check'    addParams( options: [:] )
+include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
+include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON            } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
+include { QUANTIFY_SALMON as QUANTIFY_SALMON                 } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE     } from '../subworkflows/local/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_ANTISENSE } from '../subworkflows/local/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_antisense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_antisense'] )
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -190,7 +191,6 @@ include { QUALIMAP_RNASEQ       } from '../modules/nf-core/software/qualimap/rna
 include { SORTMERNA             } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                            )
 include { STRINGTIE             } from '../modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                            )
 include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options                )
-include { UCSC_BEDGRAPHTOBIGWIG } from '../modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: modules['ucsc_bedgraphtobigwig']             )
 
 /*
  * SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -458,7 +458,7 @@ workflow RNASEQ {
     ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
-            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(workflow, params, log, align_log) }
+            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
         ch_genome_bam
@@ -547,24 +547,28 @@ workflow RNASEQ {
     }
 
     /*
-     * MODULE: Coverage tracks
+     * MODULE: Genome-wide coverage with BEDTools
      */
     if (!params.skip_alignment && !params.skip_bigwig) {
+
         BEDTOOLS_GENOMECOV (
             ch_genome_bam
         )
         ch_software_versions = ch_software_versions.mix(BEDTOOLS_GENOMECOV.out.version.first().ifEmpty(null))
-        
-        UCSC_BEDCLIP (
-            BEDTOOLS_GENOMECOV.out.bedgraph,
-            PREPARE_GENOME.out.chrom_sizes
-        )
 
-        UCSC_BEDGRAPHTOBIGWIG (
-            UCSC_BEDCLIP.out.bedgraph,
+        /*
+        * SUBWORKFLOW: Convert bedGraph to bigWig
+        */
+        BEDGRAPH_TO_BIGWIG_SENSE (
+            BEDTOOLS_GENOMECOV.out.bedgraph_sense,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_software_versions = ch_software_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_SENSE.out.ucsc_version.first().ifEmpty(null))
+
+        BEDGRAPH_TO_BIGWIG_ANTISENSE (
+            BEDTOOLS_GENOMECOV.out.bedgraph_antisense,
+            PREPARE_GENOME.out.chrom_sizes
+        )
     }
 
     /*

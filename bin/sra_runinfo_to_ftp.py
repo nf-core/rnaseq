@@ -57,13 +57,16 @@ def parse_sra_runinfo(file_in):
                 if fastq_files:
                     fq_files = fastq_files.split(';')[-2:]
                     fq_md5   = fastq_md5.split(';')[-2:]
-                    if fq_files[0].find('_1.fastq.gz') != -1 and fq_files[1].find('_2.fastq.gz') != -1:
-                        sample_dict['fastq_1'] = fq_files[0]
-                        sample_dict['fastq_2'] = fq_files[1]
-                        sample_dict['md5_1']   = fq_md5[0]
-                        sample_dict['md5_2']   = fq_md5[1]
+                    if len(fq_files) == 2:
+                        if fq_files[0].find('_1.fastq.gz') != -1 and fq_files[1].find('_2.fastq.gz') != -1:
+                            sample_dict['fastq_1'] = fq_files[0]
+                            sample_dict['fastq_2'] = fq_files[1]
+                            sample_dict['md5_1']   = fq_md5[0]
+                            sample_dict['md5_2']   = fq_md5[1]                        
+                        else:
+                            print("Invalid FastQ files found for database id:'{}'!.".format(run_id))
                     else:
-                        print("Invalid FastQ files found for database id:'{}'!.".format(run_id))
+                        print("Invalid number of FastQ files ({}) found for paired-end database id:'{}'!.".format(len(fq_files), run_id))
                 else:
                     db_id = run_id
             

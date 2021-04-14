@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 def VERSION = '377'
 
@@ -32,7 +32,11 @@ process UCSC_BEDCLIP {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    bedClip $bedgraph $sizes ${prefix}.bedGraph
+    bedClip \\
+        $bedgraph \\
+        $sizes \\
+        ${prefix}.bedGraph
+
     echo $VERSION > ${software}.version.txt
     """
 }

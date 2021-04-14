@@ -181,8 +181,8 @@ def stringtie_options   = modules['stringtie']
 stringtie_options.args += params.stringtie_ignore_gtf ? "" : " -e"
 
 def subread_featurecounts_options  = modules['subread_featurecounts']
-def biotype                        = params.gencode ? "gene_type" : params.gtf_group_features_type
-subread_featurecounts_options.args += " -g $biotype -t $params.gtf_count_type"
+def biotype                        = params.gencode ? "gene_type" : params.featurecounts_group_type
+subread_featurecounts_options.args += " -g $biotype -t $params.featurecounts_feature_type"
 
 include { CAT_FASTQ             } from '../modules/nf-core/software/cat/fastq/main'             addParams( options: cat_fastq_options                            )
 include { SAMTOOLS_SORT         } from '../modules/nf-core/software/samtools/sort/main'         addParams( options: modules['samtools_sort_transcriptome_dedup'] )

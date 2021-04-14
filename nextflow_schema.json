@@ -200,27 +200,27 @@
                     "type": "string",
                     "default": "gene_name",
                     "fa_icon": "fas fa-plus-square",
-                    "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file.",
+                    "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file when running Salmon.",
                     "help_text": "This behaviour can be modified by specifying `--gtf_extra_attributes` when running the pipeline. Note that you can also specify more than one desired value, separated by a comma e.g. `--gtf_extra_attributes gene_id,...`.\n"
                 },
                 "gtf_group_features": {
                     "type": "string",
                     "default": "gene_id",
-                    "description": "Define the attribute type used to group features in the GTF file.",
+                    "description": "Define the attribute type used to group features in the GTF file when running Salmon.",
                     "fa_icon": "fas fa-layer-group"
                 },
-                "gtf_group_features_type": {
+                "featurecounts_group_type": {
                     "type": "string",
                     "default": "gene_biotype",
                     "fa_icon": "fas fa-layer-group",
-                    "description": "Define the attribute type used to group feature types in the GTF file."
+                    "description": "The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts."
                 },
-                "gtf_count_type": {
+                "featurecounts_feature_type": {
                     "type": "string",
                     "default": "exon",
                     "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file.",
                     "fa_icon": "fas fa-indent",
-                    "help_text": "You can change this parameter for example, for nuclear RNA-seq where you may want to count reads in introns as well as exons using '--gtf_count_type transcript'."
+                    "help_text": "The feature type used from the GTF file when generating the biotype plot with featureCounts."
                 },
                 "save_reference": {
                     "type": "boolean",

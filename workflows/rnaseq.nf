@@ -442,14 +442,16 @@ workflow RNASEQ {
         /*
          * SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
          */
-        DEDUP_UMI_UMITOOLS_GENOME (
-            ch_genome_bam.join(ch_genome_bai, by: [0])
-        )
-        ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-        ch_genome_bai        = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-        ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-        ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-        ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+        if (params.with_umi) {
+            DEDUP_UMI_UMITOOLS_GENOME (
+                ch_genome_bam.join(ch_genome_bai, by: [0])
+            )
+            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
+            ch_genome_bai        = DEDUP_UMI_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+        }
     }
 
     /*

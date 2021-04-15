@@ -23,7 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#561](https://github.com/nf-core/rnaseq/issues/561)] - Add gene symbols to merged output; identified by @grst
 * [[#563](https://github.com/nf-core/rnaseq/issues/563)] - samplesheet.csv merge error
 * [[#567](https://github.com/nf-core/rnaseq/issues/567)] - Update docs to mention trimgalore core usage nuances
+* [[#568](https://github.com/nf-core/rnaseq/issues/568)] - `--star_index` argument is ignored with `--aligner star_rsem` option
 * [[#569](https://github.com/nf-core/rnaseq/issues/569)] - nextflow edge release documentation for running 3.0
+* [[#576](https://github.com/nf-core/rnaseq/issues/576)] - umi_tools dedup : Run before salmon to dedup counts
 * [[#582](https://github.com/nf-core/rnaseq/issues/582)] - Generate a separate bigwig tracks for each strand
 * [[nf-core/modules#423](https://github.com/nf-core/modules/pull/423)] - Replace `publish_by_id` module option to `publish_by_meta`
 
@@ -32,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Old parameter                | New parameter                         |
 |------------------------------|---------------------------------------|
 | `--hisat_build_memory`       | `--hisat2_build_memory`               |
+| `--gtf_count_type`           | `--featurecounts_feature_type`        |
+| `--gtf_group_features_type`  | `--featurecounts_group_type`          |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
 > **NB:** Parameter has been __added__ if just the new parameter information is present.  
@@ -44,6 +48,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | Dependency  | Old version | New version |
 |-------------|-------------|-------------|
 | `multiqc`   | 1.9         | 1.10.1      |
+| `preseq`    | 2.0.3       | 3.1.2       |
 
 > **NB:** Dependency has been __updated__ if both old and new version information is present.  
 > **NB:** Dependency has been __added__ if just the new version information is present.  

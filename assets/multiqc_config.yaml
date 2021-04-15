@@ -58,16 +58,9 @@ table_columns_visible:
         percent_duplicates: False
 
 extra_fn_clean_exts:
-    - '.ccurve'
-    - '.hisat2'
+    - '.umi_dedup'
     - '_2_val_2'
     - '_val_1'
-    - '_duprate'
-    - '.markdup'
-    - '.read_distribution'
-    - '.junction_annotation'
-    - '.infer_experiment'
-    - '.biotype'
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

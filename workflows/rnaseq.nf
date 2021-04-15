@@ -169,27 +169,28 @@ if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
 def sortmerna_options           = modules['sortmerna']
 if (params.save_non_ribo_reads) { sortmerna_options.publish_files.put('fastq.gz','') }
 
+def umitools_dedup_genome_options = modules['umitools_dedup_genome']
+if (['star_salmon','hisat2'].contains(params.aligner)) {
+    if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
+        umitools_dedup_genome_options.publish_files.put('bam','')
+        umitools_dedup_genome_options.publish_files.put('bai','')
+    }
+}
+
 def stringtie_options   = modules['stringtie']
 stringtie_options.args += params.stringtie_ignore_gtf ? "" : " -e"
 
-def umitools_dedup_options = modules['umitools_dedup']
-if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
-    umitools_dedup_options.publish_files.put('bam','')
-    umitools_dedup_options.publish_files.put('bai','')
-}
-
 def subread_featurecounts_options  = modules['subread_featurecounts']
-def biotype                        = params.gencode ? "gene_type" : params.gtf_group_features_type
-subread_featurecounts_options.args += " -g $biotype -t $params.gtf_count_type"
+def biotype                        = params.gencode ? "gene_type" : params.featurecounts_group_type
+subread_featurecounts_options.args += " -g $biotype -t $params.featurecounts_feature_type"
 
-include { CAT_FASTQ             } from '../modules/nf-core/software/cat/fastq/main'             addParams( options: cat_fastq_options                ) 
-include { PRESEQ_LCEXTRAP       } from '../modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']       )
-include { QUALIMAP_RNASEQ       } from '../modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']       )
-include { SAMTOOLS_INDEX        } from '../modules/nf-core/software/samtools/index/main'        addParams( options: umitools_dedup_options           )
-include { SORTMERNA             } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                )
-include { STRINGTIE             } from '../modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                )
-include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options    )
-include { UMITOOLS_DEDUP        } from '../modules/nf-core/software/umitools/dedup/main'        addParams( options: umitools_dedup_options           )
+include { CAT_FASTQ             } from '../modules/nf-core/software/cat/fastq/main'             addParams( options: cat_fastq_options                            )
+include { SAMTOOLS_SORT         } from '../modules/nf-core/software/samtools/sort/main'         addParams( options: modules['samtools_sort_transcriptome_dedup'] )
+include { PRESEQ_LCEXTRAP       } from '../modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']                   )
+include { QUALIMAP_RNASEQ       } from '../modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']                   )
+include { SORTMERNA             } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                            )
+include { STRINGTIE             } from '../modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                            )
+include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options                )
 
 /*
  * SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -215,8 +216,11 @@ if (params.save_unaligned)       { hisat2_align_options.publish_files.put('fastq
 include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore' addParams( fastqc_options: modules['fastqc'], umitools_options: umitools_extract_options, trimgalore_options: trimgalore_options )
 include { ALIGN_STAR                 } from '../subworkflows/nf-core/align_star'                 addParams( align_options: star_align_options, samtools_options: samtools_sort_options                                            )
 include { ALIGN_HISAT2               } from '../subworkflows/nf-core/align_hisat2'               addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options                                          )
+include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'          addParams( options: modules['samtools_sort_transcriptome']                                                                      )
 include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'     addParams( markduplicates_options: modules['picard_markduplicates'], samtools_options: modules['picard_markduplicates_samtools'] )
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
+include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: umitools_dedup_genome_options, samtools_options: umitools_dedup_genome_options                     )
+include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: modules['umitools_dedup_transcriptome'], samtools_options: modules['umitools_dedup_transcriptome'] )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -318,6 +322,7 @@ workflow RNASEQ {
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bai        = ALIGN_STAR.out.bai
+        ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
         ch_samtools_stats    = ALIGN_STAR.out.stats
         ch_samtools_flagstat = ALIGN_STAR.out.flagstat
         ch_samtools_idxstats = ALIGN_STAR.out.idxstats
@@ -326,10 +331,43 @@ workflow RNASEQ {
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
 
         /*
+        * SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
+        */
+        if (params.with_umi) {
+            // Deduplicate genome BAM file before downstream analysis
+            DEDUP_UMI_UMITOOLS_GENOME (
+                ch_genome_bam.join(ch_genome_bai, by: [0])
+            )
+            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
+            ch_genome_bai        = DEDUP_UMI_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+
+            // Co-ordinate sort, index and run stats on transcriptome BAM
+            BAM_SORT_SAMTOOLS (
+                ch_transcriptome_bam
+            )
+            ch_transcriptome_sorted_bam = BAM_SORT_SAMTOOLS.out.bam
+            ch_transcriptome_sorted_bai = BAM_SORT_SAMTOOLS.out.bai
+
+            // Deduplicate transcriptome BAM file before read counting with Salmon
+            DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
+                ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
+            )
+
+            // Name sort BAM before passing to Salmon
+            SAMTOOLS_SORT (
+                DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
+            )
+            ch_transcriptome_bam = SAMTOOLS_SORT.out.bam
+        }
+
+        /*
          * SUBWORKFLOW: Count reads from BAM alignments using Salmon
          */
         QUANTIFY_STAR_SALMON (
-            ALIGN_STAR.out.bam_transcript,
+            ch_transcriptome_bam,
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
@@ -400,6 +438,20 @@ workflow RNASEQ {
         ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.samtools_version.first().ifEmpty(null))
+
+        /*
+         * SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
+         */
+        if (params.with_umi) {
+            DEDUP_UMI_UMITOOLS_GENOME (
+                ch_genome_bam.join(ch_genome_bai, by: [0])
+            )
+            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
+            ch_genome_bai        = DEDUP_UMI_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+        }
     }
 
     /*
@@ -448,21 +500,6 @@ workflow RNASEQ {
         )
         ch_preseq_multiqc    = PRESEQ_LCEXTRAP.out.ccurve
         ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
-    }
-
-    /*
-     * MODULE: Remove duplicate reads from BAM file based on UMIs
-     */
-    if (!params.skip_alignment && params.aligner != 'star_rsem' && params.with_umi) {
-        UMITOOLS_DEDUP ( 
-            ch_genome_bam.join(ch_genome_bai, by: [0])
-        )
-
-        SAMTOOLS_INDEX ( 
-            UMITOOLS_DEDUP.out.bam
-        )
-        ch_genome_bam = UMITOOLS_DEDUP.out.bam
-        ch_genome_bai = SAMTOOLS_INDEX.out.bai
     }
 
     /*

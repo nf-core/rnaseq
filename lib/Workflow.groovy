@@ -83,9 +83,14 @@ class Workflow {
             }
         }
 
-        // Check and exit if we are using '--aligner star_rsem' and '--with_umi'
-        if (!params.skip_alignment && params.aligner == 'star_rsem' && params.with_umi) {
-            rsemUmiError(log)
+        // Checks when running --aligner star_rsem
+        if (!params.skip_alignment && params.aligner == 'star_rsem') {
+            if (params.with_umi) {
+                rsemUmiError(log)
+            }
+            if (params.rsem_index && params.star_index) {
+                rsemStarIndexWarn(log)   
+            }
         }
 
         // Check which RSeQC modules we are running
@@ -168,10 +173,21 @@ class Workflow {
         System.exit(1)
     }
 
+    // Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
+    static void rsemStarIndexWarn(log) {
+        log.warn "=============================================================================\n" +
+                 "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
+                 "  be present in the path specified by '--rsem_index'.\n\n" +
+                 "  This warning has been generated because you have provided both\n" + 
+                 "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
+                 "  Please see:\n" +
+                 "  https://github.com/nf-core/rnaseq/issues/568\n" +
+                 "==================================================================================="
+    }
+
     // Print a warning after SRA download has completed
     static void sraDownload(log) {
         log.warn "=============================================================================\n" +
-                 "  THIS IS AN EXPERIMENTAL FEATURE!\n\n" + 
                  "  Please double-check the samplesheet that has been auto-created using the\n" +
                  "  public database ids provided via the '--public_data_ids' parameter.\n\n" +
                  "  Public databases don't reliably hold information such as experimental group,\n" +

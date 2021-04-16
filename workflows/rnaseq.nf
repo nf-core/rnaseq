@@ -157,8 +157,6 @@ include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams
 include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options, merge_counts_options: modules['rsem_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON            } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_SALMON                 } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE     } from '../subworkflows/local/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_ANTISENSE } from '../subworkflows/local/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_antisense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_antisense'] )
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -231,6 +229,8 @@ include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplic
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: umitools_dedup_genome_options, samtools_index_options: umitools_dedup_genome_samtools_options, samtools_stats_options: umitools_dedup_genome_samtools_options             )
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: modules['umitools_dedup_transcriptome'], samtools_index_options: modules['umitools_dedup_transcriptome'], samtools_stats_options: modules['umitools_dedup_transcriptome'] )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE         } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_ANTISENSE     } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_antisense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_antisense'] )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */

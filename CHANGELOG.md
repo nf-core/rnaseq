@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--hisat_build_memory`       | `--hisat2_build_memory`               |
 | `--gtf_count_type`           | `--featurecounts_feature_type`        |
 | `--gtf_group_features_type`  | `--featurecounts_group_type`          |
+|                              | `--bam_csi_index`                     |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
 > **NB:** Parameter has been __added__ if just the new parameter information is present.  

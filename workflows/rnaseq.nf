@@ -135,22 +135,26 @@ if (!params.save_reference)  { salmon_index_options['publish_files'] = false }
 def salmon_quant_options   = modules['salmon_quant']
 salmon_quant_options.args += params.save_unaligned ? " --writeUnmappedNames" : ''
 
-def samtools_sort_options = modules['samtools_sort']
+def samtools_sort_genome_options  = modules['samtools_sort_genome']
+def samtools_index_genome_options = modules['samtools_index_genome']
+samtools_index_genome_options.args += params.bam_csi_index ? "-c" : ""
 if (['star_salmon','hisat2'].contains(params.aligner)) {
     if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
-        samtools_sort_options.publish_files.put('bam','')
-        samtools_sort_options.publish_files.put('bai','')
+        samtools_sort_genome_options.publish_files.put('bam','')
+        samtools_index_genome_options.publish_files.put('bai','')
+        samtools_index_genome_options.publish_files.put('csi','')
     }
 } else {
     if (params.save_align_intermeds || params.skip_markduplicates) {
-        samtools_sort_options.publish_files.put('bam','')
-        samtools_sort_options.publish_files.put('bai','')
+        samtools_sort_genome_options.publish_files.put('bam','')
+        samtools_index_genome_options.publish_files.put('bai','')
+        samtools_index_genome_options.publish_files.put('csi','')
     }
 }
-        
+
 include { INPUT_CHECK    } from '../subworkflows/local/input_check'    addParams( options: [:] )
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
-include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_options: samtools_sort_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options, merge_counts_options: modules['rsem_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON            } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_SALMON                 } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE     } from '../subworkflows/local/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
@@ -169,14 +173,6 @@ if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
 def sortmerna_options           = modules['sortmerna']
 if (params.save_non_ribo_reads) { sortmerna_options.publish_files.put('fastq.gz','') }
 
-def umitools_dedup_genome_options = modules['umitools_dedup_genome']
-if (['star_salmon','hisat2'].contains(params.aligner)) {
-    if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
-        umitools_dedup_genome_options.publish_files.put('bam','')
-        umitools_dedup_genome_options.publish_files.put('bai','')
-    }
-}
-
 def stringtie_options   = modules['stringtie']
 stringtie_options.args += params.stringtie_ignore_gtf ? "" : " -e"
 
@@ -185,7 +181,7 @@ def biotype                        = params.gencode ? "gene_type" : params.featu
 subread_featurecounts_options.args += " -g $biotype -t $params.featurecounts_feature_type"
 
 include { CAT_FASTQ             } from '../modules/nf-core/software/cat/fastq/main'             addParams( options: cat_fastq_options                            )
-include { SAMTOOLS_SORT         } from '../modules/nf-core/software/samtools/sort/main'         addParams( options: modules['samtools_sort_transcriptome_dedup'] )
+include { SAMTOOLS_SORT         } from '../modules/nf-core/software/samtools/sort/main'         addParams( options: modules['umitools_dedup_transcriptome_sort'] )
 include { PRESEQ_LCEXTRAP       } from '../modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']                   )
 include { QUALIMAP_RNASEQ       } from '../modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']                   )
 include { SORTMERNA             } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                            )
@@ -213,14 +209,28 @@ def hisat2_align_options         = modules['hisat2_align']
 if (params.save_align_intermeds) { hisat2_align_options.publish_files.put('bam','') }
 if (params.save_unaligned)       { hisat2_align_options.publish_files.put('fastq.gz','unmapped') }
 
+def picard_markduplicates_samtools   = modules['picard_markduplicates_samtools']
+picard_markduplicates_samtools.args += params.bam_csi_index ? "-c" : ""
+
+def umitools_dedup_genome_options          = modules['umitools_dedup_genome']
+def umitools_dedup_genome_samtools_options = modules['umitools_dedup_genome_samtools']
+umitools_dedup_genome_samtools_options.args += params.bam_csi_index ? "-c" : ""
+if (['star_salmon','hisat2'].contains(params.aligner)) {
+    if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
+        umitools_dedup_genome_options.publish_files.put('bam','')
+        umitools_dedup_genome_samtools_options.publish_files.put('bai','')
+        umitools_dedup_genome_samtools_options.publish_files.put('csi','')
+    }
+}
+
 include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore' addParams( fastqc_options: modules['fastqc'], umitools_options: umitools_extract_options, trimgalore_options: trimgalore_options )
-include { ALIGN_STAR                 } from '../subworkflows/nf-core/align_star'                 addParams( align_options: star_align_options, samtools_options: samtools_sort_options                                            )
-include { ALIGN_HISAT2               } from '../subworkflows/nf-core/align_hisat2'               addParams( align_options: hisat2_align_options, samtools_options: samtools_sort_options                                          )
-include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'          addParams( options: modules['samtools_sort_transcriptome']                                                                      )
-include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'     addParams( markduplicates_options: modules['picard_markduplicates'], samtools_options: modules['picard_markduplicates_samtools'] )
+include { ALIGN_STAR                 } from '../subworkflows/nf-core/align_star'                 addParams( align_options: star_align_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options   )
+include { ALIGN_HISAT2               } from '../subworkflows/nf-core/align_hisat2'               addParams( align_options: hisat2_align_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options )
+include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'          addParams( sort_options: modules['samtools_sort_transcriptome'], index_options: modules['samtools_index_transcriptome'], stats_options: modules['samtools_index_transcriptome']      )
+include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'     addParams( markduplicates_options: modules['picard_markduplicates'], samtools_index_options: picard_markduplicates_samtools, samtools_stats_options:  picard_markduplicates_samtools )
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: umitools_dedup_genome_options, samtools_options: umitools_dedup_genome_options                     )
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: modules['umitools_dedup_transcriptome'], samtools_options: modules['umitools_dedup_transcriptome'] )
+include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: umitools_dedup_genome_options, samtools_index_options: umitools_dedup_genome_samtools_options, samtools_stats_options: umitools_dedup_genome_samtools_options             )
+include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: modules['umitools_dedup_transcriptome'], samtools_index_options: modules['umitools_dedup_transcriptome'], samtools_stats_options: modules['umitools_dedup_transcriptome'] )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -307,7 +317,7 @@ workflow RNASEQ {
      * SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
      */
     ch_genome_bam                 = Channel.empty()
-    ch_genome_bai                 = Channel.empty()
+    ch_genome_bam_index           = Channel.empty()
     ch_samtools_stats             = Channel.empty()
     ch_samtools_flagstat          = Channel.empty()
     ch_samtools_idxstats          = Channel.empty()
@@ -321,12 +331,15 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
-        ch_genome_bai        = ALIGN_STAR.out.bai
+        ch_genome_bam_index  = ALIGN_STAR.out.bai
         ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
         ch_samtools_stats    = ALIGN_STAR.out.stats
         ch_samtools_flagstat = ALIGN_STAR.out.flagstat
         ch_samtools_idxstats = ALIGN_STAR.out.idxstats
         ch_star_multiqc      = ALIGN_STAR.out.log_final
+        if (params.bam_csi_index) {
+            ch_genome_bam_index  = ALIGN_STAR.out.csi
+        }
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
 
@@ -336,13 +349,16 @@ workflow RNASEQ {
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
             DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bai, by: [0])
+                ch_genome_bam.join(ch_genome_bam_index, by: [0])
             )
             ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bai        = DEDUP_UMI_UMITOOLS_GENOME.out.bai
+            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
             ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
             ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
             ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            if (params.bam_csi_index) {
+                ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+            }
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_SAMTOOLS (
@@ -399,12 +415,15 @@ workflow RNASEQ {
             PREPARE_GENOME.out.rsem_index
         )
         ch_genome_bam        = QUANTIFY_RSEM.out.bam
-        ch_genome_bai        = QUANTIFY_RSEM.out.bai
+        ch_genome_bam_index  = QUANTIFY_RSEM.out.bai
         ch_samtools_stats    = QUANTIFY_RSEM.out.stats
         ch_samtools_flagstat = QUANTIFY_RSEM.out.flagstat
         ch_samtools_idxstats = QUANTIFY_RSEM.out.idxstats
         ch_star_multiqc      = QUANTIFY_RSEM.out.logs
         ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
+        if (params.bam_csi_index) {
+            ch_genome_bam_index  = QUANTIFY_RSEM.out.csi
+        }
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
 
@@ -431,11 +450,14 @@ workflow RNASEQ {
             PREPARE_GENOME.out.splicesites
         )
         ch_genome_bam        = ALIGN_HISAT2.out.bam
-        ch_genome_bai        = ALIGN_HISAT2.out.bai
+        ch_genome_bam_index  = ALIGN_HISAT2.out.bai
         ch_samtools_stats    = ALIGN_HISAT2.out.stats
         ch_samtools_flagstat = ALIGN_HISAT2.out.flagstat
         ch_samtools_idxstats = ALIGN_HISAT2.out.idxstats
         ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
+        if (params.bam_csi_index) {
+            ch_genome_bam_index  = ALIGN_HISAT2.out.csi
+        }
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.samtools_version.first().ifEmpty(null))
 
@@ -444,13 +466,16 @@ workflow RNASEQ {
          */
         if (params.with_umi) {
             DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bai, by: [0])
+                ch_genome_bam.join(ch_genome_bam_index, by: [0])
             )
             ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bai        = DEDUP_UMI_UMITOOLS_GENOME.out.bai
+            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
             ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
             ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
             ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            if (params.bam_csi_index) {
+                ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+            }
         }
     }
 
@@ -468,11 +493,11 @@ workflow RNASEQ {
             .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
             .set { ch_genome_bam }
 
-        ch_genome_bai
+        ch_genome_bam_index
             .join(ch_percent_mapped, by: [0])
             .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
-            .set { ch_genome_bai }
-
+            .set { ch_genome_bam_index }
+        
         ch_percent_mapped
             .branch { meta, mapped, pass ->
                 pass: pass
@@ -511,11 +536,14 @@ workflow RNASEQ {
             ch_genome_bam
         )
         ch_genome_bam             = MARK_DUPLICATES_PICARD.out.bam
-        ch_genome_bai             = MARK_DUPLICATES_PICARD.out.bai
+        ch_genome_bam_index       = MARK_DUPLICATES_PICARD.out.bai
         ch_samtools_stats         = MARK_DUPLICATES_PICARD.out.stats
         ch_samtools_flagstat      = MARK_DUPLICATES_PICARD.out.flagstat
         ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
         ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
+        if (params.bam_csi_index) {
+            ch_genome_bam_index  = MARK_DUPLICATES_PICARD.out.csi
+        }
         ch_software_versions      = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
     }
 

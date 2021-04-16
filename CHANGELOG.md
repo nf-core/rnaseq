@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Add documentation to guide the analysis from salmon output files - [[slack discussion]](https://nfcore.slack.com/archives/CE8SSJV3N/p1617233836219300)
+* [[#575]](https://github.com/nf-core/rnaseq/issues/575) - Remove duplicated salmon output files.
+* [[#585]](https://github.com/nf-core/rnaseq/issues/585) - Clarify salmon uncertainty for some transcripts.
 * Updated pipeline template to nf-core/tools `1.13.3`
 * Load nf-amazon plugin if AWS igenomes is used (see [#572](https://github.com/nf-core/rnaseq/pull/572)).
 * Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process.

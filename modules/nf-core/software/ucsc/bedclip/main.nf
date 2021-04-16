@@ -12,18 +12,18 @@ process UCSC_BEDCLIP {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
-        
+
     conda (params.enable_conda ? "bioconda::ucsc-bedclip=377" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/ucsc-bedclip:377--h446ed27_1"
+        container "https://depot.galaxyproject.org/singularity/ucsc-bedclip:377--h0b8a92a_2"
     } else {
-        container "quay.io/biocontainers/ucsc-bedclip:377--h446ed27_1"
+        container "quay.io/biocontainers/ucsc-bedclip:377--h0b8a92a_2"
     }
-    
+
     input:
     tuple val(meta), path(bedgraph)
     path  sizes
-    
+
     output:
     tuple val(meta), path("*.bedGraph"), emit: bedgraph
     path "*.version.txt"               , emit: version

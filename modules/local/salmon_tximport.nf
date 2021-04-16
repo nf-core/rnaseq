@@ -21,13 +21,13 @@ process SALMON_TXIMPORT {
     path  tx2gene
     
     output:
-    path("*gene_tpm.tsv")                 , emit: tpm_gene
-    path("*gene_counts.tsv")              , emit: counts_gene
-    path("*gene_counts_length_scaled.tsv"), emit: counts_gene_length_scaled
-    path("*gene_counts_scaled.tsv")       , emit: counts_gene_scaled
-    path("*transcript_tpm.tsv")           , emit: tpm_transcript
-    path("*transcript_counts.tsv")        , emit: counts_transcript
-    path  "*.version.txt"                 , emit: version
+    path "*gene_tpm.tsv"                 , emit: tpm_gene
+    path "*gene_counts.tsv"              , emit: counts_gene
+    path "*gene_counts_length_scaled.tsv", emit: counts_gene_length_scaled
+    path "*gene_counts_scaled.tsv"       , emit: counts_gene_scaled
+    path "*transcript_tpm.tsv"           , emit: tpm_transcript
+    path "*transcript_counts.tsv"        , emit: counts_transcript
+    path "*.version.txt"                 , emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

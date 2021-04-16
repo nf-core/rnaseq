@@ -34,12 +34,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Old parameter                | New parameter                         |
-|------------------------------|---------------------------------------|
-| `--hisat_build_memory`       | `--hisat2_build_memory`               |
-| `--gtf_count_type`           | `--featurecounts_feature_type`        |
-| `--gtf_group_features_type`  | `--featurecounts_group_type`          |
-|                              | `--bam_csi_index`                     |
+| Old parameter               | New parameter                  |
+|-----------------------------|--------------------------------|
+| `--hisat_build_memory`      | `--hisat2_build_memory`        |
+| `--gtf_count_type`          | `--featurecounts_feature_type` |
+| `--gtf_group_features_type` | `--featurecounts_group_type`   |
+|                             | `--bam_csi_index`              |
+|                             | `--schema_ignore_params`       |
+|                             | `--show_hidden_params`         |
+|                             | `--validate_params`            |
+| `--clusterOptions`          |                                |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.  
 > **NB:** Parameter has been __added__ if just the new parameter information is present.  
@@ -51,6 +55,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 
 | Dependency  | Old version | New version |
 |-------------|-------------|-------------|
+| `bedtools`  | 2.29.2      | 2.30.0      |
 | `multiqc`   | 1.9         | 1.10.1      |
 | `preseq`    | 2.0.3       | 3.1.2       |
 

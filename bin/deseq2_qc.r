@@ -7,8 +7,8 @@
 ################################################
 
 ## PCA, HEATMAP AND SCATTERPLOTS FOR SAMPLES IN COUNTS FILE
-    ## - SAMPLE NAMES HAVE TO END IN e.g. "_R1" REPRESENTING REPLICATE ID. LAST 3 CHARACTERS OF SAMPLE NAME WILL BE TRIMMED TO OBTAIN GROUP ID FOR DESEQ2 COMPARISONS.
-    ## - PACKAGES BELOW NEED TO BE AVAILABLE TO LOAD WHEN RUNNING R
+## - SAMPLE NAMES HAVE TO END IN e.g. "_R1" REPRESENTING REPLICATE ID. LAST 3 CHARACTERS OF SAMPLE NAME WILL BE TRIMMED TO OBTAIN GROUP ID FOR DESEQ2 COMPARISONS.
+## - PACKAGES BELOW NEED TO BE AVAILABLE TO LOAD WHEN RUNNING R
 
 ################################################
 ################################################
@@ -54,8 +54,6 @@ if (is.null(opt$count_file)){
 ################################################
 
 count.table           <- read.delim(file=opt$count_file,header=TRUE, row.names=NULL)
-
-
 rownames(count.table) <- count.table[,opt$id_col]
 count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE]
 colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
@@ -70,25 +68,25 @@ colnames(count.table) <- gsub(pattern='\\.$', replacement='', colnames(count.tab
 ################################################
 
 if (file.exists(opt$outdir) == FALSE) {
-    dir.create(opt$outdir,recursive=TRUE)
+    dir.create(opt$outdir, recursive=TRUE)
 }
 setwd(opt$outdir)
 
-samples.vec <- colnames(count.table)
+samples.vec     <- colnames(count.table)
 name_components <- strsplit(samples.vec, "_")
-n_components <- length(name_components[[1]])
-decompose <- n_components!=1 && all(sapply(name_components, length)==n_components) 
-coldata <- data.frame(samples.vec, sample=samples.vec, row.names=1)
+n_components    <- length(name_components[[1]])
+decompose       <- n_components!=1 && all(sapply(name_components, length)==n_components) 
+coldata         <- data.frame(samples.vec, sample=samples.vec, row.names=1)
 if (decompose) {
-  groupings <- as.data.frame(lapply(1:n_components, function(i) sapply(name_components, "[[", i)))
-  names(groupings) <- paste0("Group", 1:n_components)
-  n_distinct <- sapply(groupings, function(grp) length(unique(grp)))
-  groupings <- groupings[n_distinct!=1 & n_distinct!=length(samples.vec)]
-  if (ncol(groupings)!=0) {
-    coldata <- cbind(coldata, groupings)
-  } else {
-    decompose <- FALSE
-  }
+    groupings        <- as.data.frame(lapply(1:n_components, function(i) sapply(name_components, "[[", i)))
+    names(groupings) <- paste0("Group", 1:n_components)
+    n_distinct       <- sapply(groupings, function(grp) length(unique(grp)))
+    groupings        <- groupings[n_distinct!=1 & n_distinct!=length(samples.vec)]
+    if (ncol(groupings)!=0) {
+        coldata <- cbind(coldata, groupings)
+    } else {
+        decompose <- FALSE
+    }
 }
 
 
@@ -113,14 +111,13 @@ if (file.exists(DDSFile) == FALSE) {
         vst_name <- "loaded_rld"
         assay(dds, vst_name) <- assay(rld)
     } else {
-        vst_name==vst_name[1]
+        vst_name <- vst_name[1]
     }
 }
 
 if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
-  warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
-  quit(save = "no", status = 0, runLast = FALSE)
-
+    warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
+    quit(save = "no", status = 0, runLast = FALSE)
 }
 
 
@@ -149,19 +146,17 @@ plotPCA_vst <- function (object,  ntop = 500, assay=length(assays(object))) {
     select     <- order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
     pca        <- prcomp(t(assay(object, assay)[select, ]), center=TRUE, scale=FALSE)
     percentVar <- pca$sdev^2/sum(pca$sdev^2)
-    df <- cbind( as.data.frame(colData(object)), pca$x)
+    df         <- cbind( as.data.frame(colData(object)), pca$x)
     #Order points so extreme samples are more likely to get label
-    ord <- order(abs(rank(df$PC1)-median(df$PC1)), abs(rank(df$PC2)-median(df$PC2)))
-    df <- df[ord,]
-    percentFrame <- data.frame(PC=seq(along=percentVar), percentVar=100*percentVar)
-    attr(df, "percentVar") <- percentFrame
+    ord        <- order(abs(rank(df$PC1)-median(df$PC1)), abs(rank(df$PC2)-median(df$PC2)))
+    df         <- df[ord,]
+    attr(df, "percentVar") <- data.frame(PC=seq(along=percentVar), percentVar=100*percentVar)
     return(df)
 }
 
 PlotFile <- paste(opt$outprefix,".plots.pdf",sep="")
 if (file.exists(PlotFile) == FALSE) {
-    pdf(file=PlotFile,onefile=TRUE,width=7,height=7)
-
+    pdf(file=PlotFile, onefile=TRUE, width=7, height=7)
     ## PCA
     ntop <- c(500, Inf)
     for (n_top_var in ntop) {
@@ -182,29 +177,29 @@ if (file.exists(PlotFile) == FALSE) {
         print(pl)
 
         if (decompose) {
-          pc_names <- paste0("PC", attr(pca.data, "percentVar")$PC)
-          long_pc <- reshape(pca.data, varying=pc_names, direction="long", sep="", timevar="component", idvar="pcrow")
-          long_pc <- subset(long_pc, component<=5) 
-          long_pc_grp <- reshape(long_pc, varying=names(groupings), direction="long", sep="", timevar="grouper")
-          long_pc_grp <- subset(long_pc_grp, grouper<=5)
-          long_pc_grp$component <- paste("PC", long_pc_grp$component)
-          long_pc_grp$grouper <- paste0(long_pc_grp$grouper, c("st","nd","rd","th","th")[long_pc_grp$grouper], " prefix")
-          pl <- ggplot(long_pc_grp, aes(x=Group, y=PC)) +
-            geom_point() +
-            stat_summary(fun=mean, geom="line", aes(group = 1)) +
-            labs(x=NULL, y=NULL, subtitle = plot_subtitle, title="PCs split by sample-name prefixes") +
-            facet_grid(component~grouper, scales="free_x") +
-            scale_x_discrete(guide = guide_axis(n.dodge = 3))
-          print(pl)
+            pc_names <- paste0("PC", attr(pca.data, "percentVar")$PC)
+            long_pc <- reshape(pca.data, varying=pc_names, direction="long", sep="", timevar="component", idvar="pcrow")
+            long_pc <- subset(long_pc, component<=5) 
+            long_pc_grp <- reshape(long_pc, varying=names(groupings), direction="long", sep="", timevar="grouper")
+            long_pc_grp <- subset(long_pc_grp, grouper<=5)
+            long_pc_grp$component <- paste("PC", long_pc_grp$component)
+            long_pc_grp$grouper <- paste0(long_pc_grp$grouper, c("st","nd","rd","th","th")[long_pc_grp$grouper], " prefix")
+            pl <- ggplot(long_pc_grp, aes(x=Group, y=PC)) +
+                geom_point() +
+                stat_summary(fun=mean, geom="line", aes(group = 1)) +
+                labs(x=NULL, y=NULL, subtitle = plot_subtitle, title="PCs split by sample-name prefixes") +
+                facet_grid(component~grouper, scales="free_x") +
+                scale_x_discrete(guide = guide_axis(n.dodge = 3))
+            print(pl)
         }
-
     } # at end of loop, we'll be using the user-defined ntop if any, else all genes
     
     ## WRITE PC1 vs PC2 VALUES TO FILE
     pca.vals           <- pca.data[,c("PC1","PC2")]
     colnames(pca.vals) <- paste0(colnames(pca.vals), ": ", percentVar[1:2], '% variance')
     pca.vals           <- cbind(sample = rownames(pca.vals), pca.vals)
-    write.table(pca.vals,file=paste(opt$outprefix,".pca.vals.txt",sep=""),row.names=FALSE,col.names=TRUE,sep="\t",quote=TRUE)
+    write.table(pca.vals, file = paste(opt$outprefix, ".pca.vals.txt", sep=""),
+                row.names = FALSE, col.names = TRUE, sep = "\t", quote = TRUE)
 
     ## SAMPLE CORRELATION HEATMAP
     sampleDists      <- dist(t(assay(dds, vst_name)))
@@ -219,8 +214,8 @@ if (file.exists(PlotFile) == FALSE) {
     )
 
     ## WRITE SAMPLE DISTANCES TO FILE
-    write.table(cbind(sample = rownames(sampleDistMatrix), sampleDistMatrix),file=paste(opt$outprefix,".sample.dists.txt",sep=""),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
-
+    write.table(cbind(sample = rownames(sampleDistMatrix), sampleDistMatrix),file=paste(opt$outprefix, ".sample.dists.txt", sep=""),
+                row.names=FALSE, col.names=TRUE, sep="\t", quote=FALSE)
     dev.off()
 }
 
@@ -232,18 +227,18 @@ if (file.exists(PlotFile) == FALSE) {
 
 SizeFactorsDir <- "size_factors/"
 if (file.exists(SizeFactorsDir) == FALSE) {
-    dir.create(SizeFactorsDir,recursive=TRUE)
+    dir.create(SizeFactorsDir, recursive=TRUE)
 }
 
-NormFactorsFile <- paste(SizeFactorsDir,opt$outprefix,".size_factors.RData",sep="")
+NormFactorsFile <- paste(SizeFactorsDir,opt$outprefix, ".size_factors.RData", sep="")
 if (file.exists(NormFactorsFile) == FALSE) {
     normFactors <- sizeFactors(dds)
-    save(normFactors,file=NormFactorsFile)
+    save(normFactors, file=NormFactorsFile)
 
     for (name in names(sizeFactors(dds))) {
-        sizeFactorFile <- paste(SizeFactorsDir,name,".txt",sep="")
+        sizeFactorFile <- paste(SizeFactorsDir,name, ".txt", sep="")
         if (file.exists(sizeFactorFile) == FALSE) {
-            write(as.numeric(sizeFactors(dds)[name]),file=sizeFactorFile)
+            write(as.numeric(sizeFactors(dds)[name]), file=sizeFactorFile)
         }
     }
 }

@@ -18,7 +18,6 @@
 
 library(optparse)
 library(DESeq2)
-library(BiocParallel)
 library(ggplot2)
 library(RColorBrewer)
 library(pheatmap)
@@ -55,10 +54,14 @@ if (is.null(opt$count_file)){
 ################################################
 
 count.table           <- read.delim(file=opt$count_file,header=TRUE, row.names=NULL)
+
+
 rownames(count.table) <- count.table[,opt$id_col]
 count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE]
 colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
 colnames(count.table) <- gsub(pattern='\\.$', replacement='', colnames(count.table))
+
+
 
 ################################################
 ################################################
@@ -71,18 +74,29 @@ if (file.exists(opt$outdir) == FALSE) {
 }
 setwd(opt$outdir)
 
-samples.vec <- sort(colnames(count.table))
-groups      <- sub("_[^_]+$", "", samples.vec)
-if (length(unique(groups)) == 1 || length(unique(groups)) == length(samples.vec)) {
-    quit(save = "no", status = 0, runLast = FALSE)
+samples.vec <- colnames(count.table)
+name_components <- strsplit(samples.vec, "_")
+n_components <- length(name_components[[1]])
+decompose <- n_components!=1 && all(sapply(name_components, length)==n_components) 
+coldata <- data.frame(samples.vec, sample=samples.vec, row.names=1)
+if (decompose) {
+  groupings <- as.data.frame(lapply(1:n_components, function(i) sapply(name_components, "[[", i)))
+  names(groupings) <- paste0("Group", 1:n_components)
+  n_distinct <- sapply(groupings, function(grp) length(unique(grp)))
+  groupings <- groupings[n_distinct!=1 & n_distinct!=length(samples.vec)]
+  if (ncol(groupings)!=0) {
+    coldata <- cbind(coldata, groupings)
+  } else {
+    decompose <- FALSE
+  }
 }
+
 
 DDSFile <- paste(opt$outprefix,".dds.RData",sep="")
 if (file.exists(DDSFile) == FALSE) {
     counts  <- count.table[,samples.vec,drop=FALSE]
-    coldata <- data.frame(row.names=colnames(counts), condition=groups)
-    dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ condition)
-    dds     <- DESeq(dds, parallel=TRUE, BPPARAM=MulticoreParam(opt$cores))
+    dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ 1)
+    dds     <- estimateSizeFactors(dds)
     if (!opt$vst) {
         vst_name <- "rlog"
         rld      <- rlog(dds)
@@ -103,6 +117,13 @@ if (file.exists(DDSFile) == FALSE) {
     }
 }
 
+if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
+  warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
+  quit(save = "no", status = 0, runLast = FALSE)
+
+}
+
+
 ################################################
 ################################################
 ## PLOT QC                                    ##
@@ -114,39 +135,27 @@ if (file.exists(DDSFile) == FALSE) {
 ##' Generate all the necessary information to plot PCA from a DESeq2 object
 ##' in which an assay containing a variance-stabilised matrix of counts is
 ##' stored. Copied from DESeq2::plotPCA, but with additional ability to
-##' say which assay to run the PCA on, and adds an assessment of how well
-##' each PC explains the experimental grouping of the data.
+##' say which assay to run the PCA on.
 ##' 
 ##' @param object The DESeq2DataSet object.
-##' @param intgroup interesting groups: a character vector of names in 'colData(x)' to use for grouping.
 ##' @param ntop number of top genes to use for principla components, selected by highest row variance.
 ##' @param assay the name or index of the assay that stores the variance-stabilised data.
 ##' @return A data.frame containing the projected data alongside the grouping columns.
 ##' A 'percentVar' attribute is set which includes the percentage of variation each PC explains,
 ##' and additionally how much the variation within that PC is explained by the grouping variable.
 ##' @author Gavin Kelly
-plotPCA_vst <- function (object, intgroup = "condition", ntop = 500, assay=length(assays(object))) {
+plotPCA_vst <- function (object,  ntop = 500, assay=length(assays(object))) {
     rv         <- rowVars(assay(object, assay))
     select     <- order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
-    pca        <- prcomp(t(assay(object, assay)[select, ]))
+    pca        <- prcomp(t(assay(object, assay)[select, ]), center=TRUE, scale=FALSE)
     percentVar <- pca$sdev^2/sum(pca$sdev^2)
-    if (!all(intgroup %in% names(colData(object)))) {
-        stop("the argument 'intgroup' should specify columns of colData(dds)")
-    }
-    intgroup.df <- as.data.frame(colData(object)[, intgroup, drop = FALSE])
-    group <- if (length(intgroup) > 1) {
-        factor(apply(intgroup.df, 1, paste, collapse = ":"))
-    }  else {
-        colData(object)[[intgroup]]
-    }
-    d <- cbind(pca$x, group = group, intgroup.df, name = colnames(object))
-    percentFrame <- data.frame(PC=seq(along=percentVar), percentVar=100*percentVar, groupR=0.0)
-    for (ipc in seq(along=percentVar)) {
-        fit1 <- lm(pca$x[,ipc]  ~ group)
-        percentFrame$groupR[ipc] <- 100*summary(fit1)$r.squared
-    }
-    attr(d, "percentVar") <- percentFrame
-    return(d)
+    df <- cbind( as.data.frame(colData(object)), pca$x)
+    #Order points so extreme samples are more likely to get label
+    ord <- order(abs(rank(df$PC1)-median(df$PC1)), abs(rank(df$PC2)-median(df$PC2)))
+    df <- df[ord,]
+    percentFrame <- data.frame(PC=seq(along=percentVar), percentVar=100*percentVar)
+    attr(df, "percentVar") <- percentFrame
+    return(df)
 }
 
 PlotFile <- paste(opt$outprefix,".plots.pdf",sep="")
@@ -156,11 +165,12 @@ if (file.exists(PlotFile) == FALSE) {
     ## PCA
     ntop <- c(500, Inf)
     for (n_top_var in ntop) {
-        pca.data      <- plotPCA_vst(dds, assay=vst_name,intgroup=c("condition"),ntop=n_top_var)
+        pca.data      <- plotPCA_vst(dds, assay=vst_name, ntop=n_top_var)
         percentVar    <- round(attr(pca.data, "percentVar")$percentVar)
         plot_subtitle <- ifelse(n_top_var==Inf, "All genes", paste("Top", n_top_var, "genes"))
-        pl <- ggplot(pca.data, aes(PC1, PC2, color=condition)) +
-              geom_point(size=3) +
+        pl <- ggplot(pca.data, aes(PC1, PC2, label=paste0(" ", sample, " "))) +
+              geom_point() +
+              geom_text(check_overlap=TRUE, vjust=0.5, hjust="inward") +           
               xlab(paste0("PC1: ",percentVar[1],"% variance")) +
               ylab(paste0("PC2: ",percentVar[2],"% variance")) +
               labs(title = paste0("First PCs on ", vst_name, "-transformed data"), subtitle = plot_subtitle) + 
@@ -171,31 +181,27 @@ if (file.exists(PlotFile) == FALSE) {
                     panel.border = element_rect(colour = "black", fill=NA, size=1))
         print(pl)
 
-        pl <- ggplot(attr(pca.data, "percentVar"), aes(x=PC, y=percentVar)) +
-              geom_line(aes(colour="explained by PC")) +
-              geom_line(aes(y=groupR, colour="of PC explained by condition")) +
-              scale_x_continuous(breaks=seq(along=percentVar), minor_breaks=NULL)  +
-              labs(title="Diagnostics of PCs", subtitle=plot_subtitle, x="Component", y="Percentage explaned", colour="Percentage variation") +
-              theme_bw() +
-              theme(legend.position="top")
-        print(pl)
+        if (decompose) {
+          pc_names <- paste0("PC", attr(pca.data, "percentVar")$PC)
+          long_pc <- reshape(pca.data, varying=pc_names, direction="long", sep="", timevar="component", idvar="pcrow")
+          long_pc <- subset(long_pc, component<=5) 
+          long_pc_grp <- reshape(long_pc, varying=names(groupings), direction="long", sep="", timevar="grouper")
+          long_pc_grp <- subset(long_pc_grp, grouper<=5)
+          long_pc_grp$component <- paste("PC", long_pc_grp$component)
+          long_pc_grp$grouper <- paste0(long_pc_grp$grouper, c("st","nd","rd","th","th")[long_pc_grp$grouper], " prefix")
+          pl <- ggplot(long_pc_grp, aes(x=Group, y=PC)) +
+            geom_point() +
+            stat_summary(fun=mean, geom="line", aes(group = 1)) +
+            labs(x=NULL, y=NULL, subtitle = plot_subtitle, title="PCs split by sample-name prefixes") +
+            facet_grid(component~grouper, scales="free_x") +
+            scale_x_discrete(guide = guide_axis(n.dodge = 3))
+          print(pl)
+        }
 
-        pc_r <- order(attr(pca.data, "percentVar")$groupR, decreasing=TRUE)
-        pl <- ggplot(pca.data, aes_string(paste0("PC", pc_r[1]), paste0("PC", pc_r[2]), color="condition")) +
-              geom_point(size=3) +
-              xlab(paste0("PC", pc_r[1], ": ",percentVar[pc_r[1]],"% variance")) +
-              ylab(paste0("PC", pc_r[2], ": ",percentVar[pc_r[2]],"% variance")) +
-              labs(title = paste0("Group-Explanatory PCs of ", vst_name, "-tranformed data"), subtitle = plot_subtitle) + 
-              theme(legend.position="top",
-                    panel.grid.major = element_blank(),
-                    panel.grid.minor = element_blank(),
-                    panel.background = element_blank(),
-                    panel.border = element_rect(colour = "black", fill=NA, size=1))
-        print(pl)
     } # at end of loop, we'll be using the user-defined ntop if any, else all genes
     
     ## WRITE PC1 vs PC2 VALUES TO FILE
-    pca.vals           <- pca.data[,1:2]
+    pca.vals           <- pca.data[,c("PC1","PC2")]
     colnames(pca.vals) <- paste0(colnames(pca.vals), ": ", percentVar[1:2], '% variance')
     pca.vals           <- cbind(sample = rownames(pca.vals), pca.vals)
     write.table(pca.vals,file=paste(opt$outprefix,".pca.vals.txt",sep=""),row.names=FALSE,col.names=TRUE,sep="\t",quote=TRUE)

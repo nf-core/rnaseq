@@ -158,7 +158,7 @@ class Workflow {
     static void skipAlignmentWarn(log) {
         log.warn "=============================================================================\n" +
                  "  '--skip_alignment' parameter has been provided.\n" +
-                 "  Skipping alignment, quantification and all downstream QC processes.\n" +
+                 "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
                  "==================================================================================="
     }
 

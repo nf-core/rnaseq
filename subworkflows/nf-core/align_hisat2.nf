@@ -2,11 +2,13 @@
  * Alignment with HISAT2
  */
 
-params.align_options    = [:]
-params.samtools_options = [:]
+params.align_options          = [:]
+params.samtools_sort_options  = [:]
+params.samtools_index_options = [:]
+params.samtools_stats_options = [:]
 
 include { HISAT2_ALIGN      } from '../../modules/nf-core/software/hisat2/align/main' addParams( options: params.align_options    )
-include { BAM_SORT_SAMTOOLS } from './bam_sort_samtools'                              addParams( options: params.samtools_options )
+include { BAM_SORT_SAMTOOLS } from './bam_sort_samtools'                              addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
 
 workflow ALIGN_HISAT2 {
     take:
@@ -33,6 +35,7 @@ workflow ALIGN_HISAT2 {
 
     bam              = BAM_SORT_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
     bai              = BAM_SORT_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
+    csi              = BAM_SORT_SAMTOOLS.out.csi      // channel: [ val(meta), [ csi ] ]
     stats            = BAM_SORT_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat         = BAM_SORT_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats         = BAM_SORT_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]

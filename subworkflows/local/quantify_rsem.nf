@@ -3,12 +3,14 @@
  */
 
 params.calculateexpression_options = [:]
-params.samtools_options            = [:]
+params.samtools_sort_options       = [:]
+params.samtools_index_options      = [:]
+params.samtools_stats_options      = [:]
 params.merge_counts_options        = [:]
 
 include { RSEM_CALCULATEEXPRESSION } from '../../modules/nf-core/software/rsem/calculateexpression/main' addParams( options: params.calculateexpression_options )
 include { RSEM_MERGE_COUNTS        } from '../../modules/local/rsem_merge_counts'                        addParams( options: params.merge_counts_options        )
-include { BAM_SORT_SAMTOOLS        } from '../nf-core/bam_sort_samtools'                                 addParams( options: params.samtools_options            )
+include { BAM_SORT_SAMTOOLS        } from '../nf-core/bam_sort_samtools'                                 addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
 
 workflow QUANTIFY_RSEM {
     take:
@@ -46,6 +48,7 @@ workflow QUANTIFY_RSEM {
 
     bam                      = BAM_SORT_SAMTOOLS.out.bam                      // channel: [ val(meta), [ bam ] ]
     bai                      = BAM_SORT_SAMTOOLS.out.bai                      // channel: [ val(meta), [ bai ] ]
+    csi                      = BAM_SORT_SAMTOOLS.out.csi                      // channel: [ val(meta), [ csi ] ]
     stats                    = BAM_SORT_SAMTOOLS.out.stats                    // channel: [ val(meta), [ stats ] ]
     flagstat                 = BAM_SORT_SAMTOOLS.out.flagstat                 // channel: [ val(meta), [ flagstat ] ]
     idxstats                 = BAM_SORT_SAMTOOLS.out.idxstats                 // channel: [ val(meta), [ idxstats ] ]

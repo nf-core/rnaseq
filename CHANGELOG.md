@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#569](https://github.com/nf-core/rnaseq/issues/569)] - nextflow edge release documentation for running 3.0
 * [[#576](https://github.com/nf-core/rnaseq/issues/576)] - umi_tools dedup : Run before salmon to dedup counts
 * [[#582](https://github.com/nf-core/rnaseq/issues/582)] - Generate a separate bigwig tracks for each strand
+* [[#583](https://github.com/nf-core/rnaseq/issues/583)] - Samtools error during run requires use of BAM CSI index
 * [[nf-core/modules#423](https://github.com/nf-core/modules/pull/423)] - Replace `publish_by_id` module option to `publish_by_meta`
 
 ### Parameters

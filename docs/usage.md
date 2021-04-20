@@ -216,8 +216,7 @@ Command output:
   (empty)
 
 Command error:
-  .command.sh: line 9:  9029 Segmentation fault      (core dumped) STAR --genomeDir star --readFilesIn WT_REP1_trimmed.fq.gz --runThreadN 2 --outFileNamePrefix WT_REP1. <TRUNCATED>
-
+  .command.sh: line 9:  30 Killed    STAR --genomeDir star --readFilesIn WT_REP1_trimmed.fq.gz --runThreadN 2 --outFileNamePrefix WT_REP1. <TRUNCATED>
 Work dir:
   /home/pipelinetest/work/9d/172ca5881234073e8d76f2a19c88fb
 
@@ -264,9 +263,9 @@ As you will see in the example below, we have:
 params {
     modules {
       'star_align' {
-        args            = "--quantMode TranscriptomeSAM --twopassMode Basic --outSAMtype BAM Unsorted --readFilesCommand zcat --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMattributes NH HI AS NM MD --quantTranscriptomeBan Singleend --outFilterMismatchNmax 16"
-        publish_dir     = "my_star_directory"
-        publish_files   = ['out':'log', 'tab':'log', 'bam':'']
+        args          = "--quantMode TranscriptomeSAM --twopassMode Basic --outSAMtype BAM Unsorted --readFilesCommand zcat --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMattributes NH HI AS NM MD --quantTranscriptomeBan Singleend --outFilterMismatchNmax 16"
+        publish_dir   = "my_star_directory"
+        publish_files = ['out':'log', 'tab':'log', 'bam':'']
       }
     }
 }

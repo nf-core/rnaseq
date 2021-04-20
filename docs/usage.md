@@ -155,19 +155,19 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 * `docker`
   * A generic configuration profile to be used with [Docker](https://docker.com/)
-  * Pulls software from Docker Hub: [`nfcore/rnaseq`](https://hub.docker.com/r/nfcore/rnaseq/)
+  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `singularity`
   * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-  * Pulls software from Docker Hub: [`nfcore/rnaseq`](https://hub.docker.com/r/nfcore/rnaseq/)
+  * When using Biocontainers directly downloads Singularity images via https hosted by the [Galaxy project](https://depot.galaxyproject.org/singularity/)
 * `podman`
   * A generic configuration profile to be used with [Podman](https://podman.io/)
-  * Pulls software from Docker Hub: [`nfcore/rnaseq`](https://hub.docker.com/r/nfcore/rnaseq/)
+  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `shifter`
   * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-  * Pulls software from Docker Hub: [`nfcore/rnaseq`](https://hub.docker.com/r/nfcore/rnaseq/)
+  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `charliecloud`
   * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-  * Pulls software from Docker Hub: [`nfcore/rnaseq`](https://hub.docker.com/r/nfcore/rnaseq/)
+  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `conda`
   * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
   * A generic configuration profile to be used with [Conda](https://conda.io/docs/)

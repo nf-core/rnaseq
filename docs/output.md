@@ -572,7 +572,7 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
 <details markdown="1">
 <summary>Output files</summary>
 
-* `<ALIGNER/PSEUDOALIGNER>/deseq2/`
+* `<ALIGNER/PSEUDOALIGNER>/deseq2_qc/`
   * `*.plots.pdf`: File containing PCA and hierarchical clustering plots.
   * `*.dds.RData`: File containing R `DESeqDataSet` object  generated
     by DESeq2, with either an rlog or vst `assay` storing the
@@ -580,7 +580,7 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
   * `*pca.vals.txt`: Matrix of values for the first 2 principal components.
   * `*sample.dists.txt`: Sample distance matrix.
   * `R_sessionInfo.log`: File containing information about R, the OS and attached or loaded packages.
-* `<ALIGNER/PSEUDOALIGNER>/deseq2/size_factors/`
+* `<ALIGNER/PSEUDOALIGNER>/deseq2_qc/size_factors/`
   * `*.txt`, `*.RData`: Files containing DESeq2 sizeFactors per sample.
 
 </details>

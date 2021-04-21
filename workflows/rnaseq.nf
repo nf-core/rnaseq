@@ -137,7 +137,7 @@ salmon_quant_options.args += params.save_unaligned ? " --writeUnmappedNames" : '
 
 def samtools_sort_genome_options  = modules['samtools_sort_genome']
 def samtools_index_genome_options = modules['samtools_index_genome']
-samtools_index_genome_options.args += params.bam_csi_index ? "-c" : ""
+samtools_index_genome_options.args += params.bam_csi_index ? " -c" : ""
 if (['star_salmon','hisat2'].contains(params.aligner)) {
     if (params.save_align_intermeds || (!params.with_umi && params.skip_markduplicates)) {
         samtools_sort_genome_options.publish_files.put('bam','')
@@ -208,11 +208,11 @@ if (params.save_align_intermeds) { hisat2_align_options.publish_files.put('bam',
 if (params.save_unaligned)       { hisat2_align_options.publish_files.put('fastq.gz','unmapped') }
 
 def picard_markduplicates_samtools   = modules['picard_markduplicates_samtools']
-picard_markduplicates_samtools.args += params.bam_csi_index ? "-c" : ""
+picard_markduplicates_samtools.args += params.bam_csi_index ? " -c" : ""
 
 def umitools_dedup_genome_options          = modules['umitools_dedup_genome']
 def umitools_dedup_genome_samtools_options = modules['umitools_dedup_genome_samtools']
-umitools_dedup_genome_samtools_options.args += params.bam_csi_index ? "-c" : ""
+umitools_dedup_genome_samtools_options.args += params.bam_csi_index ? " -c" : ""
 if (['star_salmon','hisat2'].contains(params.aligner)) {
     if (params.save_align_intermeds || params.skip_markduplicates || params.save_umi_intermeds) {
         umitools_dedup_genome_options.publish_files.put('bam','')

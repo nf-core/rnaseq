@@ -59,7 +59,9 @@ class Completion {
                 }
             }
         } catch (all) {
-            log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
+            if (multiqc_report) {
+                log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
+            }
         }
 
         // Check if we are only sending emails on failure

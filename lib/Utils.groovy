@@ -3,7 +3,7 @@
  */
 
 class Utils {
-    private static Map logColours(Boolean monochrome_logs) {
+    public static Map logColours(Boolean monochrome_logs) {
         Map colorcodes = [:]
 
         // Reset / Meta
@@ -68,12 +68,12 @@ class Utils {
         return colorcodes
     }
 
-    static String dashedLine(monochrome_logs) {
+    public static String dashedLine(monochrome_logs) {
         Map colors = logColours(monochrome_logs)
         return "-${colors.dim}----------------------------------------------------${colors.reset}-"
     }
 
-    static String logo(workflow, monochrome_logs) {
+    public static String logo(workflow, monochrome_logs) {
         Map colors = logColours(monochrome_logs)
         String.format(
             """\n
@@ -89,7 +89,7 @@ class Utils {
         )
     }
 
-    static String joinModuleArgs(args_list) {
+    public static String joinModuleArgs(args_list) {
         return ' ' + args_list.join(' ')
     }
 }

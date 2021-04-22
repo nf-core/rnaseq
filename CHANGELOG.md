@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Updated pipeline template to nf-core/tools `1.13.3`
 * Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process
-* `--genomeSAindexNbases` will now be auto-calculated before building STAR indices (see [#449](https://github.com/nf-core/modules/pull/449))
+* [[#449](https://github.com/nf-core/modules/pull/449)] - `--genomeSAindexNbases` will now be auto-calculated before building STAR indices
+* [[#460](https://github.com/nf-core/rnaseq/issues/460)] - Auto-detect and bypass featureCounts execution if biotype doesn't exist in GTF
 * [[#544](https://github.com/nf-core/rnaseq/issues/544)] - Update test-dataset for pipeline
 * [[#553](https://github.com/nf-core/rnaseq/issues/553)] - Make tximport output files using all the samples; identified by @j-andrews7
 * [[#561](https://github.com/nf-core/rnaseq/issues/561)] - Add gene symbols to merged output; identified by @grst

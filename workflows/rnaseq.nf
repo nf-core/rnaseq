@@ -39,17 +39,6 @@ def prepareToolIndices  = []
 if (!params.skip_alignment) { prepareToolIndices << params.aligner        }
 if (params.pseudo_aligner)  { prepareToolIndices << params.pseudo_aligner }
 
-// Show a big warning message if we are using a NCBI / UCSC assembly
-def skip_biotype_qc = params.skip_biotype_qc
-if (params.gtf) {
-    if (params.genome == 'GRCh38' && params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
-        skip_biotype_qc = true
-    }
-    if (params.gtf.contains('/UCSC/') && params.gtf.contains('Annotation/Genes/genes.gtf')) {
-        skip_biotype_qc = true
-    }
-}
-
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 
@@ -94,6 +83,7 @@ deseq2_qc_options.args               += params.deseq2_vst ? Utils.joinModuleArgs
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
+include { ATTRIBUTE_IN_GTF                   } from '../modules/local/attribute_in_gtf'
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                     )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_salmon'   )
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
@@ -150,8 +140,8 @@ if (['star_salmon','hisat2'].contains(params.aligner)) {
 include { INPUT_CHECK    } from '../subworkflows/local/input_check'    addParams( options: [:] )
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
 include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options, merge_counts_options: modules['rsem_merge_counts'] )
-include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON            } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
-include { QUANTIFY_SALMON as QUANTIFY_SALMON                 } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
+include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
+include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
@@ -558,10 +548,24 @@ workflow RNASEQ {
      * MODULE: Feature biotype QC using featureCounts
      */
     ch_featurecounts_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_qc && !skip_biotype_qc) {
+    if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc) {
         
+        // Check if GTF file has a valid biotype entry
+        ATTRIBUTE_IN_GTF (
+            PREPARE_GENOME.out.gtf,
+            biotype
+        )
+
+        // Prevent any samples from running if GTF file doesn't have a valid biotype
+        ch_genome_bam
+            .combine(PREPARE_GENOME.out.gtf)
+            .combine(ATTRIBUTE_IN_GTF.out)
+            .filter { it[-1].toBoolean() }
+            .map { it[0..<it.size()-1] }
+            .set { ch_featurecounts }
+
         SUBREAD_FEATURECOUNTS ( 
-            ch_genome_bam.combine(PREPARE_GENOME.out.gtf)
+            ch_featurecounts
         )
         ch_software_versions = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
 

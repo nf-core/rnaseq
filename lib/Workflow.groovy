@@ -135,7 +135,7 @@ class Workflow {
         log.warn "=============================================================================\n" +
                  "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
                  "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460.\n\n" +
+                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
                  "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
                  "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
                  "==================================================================================="
@@ -146,7 +146,7 @@ class Workflow {
         log.warn "=============================================================================\n" +
                  "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
                  "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460.\n\n" +
+                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
                  "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
                  "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
                  "==================================================================================="

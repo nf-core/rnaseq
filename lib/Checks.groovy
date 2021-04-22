@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.Yaml
 
 class Checks {
 
-    static void checkCondaChannels(log) {
+    public static void checkCondaChannels(log) {
         Yaml parser = new Yaml()
         def channels = []
         try {
@@ -35,7 +35,7 @@ class Checks {
         }
     }
 
-    static void awsBatch(workflow, params) {
+    public static void awsBatch(workflow, params) {
         if (workflow.profile.contains('awsbatch')) {
             assert (params.awsqueue && params.awsregion) : "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
             // Check outdir paths to be S3 buckets if running on AWSBatch
@@ -46,7 +46,7 @@ class Checks {
         }
     }
 
-    static void hostName(workflow, params, log) {
+    public static void hostName(workflow, params, log) {
         Map colors = Utils.logColours(params.monochrome_logs)
         if (params.hostnames) {
             def hostname = "hostname".execute().text.trim()
@@ -63,5 +63,4 @@ class Checks {
             }
         }
     }
-        
 }

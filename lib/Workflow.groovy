@@ -202,6 +202,16 @@ class Workflow {
                  "==================================================================================="
     }
 
+    // Print a warning if biotype attribute doesn't exist in GTF file
+    public static void biotypeInGtf(biotype, log) {
+        log.warn "=============================================================================\n" +
+                 "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
+                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
+                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+                 "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
+                 "==================================================================================="
+    }
+
     // Exit pipeline if incorrect --genome key provided
     private static void genomeExists(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {

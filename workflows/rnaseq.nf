@@ -549,7 +549,7 @@ workflow RNASEQ {
      * MODULE: Feature biotype QC using featureCounts
      */
     ch_featurecounts_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc) {
+    if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
         
         // Check if GTF file has a valid biotype entry
         ATTRIBUTE_IN_GTF (

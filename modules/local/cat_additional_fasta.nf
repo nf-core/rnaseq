@@ -23,6 +23,7 @@ process CAT_ADDITIONAL_FASTA {
     path fasta
     path gtf
     path add_fasta
+    val  biotype
     
     output:
     path "${name}.fasta", emit: fasta
@@ -33,7 +34,7 @@ process CAT_ADDITIONAL_FASTA {
     def add_name    = add_fasta.getBaseName()
     name            = "${genome_name}_${add_name}"
     """
-    fasta2gtf.py -o ${add_fasta.baseName}.gtf $add_fasta
+    fasta2gtf.py -o ${add_fasta.baseName}.gtf -b $biotype $add_fasta
     cat $fasta $add_fasta > ${name}.fasta
     cat $gtf ${add_fasta.baseName}.gtf > ${name}.gtf
     """

@@ -36,7 +36,9 @@ include { GET_CHROM_SIZES             } from '../../modules/local/get_chrom_size
 
 workflow PREPARE_GENOME {
     take:
-    prepare_tool_indices // list: tools to prepare indices for
+    prepare_tool_indices // list  : tools to prepare indices for
+    biotype              // string: if additional fasta file is provided
+                         //         biotype value to use when appending entries to GTF file
 
     main:
     /*
@@ -77,7 +79,7 @@ workflow PREPARE_GENOME {
         } else {
             ch_add_fasta = file(params.additional_fasta)
         }
-        CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta )
+        CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta, biotype )
         ch_fasta = CAT_ADDITIONAL_FASTA.out.fasta
         ch_gtf   = CAT_ADDITIONAL_FASTA.out.gtf
     }

@@ -34,12 +34,12 @@ def fasta_iter(fasta_name):
             yield (headerStr, seq)
 
 
-def fasta2gtf(fasta, output):
+def fasta2gtf(fasta, output, biotype):
     fiter = fasta_iter(fasta)
     # GTF output lines
     lines = []
     attributes = \
-        'exon_id "{name}.1"; exon_number "1"; gene_biotype "transgene"; gene_id "{name}_gene"; gene_name "{name}_gene"; gene_source "custom"; transcript_id "{name}_gene"; transcript_name "{name}_gene";\n'
+        'exon_id "{name}.1"; exon_number "1";{biotype} gene_id "{name}_gene"; gene_name "{name}_gene"; gene_source "custom"; transcript_id "{name}_gene"; transcript_name "{name}_gene";\n'
     line_template = \
         "{name}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
 
@@ -51,8 +51,11 @@ def fasta2gtf(fasta, output):
         # Remove all spaces
         name = seqname.replace(' ', '_')
         length = len(seq)
+        biotype_attr = ''
+        if biotype:
+            biotype_attr = f' {biotype} "transgene";'
         line = line_template.format(
-            name=name, length=length)
+            name=name, length=length, biotype=biotype_attr)
         lines.append(line)
 
     with open(output, 'w') as f:
@@ -66,6 +69,9 @@ if __name__ == "__main__":
     parser.add_argument("fasta", type=str, help="Custom transgene sequence")
     parser.add_argument(
         "-o", "--output", dest='output',
-        default='transgenes.gtf', type=str, help="gene annotation GTF output")
+        default='transgenes.gtf', type=str, help="Gene annotation GTF output")
+    parser.add_argument(
+        "-b", "--biotype", dest='biotype',
+        default='', type=str, help="Name of gene biotype attribute to use in last column of GTF entry")
     args = parser.parse_args()
-    fasta2gtf(args.fasta, args.output)
+    fasta2gtf(args.fasta, args.output, args.biotype)

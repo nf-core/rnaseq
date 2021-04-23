@@ -16,10 +16,12 @@ process ATTRIBUTE_IN_GTF {
     val  attribute
 
     output:
-    env (ATTRIBUTE_EXISTS), emit: attribute_exists
+    env  (ATTRIBUTE_EXISTS), emit: exists
+    path ("*.txt")         , emit: txt
     
     script:
     """
     ATTRIBUTE_EXISTS=\$(awk -F "\t" '{ print \$9 }' $gtf | grep "$attribute " | wc -l | awk '{if(\$1 != 0) {print "true"} else print "false"}')
+    echo \$ATTRIBUTE_EXISTS > attribute_exists.txt
     """
 }

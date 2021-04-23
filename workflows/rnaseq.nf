@@ -233,7 +233,8 @@ workflow RNASEQ {
      * SUBWORKFLOW: Uncompress and prepare reference genome files
      */
     PREPARE_GENOME (
-        prepareToolIndices
+        prepareToolIndices,
+        biotype
     )
     ch_software_versions = Channel.empty()
     ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.gffread_version.ifEmpty(null))

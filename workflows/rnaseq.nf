@@ -559,12 +559,13 @@ workflow RNASEQ {
 
         ATTRIBUTE_IN_GTF
             .out
+            .exists
             .map { it -> if (!it.toBoolean()) Workflow.biotypeInGtf(biotype, log) }
 
         // Prevent any samples from running if GTF file doesn't have a valid biotype
         ch_genome_bam
             .combine(PREPARE_GENOME.out.gtf)
-            .combine(ATTRIBUTE_IN_GTF.out)
+            .combine(ATTRIBUTE_IN_GTF.out.exists)
             .filter { it[-1].toBoolean() }
             .map { it[0..<it.size()-1] }
             .set { ch_featurecounts }

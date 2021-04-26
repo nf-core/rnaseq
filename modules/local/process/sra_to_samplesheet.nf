@@ -40,7 +40,7 @@ process SRA_TO_SAMPLESHEET {
     pipeline_map << meta_map
 
     // Write to file
-    def file = file("${task.workDir}/${meta.id}.samplesheet.csv")
+    def file = task.workDir.resolve("${meta.id}.samplesheet.csv")
     file.write pipeline_map.keySet().collect{ '"' + it + '"'}.join(",") + '\n'
     file.append(pipeline_map.values().collect{ '"' + it + '"'}.join(",")) + '\n'
 }

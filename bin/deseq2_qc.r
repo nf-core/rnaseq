@@ -104,6 +104,7 @@ if (file.exists(DDSFile) == FALSE) {
     }
     assay(dds, vst_name) <- assay(rld)
     save(dds,file=DDSFile)
+    saveRDS(dds, file=sub("\\.dds\\.RData$", ".rds", DDSFile))
 } else {
     load(DDSFile)
     vst_name <- intersect(assayNames(dds), c("vst", "rlog"))

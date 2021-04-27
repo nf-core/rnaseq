@@ -119,7 +119,7 @@ class Workflow {
     }
 
     // Function to check whether biotype field exists in GTF file
-    static Boolean biotypeInGtf(gtf_file, biotype, log) {
+    public static Boolean biotypeInGtf(gtf_file, biotype, log) {
         def hits = 0
         gtf_file.eachLine { line ->
             def attributes = line.split('\t')[-1].split()
@@ -299,4 +299,3 @@ class Workflow {
 }
 
     
-

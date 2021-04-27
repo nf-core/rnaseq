@@ -1,4 +1,4 @@
-- name: Run default pipline with test data
+- name: Run default pipeline with test data
   command: nextflow run main.nf -profile test,docker
   tags:
     - default

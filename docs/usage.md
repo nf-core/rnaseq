@@ -142,7 +142,7 @@ This version number will be logged in reports when you run the pipeline, so that
 
 Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Conda) - see below.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Conda) - see below. When using Biocontainers, most of these software packaging methods pull Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc) except for Singularity which directly downloads Singularity images via https hosted by the [Galaxy project](https://depot.galaxyproject.org/singularity/) and Conda which downloads and installs software locally from [Bioconda](https://bioconda.github.io/).
 
 > We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
 
@@ -155,23 +155,16 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 * `docker`
   * A generic configuration profile to be used with [Docker](https://docker.com/)
-  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `singularity`
   * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-  * When using Biocontainers directly downloads Singularity images via https hosted by the [Galaxy project](https://depot.galaxyproject.org/singularity/)
 * `podman`
   * A generic configuration profile to be used with [Podman](https://podman.io/)
-  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `shifter`
   * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `charliecloud`
   * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-  * When using Biocontainers pulls Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc)
 * `conda`
-  * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
-  * A generic configuration profile to be used with [Conda](https://conda.io/docs/)
-  * Pulls most software from [Bioconda](https://bioconda.github.io/)
+  * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
 * `test`
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters

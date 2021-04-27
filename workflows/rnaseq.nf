@@ -83,7 +83,6 @@ deseq2_qc_options.args               += params.deseq2_vst ? Utils.joinModuleArgs
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
-include { ATTRIBUTE_IN_GTF                   } from '../modules/local/attribute_in_gtf'
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                     )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_salmon'   )
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
@@ -551,25 +550,20 @@ workflow RNASEQ {
     ch_featurecounts_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
         
-        // Check if GTF file has a valid biotype entry
-        ATTRIBUTE_IN_GTF (
-            PREPARE_GENOME.out.gtf,
-            biotype
-        )
-
-        ATTRIBUTE_IN_GTF
+        PREPARE_GENOME
             .out
-            .exists
-            .map { it -> if (!it.toBoolean()) Workflow.biotypeInGtf(biotype, log) }
+            .gtf
+            .map { Workflow.biotypeInGtf(it, biotype, log) }
+            .set { biotype_in_gtf }
 
         // Prevent any samples from running if GTF file doesn't have a valid biotype
         ch_genome_bam
             .combine(PREPARE_GENOME.out.gtf)
-            .combine(ATTRIBUTE_IN_GTF.out.exists)
-            .filter { it[-1].toBoolean() }
+            .combine(biotype_in_gtf)
+            .filter { it[-1] }
             .map { it[0..<it.size()-1] }
             .set { ch_featurecounts }
-
+        
         SUBREAD_FEATURECOUNTS ( 
             ch_featurecounts
         )

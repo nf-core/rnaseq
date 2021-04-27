@@ -118,6 +118,28 @@ class Workflow {
         return val
     }
 
+    // Function to check whether biotype field exists in GTF file
+    public static Boolean biotypeInGtf(gtf_file, biotype, log) {
+        def hits = 0
+        gtf_file.eachLine { line ->
+            def attributes = line.split('\t')[-1].split()
+            if (attributes.contains(biotype)) {
+                hits += 1
+            }
+        }
+        if (hits) {
+            return true
+        } else {
+            log.warn "=============================================================================\n" +
+                     "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
+                     "  Biotype QC will be skipped to circumvent the issue below:\n" +
+                     "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+                     "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
+                     "==================================================================================="
+            return false
+        }
+    }
+
     // Function that parses and returns the alignment rate from the STAR log output
     public static ArrayList getStarPercentMapped(params, align_log) {
         def percent_aligned = 0
@@ -202,16 +224,6 @@ class Workflow {
                  "==================================================================================="
     }
 
-    // Print a warning if biotype attribute doesn't exist in GTF file
-    public static void biotypeInGtf(biotype, log) {
-        log.warn "=============================================================================\n" +
-                 "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
-                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                 "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
-                 "==================================================================================="
-    }
-
     // Exit pipeline if incorrect --genome key provided
     private static void genomeExists(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
@@ -287,4 +299,3 @@ class Workflow {
 }
 
     
-

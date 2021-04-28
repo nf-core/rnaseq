@@ -1,0 +1,8 @@
+quantify_salmon:
+  - subworkflows/local/quantify_salmon.nf
+  - tests/subworkflows/local/quantify_salmon/**
+  - modules/nf-core/software/salmon/quant/**
+  - modules/local/salmon_tx2gene.nf
+  - modules/local/salmon_tximport.nf
+  - modules/local/salmon_merge_counts.nf
+  - modules/local/salmon_summarizedexperiment.nf

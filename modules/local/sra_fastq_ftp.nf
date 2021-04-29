@@ -30,8 +30,6 @@ process SRA_FASTQ_FTP {
     tuple val(meta), path("*md5")     , emit: md5
 
     script:    
-    def args  = options.args  ? options.args  : '-C - --max-time 600'
-
     if (meta.single_end) {
         """
         timeout $task.time bash -c 'until curl $args -L ${fastq[0]} -o ${meta.id}.fastq.gz; do sleep 1; done';

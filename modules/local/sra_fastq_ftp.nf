@@ -2,7 +2,8 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
+
 
 /*
  * Download SRA data via FTP

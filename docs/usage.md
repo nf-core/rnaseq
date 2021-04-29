@@ -75,6 +75,14 @@ The final sample information for all identifiers is obtained from the ENA which 
 
 As a bonus, the pipeline will also generate a valid samplesheet with paths to the downloaded data that can be used with the `--input` parameter, however, it is highly recommended that you double-check that all of the identifiers you defined using `--public_data_ids` are represented in the samplesheet. Also, public databases don't reliably hold information such as experimental group, replicate identifiers or strandedness information so you may need to amend these entries too. All of the sample metadata obtained from the ENA has been appended as additional columns to help you manually curate the samplesheet before you run the pipeline.
 
+If you have a GEO accession (found in the data availability section of published papers) you can directly download a text file containing the appropriate SRA ids to pass to the pipeline:
+
+* Search for your GEO accession on [GEO](https://www.ncbi.nlm.nih.gov/geo)
+* Click `SRA Run Selector` at the bottom of the GEO accession page
+* Select the desired samples in the `SRA Run Selector` and then download the `Accession List`
+
+This downloads a text file called `SRR_Acc_List.txt` which can be directly provided to the pipeline e.g. `--public_data_ids SRR_Acc_List.txt`.
+
 ## Alignment options
 
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) (i.e. `--aligner star_salmon`) to map the raw FastQ reads to the reference genome, project the alignments onto the transcriptome and to perform the downstream BAM-level quantification with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). STAR is fast but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome. Since the [RSEM](https://github.com/deweylab/RSEM) (i.e. `--aligner star_rsem`) workflow in the pipeline also uses STAR you should use the [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) aligner (i.e. `--aligner hisat2`) if you have memory limitations.

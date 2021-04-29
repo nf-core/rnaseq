@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#610](https://github.com/nf-core/rnaseq/issues/610)] - save R objects as RDS
 * [[nf-core/modules#423](https://github.com/nf-core/modules/pull/423)] - Replace `publish_by_id` module option to `publish_by_meta`
 * [[#619](https://github.com/nf-core/rnaseq/issues/619)] - implicit declaration of the workflow in main
+
 ### Parameters
 
 | Old parameter               | New parameter                  |

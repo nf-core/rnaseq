@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#583](https://github.com/nf-core/rnaseq/issues/583)] - Samtools error during run requires use of BAM CSI index
 * [[#585](https://github.com/nf-core/rnaseq/issues/585)] - Clarify salmon uncertainty for some transcripts
 * [[#604](https://github.com/nf-core/rnaseq/issues/604)] - Additional fasta with GENCODE annotation results in biotype error
+* [[#610](https://github.com/nf-core/rnaseq/issues/610)] - save R objects as RDS
 * [[nf-core/modules#423](https://github.com/nf-core/modules/pull/423)] - Replace `publish_by_id` module option to `publish_by_meta`
 
 ### Parameters

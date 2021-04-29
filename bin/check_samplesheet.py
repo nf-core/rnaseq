@@ -39,7 +39,7 @@ def check_samplesheet(file_in, file_out):
     SAMPLE_SE,SAMPLE_SE_RUN1_1.fastq.gz,,forward
 
     For an example see:
-    https://github.com/nf-core/test-datasets/blob/rnaseq/samplesheet/rnaseq_v3.1/samplesheet_test.csv
+    https://github.com/nf-core/test-datasets/blob/rnaseq/samplesheet/v3.1/samplesheet_test.csv
     """
 
     sample_mapping_dict = {}

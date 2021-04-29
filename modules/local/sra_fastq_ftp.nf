@@ -31,21 +31,20 @@ process SRA_FASTQ_FTP {
 
     script:    
     def args  = options.args  ? options.args  : '-C - --max-time 600'
-    def args2 = options.args2 ? options.args2 : '12h'
 
     if (meta.single_end) {
         """
-        timeout $args2 bash -c 'until curl $args -L ${fastq[0]} -o ${meta.id}.fastq.gz; do sleep 1; done'; echo -e \\\\a
+        timeout $task.time bash -c 'until curl $args -L ${fastq[0]} -o ${meta.id}.fastq.gz; do sleep 1; done'; echo -e \\\\a
         echo "${meta.md5_1} ${meta.id}.fastq.gz" > ${meta.id}.fastq.gz.md5
         md5sum -c ${meta.id}.fastq.gz.md5
         """
     } else {
         """
-        timeout $args2 bash -c 'until curl $args -L ${fastq[0]} -o ${meta.id}_1.fastq.gz; do sleep 1; done'; echo -e \\\\a
+        timeout $task.time bash -c 'until curl $args -L ${fastq[0]} -o ${meta.id}_1.fastq.gz; do sleep 1; done'; echo -e \\\\a
         echo "${meta.md5_1} ${meta.id}_1.fastq.gz" > ${meta.id}_1.fastq.gz.md5
         md5sum -c ${meta.id}_1.fastq.gz.md5
 
-        timeout $args2 bash -c 'until curl $args -L ${fastq[1]} -o ${meta.id}_2.fastq.gz; do sleep 1; done'; echo -e \\\\a
+        timeout $task.time bash -c 'until curl $args -L ${fastq[1]} -o ${meta.id}_2.fastq.gz; do sleep 1; done'; echo -e \\\\a
         echo "${meta.md5_2} ${meta.id}_2.fastq.gz" > ${meta.id}_2.fastq.gz.md5
         md5sum -c ${meta.id}_2.fastq.gz.md5
         """

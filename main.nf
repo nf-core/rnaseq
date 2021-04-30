@@ -58,7 +58,7 @@ Workflow.validateMainParams(workflow, params, json_schema, log)
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
-workflow {
+workflow NFCORE_RNASEQ {
     
     /*
      * WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
@@ -74,6 +74,10 @@ workflow {
         include { RNASEQ } from './workflows/rnaseq' addParams( summary_params: summary_params )
         RNASEQ ()
     }
+}
+
+workflow {
+  NFCORE_RNASEQ ()
 }
 
 ////////////////////////////////////////////////////

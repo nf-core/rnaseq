@@ -55,7 +55,7 @@ log.info Utils.dashedLine(params.monochrome_logs)
 Workflow.validateMainParams(workflow, params, json_schema, log)
 
 ////////////////////////////////////////////////////
-/* --           RUN MAIN WORKFLOW              -- */
+/* --        NAMED PIPELINE WORKFLOW           -- */
 ////////////////////////////////////////////////////
 
 workflow NFCORE_RNASEQ {
@@ -76,8 +76,16 @@ workflow NFCORE_RNASEQ {
     }
 }
 
+////////////////////////////////////////////////////
+/* --           RUN ALL WORKFLOWS              -- */
+////////////////////////////////////////////////////
+
+/*
+ * WORKFLOW: Execute a single named workflow for the pipeline
+ * See: https://github.com/nf-core/rnaseq/issues/619
+ */
 workflow {
-  NFCORE_RNASEQ ()
+    NFCORE_RNASEQ ()
 }
 
 ////////////////////////////////////////////////////

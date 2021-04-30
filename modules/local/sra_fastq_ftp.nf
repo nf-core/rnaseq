@@ -40,7 +40,8 @@ process SRA_FASTQ_FTP {
         """
     } else {
         """
-        timeout $task.time bash -c 'until curl $options.args -L ${fastq[0]} -o ${meta.id}_1.fastq.gz; do sleep 1; done';
+        bash -c 'until curl $options.args -L ${fastq[0]} -o ${meta.id}_1.fastq.gz; do sleep 1; done';
+
         echo "${meta.md5_1} ${meta.id}_1.fastq.gz" > ${meta.id}_1.fastq.gz.md5
         md5sum -c ${meta.id}_1.fastq.gz.md5
 

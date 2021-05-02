@@ -11,11 +11,11 @@
         },
         "fastq_1": {
             "type": "string",
-            "pattern": "\\.fa?s?t?q\\.gz$"
+            "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
         },
         "fastq_2": {
             "type": "string",
-            "pattern": "\\.fa?s?t?q\\.gz$"
+            "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
         },
         "strandedness": {
             "type": "string",

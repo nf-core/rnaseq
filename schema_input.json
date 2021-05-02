@@ -6,7 +6,8 @@
     "type": "object",
     "properties": {
         "sample": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^\\S+$"
         },
         "fastq_1": {
             "type": "string",
@@ -25,8 +26,7 @@
         }
     },
     "required": [
-        "group",
-        "replicate",
+        "sample",
         "fastq_1",
         "strandedness"
     ]

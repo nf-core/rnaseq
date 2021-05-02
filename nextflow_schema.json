@@ -29,6 +29,10 @@
                 },
                 "public_data_ids": {
                     "type": "string",
+                    "format": "filePath",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.txt$",
+                    "schema": "schema_public_data_ids.json",
                     "fa_icon": "fas fa-database",
                     "description": "File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files."
                 },

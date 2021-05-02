@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/schema_input.json",
+    "title": "nf-core/rnaseq pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "object",
+    "properties": {
+        "sample": {
+            "type": "string"
+        },
+        "fastq_1": {
+            "type": "string",
+            "pattern": "\\.fa?s?t?q\\.gz$"
+        },
+        "fastq_2": {
+            "type": "string",
+            "pattern": "\\.fa?s?t?q\\.gz$"
+        },
+        "strandedness": {
+            "type": "string",
+            "enum": [
+                "forward",
+                "reverse"
+            ]
+        }
+    },
+    "required": [
+        "group",
+        "replicate",
+        "fastq_1",
+        "strandedness"
+    ]
+}

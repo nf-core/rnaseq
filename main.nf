@@ -12,21 +12,6 @@
 nextflow.enable.dsl = 2
 
 ////////////////////////////////////////////////////
-/* --               PRINT HELP                 -- */
-////////////////////////////////////////////////////
-
-log.info Utils.logo(workflow, params.monochrome_logs)
-
-def json_schema = "$projectDir/nextflow_schema.json"
-if (params.help) {
-    def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
-    log.info NfcoreSchema.paramsHelp(workflow, params, json_schema, command)
-    log.info Workflow.citation(workflow)
-    log.info Utils.dashedLine(params.monochrome_logs)
-    exit 0
-}
-
-////////////////////////////////////////////////////
 /* --        GENOME PARAMETER VALUES           -- */
 ////////////////////////////////////////////////////
 
@@ -40,23 +25,17 @@ params.rsem_index   = Workflow.getGenomeAttribute(params, 'rsem')
 params.salmon_index = Workflow.getGenomeAttribute(params, 'salmon')
 
 ////////////////////////////////////////////////////
-/* --         PRINT PARAMETER SUMMARY          -- */
+/* --          VALIDATE PARAMETERS             -- */
 ////////////////////////////////////////////////////
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params, json_schema)
-log.info NfcoreSchema.paramsSummaryLog(workflow, params, json_schema)
-log.info Workflow.citation(workflow)
-log.info Utils.dashedLine(params.monochrome_logs)
-
-////////////////////////////////////////////////////
-/* --          PARAMETER CHECKS                -- */
-////////////////////////////////////////////////////
-
+def json_schema = "$projectDir/nextflow_schema.json"
 Workflow.validateMainParams(workflow, params, json_schema, log)
 
 ////////////////////////////////////////////////////
 /* --        NAMED PIPELINE WORKFLOW           -- */
 ////////////////////////////////////////////////////
+
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params, json_schema)
 
 workflow NFCORE_RNASEQ {
     

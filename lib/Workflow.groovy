@@ -15,11 +15,41 @@ class Workflow {
                "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
 
+    // Print help to screen if required
+    public static String help(workflow, params, json_schema, log) {
+        def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
+        def help_string = ''
+        help_string += Utils.logo(workflow, params.monochrome_logs)
+        help_string += NfcoreSchema.paramsHelp(workflow, params, json_schema, command)
+        help_string += '\n' + Workflow.citation(workflow) + '\n'
+        help_string += Utils.dashedLine(params.monochrome_logs)
+        return help_string
+    }
+
+    // Print parameter summary log to screen
+    public static String paramsSummaryLog(workflow, params, json_schema, log) {
+        def summary_log = ''
+        summary_log += Utils.logo(workflow, params.monochrome_logs)
+        summary_log += NfcoreSchema.paramsSummaryLog(workflow, params, json_schema)
+        summary_log += '\n' + Workflow.citation(workflow) + '\n'
+        summary_log += Utils.dashedLine(params.monochrome_logs)
+        return summary_log
+    }
+
     public static void validateMainParams(workflow, params, json_schema, log) {
+        // Print help to screen if required
+        if (params.help) {
+            log.info help(workflow, params, json_schema, log)
+            System.exit(0)
+        }
+
         // Validate workflow parameters via the JSON schema
         if (params.validate_params) {
             NfcoreSchema.validateParameters(params, json_schema, log)
         }
+
+        // Print parameter summary log to screen
+        log.info paramsSummaryLog(workflow, params, json_schema, log)
 
         // Check that conda channels are set-up correctly
         if (params.enable_conda) {
@@ -40,7 +70,7 @@ class Workflow {
     }
 
     public static void validateRnaseqParams(params, log, valid_params) {
-        genomeExists(params, log)
+        genomeExistsError(params, log)
 
         if (!params.fasta) { 
             log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
@@ -212,7 +242,7 @@ class Workflow {
     }
 
     // Print a warning after SRA download has completed
-    public static void sraDownload(log) {
+    public static void sraDownloadWarn(log) {
         log.warn "=============================================================================\n" +
                  "  Please double-check the samplesheet that has been auto-created using the\n" +
                  "  public database ids provided via the '--public_data_ids' parameter.\n\n" +
@@ -225,7 +255,7 @@ class Workflow {
     }
 
     // Exit pipeline if incorrect --genome key provided
-    private static void genomeExists(params, log) {
+    private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
             log.error "=============================================================================\n" +
                       "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +

@@ -1,75 +1,11 @@
 /*
- * This file holds several functions specific to the pipeline.
+ * This file holds several functions specific to the workflow/rnaseq.nf in the nf-core/rnaseq pipeline
  */
 
-class Workflow {
+class WorkflowRnaseq {
 
-    // Citation string
-    public static String citation(workflow) {
-        return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-               "* The pipeline\n" + 
-               "  https://doi.org/10.5281/zenodo.1400710\n\n" +
-               "* The nf-core framework\n" +
-               "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
-               "* Software dependencies\n" +
-               "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
-    }
-
-    // Print help to screen if required
-    public static String help(workflow, params, json_schema, log) {
-        def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
-        def help_string = ''
-        help_string += Utils.logo(workflow, params.monochrome_logs)
-        help_string += NfcoreSchema.paramsHelp(workflow, params, json_schema, command)
-        help_string += '\n' + Workflow.citation(workflow) + '\n'
-        help_string += Utils.dashedLine(params.monochrome_logs)
-        return help_string
-    }
-
-    // Print parameter summary log to screen
-    public static String paramsSummaryLog(workflow, params, json_schema, log) {
-        def summary_log = ''
-        summary_log += Utils.logo(workflow, params.monochrome_logs)
-        summary_log += NfcoreSchema.paramsSummaryLog(workflow, params, json_schema)
-        summary_log += '\n' + Workflow.citation(workflow) + '\n'
-        summary_log += Utils.dashedLine(params.monochrome_logs)
-        return summary_log
-    }
-
-    public static void validateMainParams(workflow, params, json_schema, log) {
-        // Print help to screen if required
-        if (params.help) {
-            log.info help(workflow, params, json_schema, log)
-            System.exit(0)
-        }
-
-        // Validate workflow parameters via the JSON schema
-        if (params.validate_params) {
-            NfcoreSchema.validateParameters(params, json_schema, log)
-        }
-
-        // Print parameter summary log to screen
-        log.info paramsSummaryLog(workflow, params, json_schema, log)
-
-        // Check that conda channels are set-up correctly
-        if (params.enable_conda) {
-            Checks.checkCondaChannels(log)
-        }
-
-        // Check AWS batch settings
-        Checks.awsBatch(workflow, params)
-
-        // Check the hostnames against configured profiles
-        Checks.hostName(workflow, params, log)
-
-        // Check at least one form of input has been provided
-        if (!params.public_data_ids && !params.input) {
-            log.error "Please specify at least one form of input for the pipeline e.g. '--input samplsheet.csv' or '--public_data_ids ids.txt'."
-            System.exit(1)
-        }
-    }
-
-    public static void validateRnaseqParams(params, log, valid_params) {
+    // Check and validate parameters
+    public static void initialise(params, log, valid_params) {
         genomeExistsError(params, log)
 
         if (!params.fasta) { 
@@ -214,9 +150,7 @@ class Workflow {
         return [ strandedness, sense, antisense, undetermined ]
     }
 
-    /*
-     * Get workflow summary for MultiQC
-     */
+    // Get workflow summary for MultiQC
     public static String paramsSummaryMultiqc(workflow, summary) {
         String summary_section = ''
         for (group in summary.keySet()) {
@@ -239,19 +173,6 @@ class Workflow {
         yaml_file_text        += "data: |\n"
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
-    }
-
-    // Print a warning after SRA download has completed
-    public static void sraDownloadWarn(log) {
-        log.warn "=============================================================================\n" +
-                 "  Please double-check the samplesheet that has been auto-created using the\n" +
-                 "  public database ids provided via the '--public_data_ids' parameter.\n\n" +
-                 "  Public databases don't reliably hold information such as experimental group,\n" +
-                 "  replicate identifiers or strandedness information.\n\n" +  
-                 "  All of the sample metadata obtained from the ENA has been appended\n" +
-                 "  as additional columns to help you manually curate the samplesheet before\n" +
-                 "  you run the pipeline.\n" +
-                 "==================================================================================="
     }
 
     // Exit pipeline if incorrect --genome key provided

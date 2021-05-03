@@ -1,10 +1,4 @@
 ////////////////////////////////////////////////////
-/* --         LOCAL PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
-
-params.summary_params = [:]
-
-////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
@@ -14,8 +8,10 @@ def valid_params = [
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication']
 ]
 
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+
 // Validate input parameters
-Workflow.validateRnaseqParams(params, log, valid_params)
+WorkflowRnaseq.initialise(params, log, valid_params)
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
@@ -471,7 +467,7 @@ workflow RNASEQ {
     ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
-            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(params, align_log) }
+            .map { meta, align_log -> [ meta ] + WorkflowRnaseq.getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
         ch_genome_bam
@@ -553,7 +549,7 @@ workflow RNASEQ {
         PREPARE_GENOME
             .out
             .gtf
-            .map { Workflow.biotypeInGtf(it, biotype, log) }
+            .map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
             .set { biotype_in_gtf }
 
         // Prevent any samples from running if GTF file doesn't have a valid biotype
@@ -647,7 +643,7 @@ workflow RNASEQ {
             ch_software_versions          = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + Workflow.getInferexperimentStrandedness(strand_log, 30) }
+                .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }
                 .filter { it[0].strandedness != it[1] }
                 .map { meta, strandedness, sense, antisense, undetermined ->
                     [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
@@ -716,7 +712,7 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = Workflow.paramsSummaryMultiqc(workflow, params.summary_params)
+        workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         MULTIQC (
@@ -763,8 +759,8 @@ workflow RNASEQ {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
-    Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
+    NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
+    NfcoreTemplate.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 
 ////////////////////////////////////////////////////

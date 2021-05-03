@@ -1,10 +1,4 @@
 ////////////////////////////////////////////////////
-/* --         LOCAL PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
-
-params.summary_params = [:]
-
-////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
@@ -103,9 +97,10 @@ workflow SRA_DOWNLOAD {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary_params, projectDir, log)
-    Completion.summary(workflow, params, log)
-    Workflow.sraDownloadWarn(log)
+    def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+    NfcoreTemplate.email(workflow, params, summary_params, projectDir, log)
+    NfcoreTemplate.summary(workflow, params, log)
+    WorkflowSraDownload.sraDownloadWarn(log)
 }
 
 ////////////////////////////////////////////////////

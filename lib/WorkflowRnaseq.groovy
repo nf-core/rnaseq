@@ -4,7 +4,9 @@
 
 class WorkflowRnaseq {
 
-    // Check and validate parameters
+    /*
+     * Check and validate parameters
+     */
     public static void initialise(params, log, valid_params) {
         genomeExistsError(params, log)
 
@@ -73,7 +75,9 @@ class WorkflowRnaseq {
         }
     }
 
-    // Get attribute from genome config file e.g. fasta
+    /*
+     * Get attribute from genome config file e.g. fasta
+     */
     public static String getGenomeAttribute(params, attribute) {
         def val = ''
         if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
@@ -84,7 +88,9 @@ class WorkflowRnaseq {
         return val
     }
 
-    // Function to check whether biotype field exists in GTF file
+    /*
+     * Function to check whether biotype field exists in GTF file
+     */
     public static Boolean biotypeInGtf(gtf_file, biotype, log) {
         def hits = 0
         gtf_file.eachLine { line ->
@@ -106,7 +112,9 @@ class WorkflowRnaseq {
         }
     }
 
-    // Function that parses and returns the alignment rate from the STAR log output
+    /*
+     * Function that parses and returns the alignment rate from the STAR log output
+     */
     public static ArrayList getStarPercentMapped(params, align_log) {
         def percent_aligned = 0
         def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
@@ -124,7 +132,9 @@ class WorkflowRnaseq {
         return [ percent_aligned, pass ]
     }
 
-    // Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+    /*
+     * Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+     */
     public static ArrayList getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
         def sense        = 0
         def antisense    = 0
@@ -150,7 +160,9 @@ class WorkflowRnaseq {
         return [ strandedness, sense, antisense, undetermined ]
     }
 
-    // Get workflow summary for MultiQC
+    /*
+     * Get workflow summary for MultiQC
+     */
     public static String paramsSummaryMultiqc(workflow, summary) {
         String summary_section = ''
         for (group in summary.keySet()) {
@@ -175,7 +187,9 @@ class WorkflowRnaseq {
         return yaml_file_text
     }
 
-    // Exit pipeline if incorrect --genome key provided
+    /*
+     * Exit pipeline if incorrect --genome key provided
+     */
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
             log.error "=============================================================================\n" +
@@ -187,7 +201,9 @@ class WorkflowRnaseq {
         }
     }
 
-    // Print a warning if using GRCh38 assembly from igenomes.config
+    /*
+     * Print a warning if using GRCh38 assembly from igenomes.config
+     */
     private static void ncbiGenomeWarn(log) {
         log.warn "=============================================================================\n" +
                  "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
@@ -198,7 +214,9 @@ class WorkflowRnaseq {
                  "==================================================================================="
     }
 
-    // Print a warning if using a UCSC assembly from igenomes.config
+    /*
+     * Print a warning if using a UCSC assembly from igenomes.config
+     */
     private static void ucscGenomeWarn(log) {
         log.warn "=============================================================================\n" +
                  "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
@@ -209,7 +227,9 @@ class WorkflowRnaseq {
                  "==================================================================================="
     }
 
-    // Print a warning if both GTF and GFF have been provided
+    /*
+     * Print a warning if both GTF and GFF have been provided
+     */
     private static void gtfGffWarn(log) {
         log.warn "=============================================================================\n" +
                  "  Both '--gtf' and '--gff' parameters have been provided.\n" +
@@ -217,7 +237,9 @@ class WorkflowRnaseq {
                  "==================================================================================="
     }
 
-    // Print a warning if --skip_alignment has been provided
+    /*
+     * Print a warning if --skip_alignment has been provided
+     */
     private static void skipAlignmentWarn(log) {
         log.warn "=============================================================================\n" +
                  "  '--skip_alignment' parameter has been provided.\n" +
@@ -225,7 +247,9 @@ class WorkflowRnaseq {
                  "==================================================================================="
     }
 
-    // Print a warning if using '--aligner star_rsem' and '--with_umi'
+    /*
+     * Print a warning if using '--aligner star_rsem' and '--with_umi'
+     */
     private static void rsemUmiError(log) {
         log.error "=============================================================================\n" +
                   "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
@@ -236,7 +260,9 @@ class WorkflowRnaseq {
         System.exit(1)
     }
 
-    // Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
+    /*
+     * Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
+     */
     private static void rsemStarIndexWarn(log) {
         log.warn "=============================================================================\n" +
                  "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +

@@ -4,7 +4,9 @@
 
 class WorkflowMain {
 
-    // Citation string
+    /*
+     * Citation string for pipeline
+     */
     public static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
                "* The pipeline\n" + 
@@ -15,7 +17,9 @@ class WorkflowMain {
                "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
 
-    // Print help to screen if required
+    /*
+     * Print help to screen if required
+     */
     public static String help(workflow, params, log) {
         def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
         def help_string = ''
@@ -26,7 +30,9 @@ class WorkflowMain {
         return help_string
     }
 
-    // Print parameter summary log to screen
+    /*
+     * Print parameter summary log to screen
+     */
     public static String paramsSummaryLog(workflow, params, log) {
         def summary_log = ''
         summary_log += NfcoreTemplate.logo(workflow, params.monochrome_logs)
@@ -36,7 +42,9 @@ class WorkflowMain {
         return summary_log
     }
 
-    // Validate parameters and print summary to screen
+    /*
+     * Validate parameters and print summary to screen
+     */
     public static void initialise(workflow, params, log) {
         // Print help to screen if required
         if (params.help) {

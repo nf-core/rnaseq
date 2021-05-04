@@ -13,13 +13,17 @@ import groovy.json.JsonBuilder
 
 class NfcoreSchema {
     
-    // Resolve Schema path relative to main workflow directory
+    /*
+     * Resolve Schema path relative to main workflow directory
+     */
     public static String getSchemaPath(workflow, schema_filename='nextflow_schema.json') {
         return "${workflow.projectDir}/${schema_filename}"
     }
 
-    // Function to loop over all parameters defined in schema and check
-    // whether the given parameters adhere to the specifications
+    /*
+     * Function to loop over all parameters defined in schema and check
+     * whether the given parameters adhere to the specifications
+     */
     /* groovylint-disable-next-line UnusedPrivateMethodParameter */
     public static void validateParameters(workflow, params, log, schema_filename='nextflow_schema.json') {
         def has_error = false
@@ -167,7 +171,9 @@ class NfcoreSchema {
         }
     }
 
-    // Beautify parameters for --help
+    /*
+     * Beautify parameters for --help
+     */
     public static String paramsHelp(workflow, params, command, schema_filename='nextflow_schema.json') {
         Map colors = NfcoreTemplate.logColours(params.monochrome_logs)
         Integer num_hidden = 0
@@ -222,7 +228,9 @@ class NfcoreSchema {
         return output
     }
 
-    // Groovy Map summarising parameters/workflow options used by the pipeline
+    /*
+     * Groovy Map summarising parameters/workflow options used by the pipeline
+     */
     public static LinkedHashMap paramsSummaryMap(workflow, params, schema_filename='nextflow_schema.json') {
         // Get a selection of core Nextflow workflow options
         def Map workflow_summary = [:]
@@ -289,7 +297,9 @@ class NfcoreSchema {
         return [ 'Core Nextflow options' : workflow_summary ] << params_summary
     }
 
-    // Beautify parameters for summary and return as string
+    /*
+     * Beautify parameters for summary and return as string
+     */
     public static String paramsSummaryLog(workflow, params) {
         Map colors = NfcoreTemplate.logColours(params.monochrome_logs)
         String output  = ''
@@ -310,7 +320,9 @@ class NfcoreSchema {
         return output
     }
     
-    // Loop over nested exceptions and print the causingException
+    /*
+     * Loop over nested exceptions and print the causingException
+     */
     private static void printExceptions(ex_json, params_json, log) {
         def causingExceptions = ex_json['causingExceptions']
         if (causingExceptions.length() == 0) {
@@ -335,7 +347,9 @@ class NfcoreSchema {
         }
     }
 
-    // Remove an element from a JSONArray
+    /*
+     * Remove an element from a JSONArray
+     */
     private static JSONArray removeElement(json_array, element) {
         def list = []
         int len = json_array.length()
@@ -347,6 +361,9 @@ class NfcoreSchema {
         return jsArray
     }
 
+    /*
+     * Remove ignored parameters
+     */
     private static JSONObject removeIgnoredParams(raw_schema, params) {
         // Remove anything that's in params.schema_ignore_params
         params.schema_ignore_params.split(',').each{ ignore_param ->
@@ -376,6 +393,9 @@ class NfcoreSchema {
         return raw_schema
     }
 
+    /*
+     * Clean and check parameters relative to Nextflow native classes
+     */
     private static Map cleanParameters(params) {
         def new_params = params.getClass().newInstance(params)
         for (p in params) {
@@ -399,7 +419,9 @@ class NfcoreSchema {
         return new_params
     }
 
-    // This method tries to read a JSON params file
+    /*
+     * This function tries to read a JSON params file
+     */
     private static LinkedHashMap paramsLoad(String json_schema) {
         def params_map = new LinkedHashMap()
         try {
@@ -471,7 +493,9 @@ class NfcoreSchema {
         return params_map
     }
 
-    // Get maximum number of characters across all parameter names
+    /*
+     * Get maximum number of characters across all parameter names
+     */
     private static Integer paramsMaxChars(params_map) {
         Integer max_chars = 0
         for (group in params_map.keySet()) {

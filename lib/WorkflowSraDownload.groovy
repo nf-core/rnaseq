@@ -4,7 +4,9 @@
 
 class WorkflowSraDownload {
 
-    // Print a warning after SRA download has completed
+    /*
+     * Print a warning after SRA download has completed
+     */
     public static void sraDownloadWarn(log) {
         log.warn "=============================================================================\n" +
                  "  Please double-check the samplesheet that has been auto-created using the\n" +

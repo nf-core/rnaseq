@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
- nf-core/rnaseq
+    nf-core/rnaseq
 ========================================================================================
- Github : https://github.com/nf-core/rnaseq
- Website: https://nf-co.re/rnaseq
- Slack  : https://nfcore.slack.com/channels/rnaseq
+    Github : https://github.com/nf-core/rnaseq
+    Website: https://nf-co.re/rnaseq
+    lack  : https://nfcore.slack.com/channels/rnaseq
 ----------------------------------------------------------------------------------------
 */
 
@@ -13,7 +13,7 @@ nextflow.enable.dsl = 2
 
 /*
 ========================================================================================
- GENOME PARAMETER VALUES       
+    GENOME PARAMETER VALUES       
 ========================================================================================
 */
 
@@ -28,20 +28,20 @@ params.salmon_index = WorkflowMain.getGenomeAttribute(params, 'salmon')
 
 /*
 ========================================================================================
- VALIDATE & PRINT PARAMETER SUMMARY
+    VALIDATE & PRINT PARAMETER SUMMARY
 ========================================================================================
 */
-    
+
 WorkflowMain.initialise(workflow, params, log)
 
 /*
 ========================================================================================
- NAMED WORKFLOW FOR PIPELINE
+    NAMED WORKFLOW FOR PIPELINE
 ========================================================================================
 */
 
 workflow NFCORE_RNASEQ {
-    
+
     /*
      * WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
      */
@@ -60,7 +60,7 @@ workflow NFCORE_RNASEQ {
 
 /*
 ========================================================================================
- RUN ALL WORKFLOWS
+    RUN ALL WORKFLOWS
 ========================================================================================
 */
 
@@ -74,6 +74,6 @@ workflow {
 
 /*
 ========================================================================================
- THE END
+    THE END
 ========================================================================================
 */

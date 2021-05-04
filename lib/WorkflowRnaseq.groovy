@@ -90,11 +90,11 @@ class WorkflowRnaseq {
             return true
         } else {
             log.warn "=============================================================================\n" +
-                     "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
-                     "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                     "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                     "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
-                     "==================================================================================="
+                "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
+                "  Biotype QC will be skipped to circumvent the issue below:\n" +
+                "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+                "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
+                "==================================================================================="
             return false
         }
     }
@@ -180,10 +180,10 @@ class WorkflowRnaseq {
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
             log.error "=============================================================================\n" +
-                      "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                      "  Currently, the available genome keys are:\n" +
-                      "  ${params.genomes.keySet().join(", ")}\n" +
-                      "==================================================================================="
+                "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
+                "  Currently, the available genome keys are:\n" +
+                "  ${params.genomes.keySet().join(", ")}\n" +
+                "==================================================================================="
             System.exit(1)
         }
     }
@@ -193,12 +193,12 @@ class WorkflowRnaseq {
      */
     private static void ncbiGenomeWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
-                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                 "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-                 "==================================================================================="
+            "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
+            "  Biotype QC will be skipped to circumvent the issue below:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+            "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
+            "==================================================================================="
     }
 
     /*
@@ -206,12 +206,12 @@ class WorkflowRnaseq {
      */
     private static void ucscGenomeWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
-                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                 "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-                 "==================================================================================="
+            "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
+            "  Biotype QC will be skipped to circumvent the issue below:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+            "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
+            "==================================================================================="
     }
 
     /*
@@ -219,9 +219,9 @@ class WorkflowRnaseq {
      */
     private static void gtfGffWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  Both '--gtf' and '--gff' parameters have been provided.\n" +
-                 "  Using GTF file as priority.\n" +
-                 "==================================================================================="
+            "  Both '--gtf' and '--gff' parameters have been provided.\n" +
+            "  Using GTF file as priority.\n" +
+            "==================================================================================="
     }
 
     /*
@@ -229,9 +229,9 @@ class WorkflowRnaseq {
      */
     private static void skipAlignmentWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  '--skip_alignment' parameter has been provided.\n" +
-                 "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
-                 "==================================================================================="
+            "  '--skip_alignment' parameter has been provided.\n" +
+            "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
+            "==================================================================================="
     }
 
     /*
@@ -239,11 +239,11 @@ class WorkflowRnaseq {
      */
     private static void rsemUmiError(log) {
         log.error "=============================================================================\n" +
-                  "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
-                  "  not possible to remove UMIs before the quantification.\n\n" +
-                  "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
-                  "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
-                  "============================================================================="
+            "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
+            "  not possible to remove UMIs before the quantification.\n\n" +
+            "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
+            "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
+            "============================================================================="
         System.exit(1)
     }
 
@@ -252,14 +252,12 @@ class WorkflowRnaseq {
      */
     private static void rsemStarIndexWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
-                 "  be present in the path specified by '--rsem_index'.\n\n" +
-                 "  This warning has been generated because you have provided both\n" + 
-                 "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
-                 "  Please see:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/568\n" +
-                 "==================================================================================="
+            "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
+            "  be present in the path specified by '--rsem_index'.\n\n" +
+            "  This warning has been generated because you have provided both\n" + 
+            "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
+            "  Please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/568\n" +
+            "==================================================================================="
     }
 }
-
-    

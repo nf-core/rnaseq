@@ -30,11 +30,11 @@ class Utils {
 
         if (conda_check_failed) {
             log.warn "=============================================================================\n" +
-                     "  There is a problem with your Conda configuration!\n\n" + 
-                     "  You will need to set-up the conda-forge and bioconda channels correctly.\n" +
-                     "  Please refer to https://bioconda.github.io/user/install.html#set-up-channels\n" +
-                     "  NB: The order of the channels matters!\n" +
-                     "==================================================================================="
+                "  There is a problem with your Conda configuration!\n\n" + 
+                "  You will need to set-up the conda-forge and bioconda channels correctly.\n" +
+                "  Please refer to https://bioconda.github.io/user/install.html#set-up-channels\n" +
+                "  NB: The order of the channels matters!\n" +
+                "==================================================================================="
         }
     }
 

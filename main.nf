@@ -17,14 +17,14 @@ nextflow.enable.dsl = 2
 ========================================================================================
 */
 
-params.fasta        = WorkflowRnaseq.getGenomeAttribute(params, 'fasta')
-params.gtf          = WorkflowRnaseq.getGenomeAttribute(params, 'gtf')
-params.gff          = WorkflowRnaseq.getGenomeAttribute(params, 'gff')
-params.gene_bed     = WorkflowRnaseq.getGenomeAttribute(params, 'bed12')
-params.star_index   = WorkflowRnaseq.getGenomeAttribute(params, 'star')
-params.hisat2_index = WorkflowRnaseq.getGenomeAttribute(params, 'hisat2')
-params.rsem_index   = WorkflowRnaseq.getGenomeAttribute(params, 'rsem')
-params.salmon_index = WorkflowRnaseq.getGenomeAttribute(params, 'salmon')
+params.fasta        = WorkflowMain.getGenomeAttribute(params, 'fasta')
+params.gtf          = WorkflowMain.getGenomeAttribute(params, 'gtf')
+params.gff          = WorkflowMain.getGenomeAttribute(params, 'gff')
+params.gene_bed     = WorkflowMain.getGenomeAttribute(params, 'bed12')
+params.star_index   = WorkflowMain.getGenomeAttribute(params, 'star')
+params.hisat2_index = WorkflowMain.getGenomeAttribute(params, 'hisat2')
+params.rsem_index   = WorkflowMain.getGenomeAttribute(params, 'rsem')
+params.salmon_index = WorkflowMain.getGenomeAttribute(params, 'salmon')
 
 /*
 ========================================================================================

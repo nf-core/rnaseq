@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
- nf-core/rnaseq analysis pipeline
+ nf-core/rnaseq
 ========================================================================================
  Github : https://github.com/nf-core/rnaseq
  Website: https://nf-co.re/rnaseq

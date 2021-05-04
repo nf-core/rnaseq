@@ -1,6 +1,8 @@
-////////////////////////////////////////////////////
-/* --          VALIDATE INPUTS                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+ VALIDATE INPUTS
+========================================================================================
+*/
 
 if (params.public_data_ids) { 
     Channel
@@ -13,9 +15,11 @@ if (params.public_data_ids) {
     exit 1, 'Input file with public database ids not specified!' 
 }
 
-////////////////////////////////////////////////////
-/* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+ IMPORT LOCAL MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
@@ -26,9 +30,11 @@ include { SRA_FASTQ_FTP         } from '../modules/local/sra_fastq_ftp'         
 include { SRA_TO_SAMPLESHEET    } from '../modules/local/sra_to_samplesheet'    addParams( options: modules['sra_to_samplesheet'], results_dir: modules['sra_fastq_ftp'].publish_dir )
 include { SRA_MERGE_SAMPLESHEET } from '../modules/local/sra_merge_samplesheet' addParams( options: modules['sra_merge_samplesheet'] )
 
-////////////////////////////////////////////////////
-/* --           RUN MAIN WORKFLOW              -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+ RUN MAIN WORKFLOW
+========================================================================================
+*/
 
 workflow SRA_DOWNLOAD {
 
@@ -92,9 +98,11 @@ workflow SRA_DOWNLOAD {
     }
 }
 
-////////////////////////////////////////////////////
-/* --            COMPLETION EMAIL              -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+ COMPLETION EMAIL AND SUMMARY
+========================================================================================
+*/
 
 workflow.onComplete {
     def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -103,7 +111,8 @@ workflow.onComplete {
     WorkflowSraDownload.sraDownloadWarn(log)
 }
 
-////////////////////////////////////////////////////
-/* --                  THE END                 -- */
-////////////////////////////////////////////////////
-
+/*
+========================================================================================
+ THE END
+========================================================================================
+*/

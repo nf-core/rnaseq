@@ -5,7 +5,7 @@
 ========================================================================================
     Github : https://github.com/nf-core/rnaseq
     Website: https://nf-co.re/rnaseq
-    lack  : https://nfcore.slack.com/channels/rnaseq
+    Slack  : https://nfcore.slack.com/channels/rnaseq
 ----------------------------------------------------------------------------------------
 */
 

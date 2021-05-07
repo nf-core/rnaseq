@@ -1,46 +1,14 @@
 /*
- * This file holds several functions specific to the pipeline.
+ * This file holds several functions specific to the workflow/rnaseq.nf in the nf-core/rnaseq pipeline
  */
 
-class Workflow {
+class WorkflowRnaseq {
 
-    // Citation string
-    public static String citation(workflow) {
-        return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-               "* The pipeline\n" + 
-               "  https://doi.org/10.5281/zenodo.1400710\n\n" +
-               "* The nf-core framework\n" +
-               "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
-               "* Software dependencies\n" +
-               "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
-    }
-
-    public static void validateMainParams(workflow, params, json_schema, log) {
-        // Validate workflow parameters via the JSON schema
-        if (params.validate_params) {
-            NfcoreSchema.validateParameters(params, json_schema, log)
-        }
-
-        // Check that conda channels are set-up correctly
-        if (params.enable_conda) {
-            Checks.checkCondaChannels(log)
-        }
-
-        // Check AWS batch settings
-        Checks.awsBatch(workflow, params)
-
-        // Check the hostnames against configured profiles
-        Checks.hostName(workflow, params, log)
-
-        // Check at least one form of input has been provided
-        if (!params.public_data_ids && !params.input) {
-            log.error "Please specify at least one form of input for the pipeline e.g. '--input samplsheet.csv' or '--public_data_ids ids.txt'."
-            System.exit(1)
-        }
-    }
-
-    public static void validateRnaseqParams(params, log, valid_params) {
-        genomeExists(params, log)
+    /*
+     * Check and validate parameters
+     */
+    public static void initialise(params, log, valid_params) {
+        genomeExistsError(params, log)
 
         if (!params.fasta) { 
             log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
@@ -107,18 +75,9 @@ class Workflow {
         }
     }
 
-    // Get attribute from genome config file e.g. fasta
-    public static String getGenomeAttribute(params, attribute) {
-        def val = ''
-        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-            if (params.genomes[ params.genome ].containsKey(attribute)) {
-                val = params.genomes[ params.genome ][ attribute ]
-            }
-        }
-        return val
-    }
-
-    // Function to check whether biotype field exists in GTF file
+    /*
+     * Function to check whether biotype field exists in GTF file
+     */
     public static Boolean biotypeInGtf(gtf_file, biotype, log) {
         def hits = 0
         gtf_file.eachLine { line ->
@@ -131,16 +90,18 @@ class Workflow {
             return true
         } else {
             log.warn "=============================================================================\n" +
-                     "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
-                     "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                     "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                     "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
-                     "==================================================================================="
+                "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
+                "  Biotype QC will be skipped to circumvent the issue below:\n" +
+                "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+                "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
+                "==================================================================================="
             return false
         }
     }
 
-    // Function that parses and returns the alignment rate from the STAR log output
+    /*
+     * Function that parses and returns the alignment rate from the STAR log output
+     */
     public static ArrayList getStarPercentMapped(params, align_log) {
         def percent_aligned = 0
         def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
@@ -158,7 +119,9 @@ class Workflow {
         return [ percent_aligned, pass ]
     }
 
-    // Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+    /*
+     * Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+     */
     public static ArrayList getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
         def sense        = 0
         def antisense    = 0
@@ -211,91 +174,90 @@ class Workflow {
         return yaml_file_text
     }
 
-    // Print a warning after SRA download has completed
-    public static void sraDownload(log) {
-        log.warn "=============================================================================\n" +
-                 "  Please double-check the samplesheet that has been auto-created using the\n" +
-                 "  public database ids provided via the '--public_data_ids' parameter.\n\n" +
-                 "  Public databases don't reliably hold information such as experimental group,\n" +
-                 "  replicate identifiers or strandedness information.\n\n" +  
-                 "  All of the sample metadata obtained from the ENA has been appended\n" +
-                 "  as additional columns to help you manually curate the samplesheet before\n" +
-                 "  you run the pipeline.\n" +
-                 "==================================================================================="
-    }
-
-    // Exit pipeline if incorrect --genome key provided
-    private static void genomeExists(params, log) {
+    /*
+     * Exit pipeline if incorrect --genome key provided
+     */
+    private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
             log.error "=============================================================================\n" +
-                      "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                      "  Currently, the available genome keys are:\n" +
-                      "  ${params.genomes.keySet().join(", ")}\n" +
-                      "==================================================================================="
+                "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
+                "  Currently, the available genome keys are:\n" +
+                "  ${params.genomes.keySet().join(", ")}\n" +
+                "==================================================================================="
             System.exit(1)
         }
     }
 
-    // Print a warning if using GRCh38 assembly from igenomes.config
+    /*
+     * Print a warning if using GRCh38 assembly from igenomes.config
+     */
     private static void ncbiGenomeWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
-                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                 "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-                 "==================================================================================="
+            "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
+            "  Biotype QC will be skipped to circumvent the issue below:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+            "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
+            "==================================================================================="
     }
 
-    // Print a warning if using a UCSC assembly from igenomes.config
+    /*
+     * Print a warning if using a UCSC assembly from igenomes.config
+     */
     private static void ucscGenomeWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
-                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-                 "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-                 "==================================================================================="
+            "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
+            "  Biotype QC will be skipped to circumvent the issue below:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
+            "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
+            "==================================================================================="
     }
 
-    // Print a warning if both GTF and GFF have been provided
+    /*
+     * Print a warning if both GTF and GFF have been provided
+     */
     private static void gtfGffWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  Both '--gtf' and '--gff' parameters have been provided.\n" +
-                 "  Using GTF file as priority.\n" +
-                 "==================================================================================="
+            "  Both '--gtf' and '--gff' parameters have been provided.\n" +
+            "  Using GTF file as priority.\n" +
+            "==================================================================================="
     }
 
-    // Print a warning if --skip_alignment has been provided
+    /*
+     * Print a warning if --skip_alignment has been provided
+     */
     private static void skipAlignmentWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  '--skip_alignment' parameter has been provided.\n" +
-                 "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
-                 "==================================================================================="
+            "  '--skip_alignment' parameter has been provided.\n" +
+            "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
+            "==================================================================================="
     }
 
-    // Print a warning if using '--aligner star_rsem' and '--with_umi'
+    /*
+     * Print a warning if using '--aligner star_rsem' and '--with_umi'
+     */
     private static void rsemUmiError(log) {
         log.error "=============================================================================\n" +
-                  "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
-                  "  not possible to remove UMIs before the quantification.\n\n" +
-                  "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
-                  "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
-                  "============================================================================="
+            "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
+            "  not possible to remove UMIs before the quantification.\n\n" +
+            "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
+            "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
+            "============================================================================="
         System.exit(1)
     }
 
-    // Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
+    /*
+     * Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
+     */
     private static void rsemStarIndexWarn(log) {
         log.warn "=============================================================================\n" +
-                 "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
-                 "  be present in the path specified by '--rsem_index'.\n\n" +
-                 "  This warning has been generated because you have provided both\n" + 
-                 "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
-                 "  Please see:\n" +
-                 "  https://github.com/nf-core/rnaseq/issues/568\n" +
-                 "==================================================================================="
+            "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
+            "  be present in the path specified by '--rsem_index'.\n\n" +
+            "  This warning has been generated because you have provided both\n" + 
+            "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
+            "  Please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/568\n" +
+            "==================================================================================="
     }
 }
-
-    

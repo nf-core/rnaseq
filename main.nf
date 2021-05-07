@@ -1,84 +1,68 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                         nf-core/rnaseq
+    nf-core/rnaseq
 ========================================================================================
- nf-core/rnaseq Analysis Pipeline.
- #### Homepage / Documentation
- https://github.com/nf-core/rnaseq
+    Github : https://github.com/nf-core/rnaseq
+    Website: https://nf-co.re/rnaseq
+    Slack  : https://nfcore.slack.com/channels/rnaseq
 ----------------------------------------------------------------------------------------
 */
 
 nextflow.enable.dsl = 2
 
-////////////////////////////////////////////////////
-/* --               PRINT HELP                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    GENOME PARAMETER VALUES       
+========================================================================================
+*/
 
-log.info Utils.logo(workflow, params.monochrome_logs)
+params.fasta        = WorkflowMain.getGenomeAttribute(params, 'fasta')
+params.gtf          = WorkflowMain.getGenomeAttribute(params, 'gtf')
+params.gff          = WorkflowMain.getGenomeAttribute(params, 'gff')
+params.gene_bed     = WorkflowMain.getGenomeAttribute(params, 'bed12')
+params.star_index   = WorkflowMain.getGenomeAttribute(params, 'star')
+params.hisat2_index = WorkflowMain.getGenomeAttribute(params, 'hisat2')
+params.rsem_index   = WorkflowMain.getGenomeAttribute(params, 'rsem')
+params.salmon_index = WorkflowMain.getGenomeAttribute(params, 'salmon')
 
-def json_schema = "$projectDir/nextflow_schema.json"
-if (params.help) {
-    def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
-    log.info NfcoreSchema.paramsHelp(workflow, params, json_schema, command)
-    log.info Workflow.citation(workflow)
-    log.info Utils.dashedLine(params.monochrome_logs)
-    exit 0
-}
+/*
+========================================================================================
+    VALIDATE & PRINT PARAMETER SUMMARY
+========================================================================================
+*/
 
-////////////////////////////////////////////////////
-/* --        GENOME PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
+WorkflowMain.initialise(workflow, params, log)
 
-params.fasta        = Workflow.getGenomeAttribute(params, 'fasta')
-params.gtf          = Workflow.getGenomeAttribute(params, 'gtf')
-params.gff          = Workflow.getGenomeAttribute(params, 'gff')
-params.gene_bed     = Workflow.getGenomeAttribute(params, 'bed12')
-params.star_index   = Workflow.getGenomeAttribute(params, 'star')
-params.hisat2_index = Workflow.getGenomeAttribute(params, 'hisat2')
-params.rsem_index   = Workflow.getGenomeAttribute(params, 'rsem')
-params.salmon_index = Workflow.getGenomeAttribute(params, 'salmon')
-
-////////////////////////////////////////////////////
-/* --         PRINT PARAMETER SUMMARY          -- */
-////////////////////////////////////////////////////
-
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params, json_schema)
-log.info NfcoreSchema.paramsSummaryLog(workflow, params, json_schema)
-log.info Workflow.citation(workflow)
-log.info Utils.dashedLine(params.monochrome_logs)
-
-////////////////////////////////////////////////////
-/* --          PARAMETER CHECKS                -- */
-////////////////////////////////////////////////////
-
-Workflow.validateMainParams(workflow, params, json_schema, log)
-
-////////////////////////////////////////////////////
-/* --        NAMED PIPELINE WORKFLOW           -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    NAMED WORKFLOW FOR PIPELINE
+========================================================================================
+*/
 
 workflow NFCORE_RNASEQ {
-    
+
     /*
      * WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
      */
     if (params.public_data_ids) {
-        include { SRA_DOWNLOAD } from './workflows/sra_download' addParams( summary_params: summary_params )
+        include { SRA_DOWNLOAD } from './workflows/sra_download'
         SRA_DOWNLOAD ()
     
     /*
      * WORKFLOW: Run main nf-core/rnaseq analysis pipeline
      */
     } else {
-        include { RNASEQ } from './workflows/rnaseq' addParams( summary_params: summary_params )
+        include { RNASEQ } from './workflows/rnaseq'
         RNASEQ ()
     }
 }
 
-////////////////////////////////////////////////////
-/* --           RUN ALL WORKFLOWS              -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    RUN ALL WORKFLOWS
+========================================================================================
+*/
 
 /*
  * WORKFLOW: Execute a single named workflow for the pipeline
@@ -88,6 +72,8 @@ workflow {
     NFCORE_RNASEQ ()
 }
 
-////////////////////////////////////////////////////
-/* --                  THE END                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    THE END
+========================================================================================
+*/

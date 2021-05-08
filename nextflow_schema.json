@@ -16,7 +16,7 @@
                     "format": "file-path",
                     "mimetype": "text/csv",
                     "pattern": "\\.csv$",
-                    "schema": "schema_input.json",
+                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
@@ -32,7 +32,7 @@
                     "format": "file-path",
                     "mimetype": "text/plain",
                     "pattern": "\\.txt$",
-                    "schema": "schema_public_data_ids.json",
+                    "schema": "assets/schema_public_data_ids.json",
                     "fa_icon": "fas fa-database",
                     "description": "File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files."
                 },

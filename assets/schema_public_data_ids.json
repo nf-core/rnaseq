@@ -5,7 +5,10 @@
     "description": "Schema for the file provided with params.public_data_ids",
     "type": "array",
     "items": {
-        "type": "string",
-        "pattern": "^[SEPG][RAS][RXSMPAJXE][EN]?[AB]?\\d{5,9}$"
+        "type": "array",
+        "items": {
+            "type": "string",
+            "pattern": "^[SEPG][RAS][RXSMPAJXE][EN]?[AB]?\\d{5,9}$"
+        }
     }
 }

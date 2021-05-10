@@ -172,6 +172,35 @@ class NfcoreSchema {
     }
 
     /*
+     * Function to validate a file by its schema, eg. sample sheets
+     */
+    /* groovylint-disable-next-line UnusedPrivateMethodParameter */
+    public static void validateFile(workflow, log, param_name, obj, schema_filename) {
+        // Load the schema
+        InputStream inputStream = new File(getSchemaPath(workflow, schema_filename)).newInputStream()
+        JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream))
+        Schema schema = SchemaLoader.load(rawSchema)
+
+        // Convert the groovy object to a JSONArray
+        def jsonObj = new JsonBuilder(obj)
+        JSONArray objJSON = new JSONArray(jsonObj.toString())
+
+        // Validate
+        try {
+            schema.validate(objJSON)
+        } catch (ValidationException e) {
+            println jsonObj.toString()
+            println ''
+            log.error "ERROR: Validation of '$param_name' failed!"
+             JSONObject exceptionJSON = e.toJSON()
+             printExceptions(exceptionJSON, objJSON, log)
+            println ''
+            System.exit(1)
+        }
+        log.debug "Validation passed: '$param_name' with '$schema_filename'"
+    }
+
+    /*
      * Beautify parameters for --help
      */
     public static String paramsHelp(workflow, params, command, schema_filename='nextflow_schema.json') {

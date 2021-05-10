@@ -3,32 +3,43 @@
     "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/schema_input.json",
     "title": "nf-core/rnaseq pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
-    "type": "object",
-    "properties": {
-        "sample": {
-            "type": "string",
-            "pattern": "^\\S+$"
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$"
+            },
+            "fastq_1": {
+                "type": "string",
+                "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
+            },
+            "fastq_2": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "strandedness": {
+                "type": "string",
+                "enum": [
+                    "forward",
+                    "reverse",
+                    "unstranded"
+                ]
+            }
         },
-        "fastq_1": {
-            "type": "string",
-            "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
-        },
-        "fastq_2": {
-            "type": "string",
-            "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
-        },
-        "strandedness": {
-            "type": "string",
-            "enum": [
-                "forward",
-                "reverse",
-                "unstranded"
-            ]
-        }
-    },
-    "required": [
-        "sample",
-        "fastq_1",
-        "strandedness"
-    ]
+        "required": [
+            "sample",
+            "fastq_1",
+            "strandedness"
+        ]
+    }
 }

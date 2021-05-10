@@ -14,6 +14,7 @@ if (params.public_data_ids) {
 } else { 
     exit 1, 'Input file with public database ids not specified!' 
 }
+NfcoreSchema.validateFile(workflow, log, 'params.public_data_ids', file(params.public_data_ids).splitCsv(header:false, sep:'', strip:true), 'assets/schema_public_data_ids.json')
 
 /*
 ========================================================================================

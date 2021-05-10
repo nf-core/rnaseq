@@ -577,6 +577,8 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
   * `*.dds.RData`: File containing R `DESeqDataSet` object  generated
     by DESeq2, with either an rlog or vst `assay` storing the
     variance-stabilised data.
+  * `*.rds`: Alternative version of the RData file suitable for
+    `readRDS` to give user control of the eventual object name.
   * `*pca.vals.txt`: Matrix of values for the first 2 principal components.
   * `*sample.dists.txt`: Sample distance matrix.
   * `R_sessionInfo.log`: File containing information about R, the OS and attached or loaded packages.

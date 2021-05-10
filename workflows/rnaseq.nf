@@ -1,12 +1,8 @@
-////////////////////////////////////////////////////
-/* --         LOCAL PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
-
-params.summary_params = [:]
-
-////////////////////////////////////////////////////
-/* --          VALIDATE INPUTS                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    VALIDATE INPUTS
+========================================================================================
+*/
 
 def valid_params = [
     aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
@@ -14,8 +10,10 @@ def valid_params = [
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication']
 ]
 
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+
 // Validate input parameters
-Workflow.validateRnaseqParams(params, log, valid_params)
+WorkflowRnaseq.initialise(params, log, valid_params)
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
@@ -52,9 +50,11 @@ if (anno_readme && file(anno_readme).exists()) {
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
-////////////////////////////////////////////////////
-/* --          CONFIG FILES                    -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    CONFIG FILES       
+========================================================================================
+*/
 
 ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
@@ -64,9 +64,11 @@ ch_pca_header_multiqc        = file("$projectDir/assets/multiqc/deseq2_pca_heade
 ch_clustering_header_multiqc = file("$projectDir/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
 ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 
-////////////////////////////////////////////////////
-/* --    IMPORT LOCAL MODULES/SUBWORKFLOWS     -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    IMPORT LOCAL MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
@@ -142,9 +144,11 @@ include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
-////////////////////////////////////////////////////
-/* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    IMPORT NF-CORE MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
 /*
  * MODULE: Installed directly from nf-core/modules
@@ -217,9 +221,11 @@ include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subw
 include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE         } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
 include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_ANTISENSE     } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_antisense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_antisense'] )
 
-////////////////////////////////////////////////////
-/* --           RUN MAIN WORKFLOW              -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    RUN MAIN WORKFLOW
+========================================================================================
+*/
 
 // Info required for completion email and summary
 def multiqc_report      = []
@@ -471,7 +477,7 @@ workflow RNASEQ {
     ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
-            .map { meta, align_log -> [ meta ] + Workflow.getStarPercentMapped(params, align_log) }
+            .map { meta, align_log -> [ meta ] + WorkflowRnaseq.getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
         ch_genome_bam
@@ -553,7 +559,7 @@ workflow RNASEQ {
         PREPARE_GENOME
             .out
             .gtf
-            .map { Workflow.biotypeInGtf(it, biotype, log) }
+            .map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
             .set { biotype_in_gtf }
 
         // Prevent any samples from running if GTF file doesn't have a valid biotype
@@ -647,7 +653,7 @@ workflow RNASEQ {
             ch_software_versions          = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + Workflow.getInferexperimentStrandedness(strand_log, 30) }
+                .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }
                 .filter { it[0].strandedness != it[1] }
                 .map { meta, strandedness, sense, antisense, undetermined ->
                     [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
@@ -716,7 +722,7 @@ workflow RNASEQ {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = Workflow.paramsSummaryMultiqc(workflow, params.summary_params)
+        workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         MULTIQC (
@@ -758,15 +764,19 @@ workflow RNASEQ {
     }
 }
 
-////////////////////////////////////////////////////
-/* --              COMPLETION EMAIL            -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    COMPLETION EMAIL AND SUMMARY
+========================================================================================
+*/
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
-    Completion.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
+    NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
+    NfcoreTemplate.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 
-////////////////////////////////////////////////////
-/* --                  THE END                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    THE END
+========================================================================================
+*/

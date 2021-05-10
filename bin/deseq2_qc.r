@@ -59,8 +59,6 @@ count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE
 colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
 colnames(count.table) <- gsub(pattern='\\.$', replacement='', colnames(count.table))
 
-
-
 ################################################
 ################################################
 ## RUN DESEQ2                                 ##
@@ -88,7 +86,6 @@ if (decompose) {
         decompose <- FALSE
     }
 }
-
 
 DDSFile <- paste(opt$outprefix,".dds.RData",sep="")
 if (file.exists(DDSFile) == FALSE) {
@@ -120,7 +117,6 @@ if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
     warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
     quit(save = "no", status = 0, runLast = FALSE)
 }
-
 
 ################################################
 ################################################
@@ -165,16 +161,16 @@ if (file.exists(PlotFile) == FALSE) {
         percentVar    <- round(attr(pca.data, "percentVar")$percentVar)
         plot_subtitle <- ifelse(n_top_var==Inf, "All genes", paste("Top", n_top_var, "genes"))
         pl <- ggplot(pca.data, aes(PC1, PC2, label=paste0(" ", sample, " "))) +
-              geom_point() +
-              geom_text(check_overlap=TRUE, vjust=0.5, hjust="inward") +           
-              xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-              ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-              labs(title = paste0("First PCs on ", vst_name, "-transformed data"), subtitle = plot_subtitle) + 
-              theme(legend.position="top",
-                    panel.grid.major = element_blank(),
-                    panel.grid.minor = element_blank(),
-                    panel.background = element_blank(),
-                    panel.border = element_rect(colour = "black", fill=NA, size=1))
+            geom_point() +
+            geom_text(check_overlap=TRUE, vjust=0.5, hjust="inward") +           
+            xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+            ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+            labs(title = paste0("First PCs on ", vst_name, "-transformed data"), subtitle = plot_subtitle) + 
+            theme(legend.position="top",
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                panel.background = element_blank(),
+                panel.border = element_rect(colour = "black", fill=NA, size=1))
         print(pl)
 
         if (decompose) {

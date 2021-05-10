@@ -175,7 +175,7 @@ class NfcoreSchema {
      * Function to validate a file by its schema, eg. sample sheets
      */
     /* groovylint-disable-next-line UnusedPrivateMethodParameter */
-    public static void validateFile(workflow, log, param_name, obj, schema_filename) {
+    public static void validateFile(workflow, log, params, param_name, obj, schema_filename) {
         // Load the schema
         InputStream inputStream = new File(getSchemaPath(workflow, schema_filename)).newInputStream()
         JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream))
@@ -189,12 +189,13 @@ class NfcoreSchema {
         try {
             schema.validate(objJSON)
         } catch (ValidationException e) {
-            println jsonObj.toString()
-            println ''
-            log.error "ERROR: Validation of '$param_name' failed!"
-             JSONObject exceptionJSON = e.toJSON()
-             printExceptions(exceptionJSON, objJSON, log)
-            println ''
+            Map colors = NfcoreTemplate.logColours(params.monochrome_logs)
+            println ""
+            println "=${colors.red}====   ERROR: Validation of '$param_name' file failed!   ============================="
+            JSONObject exceptionJSON = e.toJSON()
+            e.getCausingExceptions().stream().map(ValidationException::getMessage).forEach(System.out::println)
+            println "=${colors.red}==================================================================================${colors.reset}"
+            println ""
             System.exit(1)
         }
         log.debug "Validation passed: '$param_name' with '$schema_filename'"

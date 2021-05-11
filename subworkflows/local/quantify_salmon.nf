@@ -24,7 +24,7 @@ workflow QUANTIFY_SALMON {
     gtf              // channel: /path/to/genome.gtf
     alignment_mode   //    bool: Run Salmon in alignment mode
 
-    main:    
+    main:
     /*
      * Quantify and merge counts across samples
      */
@@ -33,25 +33,25 @@ workflow QUANTIFY_SALMON {
     SALMON_TXIMPORT     ( SALMON_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.collect() )
 
 
-    SALMON_SE_GENE ( 
+    SALMON_SE_GENE (
         SALMON_TXIMPORT.out.counts_gene,
         SALMON_TXIMPORT.out.tpm_gene,
         SALMON_TX2GENE.out.collect()
     )
 
-    SALMON_SE_GENE_LENGTH_SCALED ( 
+    SALMON_SE_GENE_LENGTH_SCALED (
         SALMON_TXIMPORT.out.counts_gene_length_scaled,
         SALMON_TXIMPORT.out.tpm_gene,
         SALMON_TX2GENE.out.collect()
     )
 
-    SALMON_SE_GENE_SCALED ( 
+    SALMON_SE_GENE_SCALED (
         SALMON_TXIMPORT.out.counts_gene_scaled,
         SALMON_TXIMPORT.out.tpm_gene,
         SALMON_TX2GENE.out.collect()
     )
 
-    SALMON_SE_TRANSCRIPT ( 
+    SALMON_SE_TRANSCRIPT (
         SALMON_TXIMPORT.out.counts_transcript,
         SALMON_TXIMPORT.out.tpm_transcript,
         SALMON_TX2GENE.out.collect()
@@ -60,7 +60,7 @@ workflow QUANTIFY_SALMON {
     emit:
     results                          = SALMON_QUANT.out.results                      // channel: [ val(meta), results_dir ]
     salmon_version                   = SALMON_QUANT.out.version                      //    path: *.version.txt
-    
+
     tpm_gene                         = SALMON_TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
     counts_gene                      = SALMON_TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]
     counts_gene_length_scaled        = SALMON_TXIMPORT.out.counts_gene_length_scaled // channel: [ val(meta), counts ]
@@ -68,12 +68,12 @@ workflow QUANTIFY_SALMON {
     tpm_transcript                   = SALMON_TXIMPORT.out.tpm_transcript            // channel: [ val(meta), counts ]
     counts_transcript                = SALMON_TXIMPORT.out.counts_transcript         // channel: [ val(meta), counts ]
     tximeta_version                  = SALMON_TXIMPORT.out.version                   //    path: *.version.txt
-    
+
     merged_gene_rds                  = SALMON_SE_GENE.out.rds                        //    path: *.rds
     merged_gene_rds_length_scaled    = SALMON_SE_GENE_LENGTH_SCALED.out.rds          //    path: *.rds
     merged_gene_rds_scaled           = SALMON_SE_GENE_SCALED.out.rds                 //    path: *.rds
     summarizedexperiment_version     = SALMON_SE_GENE.out.version                    //    path: *.version.txt
-        
+
     merged_counts_transcript         = SALMON_TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
     merged_tpm_transcript            = SALMON_TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
     merged_transcript_rds            = SALMON_SE_TRANSCRIPT.out.rds                  //    path: *.rds

@@ -4,15 +4,15 @@
 ========================================================================================
 */
 
-if (params.public_data_ids) { 
+if (params.public_data_ids) {
     Channel
         .from(file(params.public_data_ids, checkIfExists: true))
         .splitCsv(header:false, sep:'', strip:true)
         .map { it[0] }
         .unique()
         .set { ch_public_data_ids }
-} else { 
-    exit 1, 'Input file with public database ids not specified!' 
+} else {
+    exit 1, 'Input file with public database ids not specified!'
 }
 
 /*
@@ -56,8 +56,8 @@ workflow SRA_DOWNLOAD {
         .out
         .tsv
         .splitCsv(header:true, sep:'\t')
-        .map { 
-            meta -> 
+        .map {
+            meta ->
                 meta.single_end = meta.single_end.toBoolean()
                 [ meta, [ meta.fastq_1, meta.fastq_2 ] ]
         }

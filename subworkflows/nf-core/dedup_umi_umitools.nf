@@ -28,7 +28,7 @@ workflow DEDUP_UMI_UMITOOLS {
     UMITOOLS_DEDUP.out.bam
         .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
         .join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
-        .map { 
+        .map {
             meta, bam, bai, csi ->
                 if (bai) {
                     [ meta, bam, bai ]

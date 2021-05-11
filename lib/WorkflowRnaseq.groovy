@@ -10,19 +10,19 @@ class WorkflowRnaseq {
     public static void initialise(params, log, valid_params) {
         genomeExistsError(params, log)
 
-        if (!params.fasta) { 
+        if (!params.fasta) {
             log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
             System.exit(1)
         }
 
-        if (!params.gtf && !params.gff) { 
+        if (!params.gtf && !params.gff) {
             log.error "No GTF or GFF3 annotation specified! The pipeline requires at least one of these files."
             System.exit(1)
         }
-        
-        if (params.gtf) { 
+
+        if (params.gtf) {
             if (params.gff) {
-                gtfGffWarn(log) 
+                gtfGffWarn(log)
             }
             if (params.genome == 'GRCh38' && params.gtf.contains('Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf')) {
                 ncbiGenomeWarn(log)
@@ -63,7 +63,7 @@ class WorkflowRnaseq {
                 rsemUmiError(log)
             }
             if (params.rsem_index && params.star_index) {
-                rsemStarIndexWarn(log)   
+                rsemStarIndexWarn(log)
             }
         }
 
@@ -241,7 +241,7 @@ class WorkflowRnaseq {
         log.error "=============================================================================\n" +
             "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
             "  not possible to remove UMIs before the quantification.\n\n" +
-            "  If you would like to remove UMI barcodes using the '--with_umi' option\n" + 
+            "  If you would like to remove UMI barcodes using the '--with_umi' option\n" +
             "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
             "============================================================================="
         System.exit(1)
@@ -254,7 +254,7 @@ class WorkflowRnaseq {
         log.warn "=============================================================================\n" +
             "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
             "  be present in the path specified by '--rsem_index'.\n\n" +
-            "  This warning has been generated because you have provided both\n" + 
+            "  This warning has been generated because you have provided both\n" +
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +

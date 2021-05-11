@@ -12,7 +12,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonBuilder
 
 class NfcoreSchema {
-    
+
     /*
      * Resolve Schema path relative to main workflow directory
      */
@@ -319,7 +319,7 @@ class NfcoreSchema {
         output += NfcoreTemplate.dashedLine(params.monochrome_logs)
         return output
     }
-    
+
     /*
      * Loop over nested exceptions and print the causingException
      */

@@ -28,7 +28,7 @@ workflow MARK_DUPLICATES_PICARD {
     PICARD_MARKDUPLICATES.out.bam
         .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
         .join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
-        .map { 
+        .map {
             meta, bam, bai, csi ->
                 if (bai) {
                     [ meta, bam, bai ]

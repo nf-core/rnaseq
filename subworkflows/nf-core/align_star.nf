@@ -15,7 +15,7 @@ workflow ALIGN_STAR {
     reads // channel: [ val(meta), [ reads ] ]
     index // channel: /path/to/star/index/
     gtf   // channel: /path/to/genome.gtf
-    
+
     main:
     /*
      * Map reads with STAR
@@ -37,7 +37,7 @@ workflow ALIGN_STAR {
     fastq            = STAR_ALIGN.out.fastq           // channel: [ val(meta), fastq          ]
     tab              = STAR_ALIGN.out.tab             // channel: [ val(meta), tab            ]
     star_version     = STAR_ALIGN.out.version         // path: *.version.txt
-    
+
     bam              = BAM_SORT_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
     bai              = BAM_SORT_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
     csi              = BAM_SORT_SAMTOOLS.out.csi      // channel: [ val(meta), [ csi ] ]

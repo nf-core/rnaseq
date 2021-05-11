@@ -21,7 +21,7 @@ workflow BEDGRAPH_TO_BIGWIG {
 
     /*
      * Convert bedGraph to bigWig
-     */ 
+     */
     UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out.bedgraph, sizes )
 
     emit:

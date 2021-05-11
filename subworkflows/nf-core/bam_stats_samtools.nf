@@ -11,7 +11,7 @@ include { SAMTOOLS_FLAGSTAT } from '../../modules/nf-core/software/samtools/flag
 workflow BAM_STATS_SAMTOOLS {
     take:
     ch_bam_bai // channel: [ val(meta), [ bam ], [bai/csi] ]
-    
+
     main:
     SAMTOOLS_STATS    ( ch_bam_bai )
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )

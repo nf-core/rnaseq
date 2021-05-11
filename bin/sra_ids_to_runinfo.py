@@ -110,7 +110,7 @@ def fetch_sra_runinfo(file_in,file_out,platform_list=[],library_layout_list=[]):
                 prefix = match.group()
                 if prefix in PREFIX_LIST:
                     if not db_id in seen_ids:
-                        
+
                         ids = [db_id]
                         ## Resolve/expand these ids against GEO URL
                         if prefix in ['GSE']:

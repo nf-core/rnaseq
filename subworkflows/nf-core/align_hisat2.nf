@@ -15,7 +15,7 @@ workflow ALIGN_HISAT2 {
     reads       // channel: [ val(meta), [ reads ] ]
     index       // channel: /path/to/star/index/
     splicesites // channel: /path/to/genome.splicesites.txt
-    
+
     main:
     /*
      * Map reads with HISAT2

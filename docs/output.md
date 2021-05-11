@@ -217,7 +217,7 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 
 </details>
 
-[HISAT2](http://daehwankimlab.github.io/hisat2/) is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes as well as to a single reference genome. It introduced a new indexing scheme called a Hierarchical Graph FM index (HGFM) which when combined with several alignment strategies, enable rapid and accurate alignment of sequencing reads. The HISAT2 route through the pipeline is a good option if you have memory limitations on your compute. However, quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.  
+[HISAT2](http://daehwankimlab.github.io/hisat2/) is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes as well as to a single reference genome. It introduced a new indexing scheme called a Hierarchical Graph FM index (HGFM) which when combined with several alignment strategies, enable rapid and accurate alignment of sequencing reads. The HISAT2 route through the pipeline is a good option if you have memory limitations on your compute. However, quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
 
 You can choose to align your data with HISAT2 by providing the `--aligner hisat2` parameter.
 
@@ -297,7 +297,7 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 * `<ALIGNER>/stringtie/`
   * `*.coverage.gtf`: GTF file containing transcripts that are fully covered by reads.
   * `*.transcripts.gtf`: GTF file containing all of the assembled transcipts from StringTie.
-  * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.  
+  * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.
 * `<ALIGNER>/stringtie/<SAMPLE>.ballgown/`: Ballgown output directory.
 
 </details>
@@ -616,7 +616,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 <details markdown="1">
 <summary>Output files</summary>
 
-* `multiqc/<ALIGNER>/`  
+* `multiqc/<ALIGNER>/`
   * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
 
@@ -678,9 +678,9 @@ According to the `txtimport` documentation you can do one of the following:
 <details markdown="1">
 <summary>Output files</summary>
 
-* `genome/`  
+* `genome/`
   * `*.fa`, `*.gtf`, `*.gff`, `*.bed`, `.tsv`: If the `--save_reference` parameter is provided then all of the genome reference files will be placed in this directory.
-* `genome/index/`  
+* `genome/index/`
   * `star/`: Directory containing STAR indices.
   * `hisat2/`: Directory containing HISAT2 indices.
   * `rsem/`: Directory containing STAR and RSEM indices.

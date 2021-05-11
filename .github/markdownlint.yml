@@ -1,12 +1,14 @@
 # Markdownlint configuration file
 default: true
 line-length: false
+ul-indent:
+  indent: 4
 no-duplicate-header:
-    siblings_only: true
+  siblings_only: true
 no-inline-html:
     allowed_elements:
-        - img
-        - p
-        - kbd
-        - details
-        - summary
+      - img
+      - p
+      - kbd
+      - details
+      - summary

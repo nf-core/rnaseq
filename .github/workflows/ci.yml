@@ -91,7 +91,7 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      
+
       - name: Run pipeline with RSEM STAR and various parameters
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }}

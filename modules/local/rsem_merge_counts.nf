@@ -15,17 +15,17 @@ process RSEM_MERGE_COUNTS {
     } else {
         container "biocontainers/biocontainers:v1.2.0_cv1"
     }
-    
+
     input:
     path ('genes/*')
     path ('isoforms/*')
-    
+
     output:
     path "rsem.merged.gene_counts.tsv"      , emit: counts_gene
     path "rsem.merged.gene_tpm.tsv"         , emit: tpm_gene
     path "rsem.merged.transcript_counts.tsv", emit: counts_transcript
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
-    
+
     script:
     """
     mkdir -p tmp/genes

@@ -1,19 +1,17 @@
-/*
- * -----------------------------------------------------
- *  Utility functions used in nf-core DSL2 module files
- * -----------------------------------------------------
- */
+//
+// Utility functions used in nf-core DSL2 module files
+//
 
-/*
- * Extract name of software tool from process name using $task.process
- */
+//
+// Extract name of software tool from process name using $task.process
+//
 def getSoftwareName(task_process) {
     return task_process.tokenize(':')[-1].tokenize('_')[0].toLowerCase()
 }
 
-/*
- * Function to initialise default values and to generate a Groovy Map of available options for nf-core modules
- */
+//
+// Function to initialise default values and to generate a Groovy Map of available options for nf-core modules
+//
 def initOptions(Map args) {
     def Map options = [:]
     options.args            = args.args ?: ''
@@ -26,18 +24,18 @@ def initOptions(Map args) {
     return options
 }
 
-/*
- * Tidy up and join elements of a list to return a path string
- */
+//
+// Tidy up and join elements of a list to return a path string
+//
 def getPathFromList(path_list) {
     def paths = path_list.findAll { item -> !item?.trim().isEmpty() }      // Remove empty entries
     paths     = paths.collect { it.trim().replaceAll("^[/]+|[/]+\$", "") } // Trim whitespace and trailing slashes
     return paths.join('/')
 }
 
-/*
- * Function to save/publish module results
- */
+//
+// Function to save/publish module results
+//
 def saveFiles(Map args) {
     if (!args.filename.endsWith('.version.txt')) {
         def ioptions  = initOptions(args.options)

@@ -52,8 +52,10 @@ if (length(extra) > 0) {
 
 rowdata = rowdata[match(rownames(counts), as.character(rowdata[[by_what]])),]
 rownames(rowdata) = rowdata[[by_what]]
-se = SummarizedExperiment(assays = list(counts = counts, abundance = tpm),
-                          colData = DataFrame(coldata),
-                          rowData = rowdata)
+se = SummarizedExperiment(
+    assays = list(counts = counts, abundance = tpm),
+    colData = DataFrame(coldata),
+    rowData = rowdata
+)
 
 saveRDS(se, file = paste0(tools::file_path_sans_ext(counts_fn), ".rds"))

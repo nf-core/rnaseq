@@ -44,9 +44,11 @@ if (length(extra) > 0) {
 }
 rowdata = rowdata[match(rownames(txi[[1]]), as.character(rowdata[["tx"]])),]
 rownames(rowdata) = rowdata[["tx"]]
-se = SummarizedExperiment(assays = list(counts = txi[["counts"]], abundance = txi[["abundance"]], length = txi[["length"]]),
-                          colData = DataFrame(coldata),
-                          rowData = rowdata)
+se = SummarizedExperiment(
+    assays = list(counts = txi[["counts"]], abundance = txi[["abundance"]], length = txi[["length"]]),
+    colData = DataFrame(coldata),
+    rowData = rowdata
+)
 if (!is.null(tx2gene)) {
     gi = summarizeToGene(txi, tx2gene = tx2gene)
     gi.ls = summarizeToGene(txi, tx2gene = tx2gene,countsFromAbundance="lengthScaledTPM")
@@ -54,15 +56,21 @@ if (!is.null(tx2gene)) {
     growdata = unique(rowdata[,2:3])
     growdata = growdata[match(rownames(gi[[1]]), growdata[["gene_id"]]),]
     rownames(growdata) = growdata[["tx"]]
-    gse = SummarizedExperiment(assays = list(counts = gi[["counts"]], abundance = gi[["abundance"]], length = gi[["length"]]),
-                                colData = DataFrame(coldata),
-                                rowData = growdata)
-    gse.ls = SummarizedExperiment(assays = list(counts = gi.ls[["counts"]], abundance = gi.ls[["abundance"]], length = gi.ls[["length"]]),
-                                  colData = DataFrame(coldata),
-                                  rowData = growdata)
-    gse.s = SummarizedExperiment(assays = list(counts = gi.s[["counts"]], abundance = gi.s[["abundance"]], length = gi.s[["length"]]),
-                                  colData = DataFrame(coldata),
-                                  rowData = growdata)
+    gse = SummarizedExperiment(
+        assays = list(counts = gi[["counts"]], abundance = gi[["abundance"]], length = gi[["length"]]),
+        colData = DataFrame(coldata),
+        rowData = growdata
+    )
+    gse.ls = SummarizedExperiment(
+        assays = list(counts = gi.ls[["counts"]], abundance = gi.ls[["abundance"]], length = gi.ls[["length"]]),
+        colData = DataFrame(coldata),
+        rowData = growdata
+    )
+    gse.s = SummarizedExperiment(
+        assays = list(counts = gi.s[["counts"]], abundance = gi.s[["abundance"]], length = gi.s[["length"]]),
+        colData = DataFrame(coldata),
+        rowData = growdata
+    )
 }
 
 build_table = function(se.obj, slot) {

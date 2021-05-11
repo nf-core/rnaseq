@@ -4,7 +4,10 @@ files_unchanged:
   - assets/email_template.html
   - assets/email_template.txt
   - assets/multiqc_config.yaml
+  - assets/sendmail_template.txt
   - lib/NfcoreSchema.groovy
+  - docs/README.md
 files_exist:
+  - .github/markdownlint.yml
   - bin/markdown_to_html.py
 actions_awsfulltest: False

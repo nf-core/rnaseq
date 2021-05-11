@@ -47,6 +47,20 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allow-repeats: false
 
+  EditorConfig:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10"
+
+      - name: Install editorconfig-checker
+        run: npm install -g editorconfig-checker
+
+      - name: Run ECLint check
+        run: editorconfig-checker -exclude README.md $(git ls-files | grep -v test)
 
   YAML:
     runs-on: ubuntu-latest

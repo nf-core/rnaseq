@@ -12,7 +12,7 @@ process SRA_TO_SAMPLESHEET {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
-        
+
     memory 100.MB
 
     input:
@@ -20,7 +20,7 @@ process SRA_TO_SAMPLESHEET {
 
     output:
     tuple val(meta), path("*csv"), emit: csv
-    
+
     exec:
     //  Remove custom keys needed to download the data
     def meta_map = meta.clone()

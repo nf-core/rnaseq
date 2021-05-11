@@ -9,7 +9,7 @@ process MULTIQC {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
-        
+
     conda (params.enable_conda ? "bioconda::multiqc=1.10.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/multiqc:1.10.1--py_0"
@@ -51,7 +51,7 @@ process MULTIQC {
     path ('rseqc/junction_saturation/*')
     path ('rseqc/read_distribution/*')
     path ('rseqc/read_duplication/*')
-    
+
     output:
     path "*multiqc_report.html", emit: report
     path "*_data"              , emit: data

@@ -12,7 +12,7 @@ indent_style = space
 indent_size = 2
 
 # These files are edited upstream in nf-core/modules
-[/modules/**]
+[/modules/nf-core/**]
 charset = unset
 end_of_line = unset
 insert_final_newline = unset

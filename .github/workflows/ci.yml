@@ -8,6 +8,9 @@ on:
   release:
     types: [published]
 
+# Uncomment if we need an edge release of Nextflow again
+# env: NXF_EDGE: 1
+
 jobs:
   test:
     name: Run workflow tests
@@ -20,7 +23,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['20.04.0', '21.03.0-edge']
+        nxf_ver: ['20.04.0', '']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

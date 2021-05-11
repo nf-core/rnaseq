@@ -112,8 +112,14 @@ class NfcoreSchema {
             }
             // unexpected params
             def params_ignore = params.schema_ignore_params.split(',') + 'schema_ignore_params'
-            if (!expectedParams.contains(specifiedParam) && !params_ignore.contains(specifiedParam)) {
-                unexpectedParams.push(specifiedParam)
+            def expectedParamsLowerCase = expectedParams.collect{ it.replace("-", "").toLowerCase() }
+            def specifiedParamLowerCase = specifiedParam.replace("-", "").toLowerCase()
+            if (!expectedParams.contains(specifiedParam) && !params_ignore.contains(specifiedParam) && !expectedParamsLowerCase.contains(specifiedParamLowerCase)) {
+                // Temporarily remove camelCase/camel-case params #1035
+                def unexpectedParamsLowerCase = unexpectedParams.collect{ it.replace("-", "").toLowerCase()}
+                if (!unexpectedParamsLowerCase.contains(specifiedParamLowerCase)){
+                    unexpectedParams.push(specifiedParam)
+                }
             }
         }
 
@@ -191,11 +197,11 @@ class NfcoreSchema {
 
     // Remove an element from a JSONArray
     private static JSONArray removeElement(jsonArray, element){
-        def list = []  
+        def list = []
         int len = jsonArray.length()
-        for (int i=0;i<len;i++){ 
+        for (int i=0;i<len;i++){
             list.add(jsonArray.get(i).toString())
-        } 
+        }
         list.remove(element)
         JSONArray jsArray = new JSONArray(list)
         return jsArray
@@ -213,7 +219,7 @@ class NfcoreSchema {
                             // If the param was required, change this
                             if (definition[key].has("required")) {
                                 def cleaned_required = removeElement(definition[key].required, ignore_param)
-                                definition[key].put("required", cleaned_required) 
+                                definition[key].put("required", cleaned_required)
                             }
                         }
                     }
@@ -243,7 +249,7 @@ class NfcoreSchema {
             }
             // Cast Duration to String
             if (p['value'].getClass() == nextflow.util.Duration) {
-                new_params.replace(p.key, p['value'].toString())
+                new_params.replace(p.key, p['value'].toString().replaceFirst(/d(?!\S)/, "day"))
             }
             // Cast LinkedHashMap to String
             if (p['value'].getClass() == LinkedHashMap) {
@@ -482,10 +488,10 @@ class NfcoreSchema {
         }
         workflow_summary['runName']      = workflow.runName
         if (workflow.containerEngine) {
-            workflow_summary['containerEngine'] = "$workflow.containerEngine"
+            workflow_summary['containerEngine'] = workflow.containerEngine
         }
         if (workflow.container) {
-            workflow_summary['container']       = "$workflow.container"
+            workflow_summary['container'] = workflow.container
         }
         workflow_summary['launchDir']    = workflow.launchDir
         workflow_summary['workDir']      = workflow.workDir
@@ -506,17 +512,7 @@ class NfcoreSchema {
                     def params_value = params.get(param)
                     def schema_value = group_params.get(param).default
                     def param_type   = group_params.get(param).type
-                    if (schema_value == null) {
-                        if (param_type == 'boolean') {
-                            schema_value = false
-                        }
-                        if (param_type == 'string') {
-                            schema_value = ''
-                        }
-                        if (param_type == 'integer') {
-                            schema_value = 0
-                        }
-                    } else {
+                    if (schema_value != null) {
                         if (param_type == 'string') {
                             if (schema_value.contains('$projectDir') || schema_value.contains('${projectDir}')) {
                                 def sub_string = schema_value.replace('\$projectDir', '')
@@ -535,8 +531,13 @@ class NfcoreSchema {
                         }
                     }
 
-                    if (params_value != schema_value) {
-                        sub_params.put("$param", params_value)
+                    // We have a default in the schema, and this isn't it
+                    if (schema_value != null && params_value != schema_value) {
+                        sub_params.put(param, params_value)
+                    }
+                    // No default in the schema, and this isn't empty
+                    else if (schema_value == null && params_value != "" && params_value != null && params_value != false) {
+                        sub_params.put(param, params_value)
                     }
                 }
             }
@@ -549,22 +550,23 @@ class NfcoreSchema {
      * Beautify parameters for summary and return as string
      */
     private static String params_summary_log(workflow, params, json_schema) {
+        Map colors = log_colours(params.monochrome_logs)
         String output  = ''
         def params_map = params_summary_map(workflow, params, json_schema)
         def max_chars  = params_max_chars(params_map)
         for (group in params_map.keySet()) {
             def group_params = params_map.get(group)  // This gets the parameters of that particular group
             if (group_params) {
-                output += group + '\n'
+                output += colors.bold + group + colors.reset + '\n'
                 for (param in group_params.keySet()) {
-                    output += "    \u001B[1m" +  param.padRight(max_chars) + ": \u001B[1m" + group_params.get(param) + '\n'
+                    output += "  " + colors.blue + param.padRight(max_chars) + ": " + colors.green +  group_params.get(param) + colors.reset + '\n'
                 }
                 output += '\n'
             }
         }
-        output += "[Only displaying parameters that differ from pipeline default]\n"
         output += dashed_line(params.monochrome_logs)
-        output += '\n\n' + dashed_line(params.monochrome_logs)
+        output += colors.dim + "\n Only displaying parameters that differ from defaults.\n" + colors.reset
+        output += dashed_line(params.monochrome_logs)
         return output
     }
 

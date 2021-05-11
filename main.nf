@@ -378,11 +378,11 @@ def checkHostname() {
         params.hostnames.each { prof, hnames ->
             hnames.each { hname ->
                 if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-                    log.error '====================================================\n' +
+                    log.error "${c_red}====================================================${c_reset}\n" +
                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
                             "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
-                            '============================================================'
+                            "${c_red}====================================================${c_reset}\n"
                 }
             }
         }

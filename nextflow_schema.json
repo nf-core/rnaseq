@@ -62,7 +62,7 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes/",
+                    "default": "s3://ngi-igenomes/igenomes",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -183,7 +183,7 @@
                     "description": "Maximum amount of memory that can be requested for any single job.",
                     "default": "128.GB",
                     "fa_icon": "fas fa-memory",
-                    "pattern": "^[\\d\\.]+\\s*.(K|M|G|T)?B$",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
                 },
@@ -192,7 +192,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
-                    "pattern": "^[\\d\\.]+\\.*(s|m|h|d)$",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }

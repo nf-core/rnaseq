@@ -199,8 +199,9 @@ class NfcoreSchema {
             println ""
             println "=${colors.red}====   ERROR: Validation of '$param_name' file failed!   ============================="
             JSONObject exceptionJSON = e.toJSON()
+            println e.getMessage()
             e.getCausingExceptions().stream().map(ValidationException::getMessage).forEach(System.out::println)
-            println "=${colors.red}==================================================================================${colors.reset}"
+            println "===================================================================================${colors.reset}"
             println ""
             System.exit(1)
         }

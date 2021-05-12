@@ -13,6 +13,10 @@
             "properties": {
                 "input": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "pattern": "\\.csv$",
+                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
@@ -25,6 +29,10 @@
                 },
                 "public_data_ids": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.txt$",
+                    "schema": "assets/schema_public_data_ids.json",
                     "fa_icon": "fas fa-database",
                     "description": "File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files."
                 },
@@ -125,60 +133,84 @@
                 },
                 "fasta": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
                     "fa_icon": "far fa-file-code"
                 },
                 "gtf": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
                     "fa_icon": "fas fa-code-branch",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified."
                 },
                 "gff": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Path to GFF3 annotation file.",
                     "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified."
                 },
                 "gene_bed": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
                     "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
                 },
                 "transcript_fasta": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "Path to FASTA transcriptome file."
                 },
                 "additional_fasta": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences.",
                     "help_text": "If provided, the sequences in this file will get concatenated to the existing genome FASTA file, a GTF file will be automatically created using the entire sequence as the gene, transcript, and exon features, and any alignment index will get created from the combined FASTA and GTF. It is recommended to save the reference with `--save_reference` to re-use the index for future runs so you do not need to create it again."
                 },
                 "splicesites": {
                     "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
                     "fa_icon": "fas fa-hand-scissors",
                     "description": "Splice sites file required for HISAT2."
                 },
                 "star_index": {
                     "type": "string",
+                    "format": "path",
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built STAR index."
                 },
                 "hisat2_index": {
                     "type": "string",
+                    "format": "path",
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built HISAT2 index."
                 },
                 "rsem_index": {
                     "type": "string",
+                    "format": "path",
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built RSEM index."
                 },
                 "salmon_index": {
                     "type": "string",
+                    "format": "path",
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Salmon index."
                 },
@@ -230,6 +262,7 @@
                 },
                 "igenomes_base": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Directory / URL base for iGenomes references.",
                     "default": "s3://ngi-igenomes/igenomes",
                     "fa_icon": "fas fa-cloud-download-alt",

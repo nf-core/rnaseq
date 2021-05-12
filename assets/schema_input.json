@@ -32,6 +32,7 @@
             },
             "strandedness": {
                 "type": "string",
+                "errorMessage": "Strandedness must be provided and be one of 'forward', 'reverse' or 'unstranded'",
                 "enum": [
                     "forward",
                     "reverse",

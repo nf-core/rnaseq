@@ -198,27 +198,35 @@ class NfcoreSchema {
             Map colors = NfcoreTemplate.logColours(params.monochrome_logs)
             println ""
             println "=${colors.red}====   ERROR: Validation of '$param_name' file failed!   ============================="
-            try {
-                // Make a deep copy of the raw schema
-                JSONObject s_obj = new JsonSlurper().parseText(rawSchema.toString())
-                // Loop over each part of the validation error location to get to the leaf element
-                String clean_ref = e.getSchemaLocation() - ~/^#\//
-                clean_ref.split('/').each {
-                    s_obj = s_obj.get(it)
-                }
-                // Print the custom error message (if there is one)
-                String error_location = e.getPointerToViolation()
-                String error_message = s_obj.errorMessage.toString()
-                println "$error_location: $error_message"
-            } catch (Exception j) {
-                println e.getMessage()
-            }
+            println niceValidationExceptionMessage(e, rawSchema)
             e.getCausingExceptions().stream().map(ValidationException::getMessage).forEach(System.out::println)
             println "===================================================================================${colors.reset}"
             println ""
             System.exit(1)
         }
         log.debug "Validation passed: '$param_name' with '$schema_filename'"
+    }
+
+    //
+    // Given a schema ValidationException, try to return the nice custom error message if we can
+    //
+    /* groovylint-disable-next-line UnusedPrivateMethodParameter */
+    public static String niceValidationExceptionMessage(e, rawSchema) {
+        try {
+            // Make a deep copy of the raw schema
+            JSONObject s_obj = new JsonSlurper().parseText(rawSchema.toString())
+            // Loop over each part of the validation error location to get to the leaf element
+            String clean_ref = e.getSchemaLocation() - ~/^#\//
+            clean_ref.split('/').each {
+                s_obj = s_obj.get(it)
+            }
+            // Print the custom error message (if there is one)
+            String error_location = e.getPointerToViolation()
+            String error_message = s_obj.errorMessage.toString()
+            return "$error_location: $error_message"
+        } catch (Exception j) {
+            return e.getMessage()
+        }
     }
 
     //

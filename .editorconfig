@@ -11,10 +11,6 @@ indent_style = space
 [*.{yml,yaml}]
 indent_size = 2
 
-# These files are linted by markdownlint anyway
-[*.{md,MD,markdown}]
-indent_size = unset
-
 # These files are edited and tested upstream in nf-core/modules
 [/modules/nf-core/**]
 charset = unset

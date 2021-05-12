@@ -15,7 +15,7 @@
             "fastq_1": {
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "File name must not be empty or contain spaces and must have extension .fa.gz or .fastq.gz"
+                "errorMessage": "File name must not be empty or contain spaces and must have extension '.fa.gz' or '.fastq.gz'"
             },
             "fastq_2": {
                 "anyOf": [

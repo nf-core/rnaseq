@@ -197,10 +197,10 @@ class NfcoreSchema {
         } catch (ValidationException e) {
             Map colors = NfcoreTemplate.logColours(params.monochrome_logs)
             println ""
-            println "=${colors.red}====   ERROR: Validation of '$param_name' file failed!   ============================="
-            println niceValidationExceptionMessage(e, rawSchema)
-            e.getCausingExceptions().stream().map(ValidationException::getMessage).forEach(System.out::println)
-            println "===================================================================================${colors.reset}"
+            println "${colors.red}======  ERROR: Validation of '$param_name' file failed!  ==============================${colors.reset}"
+            niceValidationExceptionMessage(e, rawSchema, log, colors)
+            println "${colors.dim}See verbose log for detailed information about validation failures.${colors.reset}"
+            println "${colors.red}===================================================================================${colors.reset}"
             println ""
             System.exit(1)
         }
@@ -211,8 +211,10 @@ class NfcoreSchema {
     // Given a schema ValidationException, try to return the nice custom error message if we can
     //
     /* groovylint-disable-next-line UnusedPrivateMethodParameter */
-    public static String niceValidationExceptionMessage(e, rawSchema) {
+    public static String niceValidationExceptionMessage(e, rawSchema, log, colors) {
         try {
+            // Verbose log the raw schema error
+            log.debug(e.getMessage())
             // Make a deep copy of the raw schema
             JSONObject s_obj = new JsonSlurper().parseText(rawSchema.toString())
             // Loop over each part of the validation error location to get to the leaf element
@@ -220,12 +222,30 @@ class NfcoreSchema {
             clean_ref.split('/').each {
                 s_obj = s_obj.get(it)
             }
-            // Print the custom error message (if there is one)
-            String error_location = e.getPointerToViolation()
             String error_message = s_obj.errorMessage.toString()
-            return "$error_location: $error_message"
+            // Tidy up the location string
+            String error_location = e.getPointerToViolation().replaceAll(/^#\/(\d+)\/(.*)/, "${colors.blue}Row \$1,${colors.reset} ${colors.green}column '\$2':${colors.reset} ")
+
+            // Print main error string
+            println error_location + colors.red + error_message + colors.reset
+
+            // Recursively get sub-schema validation errors
+            if( e.getCausingExceptions().size() > 0){
+                e.getCausingExceptions().each{ niceValidationExceptionMessage(it, rawSchema, log, colors) }
+            }
         } catch (Exception j) {
-            return e.getMessage()
+
+            // Return blunt error message
+            println e.getMessage()
+                        .replaceAll(
+                            /^#\/?(\d*)\/?([^: ]*): (.*)/,
+                            "${colors.blue}Row \$1,${colors.reset} ${colors.green}column '\$2':${colors.reset} ${colors.red}\$3${colors.reset}"
+                        ).replaceAll(/Row ,/, '').replaceAll(/column '':/, '')
+
+            // Recursively get sub-schema validation errors
+            if( e.getCausingExceptions().size() > 0){
+                e.getCausingExceptions().each{ niceValidationExceptionMessage(it, rawSchema, log, colors) }
+            }
         }
     }
 

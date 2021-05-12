@@ -1,6 +1,6 @@
-/*
- * Read QC, UMI extraction and trimming
- */
+//
+// Read QC, UMI extraction and trimming
+//
 
 params.fastqc_options     = [:]
 params.umitools_options   = [:]

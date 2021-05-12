@@ -1,6 +1,6 @@
-/*
- * Alignment with STAR
- */
+//
+// Alignment with STAR
+//
 
 params.align_options          = [:]
 params.samtools_sort_options  = [:]
@@ -15,16 +15,17 @@ workflow ALIGN_STAR {
     reads // channel: [ val(meta), [ reads ] ]
     index // channel: /path/to/star/index/
     gtf   // channel: /path/to/genome.gtf
-    
+
     main:
-    /*
-     * Map reads with STAR
-     */
+
+    //
+    // Map reads with STAR
+    //
     STAR_ALIGN ( reads, index, gtf )
 
-    /*
-     * Sort, index BAM file and run samtools stats, flagstat and idxstats
-     */
+    //
+    // Sort, index BAM file and run samtools stats, flagstat and idxstats
+    //
     BAM_SORT_SAMTOOLS ( STAR_ALIGN.out.bam )
 
     emit:
@@ -37,7 +38,7 @@ workflow ALIGN_STAR {
     fastq            = STAR_ALIGN.out.fastq           // channel: [ val(meta), fastq          ]
     tab              = STAR_ALIGN.out.tab             // channel: [ val(meta), tab            ]
     star_version     = STAR_ALIGN.out.version         // path: *.version.txt
-    
+
     bam              = BAM_SORT_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
     bai              = BAM_SORT_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
     csi              = BAM_SORT_SAMTOOLS.out.csi      // channel: [ val(meta), [ csi ] ]

@@ -8,6 +8,9 @@ on:
   release:
     types: [published]
 
+# Uncomment if we need an edge release of Nextflow again
+# env: NXF_EDGE: 1
+
 jobs:
   test:
     name: Run workflow tests
@@ -20,7 +23,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['21.04.0']
+        nxf_ver: ["21.04.0", ""]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -39,23 +42,23 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.04.0'
+      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
         parameters:
-          - '--skip_qc'
-          - '--remove_ribo_rna'
-          - '--skip_trimming'
-          - '--gtf false'
-          - '--star_index false'
-          - '--transcript_fasta false'
-          - '--min_mapped_reads 90'
-          - '--with_umi'
-          - '--with_umi --skip_trimming'
-          - '--bam_csi_index'
-          - '--save_align_intermeds --save_reference'
-          - '--featurecounts_group_type false'
+          - "--skip_qc"
+          - "--remove_ribo_rna"
+          - "--skip_trimming"
+          - "--gtf false"
+          - "--star_index false"
+          - "--transcript_fasta false"
+          - "--min_mapped_reads 90"
+          - "--with_umi"
+          - "--with_umi --skip_trimming"
+          - "--bam_csi_index"
+          - "--save_align_intermeds --save_reference"
+          - "--featurecounts_group_type false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -74,13 +77,13 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.04.0'
+      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
         parameters:
-          - '--skip_qc'
-          - '--rsem_index false'
+          - "--skip_qc"
+          - "--rsem_index false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -91,7 +94,7 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      
+
       - name: Run pipeline with RSEM STAR and various parameters
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }}
@@ -101,13 +104,13 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.04.0'
+      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
         parameters:
-          - '--skip_qc'
-          - '--hisat2_index false'
+          - "--skip_qc"
+          - "--hisat2_index false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -126,13 +129,13 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.04.0'
+      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
         parameters:
-          - '--skip_qc --skip_alignment'
-          - '--salmon_index false --transcript_fasta false'
+          - "--skip_qc --skip_alignment"
+          - "--salmon_index false --transcript_fasta false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -151,7 +154,7 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: '21.04.0'
+      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     steps:
       - name: Check out pipeline code
@@ -165,4 +168,3 @@ jobs:
       - name: Run pipeline to download public data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_sra,docker
-

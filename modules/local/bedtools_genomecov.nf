@@ -10,7 +10,7 @@ process BEDTOOLS_GENOMECOV {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
-        
+
     conda (params.enable_conda ? "bioconda::bedtools=2.30.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bedtools:2.30.0--hc088bd4_0"
@@ -20,7 +20,7 @@ process BEDTOOLS_GENOMECOV {
 
     input:
     tuple val(meta), path(bam)
-    
+
     output:
     tuple val(meta), path("*.sense.bedGraph")    , emit: bedgraph_sense
     tuple val(meta), path("*.antisense.bedGraph"), emit: bedgraph_antisense
@@ -34,7 +34,7 @@ process BEDTOOLS_GENOMECOV {
     def prefix_antisense = "${prefix}.antisense"
     if (meta.strandedness == 'reverse') {
         prefix_sense     = "${prefix}.antisense"
-        prefix_antisense = "${prefix}.sense"        
+        prefix_antisense = "${prefix}.sense"
     }
     """
     bedtools \\
@@ -44,7 +44,7 @@ process BEDTOOLS_GENOMECOV {
         -strand + \\
         $options.args \\
         | bedtools sort > ${prefix_sense}.bedGraph
-    
+
     bedtools \\
         genomecov \\
         -ibam $bam \\
@@ -56,4 +56,3 @@ process BEDTOOLS_GENOMECOV {
     bedtools --version | sed -e "s/bedtools v//g" > ${software}.version.txt
     """
 }
-

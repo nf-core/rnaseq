@@ -73,7 +73,7 @@ setwd(opt$outdir)
 samples.vec     <- colnames(count.table)
 name_components <- strsplit(samples.vec, "_")
 n_components    <- length(name_components[[1]])
-decompose       <- n_components!=1 && all(sapply(name_components, length)==n_components) 
+decompose       <- n_components!=1 && all(sapply(name_components, length)==n_components)
 coldata         <- data.frame(samples.vec, sample=samples.vec, row.names=1)
 if (decompose) {
     groupings        <- as.data.frame(lapply(1:n_components, function(i) sapply(name_components, "[[", i)))
@@ -130,7 +130,7 @@ if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
 ##' in which an assay containing a variance-stabilised matrix of counts is
 ##' stored. Copied from DESeq2::plotPCA, but with additional ability to
 ##' say which assay to run the PCA on.
-##' 
+##'
 ##' @param object The DESeq2DataSet object.
 ##' @param ntop number of top genes to use for principla components, selected by highest row variance.
 ##' @param assay the name or index of the assay that stores the variance-stabilised data.
@@ -162,10 +162,10 @@ if (file.exists(PlotFile) == FALSE) {
         plot_subtitle <- ifelse(n_top_var==Inf, "All genes", paste("Top", n_top_var, "genes"))
         pl <- ggplot(pca.data, aes(PC1, PC2, label=paste0(" ", sample, " "))) +
             geom_point() +
-            geom_text(check_overlap=TRUE, vjust=0.5, hjust="inward") +           
+            geom_text(check_overlap=TRUE, vjust=0.5, hjust="inward") +
             xlab(paste0("PC1: ",percentVar[1],"% variance")) +
             ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-            labs(title = paste0("First PCs on ", vst_name, "-transformed data"), subtitle = plot_subtitle) + 
+            labs(title = paste0("First PCs on ", vst_name, "-transformed data"), subtitle = plot_subtitle) +
             theme(legend.position="top",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
@@ -176,7 +176,7 @@ if (file.exists(PlotFile) == FALSE) {
         if (decompose) {
             pc_names <- paste0("PC", attr(pca.data, "percentVar")$PC)
             long_pc <- reshape(pca.data, varying=pc_names, direction="long", sep="", timevar="component", idvar="pcrow")
-            long_pc <- subset(long_pc, component<=5) 
+            long_pc <- subset(long_pc, component<=5)
             long_pc_grp <- reshape(long_pc, varying=names(groupings), direction="long", sep="", timevar="grouper")
             long_pc_grp <- subset(long_pc_grp, grouper<=5)
             long_pc_grp$component <- paste("PC", long_pc_grp$component)
@@ -190,7 +190,7 @@ if (file.exists(PlotFile) == FALSE) {
             print(pl)
         }
     } # at end of loop, we'll be using the user-defined ntop if any, else all genes
-    
+
     ## WRITE PC1 vs PC2 VALUES TO FILE
     pca.vals           <- pca.data[,c("PC1","PC2")]
     colnames(pca.vals) <- paste0(colnames(pca.vals), ": ", percentVar[1:2], '% variance')

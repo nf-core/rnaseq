@@ -1,6 +1,6 @@
-/*
- * Uncompress and prepare reference genome files
-*/
+//
+// Uncompress and prepare reference genome files
+//
 
 params.genome_options       = [:]
 params.index_options        = [:]
@@ -38,21 +38,22 @@ workflow PREPARE_GENOME {
     take:
     prepare_tool_indices // list  : tools to prepare indices for
     biotype              // string: if additional fasta file is provided
-                         //         biotype value to use when appending entries to GTF file
+                        //          biotype value to use when appending entries to GTF file
 
     main:
-    /*
-     * Uncompress genome fasta file if required
-     */
+
+    //
+    // Uncompress genome fasta file if required
+    //
     if (params.fasta.endsWith('.gz')) {
         ch_fasta = GUNZIP_FASTA ( params.fasta ).gunzip
     } else {
         ch_fasta = file(params.fasta)
     }
-    
-    /*
-     * Uncompress GTF annotation file or create from GFF3 if required
-     */
+
+    //
+    // Uncompress GTF annotation file or create from GFF3 if required
+    //
     ch_gffread_version = Channel.empty()
     if (params.gtf) {
         if (params.gtf.endsWith('.gz')) {
@@ -70,9 +71,9 @@ workflow PREPARE_GENOME {
         ch_gffread_version = GFFREAD.out.version
     }
 
-    /*
-     * Uncompress additional fasta file and concatenate with reference fasta and gtf files
-     */
+    //
+    // Uncompress additional fasta file and concatenate with reference fasta and gtf files
+    //
     if (params.additional_fasta) {
         if (params.additional_fasta.endsWith('.gz')) {
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( params.additional_fasta ).gunzip
@@ -84,9 +85,9 @@ workflow PREPARE_GENOME {
         ch_gtf   = CAT_ADDITIONAL_FASTA.out.gtf
     }
 
-    /*
-     * Uncompress gene BED annotation file or create from GTF if required
-     */
+    //
+    // Uncompress gene BED annotation file or create from GTF if required
+    //
     if (params.gene_bed) {
         if (params.gene_bed.endsWith('.gz')) {
             ch_gene_bed = GUNZIP_GENE_BED ( params.gene_bed ).gunzip
@@ -97,9 +98,9 @@ workflow PREPARE_GENOME {
         ch_gene_bed = GTF2BED ( ch_gtf )
     }
 
-    /*
-     * Uncompress transcript fasta file / create if required
-     */
+    //
+    // Uncompress transcript fasta file / create if required
+    //
     ch_rsem_version = Channel.empty()
     if (params.transcript_fasta) {
         if (params.transcript_fasta.endsWith('.gz')) {
@@ -112,14 +113,14 @@ workflow PREPARE_GENOME {
         ch_rsem_version     = RSEM_PREPAREREFERENCE_TRANSCRIPTS.out.version
     }
 
-    /*
-     * Create chromosome sizes file
-     */
+    //
+    // Create chromosome sizes file
+    //
     ch_chrom_sizes = GET_CHROM_SIZES ( ch_fasta ).sizes
 
-    /*
-     * Uncompress STAR index or generate from scratch if required
-     */
+    //
+    // Uncompress STAR index or generate from scratch if required
+    //
     ch_star_index   = Channel.empty()
     ch_star_version = Channel.empty()
     if ('star_salmon' in prepare_tool_indices) {
@@ -134,10 +135,10 @@ workflow PREPARE_GENOME {
             ch_star_version = STAR_GENOMEGENERATE.out.version
         }
     }
-    
-    /*
-     * Uncompress RSEM index or generate from scratch if required
-     */
+
+    //
+    // Uncompress RSEM index or generate from scratch if required
+    //
     ch_rsem_index   = Channel.empty()
     if ('star_rsem' in prepare_tool_indices) {
         if (params.rsem_index) {
@@ -152,9 +153,9 @@ workflow PREPARE_GENOME {
         }
     }
 
-    /*
-     * Uncompress HISAT2 index or generate from scratch if required
-     */
+    //
+    // Uncompress HISAT2 index or generate from scratch if required
+    //
     ch_splicesites    = Channel.empty()
     ch_hisat2_index   = Channel.empty()
     ch_hisat2_version = Channel.empty()
@@ -177,11 +178,11 @@ workflow PREPARE_GENOME {
         }
     }
 
-    /*
-     * Uncompress Salmon index or generate from scratch if required
-     */
+    //
+    // Uncompress Salmon index or generate from scratch if required
+    //
     ch_salmon_index   = Channel.empty()
-    ch_salmon_version = Channel.empty()  
+    ch_salmon_version = Channel.empty()
     if ('salmon' in prepare_tool_indices) {
         if (params.salmon_index) {
             if (params.salmon_index.endsWith('.tar.gz')) {
@@ -189,7 +190,7 @@ workflow PREPARE_GENOME {
             } else {
                 ch_salmon_index = file(params.salmon_index)
             }
-        } else {        
+        } else {
             ch_salmon_index   = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
             ch_salmon_version = SALMON_INDEX.out.version
         }

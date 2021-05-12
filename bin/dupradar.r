@@ -3,7 +3,7 @@
 # Command line argument processing
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) < 5) {
-  stop("Usage: dupRadar.r <input.bam> <annotation.gtf> <strandDirection:0=unstranded/1=forward/2=reverse> <paired/single> <nbThreads> <R-package-location (optional)>", call.=FALSE)
+    stop("Usage: dupRadar.r <input.bam> <annotation.gtf> <strandDirection:0=unstranded/1=forward/2=reverse> <paired/single> <nbThreads> <R-package-location (optional)>", call.=FALSE)
 }
 input_bam <- args[1]
 output_prefix <- args[2]
@@ -32,13 +32,13 @@ message("Output basename       : ", output_prefix)
 # Load / install packages
 if (length(args) > 5) { .libPaths( c( args[6], .libPaths() ) ) }
 if (!require("dupRadar")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("dupRadar", suppressUpdates=TRUE)
-  library("dupRadar")
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("dupRadar", suppressUpdates=TRUE)
+    library("dupRadar")
 }
 if (!require("parallel")) {
-  install.packages("parallel", dependencies=TRUE, repos='http://cloud.r-project.org/')
-  library("parallel")
+    install.packages("parallel", dependencies=TRUE, repos='http://cloud.r-project.org/')
+    library("parallel")
 }
 
 # Duplicate stats
@@ -53,10 +53,10 @@ mtext(output_prefix, side=3)
 dev.off()
 fit <- duprateExpFit(DupMat=dm)
 cat(
-  paste("- dupRadar Int (duprate at low read counts):", fit$intercept),
-  paste("- dupRadar Sl (progression of the duplication rate):", fit$slope),
-  fill=TRUE, labels=output_prefix,
-  file=paste0(output_prefix, "_intercept_slope.txt"), append=FALSE
+    paste("- dupRadar Int (duprate at low read counts):", fit$intercept),
+    paste("- dupRadar Sl (progression of the duplication rate):", fit$slope),
+    fill=TRUE, labels=output_prefix,
+    file=paste0(output_prefix, "_intercept_slope.txt"), append=FALSE
 )
 
 # Create a multiqc file dupInt
@@ -125,9 +125,9 @@ line="#id: dupradar
 
 write(line,file=paste0(output_prefix, "_duprateExpDensCurve_mqc.txt"),append=TRUE)
 write.table(
-  cbind(curve_x, curve_y),
-  file=paste0(output_prefix, "_duprateExpDensCurve_mqc.txt"),
-  quote=FALSE, row.names=FALSE, col.names=FALSE, append=TRUE,
+    cbind(curve_x, curve_y),
+    file=paste0(output_prefix, "_duprateExpDensCurve_mqc.txt"),
+    quote=FALSE, row.names=FALSE, col.names=FALSE, append=TRUE,
 )
 
 # Distribution of expression box plot

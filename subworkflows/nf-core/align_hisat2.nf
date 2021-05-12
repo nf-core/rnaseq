@@ -1,6 +1,6 @@
-/*
- * Alignment with HISAT2
- */
+//
+// Alignment with HISAT2
+//
 
 params.align_options          = [:]
 params.samtools_sort_options  = [:]
@@ -15,16 +15,16 @@ workflow ALIGN_HISAT2 {
     reads       // channel: [ val(meta), [ reads ] ]
     index       // channel: /path/to/star/index/
     splicesites // channel: /path/to/genome.splicesites.txt
-    
+
     main:
-    /*
-     * Map reads with HISAT2
-     */
+    //
+    // Map reads with HISAT2
+    //
     HISAT2_ALIGN ( reads, index, splicesites )
 
-    /*
-     * Sort, index BAM file and run samtools stats, flagstat and idxstats
-     */
+    //
+    // Sort, index BAM file and run samtools stats, flagstat and idxstats
+    //
     BAM_SORT_SAMTOOLS ( HISAT2_ALIGN.out.bam )
 
     emit:

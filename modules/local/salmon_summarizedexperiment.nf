@@ -9,7 +9,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
-        
+
     conda (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.20.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.20.0--r40_0"
@@ -21,7 +21,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
     path counts
     path tpm
     path tx2gene
-    
+
     output:
     path "*.rds"         , emit: rds
     path  "*.version.txt", emit: version

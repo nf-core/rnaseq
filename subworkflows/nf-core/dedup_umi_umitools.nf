@@ -1,6 +1,6 @@
-/*
- * UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
- */
+//
+// UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
+//
 
 params.umitools_options       = [:]
 params.samtools_index_options = [:]
@@ -15,20 +15,21 @@ workflow DEDUP_UMI_UMITOOLS {
     bam_bai // channel: [ val(meta), [ bam ], [ bai/csi ] ]
 
     main:
-    /*
-     * UMI-tools dedup
-     */
+
+    //
+    // UMI-tools dedup
+    //
     UMITOOLS_DEDUP ( bam_bai )
 
-    /*
-     * Index BAM file and run samtools stats, flagstat and idxstats
-     */
+    //
+    // Index BAM file and run samtools stats, flagstat and idxstats
+    //
     SAMTOOLS_INDEX ( UMITOOLS_DEDUP.out.bam )
 
     UMITOOLS_DEDUP.out.bam
         .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
         .join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
-        .map { 
+        .map {
             meta, bam, bai, csi ->
                 if (bai) {
                     [ meta, bam, bai ]

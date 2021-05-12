@@ -1,6 +1,6 @@
-/*
- * Run RSeQC modules
- */
+//
+// Run RSeQC modules
+//
 
 params.bamstat_options            = [:]
 params.innerdistance_options      = [:]
@@ -25,9 +25,10 @@ workflow RSEQC {
     rseqc_modules //    list: rseqc modules to run
 
     main:
-    /*
-     * Run RSeQC bam_stat.py
-     */
+
+    //
+    // Run RSeQC bam_stat.py
+    //
     version       = Channel.empty()
     bamstat_txt   = Channel.empty()
     if ('bam_stat' in rseqc_modules) {
@@ -36,9 +37,9 @@ workflow RSEQC {
         version     = RSEQC_BAMSTAT.out.version
     }
 
-    /*
-     * Run RSeQC inner_distance.py
-     */
+    //
+    // Run RSeQC inner_distance.py
+    //
     innerdistance_distance = Channel.empty()
     innerdistance_freq     = Channel.empty()
     innerdistance_mean     = Channel.empty()
@@ -54,9 +55,9 @@ workflow RSEQC {
         version                = RSEQC_INNERDISTANCE.out.version
     }
 
-    /*
-     * Run RSeQC infer_experiment.py
-     */
+    //
+    // Run RSeQC infer_experiment.py
+    //
     inferexperiment_txt   = Channel.empty()
     if ('infer_experiment' in rseqc_modules) {
         RSEQC_INFEREXPERIMENT ( bam, bed )
@@ -64,9 +65,9 @@ workflow RSEQC {
         version             = RSEQC_INFEREXPERIMENT.out.version
     }
 
-    /*
-     * Run RSeQC junction_annotation.py
-     */
+    //
+    // Run RSeQC junction_annotation.py
+    //
     junctionannotation_bed          = Channel.empty()
     junctionannotation_interact_bed = Channel.empty()
     junctionannotation_xls          = Channel.empty()
@@ -86,9 +87,9 @@ workflow RSEQC {
         version                         = RSEQC_JUNCTIONANNOTATION.out.version
     }
 
-    /*
-     * Run RSeQC junction_saturation.py
-     */
+    //
+    // Run RSeQC junction_saturation.py
+    //
     junctionsaturation_pdf     = Channel.empty()
     junctionsaturation_rscript = Channel.empty()
     if ('junction_saturation' in rseqc_modules) {
@@ -98,9 +99,9 @@ workflow RSEQC {
         version                    = RSEQC_JUNCTIONSATURATION.out.version
     }
 
-    /*
-     * Run RSeQC read_distribution.py
-     */
+    //
+    // Run RSeQC read_distribution.py
+    //
     readdistribution_txt = Channel.empty()
     if ('read_distribution' in rseqc_modules) {
         RSEQC_READDISTRIBUTION ( bam, bed )
@@ -108,9 +109,9 @@ workflow RSEQC {
         version              = RSEQC_READDISTRIBUTION.out.version
     }
 
-    /*
-     * Run RSeQC read_duplication.py
-     */
+    //
+    // Run RSeQC read_duplication.py
+    //
     readduplication_seq_xls = Channel.empty()
     readduplication_pos_xls = Channel.empty()
     readduplication_pdf     = Channel.empty()

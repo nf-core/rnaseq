@@ -10,15 +10,15 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must not be empty or contain spaces"
+                "errorMessage": "Sample name must be provided and cannot contain spaces"
             },
             "fastq_1": {
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "Filename must not be empty or contain spaces and must have extension '.fa.gz' or '.fastq.gz'"
+                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "fastq_2": {
-                "errorMessage": "Filename must not contain spaces and must have extension '.fa.gz' or '.fastq.gz'",
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
                 "anyOf": [
                     {
                         "type": "string",

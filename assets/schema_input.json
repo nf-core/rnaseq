@@ -9,17 +9,19 @@
         "properties": {
             "sample": {
                 "type": "string",
-                "pattern": "^\\S+$"
+                "pattern": "^\\S+$",
+                "errorMessage": "sample name name must not be empty or contain spaces"
             },
             "fastq_1": {
                 "type": "string",
-                "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "fastq_1 name must not be empty or contain spaces and must have extension .fa.gz or .fastq.gz"
             },
             "fastq_2": {
                 "anyOf": [
                     {
                         "type": "string",
-                        "pattern": "^\\S+\\.fa?s?t?q\\.gz$"
+                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
                     },
                     {
                         "type": "string",

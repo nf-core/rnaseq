@@ -228,11 +228,8 @@ class NfcoreSchema {
 
             // Print main error string
             println error_location + colors.red + error_message + colors.reset
+            // No recursion if we were given an error string
 
-            // Recursively get sub-schema validation errors
-            if( e.getCausingExceptions().size() > 0){
-                e.getCausingExceptions().each{ niceValidationExceptionMessage(it, rawSchema, log, colors) }
-            }
         } catch (Exception j) {
 
             // Return blunt error message

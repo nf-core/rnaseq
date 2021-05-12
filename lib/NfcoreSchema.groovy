@@ -198,12 +198,19 @@ class NfcoreSchema {
             Map colors = NfcoreTemplate.logColours(params.monochrome_logs)
             println ""
             println "=${colors.red}====   ERROR: Validation of '$param_name' file failed!   ============================="
-            JSONObject exceptionJSON = e.toJSON()
-            if(e.getSchemaLocation()){
+            try {
+                // Make a deep copy of the raw schema
+                JSONObject s_obj = new JsonSlurper().parseText(rawSchema.toString())
+                // Loop over each part of the validation error location to get to the leaf element
+                String clean_ref = e.getSchemaLocation() - ~/^#\//
+                clean_ref.split('/').each {
+                    s_obj = s_obj.get(it)
+                }
+                // Print the custom error message (if there is one)
                 String error_location = e.getPointerToViolation()
-                String error_message = rawSchema.items.get('properties').sample.errorMessage.toString()
-                println "$error_location - $error_message"
-            } else {
+                String error_message = s_obj.errorMessage.toString()
+                println "$error_location: $error_message"
+            } catch (Exception j) {
                 println e.getMessage()
             }
             e.getCausingExceptions().stream().map(ValidationException::getMessage).forEach(System.out::println)

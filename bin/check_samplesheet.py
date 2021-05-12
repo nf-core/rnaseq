@@ -60,7 +60,7 @@ def check_samplesheet(file_in, file_out):
             ## Check valid number of columns per row
             if len(lspl) < len(HEADER):
                 print_error(f"Invalid number of columns (minimum = {len(HEADER)})!", 'Line', line)
-            
+
             num_cols = len([x for x in lspl if x])
             if num_cols < MIN_COLS:
                 print_error(f"Invalid number of populated columns (minimum = {MIN_COLS})!", 'Line', line)
@@ -119,7 +119,7 @@ def check_samplesheet(file_in, file_out):
                 if not all(x[0] == sample_mapping_dict[sample][0][0] for x in sample_mapping_dict[sample]):
                     print_error(f"Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end!", "Sample", sample)
 
-                ## Check that multiple runs of the same sample are of the same strandedness 
+                ## Check that multiple runs of the same sample are of the same strandedness
                 if not all(x[-1] == sample_mapping_dict[sample][0][-1] for x in sample_mapping_dict[sample]):
                     print_error(f"Multiple runs of a sample must have the same strandedness!", "Sample", sample)
 

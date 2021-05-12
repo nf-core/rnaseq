@@ -1,6 +1,6 @@
-/*
- * Gene/transcript quantification with RSEM
- */
+//
+// Gene/transcript quantification with RSEM
+//
 
 params.calculateexpression_options = [:]
 params.samtools_sort_options       = [:]
@@ -18,19 +18,20 @@ workflow QUANTIFY_RSEM {
     index // channel: /path/to/rsem/index/
 
     main:
-    /*
-     * Quantify reads with RSEM
-     */
+
+    //
+    // Quantify reads with RSEM
+    //
     RSEM_CALCULATEEXPRESSION ( reads, index )
 
-    /*
-     * Sort, index BAM file and run samtools stats, flagstat and idxstats
-     */
+    //
+    // Sort, index BAM file and run samtools stats, flagstat and idxstats
+    //
     BAM_SORT_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star )
 
-    /*
-     * Merge counts across samples
-     */
+    //
+    // Merge counts across samples
+    //
     RSEM_MERGE_COUNTS (
         RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
         RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]}

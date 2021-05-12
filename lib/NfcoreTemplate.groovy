@@ -1,14 +1,14 @@
-/*
- * This file holds several functions used within the nf-core pipeline template.
- */
+//
+// This file holds several functions used within the nf-core pipeline template.
+//
 
 import org.yaml.snakeyaml.Yaml
 
 class NfcoreTemplate {
 
-    /*
-     * Check AWS Batch related parameters have been specified correctly
-     */
+    //
+    // Check AWS Batch related parameters have been specified correctly
+    //
     public static void awsBatch(workflow, params) {
         if (workflow.profile.contains('awsbatch')) {
             // Check params.awsqueue and params.awsregion have been set if running on AWSBatch
@@ -18,9 +18,9 @@ class NfcoreTemplate {
         }
     }
 
-    /*
-     * Check params.hostnames
-     */
+    //
+    // Check params.hostnames
+    //
     public static void hostName(workflow, params, log) {
         Map colors = logColours(params.monochrome_logs)
         if (params.hostnames) {
@@ -39,9 +39,9 @@ class NfcoreTemplate {
         }
     }
 
-    /*
-     * Construct and send completion email
-     */
+    //
+    // Construct and send completion email
+    //
     public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
 
         // Set up the e-mail variables
@@ -57,7 +57,7 @@ class NfcoreTemplate {
         for (group in summary_params.keySet()) {
             summary << summary_params[group]
         }
-        
+
         def misc_fields = [:]
         misc_fields['Date Started']              = workflow.start
         misc_fields['Date Completed']            = workflow.complete
@@ -84,7 +84,7 @@ class NfcoreTemplate {
         email_fields['summary']             = summary << misc_fields
         email_fields['fail_percent_mapped'] = fail_percent_mapped.keySet()
         email_fields['min_mapped_reads']    = params.min_mapped_reads
-        
+
         // On success try attach the multiqc report
         def mqc_report = null
         try {
@@ -121,7 +121,7 @@ class NfcoreTemplate {
         def email_html    = html_template.toString()
 
         // Render the sendmail template
-        def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit 
+        def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit
         def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize:  max_multiqc_email_size.toBytes()]
         def sf                     = new File("$projectDir/assets/sendmail_template.txt")
         def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
@@ -157,9 +157,9 @@ class NfcoreTemplate {
         output_tf.withWriter { w -> w << email_txt }
     }
 
-    /*
-     * Print pipeline summary on completion
-     */
+    //
+    // Print pipeline summary on completion
+    //
     public static void summary(workflow, params, log, fail_percent_mapped=[:], pass_percent_mapped=[:]) {
         Map colors = logColours(params.monochrome_logs)
 
@@ -197,9 +197,9 @@ class NfcoreTemplate {
         }
     }
 
-    /*
-     * ANSII Colours used for terminal logging
-     */
+    //
+    // ANSII Colours used for terminal logging
+    //
     public static Map logColours(Boolean monochrome_logs) {
         Map colorcodes = [:]
 
@@ -265,17 +265,17 @@ class NfcoreTemplate {
         return colorcodes
     }
 
-    /*
-     * Does what is says on the tin
-     */
+    //
+    // Does what is says on the tin
+    //
     public static String dashedLine(monochrome_logs) {
         Map colors = logColours(monochrome_logs)
         return "-${colors.dim}----------------------------------------------------${colors.reset}-"
     }
 
-    /*
-     * nf-core logo
-     */         
+    //
+    // nf-core logo
+    //
     public static String logo(workflow, monochrome_logs) {
         Map colors = logColours(monochrome_logs)
         String.format(

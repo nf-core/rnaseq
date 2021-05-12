@@ -162,20 +162,20 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
 
 * `docker`
-  * A generic configuration profile to be used with [Docker](https://docker.com/)
+    * A generic configuration profile to be used with [Docker](https://docker.com/)
 * `singularity`
-  * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
+    * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
 * `podman`
-  * A generic configuration profile to be used with [Podman](https://podman.io/)
+    * A generic configuration profile to be used with [Podman](https://podman.io/)
 * `shifter`
-  * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
+    * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 * `charliecloud`
-  * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+    * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 * `conda`
-  * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
+    * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
 * `test`
-  * A profile with a complete configuration for automated testing
-  * Includes links to test data so needs no other parameters
+    * A profile with a complete configuration for automated testing
+    * Includes links to test data so needs no other parameters
 
 ### `-resume`
 
@@ -200,26 +200,26 @@ For example, if the nf-core/rnaseq pipeline is failing after multiple re-submiss
 Error executing process > 'RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
 Caused by:
-  Process `RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
+    Process `RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
 
 Command executed:
-  STAR \
-      --genomeDir star \
-      --readFilesIn WT_REP1_trimmed.fq.gz  \
-      --runThreadN 2 \
-      --outFileNamePrefix WT_REP1. \
-      <TRUNCATED>
+    STAR \
+        --genomeDir star \
+        --readFilesIn WT_REP1_trimmed.fq.gz  \
+        --runThreadN 2 \
+        --outFileNamePrefix WT_REP1. \
+        <TRUNCATED>
 
 Command exit status:
-  137
+    137
 
 Command output:
-  (empty)
+    (empty)
 
 Command error:
-  .command.sh: line 9:  30 Killed    STAR --genomeDir star --readFilesIn WT_REP1_trimmed.fq.gz --runThreadN 2 --outFileNamePrefix WT_REP1. <TRUNCATED>
+    .command.sh: line 9:  30 Killed    STAR --genomeDir star --readFilesIn WT_REP1_trimmed.fq.gz --runThreadN 2 --outFileNamePrefix WT_REP1. <TRUNCATED>
 Work dir:
-  /home/pipelinetest/work/9d/172ca5881234073e8d76f2a19c88fb
+    /home/pipelinetest/work/9d/172ca5881234073e8d76f2a19c88fb
 
 Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
 ```
@@ -228,9 +228,9 @@ To bypass this error you would need to find exactly which resources are set by t
 
 ```nextflow
 process {
-  withName: STAR_ALIGN {
-    memory = 100.GB
-  }
+    withName: STAR_ALIGN {
+        memory = 100.GB
+    }
 }
 ```
 
@@ -263,11 +263,11 @@ As you will see in the example below, we have:
 ```nextflow
 params {
     modules {
-      'star_align' {
+    'star_align' {
         args          = "--quantMode TranscriptomeSAM --twopassMode Basic --outSAMtype BAM Unsorted --readFilesCommand zcat --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMattributes NH HI AS NM MD --quantTranscriptomeBan Singleend --outFilterMismatchNmax 16"
         publish_dir   = "my_star_directory"
         publish_files = ['out':'log', 'tab':'log', 'bam':'']
-      }
+    }
     }
 }
 ```

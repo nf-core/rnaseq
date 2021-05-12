@@ -13,7 +13,7 @@ nextflow.enable.dsl = 2
 
 /*
 ========================================================================================
-    GENOME PARAMETER VALUES       
+    GENOME PARAMETER VALUES
 ========================================================================================
 */
 
@@ -42,16 +42,16 @@ WorkflowMain.initialise(workflow, params, log)
 
 workflow NFCORE_RNASEQ {
 
-    /*
-     * WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
-     */
+    //
+    // WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
+    //
     if (params.public_data_ids) {
         include { SRA_DOWNLOAD } from './workflows/sra_download'
         SRA_DOWNLOAD ()
-    
-    /*
-     * WORKFLOW: Run main nf-core/rnaseq analysis pipeline
-     */
+
+    //
+    // WORKFLOW: Run main nf-core/rnaseq analysis pipeline
+    //
     } else {
         include { RNASEQ } from './workflows/rnaseq'
         RNASEQ ()
@@ -64,10 +64,10 @@ workflow NFCORE_RNASEQ {
 ========================================================================================
 */
 
-/*
- * WORKFLOW: Execute a single named workflow for the pipeline
- * See: https://github.com/nf-core/rnaseq/issues/619
- */
+//
+// WORKFLOW: Execute a single named workflow for the pipeline
+// See: https://github.com/nf-core/rnaseq/issues/619
+//
 workflow {
     NFCORE_RNASEQ ()
 }

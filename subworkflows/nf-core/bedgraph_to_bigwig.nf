@@ -1,6 +1,6 @@
-/*
- * Clip over-running ends from bedGraph file and convert to bigWig
- */
+//
+// Clip over-running ends from bedGraph file and convert to bigWig
+//
 
 params.bedclip_options          = [:]
 params.bedgraphtobigwig_options = [:]
@@ -14,14 +14,15 @@ workflow BEDGRAPH_TO_BIGWIG {
     sizes    //    path: chrom.sizes
 
     main:
-    /*
-     * Clip bedGraph file
-     */
+
+    //
+    // Clip bedGraph file
+    //
     UCSC_BEDCLIP ( bedgraph, sizes )
 
-    /*
-     * Convert bedGraph to bigWig
-     */ 
+    //
+    // Convert bedGraph to bigWig
+    //
     UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out.bedgraph, sizes )
 
     emit:

@@ -24,8 +24,8 @@ process DESEQ2_QC {
     path counts
     path pca_header_multiqc
     path clustering_header_multiqc
-    
-    output:    
+
+    output:
     path "*.pdf"                , optional:true, emit: pdf
     path "*.RData"              , optional:true, emit: rdata
     path "*pca.vals.txt"        , optional:true, emit: pca_txt
@@ -46,7 +46,7 @@ process DESEQ2_QC {
         --outdir ./ \\
         --cores $task.cpus \\
         $options.args
-    
+
     if [ -f "R_sessionInfo.log" ]; then
         sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc >tmp.txt
         sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" tmp.txt

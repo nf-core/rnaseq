@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Fix SALMON_SE_TRANSCRIPT process. It was removing the first sample in the matrix
 * Updated pipeline template to nf-core/tools `1.14`
 * Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process
 * [[#449](https://github.com/nf-core/modules/pull/449)] - `--genomeSAindexNbases` will now be auto-calculated before building STAR indices

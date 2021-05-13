@@ -2,14 +2,14 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process SALMON_QUANT {
     tag "$meta.id"
     label "process_medium"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::salmon=1.4.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -24,7 +24,7 @@ process SALMON_QUANT {
     path  gtf
     path  transcript_fasta
     val   alignment_mode
-    
+
     output:
     tuple val(meta), path("${prefix}"), emit: results
     path  "*.version.txt"             , emit: version
@@ -39,7 +39,7 @@ process SALMON_QUANT {
         reference   = "-t $transcript_fasta"
         input_reads = "-a $reads"
     }
-    
+
     def strandedness = meta.single_end ? 'U' : 'IU'
     if (meta.strandedness == 'forward') {
         strandedness = meta.single_end ? 'SF' : 'ISF'

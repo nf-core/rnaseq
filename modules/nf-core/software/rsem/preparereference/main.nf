@@ -2,14 +2,14 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process RSEM_PREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'index', meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "bioconda::rsem=1.3.3 bioconda::star=2.7.6a" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -19,9 +19,9 @@ process RSEM_PREPAREREFERENCE {
     }
 
     input:
-    path fasta
+    path fasta, stageAs: "rsem/*"
     path gtf
-    
+
     output:
     path "rsem"                , emit: index
     path "rsem/*transcripts.fa", emit: transcript_fasta
@@ -34,7 +34,6 @@ process RSEM_PREPAREREFERENCE {
         args.removeIf { it.contains('--star') }
         def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
-        mkdir rsem
         STAR \\
             --runMode genomeGenerate \\
             --genomeDir rsem/ \\
@@ -43,7 +42,7 @@ process RSEM_PREPAREREFERENCE {
             --runThreadN $task.cpus \\
             $memory \\
             $options.args2
-        
+
         rsem-prepare-reference \\
             --gtf $gtf \\
             --num-threads $task.cpus \\
@@ -55,7 +54,6 @@ process RSEM_PREPAREREFERENCE {
         """
     } else {
         """
-        mkdir rsem
         rsem-prepare-reference \\
             --gtf $gtf \\
             --num-threads $task.cpus \\

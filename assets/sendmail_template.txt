@@ -15,15 +15,15 @@ Content-ID: <nfcorepipelinelogo>
 Content-Disposition: inline; filename="nf-core-rnaseq_logo.png"
 
 <% out << new File("$projectDir/assets/nf-core-rnaseq_logo.png").
-  bytes.
-  encodeBase64().
-  toString().
-  tokenize( '\n' )*.
-  toList()*.
-  collate( 76 )*.
-  collect { it.join() }.
-  flatten().
-  join( '\n' ) %>
+    bytes.
+    encodeBase64().
+    toString().
+    tokenize( '\n' )*.
+    toList()*.
+    collate( 76 )*.
+    collect { it.join() }.
+    flatten().
+    join( '\n' ) %>
 
 <%
 if (mqcFile){
@@ -37,15 +37,15 @@ Content-ID: <mqcreport>
 Content-Disposition: attachment; filename=\"${mqcFileObj.getName()}\"
 
 ${mqcFileObj.
-  bytes.
-  encodeBase64().
-  toString().
-  tokenize( '\n' )*.
-  toList()*.
-  collate( 76 )*.
-  collect { it.join() }.
-  flatten().
-  join( '\n' )}
+    bytes.
+    encodeBase64().
+    toString().
+    tokenize( '\n' )*.
+    toList()*.
+    collate( 76 )*.
+    collect { it.join() }.
+    flatten().
+    join( '\n' )}
 """
 }}
 %>

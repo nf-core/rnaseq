@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 def VERSION = '377'
 
@@ -11,7 +11,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::ucsc-bedgraphtobigwig=377" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -19,11 +19,11 @@ process UCSC_BEDGRAPHTOBIGWIG {
     } else {
         container "quay.io/biocontainers/ucsc-bedgraphtobigwig:377--h446ed27_1"
     }
-    
+
     input:
     tuple val(meta), path(bedgraph)
     path  sizes
-    
+
     output:
     tuple val(meta), path("*.bigWig"), emit: bigwig
     path "*.version.txt"             , emit: version

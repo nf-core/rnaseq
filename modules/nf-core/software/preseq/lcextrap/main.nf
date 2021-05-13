@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process PRESEQ_LCEXTRAP {
     tag "$meta.id"
@@ -10,18 +10,18 @@ process PRESEQ_LCEXTRAP {
     label 'error_ignore'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::preseq=2.0.3" : null)
+    conda (params.enable_conda ? "bioconda::preseq=3.1.2" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/preseq:2.0.3--hf53bd2b_3"
+        container "https://depot.galaxyproject.org/singularity/preseq:3.1.2--h06ef8b0_1"
     } else {
-        container "quay.io/biocontainers/preseq:2.0.3--hf53bd2b_3"
+        container "quay.io/biocontainers/preseq:3.1.2--h06ef8b0_1"
     }
-    
+
     input:
     tuple val(meta), path(bam)
-    
+
     output:
     tuple val(meta), path("*.ccurve.txt"), emit: ccurve
     tuple val(meta), path("*.log")       , emit: log

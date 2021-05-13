@@ -1,85 +1,79 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                         nf-core/rnaseq
+    nf-core/rnaseq
 ========================================================================================
- nf-core/rnaseq Analysis Pipeline.
- #### Homepage / Documentation
- https://github.com/nf-core/rnaseq
+    Github : https://github.com/nf-core/rnaseq
+    Website: https://nf-co.re/rnaseq
+    Slack  : https://nfcore.slack.com/channels/rnaseq
 ----------------------------------------------------------------------------------------
 */
 
 nextflow.enable.dsl = 2
 
-////////////////////////////////////////////////////
-/* --               PRINT HELP                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    GENOME PARAMETER VALUES
+========================================================================================
+*/
 
-def json_schema = "$projectDir/nextflow_schema.json"
-if (params.help) {
-    def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
-    log.info Schema.params_help(workflow, params, json_schema, command)
-    exit 0
-}
+params.fasta        = WorkflowMain.getGenomeAttribute(params, 'fasta')
+params.gtf          = WorkflowMain.getGenomeAttribute(params, 'gtf')
+params.gff          = WorkflowMain.getGenomeAttribute(params, 'gff')
+params.gene_bed     = WorkflowMain.getGenomeAttribute(params, 'bed12')
+params.star_index   = WorkflowMain.getGenomeAttribute(params, 'star')
+params.hisat2_index = WorkflowMain.getGenomeAttribute(params, 'hisat2')
+params.rsem_index   = WorkflowMain.getGenomeAttribute(params, 'rsem')
+params.salmon_index = WorkflowMain.getGenomeAttribute(params, 'salmon')
 
-////////////////////////////////////////////////////
-/* --        GENOME PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    VALIDATE & PRINT PARAMETER SUMMARY
+========================================================================================
+*/
 
-params.fasta        = Checks.get_genome_attribute(params, 'fasta')
-params.gtf          = Checks.get_genome_attribute(params, 'gtf')
-params.gff          = Checks.get_genome_attribute(params, 'gff')
-params.gene_bed     = Checks.get_genome_attribute(params, 'bed12')
-params.star_index   = Checks.get_genome_attribute(params, 'star')
-params.hisat2_index = Checks.get_genome_attribute(params, 'hisat2')
-params.rsem_index   = Checks.get_genome_attribute(params, 'rsem')
-params.salmon_index = Checks.get_genome_attribute(params, 'salmon')
+WorkflowMain.initialise(workflow, params, log)
 
-////////////////////////////////////////////////////
-/* --         PRINT PARAMETER SUMMARY          -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    NAMED WORKFLOW FOR PIPELINE
+========================================================================================
+*/
 
-def summary_params = Schema.params_summary_map(workflow, params, json_schema)
-log.info Schema.params_summary_log(workflow, params, json_schema)
+workflow NFCORE_RNASEQ {
 
-////////////////////////////////////////////////////
-/* --          PARAMETER CHECKS                -- */
-////////////////////////////////////////////////////
-
-// Check that conda channels are set-up correctly
-if (params.enable_conda) {
-    Checks.check_conda_channels(log)
-}
-
-// Check AWS batch settings
-Checks.aws_batch(workflow, params)
-
-// Check the hostnames against configured profiles
-Checks.hostname(workflow, params, log)
-
-// Check genome key exists if provided
-Checks.genome_exists(params, log)
-
-////////////////////////////////////////////////////
-/* --           RUN MAIN WORKFLOW              -- */
-////////////////////////////////////////////////////
-
-workflow {
+    //
+    // WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
+    //
     if (params.public_data_ids) {
-        /*
-         * SUBWORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
-         */
-        include { SRA_DOWNLOAD } from './sra_download' addParams( summary_params: summary_params )
+        include { SRA_DOWNLOAD } from './workflows/sra_download'
         SRA_DOWNLOAD ()
+
+    //
+    // WORKFLOW: Run main nf-core/rnaseq analysis pipeline
+    //
     } else {
-        /*
-         * SUBWORKFLOW: Run main nf-core/rnaseq analysis pipeline
-         */
-        include { RNASEQ } from './rnaseq' addParams( summary_params: summary_params )
+        include { RNASEQ } from './workflows/rnaseq'
         RNASEQ ()
     }
 }
 
-////////////////////////////////////////////////////
-/* --                  THE END                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    RUN ALL WORKFLOWS
+========================================================================================
+*/
+
+//
+// WORKFLOW: Execute a single named workflow for the pipeline
+// See: https://github.com/nf-core/rnaseq/issues/619
+//
+workflow {
+    NFCORE_RNASEQ ()
+}
+
+/*
+========================================================================================
+    THE END
+========================================================================================
+*/

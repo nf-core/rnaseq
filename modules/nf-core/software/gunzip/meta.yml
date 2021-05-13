@@ -1,0 +1,27 @@
+name: gunzip
+description: Compresses and decompresses files.
+keywords:
+    - gunzip
+    - compression
+tools:
+    - gunzip:
+        description: |
+            gzip is a file format and a software application used for file compression and decompression.
+        documentation: https://www.gnu.org/software/gzip/manual/gzip.html
+input:
+    - archive:
+        type: file
+        description: File to be compressed/uncompressed
+        pattern: "*.*"
+output:
+    - gunzip:
+        type: file
+        description: Compressed/uncompressed file
+        pattern: "*.*"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@joseespinosa"
+    - "@drpatelh"

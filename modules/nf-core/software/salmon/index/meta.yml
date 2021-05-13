@@ -1,0 +1,35 @@
+name: salmon_index
+description: Create index for salmon
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - salmon:
+      description: |
+        Salmon is a tool for wicked-fast transcript quantification from RNA-seq data
+      homepage: https://salmon.readthedocs.io/en/latest/salmon.html
+      manual: https://salmon.readthedocs.io/en/latest/salmon.html
+      doi: 10.1038/nmeth.4197
+input:
+  - genome_fasta:
+      type: file
+      description: Fasta file of the reference genome
+  - transcriptome_fasta:
+      type: file
+      description: Fasta file of the reference transcriptome
+
+output:
+  - index:
+      type: directory
+      description: Folder containing the star index files
+      pattern: "salmon"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "*.{version.txt}"
+
+authors:
+  - "@kevinmenden"
+  - "@drpatelh"

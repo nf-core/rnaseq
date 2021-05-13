@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/schema_public_data_ids.json",
+    "title": "nf-core/rnaseq pipeline - params.public_data_ids schema",
+    "description": "Schema for the file provided with params.public_data_ids",
+    "type": "array",
+    "items": {
+        "type": "array",
+        "items": {
+            "type": "string",
+            "pattern": "^[SEPG][RAS][RXSMPAJXE][EN]?[AB]?\\d{4,9}$",
+            "errorMessage": "Please provide a valid SRA, GEO or ENA identifier"
+        }
+    }
+}

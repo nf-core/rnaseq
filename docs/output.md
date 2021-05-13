@@ -601,15 +601,11 @@ We also explore higher components in terms of experimental factors inferred from
 
 The plot on the left hand side shows the standard PC plot - notice the variable number of underscores, meaning that the central plot would not be produced: here we have changed the underscore that is hyphenating the treatment to a '-' character. This allows the central plot to be generated, and we can see that replicate (the 2nd part of the sample name) seems to be affecting the 3rd principal component, but the treatment factor is affecting the more important first two components. The right-most plot shows all pairwise euclidean distances between the samples.
 
-<p markdown="1" align="center">
-    <img src="images/deseq2_qc_plots.png" alt="DESeq2 PCA plots">
-</p>
+<p align="center"><img src="images/deseq2_qc_plots.png" alt="DESeq2 PCA plots"></p>
 
 ![MultiQC - DESeq2 PCA plot](images/mqc_deseq2_pca.png)
 
-<p markdown="1" align="center">
-    <img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600">
-</p>
+<p align="center"><img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600"></p>
 
 ### MultiQC
 

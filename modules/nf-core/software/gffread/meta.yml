@@ -1,0 +1,43 @@
+name: gffread
+description: Validate, filter, convert and perform various other operations on GFF files
+keywords:
+  - gff
+  - conversion
+  - validation
+tools:
+  - gffread:
+      description: GFF/GTF utility providing format conversions, region filtering, FASTA sequence extraction and more.
+      homepage: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
+      documentation: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
+      tool_dev_url: https://github.com/gpertea/gffread
+      doi: 10.12688/f1000research.23297.1
+      licence: ['MIT']
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - gff:
+        type: file
+        description: A GFF file in either the GFF3 or GFF2 format.
+        patter: "*.gff"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - gtf:
+      type: file
+      description: GTF file resulting from the conversion of the GFF input file
+      pattern: "*.gtf"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "*.{version.txt}"
+
+authors:
+  - "@emiller88"

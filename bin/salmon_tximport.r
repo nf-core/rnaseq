@@ -66,7 +66,7 @@ if (!is.null(tx2gene)) {
 }
 
 build_table = function(se.obj, slot) {
-    cbind(rowData(se.obj), assays(se.obj)[[slot]])
+    cbind(rowData(se.obj)[,1:2], assays(se.obj)[[slot]])
 }
 
 if(exists("gse")){
@@ -78,8 +78,8 @@ if(exists("gse")){
     write.table(build_table(gse.s, "counts"), paste(c(prefix, "gene_counts_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
 }
 
-write.table(assays(se)[["abundance"]], paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)
-write.table(assays(se)[["counts"]], paste(c(prefix, "transcript_counts.tsv"), collapse="."), sep="\t", quote=FALSE)
+write.table(build_table(se,"abundance"), paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE)
+write.table(build_table(se, "counts"), paste(c(prefix, "transcript_counts.tsv"), collapse="."), sep="\t", quote=FALSE)
 
 # Print sessioninfo to standard out
 citation("tximeta")

@@ -171,7 +171,7 @@ include { SAMTOOLS_SORT         } from '../modules/nf-core/software/samtools/sor
 include { PRESEQ_LCEXTRAP       } from '../modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']                   )
 include { QUALIMAP_RNASEQ       } from '../modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']                   )
 include { SORTMERNA             } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                            )
-include { STRINGTIE             } from '../modules/nf-core/software/stringtie/main'             addParams( options: stringtie_options                            )
+include { STRINGTIE             } from '../modules/nf-core/software/stringtie/stringtie/main'   addParams( options: stringtie_options                            )
 include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options                )
 
 //

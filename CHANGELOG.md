@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * Updated pipeline template to nf-core/tools `1.14`
+* Initial implementation of a standardised samplesheet JSON schema to use with user interfaces and for validation
 * Only FastQ files that require to be concatenated will be passed to `CAT_FASTQ` process
 * [[#449](https://github.com/nf-core/modules/pull/449)] - `--genomeSAindexNbases` will now be auto-calculated before building STAR indices
 * [[#460](https://github.com/nf-core/rnaseq/issues/460)] - Auto-detect and bypass featureCounts execution if biotype doesn't exist in GTF
@@ -34,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#604](https://github.com/nf-core/rnaseq/issues/604)] - Additional fasta with GENCODE annotation results in biotype error
 * [[#610](https://github.com/nf-core/rnaseq/issues/610)] - save R objects as RDS
 * [[#619](https://github.com/nf-core/rnaseq/issues/619)] - implicit declaration of the workflow in main
-* [[#629](https://github.com/nf-core/modules/pull/629)] - Add and fix EditorConfig linting in entire pipeline
+* [[#629](https://github.com/nf-core/rnaseq/pull/629)] - Add and fix EditorConfig linting in entire pipeline
 * [[nf-core/modules#423](https://github.com/nf-core/modules/pull/423)] - Replace `publish_by_id` module option to `publish_by_meta`
 * [[nextflow#2060](https://github.com/nextflow-io/nextflow/issues/2060)] - Pipeline execution hang when native task fail to be submitted
 

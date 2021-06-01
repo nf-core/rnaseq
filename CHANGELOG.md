@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **NB:** Parameter has been __added__ if just the new parameter information is present.
 > **NB:** Parameter has been __removed__ if parameter information isn't present.
 
-
 ## [[3.1](https://github.com/nf-core/rnaseq/releases/tag/3.1)] - 2021-05-13
 
 ### :warning: Major enhancements

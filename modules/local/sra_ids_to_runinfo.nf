@@ -19,13 +19,18 @@ process SRA_IDS_TO_RUNINFO {
 
     input:
     val id
+    val fields
 
     output:
     path "*.tsv", emit: tsv
 
     script:
+    def metadata_fields = fields ? "--ena_metadata_fields ${fields}" : ''
     """
     echo $id > id.txt
-    sra_ids_to_runinfo.py id.txt ${id}.runinfo.tsv
+    sra_ids_to_runinfo.py \\
+        id.txt \\
+        ${id}.runinfo.tsv \\
+        $metadata_fields
     """
 }

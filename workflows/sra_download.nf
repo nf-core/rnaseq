@@ -4,6 +4,16 @@
 ========================================================================================
 */
 
+def valid_params = [
+    ena_metadata_fields : ['run_accession', 'experiment_accession', 'library_layout', 'fastq_ftp', 'fastq_md5']
+]
+
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+
+// Validate input parameters
+WorkflowSraDownload.initialise(params, log, valid_params)
+
+// Check mandatory parameters
 if (params.public_data_ids) {
     Channel
         .from(file(params.public_data_ids, checkIfExists: true))
@@ -42,7 +52,8 @@ workflow SRA_DOWNLOAD {
     // MODULE: Get SRA run information for public database ids
     //
     SRA_IDS_TO_RUNINFO (
-        ch_public_data_ids
+        ch_public_data_ids,
+        params.ena_metadata_fields ?: ''
     )
 
     //
@@ -105,7 +116,6 @@ workflow SRA_DOWNLOAD {
 */
 
 workflow.onComplete {
-    def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     NfcoreTemplate.email(workflow, params, summary_params, projectDir, log)
     NfcoreTemplate.summary(workflow, params, log)
     WorkflowSraDownload.sraDownloadWarn(log)

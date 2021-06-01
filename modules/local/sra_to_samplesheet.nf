@@ -37,8 +37,8 @@ process SRA_TO_SAMPLESHEET {
     ]
     pipeline_map << meta_map
 
-    // create a sample sheet 
-    def csv = "sample,fastq_1,fastq_2,strandedness\n" + 
+    // create a sample sheet
+    def csv = "sample,fastq_1,fastq_2,strandedness\n" +
             "${pipeline_map.sample},${pipeline_map.fastq_1},${pipeline_map,fastq_2},'unstranded'\n"
 
     // Write to file

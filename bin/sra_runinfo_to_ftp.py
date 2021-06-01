@@ -6,7 +6,6 @@ import errno
 import argparse
 import collections
 
-
 def parse_args(args=None):
     Description = "Create samplesheet with FTP download links and md5ums from sample information obtained via 'sra_ids_to_runinfo.py' script."
     Epilog = 'Example usage: python sra_runinfo_to_ftp.py <FILES_IN> <FILE_OUT>'
@@ -16,7 +15,6 @@ def parse_args(args=None):
     parser.add_argument('FILE_OUT', help="Output file containing paths to download FastQ files along with their associated md5sums.")
     return parser.parse_args(args)
 
-
 def make_dir(path):
     if not len(path) == 0:
         try:
@@ -24,7 +22,6 @@ def make_dir(path):
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
-
 
 def parse_sra_runinfo(file_in):
     runinfo_dict = {}
@@ -38,7 +35,6 @@ def parse_sra_runinfo(file_in):
             library     = line_dict['library_layout']
             fastq_files = line_dict['fastq_ftp']
             fastq_md5   = line_dict['fastq_md5']
-            print(line_dict)
 
             db_id = exp_id
             sample_dict = collections.OrderedDict()
@@ -82,8 +78,7 @@ def parse_sra_runinfo(file_in):
 
     return runinfo_dict
 
-
-def sra_runinfo_to_ftp(files_in,file_out):
+def sra_runinfo_to_ftp(files_in, file_out):
     samplesheet_dict = {}
     for file_in in files_in:
         runinfo_dict = parse_sra_runinfo(file_in)
@@ -104,11 +99,9 @@ def sra_runinfo_to_ftp(files_in,file_out):
                 for idx,val in enumerate(samplesheet_dict[db_id]):
                     fout.write('\t'.join(["{}_T{}".format(db_id,idx+1)] + [val[x] for x in header[1:]]) + '\n')
 
-
 def main(args=None):
     args = parse_args(args)
     sra_runinfo_to_ftp([x.strip() for x in args.FILES_IN.split(',')], args.FILE_OUT)
-
 
 if __name__ == '__main__':
     sys.exit(main())

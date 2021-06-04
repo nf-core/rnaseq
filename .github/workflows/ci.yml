@@ -36,7 +36,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
@@ -53,19 +53,19 @@ jobs:
     strategy:
       matrix:
         parameters:
-          - 'skip_qc'
-          - 'remove_ribo_rna'
-          - 'skip_trimming'
-          - 'gtf false'
-          - 'star_index false'
-          - 'transcript_fasta'
-          - 'min_mapped_reads 90'
-          - 'with_umi'
-          - 'skip_trimming'
-          - 'bam_csi_index'
-          - 'save_align_intermeds'
-          - 'save_reference'
-          - 'featurecounts_group_type'
+          - "skip_qc"
+          - "remove_ribo_rna"
+          - "skip_trimming"
+          - "gtf false"
+          - "star_index false"
+          - "transcript_fasta"
+          - "min_mapped_reads 90"
+          - "with_umi"
+          - "skip_trimming"
+          - "bam_csi_index"
+          - "save_align_intermeds"
+          - "save_reference"
+          - "featurecounts_group_type"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

@@ -1,5 +1,5 @@
 # NOTE For now these tests don't support any containers beside docker
-- name: Test Salmon with --skip_qc --skip_alignment workflow parameters
+- name: Test Salmon with skip_qc skip_alignment workflow parameters
   command: nextflow run main.nf -profile test,docker --pseudo_aligner salmon --skip_qc --skip_alignment
   tags:
     - salmon
@@ -7,7 +7,7 @@
     - skip_alignment
     - 'skip_qc skip_alignment'
 
-- name: Test Salmon with --salmon_index false --transcript_fasta false workflow parameters
+- name: Test Salmon with salmon_index false transcript_fasta false workflow parameters
   command: nextflow run main.nf -profile test,docker --salmon_index false --transcript_fasta false
   tags:
     - salmon

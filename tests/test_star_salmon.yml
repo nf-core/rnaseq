@@ -62,3 +62,24 @@
     - salmon
     - with_umi
     - skip_trimming
+
+- name: Test STAR Salmon with `--bam_csi_index` workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --bam_csi_index
+  tags:
+    - star
+    - salmon
+    - "bam_csi_index"
+
+- name: Test STAR Salmon with `--save_align_intermeds --save_reference` workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --save_align_intermeds --save_reference
+  tags:
+    - star
+    - salmon
+    - "save_reference"
+
+- name: Test STAR Salmon with `--featurecounts_group_type false` workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --featurecounts_group_type false
+  tags:
+    - star
+    - salmon
+    - "featurecounts_group_type"

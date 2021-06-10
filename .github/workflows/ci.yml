@@ -63,7 +63,6 @@ jobs:
           - "with_umi"
           - "skip_trimming"
           - "bam_csi_index"
-          - "save_align_intermeds"
           - "save_reference"
           - "featurecounts_group_type"
     steps:

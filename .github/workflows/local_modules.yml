@@ -1,5 +1,11 @@
 name: Local Modules pytest-workflow
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
 
 jobs:
   changes:

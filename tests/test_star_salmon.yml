@@ -12,6 +12,8 @@
     - star
     - salmon
     - remove_ribo_rna
+    - failing
+  exit_code: 1
 
 - name: Test STAR Salmon with skim_trimming workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --skim_trimming

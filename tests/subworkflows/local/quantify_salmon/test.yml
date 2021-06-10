@@ -1,5 +1,5 @@
 - name: subworkflow quantify_salmon
-  command: nextflow run ./tests/modules/local/subworkflows/quantify_salmon/ -entry test_quantify_salmon -c tests/config/nextflow.config
+  command: nextflow run ./tests/subworkflows/local/quantify_salmon/ -entry test_quantify_salmon -c tests/config/nextflow.config
   tags:
     - quantify_salmon
   # TODO files:

@@ -8,7 +8,7 @@ include { SALMON_INDEX } from '../../../../modules/nf-core/software/salmon/index
 include { QUANTIFY_SALMON } from '../../../../subworkflows/local/quantify_salmon' addParams(
     genome_options: '',
     tximport_options: modules['salmon_tximport'],
-    salmon_quant_options: salmon_quant_options,
+    salmon_quant_options: modules['salmon_quant'],
     merge_counts_options: modules['salmon_merge_counts']
 )
 

@@ -43,6 +43,16 @@ jobs:
       - name: Run pipeline with default settings
         run: pytest --tag default --kwdof
 
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-default-${{ matrix.nxf_version }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+
   star_salmon:
     name: Test STAR Salmon with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
@@ -84,6 +94,17 @@ jobs:
       - name: Run pipeline with STAR Salmon and ${{ matrix.parameters }}
         run: pytest --tag star --tag salmon --tag "${{ matrix.parameters }}" --kwdof
 
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-star_salmon-${{ matrix.parameters }}-${{ matrix.nxf_version }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+
+
   star_rsem:
     name: Test STAR RSEM with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
@@ -117,6 +138,16 @@ jobs:
       - name: Run pipeline with STAR RSEM and ${{ matrix.parameters }}
         run: pytest --tag star --tag rsem --tag "${{ matrix.parameters }}" --kwdof
 
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-star_rsem-${{ matrix.parameters }}-${{ matrix.nxf_version }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+
   hisat2:
     name: Test HISAT2 with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
@@ -147,6 +178,16 @@ jobs:
 
       - name: Run pipeline with HISAT2 ${{ matrix.parameters }}
         run: pytest --tag hisat2 --tag "${{ matrix.parameters }}" --kwdof
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-hisat2-${{ matrix.parameters }}-${{ matrix.nxf_version }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
 
   salmon:
     name: Test Salmon with ${{ matrix.parameters }}
@@ -179,6 +220,16 @@ jobs:
       - name: Run pipeline with Salmon and various parameters
         run: pytest --tag salmon --tag "${{ matrix.parameters }}" --kwdof
 
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-salmon-${{ matrix.parameters }}-${{ matrix.nxf_version }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+
   sra_download:
     name: Test downloading of public data
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
@@ -205,3 +256,13 @@ jobs:
       - name: Run pipeline to download public data
         continue-on-error: true
         run: pytest --tag sra_download --kwdof
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-sra_download-${{ matrix.nxf_version }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err

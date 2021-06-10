@@ -2,6 +2,8 @@
 
 nextflow.enable.dsl = 2
 
+def modules = params.modules.clone()
+
 include { SALMON_INDEX } from '../../../../modules/nf-core/software/salmon/index/main.nf' addParams( options: [:] )
 include { QUANTIFY_SALMON } from '../../../../subworkflows/local/quantify_salmon' addParams(
     genome_options: '',

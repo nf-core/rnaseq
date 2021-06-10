@@ -6,3 +6,10 @@ quantify_salmon:
   - modules/local/salmon_tximport.nf
   - modules/local/salmon_merge_counts.nf
   - modules/local/salmon_summarizedexperiment.nf
+
+quantify_rsem:
+  - subworkflows/local/quantify_rsem.nf
+  - subworkflows/nf-core/bam_sort_samtools.nf
+  - tests/subworkflows/local/quantify_rsem/**
+  - modules/nf-core/software/rsem/calculateexpression/**
+  - modules/local/rsem_merge_counts.nf

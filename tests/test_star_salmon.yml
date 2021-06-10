@@ -39,7 +39,7 @@
   tags:
     - star
     - salmon
-    - 'transcript_fasta false'
+    - 'transcript_fasta'
 
 - name: Test STAR Salmon with `--min_mapped_reads 90` workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --min_mapped_reads 90

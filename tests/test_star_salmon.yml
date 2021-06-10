@@ -1,3 +1,4 @@
+# NOTE For now these tests don't support any containers beside docker
 - name: Test STAR Salmon with `--skip_qc` workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --skip_qc
   tags:

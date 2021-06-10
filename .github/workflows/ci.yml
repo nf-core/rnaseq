@@ -44,7 +44,7 @@ jobs:
         run: pytest --tag default --kwdof
 
   star_salmon:
-    name: Test STAR Salmon with workflow parameters
+    name: Test STAR Salmon with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
@@ -82,11 +82,11 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with STAR Salmon and various parameters
+      - name: Run pipeline with STAR Salmon and ${{ matrix.parameters }}
         run: pytest --tag star --tag salmon --tag "${{ matrix.parameters }}" --kwdof
 
   star_rsem:
-    name: Test STAR RSEM with workflow parameters
+    name: Test STAR RSEM with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
@@ -115,11 +115,11 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with STAR RSEM and various parameters
+      - name: Run pipeline with STAR RSEM and ${{ matrix.parameters }}
         run: pytest --tag star --tag rsem --tag "${{ matrix.parameters }}" --kwdof
 
   hisat2:
-    name: Test HISAT2 with workflow parameters
+    name: Test HISAT2 with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
@@ -146,11 +146,11 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with HISAT2 and various parameters
+      - name: Run pipeline with HISAT2 ${{ matrix.parameters }}
         run: pytest --tag hisat2 --tag "${{ matrix.parameters }}" --kwdof
 
   salmon:
-    name: Test Salmon with workflow parameters
+    name: Test Salmon with ${{ matrix.parameters }}
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:

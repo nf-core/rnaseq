@@ -158,8 +158,8 @@ jobs:
     strategy:
       matrix:
         parameters:
-          - "--skip_qc --skip_alignment"
-          - "--salmon_index false --transcript_fasta false"
+          - "skip_qc skip_alignment"
+          - "salmon_index false transcript_fasta false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

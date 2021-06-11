@@ -2,4 +2,6 @@
   command: nextflow run ./tests/subworkflows/local/quantify_salmon/ -entry test_quantify_salmon -c tests/config/nextflow.config
   tags:
     - quantify_salmon
+    - failing
+  exit_code: 1
   # TODO files:

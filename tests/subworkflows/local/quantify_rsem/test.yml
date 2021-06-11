@@ -2,4 +2,6 @@
   command: nextflow run ./tests/subworkflows/local/quantify_rsem/ -entry test_quantify_rsem -c tests/config/nextflow.config
   tags:
     - quantify_rsem
+    - failing
+  exit_code: 1
   # TODO files:

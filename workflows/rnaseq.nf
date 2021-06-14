@@ -90,7 +90,7 @@ include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
 include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon' )
 include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                               )
-include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                      )
+include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['tsv':'']]                      )
 include { MULTIQC                            } from '../modules/local/multiqc'                     addParams( options: multiqc_options                                   )
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                 )
 include { MULTIQC_CUSTOM_FAIL_MAPPED         } from '../modules/local/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                            )

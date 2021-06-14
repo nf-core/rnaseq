@@ -71,9 +71,9 @@ class WorkflowMain {
         // Check the hostnames against configured profiles
         NfcoreTemplate.hostName(workflow, params, log)
 
-        // Check at least one form of input has been provided
-        if (!params.public_data_ids && !params.input) {
-            log.error "Please specify at least one form of input for the pipeline e.g. '--input samplesheet.csv' or '--public_data_ids ids.txt'."
+        // Check an input samplesheet has been provided
+        if (!params.input) {
+            log.error "Please specify at least an input samplesheet for the pipeline e.g. '--input samplesheet.csv'."
             System.exit(1)
         }
     }

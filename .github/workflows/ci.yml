@@ -48,7 +48,7 @@ jobs:
       matrix:
         parameters:
           - "--skip_qc"
-          - "--remove_ribo_rna"
+          - "--remove_ribo_rna --skip_qualimap"
           - "--skip_trimming"
           - "--gtf false"
           - "--star_index false"

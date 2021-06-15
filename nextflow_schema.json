@@ -27,21 +27,6 @@
                     "default": "./results",
                     "fa_icon": "fas fa-folder-open"
                 },
-                "public_data_ids": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "\\.txt$",
-                    "schema": "assets/schema_public_data_ids.json",
-                    "fa_icon": "fas fa-database",
-                    "description": "File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files."
-                },
-                "ena_metadata_fields": {
-                    "type": "string",
-                    "fa_icon": "fas fa-database",
-                    "description": "Comma-separated list of ENA metadata fields to fetch before downloading data.",
-                    "help_text": "The default list of fields used by the pipeline can be found at the top of the [`bin/sra_ids_to_runinfo.py`](https://github.com/nf-core/rnaseq/blob/master/bin/sra_ids_to_runinfo.py) script within the pipeline repo. This pipeline requires a minimal set of fields to download FastQ files i.e. `'run_accession,experiment_accession,library_layout,fastq_ftp,fastq_md5'`. Full list of accepted metadata fields can be obtained from the [ENA API](https://www.ebi.ac.uk/ena/portal/api/returnFields?dataPortal=ena&format=tsv&result=read_run])."
-                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
@@ -53,11 +38,6 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
-                },
-                "skip_sra_fastq_download": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": "Only download metadata for public data database ids and don't download the FastQ files."
                 },
                 "save_merged_fastq": {
                     "type": "boolean",

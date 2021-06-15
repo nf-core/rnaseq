@@ -48,7 +48,7 @@ jobs:
       matrix:
         parameters:
           - "--skip_qc"
-          - "--remove_ribo_rna"
+          - "--remove_ribo_rna --skip_qualimap"
           - "--skip_trimming"
           - "--gtf false"
           - "--star_index false"
@@ -148,23 +148,3 @@ jobs:
       - name: Run pipeline with Salmon and various parameters
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }}
-
-  sra_download:
-    name: Test downloading of public data
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
-    env:
-      NXF_VER: ${{ matrix.nxf_ver }}
-      NXF_ANSI_LOG: false
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Run pipeline to download public data
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_sra,docker

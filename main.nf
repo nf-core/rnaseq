@@ -40,22 +40,13 @@ WorkflowMain.initialise(workflow, params, log)
 ========================================================================================
 */
 
+include { RNASEQ } from './workflows/rnaseq'
+
+//
+// WORKFLOW: Run main nf-core/rnaseq analysis pipeline
+//
 workflow NFCORE_RNASEQ {
-
-    //
-    // WORKFLOW: Get SRA run information for public database ids, download and md5sum check FastQ files, auto-create samplesheet
-    //
-    if (params.public_data_ids) {
-        include { SRA_DOWNLOAD } from './workflows/sra_download'
-        SRA_DOWNLOAD ()
-
-    //
-    // WORKFLOW: Run main nf-core/rnaseq analysis pipeline
-    //
-    } else {
-        include { RNASEQ } from './workflows/rnaseq'
-        RNASEQ ()
-    }
+    RNASEQ ()
 }
 
 /*

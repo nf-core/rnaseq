@@ -7,14 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Removed workflow to download data from public databases in favour of using [nf-core/fetchngs](https://nf-co.re/fetchngs)
+* Added docs about overwriting default container definitions to use latest versions e.g. Pangolin
 * [[#645](https://github.com/nf-core/rnaseq/issues/645)] - Remove trailing slash from `params.igenomes_base`
-* [[#646](https://github.com/nf-core/rnaseq/issues/646)] - Connection failed in `sra_ids_to_runinfo.py`
+* [[nf-core/viralrecon#201](https://github.com/nf-core/viralrecon/issues/201)] - Conditional include are not expected to work
 
 ### Parameters
 
 | Old parameter               | New parameter                  |
 |-----------------------------|--------------------------------|
-|                             | `--ena_metadata_fields`        |
+| `--public_data_ids`         |                                |
+| `--skip_sra_fastq_download` |                                |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.
 > **NB:** Parameter has been __added__ if just the new parameter information is present.

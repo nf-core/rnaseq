@@ -121,7 +121,8 @@ class NfcoreSchema {
             def params_ignore = params.schema_ignore_params.split(',') + 'schema_ignore_params'
             def expectedParamsLowerCase = expectedParams.collect{ it.replace("-", "").toLowerCase() }
             def specifiedParamLowerCase = specifiedParam.replace("-", "").toLowerCase()
-            if (!expectedParams.contains(specifiedParam) && !params_ignore.contains(specifiedParam) && !expectedParamsLowerCase.contains(specifiedParamLowerCase)) {
+            def isCamelCaseBug = (specifiedParam.contains("-") && !expectedParams.contains(specifiedParam) && expectedParamsLowerCase.contains(specifiedParamLowerCase))
+            if (!expectedParams.contains(specifiedParam) && !params_ignore.contains(specifiedParam) && !isCamelCaseBug) {
                 // Temporarily remove camelCase/camel-case params #1035
                 def unexpectedParamsLowerCase = unexpectedParams.collect{ it.replace("-", "").toLowerCase()}
                 if (!unexpectedParamsLowerCase.contains(specifiedParamLowerCase)){

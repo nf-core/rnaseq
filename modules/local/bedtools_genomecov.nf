@@ -22,19 +22,19 @@ process BEDTOOLS_GENOMECOV {
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("*.sense.bedGraph")    , emit: bedgraph_sense
-    tuple val(meta), path("*.antisense.bedGraph"), emit: bedgraph_antisense
-    path "*.version.txt"                         , emit: version
+    tuple val(meta), path("*.forward.bedGraph"), emit: bedgraph_forward
+    tuple val(meta), path("*.reverse.bedGraph"), emit: bedgraph_reverse
+    path "*.version.txt"                       , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
-    def prefix_sense     = "${prefix}.sense"
-    def prefix_antisense = "${prefix}.antisense"
+    def prefix_forward = "${prefix}.forward"
+    def prefix_reverse = "${prefix}.reverse"
     if (meta.strandedness == 'reverse') {
-        prefix_sense     = "${prefix}.antisense"
-        prefix_antisense = "${prefix}.sense"
+        prefix_forward = "${prefix}.reverse"
+        prefix_reverse = "${prefix}.forward"
     }
     """
     bedtools \\
@@ -43,7 +43,7 @@ process BEDTOOLS_GENOMECOV {
         -bg \\
         -strand + \\
         $options.args \\
-        | bedtools sort > ${prefix_sense}.bedGraph
+        | bedtools sort > ${prefix_forward}.bedGraph
 
     bedtools \\
         genomecov \\
@@ -51,7 +51,7 @@ process BEDTOOLS_GENOMECOV {
         -bg \\
         -strand - \\
         $options.args \\
-        | bedtools sort > ${prefix_antisense}.bedGraph
+        | bedtools sort > ${prefix_reverse}.bedGraph
 
     bedtools --version | sed -e "s/bedtools v//g" > ${software}.version.txt
     """

@@ -218,8 +218,8 @@ include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplic
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: umitools_dedup_genome_options, samtools_index_options: umitools_dedup_genome_samtools_options, samtools_stats_options: umitools_dedup_genome_samtools_options             )
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: modules['umitools_dedup_transcriptome'], samtools_index_options: modules['umitools_dedup_transcriptome'], samtools_stats_options: modules['umitools_dedup_transcriptome'] )
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE         } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_ANTISENSE     } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_antisense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_antisense'] )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD       } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_forward'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_forward'] )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE       } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_reverse'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_reverse'] )
 
 /*
 ========================================================================================
@@ -595,14 +595,14 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
-        BEDGRAPH_TO_BIGWIG_SENSE (
-            BEDTOOLS_GENOMECOV.out.bedgraph_sense,
+        BEDGRAPH_TO_BIGWIG_FORWARD (
+            BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
         ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_SENSE.out.ucsc_version.first().ifEmpty(null))
 
-        BEDGRAPH_TO_BIGWIG_ANTISENSE (
-            BEDTOOLS_GENOMECOV.out.bedgraph_antisense,
+        BEDGRAPH_TO_BIGWIG_REVERSE (
+            BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
             PREPARE_GENOME.out.chrom_sizes
         )
     }

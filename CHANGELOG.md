@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Removed workflow to download data from public databases in favour of using [nf-core/fetchngs](https://nf-co.re/fetchngs)
 * Added docs about overwriting default container definitions to use latest versions e.g. Pangolin
 * [[#645](https://github.com/nf-core/rnaseq/issues/645)] - Remove trailing slash from `params.igenomes_base`
+* [[#649](https://github.com/nf-core/rnaseq/issues/649)] - DESeq2 fails with only one sample
+* [[#652](https://github.com/nf-core/rnaseq/issues/652)] - Results files have incorrect file names
 * [[nf-core/viralrecon#201](https://github.com/nf-core/viralrecon/issues/201)] - Conditional include are not expected to work
 
 ### Parameters

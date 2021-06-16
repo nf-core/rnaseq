@@ -599,7 +599,7 @@ workflow RNASEQ {
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_SENSE.out.ucsc_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_FORWARD.out.ucsc_version.first().ifEmpty(null))
 
         BEDGRAPH_TO_BIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,

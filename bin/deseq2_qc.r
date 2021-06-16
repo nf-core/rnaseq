@@ -110,8 +110,6 @@ assay(dds, vst_name) <- assay(rld)
 save(dds,file=DDSFile)
 saveRDS(dds, file=sub("\\.dds\\.RData$", ".rds", DDSFile))
 
-
-
 ################################################
 ################################################
 ## PLOT QC                                    ##
@@ -209,7 +207,6 @@ write.table(cbind(sample = rownames(sampleDistMatrix), sampleDistMatrix),file=pa
             row.names=FALSE, col.names=TRUE, sep="\t", quote=FALSE)
 dev.off()
 
-
 ################################################
 ################################################
 ## SAVE SIZE FACTORS                          ##
@@ -231,7 +228,6 @@ for (name in names(sizeFactors(dds))) {
     write(as.numeric(sizeFactors(dds)[name]), file=sizeFactorFile)
 }
 
-
 ################################################
 ################################################
 ## R SESSION INFO                             ##
@@ -244,7 +240,6 @@ sink(RLogFile)
 a <- sessionInfo()
 print(a)
 sink()
-
 
 ################################################
 ################################################

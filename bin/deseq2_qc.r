@@ -88,35 +88,29 @@ if (decompose) {
 }
 
 DDSFile <- paste(opt$outprefix,".dds.RData",sep="")
-if (file.exists(DDSFile) == FALSE) {
-    counts  <- count.table[,samples.vec,drop=FALSE]
-    dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ 1)
-    dds     <- estimateSizeFactors(dds)
-    if (!opt$vst) {
-        vst_name <- "rlog"
-        rld      <- rlog(dds)
-    } else {
-        vst_name <- "vst"
-        rld      <- varianceStabilizingTransformation(dds)
-    }
-    assay(dds, vst_name) <- assay(rld)
+
+counts  <- count.table[,samples.vec,drop=FALSE]
+dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ 1)
+dds     <- estimateSizeFactors(dds)
+if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
     save(dds,file=DDSFile)
     saveRDS(dds, file=sub("\\.dds\\.RData$", ".rds", DDSFile))
-} else {
-    load(DDSFile)
-    vst_name <- intersect(assayNames(dds), c("vst", "rlog"))
-    if (length(vst_name)==0) { # legacy might mean vst was saved as a separate object called rld
-        vst_name <- "loaded_rld"
-        assay(dds, vst_name) <- assay(rld)
-    } else {
-        vst_name <- vst_name[1]
-    }
-}
-
-if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
     warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
     quit(save = "no", status = 0, runLast = FALSE)
 }
+if (!opt$vst) {
+    vst_name <- "rlog"
+    rld      <- rlog(dds)
+} else {
+    vst_name <- "vst"
+    rld      <- varianceStabilizingTransformation(dds)
+}
+
+assay(dds, vst_name) <- assay(rld)
+save(dds,file=DDSFile)
+saveRDS(dds, file=sub("\\.dds\\.RData$", ".rds", DDSFile))
+
+
 
 ################################################
 ################################################

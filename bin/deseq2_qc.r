@@ -59,6 +59,11 @@ count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE
 colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
 colnames(count.table) <- gsub(pattern='\\.$', replacement='', colnames(count.table))
 
+if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
+    warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
+    quit(save = "no", status = 0, runLast = FALSE)
+}
+
 ################################################
 ################################################
 ## RUN DESEQ2                                 ##
@@ -111,11 +116,6 @@ if (file.exists(DDSFile) == FALSE) {
     } else {
         vst_name <- vst_name[1]
     }
-}
-
-if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
-    warning("Not enough samples or genes in counts file for PCA.", call.=FALSE)
-    quit(save = "no", status = 0, runLast = FALSE)
 }
 
 ################################################

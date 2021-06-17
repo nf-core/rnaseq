@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * Removed workflow to download data from public databases in favour of using [nf-core/fetchngs](https://nf-co.re/fetchngs)
-* Added stand-alone executable [`bin/fastq_dir_to_samplesheet.py`](https://github.com/nf-core/rnaseq/blob/master/bin/fastq_dir_to_samplesheet.py) to auto-create samplesheet from a directory of FastQ files
+* Added a stand-alone Python script [`bin/fastq_dir_to_samplesheet.py`](https://github.com/nf-core/rnaseq/blob/master/bin/fastq_dir_to_samplesheet.py) to auto-create samplesheet from a directory of FastQ files
 * Added docs about overwriting default container definitions to use latest versions e.g. Pangolin
 * [[#645](https://github.com/nf-core/rnaseq/issues/645)] - Remove trailing slash from `params.igenomes_base`
 * [[#649](https://github.com/nf-core/rnaseq/issues/649)] - DESeq2 fails with only one sample

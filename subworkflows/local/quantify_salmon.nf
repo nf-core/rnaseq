@@ -23,13 +23,14 @@ workflow QUANTIFY_SALMON {
     transcript_fasta // channel: /path/to/transcript.fasta
     gtf              // channel: /path/to/genome.gtf
     alignment_mode   //    bool: Run Salmon in alignment mode
+    lib_type         //     val: String to override salmon library type
 
     main:
 
     //
     // Quantify and merge counts across samples
     //
-    SALMON_QUANT        ( reads, index, gtf, transcript_fasta, alignment_mode )
+    SALMON_QUANT        ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
     SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
     SALMON_TXIMPORT     ( SALMON_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.collect() )
 

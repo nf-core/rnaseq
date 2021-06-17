@@ -77,6 +77,12 @@ The SRA download functionality has been removed from the pipeline (`>=3.2`) and 
         -profile <docker/singularity/podman/conda/institute>
     ```
 
+    * An executable Python script called [`fastq_dir_to_samplesheet.py`](https://github.com/nf-core/rnaseq/blob/master/bin/fastq_dir_to_samplesheet.py) has been provided if you would like to auto-create an input samplesheet based on a directory containing FastQ files **before** you run the pipeline (requires Python 3 installed locally) e.g.
+
+        ```console
+        ~/.nextflow/assets/nf-core/rnaseq/bin/fastq_dir_to_samplesheet.py <FASTQ_DIR> samplesheet.csv
+        ```
+
 ## Documentation
 
 The nf-core/rnaseq pipeline comes with documentation about the pipeline [usage](https://nf-co.re/rnaseq/usage), [parameters](https://nf-co.re/rnaseq/parameters) and [output](https://nf-co.re/rnaseq/output).

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Removed workflow to download data from public databases in favour of using [nf-core/fetchngs](https://nf-co.re/fetchngs)
 * Added a stand-alone Python script [`bin/fastq_dir_to_samplesheet.py`](https://github.com/nf-core/rnaseq/blob/master/bin/fastq_dir_to_samplesheet.py) to auto-create samplesheet from a directory of FastQ files
 * Added docs about overwriting default container definitions to use latest versions e.g. Pangolin
+* [[#637](https://github.com/nf-core/rnaseq/issues/637)] - Add `--salmon_quant_libtype` parameter to provide the `--libType` option to salmon quantification
 * [[#645](https://github.com/nf-core/rnaseq/issues/645)] - Remove trailing slash from `params.igenomes_base`
 * [[#649](https://github.com/nf-core/rnaseq/issues/649)] - DESeq2 fails with only one sample
 * [[#652](https://github.com/nf-core/rnaseq/issues/652)] - Results files have incorrect file names
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 |-----------------------------|--------------------------------|
 | `--public_data_ids`         |                                |
 | `--skip_sra_fastq_download` |                                |
+|                             | `--salmon_quant_libtype`       |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.
 > **NB:** Parameter has been __added__ if just the new parameter information is present.

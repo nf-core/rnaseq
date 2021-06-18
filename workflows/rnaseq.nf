@@ -379,7 +379,8 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
-            true
+            true,
+            params.salmon_quant_libtype ?: ''
         )
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.ifEmpty(null))
@@ -679,7 +680,8 @@ workflow RNASEQ {
             PREPARE_GENOME.out.salmon_index,
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,
-            false
+            false,
+            params.salmon_quant_libtype ?: ''
         )
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
         if (params.skip_alignment && params.aligner != 'star_salmon') {

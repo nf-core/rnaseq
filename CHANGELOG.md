@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#649](https://github.com/nf-core/rnaseq/issues/649)] - DESeq2 fails with only one sample
 * [[#652](https://github.com/nf-core/rnaseq/issues/652)] - Results files have incorrect file names
 * [[nf-core/viralrecon#201](https://github.com/nf-core/viralrecon/issues/201)] - Conditional include are not expected to work
-* [[#637](https://github.com/nf-core/rnaseq/issues/637)] - Add `--salmon_quant_libtype` parameter to provide the `libtype` option to salmon quantification
+* [[#637](https://github.com/nf-core/rnaseq/issues/637)] - Add `--salmon_quant_libtype` parameter to provide the `--libType` option to salmon quantification
 
 ### Parameters
 

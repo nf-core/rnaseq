@@ -120,8 +120,6 @@ if (!params.save_reference)  { salmon_index_options['publish_files'] = false }
 
 def salmon_quant_options   = modules['salmon_quant']
 salmon_quant_options.args += params.save_unaligned ? Utils.joinModuleArgs(['--writeUnmappedNames']) : ''
-def salmon_quant_lib_type = params.salmon_quant_libtype ? params.salmon_quant_libtype : ''
-
 
 def samtools_sort_genome_options  = modules['samtools_sort_genome']
 def samtools_index_genome_options = modules['samtools_index_genome']
@@ -382,7 +380,7 @@ workflow RNASEQ {
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
             true,
-            salmon_quant_lib_type
+            params.salmon_quant_libtype ?: ''
         )
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.ifEmpty(null))
@@ -683,7 +681,7 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,
             false,
-            salmon_quant_lib_type
+            params.salmon_quant_libtype ?: ''
         )
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
         if (params.skip_alignment && params.aligner != 'star_salmon') {

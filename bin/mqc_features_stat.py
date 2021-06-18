@@ -5,7 +5,7 @@ import logging
 import os
 
 # Create a logger
-logging.basicConfig(format='%(name)s - %(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
@@ -13,7 +13,7 @@ mqc_main = """#id: 'biotype-gs'
 #plot_type: 'generalstats'
 #pconfig:"""
 
-mqc_pconf="""#    percent_{ft}:
+mqc_pconf = """#    percent_{ft}:
 #        title: '% {ft}'
 #        namespace: 'Biotype Counts'
 #        description: '% reads overlapping {ft} features'
@@ -21,6 +21,7 @@ mqc_pconf="""#    percent_{ft}:
 #        min: 0
 #        scale: 'RdYlGn-rev'
 #        format: '{{:.2f}}%'"""
+
 
 def mqc_feature_stat(bfile, features, outfile, sname=None):
 
@@ -31,11 +32,11 @@ def mqc_feature_stat(bfile, features, outfile, sname=None):
     # Try to parse and read biocount file
     fcounts = {}
     try:
-        with open(bfile, 'r') as bfl:
+        with open(bfile, "r") as bfl:
             for ln in bfl:
-                if ln.startswith('#'):
+                if ln.startswith("#"):
                     continue
-                ft, cn = ln.strip().split('\t')
+                ft, cn = ln.strip().split("\t")
                 fcounts[ft] = float(cn)
     except:
         logger.error("Trouble reading the biocount file {}".format(bfile))
@@ -47,9 +48,15 @@ def mqc_feature_stat(bfile, features, outfile, sname=None):
         return
 
     # Calculate percentage for each requested feature
-    fpercent = {f: (fcounts[f]/total_count)*100 if f in fcounts else 0 for f in features}
+    fpercent = {
+        f: (fcounts[f] / total_count) * 100 if f in fcounts else 0 for f in features
+    }
     if len(fpercent) == 0:
-        logger.error("Any of given features '{}' not found in the biocount file".format(", ".join(features), bfile))
+        logger.error(
+            "Any of given features '{}' not found in the biocount file".format(
+                ", ".join(features), bfile
+            )
+        )
         return
 
     # Prepare the output strings
@@ -60,15 +67,32 @@ def mqc_feature_stat(bfile, features, outfile, sname=None):
         out_mqc = "{}\n{}".format(out_mqc, mqc_pconf.format(ft=ft))
 
     # Write the output to a file
-    with open(outfile, 'w') as ofl:
+    with open(outfile, "w") as ofl:
         out_final = "\n".join([out_mqc, out_head, out_value]).strip()
         ofl.write(out_final + "\n")
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="""Calculate features percentage for biotype counts""")
+    parser = argparse.ArgumentParser(
+        description="""Calculate features percentage for biotype counts"""
+    )
     parser.add_argument("biocount", type=str, help="File with all biocounts")
-    parser.add_argument("-f", "--features", dest='features', required=True, nargs='+', help="Features to count")
-    parser.add_argument("-s", "--sample", dest='sample', type=str, help="Sample Name")
-    parser.add_argument("-o", "--output", dest='output', default='biocount_percent.tsv', type=str, help="Sample Name")
+    parser.add_argument(
+        "-f",
+        "--features",
+        dest="features",
+        required=True,
+        nargs="+",
+        help="Features to count",
+    )
+    parser.add_argument("-s", "--sample", dest="sample", type=str, help="Sample Name")
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="output",
+        default="biocount_percent.tsv",
+        type=str,
+        help="Sample Name",
+    )
     args = parser.parse_args()
     mqc_feature_stat(args.biocount, args.features, args.output, args.sample)

@@ -7,7 +7,7 @@ import glob
 import os
 
 # Create a logger
-logging.basicConfig(format='%(name)s - %(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
@@ -39,7 +39,7 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
             for gff_item in cols[8].split(";"):
                 item_pair = gff_item.strip().split(" ")
                 if len(item_pair) > 1:
-                    value = item_pair[1].strip().replace("\"", "")
+                    value = item_pair[1].strip().replace('"', "")
                     if value in txs:
                         votes[item_pair[0].strip()] += 1
 
@@ -53,7 +53,7 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
     txid = votes.most_common(1)[0][0]
     logger.info("Attributed found to be transcript: %s" % txid)
     seen = set()
-    with open(out, 'w') as outh:
+    with open(out, "w") as outh:
         for gene in gene_dict:
             for row in gene_dict[gene]:
                 if txid not in row:
@@ -68,12 +68,21 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="""Get tx to gene names for tximport""")
+    parser = argparse.ArgumentParser(
+        description="""Get tx to gene names for tximport"""
+    )
     parser.add_argument("--gtf", type=str, help="GTF file")
     parser.add_argument("--salmon", type=str, help="output of salmon")
     parser.add_argument("--id", type=str, help="gene id in the gtf file")
     parser.add_argument("--extra", type=str, help="extra id in the gtf file")
-    parser.add_argument("-o", "--output", dest='output', default='tx2gene.tsv', type=str, help="file with output")
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="output",
+        default="tx2gene.tsv",
+        type=str,
+        help="file with output",
+    )
 
     args = parser.parse_args()
     tx2gene(args.gtf, args.salmon, args.id, args.extra, args.output)

@@ -30,7 +30,9 @@ def fastq_dir_to_samplesheet(fastq_dir, samplesheet_file, strandedness='unstrand
         sample = os.path.basename(read1_file).replace(read1_extension,'')
         if sanitise_name:
             sample = sanitise_name_delimiter.join(os.path.basename(read1_file).split(sanitise_name_delimiter)[:sanitise_name_index])
-        read_dict[sample] = [read1_file]
+        if sample not in read_dict:
+            read_dict[sample] = {'R1':[], 'R2':[]}
+        read_dict[sample]['R1'].append(read1_file)
 
     ## Get read 2 files
     read2_files = glob.glob(os.path.join(fastq_dir, f'*{read2_extension}'), recursive=False)
@@ -38,8 +40,8 @@ def fastq_dir_to_samplesheet(fastq_dir, samplesheet_file, strandedness='unstrand
         for read2_file in read2_files:
             sample = os.path.basename(read2_file).replace(read2_extension,'')
             if sanitise_name:
-                sample = sanitise_name_delimiter.join(os.path.basename(read1_file).split(sanitise_name_delimiter)[:sanitise_name_index])
-            read_dict[sample] += [read2_file]
+                sample = sanitise_name_delimiter.join(os.path.basename(read2_file).split(sanitise_name_delimiter)[:sanitise_name_index])
+            read_dict[sample]['R2'].append(read2_file)
 
     ## Write to file
     if len(read_dict) > 0:
@@ -50,11 +52,13 @@ def fastq_dir_to_samplesheet(fastq_dir, samplesheet_file, strandedness='unstrand
         with open(samplesheet_file, "w") as fout:
             header = ['sample', 'fastq_1', 'fastq_2', 'strandedness']
             fout.write(','.join(header) + '\n')
-            for sample, reads in read_dict.items():
-                sample_info = ','.join([sample] + reads + [strandedness])
-                if len(reads) == 1:
-                    sample_info += ','
-                fout.write(f'{sample_info}\n')
+            for sample, reads in sorted(read_dict.items()):
+                for idx, read_1 in enumerate(reads['R1']):
+                    read_2 = ''
+                    if idx < len(reads['R2']):
+                        read_2 = reads['R2'][idx]
+                    sample_info = ','.join([sample, read_1, read_2, strandedness])
+                    fout.write(f'{sample_info}\n')
     else:
         error_str  = "\nWARNING: No FastQ files found so samplesheet has not been created!\n\n"
         error_str += "Please check the values provided for the:\n"

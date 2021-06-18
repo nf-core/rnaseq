@@ -81,7 +81,11 @@ def check_samplesheet(file_in, file_out):
 
             ## Check sample name entries
             sample, fastq_1, fastq_2, strandedness = lspl[: len(HEADER)]
-            sample = sample.replace(" ", "_")
+            if sample.find(" ") != -1:
+                print(
+                    f"WARNING: Spaces have been replaced by underscores for sample: {sample}"
+                )
+                sample = sample.replace(" ", "_")
             if not sample:
                 print_error("Sample entry has not been specified!", "Line", line)
 

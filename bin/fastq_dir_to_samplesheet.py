@@ -96,14 +96,16 @@ def fastq_dir_to_samplesheet(
     read1_files = glob.glob(os.path.join(fastq_dir, read1_pattern), recursive=False)
     for read1_file in read1_files:
         sample = sanitize_sample(read1_file)
-        read_dict[sample] = [read1_file]
+        if sample not in read_dict:
+            read_dict[sample] = {"R1": [], "R2": []}
+        read_dict[sample]["R1"].append(read1_file)
 
     ## Get read 2 files
     if not single_end:
         read2_files = glob.glob(os.path.join(fastq_dir, read2_pattern), recursive=False)
         for read2_file in read2_files:
             sample = sanitize_sample(read2_file)
-            read_dict[sample] += [read2_file]
+            read_dict[sample]["R2"].append(read2_file)
 
     ## Write to file
     if len(read_dict) > 0:
@@ -114,11 +116,13 @@ def fastq_dir_to_samplesheet(
         with open(samplesheet_file, "w") as fout:
             header = ["sample", "fastq_1", "fastq_2", "strandedness"]
             fout.write(",".join(header) + "\n")
-            for sample, reads in read_dict.items():
-                sample_info = ",".join([sample] + reads + [strandedness])
-                if len(reads) == 1:
-                    sample_info += ","
-                fout.write(f"{sample_info}\n")
+            for sample, reads in sorted(read_dict.items()):
+                for idx, read_1 in enumerate(reads["R1"]):
+                    read_2 = ""
+                    if idx < len(reads["R2"]):
+                        read_2 = reads["R2"][idx]
+                    sample_info = ",".join([sample, read_1, read_2, strandedness])
+                    fout.write(f"{sample_info}\n")
     else:
         error_str = (
             "\nWARNING: No FastQ files found so samplesheet has not been created!\n\n"

@@ -23,19 +23,19 @@ def parse_args(args=None):
     )
     parser.add_argument(
         "-r1",
-        "--read1_pattern",
+        "--read1_extension",
         type=str,
-        dest="READ1_PATTERN",
-        default="*_R1_001.fastq.gz",
-        help="File pattern for read 1.",
+        dest="READ1_EXTENSION",
+        default="_R1_001.fastq.gz",
+        help="File extension for read 1.",
     )
     parser.add_argument(
         "-r2",
-        "--read2_pattern",
+        "--read2_extension",
         type=str,
-        dest="READ2_PATTERN",
-        default="*_R2_001.fastq.gz",
-        help="File pattern for read 2.",
+        dest="READ2_EXTENSION",
+        default="_R2_001.fastq.gz",
+        help="File extension for read 2.",
     )
     parser.add_argument(
         "-se",
@@ -74,15 +74,16 @@ def fastq_dir_to_samplesheet(
     fastq_dir,
     samplesheet_file,
     strandedness="unstranded",
-    read1_pattern="*_R1_001.fastq.gz",
-    read2_pattern="*_R2_001.fastq.gz",
+    read1_extension="_R1_001.fastq.gz",
+    read2_extension="_R2_001.fastq.gz",
     single_end=False,
     sanitise_name=False,
     sanitise_name_delimiter="_",
     sanitise_name_index=1,
 ):
-    def sanitize_sample(path):
-        sample = os.path.splitext(os.path.basename(path))[0]
+    def sanitize_sample(path, extension):
+        """Retrieve sample id from filename"""
+        sample = os.path.basename(path).replace(extension, "")
         if sanitise_name:
             sample = sanitise_name_delimiter.join(
                 os.path.basename(path).split(sanitise_name_delimiter)[
@@ -91,20 +92,30 @@ def fastq_dir_to_samplesheet(
             )
         return sample
 
-    ## Get read 1 files
+    def get_fastqs(extension):
+        """
+        Needs to be sorted to ensure R1 and R2 are in the same order
+        when merging technical replicates. Glob is not guaranteed to produce
+        sorted results.
+        See also https://stackoverflow.com/questions/6773584/how-is-pythons-glob-glob-ordered
+        """
+        return sorted(
+            glob.glob(os.path.join(fastq_dir, f"*{extension}"), recursive=False)
+        )
+
     read_dict = {}
-    read1_files = glob.glob(os.path.join(fastq_dir, read1_pattern), recursive=False)
-    for read1_file in read1_files:
-        sample = sanitize_sample(read1_file)
+
+    ## Get read 1 files
+    for read1_file in get_fastqs(read1_extension):
+        sample = sanitize_sample(read1_file, read1_extension)
         if sample not in read_dict:
             read_dict[sample] = {"R1": [], "R2": []}
         read_dict[sample]["R1"].append(read1_file)
 
     ## Get read 2 files
     if not single_end:
-        read2_files = glob.glob(os.path.join(fastq_dir, read2_pattern), recursive=False)
-        for read2_file in read2_files:
-            sample = sanitize_sample(read2_file)
+        for read2_file in get_fastqs(read2_extension):
+            sample = sanitize_sample(read2_file, read2_extension)
             read_dict[sample]["R2"].append(read2_file)
 
     ## Write to file
@@ -129,8 +140,8 @@ def fastq_dir_to_samplesheet(
         )
         error_str += "Please check the values provided for the:\n"
         error_str += "  - Path to the directory containing the FastQ files\n"
-        error_str += "  - '--read1_pattern' parameter\n"
-        error_str += "  - '--read2_pattern' parameter\n"
+        error_str += "  - '--read1_extension' parameter\n"
+        error_str += "  - '--read2_extension' parameter\n"
         print(error_str)
         sys.exit(1)
 
@@ -146,8 +157,8 @@ def main(args=None):
         fastq_dir=args.FASTQ_DIR,
         samplesheet_file=args.SAMPLESHEET_FILE,
         strandedness=strandedness,
-        read1_pattern=args.READ1_PATTERN,
-        read2_pattern=args.READ2_PATTERN,
+        read1_extension=args.READ1_EXTENSION,
+        read2_extension=args.READ2_EXTENSION,
         single_end=args.SINGLE_END,
         sanitise_name=args.SANITISE_NAME,
         sanitise_name_delimiter=args.SANITISE_NAME_DELIMITER,

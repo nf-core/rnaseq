@@ -81,37 +81,41 @@ def fastq_dir_to_samplesheet(
     sanitise_name_delimiter="_",
     sanitise_name_index=1,
 ):
-
-    ## Get read 1 files
-    read_dict = {}
-    read1_files = glob.glob(
-        os.path.join(fastq_dir, f"*{read1_extension}"), recursive=False
-    )
-    for read1_file in read1_files:
-        sample = os.path.basename(read1_file).replace(read1_extension, "")
+    def sanitize_sample(path, extension):
+        """Retrieve sample id from filename"""
+        sample = os.path.basename(path).replace(extension, "")
         if sanitise_name:
             sample = sanitise_name_delimiter.join(
-                os.path.basename(read1_file).split(sanitise_name_delimiter)[
+                os.path.basename(path).split(sanitise_name_delimiter)[
                     :sanitise_name_index
                 ]
             )
+        return sample
+
+    def get_fastqs(extension):
+        """
+        Needs to be sorted to ensure R1 and R2 are in the same order
+        when merging technical replicates. Glob is not guaranteed to produce
+        sorted results.
+        See also https://stackoverflow.com/questions/6773584/how-is-pythons-glob-glob-ordered
+        """
+        return sorted(
+            glob.glob(os.path.join(fastq_dir, f"*{extension}"), recursive=False)
+        )
+
+    read_dict = {}
+
+    ## Get read 1 files
+    for read1_file in get_fastqs(read1_extension):
+        sample = sanitize_sample(read1_file, read1_extension)
         if sample not in read_dict:
             read_dict[sample] = {"R1": [], "R2": []}
         read_dict[sample]["R1"].append(read1_file)
 
     ## Get read 2 files
-    read2_files = glob.glob(
-        os.path.join(fastq_dir, f"*{read2_extension}"), recursive=False
-    )
-    if not single_end and len(read2_files) != 0:
-        for read2_file in read2_files:
-            sample = os.path.basename(read2_file).replace(read2_extension, "")
-            if sanitise_name:
-                sample = sanitise_name_delimiter.join(
-                    os.path.basename(read2_file).split(sanitise_name_delimiter)[
-                        :sanitise_name_index
-                    ]
-                )
+    if not single_end:
+        for read2_file in get_fastqs(read2_extension):
+            sample = sanitize_sample(read2_file, read2_extension)
             read_dict[sample]["R2"].append(read2_file)
 
     ## Write to file

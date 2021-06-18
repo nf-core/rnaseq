@@ -344,6 +344,12 @@
                     "fa_icon": "fas fa-ban",
                     "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
                 },
+                "salmon_quant_libtype": {
+                    "type": "string",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
+                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
+                },
                 "min_mapped_reads": {
                     "type": "integer",
                     "default": 5,
@@ -382,12 +388,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip all of the alignment-based processes within the pipeline."
-                },
-                "salmon_quant_libtype": {
-                    "type": "string",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
-                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
                 }
             }
         },

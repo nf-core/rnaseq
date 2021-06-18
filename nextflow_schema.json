@@ -27,15 +27,6 @@
                     "default": "./results",
                     "fa_icon": "fas fa-folder-open"
                 },
-                "public_data_ids": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "\\.txt$",
-                    "schema": "assets/schema_public_data_ids.json",
-                    "fa_icon": "fas fa-database",
-                    "description": "File containing SRA/ENA/GEO identifiers one per line in order to download their associated FastQ files."
-                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
@@ -47,11 +38,6 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
-                },
-                "skip_sra_fastq_download": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": "Only download metadata for public data database ids and don't download the FastQ files."
                 },
                 "save_merged_fastq": {
                     "type": "boolean",
@@ -357,6 +343,12 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-ban",
                     "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
+                },
+                "salmon_quant_libtype": {
+                    "type": "string",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
+                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
                 },
                 "min_mapped_reads": {
                     "type": "integer",

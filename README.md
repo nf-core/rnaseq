@@ -24,32 +24,33 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 ## Pipeline summary
 
-1. Download FastQ files via SRA, ENA or GEO ids and auto-create input samplesheet ([`ENA FTP`](https://ena-docs.readthedocs.io/en/latest/retrieval/file-download.html); *if required*)
-2. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
-3. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-4. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
-5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
-6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
-7. Choice of multiple alignment and quantification routes:
+The SRA download functionality has been removed from the pipeline (`>=3.2`) and ported to an independent workflow called [nf-core/fetchngs](https://nf-co.re/fetchngs). You can provide `--nf_core_pipeline rnaseq` when running nf-core/fetchngs to download and auto-create a samplesheet containing publicly available samples that can be accepted directly as input by this pipeline.
+
+1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
+2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+5. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
+6. Choice of multiple alignment and quantification routes:
     1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)
     2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
     3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> **NO QUANTIFICATION**
-8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
-9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
-10. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
-11. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
-12. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
-13. Extensive quality control:
+7. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+8. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
+10. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
+11. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
+12. Extensive quality control:
     1. [`RSeQC`](http://rseqc.sourceforge.net/)
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
-14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
-15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+13. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
+14. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
-> **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
-> **NB:** The `--aligner star_rsem` option will require STAR indices built from version 2.7.6a or later. However, in order to support legacy usage of genomes hosted on AWS iGenomes the `--aligner star_salmon` option requires indices built with STAR 2.6.1d or earlier. Please refer to this [issue](https://github.com/nf-core/rnaseq/issues/498) for further details.
+> * **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
+> * **NB:** The `--aligner star_rsem` option will require STAR indices built from version 2.7.6a or later. However, in order to support legacy usage of genomes hosted on AWS iGenomes the `--aligner star_salmon` option requires indices built with STAR 2.6.1d or earlier. Please refer to this [issue](https://github.com/nf-core/rnaseq/issues/498) for further details.
 
 ## Quick Start
 
@@ -59,7 +60,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
-    ```bash
+    ```console
     nextflow run nf-core/rnaseq -profile test,<docker/singularity/podman/shifter/charliecloud/conda/institute>
     ```
 
@@ -69,30 +70,23 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 4. Start running your own analysis!
 
-    * Typical command for RNA-seq analysis:
+    ```console
+    nextflow run nf-core/rnaseq \
+        --input samplesheet.csv \
+        --genome GRCh37 \
+        -profile <docker/singularity/podman/conda/institute>
+    ```
 
-        ```bash
-        nextflow run nf-core/rnaseq \
-            --input samplesheet.csv \
-            --genome GRCh37 \
-            -profile <docker/singularity/podman/conda/institute>
+    * An executable Python script called [`fastq_dir_to_samplesheet.py`](https://github.com/nf-core/rnaseq/blob/master/bin/fastq_dir_to_samplesheet.py) has been provided if you would like to auto-create an input samplesheet based on a directory containing FastQ files **before** you run the pipeline (requires Python 3 installed locally) e.g.
+
+        ```console
+        wget -L https://raw.githubusercontent.com/nf-core/rnaseq/master/bin/fastq_dir_to_samplesheet.py
+        ./fastq_dir_to_samplesheet.py <FASTQ_DIR> samplesheet.csv --strandedness reverse
         ```
-
-    * Typical command for downloading public data:
-
-        ```bash
-        nextflow run nf-core/rnaseq \
-            --public_data_ids ids.txt \
-            -profile <docker/singularity/podman/conda/institute>
-        ```
-
-    > **NB:** The commands to obtain public data and to run the main arm of the pipeline are completely independent. This is intentional because it allows you to download all of the raw data in an initial pipeline run (`results/public_data/`) and then to curate the auto-created samplesheet based on the available sample metadata before you run the pipeline again properly.
-
-See [usage](https://nf-co.re/rnaseq/usage) and [parameter](https://nf-co.re/rnaseq/parameters) docs for all of the available options when running the pipeline.
 
 ## Documentation
 
-The nf-core/rnaseq pipeline comes with documentation about the pipeline: [usage](https://nf-co.re/rnaseq/usage) and [output](https://nf-co.re/rnaseq/output).
+The nf-core/rnaseq pipeline comes with documentation about the pipeline [usage](https://nf-co.re/rnaseq/usage), [parameters](https://nf-co.re/rnaseq/parameters) and [output](https://nf-co.re/rnaseq/output).
 
 ## Credits
 

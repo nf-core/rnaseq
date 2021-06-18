@@ -90,7 +90,7 @@ include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
 include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon' )
 include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                               )
-include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]                      )
+include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['tsv':'']]                      )
 include { MULTIQC                            } from '../modules/local/multiqc'                     addParams( options: multiqc_options                                   )
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                 )
 include { MULTIQC_CUSTOM_FAIL_MAPPED         } from '../modules/local/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                            )
@@ -218,8 +218,8 @@ include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplic
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'                      addParams( bamstat_options: modules['rseqc_bamstat'], innerdistance_options: modules['rseqc_innerdistance'], inferexperiment_options: modules['rseqc_inferexperiment'], junctionannotation_options: modules['rseqc_junctionannotation'], junctionsaturation_options: modules['rseqc_junctionsaturation'], readdistribution_options: modules['rseqc_readdistribution'], readduplication_options: modules['rseqc_readduplication'] )
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: umitools_dedup_genome_options, samtools_index_options: umitools_dedup_genome_samtools_options, samtools_stats_options: umitools_dedup_genome_samtools_options             )
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools' addParams( umitools_options: modules['umitools_dedup_transcriptome'], samtools_index_options: modules['umitools_dedup_transcriptome'], samtools_stats_options: modules['umitools_dedup_transcriptome'] )
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_SENSE         } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_sense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_sense']         )
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_ANTISENSE     } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_antisense'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_antisense'] )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD       } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_forward'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_forward'] )
+include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE       } from '../subworkflows/nf-core/bedgraph_to_bigwig' addParams( bedclip_options: modules['ucsc_bedclip_reverse'], bedgraphtobigwig_options: modules['ucsc_bedgraphtobigwig_reverse'] )
 
 /*
 ========================================================================================
@@ -379,7 +379,8 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
-            true
+            true,
+            params.salmon_quant_libtype ?: ''
         )
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.ifEmpty(null))
@@ -595,14 +596,14 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
-        BEDGRAPH_TO_BIGWIG_SENSE (
-            BEDTOOLS_GENOMECOV.out.bedgraph_sense,
+        BEDGRAPH_TO_BIGWIG_FORWARD (
+            BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_SENSE.out.ucsc_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_FORWARD.out.ucsc_version.first().ifEmpty(null))
 
-        BEDGRAPH_TO_BIGWIG_ANTISENSE (
-            BEDTOOLS_GENOMECOV.out.bedgraph_antisense,
+        BEDGRAPH_TO_BIGWIG_REVERSE (
+            BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
             PREPARE_GENOME.out.chrom_sizes
         )
     }
@@ -679,7 +680,8 @@ workflow RNASEQ {
             PREPARE_GENOME.out.salmon_index,
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,
-            false
+            false,
+            params.salmon_quant_libtype ?: ''
         )
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
         if (params.skip_alignment && params.aligner != 'star_salmon') {

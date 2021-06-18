@@ -35,6 +35,10 @@ input:
   - alignment_mode:
     type: boolean
     description: whether to run salmon in alignment mode
+  - lib_type:
+    type: string
+    description: |
+      Override library type inferred based on strandedness defined in meta object
 
 output:
   - sample_output:

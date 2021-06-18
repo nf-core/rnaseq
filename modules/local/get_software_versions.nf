@@ -21,7 +21,7 @@ process GET_SOFTWARE_VERSIONS {
     path versions
 
     output:
-    path "software_versions.csv"     , emit: csv
+    path "software_versions.tsv"     , emit: tsv
     path 'software_versions_mqc.yaml', emit: yaml
 
     script:

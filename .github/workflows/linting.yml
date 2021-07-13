@@ -127,7 +127,7 @@ jobs:
           GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
-        run: nf-core -l lint_log.txt lint ${GITHUB_WORKSPACE} --markdown lint_results.md
+        run: nf-core -l lint_log.txt lint --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
 
       - name: Save PR number
         if: ${{ always() }}

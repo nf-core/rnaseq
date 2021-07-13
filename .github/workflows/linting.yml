@@ -18,7 +18,7 @@ jobs:
       - name: Install markdownlint
         run: npm install -g markdownlint-cli
       - name: Run Markdownlint
-        run: markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
+        run: markdownlint .
 
       # If the above check failed, post a comment on the PR explaining the failure
       - name: Post PR comment
@@ -35,8 +35,8 @@ jobs:
                 * On Mac: `brew install markdownlint-cli`
                 * Everything else: [Install `npm`](https://www.npmjs.com/get-npm) then [install `markdownlint-cli`](https://www.npmjs.com/package/markdownlint-cli) (`npm install -g markdownlint-cli`)
             * Fix the markdown errors
-                * Automatically: `markdownlint . --config .github/markdownlint.yml --fix`
-                * Manually resolve anything left from `markdownlint . --config .github/markdownlint.yml`
+                * Automatically: `markdownlint . --fix`
+                * Manually resolve anything left from `markdownlint .`
 
             Once you push these changes the test should pass, and you can hide this comment :+1:
 
@@ -46,6 +46,20 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allow-repeats: false
 
+  EditorConfig:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10"
+
+      - name: Install editorconfig-checker
+        run: npm install -g editorconfig-checker
+
+      - name: Run ECLint check
+        run: editorconfig-checker -exclude README.md $(git ls-files | grep -v test)
 
   YAML:
     runs-on: ubuntu-latest
@@ -83,7 +97,6 @@ jobs:
             Thanks again for your contribution!
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allow-repeats: false
-
 
   nf-core:
     runs-on: ubuntu-latest

@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: "10"
+          node-version: '10'
       - name: Install markdownlint
         run: npm install -g markdownlint-cli
       - name: Run Markdownlint
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: "10"
+          node-version: '10'
       - name: Install yaml-lint
         run: npm install -g yaml-lint
       - name: Run yaml-lint
@@ -101,6 +101,7 @@ jobs:
   nf-core:
     runs-on: ubuntu-latest
     steps:
+
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
@@ -113,8 +114,8 @@ jobs:
 
       - uses: actions/setup-python@v1
         with:
-          python-version: "3.6"
-          architecture: "x64"
+          python-version: '3.6'
+          architecture: 'x64'
 
       - name: Install dependencies
         run: |
@@ -141,3 +142,4 @@ jobs:
             lint_log.txt
             lint_results.md
             PR_number.txt
+

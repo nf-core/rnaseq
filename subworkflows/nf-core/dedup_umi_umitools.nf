@@ -6,9 +6,9 @@ params.umitools_options       = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { UMITOOLS_DEDUP     } from '../../modules/nf-core/software/umitools/dedup/main' addParams( options: params.umitools_options       )
-include { SAMTOOLS_INDEX     } from '../../modules/nf-core/software/samtools/index/main' addParams( options: params.samtools_index_options )
-include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'                               addParams( options: params.samtools_stats_options )
+include { UMITOOLS_DEDUP     } from '../../modules/nf-core/modules/umitools/dedup/main' addParams( options: params.umitools_options       )
+include { SAMTOOLS_INDEX     } from '../../modules/nf-core/modules/samtools/index/main' addParams( options: params.samtools_index_options )
+include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'                              addParams( options: params.samtools_stats_options )
 
 workflow DEDUP_UMI_UMITOOLS {
     take:

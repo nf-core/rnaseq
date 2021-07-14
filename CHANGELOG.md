@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Updated pipeline template to [nf-core/tools 2.0.1](https://github.com/nf-core/tools/releases/tag/2.0.1)
+
 ### Parameters
 
 ## [[3.2](https://github.com/nf-core/rnaseq/releases/tag/3.2)] - 2021-06-18

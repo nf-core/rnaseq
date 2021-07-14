@@ -1,4 +1,4 @@
-name: rseqc_innerdistance
+name: rseqc_junctionsaturation
 description: compare detected splice junctions to reference gene model
 keywords:
   - junctions
@@ -27,31 +27,14 @@ input:
       description: a bed file for the reference gene model
       pattern: "*.{bed}"
 output:
-  - bed:
-      type: file
-      description: bed file of annotated junctions
-      pattern: "*.junction.bed"
-  - interact_bed:
-      type: file
-      description: Interact bed file
-      pattern: "*.Interact.bed"
-  - xls:
-      type: file
-      description: xls file with junction information
-      pattern: "*.xls"
   - pdf:
       type: file
-      description: junction plot
-      pattern: "*.junction.pdf"
-  - events_pdf:
-      type: file
-      description: events plot
-      pattern: "*.events.pdf"
+      description: Junction saturation report
+      pattern: "*.pdf"
   - rscript:
       type: file
-      description: Rscript to reproduce the plots
+      description: Junction saturation R-script
       pattern: "*.r"
-  - log:
   - version:
       type: file
       description: File containing software version

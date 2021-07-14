@@ -11,6 +11,9 @@ indent_style = space
 [*.{yml,yaml}]
 indent_size = 2
 
+[*.json]
+insert_final_newline = unset
+
 # These files are edited and tested upstream in nf-core/modules
 [/modules/nf-core/**]
 charset = unset

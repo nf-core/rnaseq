@@ -1,0 +1,47 @@
+name: samtools_stats
+description: Produces comprehensive statistics from SAM/BAM/CRAM file
+keywords:
+    - statistics
+    - counts
+    - bam
+    - sam
+    - cram
+tools:
+    - samtools:
+        description: |
+            SAMtools is a set of utilities for interacting with and post-processing
+            short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+            These files are generated as output by short read aligners like BWA.
+        homepage: http://www.htslib.org/
+        documentation: hhttp://www.htslib.org/doc/samtools.html
+        doi: 10.1093/bioinformatics/btp352
+input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+    - bai:
+        type: file
+        description: Index for BAM/CRAM/SAM file
+        pattern: "*.{bai,crai,sai}"
+output:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - stats:
+        type: file
+        description: File containing samtools stats output
+        pattern: "*.{stats}"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@drpatelh"

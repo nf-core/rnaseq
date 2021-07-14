@@ -1,0 +1,27 @@
+name: untar
+description: Extract files.
+keywords:
+    - untar
+    - uncompress
+tools:
+    - untar:
+        description: |
+            Extract tar.gz files.
+        documentation: https://www.gnu.org/software/tar/manual/
+input:
+    - archive:
+        type: file
+        description: File to be untar
+        pattern: "*.{tar}.{gz}"
+output:
+    - untar:
+        type: file
+        description:
+        pattern: "*.*"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@joseespinosa"
+    - "@drpatelh"

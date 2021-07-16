@@ -43,7 +43,6 @@ workflow DEDUP_UMI_UMITOOLS {
 
     emit:
     bam              = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), [ bam ] ]
-    tsv              = UMITOOLS_DEDUP.out.tsv          // channel: [ val(meta), [ tsv ] ]
     umitools_version = UMITOOLS_DEDUP.out.version      //    path: *.version.txt
 
     bai              = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]

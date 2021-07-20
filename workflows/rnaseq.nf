@@ -772,7 +772,9 @@ workflow RNASEQ {
 */
 
 workflow.onComplete {
-    NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
+    }
     NfcoreTemplate.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
 }
 

@@ -27,7 +27,7 @@ process RSEQC_JUNCTIONANNOTATION {
     tuple val(meta), path("*.r")           , emit: rscript
     tuple val(meta), path("*.log")         , emit: log
     tuple val(meta), path("*.junction.bed"), optional:true, emit: bed
-    tuple val(meta), path("*.interact.bed"), optional:true, emit: interact_bed
+    tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
     tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
     tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
     path  "*.version.txt"                  , emit: version

@@ -24,7 +24,7 @@ class NfcoreTemplate {
     public static void hostName(workflow, params, log) {
         Map colors = logColours(params.monochrome_logs)
         if (params.hostnames) {
-            def hostname = "hostname".execute().text.trim()
+            def hostname = ['sh', '-c', 'echo $HOSTNAME'].execute().text.trim()
             params.hostnames.each { prof, hnames ->
                 hnames.each { hname ->
                     if (hostname.contains(hname) && !workflow.profile.contains(prof)) {

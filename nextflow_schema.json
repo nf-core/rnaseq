@@ -15,7 +15,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/csv",
-                    "pattern": "\\.csv$",
+                    "pattern": "^\\S+\\.csv$",
                     "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
@@ -121,7 +121,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "pattern": "\\.fn?a(sta)?(\\.gz)?$",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
                     "fa_icon": "far fa-file-code"
@@ -130,7 +130,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "pattern": "\\.gtf(\\.gz)?$",
+                    "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
                     "fa_icon": "fas fa-code-branch",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified."
@@ -139,7 +139,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "pattern": "\\.gff(\\.gz)?$",
+                    "pattern": "^\\S+\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Path to GFF3 annotation file.",
                     "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified."
@@ -148,7 +148,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "pattern": "\\.bed(\\.gz)?$",
+                    "pattern": "^\\S+\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
                     "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
                 },
@@ -156,7 +156,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "pattern": "\\.fn?a(sta)?(\\.gz)?$",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "Path to FASTA transcriptome file."
                 },
@@ -164,7 +164,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "pattern": "\\.fn?a(sta)?(\\.gz)?$",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences.",
                     "help_text": "If provided, the sequences in this file will get concatenated to the existing genome FASTA file, a GTF file will be automatically created using the entire sequence as the gene, transcript, and exon features, and any alignment index will get created from the combined FASTA and GTF. It is recommended to save the reference with `--save_reference` to re-use the index for future runs so you do not need to create it again."

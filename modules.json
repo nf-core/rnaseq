@@ -91,7 +91,7 @@
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "stringtie/stringtie": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "217303f5c1a92effb8a97c29294ee9f2e19f697e"
             },
             "subread/featurecounts": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"

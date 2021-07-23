@@ -11,11 +11,11 @@ process STRINGTIE {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::stringtie=2.1.4" : null)
+    conda (params.enable_conda ? "bioconda::stringtie=2.1.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/stringtie:2.1.4--h7e0af3c_0"
+        container "https://depot.galaxyproject.org/singularity/stringtie:2.1.7--h978d192_0"
     } else {
-        container "quay.io/biocontainers/stringtie:2.1.4--h7e0af3c_0"
+        container "quay.io/biocontainers/stringtie:2.1.7--h978d192_0"
     }
 
     input:
@@ -48,8 +48,9 @@ process STRINGTIE {
         -A ${prefix}.gene.abundance.txt \\
         -C ${prefix}.coverage.gtf \\
         -b ${prefix}.ballgown \\
+        -p $task.cpus \\
         $options.args
 
-    stringtie --version > ${software}.version.txt
+    echo \$(stringtie --version 2>&1) > ${software}.version.txt
     """
 }

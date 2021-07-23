@@ -19,6 +19,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 |-------------|-------------|-------------|
 | `umi_tools` | 1.1.1       | 1.1.2       |
 | `samtools`  | 1.10        | 1.12        |
+| `stringtie` | 2.1.4       | 2.1.7       |
 
 > **NB:** Dependency has been __updated__ if both old and new version information is present.
 > **NB:** Dependency has been __added__ if just the new version information is present.

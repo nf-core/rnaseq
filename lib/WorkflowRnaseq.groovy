@@ -67,6 +67,18 @@ class WorkflowRnaseq {
             }
         }
 
+        // Warn if --additional_fasta provided with aligner index
+        if (!params.skip_alignment && params.additional_fasta) {
+            def index = 'star'
+            if (params.aligner == 'star_rsem' && params.rsem_index) {
+                index = 'rsem'
+            }
+            if (params.aligner == 'hisat2' && params.hisat2_index) {
+                index = 'hisat2'
+            }
+            additionaFastaIndexWarn(index, log)
+        }
+
         // Check which RSeQC modules we are running
         def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
         if ((valid_params['rseqc_modules'] + rseqc_modules).unique().size() != valid_params['rseqc_modules'].size()) {
@@ -258,6 +270,22 @@ class WorkflowRnaseq {
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +
+            "==================================================================================="
+    }
+
+    //
+    // Print a warning if using '--additional_fasta' and '--<ALIGNER>_index'
+    //
+    private static void additionaFastaIndexWarn(index, log) {
+        log.warn "=============================================================================\n" +
+            "  When using '--additional_fasta <FASTA_FILE> --${index}_index <INDEX>'\n" +
+            "  the index will not be re-built with the transgenes incorporated by default since\n" +
+            "  you have already provided an index via '--${index}_index <INDEX>'.\n\n" +
+            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --save_reference'\n" +
+            "  to re-build the index including transgenes and save for re-use with\n" +
+            "  '--${index}_index' in 'results/genome/index/${index}/'.\n\n" +
+            "  Please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/556\n" +
             "==================================================================================="
     }
 }

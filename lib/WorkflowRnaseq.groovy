@@ -69,14 +69,19 @@ class WorkflowRnaseq {
 
         // Warn if --additional_fasta provided with aligner index
         if (!params.skip_alignment && params.additional_fasta) {
-            def index = 'star'
+            def index = ''
+            if (params.aligner == 'star_salmon' && params.star_index) {
+                index = 'star'
+            }
             if (params.aligner == 'star_rsem' && params.rsem_index) {
                 index = 'rsem'
             }
             if (params.aligner == 'hisat2' && params.hisat2_index) {
                 index = 'hisat2'
             }
-            additionaFastaIndexWarn(index, log)
+            if (index) {
+                additionaFastaIndexWarn(index, log)
+            }
         }
 
         // Check which RSeQC modules we are running

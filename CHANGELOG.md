@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * Updated pipeline template to [nf-core/tools 2.1](https://github.com/nf-core/tools/releases/tag/2.1)
+* [[#556](https://github.com/nf-core/rnaseq/issues/556)] - Genome index isn't recreated with --additional_fasta unless --star_index false
 * [[#668](https://github.com/nf-core/rnaseq/issues/668)] - Salmon quant with UMI-tools does not work
 * [[#674](https://github.com/nf-core/rnaseq/issues/674)] - Launch pipeline regex fails
 

@@ -19,7 +19,7 @@ If you'd like to write some code for nf-core/rnaseq, the standard workflow is as
     * If there isn't one already, please create one so that others know you're working on this
 2. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the [nf-core/rnaseq repository](https://github.com/nf-core/rnaseq) to your GitHub account
 3. Make the necessary changes / additions within your forked repository following [Pipeline conventions](#pipeline-contribution-conventions)
-4. Use `nf-core schema build .` and add any new parameters to the pipeline JSON schema (requires [nf-core tools](https://github.com/nf-core/tools) >= 1.10).
+4. Use `nf-core schema build` and add any new parameters to the pipeline JSON schema (requires [nf-core tools](https://github.com/nf-core/tools) >= 1.10).
 5. Submit a Pull Request against the `dev` branch and wait for the code to be reviewed and merged
 
 If you're not used to this workflow with git, you can start with some [docs from GitHub](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests) or even their [excellent `git` resources](https://try.github.io/).
@@ -69,7 +69,7 @@ If you wish to contribute a new step, please use the following coding standards:
 2. Write the process block (see below).
 3. Define the output channel if needed (see below).
 4. Add any new flags/options to `nextflow.config` with a default (see below).
-5. Add any new flags/options to `nextflow_schema.json` with help text (with `nf-core schema build .`).
+5. Add any new flags/options to `nextflow_schema.json` with help text (with `nf-core schema build`).
 6. Add any new flags/options to the help message (for integer/text parameters, print to help the corresponding `nextflow.config` parameter).
 7. Add sanity checks for all relevant parameters.
 8. Add any new software to the `scrape_software_versions.py` script in `bin/` and the version command to the `scrape_software_versions` process in `main.nf`.
@@ -83,7 +83,7 @@ If you wish to contribute a new step, please use the following coding standards:
 
 Parameters should be initialised / defined with default values in `nextflow.config` under the `params` scope.
 
-Once there, use `nf-core schema build .` to add to `nextflow_schema.json`.
+Once there, use `nf-core schema build` to add to `nextflow_schema.json`.
 
 ### Default processes resource requirements
 

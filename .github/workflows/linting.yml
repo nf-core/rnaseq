@@ -53,7 +53,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "10"
+          node-version: '10'
 
       - name: Install editorconfig-checker
         run: npm install -g editorconfig-checker

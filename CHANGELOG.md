@@ -3,12 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unpublished Version / DEV]
+
+### Enhancements & fixes
+
+### Parameters
+
 ## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-29
 
 ### Enhancements & fixes
 
 * Updated pipeline template to [nf-core/tools 2.1](https://github.com/nf-core/tools/releases/tag/2.1)
-* [[#556](https://github.com/nf-core/rnaseq/issues/556)] - Genome index isn't recreated with --additional_fasta unless --star_index false
+* [[#556](https://github.com/nf-core/rnaseq/issues/556)] - Genome index is not recreated with --additional_fasta unless --star_index false
 * [[#668](https://github.com/nf-core/rnaseq/issues/668)] - Salmon quant with UMI-tools does not work
 * [[#674](https://github.com/nf-core/rnaseq/issues/674)] - Launch pipeline regex fails
 

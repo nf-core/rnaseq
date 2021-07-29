@@ -6,9 +6,9 @@ params.fastqc_options     = [:]
 params.umitools_options   = [:]
 params.trimgalore_options = [:]
 
-include { FASTQC           } from '../../modules/nf-core/software/fastqc/main'           addParams( options: params.fastqc_options     )
-include { UMITOOLS_EXTRACT } from '../../modules/nf-core/software/umitools/extract/main' addParams( options: params.umitools_options   )
-include { TRIMGALORE       } from '../../modules/nf-core/software/trimgalore/main'       addParams( options: params.trimgalore_options )
+include { FASTQC           } from '../../modules/nf-core/modules/fastqc/main'           addParams( options: params.fastqc_options     )
+include { UMITOOLS_EXTRACT } from '../../modules/nf-core/modules/umitools/extract/main' addParams( options: params.umitools_options   )
+include { TRIMGALORE       } from '../../modules/nf-core/modules/trimgalore/main'       addParams( options: params.trimgalore_options )
 
 workflow FASTQC_UMITOOLS_TRIMGALORE {
     take:

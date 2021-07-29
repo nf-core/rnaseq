@@ -21,7 +21,7 @@ class WorkflowMain {
     // Print help to screen if required
     //
     public static String help(workflow, params, log) {
-        def command = "nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker"
+        def command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
         def help_string = ''
         help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
         help_string += NfcoreSchema.paramsHelp(workflow, params, command)
@@ -71,9 +71,9 @@ class WorkflowMain {
         // Check the hostnames against configured profiles
         NfcoreTemplate.hostName(workflow, params, log)
 
-        // Check an input samplesheet has been provided
+        // Check input has been provided
         if (!params.input) {
-            log.error "Please specify at least an input samplesheet for the pipeline e.g. '--input samplesheet.csv'."
+            log.error "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
             System.exit(1)
         }
     }

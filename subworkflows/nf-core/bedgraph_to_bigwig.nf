@@ -5,8 +5,8 @@
 params.bedclip_options          = [:]
 params.bedgraphtobigwig_options = [:]
 
-include { UCSC_BEDCLIP          } from '../../modules/nf-core/software/ucsc/bedclip/main'          addParams( options: params.bedclip_options          )
-include { UCSC_BEDGRAPHTOBIGWIG } from '../../modules/nf-core/software/ucsc/bedgraphtobigwig/main' addParams( options: params.bedgraphtobigwig_options )
+include { UCSC_BEDCLIP          } from '../../modules/nf-core/modules/ucsc/bedclip/main'          addParams( options: params.bedclip_options          )
+include { UCSC_BEDGRAPHTOBIGWIG } from '../../modules/nf-core/modules/ucsc/bedgraphtobigwig/main' addParams( options: params.bedgraphtobigwig_options )
 
 workflow BEDGRAPH_TO_BIGWIG {
     take:

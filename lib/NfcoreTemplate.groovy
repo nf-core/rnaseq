@@ -24,17 +24,21 @@ class NfcoreTemplate {
     public static void hostName(workflow, params, log) {
         Map colors = logColours(params.monochrome_logs)
         if (params.hostnames) {
-            def hostname = "hostname".execute().text.trim()
-            params.hostnames.each { prof, hnames ->
-                hnames.each { hname ->
-                    if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-                        log.info "=${colors.yellow}====================================================${colors.reset}=\n" +
-                            "${colors.yellow}WARN: You are running with `-profile $workflow.profile`\n" +
-                            "      but your machine hostname is ${colors.white}'$hostname'${colors.reset}.\n" +
-                            "      ${colors.yellow_bold}Please use `-profile $prof${colors.reset}`\n" +
-                            "=${colors.yellow}====================================================${colors.reset}="
+            try {
+                def hostname = "hostname".execute().text.trim()
+                params.hostnames.each { prof, hnames ->
+                    hnames.each { hname ->
+                        if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
+                            log.info "=${colors.yellow}====================================================${colors.reset}=\n" +
+                                "${colors.yellow}WARN: You are running with `-profile $workflow.profile`\n" +
+                                "      but your machine hostname is ${colors.white}'$hostname'${colors.reset}.\n" +
+                                "      ${colors.yellow_bold}Please use `-profile $prof${colors.reset}`\n" +
+                                "=${colors.yellow}====================================================${colors.reset}="
+                        }
                     }
                 }
+            } catch (Exception e) {
+                log.warn "[$workflow.manifest.name] Could not determine 'hostname' - skipping check. Reason: ${e.message}."
             }
         }
     }
@@ -122,7 +126,7 @@ class NfcoreTemplate {
 
         // Render the sendmail template
         def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit
-        def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize:  max_multiqc_email_size.toBytes()]
+        def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes() ]
         def sf                     = new File("$projectDir/assets/sendmail_template.txt")
         def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
         def sendmail_html          = sendmail_template.toString()

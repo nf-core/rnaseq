@@ -31,7 +31,7 @@ output:
   - version:
       type: file
       description: File containing software version
-      pattern: "*.{version.txt}"
+      pattern: "versions.yml"
   - bedgraph:
       type: file
       description: bedGraph file

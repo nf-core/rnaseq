@@ -36,7 +36,7 @@ output:
   - version:
       type: file
       description: File containing software version
-      pattern: "*.{version.txt}"
+      pattern: "versions.yml"
   - bigwig:
       type: file
       description: bigWig file

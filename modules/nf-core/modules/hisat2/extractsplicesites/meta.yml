@@ -24,7 +24,7 @@ output:
   - version:
       type: file
       description: File containing software version
-      pattern: "*.{version.txt}"
+      pattern: "versions.yml"
   - splicesites:
       type: file
       description: Splices sites in gtf file

@@ -44,7 +44,7 @@ def getPathFromList(path_list) {
 // Function to save/publish module results
 //
 def saveFiles(Map args) {
-    if (!args.filename.endsWith('.version.txt')) {
+    if (args.filename != "versions.yml") {
         def ioptions  = initOptions(args.options)
         def path_list = [ ioptions.publish_dir ?: args.publish_dir ]
         if (ioptions.publish_by_meta) {

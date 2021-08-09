@@ -21,13 +21,24 @@ process GET_SOFTWARE_VERSIONS {
     path versions
 
     output:
-    path "software_versions.tsv"     , emit: tsv
-    path 'software_versions_mqc.yaml', emit: yaml
+    path "software_versions.yml"     , emit: yml
+    path 'software_versions_mqc.yaml', emit: mqc_yaml
 
-    script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
+    script: // This script is bundled with the pipeline, in {{ name }}/bin/
     """
-    echo $workflow.manifest.version > pipeline.version.txt
-    echo $workflow.nextflow.version > nextflow.version.txt
-    scrape_software_versions.py &> software_versions_mqc.yaml
+    cat - $versions <<-END_WORKFLOW_VERSION > software_versions.yml
+    Workflow:
+        - Nextflow: $workflow.nextflow.version
+        - $workflow.manifest.name: $workflow.manifest.version
+    END_WORKFLOW_VERSION
+    cat - <<-END_MQC_YAML > software_versions_mqc.yaml
+    id: 'software_versions'
+    section_name: '{{ name }} Software Versions'
+    section_href: 'https://github.com/{{ name }}'
+    plot_type: 'table'
+    description: 'are collected at run time from the software output.'
+    data:
+    \$( sed 's/^/    /' software_versions.yml )
+    END_MQC_YAML
     """
 }

@@ -27,7 +27,7 @@ process RSEM_CALCULATEEXPRESSION {
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
     tuple val(meta), path("*.stat")            , emit: stat
     tuple val(meta), path("*.log")             , emit: logs
-    path   "versions.yml"                      , emit: version
+    path "versions.yml"                        , emit: version
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome

@@ -30,7 +30,7 @@ process RSEQC_JUNCTIONANNOTATION {
     tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
     tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
     tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
-    path   "versions.yml"                  , emit: version
+    path "versions.yml"                    , emit: version
 
     script:
     def software = getSoftwareName(task.process)

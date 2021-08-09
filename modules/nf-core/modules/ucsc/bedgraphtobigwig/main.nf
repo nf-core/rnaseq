@@ -26,7 +26,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
 
     output:
     tuple val(meta), path("*.bigWig"), emit: bigwig
-    path  "versions.yml"             , emit: version
+    path "versions.yml"              , emit: version
 
     script:
     def software = getSoftwareName(task.process)

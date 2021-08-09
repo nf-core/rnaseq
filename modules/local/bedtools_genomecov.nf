@@ -24,7 +24,7 @@ process BEDTOOLS_GENOMECOV {
     output:
     tuple val(meta), path("*.forward.bedGraph"), emit: bedgraph_forward
     tuple val(meta), path("*.reverse.bedGraph"), emit: bedgraph_reverse
-    path  "versions.yml"                       , emit: version
+    path "versions.yml"                        , emit: version
 
     script:
     def software = getSoftwareName(task.process)

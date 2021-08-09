@@ -24,7 +24,7 @@ process FASTQC {
     output:
     tuple val(meta), path("*.html"), emit: html
     tuple val(meta), path("*.zip") , emit: zip
-    path   "versions.yml"          , emit: version
+    path "versions.yml"            , emit: version
 
     script:
     // Add soft-links to original FastQs for consistent naming in pipeline

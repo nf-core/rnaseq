@@ -23,7 +23,7 @@ process SAMTOOLS_IDXSTATS {
 
     output:
     tuple val(meta), path("*.idxstats"), emit: idxstats
-    path   "versions.yml"              , emit: version
+    path "versions.yml"                , emit: version
 
     script:
     def software = getSoftwareName(task.process)

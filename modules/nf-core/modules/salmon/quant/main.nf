@@ -28,7 +28,7 @@ process SALMON_QUANT {
 
     output:
     tuple val(meta), path("${prefix}"), emit: results
-    path   "versions.yml"             , emit: version
+    path "versions.yml"               , emit: version
 
     script:
     def software    = getSoftwareName(task.process)

@@ -24,7 +24,7 @@ process RSEQC_INFEREXPERIMENT {
 
     output:
     tuple val(meta), path("*.infer_experiment.txt"), emit: txt
-    path   "versions.yml"                          , emit: version
+    path "versions.yml"                            , emit: version
 
     script:
     def software = getSoftwareName(task.process)

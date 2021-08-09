@@ -26,7 +26,7 @@ process RSEQC_READDUPLICATION {
     tuple val(meta), path("*pos.DupRate.xls"), emit: pos_xls
     tuple val(meta), path("*.pdf")           , emit: pdf
     tuple val(meta), path("*.r")             , emit: rscript
-    path   "versions.yml"                    , emit: version
+    path "versions.yml"                      , emit: version
 
     script:
     def software = getSoftwareName(task.process)

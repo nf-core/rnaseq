@@ -24,7 +24,7 @@ process UMITOOLS_EXTRACT {
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path   "versions.yml"              , emit: version
+    path "versions.yml"                , emit: version
 
     script:
     def software = getSoftwareName(task.process)

@@ -34,7 +34,7 @@ process DESEQ2_QC {
     path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
     path "*.log"                , optional:true, emit: log
     path "size_factors"         , optional:true, emit: size_factors
-    path   "versions.yml"       , emit: version
+    path "versions.yml"         , emit: version
 
     script:
     def software    = getSoftwareName(task.process)

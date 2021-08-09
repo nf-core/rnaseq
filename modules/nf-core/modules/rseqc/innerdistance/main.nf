@@ -28,7 +28,7 @@ process RSEQC_INNERDISTANCE {
     tuple val(meta), path("*mean.txt")    , optional:true, emit: mean
     tuple val(meta), path("*.pdf")        , optional:true, emit: pdf
     tuple val(meta), path("*.r")          , optional:true, emit: rscript
-    path   "versions.yml"                 , emit: version
+    path "versions.yml"                   , emit: version
 
     script:
     def software = getSoftwareName(task.process)

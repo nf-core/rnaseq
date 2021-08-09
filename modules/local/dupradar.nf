@@ -26,7 +26,7 @@ process DUPRADAR {
     tuple val(meta), path("*.pdf")    , emit: pdf
     tuple val(meta), path("*.txt")    , emit: txt
     tuple val(meta), path("*_mqc.txt"), emit: multiqc
-    path   "versions.yml"             , emit: version
+    path "versions.yml"               , emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     def software = getSoftwareName(task.process)

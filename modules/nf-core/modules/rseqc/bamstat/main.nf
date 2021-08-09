@@ -23,7 +23,7 @@ process RSEQC_BAMSTAT {
 
     output:
     tuple val(meta), path("*.bam_stat.txt"), emit: txt
-    path   "versions.yml"                  , emit: version
+    path "versions.yml"                    , emit: version
 
     script:
     def software = getSoftwareName(task.process)

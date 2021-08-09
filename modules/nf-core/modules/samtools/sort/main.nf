@@ -23,7 +23,7 @@ process SAMTOOLS_SORT {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    path   "versions.yml"         , emit: version
+    path "versions.yml"           , emit: version
 
     script:
     def software = getSoftwareName(task.process)

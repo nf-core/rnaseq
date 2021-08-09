@@ -27,7 +27,7 @@ process STRINGTIE {
     tuple val(meta), path("*.transcripts.gtf"), emit: transcript_gtf
     tuple val(meta), path("*.abundance.txt")  , emit: abundance
     tuple val(meta), path("*.ballgown")       , emit: ballgown
-    path   "versions.yml"                     , emit: version
+    path "versions.yml"                       , emit: version
 
     script:
     def software = getSoftwareName(task.process)

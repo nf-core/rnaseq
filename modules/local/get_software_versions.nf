@@ -34,8 +34,8 @@ process GET_SOFTWARE_VERSIONS {
 
     cat - <<-END_MQC_YAML > software_versions_mqc.yaml
     id: 'software_versions'
-    section_name: '{{ name }} Software Versions'
-    section_href: 'https://github.com/{{ name }}'
+    section_name: '${workflow.manifest.name} Software Versions'
+    section_href: 'https://github.com/${workflow.manifest.name}'
     plot_type: 'table'
     description: 'are collected at run time from the software output.'
     data:

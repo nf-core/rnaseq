@@ -29,6 +29,11 @@ process SALMON_SUMMARIZEDEXPERIMENT {
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     salmon_summarizedexperiment.r NULL $counts $tpm
-    Rscript -e "library(SummarizedExperiment); write(x=as.character(packageVersion('SummarizedExperiment')), file='bioconductor-summarizedexperiment.version.txt')"
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
+    END_VERSIONS
+
     """
 }

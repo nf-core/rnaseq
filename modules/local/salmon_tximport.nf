@@ -32,6 +32,10 @@ process SALMON_TXIMPORT {
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     salmon_tximport.r NULL salmon salmon.merged
-    Rscript -e "library(tximeta); write(x=as.character(packageVersion('tximeta')), file='bioconductor-tximeta.version.txt')"
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - bioconductor-txmeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
+    END_VERSIONS
     """
 }

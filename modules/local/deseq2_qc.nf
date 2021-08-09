@@ -57,6 +57,9 @@ process DESEQ2_QC {
         cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
     fi
 
-    Rscript -e "library(DESeq2); write(x=as.character(packageVersion('DESeq2')), file='${software}.version.txt')"
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - $software: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+    END_VERSIONS
     """
 }

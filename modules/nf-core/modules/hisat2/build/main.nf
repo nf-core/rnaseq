@@ -67,7 +67,7 @@ process HISAT2_BUILD {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+        - $software: \$(echo $VERSION)
     END_VERSIONS
     """
 }

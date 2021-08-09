@@ -61,7 +61,7 @@ process HISAT2_ALIGN {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+            - $software: \$(echo $VERSION)
         END_VERSIONS
         """
     } else {
@@ -92,7 +92,7 @@ process HISAT2_ALIGN {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+            - $software: \$(echo $VERSION)
         END_VERSIONS
         """
     }

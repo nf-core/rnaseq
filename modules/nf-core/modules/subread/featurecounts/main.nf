@@ -49,7 +49,7 @@ process SUBREAD_FEATURECOUNTS {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - ${getSoftwareName(task.process)}: \$(echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
+        - $software: \$(echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
     END_VERSIONS
     """
 }

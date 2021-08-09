@@ -45,7 +45,7 @@ process RSEQC_JUNCTIONANNOTATION {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - ${getSoftwareName(task.process)}: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
+        - $software: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
     END_VERSIONS
     """
 }

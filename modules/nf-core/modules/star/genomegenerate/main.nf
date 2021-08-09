@@ -45,7 +45,7 @@ process STAR_GENOMEGENERATE {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(STAR --version | sed -e "s/STAR_//g")
+            - $software: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """
     } else {
@@ -66,7 +66,7 @@ process STAR_GENOMEGENERATE {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(STAR --version | sed -e "s/STAR_//g")
+            - $software: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """
     }

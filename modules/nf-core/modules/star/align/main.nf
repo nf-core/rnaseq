@@ -68,7 +68,7 @@ process STAR_ALIGN {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - ${getSoftwareName(task.process)}: \$(STAR --version | sed -e "s/STAR_//g")
+        - $software: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS
     """
 }

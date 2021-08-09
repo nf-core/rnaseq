@@ -40,7 +40,7 @@ process UMITOOLS_EXTRACT {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
+            - $software: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """
     }  else {
@@ -56,7 +56,7 @@ process UMITOOLS_EXTRACT {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
+            - $software: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """
     }

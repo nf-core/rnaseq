@@ -49,7 +49,7 @@ process SORTMERNA {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+            - $software: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
         END_VERSIONS
         """
     } else {
@@ -72,7 +72,7 @@ process SORTMERNA {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+            - $software: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
         END_VERSIONS
         """
     }

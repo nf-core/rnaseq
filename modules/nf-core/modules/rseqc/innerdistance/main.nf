@@ -45,14 +45,14 @@ process RSEQC_INNERDISTANCE {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+            - $software: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
         END_VERSIONS
         """
     } else {
         """
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+            - $software: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
         END_VERSIONS
         """
     }

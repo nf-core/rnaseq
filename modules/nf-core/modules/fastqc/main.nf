@@ -36,7 +36,7 @@ process FASTQC {
         fastqc $options.args --threads $task.cpus ${prefix}.fastq.gz
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(fastqc --version | sed -e "s/FastQC v//g")
+            - $software: \$(fastqc --version | sed -e "s/FastQC v//g")
         END_VERSIONS
         """
     } else {
@@ -46,7 +46,7 @@ process FASTQC {
         fastqc $options.args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - ${getSoftwareName(task.process)}: \$(fastqc --version | sed -e "s/FastQC v//g")
+            - $software: \$(fastqc --version | sed -e "s/FastQC v//g")
         END_VERSIONS
         """
     }

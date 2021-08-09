@@ -53,6 +53,9 @@ process BEDTOOLS_GENOMECOV {
         $options.args \\
         | bedtools sort > ${prefix_reverse}.bedGraph
 
-    bedtools --version | sed -e "s/bedtools v//g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(bedtools --version | sed -e "s/bedtools v//g")
+    END_VERSIONS
     """
 }

@@ -46,6 +46,9 @@ process SALMON_INDEX {
         -d decoys.txt \\
         $options.args \\
         -i salmon
-    salmon --version | sed -e "s/salmon //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(salmon --version | sed -e "s/salmon //g")
+    END_VERSIONS
     """
 }

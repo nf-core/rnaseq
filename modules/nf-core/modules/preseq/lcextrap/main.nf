@@ -40,6 +40,9 @@ process PRESEQ_LCEXTRAP {
         $bam
     cp .command.err ${prefix}.command.log
 
-    echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
+    END_VERSIONS
     """
 }

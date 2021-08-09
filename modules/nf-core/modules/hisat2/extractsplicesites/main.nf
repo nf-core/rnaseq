@@ -31,6 +31,9 @@ process HISAT2_EXTRACTSPLICESITES {
     def software = getSoftwareName(task.process)
     """
     hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.splice_sites.txt
-    echo $VERSION > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    END_VERSIONS
     """
 }

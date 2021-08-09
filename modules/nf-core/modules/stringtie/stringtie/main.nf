@@ -51,6 +51,9 @@ process STRINGTIE {
         -p $task.cpus \\
         $options.args
 
-    echo \$(stringtie --version 2>&1) > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(stringtie --version 2>&1))
+    END_VERSIONS
     """
 }

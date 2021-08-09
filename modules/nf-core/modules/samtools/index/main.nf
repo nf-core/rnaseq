@@ -30,6 +30,9 @@ process SAMTOOLS_INDEX {
     def software = getSoftwareName(task.process)
     """
     samtools index $options.args $bam
-    echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 }

@@ -50,7 +50,10 @@ process RSEM_PREPAREREFERENCE {
             $fasta \\
             rsem/genome
 
-        rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        END_VERSIONS
         """
     } else {
         """
@@ -61,7 +64,10 @@ process RSEM_PREPAREREFERENCE {
             $fasta \\
             rsem/genome
 
-        rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        END_VERSIONS
         """
     }
 }

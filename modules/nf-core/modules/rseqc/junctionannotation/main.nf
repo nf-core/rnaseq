@@ -43,6 +43,9 @@ process RSEQC_JUNCTIONANNOTATION {
         $options.args \\
         2> ${prefix}.junction_annotation.log
 
-    junction_annotation.py --version | sed -e "s/junction_annotation.py //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
+    END_VERSIONS
     """
 }

@@ -30,6 +30,9 @@ process UNTAR {
     untar        = archive.toString() - '.tar.gz'
     """
     tar -xzvf $options.args $archive
-    echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//')
+    END_VERSIONS
     """
 }

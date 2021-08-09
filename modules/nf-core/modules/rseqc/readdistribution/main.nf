@@ -35,6 +35,9 @@ process RSEQC_READDISTRIBUTION {
         -r $bed \\
         > ${prefix}.read_distribution.txt
 
-    read_distribution.py --version | sed -e "s/read_distribution.py //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
+    END_VERSIONS
     """
 }

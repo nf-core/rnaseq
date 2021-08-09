@@ -37,6 +37,9 @@ process UCSC_BEDCLIP {
         $sizes \\
         ${prefix}.bedGraph
 
-    echo $VERSION > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    END_VERSIONS
     """
 }

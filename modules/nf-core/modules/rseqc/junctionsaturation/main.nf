@@ -37,6 +37,9 @@ process RSEQC_JUNCTIONSATURATION {
         -o $prefix \\
         $options.args
 
-    junction_saturation.py --version | sed -e "s/junction_saturation.py //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
+    END_VERSIONS
     """
 }

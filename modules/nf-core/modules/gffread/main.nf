@@ -29,6 +29,9 @@ process GFFREAD {
     def software = getSoftwareName(task.process)
     """
     gffread $gff $options.args -o ${gff.baseName}.gtf
-    echo \$(gffread --version 2>&1) > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(gffread --version 2>&1))
+    END_VERSIONS
     """
 }

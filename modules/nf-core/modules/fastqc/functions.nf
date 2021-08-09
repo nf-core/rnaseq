@@ -10,6 +10,13 @@ def getSoftwareName(task_process) {
 }
 
 //
+// Extract name of module from process name using $task.process
+//
+getModuleName(task_process) {
+    return task_process.tokenize(':')[-1]
+}
+
+//
 // Function to initialise default values and to generate a Groovy Map of available options for nf-core modules
 //
 def initOptions(Map args) {

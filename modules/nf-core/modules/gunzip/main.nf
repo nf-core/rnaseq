@@ -30,6 +30,9 @@ process GUNZIP {
     gunzip       = archive.toString() - '.gz'
     """
     gunzip -f $options.args $archive
-    echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
+    END_VERSIONS
     """
 }

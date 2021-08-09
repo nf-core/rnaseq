@@ -29,6 +29,9 @@ process GET_CHROM_SIZES {
     """
     samtools faidx $fasta
     cut -f 1,2 ${fasta}.fai > ${fasta}.sizes
-    echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 }

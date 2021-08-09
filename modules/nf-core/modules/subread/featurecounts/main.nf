@@ -47,6 +47,9 @@ process SUBREAD_FEATURECOUNTS {
         -o ${prefix}.featureCounts.txt \\
         ${bams.join(' ')}
 
-    echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
+    END_VERSIONS
     """
 }

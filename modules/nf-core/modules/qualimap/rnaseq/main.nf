@@ -52,6 +52,9 @@ process QUALIMAP_RNASEQ {
         $paired_end \\
         -outdir $prefix
 
-    echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
+    END_VERSIONS
     """
 }

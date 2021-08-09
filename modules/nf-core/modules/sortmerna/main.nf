@@ -47,7 +47,10 @@ process SORTMERNA {
         gzip -f < non_rRNA_reads.fq > ${prefix}.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
-        echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//' > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+        END_VERSIONS
         """
     } else {
         """
@@ -67,7 +70,10 @@ process SORTMERNA {
         gzip -f < non_rRNA_reads_rev.fq > ${prefix}_2.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
-        echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//' > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+        END_VERSIONS
         """
     }
 }

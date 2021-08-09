@@ -65,6 +65,9 @@ process HISAT2_BUILD {
         $fasta \\
         hisat2/${fasta.baseName}
 
-    echo $VERSION > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    END_VERSIONS
     """
 }

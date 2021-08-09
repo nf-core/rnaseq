@@ -66,6 +66,9 @@ process STAR_ALIGN {
         gzip ${prefix}.unmapped_2.fastq
     fi
 
-    STAR --version | sed -e "s/STAR_//g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(STAR --version | sed -e "s/STAR_//g")
+    END_VERSIONS
     """
 }

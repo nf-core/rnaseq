@@ -44,6 +44,9 @@ process PICARD_MARKDUPLICATES {
         OUTPUT=${prefix}.bam \\
         METRICS_FILE=${prefix}.MarkDuplicates.metrics.txt
 
-    echo \$(picard MarkDuplicates --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d: > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getModuleName(task.process)}:
+        - ${getSoftwareName(task.process)}: \$(echo \$(picard MarkDuplicates --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
+    END_VERSIONS
     """
 }

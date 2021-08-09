@@ -34,14 +34,20 @@ process FASTQC {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         fastqc $options.args --threads $task.cpus ${prefix}.fastq.gz
-        fastqc --version | sed -e "s/FastQC v//g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(fastqc --version | sed -e "s/FastQC v//g")
+        END_VERSIONS
         """
     } else {
         """
         [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         fastqc $options.args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
-        fastqc --version | sed -e "s/FastQC v//g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(fastqc --version | sed -e "s/FastQC v//g")
+        END_VERSIONS
         """
     }
 }

@@ -43,11 +43,17 @@ process RSEQC_INNERDISTANCE {
             > stdout.txt
         head -n 2 stdout.txt > ${prefix}.inner_distance_mean.txt
 
-        inner_distance.py --version | sed -e "s/inner_distance.py //g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+        END_VERSIONS
         """
     } else {
         """
-        inner_distance.py --version | sed -e "s/inner_distance.py //g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+        END_VERSIONS
         """
     }
 }

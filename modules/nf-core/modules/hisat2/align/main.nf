@@ -59,7 +59,10 @@ process HISAT2_ALIGN {
             $options.args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
-        echo $VERSION > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+        END_VERSIONS
         """
     } else {
         def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -87,7 +90,10 @@ process HISAT2_ALIGN {
             mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
         fi
 
-        echo $VERSION > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getModuleName(task.process)}:
+            - ${getSoftwareName(task.process)}: \$(echo $VERSION)
+        END_VERSIONS
         """
     }
 }

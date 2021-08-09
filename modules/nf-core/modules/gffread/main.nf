@@ -31,7 +31,7 @@ process GFFREAD {
     gffread $gff $options.args -o ${gff.baseName}.gtf
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(echo \$(gffread --version 2>&1))
+        $software: \$(echo \$(gffread --version 2>&1))
     END_VERSIONS
     """
 }

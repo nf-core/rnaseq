@@ -44,7 +44,7 @@ process DUPRADAR {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
+        dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
     END_VERSION
     """
 }

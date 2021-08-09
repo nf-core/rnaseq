@@ -38,7 +38,7 @@ process UMITOOLS_DEDUP {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
+        $software: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
     END_VERSIONS
     """
 }

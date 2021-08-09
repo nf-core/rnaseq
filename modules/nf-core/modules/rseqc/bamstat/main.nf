@@ -36,7 +36,7 @@ process RSEQC_BAMSTAT {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(bam_stat.py --version | sed -e "s/bam_stat.py //g")
+        $software: \$(bam_stat.py --version | sed -e "s/bam_stat.py //g")
     END_VERSIONS
     """
 }

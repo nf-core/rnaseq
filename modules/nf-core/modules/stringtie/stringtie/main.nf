@@ -53,7 +53,7 @@ process STRINGTIE {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(echo \$(stringtie --version 2>&1))
+        $software: \$(echo \$(stringtie --version 2>&1))
     END_VERSIONS
     """
 }

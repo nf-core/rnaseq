@@ -39,7 +39,7 @@ process RSEQC_READDUPLICATION {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
+        $software: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
     END_VERSIONS
     """
 }

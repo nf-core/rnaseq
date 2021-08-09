@@ -59,7 +59,7 @@ process DESEQ2_QC {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+        $software: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
     END_VERSIONS
     """
 }

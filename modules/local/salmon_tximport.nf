@@ -35,7 +35,7 @@ process SALMON_TXIMPORT {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - bioconductor-txmeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
+        bioconductor-txmeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
     END_VERSIONS
     """
 }

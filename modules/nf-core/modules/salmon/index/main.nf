@@ -48,7 +48,7 @@ process SALMON_INDEX {
         -i salmon
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(salmon --version | sed -e "s/salmon //g")
+        $software: \$(salmon --version | sed -e "s/salmon //g")
     END_VERSIONS
     """
 }

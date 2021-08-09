@@ -24,13 +24,14 @@ process GET_SOFTWARE_VERSIONS {
     path "software_versions.yml"     , emit: yml
     path 'software_versions_mqc.yaml', emit: mqc_yaml
 
-    script: // This script is bundled with the pipeline, in {{ name }}/bin/
+    script:
     """
     cat - $versions <<-END_WORKFLOW_VERSION > software_versions.yml
     Workflow:
-        - Nextflow: $workflow.nextflow.version
-        - $workflow.manifest.name: $workflow.manifest.version
+        Nextflow: $workflow.nextflow.version
+        $workflow.manifest.name: $workflow.manifest.version
     END_WORKFLOW_VERSION
+
     cat - <<-END_MQC_YAML > software_versions_mqc.yaml
     id: 'software_versions'
     section_name: '{{ name }} Software Versions'

@@ -33,7 +33,7 @@ process HISAT2_EXTRACTSPLICESITES {
     hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.splice_sites.txt
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - $software: \$(echo $VERSION)
+        $software: \$(echo $VERSION)
     END_VERSIONS
     """
 }

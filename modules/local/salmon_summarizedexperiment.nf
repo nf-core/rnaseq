@@ -32,7 +32,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
 
     cat <<-END_VERSIONS > versions.yml
     ${getModuleName(task.process)}:
-        - bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
+        bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
     END_VERSIONS
 
     """

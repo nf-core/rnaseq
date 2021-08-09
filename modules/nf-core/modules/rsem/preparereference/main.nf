@@ -52,7 +52,7 @@ process RSEM_PREPAREREFERENCE {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - $software: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+            $software: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
         END_VERSIONS
         """
     } else {
@@ -66,7 +66,7 @@ process RSEM_PREPAREREFERENCE {
 
         cat <<-END_VERSIONS > versions.yml
         ${getModuleName(task.process)}:
-            - $software: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+            $software: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
         END_VERSIONS
         """
     }

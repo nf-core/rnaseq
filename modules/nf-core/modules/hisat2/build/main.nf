@@ -28,7 +28,7 @@ process HISAT2_BUILD {
 
     output:
     path "hisat2"       , emit: index
-    path "*.version.txt", emit: version
+    path  "versions.yml", emit: version
 
     script:
     def avail_mem = 0

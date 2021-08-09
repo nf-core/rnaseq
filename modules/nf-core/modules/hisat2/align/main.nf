@@ -28,7 +28,7 @@ process HISAT2_ALIGN {
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.log"), emit: summary
-    path  "*.version.txt"         , emit: version
+    path   "versions.yml"         , emit: version
 
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
 

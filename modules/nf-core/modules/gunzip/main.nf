@@ -23,7 +23,7 @@ process GUNZIP {
 
     output:
     path "$gunzip",       emit: gunzip
-    path "*.version.txt", emit: version
+    path  "versions.yml", emit: version
 
     script:
     def software = getSoftwareName(task.process)

@@ -24,7 +24,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
 
     output:
     path "*.rds"         , emit: rds
-    path  "*.version.txt", emit: version
+    path   "versions.yml", emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

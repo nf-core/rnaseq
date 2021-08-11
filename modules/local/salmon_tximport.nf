@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName; getModuleName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -34,7 +34,7 @@ process SALMON_TXIMPORT {
     salmon_tximport.r NULL salmon salmon.merged
 
     cat <<-END_VERSIONS > versions.yml
-    ${getModuleName(task.process)}:
+    ${getProcessName(task.process)}:
         bioconductor-txmeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
     END_VERSIONS
     """

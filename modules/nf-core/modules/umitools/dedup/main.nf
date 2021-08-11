@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -37,7 +37,7 @@ process UMITOOLS_DEDUP {
         $options.args
 
     cat <<-END_VERSIONS > versions.yml
-    ${getModuleName(task.process)}:
+    ${getProcessName(task.process)}:
         $software: \$(echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//')
     END_VERSIONS
     """

@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -35,7 +35,7 @@ process FASTQC {
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         fastqc $options.args --threads $task.cpus ${prefix}.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        ${getModuleName(task.process)}:
+        ${getProcessName(task.process)}:
             $software: \$(fastqc --version | sed -e "s/FastQC v//g")
         END_VERSIONS
         """
@@ -45,7 +45,7 @@ process FASTQC {
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         fastqc $options.args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        ${getModuleName(task.process)}:
+        ${getProcessName(task.process)}:
             $software: \$(fastqc --version | sed -e "s/FastQC v//g")
         END_VERSIONS
         """

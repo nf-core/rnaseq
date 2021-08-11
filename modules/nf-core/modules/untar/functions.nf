@@ -12,7 +12,7 @@ def getSoftwareName(task_process) {
 //
 // Extract name of module from process name using $task.process
 //
-def getModuleName(task_process) {
+def getProcessName(task_process) {
     return task_process.tokenize(':')[-1]
 }
 

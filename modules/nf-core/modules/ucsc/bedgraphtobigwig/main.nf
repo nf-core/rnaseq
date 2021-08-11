@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -34,7 +34,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
     """
     bedGraphToBigWig $bedgraph $sizes ${prefix}.bigWig
     cat <<-END_VERSIONS > versions.yml
-    ${getModuleName(task.process)}:
+    ${getProcessName(task.process)}:
         $software: \$(echo $VERSION)
     END_VERSIONS
     """

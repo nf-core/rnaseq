@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -43,7 +43,7 @@ process DUPRADAR {
     dupradar.r $bam $prefix $gtf $strandedness $paired_end $task.cpus
 
     cat <<-END_VERSIONS > versions.yml
-    ${getModuleName(task.process)}:
+    ${getProcessName(task.process)}:
         dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
     END_VERSION
     """

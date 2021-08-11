@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -44,7 +44,7 @@ process STAR_GENOMEGENERATE {
             $options.args
 
         cat <<-END_VERSIONS > versions.yml
-        ${getModuleName(task.process)}:
+        ${getProcessName(task.process)}:
             $software: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """
@@ -65,7 +65,7 @@ process STAR_GENOMEGENERATE {
             $options.args
 
         cat <<-END_VERSIONS > versions.yml
-        ${getModuleName(task.process)}:
+        ${getProcessName(task.process)}:
             $software: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """

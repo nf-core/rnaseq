@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -54,7 +54,7 @@ process BEDTOOLS_GENOMECOV {
         | bedtools sort > ${prefix_reverse}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml
-    ${getModuleName(task.process)}:
+    ${getProcessName(task.process)}:
         $software: \$(bedtools --version | sed -e "s/bedtools v//g")
     END_VERSIONS
     """

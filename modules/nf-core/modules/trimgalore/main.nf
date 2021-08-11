@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getModuleName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -61,7 +61,7 @@ process TRIMGALORE {
             $tpc_r1 \\
             ${prefix}.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        ${getModuleName(task.process)}:
+        ${getProcessName(task.process)}:
             $software: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
         END_VERSIONS
         """
@@ -81,7 +81,7 @@ process TRIMGALORE {
             ${prefix}_1.fastq.gz \\
             ${prefix}_2.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        ${getModuleName(task.process)}:
+        ${getProcessName(task.process)}:
             $software: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
         END_VERSIONS
         """

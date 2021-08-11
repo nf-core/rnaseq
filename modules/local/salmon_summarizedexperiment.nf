@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName; getModuleName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -31,7 +31,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
     salmon_summarizedexperiment.r NULL $counts $tpm
 
     cat <<-END_VERSIONS > versions.yml
-    ${getModuleName(task.process)}:
+    ${getProcessName(task.process)}:
         bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
     END_VERSIONS
 

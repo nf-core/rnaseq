@@ -8,11 +8,12 @@ process GET_SOFTWARE_VERSIONS {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "conda-forge::pyaml==15.8.2" : null)
+    // just requires `pyyaml` which does not have a dedicated container, but is contained in the multiqc container.
+    conda (params.enable_conda ? "bioconda::multiqc=1.10.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyaml%3A15.8.2--py36_0"
+        container "https://depot.galaxyproject.org/singularity/multiqc:1.10.1--pyhdfd78af_1"
     } else {
-        container "quay.io/biocontainers/pyaml:15.8.2--py36_0"
+        container "quay.io/biocontainers/multiqc:1.10.1--pyhdfd78af_1"
     }
 
     cache false

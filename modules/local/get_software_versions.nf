@@ -36,11 +36,11 @@ process GET_SOFTWARE_VERSIONS {
             dedent(
                 '''\\
                 <style>
-                tbody:nth-child(even) {
-                    background-color: #f2f2f2;;
+                #nf-core-versions tbody:nth-child(even) {
+                    background-color: #f2f2f2;
                 }
                 </style>
-                <table style="width:100%">
+                <table style="width:100%" id="nf-core-versions">
                     <thead>
                         <tr>
                             <th> Process Name </th>

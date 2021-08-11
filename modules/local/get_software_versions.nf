@@ -51,9 +51,9 @@ process GET_SOFTWARE_VERSIONS {
                 '''
             )
         ]
-        for process, tmp_versions in versions.items():
+        for process, tmp_versions in sorted(versions.items()):
             html.append("<tbody>")
-            for i, (tool, version) in enumerate(tmp_versions.items()):
+            for i, (tool, version) in enumerate(sorted(tmp_versions.items())):
                 html.append(
                     dedent(
                         f'''\\

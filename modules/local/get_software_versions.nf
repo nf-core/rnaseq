@@ -21,7 +21,7 @@ process GET_SOFTWARE_VERSIONS {
     path versions
 
     output:
-    path "software_versions.yml"     , emit: yml
+    path "software_versions.yml"    , emit: yml
     path 'software_versions_mqc.yml', emit: mqc_yaml
 
     script:
@@ -37,7 +37,7 @@ process GET_SOFTWARE_VERSIONS {
             for tool, version in tmp_versions.items():
                 html.append(
                     dedent(
-                        f'''\
+                        f'''\\
                         <dl>
                             <dt>{process}</dt>
                             <dt>{tool}</dt>

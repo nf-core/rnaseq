@@ -45,7 +45,7 @@ workflow QUANTIFY_RSEM {
     bam_star                 = RSEM_CALCULATEEXPRESSION.out.bam_star          // channel: [ val(meta), bam ]
     bam_genome               = RSEM_CALCULATEEXPRESSION.out.bam_genome        // channel: [ val(meta), bam ]
     bam_transcript           = RSEM_CALCULATEEXPRESSION.out.bam_transcript    // channel: [ val(meta), bam ]
-    rsem_version             = RSEM_CALCULATEEXPRESSION.out.version           //    path: *.version.txt
+    rsem_version             = RSEM_CALCULATEEXPRESSION.out.version           //    path: versions.yml
 
     bam                      = BAM_SORT_SAMTOOLS.out.bam                      // channel: [ val(meta), [ bam ] ]
     bai                      = BAM_SORT_SAMTOOLS.out.bai                      // channel: [ val(meta), [ bai ] ]
@@ -53,7 +53,7 @@ workflow QUANTIFY_RSEM {
     stats                    = BAM_SORT_SAMTOOLS.out.stats                    // channel: [ val(meta), [ stats ] ]
     flagstat                 = BAM_SORT_SAMTOOLS.out.flagstat                 // channel: [ val(meta), [ flagstat ] ]
     idxstats                 = BAM_SORT_SAMTOOLS.out.idxstats                 // channel: [ val(meta), [ idxstats ] ]
-    samtools_version         = BAM_SORT_SAMTOOLS.out.version                  //    path: *.version.txt
+    samtools_version         = BAM_SORT_SAMTOOLS.out.version                  //    path: versions.yml
 
     merged_counts_gene       = RSEM_MERGE_COUNTS.out.counts_gene              //    path: *.gene_counts.tsv
     merged_tpm_gene          = RSEM_MERGE_COUNTS.out.tpm_gene                 //    path: *.gene_tpm.tsv

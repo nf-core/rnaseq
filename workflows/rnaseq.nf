@@ -707,16 +707,8 @@ workflow RNASEQ {
     //
     // MODULE: Pipeline reporting
     //
-    ch_software_versions
-        .map { it -> if (it) [ it.baseName, it ] }
-        .groupTuple()
-        .map { it[1][0] }
-        .flatten()
-        .collect()
-        .set { ch_software_versions }
-
     GET_SOFTWARE_VERSIONS (
-        ch_software_versions.map { it }.collect()
+        ch_software_versions.collectFile()
     )
 
     //
@@ -729,7 +721,7 @@ workflow RNASEQ {
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
-            GET_SOFTWARE_VERSIONS.out.yaml.collect(),
+            GET_SOFTWARE_VERSIONS.out.mqc_yaml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
             ch_fail_mapping_multiqc.ifEmpty([]),
             ch_fail_strand_multiqc.ifEmpty([]),

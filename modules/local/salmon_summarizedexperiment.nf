@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -24,11 +24,16 @@ process SALMON_SUMMARIZEDEXPERIMENT {
 
     output:
     path "*.rds"         , emit: rds
-    path  "*.version.txt", emit: version
+    path "versions.yml"  , emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     salmon_summarizedexperiment.r NULL $counts $tpm
-    Rscript -e "library(SummarizedExperiment); write(x=as.character(packageVersion('SummarizedExperiment')), file='bioconductor-summarizedexperiment.version.txt')"
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
+    END_VERSIONS
+
     """
 }

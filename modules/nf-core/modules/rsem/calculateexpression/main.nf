@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -27,7 +27,7 @@ process RSEM_CALCULATEEXPRESSION {
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
     tuple val(meta), path("*.stat")            , emit: stat
     tuple val(meta), path("*.log")             , emit: logs
-    path  "*.version.txt"                      , emit: version
+    path "versions.yml"                        , emit: version
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
@@ -56,6 +56,9 @@ process RSEM_CALCULATEEXPRESSION {
         \$INDEX \\
         $prefix
 
-    rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        $software: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+    END_VERSIONS
     """
 }

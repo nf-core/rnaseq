@@ -207,9 +207,9 @@ workflow PREPARE_GENOME {
     rsem_index       = ch_rsem_index       // path: rsem/index/
     hisat2_index     = ch_hisat2_index     // path: hisat2/index/
     salmon_index     = ch_salmon_index     // path: salmon/index/
-    star_version     = ch_star_version     // path: *.version.txt
-    rsem_version     = ch_rsem_version     // path: *.version.txt
-    hisat2_version   = ch_hisat2_version   // path: *.version.txt
-    salmon_version   = ch_salmon_version   // path: *.version.txt
-    gffread_version  = ch_gffread_version  // path: *.version.txt
+    star_version     = ch_star_version     // path: versions.yml
+    rsem_version     = ch_rsem_version     // path: versions.yml
+    hisat2_version   = ch_hisat2_version   // path: versions.yml
+    salmon_version   = ch_salmon_version   // path: versions.yml
+    gffread_version  = ch_gffread_version  // path: versions.yml
 }

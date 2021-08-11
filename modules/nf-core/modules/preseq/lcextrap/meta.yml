@@ -33,7 +33,7 @@ output:
   - version:
       type: file
       description: File containing software version
-      pattern: "*.{version.txt}"
+      pattern: "versions.yml"
   - ccurve:
       type: file
       description: File containing output of Preseq lcextrap

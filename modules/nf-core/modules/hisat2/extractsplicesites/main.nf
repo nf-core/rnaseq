@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -25,12 +25,15 @@ process HISAT2_EXTRACTSPLICESITES {
 
     output:
     path "*.splice_sites.txt", emit: txt
-    path "*.version.txt"     , emit: version
+    path "versions.yml"      , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     """
     hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.splice_sites.txt
-    echo $VERSION > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        $software: \$(echo $VERSION)
+    END_VERSIONS
     """
 }

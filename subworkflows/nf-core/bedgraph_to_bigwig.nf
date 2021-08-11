@@ -28,5 +28,5 @@ workflow BEDGRAPH_TO_BIGWIG {
     emit:
     bigwig       = UCSC_BEDGRAPHTOBIGWIG.out.bigwig // channel: [ val(meta), [ bigwig ] ]
     bedgraph     = UCSC_BEDCLIP.out.bedgraph        // channel: [ val(meta), [ bedgraph ] ]
-    ucsc_version = UCSC_BEDCLIP.out.version         //    path: *.version.txt
+    ucsc_version = UCSC_BEDCLIP.out.version         //    path: versions.yml
 }

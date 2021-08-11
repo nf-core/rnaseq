@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -28,7 +28,7 @@ process SALMON_QUANT {
 
     output:
     tuple val(meta), path("${prefix}"), emit: results
-    path  "*.version.txt"             , emit: version
+    path "versions.yml"               , emit: version
 
     script:
     def software    = getSoftwareName(task.process)
@@ -72,6 +72,9 @@ process SALMON_QUANT {
         $options.args \\
         -o $prefix
 
-    salmon --version | sed -e "s/salmon //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        $software: \$(salmon --version | sed -e "s/salmon //g")
+    END_VERSIONS
     """
 }

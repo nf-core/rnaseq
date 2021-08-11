@@ -41,7 +41,7 @@ process GET_SOFTWARE_VERSIONS {
                     background-color: #f2f2f2;
                 }
                 </style>
-                <table style="width:100%" id="nf-core-versions">
+                <table class="table" style="width:100%" id="nf-core-versions">
                     <thead>
                         <tr>
                             <th> Process Name </th>

@@ -32,21 +32,39 @@ process GET_SOFTWARE_VERSIONS {
     from textwrap import dedent
 
     def _make_versions_html(versions):
-        html = ["<dl>"]
+        html = ["""
+        <style>
+        tbody:nth-child(even) {
+            background-color: #f2f2f2;;
+        }
+        </style>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th> Process Name </th>
+                    <th> Software </th>
+                    <th> Version  </th>
+                </tr>
+            </thead>
+        """]
         for process, tmp_versions in versions.items():
+            html.append("<tbody>")
+            print_module = 0
             for tool, version in tmp_versions.items():
+                print_module += 1
                 html.append(
                     dedent(
-                        f'''\\
-                        <dl>
-                            <dt>{process}</dt>
-                            <dt>{tool}</dt>
-                            <dd>{version}</dd>
-                        </dl>
+                        f'''\
+                        <tr>
+                            <td><samp>{process if (print_module == 1) else ''}</samp></td>
+                            <td><samp>{tool}</samp></td>
+                            <td><samp>{version}</samp></td>
+                        </tr>
                         '''
                     )
                 )
-        html.append("</dl>")
+            html.append("</tbody>")
+        html.append("</table>")
         return "\\n".join(html)
 
     with open("$versions") as f:

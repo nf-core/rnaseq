@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unpublished Version / DEV]
 
 ### Enhancements & fixes
+* Updated python3 script shebang line to specify python3
 
 ### Parameters
 

@@ -174,6 +174,9 @@ include { SORTMERNA             } from '../modules/nf-core/modules/sortmerna/mai
 include { STRINGTIE             } from '../modules/nf-core/modules/stringtie/stringtie/main'   addParams( options: stringtie_options                            )
 include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/modules/subread/featurecounts/main' addParams( options: subread_featurecounts_options                )
 
+// RLM: import custom function
+include { TAB_TO_JUNC           } from '../modules/invitae/tab_to_junc'
+
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
@@ -334,6 +337,9 @@ workflow RNASEQ {
         }
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
+
+        // RLM: convert tab to junc
+        TAB_TO_JUNC (ALIGN_STAR.out.tab)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs

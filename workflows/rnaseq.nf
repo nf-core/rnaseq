@@ -86,7 +86,6 @@ def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
 def dexseq_annotate_options           = modules['dexseq_annotate']
-dexseq_annotate_options.args         += params.dexseq_annotate_options ? Utils.joinModuleArgs(['-r no']) : ''
 dexseq_annotate_options.publish_dir   = "dexseq/dexseq_annotate"
 
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                     )

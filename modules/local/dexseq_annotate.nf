@@ -31,7 +31,7 @@ process DEXSEQ_ANNOTATE {
     def software = getSoftwareName(task.process)
 
     """
-    python dexseq_prepare_annotation.py $gtf $options.args dexseq.gff
+    python dexseq_prepare_annotation.py $gtf dexseq.gff
     echo $VERSION > ${software}.version.txt
     """
 }

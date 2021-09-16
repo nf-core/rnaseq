@@ -419,6 +419,11 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip StringTie."
                 },
+                "skip_dexseq": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip DEXSeq."
+                },
                 "skip_fastqc": {
                     "type": "boolean",
                     "description": "Skip FastQC.",

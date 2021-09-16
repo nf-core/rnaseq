@@ -85,14 +85,11 @@ deseq2_qc_options.args               += params.deseq2_vst ? Utils.joinModuleArgs
 def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
-def dexseq_annotate_options           = modules['dexseq_annotate']
-dexseq_annotate_options.publish_dir   = "dexseq/dexseq_annotate"
-
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                     )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_salmon'   )
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
 include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon' )
-include { DEXSEQ_ANNOTATE as DEXSEQ_ANNOTATE } from '../modules/local/dexseq_annotate'             addParams( options: dexseq_annotate_options                           )
+include { DEXSEQ_ANNOTATE as DEXSEQ_ANNOTATE } from '../modules/local/dexseq_annotate'             addParams( options: modules['dexseq_annotate']                        )
 include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                               )
 include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['tsv':'']]                      )
 include { MULTIQC                            } from '../modules/local/multiqc'                     addParams( options: multiqc_options                                   )

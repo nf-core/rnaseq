@@ -339,7 +339,11 @@ workflow RNASEQ {
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
 
         // RLM: convert tab to junc
-        TAB_TO_JUNC (ALIGN_STAR.out.tab)
+        ch_tab = ALIGN_STAR.out.tab
+        TAB_TO_JUNC (
+            ch_tab
+        )
+        ch_junc = TAB_TO_JUNC.out.junc
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs

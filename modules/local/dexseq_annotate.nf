@@ -15,9 +15,9 @@ process DEXSEQ_ANNOTATE {
 
     conda (params.enable_conda ? "bioconda::bioconductor-dexseq=1.38.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-dexseq%3A1.36.0--r40_0"
+        container "https://depot.galaxyproject.org/singularity/bioconductor-dexseq%3A1.38.0--r41hdfd78af_0"
     } else {
-        container "quay.io/biocontainers/bioconductor-dexseq"
+        container "quay.io/biocontainers/bioconductor-dexseq:1.38.0--r41hdfd78af_0"
     }
 
     input:
@@ -31,7 +31,7 @@ process DEXSEQ_ANNOTATE {
     def software = getSoftwareName(task.process)
 
     """
-    python dexseq_prepare_annotation.py $gtf dexseq.gff
+    dexseq_prepare_annotation.py ${options.args} $gtf dexseq.gff
     echo $VERSION > ${software}.version.txt
     """
 }

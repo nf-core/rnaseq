@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys, collections, itertools, os.path, optparse
 
 optParser = optparse.OptionParser( 

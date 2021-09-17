@@ -7,21 +7,21 @@ options              = initOptions(params.options)
 def VERSION = '1.38.0'
 
 process DEXSEQ_ANNOTATE {
-    tag "$meta.id"
+    tag "$gtf"
     label 'process_low'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "bioconda::bioconductor-dexseq=1.38.0" : null)
+    conda (params.enable_conda ? "conda-forge::python=3.8.3 bioconda::htseq=0.13.5" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-dexseq%3A1.38.0--r41hdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/htseq:0.13.5--py39h70b41aa_1"
     } else {
-        container "quay.io/biocontainers/bioconductor-dexseq:1.38.0--r41hdfd78af_0"
+        container "quay.io/biocontainers/htseq:0.13.5--py39h70b41aa_1"
     }
 
     input:
-    tuple val(meta), path(gtf)
+    path gtf
 
     output:
     path "dexseq.gff"             , emit: dexseq_gff
@@ -31,7 +31,7 @@ process DEXSEQ_ANNOTATE {
     def software = getSoftwareName(task.process)
 
     """
-    dexseq_prepare_annotation.py ${options.args} $gtf dexseq.gff
+    dexseq_prepare_annotation.py $gtf dexseq.gff
     echo $VERSION > ${software}.version.txt
     """
 }

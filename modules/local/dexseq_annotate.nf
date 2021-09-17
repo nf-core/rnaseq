@@ -21,7 +21,7 @@ process DEXSEQ_ANNOTATE {
     }
 
     input:
-    path gtf
+    tuple val(meta), path(gtf)
 
     output:
     path "dexseq.gff"             , emit: dexseq_gff

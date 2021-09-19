@@ -384,6 +384,11 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip picard MarkDuplicates step."
                 },
+                "skip_stringtie_prepde": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip StringTie prepDE.py step."
+                },
                 "skip_alignment": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",

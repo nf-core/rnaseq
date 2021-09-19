@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Added StringTie `prepDE.py` module to generate gene/transcript level counts
+
 ### Parameters
+
+| Old parameter               | New parameter                  |
+|-----------------------------|--------------------------------|
+|                             | `--skip_stringtie_prepde`      |
+
+> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
+> **NB:** Parameter has been __added__ if just the new parameter information is present.
+> **NB:** Parameter has been __removed__ if parameter information isn't present.
 
 ## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-29
 

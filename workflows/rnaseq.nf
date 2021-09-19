@@ -86,6 +86,7 @@ def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                     )
+include { STRINGTIE_PREPDE                   } from '../modules/local/stringtie_prepde'            addParams( options: modules['stringtie_prepde']                       )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_salmon'   )
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
 include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon' )
@@ -549,6 +550,12 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf
         )
         ch_software_versions = ch_software_versions.mix(STRINGTIE.out.version.first().ifEmpty(null))
+
+        if (!params.skip_stringtie_prepde) {
+            STRINGTIE_PREPDE (
+                STRINGTIE.out.transcript_gtf
+            )
+        }
     }
 
     //

@@ -279,6 +279,8 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
     * `*.coverage.gtf`: GTF file containing transcripts that are fully covered by reads.
     * `*.transcripts.gtf`: GTF file containing all of the assembled transcipts from StringTie.
     * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.
+    * `*.transcript_count_matrix.csv`: CSV file containing raw counts for all annotated transcipts derived from StringTie results.
+    * `*.gene_count_matrix.csv`: CSV file containing raw counts for all annotated genes derived from StringTie results.
 * `<ALIGNER>/stringtie/<SAMPLE>.ballgown/`: Ballgown output directory.
 
 </details>

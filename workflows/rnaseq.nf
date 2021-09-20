@@ -28,6 +28,9 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
+// RLM test that we're pulling the code properly
+if (params.rlm) { ch_rlm = file(params.rlm) } else { exit 1, 'Dummy rlm flag was not specified!' }
+
 // Check rRNA databases for sortmerna
 ch_ribo_db = file(params.ribo_database_manifest)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}

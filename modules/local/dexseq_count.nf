@@ -13,11 +13,11 @@ process DEXSEQ_COUNT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "conda-forge::python=3.8.3 bioconda::htseq=0.13.5 bioconda::pysam=0.16.0.1-3" : null)
+    conda (params.enable_conda ? "conda-forge::python=3.8.3 bioconda::htseq=0.13.5" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-99b86c9c0de90c62fa0fb4ad6daef5bf8b261885:8e553aed88d367cdb3ea41614ad895bae8c9818b-0"
+        container "https://depot.galaxyproject.org/singularity/htseq:0.13.5--py39h70b41aa_1"
     } else {
-        container "quay.io/biocontainers/mulled-v2-99b86c9c0de90c62fa0fb4ad6daef5bf8b261885:8e553aed88d367cdb3ea41614ad895bae8c9818b-0"
+        container "quay.io/biocontainers/htseq:0.13.5--py39h70b41aa_1"
     }
 
     input:

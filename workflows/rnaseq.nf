@@ -28,6 +28,9 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
+// RLM test that we're pulling the code properly
+if (params.rlm) { ch_rlm = file(params.rlm) } else { exit 1, 'Dummy rlm flag was not specified!' }
+
 // Check rRNA databases for sortmerna
 ch_ribo_db = file(params.ribo_database_manifest)
 if (ch_ribo_db.isEmpty()) {exit 1, "File ${ch_ribo_db.getName()} is empty!"}
@@ -144,6 +147,9 @@ include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
+// RLM: import custom function
+include { TAB_TO_JUNC           } from '../subworkflows/invitae/tab_to_junc'
+
 /*
 ========================================================================================
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -173,9 +179,6 @@ include { QUALIMAP_RNASEQ       } from '../modules/nf-core/modules/qualimap/rnas
 include { SORTMERNA             } from '../modules/nf-core/modules/sortmerna/main'             addParams( options: sortmerna_options                            )
 include { STRINGTIE             } from '../modules/nf-core/modules/stringtie/stringtie/main'   addParams( options: stringtie_options                            )
 include { SUBREAD_FEATURECOUNTS } from '../modules/nf-core/modules/subread/featurecounts/main' addParams( options: subread_featurecounts_options                )
-
-// RLM: import custom function
-include { TAB_TO_JUNC           } from '../modules/invitae/tab_to_junc'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules

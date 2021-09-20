@@ -21,7 +21,7 @@ process DEXSEQ_COUNT {
     }
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     path dexseq_gff
 
     output:

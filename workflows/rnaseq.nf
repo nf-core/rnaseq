@@ -564,11 +564,11 @@ workflow RNASEQ {
     } 
 
     //
-    // MODULE: DEXSEQ_ANNOTATE
+    // MODULE: DEXSEQ_COUNT
     //
     if (!params.skip_alignment && !params.skip_dexseq) {
         DEXSEQ_COUNT (
-            ch_transcriptome_bam,
+            ch_genome_bam.join(ch_genome_bam_index, by: [0]),
             DEXSEQ_ANNOTATE.out.dexseq_gff
         )
         ch_software_versions = ch_software_versions.mix(DEXSEQ_COUNT.out.version.first().ifEmpty(null))

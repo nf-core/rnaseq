@@ -2,9 +2,6 @@
 // Convert tab file from STAR to junc format
 //
 
-params.options = [:]
-options        = initOptions(params.options)
-
 process JUNC_FROM_TAB {
     input:
     path tab

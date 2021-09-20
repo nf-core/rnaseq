@@ -89,7 +89,8 @@ include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_g
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_salmon'   )
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
 include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon' )
-include { DEXSEQ_ANNOTATE                    } from '../modules/local/dexseq_annotate'             addParams( options: modules['dexseq_annotate']                     )
+include { DEXSEQ_ANNOTATE                    } from '../modules/local/dexseq_annotate'             addParams( options: modules['dexseq_annotate']                        )
+include { DEXSEQ_COUNT                       } from '../modules/local/dexseq_count'                addParams( options: modules['dexseq_count']                           )
 include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                               )
 include { GET_SOFTWARE_VERSIONS              } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['tsv':'']]                      )
 include { MULTIQC                            } from '../modules/local/multiqc'                     addParams( options: multiqc_options                                   )
@@ -560,6 +561,17 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf
         )
         ch_software_versions = ch_software_versions.mix(DEXSEQ_ANNOTATE.out.version.first().ifEmpty(null))
+    } 
+
+    //
+    // MODULE: DEXSEQ_ANNOTATE
+    //
+    if (!params.skip_alignment && !params.skip_dexseq) {
+        DEXSEQ_COUNT (
+            ch_transcriptome_bam,
+            DEXSEQ_ANNOTATE.out.dexseq_gff
+        )
+        ch_software_versions = ch_software_versions.mix(DEXSEQ_COUNT.out.version.first().ifEmpty(null))
     } 
 
     //

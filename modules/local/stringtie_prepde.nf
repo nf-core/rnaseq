@@ -36,6 +36,7 @@ process STRINGTIE_PREPDE {
         -i sample_lst.txt \\
         -g ${prefix}.gene_count_matrix.csv \\
         -t ${prefix}.transcript_count_matrix.csv \\
+        -l $meta.read_length \\
         $options.args
 
     echo \$(stringtie --version 2>&1) > ${software}.version.txt

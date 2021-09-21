@@ -117,6 +117,21 @@ class WorkflowRnaseq {
     }
 
     //
+    // Function that parses read length from FastQC html report
+    //
+    public static Integer getFastqcReadLength(report) {
+        def read_length = 76
+        def pattern = /Sequence length<\/td><td>(.*?)</
+        report.eachLine { line ->
+            def matcher = line =~ pattern
+            if (matcher) {
+                read_length = matcher[0][1].tokenize('-')[0].toInteger()
+            }
+        }
+        return read_length
+    }
+
+    //
     // Function that parses and returns the alignment rate from the STAR log output
     //
     public static ArrayList getStarPercentMapped(params, align_log) {

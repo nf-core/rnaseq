@@ -287,10 +287,22 @@ workflow RNASEQ {
     ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
     ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 
+    // Get minimum read length reported by FastQC and add to meta information
+    FASTQC_UMITOOLS_TRIMGALORE
+        .out
+        .reads
+        .join ( FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_html, by: [0] )
+        .map {
+            meta, reads, reports ->
+                def report = meta.single_end ? reports : reports[0]
+                meta.read_length = WorkflowRnaseq.getFastqcReadLength(report)
+                return [ meta, reads ]
+        }
+        .set { ch_trimmed_reads }
+
     //
     // MODULE: Remove ribosomal RNA reads
     //
-    ch_trimmed_reads     = FASTQC_UMITOOLS_TRIMGALORE.out.reads
     ch_sortmerna_multiqc = Channel.empty()
     if (params.remove_ribo_rna) {
         ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()

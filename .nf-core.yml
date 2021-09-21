@@ -7,13 +7,13 @@ lint:
     - assets/multiqc_config.yaml
 update:
   nf-core/modules:
-    rseqc/bamstat: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
-    rseqc/inferexperiment: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
-    rseqc/innerdistance: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
-    rseqc/junctionannotation: "5dd049047d01e72c01a519422f17e203bca343ac"
-    rseqc/junctionsaturation: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
-    rseqc/readdistribution: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
-    rseqc/readduplication: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+    rseqc/bamstat: "28b023e6f4d0d2745406d9dc6e38006882804e67"
+    rseqc/inferexperiment: "28b023e6f4d0d2745406d9dc6e38006882804e67"
+    rseqc/innerdistance: "28b023e6f4d0d2745406d9dc6e38006882804e67"
+    rseqc/junctionannotation: "28b023e6f4d0d2745406d9dc6e38006882804e67"
+    rseqc/junctionsaturation: "28b023e6f4d0d2745406d9dc6e38006882804e67"
+    rseqc/readdistribution: "28b023e6f4d0d2745406d9dc6e38006882804e67"
+    rseqc/readduplication: "28b023e6f4d0d2745406d9dc6e38006882804e67"
     sortmerna: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
     star/align: "e937c7950af70930d1f34bb961403d9d2aa81c7d"
     star/genomegenerate: "e937c7950af70930d1f34bb961403d9d2aa81c7d"

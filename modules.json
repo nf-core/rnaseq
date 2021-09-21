@@ -40,25 +40,25 @@
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "rseqc/bamstat": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "rseqc/inferexperiment": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "rseqc/innerdistance": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "rseqc/junctionannotation": {
-                "git_sha": "5dd049047d01e72c01a519422f17e203bca343ac"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "rseqc/junctionsaturation": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "rseqc/readdistribution": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "rseqc/readduplication": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "28b023e6f4d0d2745406d9dc6e38006882804e67"
             },
             "salmon/index": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"

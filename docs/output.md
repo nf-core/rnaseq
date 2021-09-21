@@ -31,6 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 * [Other steps](#other-steps)
     * [StringTie](#stringtie) - Transcript assembly and quantification
     * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
+    * [DEXSeq](#dexseq) - Differential usage of exons
 * [Quality control](#quality-control)
     * [RSeQC](#rseqc) - Various RNA-seq QC metrics
     * [Qualimap](#qualimap) - Various RNA-seq QC metrics
@@ -297,6 +298,21 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 </details>
 
 The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an indexed binary format useful for displaying dense, continuous data in Genome Browsers such as the [UCSC](https://genome.ucsc.edu/cgi-bin/hgTracks) and [IGV](http://software.broadinstitute.org/software/igv/). This mitigates the need to load the much larger BAM files for data visualisation purposes which will be slower and result in memory issues. The bigWig format is also supported by various bioinformatics software for downstream processing such as meta-profile plotting.
+
+### DEXSeq
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `<ALIGNER>/dexseq/`
+    * `*.dexseq_gff`: GFF file with collapsed exon counting bins.
+    * `*.count`: Counts file countaining the number of reads that overlap with each exon counting bin in the flattened GFF file produced by DEXSEQ_ANNOTATE
+
+</details>
+
+The [DEXSeq Bioconductor package](https://bioconductor.org/packages/3.14/bioc/html/DEXSeq.html) implements a method to test for differential exon usage in comparative RNA-Seq experiments. It provides functions that allows the user to make the necessary statistical tests based on a model that uses the negative binomial distribution to estimate the variance between biological replicates and generalized linear models for testing. 
+
+The content of the files above is explained in more detail in the [DEXSeq documentation](https://genome.cshlp.org/content/22/10/2008).
 
 ## Quality control
 

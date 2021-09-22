@@ -54,13 +54,12 @@ report_section_order:
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:
-    FastQC:
+    fastqc:
         percent_duplicates: False
 
 extra_fn_clean_exts:
     - '.umi_dedup'
-    - '_2_val_2'
-    - '_val_1'
+    - '_val'
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

@@ -308,9 +308,10 @@ workflow RNASEQ {
             ch_filtered_reads,
             PREPARE_GENOME.out.bbsplit_index,
             [],
+            [ [], [] ],
             false
         )
-        .fastq
+        .primary_fastq
         .set { ch_filtered_reads }
 
         ch_software_versions = ch_software_versions.mix(BBMAP_BBSPLIT.out.version.first().ifEmpty(null))

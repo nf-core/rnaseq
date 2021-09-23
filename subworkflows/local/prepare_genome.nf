@@ -134,8 +134,16 @@ workflow PREPARE_GENOME {
                 ch_bbsplit_index = file(params.star_index)
             }
         } else {
-            ch_bbsplit_fasta_list = Channel.from(file(params.bbsplit_fasta_list).readLines()).map { row -> file(row) }
-            ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta.concat(ch_bbsplit_fasta_list).collect(), true ).index
+            Channel
+                .from(file(params.bbsplit_fasta_list))
+                .splitCsv()
+                .flatMap { id, fasta -> [ [ 'id', id ], [ 'fasta', fasta ] ] }
+                .groupTuple()
+                .map { it -> it[1] }
+                .collect { [ it ] }
+                .set { ch_bbsplit_fasta_list }
+
+            ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
             ch_bbmap_version = BBMAP_BBSPLIT.out.version
         }
     }

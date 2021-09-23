@@ -300,7 +300,7 @@ workflow RNASEQ {
     ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
 
     //
-    // SUBWORKFLOW: Remove contaminant reads
+    // SUBWORKFLOW: Remove genome contaminant reads
     //
     ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_bbsplit) {

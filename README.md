@@ -30,7 +30,7 @@ The SRA download functionality has been removed from the pipeline (`>=3.2`) and 
 2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 3. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
-5. Remove of genome contaminants ([`BBSplit`](http://seqanswers.com/forums/showthread.php?t=41288))
+5. Removal of genome contaminants ([`BBSplit`](http://seqanswers.com/forums/showthread.php?t=41288))
 6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
 7. Choice of multiple alignment and quantification routes:
     1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)

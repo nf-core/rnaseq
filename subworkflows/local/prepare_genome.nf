@@ -2,13 +2,15 @@
 // Uncompress and prepare reference genome files
 //
 
-params.genome_options       = [:]
-params.index_options        = [:]
-params.gffread_options      = [:]
-params.star_index_options   = [:]
-params.rsem_index_options   = [:]
-params.hisat2_index_options = [:]
-params.salmon_index_options = [:]
+params.genome_options        = [:]
+params.index_options         = [:]
+params.gffread_options       = [:]
+params.bbsplit_untar_options = [:]
+params.bbsplit_index_options = [:]
+params.star_index_options    = [:]
+params.rsem_index_options    = [:]
+params.hisat2_index_options  = [:]
+params.salmon_index_options  = [:]
 
 include {
     GUNZIP as GUNZIP_FASTA
@@ -16,23 +18,25 @@ include {
     GUNZIP as GUNZIP_GFF
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../modules/nf-core/modules/gunzip/main'                    addParams( options: params.genome_options       )
-include { UNTAR as UNTAR_STAR_INDEX   } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.star_index_options   )
-include { UNTAR as UNTAR_RSEM_INDEX   } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options        )
-include { UNTAR as UNTAR_HISAT2_INDEX } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.hisat2_index_options )
-include { UNTAR as UNTAR_SALMON_INDEX } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options        )
-include { GFFREAD                     } from '../../modules/nf-core/modules/gffread/main'                   addParams( options: params.gffread_options      )
-include { STAR_GENOMEGENERATE         } from '../../modules/nf-core/modules/star/genomegenerate/main'       addParams( options: params.star_index_options   )
-include { HISAT2_EXTRACTSPLICESITES   } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options )
-include { HISAT2_BUILD                } from '../../modules/nf-core/modules/hisat2/build/main'              addParams( options: params.hisat2_index_options )
-include { SALMON_INDEX                } from '../../modules/nf-core/modules/salmon/index/main'              addParams( options: params.salmon_index_options )
+    GUNZIP as GUNZIP_ADDITIONAL_FASTA  } from '../../modules/nf-core/modules/gunzip/main'                    addParams( options: params.genome_options        )
+include { UNTAR as UNTAR_BBSPLIT_INDEX } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.bbsplit_untar_options )
+include { UNTAR as UNTAR_STAR_INDEX    } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.star_index_options    )
+include { UNTAR as UNTAR_RSEM_INDEX    } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options         )
+include { UNTAR as UNTAR_HISAT2_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.hisat2_index_options  )
+include { UNTAR as UNTAR_SALMON_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options         )
+include { GFFREAD                      } from '../../modules/nf-core/modules/gffread/main'                   addParams( options: params.gffread_options       )
+include { STAR_GENOMEGENERATE          } from '../../modules/nf-core/modules/star/genomegenerate/main'       addParams( options: params.star_index_options    )
+include { HISAT2_EXTRACTSPLICESITES    } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options  )
+include { HISAT2_BUILD                 } from '../../modules/nf-core/modules/hisat2/build/main'              addParams( options: params.hisat2_index_options  )
+include { SALMON_INDEX                 } from '../../modules/nf-core/modules/salmon/index/main'              addParams( options: params.salmon_index_options  )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.rsem_index_options )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.genome_options     )
 
-include { GTF2BED                     } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options )
-include { CAT_ADDITIONAL_FASTA        } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options )
-include { GTF_GENE_FILTER             } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options )
-include { GET_CHROM_SIZES             } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options )
+include { GTF2BED                     } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options        )
+include { CAT_ADDITIONAL_FASTA        } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options        )
+include { GTF_GENE_FILTER             } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options        )
+include { GET_CHROM_SIZES             } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options        )
+include { BBMAP_BBSPLIT               } from '../../modules/local/bbmap_bbsplit'        addParams( options: params.bbsplit_index_options )
 
 workflow PREPARE_GENOME {
     take:
@@ -119,6 +123,33 @@ workflow PREPARE_GENOME {
     ch_chrom_sizes = GET_CHROM_SIZES ( ch_fasta ).sizes
 
     //
+    // Uncompress BBSplit index or generate from scratch if required
+    //
+    ch_bbsplit_index = Channel.empty()
+    ch_bbmap_version = Channel.empty()
+    if ('bbsplit' in prepare_tool_indices) {
+        if (params.bbsplit_index) {
+            if (params.bbsplit_index.endsWith('.tar.gz')) {
+                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( params.bbsplit_index ).untar
+            } else {
+                ch_bbsplit_index = file(params.bbsplit_index)
+            }
+        } else {
+            Channel
+                .from(file(params.bbsplit_fasta_list))
+                .splitCsv() // Read in 2 column csv file: short_name,path_to_fasta
+                .flatMap { id, fasta -> [ [ 'id', id ], [ 'fasta', fasta ] ] } // Flatten entries to be able to groupTuple by a common key
+                .groupTuple()
+                .map { it -> it[1] } // Get rid of keys and keep grouped values
+                .collect { [ it ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module
+                .set { ch_bbsplit_fasta_list }
+
+            ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
+            ch_bbmap_version = BBMAP_BBSPLIT.out.version
+        }
+    }
+
+    //
     // Uncompress STAR index or generate from scratch if required
     //
     ch_star_index   = Channel.empty()
@@ -203,10 +234,12 @@ workflow PREPARE_GENOME {
     transcript_fasta = ch_transcript_fasta // path: transcript.fasta
     chrom_sizes      = ch_chrom_sizes      // path: genome.sizes
     splicesites      = ch_splicesites      // path: genome.splicesites.txt
+    bbsplit_index    = ch_bbsplit_index    // path: bbsplit/index/
     star_index       = ch_star_index       // path: star/index/
     rsem_index       = ch_rsem_index       // path: rsem/index/
     hisat2_index     = ch_hisat2_index     // path: hisat2/index/
     salmon_index     = ch_salmon_index     // path: salmon/index/
+    bbmap_version    = ch_bbmap_version    // path: *.version.txt
     star_version     = ch_star_version     // path: *.version.txt
     rsem_version     = ch_rsem_version     // path: *.version.txt
     hisat2_version   = ch_hisat2_version   // path: *.version.txt

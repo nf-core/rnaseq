@@ -94,7 +94,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built BBSplit index.",
-                    "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference`to save index). It can then be provided via --bbsplit_index for future runs."
+                    "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference` to save index). It can then be provided via `--bbsplit_index` for future runs."
                 },
                 "save_bbsplit_reads": {
                     "type": "boolean",
@@ -105,7 +105,7 @@
                     "type": "boolean",
                     "default": true,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip BBSplit for removal of non-reference genome reads"
+                    "description": "Skip BBSplit for removal of non-reference genome reads."
                 },
                 "remove_ribo_rna": {
                     "type": "boolean",

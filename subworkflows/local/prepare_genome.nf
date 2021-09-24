@@ -5,6 +5,7 @@
 params.genome_options        = [:]
 params.index_options         = [:]
 params.gffread_options       = [:]
+params.bbsplit_untar_options = [:]
 params.bbsplit_index_options = [:]
 params.star_index_options    = [:]
 params.rsem_index_options    = [:]
@@ -18,7 +19,7 @@ include {
     GUNZIP as GUNZIP_GENE_BED
     GUNZIP as GUNZIP_TRANSCRIPT_FASTA
     GUNZIP as GUNZIP_ADDITIONAL_FASTA  } from '../../modules/nf-core/modules/gunzip/main'                    addParams( options: params.genome_options        )
-include { UNTAR as UNTAR_BBSPLIT_INDEX } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.bbsplit_index_options )
+include { UNTAR as UNTAR_BBSPLIT_INDEX } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.bbsplit_untar_options )
 include { UNTAR as UNTAR_STAR_INDEX    } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.star_index_options    )
 include { UNTAR as UNTAR_RSEM_INDEX    } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options         )
 include { UNTAR as UNTAR_HISAT2_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.hisat2_index_options  )
@@ -131,7 +132,7 @@ workflow PREPARE_GENOME {
             if (params.bbsplit_index.endsWith('.tar.gz')) {
                 ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( params.bbsplit_index ).untar
             } else {
-                ch_bbsplit_index = file(params.star_index)
+                ch_bbsplit_index = file(params.bbsplit_index)
             }
         } else {
             Channel

@@ -7,11 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-* Add `python3` shebang to appropriate scripts in `bin/` directory
+* [[#407](https://github.com/nf-core/rnaseq/issues/407)] - Filter mouse reads from PDX samples
 * [[#690](https://github.com/nf-core/rnaseq/issues/690)] - Error with post-trimmed read 2 sample names from FastQC in MultiQC
 * [[#697](https://github.com/nf-core/rnaseq/issues/697)] - pipeline_report.{txt,html} missing from pipeline_info directory
+* Added `python3` shebang to appropriate scripts in `bin/` directory
 
 ### Parameters
+
+| Old parameter               | New parameter                  |
+|-----------------------------|--------------------------------|
+|                             | `--bbsplit_fasta_list`         |
+|                             | `--bbsplit_index`              |
+|                             | `--skip_bbsplit`               |
+
+> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
+> **NB:** Parameter has been __added__ if just the new parameter information is present.
+> **NB:** Parameter has been __removed__ if parameter information isn't present.
 
 ## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-29
 

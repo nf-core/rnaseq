@@ -4,10 +4,10 @@
 
 process JUNC_FROM_TAB {
     input:
-    path tab
+    tuple val(meta), path(tab)
 
     output:
-    tuple val(meta), path('*.junc')         , emit: junc
+    tuple val(meta), path('*.junc'), emit: junc
 
     """
     date > date.txt

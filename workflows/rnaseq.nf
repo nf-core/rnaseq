@@ -85,6 +85,9 @@ def modules = params.modules.clone()
 def publish_genome_options = params.save_reference ? [publish_dir: 'genome']       : [publish_files: false]
 def publish_index_options  = params.save_reference ? [publish_dir: 'genome/index'] : [publish_files: false]
 
+def bbmap_bbsplit_options      = modules['bbmap_bbsplit']
+if (params.save_bbsplit_reads) { bbmap_bbsplit_options.publish_files.put('fastq.gz','') }
+
 def multiqc_options         = modules['multiqc']
 multiqc_options.args       += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 if (params.skip_alignment)  { multiqc_options['publish_dir'] = '' }
@@ -95,7 +98,7 @@ def deseq2_qc_salmon_options          = deseq2_qc_options.clone()
 deseq2_qc_salmon_options.publish_dir  = "salmon/deseq2_qc"
 
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'          addParams( options: modules['bedtools_genomecov']                     )
-include { BBMAP_BBSPLIT                      } from '../modules/local/bbmap_bbsplit'               addParams( options: modules['bbmap_bbsplit']                          )
+include { BBMAP_BBSPLIT                      } from '../modules/local/bbmap_bbsplit'               addParams( options: bbmap_bbsplit_options                             )
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_salmon'   )
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_options, multiqc_label: 'star_rsem'     )
 include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'                   addParams( options: deseq2_qc_salmon_options, multiqc_label: 'salmon' )

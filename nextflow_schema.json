@@ -96,6 +96,11 @@
                     "description": "Path to directory or tar.gz archive for pre-built BBSplit index.",
                     "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference`to save index). It can then be provided via --bbsplit_index for future runs."
                 },
+                "save_bbsplit_reads": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "If this option is specified, FastQ files split by reference will be saved in the results directory."
+                },
                 "skip_bbsplit": {
                     "type": "boolean",
                     "default": true,

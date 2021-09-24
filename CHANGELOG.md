@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 |-----------------------------|--------------------------------|
 |                             | `--bbsplit_fasta_list`         |
 |                             | `--bbsplit_index`              |
+|                             | `--save_bbsplit_reads`         |
 |                             | `--skip_bbsplit`               |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.

@@ -19,7 +19,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     * [FastQC](#fastqc) - Raw read QC
     * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
     * [TrimGalore](#trimgalore) - Adapter and quality trimming
-    - [BBSplit](#bbsplit) - Remove of genome contaminants
+    * [BBSplit](#bbsplit) - Remove of genome contaminants
     * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment and quantification](#alignment-and-quantification)
     * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
@@ -124,7 +124,6 @@ If multiple libraries/runs have been provided for the same sample in the input s
     * `*.txt`: File containing statistics on how many reads were assigned to each reference.
 
 </details>
-
 
 [BBSplit](http://seqanswers.com/forums/showthread.php?t=41288) is a tool that bins reads by mapping to multiple references simultaneously, using BBMap. The reads go to the bin of the reference they map to best. There are also disambiguation options, such that reads that map to multiple references can be binned with all of them, none of them, one of them, or put in a special "ambiguous" file for each of them.
 

@@ -19,7 +19,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     * [FastQC](#fastqc) - Raw read QC
     * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
     * [TrimGalore](#trimgalore) - Adapter and quality trimming
-    * [BBSplit](#bbsplit) - Remove of genome contaminants
+    * [BBSplit](#bbsplit) - Removal of genome contaminants
     * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment and quantification](#alignment-and-quantification)
     * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification

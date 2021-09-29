@@ -10,9 +10,9 @@ workflow PSI_CALLIN {
     ch_tab // channel: [ val(meta), [ tab ] ]
 
     main:
-    JUNC_FROM_TAB ( ch_tab )
+    CALL_PSI ( ch_tab )
 
     emit:
-    junc         = JUNC_FROM_TAB.out.junc
-    bed         = JUNC_FROM_TAB.out.bed
+    junc         = CALL_PSI.out.junc
+    bed         = CALL_PSI.out.bed
 }

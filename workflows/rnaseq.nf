@@ -148,7 +148,7 @@ include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
 // RLM: import custom function
-include { TAB_TO_JUNC           } from '../subworkflows/invitae/tab_to_junc'
+include { PSI_CALLIN           } from '../subworkflows/invitae/psi_callin'
 
 /*
 ========================================================================================
@@ -341,12 +341,13 @@ workflow RNASEQ {
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
 
-        // RLM: convert tab to junc
+        // RLM: PSI callin'
         ch_tab = ALIGN_STAR.out.tab
-        TAB_TO_JUNC (
+        PSI_CALLIN (
             ch_tab
         )
-        ch_junc = TAB_TO_JUNC.out.junc
+        ch_junc = PSI_CALLIN.out.junc
+        ch_bed = PSI_CALLIN.out.bed
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs

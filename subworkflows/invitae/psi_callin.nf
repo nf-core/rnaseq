@@ -15,7 +15,7 @@ workflow PSI_CALLIN {
     ch_targets // file: /path/to/targets.bed
 
     main:
-    CALL_PSI ( ch_tab, ch_rlm )
+    CALL_PSI ( ch_tab, ch_script, ch_caller, ch_annotations, ch_pon, ch_targets )
 
     emit:
     junc         = CALL_PSI.out.junc

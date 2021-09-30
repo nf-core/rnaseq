@@ -43,12 +43,12 @@ workflow DEDUP_UMI_UMITOOLS {
 
     emit:
     bam              = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), [ bam ] ]
-    umitools_version = UMITOOLS_DEDUP.out.version      //    path: *.version.txt
+    umitools_version = UMITOOLS_DEDUP.out.version      //    path: versions.yml
 
     bai              = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
     csi              = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
     stats            = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat         = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats         = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    samtools_version = SAMTOOLS_INDEX.out.version      //    path: *.version.txt
+    samtools_version = SAMTOOLS_INDEX.out.version      //    path: versions.yml
 }

@@ -3,8 +3,14 @@
     "homePage": "https://github.com/nf-core/rnaseq",
     "repos": {
         "nf-core/modules": {
+            "bbmap/bbsplit": {
+                "git_sha": "5b1cea7f7f38b78a8fd8e2b90b1b877bd117ed96"
+            },
             "cat/fastq": {
                 "git_sha": "b932210f270a1fea1f36c181abfb064448572846"
+            },
+            "custom/dumpsoftwareversions": {
+                "git_sha": "22ec5c6007159d441585ef54bfa6272b6f93c78a"
             },
             "fastqc": {
                 "git_sha": "ab67a1d41b63bf52fd7c147f7f8f6e8d167590b5"

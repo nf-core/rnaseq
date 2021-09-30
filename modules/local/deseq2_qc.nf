@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options       = [:]
 params.multiqc_label = ''
@@ -34,7 +34,7 @@ process DESEQ2_QC {
     path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
     path "*.log"                , optional:true, emit: log
     path "size_factors"         , optional:true, emit: size_factors
-    path  "*.version.txt"       , emit: version
+    path "versions.yml"         , emit: version
 
     script:
     def software    = getSoftwareName(task.process)
@@ -57,6 +57,9 @@ process DESEQ2_QC {
         cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
     fi
 
-    Rscript -e "library(DESeq2); write(x=as.character(packageVersion('DESeq2')), file='${software}.version.txt')"
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        $software: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+    END_VERSIONS
     """
 }

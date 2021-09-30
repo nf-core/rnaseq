@@ -154,5 +154,5 @@ workflow RSEQC {
     readduplication_pdf             // channel: [ val(meta), pdf ]
     readduplication_rscript         // channel: [ val(meta), r   ]
 
-    version                         //    path: *.version.txt
+    version                         //    path: versions.yml
 }

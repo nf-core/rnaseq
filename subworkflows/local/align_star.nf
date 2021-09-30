@@ -7,8 +7,8 @@ params.samtools_sort_options  = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { STAR_ALIGN        } from '../../modules/nf-core/modules/star/align/main' addParams( options: params.align_options    )
-include { BAM_SORT_SAMTOOLS } from './bam_sort_samtools'                           addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
+include { STAR_ALIGN        } from '../../modules/local/star_align' addParams( options: params.align_options )
+include { BAM_SORT_SAMTOOLS } from '../nf-core/bam_sort_samtools'   addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
 
 workflow ALIGN_STAR {
     take:
@@ -37,7 +37,7 @@ workflow ALIGN_STAR {
     bam_transcript   = STAR_ALIGN.out.bam_transcript  // channel: [ val(meta), bam_transcript ]
     fastq            = STAR_ALIGN.out.fastq           // channel: [ val(meta), fastq          ]
     tab              = STAR_ALIGN.out.tab             // channel: [ val(meta), tab            ]
-    star_version     = STAR_ALIGN.out.version         // path: *.version.txt
+    star_version     = STAR_ALIGN.out.version         // path: versions.yml
 
     bam              = BAM_SORT_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
     bai              = BAM_SORT_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
@@ -45,5 +45,5 @@ workflow ALIGN_STAR {
     stats            = BAM_SORT_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat         = BAM_SORT_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats         = BAM_SORT_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    samtools_version = BAM_SORT_SAMTOOLS.out.version  //    path: *.version.txt
+    samtools_version = BAM_SORT_SAMTOOLS.out.version  //    path: versions.yml
 }

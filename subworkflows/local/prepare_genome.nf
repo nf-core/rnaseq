@@ -25,24 +25,24 @@ include { UNTAR as UNTAR_RSEM_INDEX    } from '../../modules/nf-core/modules/unt
 include { UNTAR as UNTAR_HISAT2_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.hisat2_index_options  )
 include { UNTAR as UNTAR_SALMON_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options         )
 include { GFFREAD                      } from '../../modules/nf-core/modules/gffread/main'                   addParams( options: params.gffread_options       )
-include { STAR_GENOMEGENERATE          } from '../../modules/nf-core/modules/star/genomegenerate/main'       addParams( options: params.star_index_options    )
+include { BBMAP_BBSPLIT                } from '../../modules/nf-core/modules/bbmap/bbsplit/main'             addParams( options: params.bbsplit_index_options )
 include { HISAT2_EXTRACTSPLICESITES    } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options  )
 include { HISAT2_BUILD                 } from '../../modules/nf-core/modules/hisat2/build/main'              addParams( options: params.hisat2_index_options  )
 include { SALMON_INDEX                 } from '../../modules/nf-core/modules/salmon/index/main'              addParams( options: params.salmon_index_options  )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.rsem_index_options )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.genome_options     )
 
-include { GTF2BED                     } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options        )
-include { CAT_ADDITIONAL_FASTA        } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options        )
-include { GTF_GENE_FILTER             } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options        )
-include { GET_CHROM_SIZES             } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options        )
-include { BBMAP_BBSPLIT               } from '../../modules/local/bbmap_bbsplit'        addParams( options: params.bbsplit_index_options )
+include { GTF2BED              } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options        )
+include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options        )
+include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options        )
+include { GET_CHROM_SIZES      } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options        )
+include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'  addParams( options: params.star_index_options    )
 
 workflow PREPARE_GENOME {
     take:
     prepare_tool_indices // list  : tools to prepare indices for
     biotype              // string: if additional fasta file is provided
-                        //          biotype value to use when appending entries to GTF file
+                         //         biotype value to use when appending entries to GTF file
 
     main:
 
@@ -239,10 +239,10 @@ workflow PREPARE_GENOME {
     rsem_index       = ch_rsem_index       // path: rsem/index/
     hisat2_index     = ch_hisat2_index     // path: hisat2/index/
     salmon_index     = ch_salmon_index     // path: salmon/index/
-    bbmap_version    = ch_bbmap_version    // path: *.version.txt
-    star_version     = ch_star_version     // path: *.version.txt
-    rsem_version     = ch_rsem_version     // path: *.version.txt
-    hisat2_version   = ch_hisat2_version   // path: *.version.txt
-    salmon_version   = ch_salmon_version   // path: *.version.txt
-    gffread_version  = ch_gffread_version  // path: *.version.txt
+    bbmap_version    = ch_bbmap_version    // path: versions.yml
+    star_version     = ch_star_version     // path: versions.yml
+    rsem_version     = ch_rsem_version     // path: versions.yml
+    hisat2_version   = ch_hisat2_version   // path: versions.yml
+    salmon_version   = ch_salmon_version   // path: versions.yml
+    gffread_version  = ch_gffread_version  // path: versions.yml
 }

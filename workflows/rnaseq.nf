@@ -28,8 +28,12 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
-// RLM test that we're pulling the code properly
-if (params.rlm) { ch_rlm = file(params.rlm) } else { exit 1, 'Script to source was not specified!' }
+// RLM specify custom arguments
+if (params.script) { ch_script = file(params.script) } else { exit 1, 'Script to source was not specified!' }
+if (params.caller) { ch_caller = file(params.caller) } else { exit 1, 'Caller to invoke was not specified!' }
+if (params.annotations) { ch_annotations = file(params.annotations) } else { exit 1, 'Annotated junctions to reference were not specified!' }
+if (params.pon) { ch_pon = file(params.pon) } else { exit 1, 'PON to call against was not specified!' }
+if (params.targets) { ch_targets = file(params.targets) } else { exit 1, 'Target definitions were not specified!' }
 
 // Check rRNA databases for sortmerna
 ch_ribo_db = file(params.ribo_database_manifest)
@@ -345,7 +349,11 @@ workflow RNASEQ {
         ch_tab = ALIGN_STAR.out.tab
         PSI_CALLIN (
             ch_tab,
-            ch_rlm
+            ch_script,
+            ch_caller,
+            ch_annotations,
+            ch_pon,
+            ch_targets
         )
         ch_junc = PSI_CALLIN.out.junc
         ch_bed = PSI_CALLIN.out.bed

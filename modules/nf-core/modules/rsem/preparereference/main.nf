@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -25,7 +25,7 @@ process RSEM_PREPAREREFERENCE {
     output:
     path "rsem"                , emit: index
     path "rsem/*transcripts.fa", emit: transcript_fasta
-    path "*.version.txt"       , emit: version
+    path "versions.yml"        , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -50,7 +50,11 @@ process RSEM_PREPAREREFERENCE {
             $fasta \\
             rsem/genome
 
-        rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+            star: \$(STAR --version | sed -e "s/STAR_//g")
+        END_VERSIONS
         """
     } else {
         """
@@ -61,7 +65,11 @@ process RSEM_PREPAREREFERENCE {
             $fasta \\
             rsem/genome
 
-        rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g" > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+            star: \$(STAR --version | sed -e "s/STAR_//g")
+        END_VERSIONS
         """
     }
 }

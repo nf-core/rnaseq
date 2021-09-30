@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -25,7 +25,7 @@ process SORTMERNA {
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path  "*.version.txt"              , emit: version
+    path  "versions.yml"               , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -47,7 +47,10 @@ process SORTMERNA {
         gzip -f < non_rRNA_reads.fq > ${prefix}.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
-        echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//' > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(sortmerna --version 2>&1 | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+        END_VERSIONS
         """
     } else {
         """
@@ -67,7 +70,10 @@ process SORTMERNA {
         gzip -f < non_rRNA_reads_rev.fq > ${prefix}_2.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
-        echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//' > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(sortmerna --version 2>&1 | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+        END_VERSIONS
         """
     }
 }

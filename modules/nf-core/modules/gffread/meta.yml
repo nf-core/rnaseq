@@ -14,30 +14,20 @@ tools:
       licence: ['MIT']
 
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - gff:
         type: file
-        description: A GFF file in either the GFF3 or GFF2 format.
-        patter: "*.gff"
+        description: A reference file in either the GFF3, GFF2 or GTF format.
+        pattern: "*.{gff, gtf}"
 
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - gtf:
       type: file
       description: GTF file resulting from the conversion of the GFF input file
-      pattern: "*.gtf"
+      pattern: "*.{gtf}"
   - version:
       type: file
       description: File containing software version
-      pattern: "*.{version.txt}"
+      pattern: "versions.yml"
 
 authors:
   - "@emiller88"

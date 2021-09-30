@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -24,7 +24,7 @@ process RSEQC_INFEREXPERIMENT {
 
     output:
     tuple val(meta), path("*.infer_experiment.txt"), emit: txt
-    path  "*.version.txt"                          , emit: version
+    path  "versions.yml"                           , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -36,6 +36,9 @@ process RSEQC_INFEREXPERIMENT {
         $options.args \\
         > ${prefix}.infer_experiment.txt
 
-    infer_experiment.py --version | sed -e "s/infer_experiment.py //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(infer_experiment.py --version | sed -e "s/infer_experiment.py //g")
+    END_VERSIONS
     """
 }

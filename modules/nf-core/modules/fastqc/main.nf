@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -24,24 +24,31 @@ process FASTQC {
     output:
     tuple val(meta), path("*.html"), emit: html
     tuple val(meta), path("*.zip") , emit: zip
-    path  "*.version.txt"          , emit: version
+    path  "versions.yml"           , emit: version
 
     script:
     // Add soft-links to original FastQs for consistent naming in pipeline
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         fastqc $options.args --threads $task.cpus ${prefix}.fastq.gz
-        fastqc --version | sed -e "s/FastQC v//g" > ${software}.version.txt
+
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
+        END_VERSIONS
         """
     } else {
         """
         [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         fastqc $options.args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
-        fastqc --version | sed -e "s/FastQC v//g" > ${software}.version.txt
+
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
+        END_VERSIONS
         """
     }
 }

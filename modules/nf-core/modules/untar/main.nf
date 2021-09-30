@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -22,14 +22,21 @@ process UNTAR {
     path archive
 
     output:
-    path "$untar"       , emit: untar
-    path "*.version.txt", emit: version
+    path "$untar"      , emit: untar
+    path "versions.yml", emit: version
 
     script:
     def software = getSoftwareName(task.process)
     untar        = archive.toString() - '.tar.gz'
     """
-    tar -xzvf $options.args $archive
-    echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//' > ${software}.version.txt
+    tar \\
+        -xzvf \\
+        $options.args \\
+        $archive
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//')
+    END_VERSIONS
     """
 }

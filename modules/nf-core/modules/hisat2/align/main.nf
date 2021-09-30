@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -28,7 +28,7 @@ process HISAT2_ALIGN {
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.log"), emit: summary
-    path  "*.version.txt"         , emit: version
+    path  "versions.yml"          , emit: version
 
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
 
@@ -59,7 +59,11 @@ process HISAT2_ALIGN {
             $options.args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
-        echo $VERSION > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(echo $VERSION)
+            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+        END_VERSIONS
         """
     } else {
         def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -87,7 +91,11 @@ process HISAT2_ALIGN {
             mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
         fi
 
-        echo $VERSION > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(echo $VERSION)
+            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+        END_VERSIONS
         """
     }
 }

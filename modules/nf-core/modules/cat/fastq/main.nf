@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -23,6 +23,7 @@ process CAT_FASTQ {
 
     output:
     tuple val(meta), path("*.merged.fastq.gz"), emit: reads
+    path "versions.yml"                       , emit: version
 
     script:
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
@@ -31,6 +32,11 @@ process CAT_FASTQ {
         if (readList.size > 1) {
             """
             cat ${readList.sort().join(' ')} > ${prefix}.merged.fastq.gz
+
+            cat <<-END_VERSIONS > versions.yml
+            ${getProcessName(task.process)}:
+                ${getSoftwareName(task.process)}: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+            END_VERSIONS
             """
         }
     } else {
@@ -41,6 +47,11 @@ process CAT_FASTQ {
             """
             cat ${read1.sort().join(' ')} > ${prefix}_1.merged.fastq.gz
             cat ${read2.sort().join(' ')} > ${prefix}_2.merged.fastq.gz
+
+            cat <<-END_VERSIONS > versions.yml
+            ${getProcessName(task.process)}:
+                ${getSoftwareName(task.process)}: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+            END_VERSIONS
             """
         }
     }

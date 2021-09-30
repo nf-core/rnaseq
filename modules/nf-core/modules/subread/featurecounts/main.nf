@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -24,7 +24,7 @@ process SUBREAD_FEATURECOUNTS {
     output:
     tuple val(meta), path("*featureCounts.txt")        , emit: counts
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
-    path "*.version.txt"                               , emit: version
+    path "versions.yml"                                , emit: version
 
     script:
     def software   = getSoftwareName(task.process)
@@ -47,6 +47,9 @@ process SUBREAD_FEATURECOUNTS {
         -o ${prefix}.featureCounts.txt \\
         ${bams.join(' ')}
 
-    echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
+    END_VERSIONS
     """
 }

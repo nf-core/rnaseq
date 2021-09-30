@@ -8,9 +8,10 @@ include { CALL_PSI        } from '../../modules/invitae/call_psi'
 workflow PSI_CALLIN {
     take:
     ch_tab // channel: [ val(meta), [ tab ] ]
+    ch_rlm // file: /path/to/source.sh
 
     main:
-    CALL_PSI ( ch_tab )
+    CALL_PSI ( ch_tab, ch_rlm )
 
     emit:
     junc         = CALL_PSI.out.junc

@@ -29,7 +29,7 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 // RLM test that we're pulling the code properly
-if (params.rlm) { ch_rlm = file(params.rlm) } else { exit 1, 'Dummy rlm flag was not specified!' }
+if (params.rlm) { ch_rlm = file(params.rlm) } else { exit 1, 'Script to source was not specified!' }
 
 // Check rRNA databases for sortmerna
 ch_ribo_db = file(params.ribo_database_manifest)
@@ -344,7 +344,8 @@ workflow RNASEQ {
         // RLM: PSI callin'
         ch_tab = ALIGN_STAR.out.tab
         PSI_CALLIN (
-            ch_tab
+            ch_tab,
+            ch_rlm
         )
         ch_junc = PSI_CALLIN.out.junc
         ch_bed = PSI_CALLIN.out.bed

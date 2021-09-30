@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -19,17 +19,28 @@ process MULTIQC_CUSTOM_STRAND_CHECK {
     val fail_strand
 
     output:
-    path "*.tsv"
+    path "*.tsv"       , emit: tsv
+    path "versions.yml", emit: version
 
     script:
     if (fail_strand.size() > 0) {
         """
         echo "Sample\tProvided strandedness\tInferred strandedness\tSense (%)\tAntisense (%)\tUndetermined (%)" > fail_strand_check_mqc.tsv
         echo "${fail_strand.join('\n')}" >> fail_strand_check_mqc.tsv
+
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+        END_VERSIONS
         """
     } else {
         """
         touch fail_strand_check_mqc.tsv
+
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+        END_VERSIONS
         """
     }
 }

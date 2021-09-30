@@ -367,7 +367,7 @@ workflow RNASEQ {
         ch_samtools_idxstats = ALIGN_STAR.out.idxstats
         ch_star_multiqc      = ALIGN_STAR.out.log_final
         if (params.bam_csi_index) {
-            ch_genome_bam_index  = ALIGN_STAR.out.csi
+            ch_genome_bam_index = ALIGN_STAR.out.csi
         }
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
@@ -452,7 +452,7 @@ workflow RNASEQ {
         ch_star_multiqc      = QUANTIFY_RSEM.out.logs
         ch_rsem_multiqc      = QUANTIFY_RSEM.out.stat
         if (params.bam_csi_index) {
-            ch_genome_bam_index  = QUANTIFY_RSEM.out.csi
+            ch_genome_bam_index = QUANTIFY_RSEM.out.csi
         }
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
@@ -486,7 +486,7 @@ workflow RNASEQ {
         ch_samtools_idxstats = ALIGN_HISAT2.out.idxstats
         ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
         if (params.bam_csi_index) {
-            ch_genome_bam_index  = ALIGN_HISAT2.out.csi
+            ch_genome_bam_index = ALIGN_HISAT2.out.csi
         }
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.samtools_version.first().ifEmpty(null))
@@ -504,7 +504,7 @@ workflow RNASEQ {
             ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
             ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index = DEDUP_UMI_UMITOOLS_GENOME.out.csi
             }
         }
     }
@@ -542,6 +542,7 @@ workflow RNASEQ {
         MULTIQC_CUSTOM_FAIL_MAPPED (
             ch_pass_fail_mapped.fail.collect()
         )
+        .tsv
         .set { ch_fail_mapping_multiqc }
     }
 
@@ -572,9 +573,9 @@ workflow RNASEQ {
         ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
         ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
         if (params.bam_csi_index) {
-            ch_genome_bam_index  = MARK_DUPLICATES_PICARD.out.csi
+            ch_genome_bam_index = MARK_DUPLICATES_PICARD.out.csi
         }
-        ch_software_versions      = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
     }
 
     //
@@ -664,7 +665,7 @@ workflow RNASEQ {
                 ch_genome_bam,
                 PREPARE_GENOME.out.gtf
             )
-            ch_qualimap_multiqc  = QUALIMAP_RNASEQ.out.results
+            ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
             //ch_software_versions = ch_software_versions.mix(QUALIMAP_RNASEQ.out.version.first().ifEmpty(null))
         }
         if (!params.skip_dupradar) {
@@ -701,6 +702,7 @@ workflow RNASEQ {
             MULTIQC_CUSTOM_STRAND_CHECK (
                 ch_fail_strand.collect()
             )
+            .tsv
             .set { ch_fail_strand_multiqc }
         }
     }

@@ -29,8 +29,7 @@ process DUPRADAR {
     path "versions.yml"               , emit: version
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
-    def software = getSoftwareName(task.process)
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def strandedness = 0
     if (meta.strandedness == 'forward') {
@@ -50,7 +49,8 @@ process DUPRADAR {
 
     cat <<-END_VERSIONS > versions.yml
     ${getProcessName(task.process)}:
-        dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
+        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+        bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
     END_VERSIONS
     """
 }

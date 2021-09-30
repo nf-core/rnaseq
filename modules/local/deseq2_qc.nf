@@ -37,7 +37,6 @@ process DESEQ2_QC {
     path "versions.yml"         , emit: version
 
     script:
-    def software    = getSoftwareName(task.process)
     def label_lower = params.multiqc_label.toLowerCase()
     def label_upper = params.multiqc_label.toUpperCase()
     """
@@ -59,7 +58,8 @@ process DESEQ2_QC {
 
     cat <<-END_VERSIONS > versions.yml
     ${getProcessName(task.process)}:
-        $software: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
     END_VERSIONS
     """
 }

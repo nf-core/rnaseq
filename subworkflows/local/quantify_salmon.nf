@@ -30,33 +30,33 @@ workflow QUANTIFY_SALMON {
     //
     // Quantify and merge counts across samples
     //
-    SALMON_QUANT        ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
-    SALMON_TX2GENE      ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
-    SALMON_TXIMPORT     ( SALMON_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.collect() )
+    SALMON_QUANT    ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
+    SALMON_TX2GENE  ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
+    SALMON_TXIMPORT ( SALMON_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
 
 
     SALMON_SE_GENE (
         SALMON_TXIMPORT.out.counts_gene,
         SALMON_TXIMPORT.out.tpm_gene,
-        SALMON_TX2GENE.out.collect()
+        SALMON_TX2GENE.out.tsv.collect()
     )
 
     SALMON_SE_GENE_LENGTH_SCALED (
         SALMON_TXIMPORT.out.counts_gene_length_scaled,
         SALMON_TXIMPORT.out.tpm_gene,
-        SALMON_TX2GENE.out.collect()
+        SALMON_TX2GENE.out.tsv.collect()
     )
 
     SALMON_SE_GENE_SCALED (
         SALMON_TXIMPORT.out.counts_gene_scaled,
         SALMON_TXIMPORT.out.tpm_gene,
-        SALMON_TX2GENE.out.collect()
+        SALMON_TX2GENE.out.tsv.collect()
     )
 
     SALMON_SE_TRANSCRIPT (
         SALMON_TXIMPORT.out.counts_transcript,
         SALMON_TXIMPORT.out.tpm_transcript,
-        SALMON_TX2GENE.out.collect()
+        SALMON_TX2GENE.out.tsv.collect()
     )
 
     emit:

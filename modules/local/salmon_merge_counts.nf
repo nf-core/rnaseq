@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -31,6 +31,7 @@ process SALMON_MERGE_COUNTS {
     path "salmon.merged.gene_counts_scaled.tsv"       , emit: counts_gene_scaled
     path "salmon.merged.transcript_counts.tsv"        , emit: counts_transcript
     path "salmon.merged.transcript_tpm.tsv"           , emit: tpm_transcript
+    path "versions.yml"                               , emit: version
 
     script:
     """
@@ -92,5 +93,10 @@ process SALMON_MERGE_COUNTS {
     paste gene_ids.txt tmp/genes_counts_scaled/* > salmon.merged.gene_counts_scaled.tsv
     paste transcript_ids.txt tmp/isoforms_counts/* > salmon.merged.transcript_counts.tsv
     paste transcript_ids.txt tmp/isoforms_tpm/* > salmon.merged.transcript_tpm.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+    END_VERSIONS
     """
 }

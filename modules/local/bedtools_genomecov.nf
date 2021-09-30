@@ -27,8 +27,7 @@ process BEDTOOLS_GENOMECOV {
     path "versions.yml"                        , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def prefix_forward = "${prefix}.forward"
     def prefix_reverse = "${prefix}.reverse"
@@ -55,7 +54,7 @@ process BEDTOOLS_GENOMECOV {
 
     cat <<-END_VERSIONS > versions.yml
     ${getProcessName(task.process)}:
-        $software: \$(bedtools --version | sed -e "s/bedtools v//g")
+        ${getSoftwareName(task.process)}: \$(bedtools --version | sed -e "s/bedtools v//g")
     END_VERSIONS
     """
 }

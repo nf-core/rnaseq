@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -19,17 +19,28 @@ process MULTIQC_CUSTOM_FAIL_MAPPED {
     val fail_mapped
 
     output:
-    path "*.tsv"
+    path "*.tsv"       , emit: tsv
+    path "versions.yml", emit: version
 
     script:
     if (fail_mapped.size() > 0) {
         """
         echo "Sample\tSTAR uniquely mapped reads (%)" > fail_mapped_samples_mqc.tsv
         echo "${fail_mapped.join('\n')}" >> fail_mapped_samples_mqc.tsv
+
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+        END_VERSIONS
         """
     } else {
         """
         touch fail_mapped_samples_mqc.tsv
+
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+        END_VERSIONS
         """
     }
 }

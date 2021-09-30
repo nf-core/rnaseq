@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -25,6 +25,7 @@ process RSEM_MERGE_COUNTS {
     path "rsem.merged.gene_tpm.tsv"         , emit: tpm_gene
     path "rsem.merged.transcript_counts.tsv", emit: counts_transcript
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
+    path "versions.yml"                     , emit: version
 
     script:
     """
@@ -52,5 +53,10 @@ process RSEM_MERGE_COUNTS {
     paste gene_ids.txt tmp/genes/*.tpm.txt > rsem.merged.gene_tpm.tsv
     paste transcript_ids.txt tmp/isoforms/*.counts.txt > rsem.merged.transcript_counts.tsv
     paste transcript_ids.txt tmp/isoforms/*.tpm.txt > rsem.merged.transcript_tpm.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+    END_VERSIONS
     """
 }

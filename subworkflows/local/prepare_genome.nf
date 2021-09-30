@@ -32,11 +32,11 @@ include { SALMON_INDEX                 } from '../../modules/nf-core/modules/sal
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.rsem_index_options )
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.genome_options     )
 
-include { GTF2BED              } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options        )
-include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options        )
-include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options        )
-include { GET_CHROM_SIZES      } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options        )
-include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'  addParams( options: params.star_index_options    )
+include { GTF2BED              } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options     )
+include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options     )
+include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options     )
+include { GET_CHROM_SIZES      } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options     )
+include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'  addParams( options: params.star_index_options )
 
 workflow PREPARE_GENOME {
     take:
@@ -99,7 +99,7 @@ workflow PREPARE_GENOME {
             ch_gene_bed = file(params.gene_bed)
         }
     } else {
-        ch_gene_bed = GTF2BED ( ch_gtf )
+        ch_gene_bed = GTF2BED ( ch_gtf ).bed
     }
 
     //
@@ -113,7 +113,7 @@ workflow PREPARE_GENOME {
             ch_transcript_fasta = file(params.transcript_fasta)
         }
     } else {
-        ch_transcript_fasta = RSEM_PREPAREREFERENCE_TRANSCRIPTS ( ch_fasta, GTF_GENE_FILTER ( ch_fasta, ch_gtf ) ).transcript_fasta
+        ch_transcript_fasta = RSEM_PREPAREREFERENCE_TRANSCRIPTS ( ch_fasta, GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf ).transcript_fasta
         ch_rsem_version     = RSEM_PREPAREREFERENCE_TRANSCRIPTS.out.version
     }
 

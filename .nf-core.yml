@@ -5,6 +5,9 @@ lint:
     - assets/email_template.txt
     - lib/NfcoreTemplate.groovy
     - assets/multiqc_config.yaml
+  files_exist:
+    - bin/scrape_software_versions.py
+    - modules/local/get_software_versions.nf
 update:
   nf-core/modules:
     rseqc/bamstat: "906577873b66253b0d244871bfec2eeeaff73053"

@@ -29,7 +29,7 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 // RLM specify custom arguments
-if (params.script) { ch_script = file(params.script) } else { exit 1, 'Script to source was not specified!' }
+if (params.venv) { ch_venv = file(params.venv) } else { exit 1, 'Virtual environment to source was not specified!' }
 if (params.caller) { ch_caller = file(params.caller) } else { exit 1, 'Caller to invoke was not specified!' }
 if (params.annotations) { ch_annotations = file(params.annotations) } else { exit 1, 'Annotated junctions to reference were not specified!' }
 if (params.pon) { ch_pon = file(params.pon) } else { exit 1, 'PON to call against was not specified!' }
@@ -349,7 +349,7 @@ workflow RNASEQ {
         ch_tab = ALIGN_STAR.out.tab
         PSI_CALLIN (
             ch_tab,
-            ch_script,
+            ch_venv,
             ch_caller,
             ch_annotations,
             ch_pon,

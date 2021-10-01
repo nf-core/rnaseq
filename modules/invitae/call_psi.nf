@@ -6,7 +6,7 @@
 process CALL_PSI {
     input:
     tuple val(meta), path(tab)
-    path script
+    path venv
     path caller
     path annotations
     path pon
@@ -28,15 +28,9 @@ process CALL_PSI {
     date > date.txt
     awk -F '\t' -v OFS='\t' '{if(\$4==0) strand="."; else if(\$4==1) strand="+"; else strand="-"; print \$1, \$2, \$3, ".", \$7, strand;}' $tab > ${tab}.junc
     date >> date.txt
-    source $script
+    source $venv
     date >> date.txt
-    export LOCUS_SRLC=nkampshughes/git/pipe_splice_research/locus-pipe
-    date >> date.txt
-    export OPENBLAS_NUM_THREADS=1
-    date >> date.txt
-    export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-    date >> date.txt
-    $caller \\
+    python $caller \\
         --annotated-junctions $annotations \\
         --input-pon $pon \\
         --targets $targets \\

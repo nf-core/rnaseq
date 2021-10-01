@@ -26,15 +26,16 @@ workflow RSEQC {
 
     main:
 
+    ch_versions = Channel.empty()
+
     //
     // Run RSeQC bam_stat.py
     //
-    version       = Channel.empty()
-    bamstat_txt   = Channel.empty()
+    bamstat_txt = Channel.empty()
     if ('bam_stat' in rseqc_modules) {
         RSEQC_BAMSTAT ( bam )
         bamstat_txt = RSEQC_BAMSTAT.out.txt
-        version     = RSEQC_BAMSTAT.out.version
+        ch_versions = ch_versions.mix(RSEQC_BAMSTAT.out.versions.first())
     }
 
     //
@@ -52,17 +53,17 @@ workflow RSEQC {
         innerdistance_mean     = RSEQC_INNERDISTANCE.out.mean
         innerdistance_pdf      = RSEQC_INNERDISTANCE.out.pdf
         innerdistance_rscript  = RSEQC_INNERDISTANCE.out.rscript
-        version                = RSEQC_INNERDISTANCE.out.version
+        ch_versions = ch_versions.mix(RSEQC_INNERDISTANCE.out.versions.first())
     }
 
     //
     // Run RSeQC infer_experiment.py
     //
-    inferexperiment_txt   = Channel.empty()
+    inferexperiment_txt = Channel.empty()
     if ('infer_experiment' in rseqc_modules) {
         RSEQC_INFEREXPERIMENT ( bam, bed )
         inferexperiment_txt = RSEQC_INFEREXPERIMENT.out.txt
-        version             = RSEQC_INFEREXPERIMENT.out.version
+        ch_versions = ch_versions.mix(RSEQC_INFEREXPERIMENT.out.versions.first())
     }
 
     //
@@ -84,7 +85,7 @@ workflow RSEQC {
         junctionannotation_events_pdf   = RSEQC_JUNCTIONANNOTATION.out.events_pdf
         junctionannotation_rscript      = RSEQC_JUNCTIONANNOTATION.out.rscript
         junctionannotation_log          = RSEQC_JUNCTIONANNOTATION.out.log
-        version                         = RSEQC_JUNCTIONANNOTATION.out.version
+        ch_versions = ch_versions.mix(RSEQC_JUNCTIONANNOTATION.out.versions.first())
     }
 
     //
@@ -96,7 +97,7 @@ workflow RSEQC {
         RSEQC_JUNCTIONSATURATION ( bam, bed )
         junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.pdf
         junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.rscript
-        version                    = RSEQC_JUNCTIONSATURATION.out.version
+        ch_versions = ch_versions.mix(RSEQC_JUNCTIONSATURATION.out.versions.first())
     }
 
     //
@@ -106,7 +107,7 @@ workflow RSEQC {
     if ('read_distribution' in rseqc_modules) {
         RSEQC_READDISTRIBUTION ( bam, bed )
         readdistribution_txt = RSEQC_READDISTRIBUTION.out.txt
-        version              = RSEQC_READDISTRIBUTION.out.version
+        ch_versions = ch_versions.mix(RSEQC_READDISTRIBUTION.out.versions.first())
     }
 
     //
@@ -122,7 +123,7 @@ workflow RSEQC {
         readduplication_pos_xls = RSEQC_READDUPLICATION.out.pos_xls
         readduplication_pdf     = RSEQC_READDUPLICATION.out.pdf
         readduplication_rscript = RSEQC_READDUPLICATION.out.rscript
-        version                 = RSEQC_READDUPLICATION.out.version
+        ch_versions = ch_versions.mix(RSEQC_READDUPLICATION.out.versions.first())
     }
 
     emit:
@@ -154,5 +155,5 @@ workflow RSEQC {
     readduplication_pdf             // channel: [ val(meta), pdf ]
     readduplication_rscript         // channel: [ val(meta), r   ]
 
-    version                         //    path: versions.yml
+    versions = ch_versions          // channel: [ versions.yml ]
 }

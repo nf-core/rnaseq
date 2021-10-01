@@ -27,7 +27,7 @@ process SALMON_TXIMPORT {
     path "*gene_counts_scaled.tsv"       , emit: counts_gene_scaled
     path "*transcript_tpm.tsv"           , emit: tpm_transcript
     path "*transcript_counts.tsv"        , emit: counts_transcript
-    path "versions.yml"                  , emit: version
+    path "versions.yml"                  , emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

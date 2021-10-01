@@ -16,15 +16,19 @@ workflow DEDUP_UMI_UMITOOLS {
 
     main:
 
+    ch_versions = Channel.empty()
+
     //
     // UMI-tools dedup
     //
     UMITOOLS_DEDUP ( bam_bai )
+    ch_versions = ch_versions.mix(UMITOOLS_DEDUP.out.versions.first())
 
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
     SAMTOOLS_INDEX ( UMITOOLS_DEDUP.out.bam )
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     UMITOOLS_DEDUP.out.bam
         .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
@@ -40,15 +44,16 @@ workflow DEDUP_UMI_UMITOOLS {
         .set { ch_bam_bai }
 
     BAM_STATS_SAMTOOLS ( ch_bam_bai )
+    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
     bam              = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), [ bam ] ]
-    umitools_version = UMITOOLS_DEDUP.out.version      //    path: versions.yml
 
     bai              = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
     csi              = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
     stats            = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat         = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats         = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    samtools_version = SAMTOOLS_INDEX.out.version      //    path: versions.yml
+
+    versions         = ch_versions                     // channel: [ versions.yml ]
 }

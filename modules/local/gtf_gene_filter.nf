@@ -22,7 +22,7 @@ process GTF_GENE_FILTER {
 
     output:
     path "*.gtf"       , emit: gtf
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script: // filter_gtf_for_genes_in_genome.py is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

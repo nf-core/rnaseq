@@ -31,7 +31,7 @@ process SALMON_MERGE_COUNTS {
     path "salmon.merged.gene_counts_scaled.tsv"       , emit: counts_gene_scaled
     path "salmon.merged.transcript_counts.tsv"        , emit: counts_transcript
     path "salmon.merged.transcript_tpm.tsv"           , emit: tpm_transcript
-    path "versions.yml"                               , emit: version
+    path "versions.yml"                               , emit: versions
 
     script:
     """

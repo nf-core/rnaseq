@@ -24,7 +24,7 @@ process TRIMGALORE {
     output:
     tuple val(meta), path("*.fq.gz")    , emit: reads
     tuple val(meta), path("*report.txt"), emit: log
-    path "versions.yml"                 , emit: version
+    path "versions.yml"                 , emit: versions
 
     tuple val(meta), path("*.html"), emit: html optional true
     tuple val(meta), path("*.zip") , emit: zip optional true
@@ -48,7 +48,6 @@ process TRIMGALORE {
     def tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
 
     // Added soft-links to original fastqs for consistent naming in MultiQC
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     if (meta.single_end) {
         """

@@ -23,10 +23,9 @@ process UNTAR {
 
     output:
     path "$untar"      , emit: untar
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     untar        = archive.toString() - '.tar.gz'
     """
     tar \\

@@ -25,7 +25,7 @@ process CAT_ADDITIONAL_FASTA {
     output:
     path "${name}.fasta", emit: fasta
     path "${name}.gtf"  , emit: gtf
-    path "versions.yml" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
     def genome_name  = params.genome ? params.genome : fasta.getBaseName()

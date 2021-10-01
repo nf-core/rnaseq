@@ -203,7 +203,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
 def umitools_extract_options    = modules['umitools_extract']
-
 umitools_extract_options.args  += params.umitools_extract_method ? Utils.joinModuleArgs(["--extract-method=${params.umitools_extract_method}"]) : ''
 umitools_extract_options.args  += params.umitools_bc_pattern     ? Utils.joinModuleArgs(["--bc-pattern='${params.umitools_bc_pattern}'"])       : ''
 if (params.save_umi_intermeds)  { umitools_extract_options.publish_files.put('fastq.gz','') }
@@ -253,6 +252,8 @@ def fail_percent_mapped = [:]
 
 workflow RNASEQ {
 
+    ch_versions = Channel.empty()
+
     //
     // SUBWORKFLOW: Uncompress and prepare reference genome files
     //
@@ -260,8 +261,7 @@ workflow RNASEQ {
         prepareToolIndices,
         biotype
     )
-    ch_software_versions = Channel.empty()
-    ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.gffread_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -269,6 +269,7 @@ workflow RNASEQ {
     INPUT_CHECK (
         ch_input
     )
+    .reads
     .map {
         meta, fastq ->
             meta.id = meta.id.split('_')[0..-2].join('_')
@@ -282,6 +283,7 @@ workflow RNASEQ {
                 return [ meta, fastq.flatten() ]
     }
     .set { ch_fastq }
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
     // MODULE: Concatenate FastQ files from same sample if required
@@ -292,6 +294,7 @@ workflow RNASEQ {
     .reads
     .mix(ch_fastq.single)
     .set { ch_cat_fastq }
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters
@@ -302,12 +305,10 @@ workflow RNASEQ {
         params.with_umi,
         params.skip_trimming
     )
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.umitools_version.first().ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.trimgalore_version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
     //
-    // SUBWORKFLOW: Remove genome contaminant reads
+    // MODULE: Remove genome contaminant reads
     //
     ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_bbsplit) {
@@ -320,8 +321,7 @@ workflow RNASEQ {
         )
         .primary_fastq
         .set { ch_filtered_reads }
-
-        ch_software_versions = ch_software_versions.mix(BBMAP_BBSPLIT.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions.first())
     }
 
     //
@@ -339,7 +339,7 @@ workflow RNASEQ {
         .set { ch_filtered_reads }
 
         ch_sortmerna_multiqc = SORTMERNA.out.log
-        ch_software_versions = ch_software_versions.mix(SORTMERNA.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
 
     //
@@ -369,8 +369,7 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = ALIGN_STAR.out.csi
         }
-        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.star_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(ALIGN_STAR.out.samtools_version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
@@ -388,6 +387,7 @@ workflow RNASEQ {
             if (params.bam_csi_index) {
                 ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
             }
+            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_SAMTOOLS (
@@ -419,9 +419,7 @@ workflow RNASEQ {
             true,
             params.salmon_quant_libtype ?: ''
         )
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.salmon_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.tximeta_version.ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_STAR_SALMON.out.summarizedexperiment_version.ifEmpty(null))
+        ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (
@@ -431,7 +429,7 @@ workflow RNASEQ {
             )
             ch_aligner_pca_multiqc        = DESEQ2_QC_STAR_SALMON.out.pca_multiqc
             ch_aligner_clustering_multiqc = DESEQ2_QC_STAR_SALMON.out.dists_multiqc
-            ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_STAR_SALMON.out.version.ifEmpty(null))
+            ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions)
         }
     }
 
@@ -454,8 +452,7 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = QUANTIFY_RSEM.out.csi
         }
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.rsem_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(QUANTIFY_RSEM.out.samtools_version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_RSEM (
@@ -465,7 +462,7 @@ workflow RNASEQ {
             )
             ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
             ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
-            ch_software_versions          = ch_software_versions.mix(DESEQ2_QC_RSEM.out.version.ifEmpty(null))
+            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
         }
     }
 
@@ -488,8 +485,7 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = ALIGN_HISAT2.out.csi
         }
-        ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.hisat2_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(ALIGN_HISAT2.out.samtools_version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(ALIGN_HISAT2.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
@@ -506,6 +502,7 @@ workflow RNASEQ {
             if (params.bam_csi_index) {
                 ch_genome_bam_index = DEDUP_UMI_UMITOOLS_GENOME.out.csi
             }
+            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
         }
     }
 
@@ -544,6 +541,7 @@ workflow RNASEQ {
         )
         .tsv
         .set { ch_fail_mapping_multiqc }
+        ch_versions = ch_versions.mix(MULTIQC_CUSTOM_FAIL_MAPPED.out.versions)
     }
 
     //
@@ -554,8 +552,8 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
-        ch_preseq_multiqc    = PRESEQ_LCEXTRAP.out.ccurve
-        ch_software_versions = ch_software_versions.mix(PRESEQ_LCEXTRAP.out.version.first().ifEmpty(null))
+        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.ccurve
+        ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 
     //
@@ -575,7 +573,7 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = MARK_DUPLICATES_PICARD.out.csi
         }
-        ch_software_versions = ch_software_versions.mix(MARK_DUPLICATES_PICARD.out.picard_version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(MARK_DUPLICATES_PICARD.out.versions)
     }
 
     //
@@ -586,7 +584,7 @@ workflow RNASEQ {
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
         )
-        ch_software_versions = ch_software_versions.mix(STRINGTIE.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(STRINGTIE.out.versions.first())
     }
 
     //
@@ -612,13 +610,14 @@ workflow RNASEQ {
         SUBREAD_FEATURECOUNTS (
             ch_featurecounts
         )
-        ch_software_versions = ch_software_versions.mix(SUBREAD_FEATURECOUNTS.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
 
         MULTIQC_CUSTOM_BIOTYPE (
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
         )
         ch_featurecounts_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
+        ch_versions = ch_versions.mix(MULTIQC_CUSTOM_BIOTYPE.out.versions.first())
     }
 
     //
@@ -629,7 +628,7 @@ workflow RNASEQ {
         BEDTOOLS_GENOMECOV (
             ch_genome_bam
         )
-        ch_software_versions = ch_software_versions.mix(BEDTOOLS_GENOMECOV.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV.out.versions.first())
 
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
@@ -638,7 +637,7 @@ workflow RNASEQ {
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_software_versions = ch_software_versions.mix(BEDGRAPH_TO_BIGWIG_FORWARD.out.ucsc_version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(BEDGRAPH_TO_BIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_TO_BIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
@@ -666,15 +665,15 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gtf
             )
             ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
-            //ch_software_versions = ch_software_versions.mix(QUALIMAP_RNASEQ.out.version.first().ifEmpty(null))
+            ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
         if (!params.skip_dupradar) {
             DUPRADAR (
                 ch_genome_bam,
                 PREPARE_GENOME.out.gtf
             )
-            ch_dupradar_multiqc  = DUPRADAR.out.multiqc
-            ch_software_versions = ch_software_versions.mix(DUPRADAR.out.version.first().ifEmpty(null))
+            ch_dupradar_multiqc = DUPRADAR.out.multiqc
+            ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             RSEQC (
@@ -689,7 +688,7 @@ workflow RNASEQ {
             ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
             ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
             ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
-            ch_software_versions          = ch_software_versions.mix(RSEQC.out.version.first().ifEmpty(null))
+            ch_versions = ch_versions.mix(RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
                 .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }
@@ -704,6 +703,7 @@ workflow RNASEQ {
             )
             .tsv
             .set { ch_fail_strand_multiqc }
+            ch_versions = ch_versions.mix(MULTIQC_CUSTOM_STRAND_CHECK.out.versions)
         }
     }
 
@@ -723,11 +723,7 @@ workflow RNASEQ {
             params.salmon_quant_libtype ?: ''
         )
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
-        if (params.skip_alignment && params.aligner != 'star_salmon') {
-            ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.salmon_version.first().ifEmpty(null))
-            ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.tximeta_version.ifEmpty(null))
-            ch_software_versions = ch_software_versions.mix(QUANTIFY_SALMON.out.summarizedexperiment_version.ifEmpty(null))
-        }
+        ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_SALMON (
@@ -737,9 +733,7 @@ workflow RNASEQ {
             )
             ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
             ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
-            if (params.skip_alignment) {
-                ch_software_versions = ch_software_versions.mix(DESEQ2_QC_SALMON.out.version.ifEmpty(null))
-            }
+            ch_versions = ch_versions.mix(DESEQ2_QC_SALMON.out.versions)
         }
     }
 
@@ -747,53 +741,53 @@ workflow RNASEQ {
     // MODULE: Pipeline reporting
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_software_versions.collectFile()
+        ch_versions.unique().collectFile()
     )
 
-    //
-    // MODULE: MultiQC
-    //
-    if (!params.skip_multiqc) {
-        workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
-        ch_workflow_summary = Channel.value(workflow_summary)
+    // //
+    // // MODULE: MultiQC
+    // //
+    // if (!params.skip_multiqc) {
+    //     workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
+    //     ch_workflow_summary = Channel.value(workflow_summary)
 
-        MULTIQC (
-            ch_multiqc_config,
-            ch_multiqc_custom_config.collect().ifEmpty([]),
-            CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
-            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-            ch_fail_mapping_multiqc.ifEmpty([]),
-            ch_fail_strand_multiqc.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
-            ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_star_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_rsem_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_salmon_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_samtools_stats.collect{it[1]}.ifEmpty([]),
-            ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
-            ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
-            ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_aligner_pca_multiqc.collect().ifEmpty([]),
-            ch_aligner_clustering_multiqc.collect().ifEmpty([]),
-            ch_pseudoaligner_pca_multiqc.collect().ifEmpty([]),
-            ch_pseudoaligner_clustering_multiqc.collect().ifEmpty([]),
-            ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_bamstat_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_inferexperiment_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_innerdistance_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_junctionannotation_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_readduplication_multiqc.collect{it[1]}.ifEmpty([])
-        )
-        multiqc_report = MULTIQC.out.report.toList()
-    }
+    //     MULTIQC (
+    //         ch_multiqc_config,
+    //         ch_multiqc_custom_config.collect().ifEmpty([]),
+    //         CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
+    //         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+    //         ch_fail_mapping_multiqc.ifEmpty([]),
+    //         ch_fail_strand_multiqc.ifEmpty([]),
+    //         FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
+    //         FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
+    //         FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+    //         ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_star_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_rsem_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_salmon_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_samtools_stats.collect{it[1]}.ifEmpty([]),
+    //         ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
+    //         ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
+    //         ch_markduplicates_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_featurecounts_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_aligner_pca_multiqc.collect().ifEmpty([]),
+    //         ch_aligner_clustering_multiqc.collect().ifEmpty([]),
+    //         ch_pseudoaligner_pca_multiqc.collect().ifEmpty([]),
+    //         ch_pseudoaligner_clustering_multiqc.collect().ifEmpty([]),
+    //         ch_preseq_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_qualimap_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_dupradar_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_bamstat_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_inferexperiment_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_innerdistance_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_junctionannotation_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
+    //         ch_readduplication_multiqc.collect{it[1]}.ifEmpty([])
+    //     )
+    //     multiqc_report = MULTIQC.out.report.toList()
+    // }
 }
 
 /*

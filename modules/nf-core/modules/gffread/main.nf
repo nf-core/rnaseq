@@ -23,10 +23,9 @@ process GFFREAD {
 
     output:
     path "*.gtf"        , emit: gtf
-    path "versions.yml" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${gff.baseName}${options.suffix}" : "${gff.baseName}"
     """
     gffread \\

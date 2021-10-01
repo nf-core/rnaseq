@@ -24,10 +24,9 @@ process SAMTOOLS_INDEX {
     output:
     tuple val(meta), path("*.bai"), optional:true, emit: bai
     tuple val(meta), path("*.csi"), optional:true, emit: csi
-    path  "versions.yml"          , emit: version
+    path  "versions.yml"          , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     """
     samtools index $options.args $bam
     cat <<-END_VERSIONS > versions.yml

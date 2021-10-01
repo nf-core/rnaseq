@@ -30,10 +30,9 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*primary*fastq.gz'), optional:true, emit: primary_fastq
     tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
     tuple val(meta), path('*txt')             , optional:true, emit: stats
-    path "versions.yml"                       , emit: version
+    path "versions.yml"                       , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def avail_mem = 3

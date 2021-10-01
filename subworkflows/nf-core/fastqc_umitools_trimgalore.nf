@@ -18,35 +18,34 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
     skip_trimming // boolean: true/false
 
     main:
-    fastqc_html    = Channel.empty()
-    fastqc_zip     = Channel.empty()
-    fastqc_version = Channel.empty()
+
+    ch_versions = Channel.empty()
+    fastqc_html = Channel.empty()
+    fastqc_zip  = Channel.empty()
     if (!skip_fastqc) {
         FASTQC ( reads ).html.set { fastqc_html }
-        fastqc_zip     = FASTQC.out.zip
-        fastqc_version = FASTQC.out.version
+        fastqc_zip  = FASTQC.out.zip
+        ch_versions = ch_versions.mix(FASTQC.out.versions.first())
     }
 
-    umi_reads        = reads
-    umi_log          = Channel.empty()
-    umitools_version = Channel.empty()
+    umi_reads = reads
+    umi_log   = Channel.empty()
     if (with_umi) {
         UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
-        umi_log          = UMITOOLS_EXTRACT.out.log
-        umitools_version = UMITOOLS_EXTRACT.out.version
+        umi_log     = UMITOOLS_EXTRACT.out.log
+        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
     }
 
     trim_reads = umi_reads
     trim_html  = Channel.empty()
     trim_zip   = Channel.empty()
     trim_log   = Channel.empty()
-    trimgalore_version = Channel.empty()
     if (!skip_trimming) {
         TRIMGALORE ( umi_reads ).reads.set { trim_reads }
-        trim_html  = TRIMGALORE.out.html
-        trim_zip   = TRIMGALORE.out.zip
-        trim_log   = TRIMGALORE.out.log
-        trimgalore_version = TRIMGALORE.out.version
+        trim_html   = TRIMGALORE.out.html
+        trim_zip    = TRIMGALORE.out.zip
+        trim_log    = TRIMGALORE.out.log
+        ch_versions = ch_versions.mix(TRIMGALORE.out.versions.first())
     }
 
     emit:
@@ -54,13 +53,12 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
 
     fastqc_html        // channel: [ val(meta), [ html ] ]
     fastqc_zip         // channel: [ val(meta), [ zip ] ]
-    fastqc_version     //    path: versions.yml
 
     umi_log            // channel: [ val(meta), [ log ] ]
-    umitools_version   //    path: versions.yml
 
     trim_html          // channel: [ val(meta), [ html ] ]
     trim_zip           // channel: [ val(meta), [ zip ] ]
     trim_log           // channel: [ val(meta), [ txt ] ]
-    trimgalore_version //    path: versions.yml
+
+    versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

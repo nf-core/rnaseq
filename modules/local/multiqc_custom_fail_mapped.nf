@@ -20,7 +20,7 @@ process MULTIQC_CUSTOM_FAIL_MAPPED {
 
     output:
     path "*.tsv"       , emit: tsv
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
     if (fail_mapped.size() > 0) {

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * [[#407](https://github.com/nf-core/rnaseq/issues/407)] - Filter mouse reads from PDX samples
 * [[#690](https://github.com/nf-core/rnaseq/issues/690)] - Error with post-trimmed read 2 sample names from FastQC in MultiQC
+* [[#693](https://github.com/nf-core/rnaseq/issues/693)] - Cutadapt version missing from MultiQC report
 * [[#697](https://github.com/nf-core/rnaseq/issues/697)] - pipeline_report.{txt,html} missing from pipeline_info directory
 * Added `python3` shebang to appropriate scripts in `bin/` directory
 
@@ -24,6 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.
 > **NB:** Parameter has been __added__ if just the new parameter information is present.
 > **NB:** Parameter has been __removed__ if parameter information isn't present.
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency    | Old version | New version |
+|---------------|-------------|-------------|
+| `hisat2`      | 2.2.0       | 2.2.1       |
+| `picard`      | 2.23.9      | 2.25.7      |
+| `salmon`      | 1.4.0       | 1.5.2       |
+| `samtools`    | 1.12        | 1.13        |
+| `trim-galore` | 0.6.6       | 0.6.7       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.
+> **NB:** Dependency has been __added__ if just the new version information is present.
+> **NB:** Dependency has been __removed__ if version information isn't present.
 
 ## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-29
 

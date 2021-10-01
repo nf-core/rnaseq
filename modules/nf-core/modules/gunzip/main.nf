@@ -23,10 +23,9 @@ process GUNZIP {
 
     output:
     path "$gunzip",       emit: gunzip
-    path "versions.yml" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     gunzip       = archive.toString() - '.gz'
     """
     gunzip \\

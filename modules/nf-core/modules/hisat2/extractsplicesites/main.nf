@@ -25,10 +25,9 @@ process HISAT2_EXTRACTSPLICESITES {
 
     output:
     path "*.splice_sites.txt", emit: txt
-    path "versions.yml"      , emit: version
+    path "versions.yml"      , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     """
     hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.splice_sites.txt
     cat <<-END_VERSIONS > versions.yml

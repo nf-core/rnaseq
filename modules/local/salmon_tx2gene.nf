@@ -23,7 +23,7 @@ process SALMON_TX2GENE {
 
     output:
     path "*.tsv"       , emit: tsv
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

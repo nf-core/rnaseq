@@ -25,7 +25,7 @@ process STAR_GENOMEGENERATE {
 
     output:
     path "star"        , emit: index
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
     def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''

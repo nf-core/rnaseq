@@ -28,7 +28,7 @@ process HISAT2_BUILD {
 
     output:
     path "hisat2"       , emit: index
-    path "versions.yml" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
     def avail_mem = 0
@@ -53,7 +53,6 @@ process HISAT2_BUILD {
         log.info "[HISAT2 index build] Use --hisat2_build_memory [small number] to skip this check."
     }
 
-    def software = getSoftwareName(task.process)
     """
     mkdir hisat2
     $extract_exons

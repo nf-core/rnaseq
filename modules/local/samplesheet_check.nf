@@ -21,7 +21,7 @@ process SAMPLESHEET_CHECK {
 
     output:
     path '*.csv'       , emit: csv
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """

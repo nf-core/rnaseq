@@ -24,10 +24,9 @@ process SUBREAD_FEATURECOUNTS {
     output:
     tuple val(meta), path("*featureCounts.txt")        , emit: counts
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
-    path "versions.yml"                                , emit: version
+    path "versions.yml"                                , emit: versions
 
     script:
-    def software   = getSoftwareName(task.process)
     def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def paired_end = meta.single_end ? '' : '-p'
 

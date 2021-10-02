@@ -101,8 +101,8 @@ include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../modules/local/dupradar'                    addParams( options: modules['dupradar']                               )
 include { MULTIQC                            } from '../modules/local/multiqc'                     addParams( options: multiqc_options                                   )
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'      addParams( options: modules['multiqc_custom_biotype']                 )
-include { MULTIQC_CUSTOM_FAIL_MAPPED         } from '../modules/local/multiqc_custom_fail_mapped'  addParams( options: [publish_files: false]                            )
-include { MULTIQC_CUSTOM_STRAND_CHECK        } from '../modules/local/multiqc_custom_strand_check' addParams( options: [publish_files: false]                            )
+include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_MAPPED  } from '../modules/local/multiqc_tsv_from_list' addParams( options: [publish_files: false] )
+include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_STRAND_CHECK } from '../modules/local/multiqc_tsv_from_list' addParams( options: [publish_files: false] )
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -536,10 +536,15 @@ workflow RNASEQ {
             }
             .set { ch_pass_fail_mapped }
 
-        MULTIQC_CUSTOM_FAIL_MAPPED (
-            ch_pass_fail_mapped.fail.collect()
+        def header = [
+            "Sample",
+            "STAR uniquely mapped reads (%)"
+        ]
+        MULTIQC_TSV_FAIL_MAPPED (
+            ch_pass_fail_mapped.fail.collect(),
+            header,
+            'fail_mapped_samples'
         )
-        .tsv
         .set { ch_fail_mapping_multiqc }
     }
 
@@ -697,10 +702,19 @@ workflow RNASEQ {
                 }
                 .set { ch_fail_strand }
 
-            MULTIQC_CUSTOM_STRAND_CHECK (
-                ch_fail_strand.collect()
+            def header = [
+                "Sample",
+                "Provided strandedness",
+                "Inferred strandedness",
+                "Sense (%)",
+                "Antisense (%)",
+                "Undetermined (%)"
+            ]
+            MULTIQC_TSV_STRAND_CHECK (
+                ch_fail_strand.collect(),
+                header,
+                'fail_strand_check'
             )
-            .tsv
             .set { ch_fail_strand_multiqc }
         }
     }

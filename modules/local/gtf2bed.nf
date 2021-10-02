@@ -32,7 +32,7 @@ process GTF2BED {
 
     cat <<-END_VERSIONS > versions.yml
     ${getProcessName(task.process)}:
-        perl: \$(echo \$(perl --version 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
+        perl: \$(echo \$(perl --version 2>&1) | sed 's/.*v\\(.*\\)) built.*/\\1/')
     END_VERSIONS
     """
 }

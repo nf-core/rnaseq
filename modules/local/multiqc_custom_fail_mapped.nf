@@ -17,14 +17,18 @@ process MULTIQC_CUSTOM_FAIL_MAPPED {
     path "*.tsv", emit: tsv
 
     exec:
+    // Generate file contents
     def header = [
         "Sample",
         "STAR uniquely mapped reads (%)"
     ]
-    def contents = "${header.join('\t')}\n"
-    def mqc_file = task.workDir.resolve("fail_mapped_samples_mqc.tsv")
+    def contents = ""
     if (fail_mapped.size() > 0) {
+        contents += "${header.join('\t')}\n"
         contents += fail_mapped.join('\n')
-        mqc_file.text = contents
     }
+
+    // Write to file
+    def mqc_file = task.workDir.resolve("fail_mapped_samples_mqc.tsv")
+    mqc_file.text = contents
 }

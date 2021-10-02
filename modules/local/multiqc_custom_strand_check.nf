@@ -17,6 +17,7 @@ process MULTIQC_CUSTOM_STRAND_CHECK {
     path "*.tsv", emit: tsv
 
     exec:
+    // Generate file contents
     def header = [
         "Sample",
         "Provided strandedness",
@@ -25,10 +26,13 @@ process MULTIQC_CUSTOM_STRAND_CHECK {
         "Antisense (%)",
         "Undetermined (%)"
     ]
-    def contents = "{$header.join('\t')}\n"
-    def mqc_file = task.workDir.resolve("fail_strand_check_mqc.tsv")
+    def contents = ''
     if (fail_strand.size() > 0) {
+        contents += "${header.join('\t')}\n"
         contents += fail_strand.join('\n')
-        mqc_file.text = contents
     }
+
+    // Write to file
+    def mqc_file = task.workDir.resolve("fail_strand_check_mqc.tsv")
+    mqc_file.text = contents
 }

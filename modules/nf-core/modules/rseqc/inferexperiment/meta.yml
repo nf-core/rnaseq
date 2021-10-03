@@ -30,9 +30,9 @@ output:
       type: file
       description: infer_experiment results report
       pattern: "*.infer_experiment.txt"
-  - version:
+  - versions:
       type: file
-      description: File containing software version
+      description: File containing software versions
       pattern: "versions.yml"
 authors:
   - "@drpatelh"

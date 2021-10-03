@@ -10,11 +10,11 @@ lint:
     - modules/local/get_software_versions.nf
 update:
   nf-core/modules:
-    rseqc/bamstat: "7b3315591a149609e27914965f858c9a7e071564"
-    rseqc/inferexperiment: "7b3315591a149609e27914965f858c9a7e071564"
-    rseqc/innerdistance: "7b3315591a149609e27914965f858c9a7e071564"
-    rseqc/junctionannotation: "7b3315591a149609e27914965f858c9a7e071564"
-    rseqc/junctionsaturation: "7b3315591a149609e27914965f858c9a7e071564"
-    rseqc/readdistribution: "7b3315591a149609e27914965f858c9a7e071564"
-    rseqc/readduplication: "7b3315591a149609e27914965f858c9a7e071564"
+    rseqc/bamstat: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/inferexperiment: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/innerdistance: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/junctionannotation: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/junctionsaturation: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/readdistribution: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/readduplication: "49da8642876ae4d91128168cd0db4f1c858d7792"
     sortmerna: "7b3315591a149609e27914965f858c9a7e071564"

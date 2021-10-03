@@ -24,9 +24,9 @@ output:
       type: file
       description: GTF file resulting from the conversion of the GFF input file
       pattern: "*.{gtf}"
-  - version:
+  - versions:
       type: file
-      description: File containing software version
+      description: File containing software versions
       pattern: "versions.yml"
 
 authors:

@@ -35,9 +35,9 @@ output:
       type: file
       description: Junction saturation R-script
       pattern: "*.r"
-  - version:
+  - versions:
       type: file
-      description: File containing software version
+      description: File containing software versions
       pattern: "versions.yml"
 authors:
   - "@drpatelh"

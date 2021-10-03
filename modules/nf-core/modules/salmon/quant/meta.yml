@@ -45,9 +45,9 @@ output:
       type: directory
       description: Folder containing the quantification results for a specific sample
       pattern: "${prefix}"
-  - version:
+  - versions:
       type: file
-      description: File containing software version
+      description: File containing software versions
       pattern: "versions.yml"
 
 authors:

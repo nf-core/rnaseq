@@ -25,9 +25,9 @@ output:
       type: directory
       description: Folder containing the star index files
       pattern: "salmon"
-  - version:
+  - versions:
       type: file
-      description: File containing software version
+      description: File containing software versions
       pattern: "versions.yml"
 
 authors:

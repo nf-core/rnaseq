@@ -42,9 +42,9 @@ output:
       type: file
       description: RSEM logs
       pattern: "*.log"
-  - version:
+  - versions:
       type: file
-      description: File containing software version
+      description: File containing software versions
       pattern: "versions.yml"
   - bam_star:
       type: file

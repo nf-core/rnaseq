@@ -30,13 +30,13 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input sample
 
 // Check rRNA databases for sortmerna
 if (params.remove_ribo_rna) {
-    ch_ribo_db = file(params.ribo_database_manifest)
+    ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
     if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
 }
 
 // Check if file with list of fastas is provided when running BBSplit
 if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
-    ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
+    ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list, checkIfExists: true)
     if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
 }
 
@@ -329,11 +329,11 @@ workflow RNASEQ {
     //
     ch_sortmerna_multiqc = Channel.empty()
     if (params.remove_ribo_rna) {
-        ch_sortmerna_fasta = Channel.from(ch_ribo_db.readLines()).map { row -> file(row) }.collect()
+        ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines()).map { row -> file(row, checkIfExists: true) }.collect()
 
         SORTMERNA (
             ch_filtered_reads,
-            ch_sortmerna_fasta
+            ch_sortmerna_fastas
         )
         .reads
         .set { ch_filtered_reads }

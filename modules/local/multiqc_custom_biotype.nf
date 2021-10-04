@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -23,12 +23,22 @@ process MULTIQC_CUSTOM_BIOTYPE {
 
     output:
     tuple val(meta), path("*.tsv"), emit: tsv
+    path "versions.yml"           , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
     cut -f 1,7 $count | tail -n +3 | cat $header - >> ${prefix}.biotype_counts_mqc.tsv
-    mqc_features_stat.py ${prefix}.biotype_counts_mqc.tsv -s $meta.id -f rRNA -o ${prefix}.biotype_counts_rrna_mqc.tsv
+
+    mqc_features_stat.py \\
+        ${prefix}.biotype_counts_mqc.tsv \\
+        -s $meta.id \\
+        -f rRNA \\
+        -o ${prefix}.biotype_counts_rrna_mqc.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
     """
 }

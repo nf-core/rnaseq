@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -24,10 +24,9 @@ process UMITOOLS_EXTRACT {
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path  "*.version.txt"              , emit: version
+    path  "versions.yml"               , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     if (meta.single_end) {
         """
@@ -38,7 +37,10 @@ process UMITOOLS_EXTRACT {
             $options.args \\
             > ${prefix}.umi_extract.log
 
-        echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//' > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        END_VERSIONS
         """
     }  else {
         """
@@ -51,7 +53,10 @@ process UMITOOLS_EXTRACT {
             $options.args \\
             > ${prefix}.umi_extract.log
 
-        echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//' > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        END_VERSIONS
         """
     }
 }

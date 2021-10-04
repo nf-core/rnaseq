@@ -1,10 +1,11 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
 
 process BBMAP_BBSPLIT {
+    tag "$meta.id"
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -29,10 +30,9 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*primary*fastq.gz'), optional:true, emit: primary_fastq
     tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
     tuple val(meta), path('*txt')             , optional:true, emit: stats
-    path "*.version.txt"                      , emit: version
+    path "versions.yml"                       , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def avail_mem = 3
@@ -57,7 +57,10 @@ process BBMAP_BBSPLIT {
                 threads=$task.cpus \\
                 $options.args
 
-            echo \$(bbversion.sh) > ${software}.version.txt
+            cat <<-END_VERSIONS > versions.yml
+            ${getProcessName(task.process)}:
+                ${getSoftwareName(task.process)}: \$(bbversion.sh 2>&1)
+            END_VERSIONS
             """
         } else {
             log.error 'ERROR: Please specify as input a primary fasta file along with names and paths to non-primary fasta files.'
@@ -83,7 +86,10 @@ process BBMAP_BBSPLIT {
             refstats=${prefix}.stats.txt \\
             $options.args
 
-        echo \$(bbversion.sh) > ${software}.version.txt
+        cat <<-END_VERSIONS > versions.yml
+        ${getProcessName(task.process)}:
+            ${getSoftwareName(task.process)}: \$(bbversion.sh 2>&1)
+        END_VERSIONS
         """
     }
 }

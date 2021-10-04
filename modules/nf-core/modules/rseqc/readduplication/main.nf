@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -26,10 +26,9 @@ process RSEQC_READDUPLICATION {
     tuple val(meta), path("*pos.DupRate.xls"), emit: pos_xls
     tuple val(meta), path("*.pdf")           , emit: pdf
     tuple val(meta), path("*.r")             , emit: rscript
-    path  "*.version.txt"                    , emit: version
+    path  "versions.yml"                     , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
     read_duplication.py \\
@@ -37,6 +36,9 @@ process RSEQC_READDUPLICATION {
         -o $prefix \\
         $options.args
 
-    read_duplication.py --version | sed -e "s/read_duplication.py //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
+    END_VERSIONS
     """
 }

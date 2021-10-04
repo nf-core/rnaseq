@@ -21,10 +21,10 @@ input:
       pattern: "*.{gtf}"
 
 output:
-  - version:
+  - versions:
       type: file
-      description: File containing software version
-      pattern: "*.{version.txt}"
+      description: File containing software versions
+      pattern: "versions.yml"
   - splicesites:
       type: file
       description: Splices sites in gtf file

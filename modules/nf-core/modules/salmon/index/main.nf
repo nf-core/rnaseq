@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -11,11 +11,11 @@ process SALMON_INDEX {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'index', meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::salmon=1.4.0" : null)
+    conda (params.enable_conda ? 'bioconda::salmon=1.5.2' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/salmon:1.4.0--hf69c8f4_0"
+        container "https://depot.galaxyproject.org/singularity/salmon:1.5.2--h84f40af_0"
     } else {
-        container "quay.io/biocontainers/salmon:1.4.0--hf69c8f4_0"
+        container "quay.io/biocontainers/salmon:1.5.2--h84f40af_0"
     }
 
     input:
@@ -24,10 +24,9 @@ process SALMON_INDEX {
 
     output:
     path "salmon"       , emit: index
-    path "*.version.txt", emit: version
+    path "versions.yml" , emit: versions
 
     script:
-    def software      = getSoftwareName(task.process)
     def get_decoy_ids = "grep '^>' $genome_fasta | cut -d ' ' -f 1 > decoys.txt"
     def gentrome      = "gentrome.fa"
     if (genome_fasta.endsWith('.gz')) {
@@ -46,6 +45,9 @@ process SALMON_INDEX {
         -d decoys.txt \\
         $options.args \\
         -i salmon
-    salmon --version | sed -e "s/salmon //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
+    END_VERSIONS
     """
 }

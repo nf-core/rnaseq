@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -23,12 +23,18 @@ process GFFREAD {
 
     output:
     path "*.gtf"        , emit: gtf
-    path "*.version.txt", emit: version
+    path "versions.yml" , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
+    def prefix   = options.suffix ? "${gff.baseName}${options.suffix}" : "${gff.baseName}"
     """
-    gffread $gff $options.args -o ${gff.baseName}.gtf
-    echo \$(gffread --version 2>&1) > ${software}.version.txt
+    gffread \\
+        $gff \\
+        $options.args \\
+        -o ${prefix}.gtf
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(gffread --version 2>&1)
+    END_VERSIONS
     """
 }

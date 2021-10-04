@@ -29,10 +29,10 @@ input:
       pattern: "*.{txt}"
 
 output:
-  - version:
+  - versions:
       type: file
-      description: File containing software version
-      pattern: "*.{version.txt}"
+      description: File containing software versions
+      pattern: "versions.yml"
   - index:
       type: file
       description: HISAT2 genome index file

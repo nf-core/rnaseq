@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -23,10 +23,9 @@ process UMITOOLS_DEDUP {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    path  "*.version.txt"         , emit: version
+    path  "versions.yml"          , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def paired   = meta.single_end ? "" : "--paired"
     """
@@ -36,6 +35,9 @@ process UMITOOLS_DEDUP {
         $paired \\
         $options.args
 
-    echo \$(umi_tools --version 2>&1) | sed 's/^.*UMI-tools version://; s/ *\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+    END_VERSIONS
     """
 }

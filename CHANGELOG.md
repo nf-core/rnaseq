@@ -3,15 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unpublished Version / DEV]
+## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-10-05
 
 ### Enhancements & fixes
 
+* Software version(s) will now be reported for every module imported during a given pipeline execution
+* Added `python3` shebang to appropriate scripts in `bin/` directory
 * [[#407](https://github.com/nf-core/rnaseq/issues/407)] - Filter mouse reads from PDX samples
 * [[#690](https://github.com/nf-core/rnaseq/issues/690)] - Error with post-trimmed read 2 sample names from FastQC in MultiQC
 * [[#693](https://github.com/nf-core/rnaseq/issues/693)] - Cutadapt version missing from MultiQC report
 * [[#697](https://github.com/nf-core/rnaseq/issues/697)] - pipeline_report.{txt,html} missing from pipeline_info directory
-* Added `python3` shebang to appropriate scripts in `bin/` directory
+* [[#705](https://github.com/nf-core/rnaseq/issues/705)] - Sample sheet error check false positive
 
 ### Parameters
 

@@ -4,7 +4,7 @@
     "repos": {
         "nf-core/modules": {
             "bbmap/bbsplit": {
-                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+                "git_sha": "515793c73e7f1d8a742aad0ab830ad9575318784"
             },
             "cat/fastq": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
@@ -88,7 +88,7 @@
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
             },
             "sortmerna": {
-                "git_sha": "7b3315591a149609e27914965f858c9a7e071564"
+                "git_sha": "515793c73e7f1d8a742aad0ab830ad9575318784"
             },
             "stringtie/stringtie": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"

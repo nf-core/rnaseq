@@ -20,7 +20,7 @@ process SORTMERNA {
 
     input:
     tuple val(meta), path(reads)
-    path  fasta
+    path  fastas
 
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
@@ -28,14 +28,11 @@ process SORTMERNA {
     path  "versions.yml"               , emit: versions
 
     script:
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-
-    def Refs = ""
-    for (i=0; i<fasta.size(); i++) { Refs+= " --ref ${fasta[i]}" }
+    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     if (meta.single_end) {
         """
         sortmerna \\
-            $Refs \\
+            ${'--ref '+fastas.join(' --ref ')} \\
             --reads $reads \\
             --threads $task.cpus \\
             --workdir . \\
@@ -54,7 +51,7 @@ process SORTMERNA {
     } else {
         """
         sortmerna \\
-            $Refs \\
+            ${'--ref '+fastas.join(' --ref ')} \\
             --reads ${reads[0]} \\
             --reads ${reads[1]} \\
             --threads $task.cpus \\

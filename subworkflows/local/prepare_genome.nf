@@ -149,7 +149,7 @@ workflow PREPARE_GENOME {
             Channel
                 .from(file(params.bbsplit_fasta_list))
                 .splitCsv() // Read in 2 column csv file: short_name,path_to_fasta
-                .flatMap { id, fasta -> [ [ 'id', id ], [ 'fasta', fasta ] ] } // Flatten entries to be able to groupTuple by a common key
+                .flatMap { id, fasta -> [ [ 'id', id ], [ 'fasta', file(fasta, checkIfExists: true) ] ] } // Flatten entries to be able to groupTuple by a common key
                 .groupTuple()
                 .map { it -> it[1] } // Get rid of keys and keep grouped values
                 .collect { [ it ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module

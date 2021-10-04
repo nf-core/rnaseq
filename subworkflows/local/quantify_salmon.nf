@@ -2,15 +2,15 @@
 // Pseudo-alignment and quantification with Salmon
 //
 
-params.genome_options       = [:]
-params.salmon_quant_options = [:]
-params.tximport_options     = [:]
-params.merge_counts_options = [:]
+params.salmon_quant_options   = [:]
+params.salmon_tx2gene_options = [:]
+params.tximport_options       = [:]
+params.merge_counts_options   = [:]
 
-include { SALMON_QUANT        } from '../../modules/nf-core/modules/salmon/quant/main' addParams( options: params.salmon_quant_options )
-include { SALMON_TX2GENE      } from '../../modules/local/salmon_tx2gene'              addParams( options: params.genome_options       )
-include { SALMON_TXIMPORT     } from '../../modules/local/salmon_tximport'             addParams( options: params.tximport_options     )
-include { SALMON_MERGE_COUNTS } from '../../modules/local/salmon_merge_counts'         addParams( options: params.merge_counts_options )
+include { SALMON_QUANT        } from '../../modules/nf-core/modules/salmon/quant/main' addParams( options: params.salmon_quant_options   )
+include { SALMON_TX2GENE      } from '../../modules/local/salmon_tx2gene'              addParams( options: params.salmon_tx2gene_options )
+include { SALMON_TXIMPORT     } from '../../modules/local/salmon_tximport'             addParams( options: params.tximport_options       )
+include { SALMON_MERGE_COUNTS } from '../../modules/local/salmon_merge_counts'         addParams( options: params.merge_counts_options   )
 include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE
         SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED
         SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_SCALED

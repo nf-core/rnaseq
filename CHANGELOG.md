@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-* Software version(s) will now be reported for every module imported during a given pipeline execution.
+* Software version(s) will now be reported for every module imported during a given pipeline execution
 * Added `python3` shebang to appropriate scripts in `bin/` directory
 * [[#407](https://github.com/nf-core/rnaseq/issues/407)] - Filter mouse reads from PDX samples
 * [[#690](https://github.com/nf-core/rnaseq/issues/690)] - Error with post-trimmed read 2 sample names from FastQC in MultiQC

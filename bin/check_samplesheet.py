@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -47,7 +47,7 @@ def check_samplesheet(file_in, file_out):
     """
 
     sample_mapping_dict = {}
-    with open(file_in, "r") as fin:
+    with open(file_in, "r", encoding='utf-8-sig') as fin:
 
         ## Check header
         MIN_COLS = 3

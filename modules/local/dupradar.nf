@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -26,11 +26,10 @@ process DUPRADAR {
     tuple val(meta), path("*.pdf")    , emit: pdf
     tuple val(meta), path("*.txt")    , emit: txt
     tuple val(meta), path("*_mqc.txt"), emit: multiqc
-    path  "*.version.txt"             , emit: version
+    path "versions.yml"               , emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
-    def software = getSoftwareName(task.process)
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
 
     def strandedness = 0
     if (meta.strandedness == 'forward') {
@@ -40,7 +39,18 @@ process DUPRADAR {
     }
     def paired_end = meta.single_end ? 'single' :  'paired'
     """
-    dupradar.r $bam $prefix $gtf $strandedness $paired_end $task.cpus
-    Rscript -e "library(dupRadar); write(x=as.character(packageVersion('dupRadar')), file='${software}.version.txt')"
+    dupradar.r \\
+        $bam \\
+        $prefix \\
+        $gtf \\
+        $strandedness \\
+        $paired_end \\
+        $task.cpus
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+        bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
+    END_VERSIONS
     """
 }

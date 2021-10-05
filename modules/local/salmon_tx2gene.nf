@@ -1,5 +1,5 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 
@@ -22,7 +22,8 @@ process SALMON_TX2GENE {
     path gtf
 
     output:
-    path "*.tsv"
+    path "*.tsv"       , emit: tsv
+    path "versions.yml", emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
@@ -32,5 +33,10 @@ process SALMON_TX2GENE {
         --id $params.gtf_group_features \\
         --extra $params.gtf_extra_attributes \\
         -o salmon_tx2gene.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
     """
 }

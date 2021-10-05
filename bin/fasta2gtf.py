@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Read a custom fasta file and create a custom GTF containing each entry
 """

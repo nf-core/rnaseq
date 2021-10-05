@@ -17,21 +17,25 @@ workflow ALIGN_HISAT2 {
     splicesites // channel: /path/to/genome.splicesites.txt
 
     main:
+
+    ch_versions = Channel.empty()
+
     //
     // Map reads with HISAT2
     //
     HISAT2_ALIGN ( reads, index, splicesites )
+    ch_versions = ch_versions.mix(HISAT2_ALIGN.out.versions.first())
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
     BAM_SORT_SAMTOOLS ( HISAT2_ALIGN.out.bam )
+    ch_versions = ch_versions.mix(BAM_SORT_SAMTOOLS.out.versions)
 
     emit:
     orig_bam         = HISAT2_ALIGN.out.bam           // channel: [ val(meta), bam   ]
     summary          = HISAT2_ALIGN.out.summary       // channel: [ val(meta), log   ]
     fastq            = HISAT2_ALIGN.out.fastq         // channel: [ val(meta), fastq ]
-    hisat2_version   = HISAT2_ALIGN.out.version       //    path: *.version.txt
 
     bam              = BAM_SORT_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
     bai              = BAM_SORT_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
@@ -39,5 +43,6 @@ workflow ALIGN_HISAT2 {
     stats            = BAM_SORT_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat         = BAM_SORT_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats         = BAM_SORT_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    samtools_version = BAM_SORT_SAMTOOLS.out.version  //    path: *.version.txt
+
+    versions       = ch_versions                      // channel: [ versions.yml ]
 }

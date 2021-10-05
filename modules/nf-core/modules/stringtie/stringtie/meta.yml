@@ -48,9 +48,9 @@ output:
         type: file
         description: for running ballgown
         pattern: "*.{ballgown}"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@drpatelh"

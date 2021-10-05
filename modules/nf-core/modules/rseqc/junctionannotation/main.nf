@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -11,7 +11,7 @@ process RSEQC_JUNCTIONANNOTATION {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::rseqc=3.0.1" : null)
+    conda (params.enable_conda ? "bioconda::rseqc=3.0.1 'conda-forge::r-base>=3.5'" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1"
     } else {
@@ -30,10 +30,9 @@ process RSEQC_JUNCTIONANNOTATION {
     tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
     tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
     tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
-    path  "*.version.txt"                  , emit: version
+    path  "versions.yml"                   , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
     junction_annotation.py \\
@@ -43,6 +42,9 @@ process RSEQC_JUNCTIONANNOTATION {
         $options.args \\
         2> ${prefix}.junction_annotation.log
 
-    junction_annotation.py --version | sed -e "s/junction_annotation.py //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
+    END_VERSIONS
     """
 }

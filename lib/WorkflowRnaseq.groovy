@@ -32,6 +32,16 @@ class WorkflowRnaseq {
             }
         }
 
+        if (!params.skip_bbsplit && !params.bbsplit_index && !params.bbsplit_fasta_list) {
+            log.error "Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit."
+            System.exit(1)
+        }
+
+        if (params.remove_ribo_rna && !params.ribo_database_manifest) {
+            log.error "Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA."
+            System.exit(1)
+        }
+
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {
                 log.error "Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}."

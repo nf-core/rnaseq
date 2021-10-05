@@ -10,6 +10,8 @@
 
 ## Pipeline tools
 
+* [BBMap](https://sourceforge.net/projects/bbmap/)
+
 * [BEDTools](https://pubmed.ncbi.nlm.nih.gov/20110278/)
     > Quinlan AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics. 2010 Mar 15;26(6):841-2. doi: 10.1093/bioinformatics/btq033. Epub 2010 Jan 28. PubMed PMID: 20110278; PubMed Central PMCID: PMC2832824.
 

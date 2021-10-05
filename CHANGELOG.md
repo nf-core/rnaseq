@@ -34,10 +34,12 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 
 | Dependency    | Old version | New version |
 |---------------|-------------|-------------|
+| `bbmap`       |             | 38.93       |
 | `hisat2`      | 2.2.0       | 2.2.1       |
 | `picard`      | 2.23.9      | 2.25.7      |
 | `salmon`      | 1.4.0       | 1.5.2       |
 | `samtools`    | 1.12        | 1.13        |
+| `sortmerna`   | 4.2.0       | 4.3.4       |
 | `trim-galore` | 0.6.6       | 0.6.7       |
 
 > **NB:** Dependency has been __updated__ if both old and new version information is present.

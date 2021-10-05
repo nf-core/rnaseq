@@ -15,7 +15,7 @@ process SORTMERNA {
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/sortmerna:4.3.4--h9ee0642_0"
     } else {
-        container "quay.io/biocontainers/sortmerna:sortmerna:4.3.4--h9ee0642_0"
+        container "quay.io/biocontainers/sortmerna:4.3.4--h9ee0642_0"
     }
 
     input:

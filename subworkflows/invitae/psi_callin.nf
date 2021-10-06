@@ -8,16 +8,13 @@ include { CALL_PSI        } from '../../modules/invitae/call_psi'
 workflow PSI_CALLIN {
     take:
     ch_tab // channel: [ val(meta), [ tab ] ]
-    ch_venv // file: /path/to/source activate
-    ch_caller // file: /path/to/caller executable
-    ch_annotations // file: /path/to/annotated-junctions.bed
-    ch_pon // file: /path/to/pon.bed
-    ch_targets // file: /path/to/targets.bed
+    ch_template_script // file: /path/to/template.sh
 
     main:
-    CALL_PSI ( ch_tab, ch_venv, ch_caller, ch_annotations, ch_pon, ch_targets )
+    CALL_PSI ( ch_tab, ch_template_script )
 
-    emit:
-    junc         = CALL_PSI.out.junc
-    bed         = CALL_PSI.out.bed
+//legacy
+//    emit:
+//    junc         = CALL_PSI.out.junc
+//    bed         = CALL_PSI.out.bed
 }

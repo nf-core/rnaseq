@@ -29,11 +29,7 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 // RLM specify custom arguments
-if (params.venv) { ch_venv = file(params.venv) } else { exit 1, 'Virtual environment to source was not specified!' }
-if (params.caller) { ch_caller = file(params.caller) } else { exit 1, 'Caller to invoke was not specified!' }
-if (params.annotations) { ch_annotations = file(params.annotations) } else { exit 1, 'Annotated junctions to reference were not specified!' }
-if (params.pon) { ch_pon = file(params.pon) } else { exit 1, 'PON to call against was not specified!' }
-if (params.targets) { ch_targets = file(params.targets) } else { exit 1, 'Target definitions were not specified!' }
+if (params.template_script) { ch_template_script = file(params.template_script) } else { exit 1, 'Template script (containing pre-specified caller, annotations, PON and targets) was not specified!' }
 
 // Check rRNA databases for sortmerna
 ch_ribo_db = file(params.ribo_database_manifest)
@@ -349,14 +345,11 @@ workflow RNASEQ {
         ch_tab = ALIGN_STAR.out.tab
         PSI_CALLIN (
             ch_tab,
-            ch_venv,
-            ch_caller,
-            ch_annotations,
-            ch_pon,
-            ch_targets
+            ch_template_script
         )
-        ch_junc = PSI_CALLIN.out.junc
-        ch_bed = PSI_CALLIN.out.bed
+        //legacy
+        //ch_junc = PSI_CALLIN.out.junc
+        //ch_bed = PSI_CALLIN.out.bed
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs

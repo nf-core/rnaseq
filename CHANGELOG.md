@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-10-05
+## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.4)] - 2021-10-05
 
 ### Enhancements & fixes
 

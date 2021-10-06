@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* Fix version reporting of versions with trailing zeros.
+
 ### Parameters
 
 ## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.4)] - 2021-10-05

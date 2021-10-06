@@ -79,7 +79,7 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
     }
 
     with open("$versions") as f:
-        workflow_versions = yaml.safe_load(f) | module_versions
+        workflow_versions = yaml.load(f, Loader=yaml.BaseLoader) | module_versions
 
     workflow_versions["Workflow"] = {
         "Nextflow": "$workflow.nextflow.version",

@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process SORTMERNA {
     tag "$meta.id"
     label "process_high"
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::sortmerna=4.3.4" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -28,7 +22,8 @@ process SORTMERNA {
     path  "versions.yml"               , emit: versions
 
     script:
-    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args   = task.ext.args ?: ''
     if (meta.single_end) {
         """
         sortmerna \\
@@ -38,7 +33,7 @@ process SORTMERNA {
             --workdir . \\
             --aligned rRNA_reads \\
             --other non_rRNA_reads \\
-            $options.args
+            $args
 
         mv non_rRNA_reads.fq.gz ${prefix}.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
@@ -60,7 +55,7 @@ process SORTMERNA {
             --other non_rRNA_reads \\
             --paired_in \\
             --out2 \\
-            $options.args
+            $args
 
         mv non_rRNA_reads_fwd.fq.gz ${prefix}_1.fastq.gz
         mv non_rRNA_reads_rev.fq.gz ${prefix}_2.fastq.gz

@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process SUBREAD_FEATURECOUNTS {
     tag "$meta.id"
     label 'process_medium'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::subread=2.0.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -27,7 +21,8 @@ process SUBREAD_FEATURECOUNTS {
     path "versions.yml"                                , emit: versions
 
     script:
-    def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix     = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args       = task.ext.args ?: ''
     def paired_end = meta.single_end ? '' : '-p'
 
     def strandedness = 0
@@ -38,7 +33,7 @@ process SUBREAD_FEATURECOUNTS {
     }
     """
     featureCounts \\
-        $options.args \\
+        $args \\
         $paired_end \\
         -T $task.cpus \\
         -a $annotation \\

@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process UMITOOLS_EXTRACT {
     tag "$meta.id"
     label "process_low"
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::umi_tools=1.1.2" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -27,14 +21,15 @@ process UMITOOLS_EXTRACT {
     path  "versions.yml"               , emit: versions
 
     script:
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args     = task.ext.args ?: ''
     if (meta.single_end) {
         """
         umi_tools \\
             extract \\
             -I $reads \\
             -S ${prefix}.umi_extract.fastq.gz \\
-            $options.args \\
+            $args \\
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
@@ -50,7 +45,7 @@ process UMITOOLS_EXTRACT {
             --read2-in=${reads[1]} \\
             -S ${prefix}.umi_extract_1.fastq.gz \\
             --read2-out=${prefix}.umi_extract_2.fastq.gz \\
-            $options.args \\
+            $args \\
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml

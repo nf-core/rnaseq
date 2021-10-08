@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process GFFREAD {
     tag "$gff"
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "bioconda::gffread=0.12.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -26,11 +20,12 @@ process GFFREAD {
     path "versions.yml" , emit: versions
 
     script:
-    def prefix   = options.suffix ? "${gff.baseName}${options.suffix}" : "${gff.baseName}"
+    def prefix   = task.ext.suffix ? "${gff.baseName}${task.ext.suffix}" : "${gff.baseName}"
+    def args     = task.ext.args ?: ''
     """
     gffread \\
         $gff \\
-        $options.args \\
+        $args \\
         -o ${prefix}.gtf
     cat <<-END_VERSIONS > versions.yml
     ${getProcessName(task.process)}:

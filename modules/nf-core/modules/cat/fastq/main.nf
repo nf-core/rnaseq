@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process CAT_FASTQ {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'merged_fastq', meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -26,7 +20,7 @@ process CAT_FASTQ {
     path "versions.yml"                       , emit: versions
 
     script:
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     def readList = reads.collect{ it.toString() }
     if (meta.single_end) {
         if (readList.size > 1) {

@@ -1,15 +1,10 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
-params.options       = [:]
 params.multiqc_label = ''
-options              = initOptions(params.options)
 
 process DESEQ2_QC {
     label "process_medium"
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     // (Bio)conda packages have intentionally not been pinned to a specific version
     // This was to avoid the pipeline failing due to package conflicts whilst creating the environment when using -profile conda
@@ -39,12 +34,13 @@ process DESEQ2_QC {
     script:
     def label_lower = params.multiqc_label.toLowerCase()
     def label_upper = params.multiqc_label.toUpperCase()
+    def args        = task.ext.args?: ''
     """
     deseq2_qc.r \\
         --count_file $counts \\
         --outdir ./ \\
         --cores $task.cpus \\
-        $options.args
+        $args
 
     if [ -f "R_sessionInfo.log" ]; then
         sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc >tmp.txt

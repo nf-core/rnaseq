@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process QUALIMAP_RNASEQ {
     tag "$meta.id"
     label 'process_medium'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::qualimap=2.2.2d" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -27,7 +21,8 @@ process QUALIMAP_RNASEQ {
     path  "versions.yml"              , emit: versions
 
     script:
-    prefix         = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    prefix         = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args       = task.ext.args ?: ''
     def paired_end = meta.single_end ? '' : '-pe'
     def memory     = task.memory.toGiga() + "G"
 
@@ -44,7 +39,7 @@ process QUALIMAP_RNASEQ {
     qualimap \\
         --java-mem-size=$memory \\
         rnaseq \\
-        $options.args \\
+        $args \\
         -bam $bam \\
         -gtf $gtf \\
         -p $strandedness \\

@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process BEDTOOLS_GENOMECOV {
     tag "$meta.id"
     label 'process_medium'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::bedtools=2.30.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -27,7 +21,8 @@ process BEDTOOLS_GENOMECOV {
     path "versions.yml"                        , emit: versions
 
     script:
-    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args   = task.ext.args ?: ''
 
     def prefix_forward = "${prefix}.forward"
     def prefix_reverse = "${prefix}.reverse"
@@ -41,7 +36,7 @@ process BEDTOOLS_GENOMECOV {
         -ibam $bam \\
         -bg \\
         -strand + \\
-        $options.args \\
+        $args \\
         | bedtools sort > ${prefix_forward}.bedGraph
 
     bedtools \\
@@ -49,7 +44,7 @@ process BEDTOOLS_GENOMECOV {
         -ibam $bam \\
         -bg \\
         -strand - \\
-        $options.args \\
+        $args \\
         | bedtools sort > ${prefix_reverse}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml

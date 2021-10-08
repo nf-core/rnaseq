@@ -1,15 +1,9 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 process FASTQC {
     tag "$meta.id"
     label 'process_medium'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::fastqc=0.11.9" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -28,11 +22,12 @@ process FASTQC {
 
     script:
     // Add soft-links to original FastQs for consistent naming in pipeline
-    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args   = task.ext.args ?: ''
     if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
-        fastqc $options.args --threads $task.cpus ${prefix}.fastq.gz
+        fastqc $args --threads $task.cpus ${prefix}.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
         ${getProcessName(task.process)}:
@@ -43,7 +38,7 @@ process FASTQC {
         """
         [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
-        fastqc $options.args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
+        fastqc $args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
         ${getProcessName(task.process)}:

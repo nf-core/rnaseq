@@ -1,17 +1,11 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
+include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
 
 def VERSION = '2.2.0'
 
 process HISAT2_ALIGN {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::hisat2=2.2.0 bioconda::samtools=1.10" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -33,7 +27,8 @@ process HISAT2_ALIGN {
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
 
     script:
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args   = task.ext.args ?: ''
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -55,7 +50,7 @@ process HISAT2_ALIGN {
             --threads $task.cpus \\
             $seq_center \\
             $unaligned \\
-            $options.args \\
+            $args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
         cat <<-END_VERSIONS > versions.yml
@@ -80,7 +75,7 @@ process HISAT2_ALIGN {
             $unaligned \\
             --no-mixed \\
             --no-discordant \\
-            $options.args \\
+            $args \\
             | samtools view -bS -F 4 -F 8 -F 256 - > ${prefix}.bam
 
         if [ -f ${prefix}.unmapped.fastq.1.gz ]; then

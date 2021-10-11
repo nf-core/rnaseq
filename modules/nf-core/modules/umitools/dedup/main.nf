@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process UMITOOLS_DEDUP {
     tag "$meta.id"
     label "process_medium"

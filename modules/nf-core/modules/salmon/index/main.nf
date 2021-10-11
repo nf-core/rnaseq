@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SALMON_INDEX {
     tag "$transcript_fasta"
     label "process_medium"

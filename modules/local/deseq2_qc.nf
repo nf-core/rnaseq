@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 params.multiqc_label = ''
 
 process DESEQ2_QC {

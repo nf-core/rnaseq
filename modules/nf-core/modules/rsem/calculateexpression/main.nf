@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEM_CALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'

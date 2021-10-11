@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 def VERSION = '2.2.0'
 
 process HISAT2_EXTRACTSPLICESITES {

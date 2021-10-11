@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process MULTIQC_CUSTOM_BIOTYPE {
     tag "$meta.id"
 

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEQC_INNERDISTANCE {
     tag "$meta.id"
     label 'process_medium'

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process MULTIQC_TSV_FROM_LIST {
 
     memory 100.MB

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SALMON_SUMMARIZEDEXPERIMENT {
     tag "$tx2gene"
     label "process_medium"

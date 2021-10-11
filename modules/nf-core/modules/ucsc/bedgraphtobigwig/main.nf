@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 def VERSION = '377'
 
 process UCSC_BEDGRAPHTOBIGWIG {

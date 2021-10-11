@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process CAT_ADDITIONAL_FASTA {
     tag "$add_fasta"
 

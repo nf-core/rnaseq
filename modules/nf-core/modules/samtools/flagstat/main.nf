@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SAMTOOLS_FLAGSTAT {
     tag "$meta.id"
     label 'process_low'

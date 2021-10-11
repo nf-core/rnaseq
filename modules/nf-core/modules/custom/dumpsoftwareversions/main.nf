@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process CUSTOM_DUMPSOFTWAREVERSIONS {
     label 'process_low'
 

@@ -32,8 +32,8 @@ process PRESEQ_LCEXTRAP {
     cp .command.err ${prefix}.command.log
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
+    PRESEQ_LCEXTRAP:
+        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
     END_VERSIONS
     """
 }

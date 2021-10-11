@@ -26,7 +26,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
         $tpm
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    SALMON_SUMMARIZEDEXPERIMENT:
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
     END_VERSIONS

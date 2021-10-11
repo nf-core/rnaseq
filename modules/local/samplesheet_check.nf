@@ -22,7 +22,7 @@ process SAMPLESHEET_CHECK {
         samplesheet.valid.csv
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    SAMPLESHEET_CHECK:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

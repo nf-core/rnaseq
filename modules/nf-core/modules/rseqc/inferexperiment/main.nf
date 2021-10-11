@@ -28,8 +28,8 @@ process RSEQC_INFEREXPERIMENT {
         > ${prefix}.infer_experiment.txt
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(infer_experiment.py --version | sed -e "s/infer_experiment.py //g")
+    RSEQC_INFEREXPERIMENT:
+        rseqc: \$(infer_experiment.py --version | sed -e "s/infer_experiment.py //g")
     END_VERSIONS
     """
 }

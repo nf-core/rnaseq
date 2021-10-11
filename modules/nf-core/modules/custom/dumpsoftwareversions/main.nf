@@ -64,7 +64,7 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
         return "\\n".join(html)
 
     module_versions = {}
-    module_versions["${getProcessName(task.process)}"] = {
+    module_versions["CUSTOM_DUMPSOFTWAREVERSIONS"] = {
         'python': platform.python_version(),
         'yaml': yaml.__version__
     }

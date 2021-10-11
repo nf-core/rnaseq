@@ -28,8 +28,8 @@ process UCSC_BEDCLIP {
         ${prefix}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    UCSC_BEDCLIP:
+        ucsc: \$(echo $VERSION)
     END_VERSIONS
     """
 }

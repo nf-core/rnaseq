@@ -50,7 +50,7 @@ process DESEQ2_QC {
     fi
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    DESEQ2_QC:
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
     END_VERSIONS

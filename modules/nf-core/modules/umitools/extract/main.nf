@@ -30,8 +30,8 @@ process UMITOOLS_EXTRACT {
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        UMITOOLS_EXTRACT:
+            umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """
     }  else {
@@ -46,8 +46,8 @@ process UMITOOLS_EXTRACT {
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        UMITOOLS_EXTRACT:
+            umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """
     }

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SORTMERNA {
     tag "$meta.id"
     label "process_high"
@@ -39,8 +36,8 @@ process SORTMERNA {
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+        SORTMERNA:
+            sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
         END_VERSIONS
         """
     } else {
@@ -62,8 +59,8 @@ process SORTMERNA {
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
+        SORTMERNA:
+            sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
         END_VERSIONS
         """
     }

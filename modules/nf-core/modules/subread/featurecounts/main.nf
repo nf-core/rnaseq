@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SUBREAD_FEATURECOUNTS {
     tag "$meta.id"
     label 'process_medium'
@@ -42,8 +39,8 @@ process SUBREAD_FEATURECOUNTS {
         ${bams.join(' ')}
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
+    SUBREAD_FEATURECOUNTS:
+        subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
     END_VERSIONS
     """
 }

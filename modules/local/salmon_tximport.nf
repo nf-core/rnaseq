@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SALMON_TXIMPORT {
     label "process_medium"
 
@@ -32,7 +29,7 @@ process SALMON_TXIMPORT {
         salmon.merged
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    SALMON_TXIMPORT:
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
     END_VERSIONS

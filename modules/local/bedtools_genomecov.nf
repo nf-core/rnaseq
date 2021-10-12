@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process BEDTOOLS_GENOMECOV {
     tag "$meta.id"
     label 'process_medium'
@@ -48,8 +45,8 @@ process BEDTOOLS_GENOMECOV {
         | bedtools sort > ${prefix_reverse}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(bedtools --version | sed -e "s/bedtools v//g")
+    BEDTOOLS_GENOMECOV:
+        bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
     END_VERSIONS
     """
 }

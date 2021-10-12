@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 def VERSION = '377'
 
 process UCSC_BEDCLIP {
@@ -31,8 +28,8 @@ process UCSC_BEDCLIP {
         ${prefix}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    UCSC_BEDCLIP:
+        ucsc: \$(echo $VERSION)
     END_VERSIONS
     """
 }

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process QUALIMAP_RNASEQ {
     tag "$meta.id"
     label 'process_medium'
@@ -47,8 +44,8 @@ process QUALIMAP_RNASEQ {
         -outdir $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
+    QUALIMAP_RNASEQ:
+        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
     END_VERSIONS
     """
 }

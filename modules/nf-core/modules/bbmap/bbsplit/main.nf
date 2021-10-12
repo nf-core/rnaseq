@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process BBMAP_BBSPLIT {
     label 'process_high'
 
@@ -52,8 +49,8 @@ process BBMAP_BBSPLIT {
                 $args
 
             cat <<-END_VERSIONS > versions.yml
-            ${getProcessName(task.process)}:
-                ${getSoftwareName(task.process)}: \$(bbversion.sh 2>&1)
+            BBMAP_BBSPLIT:
+                bbmap: \$(bbversion.sh 2>&1)
             END_VERSIONS
             """
         } else {
@@ -81,8 +78,8 @@ process BBMAP_BBSPLIT {
             $args
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(bbversion.sh 2>&1)
+        BBMAP_BBSPLIT:
+            bbmap: \$(bbversion.sh 2>&1)
         END_VERSIONS
         """
     }

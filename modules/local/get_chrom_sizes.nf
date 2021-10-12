@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process GET_CHROM_SIZES {
     tag "$fasta"
 
@@ -28,7 +25,7 @@ process GET_CHROM_SIZES {
     cut -f 1,2 ${fasta}.fai > ${fasta}.sizes
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    GET_CHROM_SIZES:
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """

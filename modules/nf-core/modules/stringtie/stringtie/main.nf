@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process STRINGTIE {
     tag "$meta.id"
     label 'process_medium'
@@ -46,8 +43,8 @@ process STRINGTIE {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(stringtie --version 2>&1)
+    STRINGTIE:
+        stringtie: \$(stringtie --version 2>&1)
     END_VERSIONS
     """
 }

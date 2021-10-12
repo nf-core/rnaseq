@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 def VERSION = '377'
 
 process UCSC_BEDGRAPHTOBIGWIG {
@@ -31,8 +28,8 @@ process UCSC_BEDGRAPHTOBIGWIG {
         ${prefix}.bigWig
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    UCSC_BEDGRAPHTOBIGWIG:
+        ucsc: \$(echo $VERSION)
     END_VERSIONS
     """
 }

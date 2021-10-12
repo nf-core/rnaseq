@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process UMITOOLS_DEDUP {
     tag "$meta.id"
     label "process_medium"
@@ -31,8 +28,8 @@ process UMITOOLS_DEDUP {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+    UMITOOLS_DEDUP:
+        umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
     END_VERSIONS
     """
 }

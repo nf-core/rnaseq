@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEQC_READDISTRIBUTION {
     tag "$meta.id"
     label 'process_medium'
@@ -29,8 +26,8 @@ process RSEQC_READDISTRIBUTION {
         > ${prefix}.read_distribution.txt
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
+    RSEQC_READDISTRIBUTION:
+        rseqc: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
     END_VERSIONS
     """
 }

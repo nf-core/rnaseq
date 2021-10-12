@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEQC_JUNCTIONANNOTATION {
     tag "$meta.id"
     label 'process_medium'
@@ -38,8 +35,8 @@ process RSEQC_JUNCTIONANNOTATION {
         2> ${prefix}.junction_annotation.log
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
+    RSEQC_JUNCTIONANNOTATION:
+        rseqc: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
     END_VERSIONS
     """
 }

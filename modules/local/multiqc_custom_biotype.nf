@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process MULTIQC_CUSTOM_BIOTYPE {
     tag "$meta.id"
 
@@ -31,7 +28,7 @@ process MULTIQC_CUSTOM_BIOTYPE {
         -o ${prefix}.biotype_counts_rrna_mqc.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    MULTIQC_CUSTOM_BIOTYPE:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

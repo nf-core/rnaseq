@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process GTF_GENE_FILTER {
     tag "$fasta"
 
@@ -27,7 +24,7 @@ process GTF_GENE_FILTER {
         -o ${fasta.baseName}_genes.gtf
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    GTF_GENE_FILTER:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

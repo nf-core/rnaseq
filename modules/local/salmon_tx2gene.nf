@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SALMON_TX2GENE {
     tag "$gtf"
     label "process_low"
@@ -30,7 +27,7 @@ process SALMON_TX2GENE {
         -o salmon_tx2gene.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    SALMON_TX2GENE:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process SAMTOOLS_FLAGSTAT {
     tag "$meta.id"
     label 'process_low'
@@ -23,8 +20,8 @@ process SAMTOOLS_FLAGSTAT {
     """
     samtools flagstat $bam > ${bam}.flagstat
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    SAMTOOLS_FLAGSTAT:
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
 }

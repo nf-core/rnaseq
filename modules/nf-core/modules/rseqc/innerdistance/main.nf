@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEQC_INNERDISTANCE {
     tag "$meta.id"
     label 'process_medium'
@@ -38,15 +35,15 @@ process RSEQC_INNERDISTANCE {
         head -n 2 stdout.txt > ${prefix}.inner_distance_mean.txt
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+        RSEQC_INNERDISTANCE:
+            rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
         END_VERSIONS
         """
     } else {
         """
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+        RSEQC_INNERDISTANCE:
+            rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
         END_VERSIONS
         """
     }

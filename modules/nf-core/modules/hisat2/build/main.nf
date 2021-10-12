@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 def VERSION = '2.2.0'
 
 process HISAT2_BUILD {
@@ -60,8 +57,8 @@ process HISAT2_BUILD {
         hisat2/${fasta.baseName}
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo $VERSION)
+    HISAT2_BUILD:
+        hisat2: \$(echo $VERSION)
     END_VERSIONS
     """
 }

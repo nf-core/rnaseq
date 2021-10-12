@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process DUPRADAR {
     tag "$meta.id"
     label 'process_long'
@@ -42,7 +39,7 @@ process DUPRADAR {
         $task.cpus
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    DUPRADAR:
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
     END_VERSIONS

@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEM_PREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
@@ -45,8 +42,8 @@ process RSEM_PREPAREREFERENCE {
             rsem/genome
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        RSEM_PREPAREREFERENCE:
+            rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
             star: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """
@@ -60,8 +57,8 @@ process RSEM_PREPAREREFERENCE {
             rsem/genome
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        RSEM_PREPAREREFERENCE:
+            rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
             star: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """

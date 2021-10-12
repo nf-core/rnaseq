@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 def VERSION = '2.2.0'
 
 process HISAT2_ALIGN {
@@ -54,8 +51,8 @@ process HISAT2_ALIGN {
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(echo $VERSION)
+        HISAT2_ALIGN:
+            hisat2: \$(echo $VERSION)
             samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         END_VERSIONS
         """
@@ -86,8 +83,8 @@ process HISAT2_ALIGN {
         fi
 
         cat <<-END_VERSIONS > versions.yml
-        ${getProcessName(task.process)}:
-            ${getSoftwareName(task.process)}: \$(echo $VERSION)
+        HISAT2_ALIGN:
+            hisat2: \$(echo $VERSION)
             samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         END_VERSIONS
         """

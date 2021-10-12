@@ -1,6 +1,3 @@
-// Import generic module functions
-include { getSoftwareName; getProcessName } from "$projectDir/lib/functions"
-
 process RSEQC_JUNCTIONSATURATION {
     tag "$meta.id"
     label 'process_medium'
@@ -32,8 +29,8 @@ process RSEQC_JUNCTIONSATURATION {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
+    RSEQC_JUNCTIONSATURATION:
+        rseqc: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
     END_VERSIONS
     """
 }

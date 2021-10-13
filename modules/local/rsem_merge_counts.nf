@@ -47,7 +47,7 @@ process RSEM_MERGE_COUNTS {
     paste transcript_ids.txt tmp/isoforms/*.tpm.txt > rsem.merged.transcript_tpm.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    RSEM_MERGE_COUNTS:
+    ${task.process.tokenize(':').last()}:
         sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
     END_VERSIONS
     """

@@ -22,7 +22,7 @@ process SAMTOOLS_SORT {
     """
     samtools sort $args -@ $task.cpus -o ${prefix}.bam -T $prefix $bam
     cat <<-END_VERSIONS > versions.yml
-    SAMTOOLS_SORT:
+    ${task.process.tokenize(':').last()}:
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """

@@ -26,7 +26,7 @@ process UNTAR {
         $archive
 
     cat <<-END_VERSIONS > versions.yml
-    UNTAR:
+    ${task.process.tokenize(':').last()}:
         untar: \$(echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//')
     END_VERSIONS
     """

@@ -35,14 +35,14 @@ process RSEQC_INNERDISTANCE {
         head -n 2 stdout.txt > ${prefix}.inner_distance_mean.txt
 
         cat <<-END_VERSIONS > versions.yml
-        RSEQC_INNERDISTANCE:
+        ${task.process.tokenize(':').last()}:
             rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
         END_VERSIONS
         """
     } else {
         """
         cat <<-END_VERSIONS > versions.yml
-        RSEQC_INNERDISTANCE:
+        ${task.process.tokenize(':').last()}:
             rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
         END_VERSIONS
         """

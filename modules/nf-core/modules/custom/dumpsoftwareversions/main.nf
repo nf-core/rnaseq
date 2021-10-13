@@ -64,7 +64,7 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
         return "\\n".join(html)
 
     module_versions = {}
-    module_versions["CUSTOM_DUMPSOFTWAREVERSIONS"] = {
+    module_versions["${task.process.tokenize(':').last()}"] = {
         'python': platform.python_version(),
         'yaml': yaml.__version__
     }

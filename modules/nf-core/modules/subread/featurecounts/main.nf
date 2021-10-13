@@ -39,7 +39,7 @@ process SUBREAD_FEATURECOUNTS {
         ${bams.join(' ')}
 
     cat <<-END_VERSIONS > versions.yml
-    SUBREAD_FEATURECOUNTS:
+    ${task.process.tokenize(':').last()}:
         subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
     END_VERSIONS
     """

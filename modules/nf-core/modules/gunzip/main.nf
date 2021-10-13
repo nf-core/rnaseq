@@ -26,7 +26,7 @@ process GUNZIP {
         $archive
 
     cat <<-END_VERSIONS > versions.yml
-    GUNZIP:
+    ${task.process.tokenize(':').last()}:
         gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
     END_VERSIONS
     """

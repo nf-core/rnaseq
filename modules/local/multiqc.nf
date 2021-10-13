@@ -60,7 +60,7 @@ process MULTIQC {
         .
 
     cat <<-END_VERSIONS > versions.yml
-    MULTIQC:
+    ${task.process.tokenize(':').last()}:
         multiqc: \$( multiqc --version | sed -e "s/multiqc, version //g" )
     END_VERSIONS
     """

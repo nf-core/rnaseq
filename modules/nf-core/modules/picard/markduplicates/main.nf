@@ -37,7 +37,7 @@ process PICARD_MARKDUPLICATES {
         -M ${prefix}.MarkDuplicates.metrics.txt
 
     cat <<-END_VERSIONS > versions.yml
-    PICARD_MARKDUPLICATES:
+    ${task.process.tokenize(':').last()}:
         picard: \$(echo \$(picard MarkDuplicates --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
     END_VERSIONS
     """

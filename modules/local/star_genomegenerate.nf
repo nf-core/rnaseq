@@ -34,7 +34,7 @@ process STAR_GENOMEGENERATE {
             ${args.join(' ')}
 
         cat <<-END_VERSIONS > versions.yml
-        STAR_GENOMEGENERATE:
+        ${task.process.tokenize(':').last()}:
             star: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """
@@ -55,7 +55,7 @@ process STAR_GENOMEGENERATE {
             ${args.join(' ')}
 
         cat <<-END_VERSIONS > versions.yml
-        STAR_GENOMEGENERATE:
+        ${task.process.tokenize(':').last()}:
             star: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """

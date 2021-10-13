@@ -28,7 +28,7 @@ process MULTIQC_CUSTOM_BIOTYPE {
         -o ${prefix}.biotype_counts_rrna_mqc.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    MULTIQC_CUSTOM_BIOTYPE:
+    ${task.process.tokenize(':').last()}:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

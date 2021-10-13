@@ -32,7 +32,7 @@ process PRESEQ_LCEXTRAP {
     cp .command.err ${prefix}.command.log
 
     cat <<-END_VERSIONS > versions.yml
-    PRESEQ_LCEXTRAP:
+    ${task.process.tokenize(':').last()}:
         preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
     END_VERSIONS
     """

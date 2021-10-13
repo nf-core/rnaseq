@@ -87,7 +87,7 @@ process SALMON_MERGE_COUNTS {
     paste transcript_ids.txt tmp/isoforms_tpm/* > salmon.merged.transcript_tpm.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    SALMON_MERGE_COUNTS:
+    ${task.process.tokenize(':').last()}:
         sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
     END_VERSIONS
     """

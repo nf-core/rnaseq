@@ -25,7 +25,7 @@ process GET_CHROM_SIZES {
     cut -f 1,2 ${fasta}.fai > ${fasta}.sizes
 
     cat <<-END_VERSIONS > versions.yml
-    GET_CHROM_SIZES:
+    ${task.process.tokenize(':').last()}:
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """

@@ -25,7 +25,7 @@ process CAT_FASTQ {
             cat ${readList.sort().join(' ')} > ${prefix}.merged.fastq.gz
 
             cat <<-END_VERSIONS > versions.yml
-            CAT_FASTQ:
+            ${task.process.tokenize(':').last()}:
                 cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
             END_VERSIONS
             """
@@ -40,7 +40,7 @@ process CAT_FASTQ {
             cat ${read2.sort().join(' ')} > ${prefix}_2.merged.fastq.gz
 
             cat <<-END_VERSIONS > versions.yml
-            cat_fastq:
+            ${task.process.tokenize(':').last()}:
                 cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
             END_VERSIONS
             """

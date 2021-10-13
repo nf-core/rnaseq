@@ -44,7 +44,7 @@ process QUALIMAP_RNASEQ {
         -outdir $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    QUALIMAP_RNASEQ:
+    ${task.process.tokenize(':').last()}:
         qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
     END_VERSIONS
     """

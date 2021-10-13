@@ -20,7 +20,7 @@ process SAMTOOLS_FLAGSTAT {
     """
     samtools flagstat $bam > ${bam}.flagstat
     cat <<-END_VERSIONS > versions.yml
-    SAMTOOLS_FLAGSTAT:
+    ${task.process.tokenize(':').last()}:
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """

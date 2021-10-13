@@ -34,7 +34,7 @@ process CAT_ADDITIONAL_FASTA {
     cat $gtf ${add_fasta.baseName}.gtf > ${name}.gtf
 
     cat <<-END_VERSIONS > versions.yml
-    CAT_ADDITIONAL_FASTA:
+    ${task.process.tokenize(':').last()}:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

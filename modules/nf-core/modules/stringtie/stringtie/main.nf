@@ -43,7 +43,7 @@ process STRINGTIE {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    STRINGTIE:
+    ${task.process.tokenize(':').last()}:
         stringtie: \$(stringtie --version 2>&1)
     END_VERSIONS
     """

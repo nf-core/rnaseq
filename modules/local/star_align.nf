@@ -58,7 +58,7 @@ process STAR_ALIGN {
     fi
 
     cat <<-END_VERSIONS > versions.yml
-    STAR_ALIGN:
+    ${task.process.tokenize(':').last()}:
         star: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS
     """

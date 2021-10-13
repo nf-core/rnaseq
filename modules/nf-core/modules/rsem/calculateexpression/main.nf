@@ -48,7 +48,7 @@ process RSEM_CALCULATEEXPRESSION {
         $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    RSEM_CALCULATEEXPRESSION:
+    ${task.process.tokenize(':').last()}:
         rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
         star: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS

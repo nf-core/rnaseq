@@ -24,7 +24,7 @@ process GTF_GENE_FILTER {
         -o ${fasta.baseName}_genes.gtf
 
     cat <<-END_VERSIONS > versions.yml
-    GTF_GENE_FILTER:
+    ${task.process.tokenize(':').last()}:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

@@ -27,7 +27,7 @@ process SALMON_TX2GENE {
         -o salmon_tx2gene.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    SALMON_TX2GENE:
+    ${task.process.tokenize(':').last()}:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

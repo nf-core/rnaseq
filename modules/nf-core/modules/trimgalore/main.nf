@@ -52,7 +52,7 @@ process TRIMGALORE {
             $tpc_r1 \\
             ${prefix}.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        TRIMGALORE:
+        ${task.process.tokenize(':').last()}:
             TRIMGALORE: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
             cutadapt: \$(cutadapt --version)
         END_VERSIONS
@@ -73,7 +73,7 @@ process TRIMGALORE {
             ${prefix}_1.fastq.gz \\
             ${prefix}_2.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        TRIMGALORE:
+        ${task.process.tokenize(':').last()}:
             trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
             cutadapt: \$(cutadapt --version)
         END_VERSIONS

@@ -23,7 +23,7 @@ process GTF2BED {
         > ${gtf.baseName}.bed
 
     cat <<-END_VERSIONS > versions.yml
-    GTF2BED:
+    ${task.process.tokenize(':').last()}:
         perl: \$(echo \$(perl --version 2>&1) | sed 's/.*v\\(.*\\)) built.*/\\1/')
     END_VERSIONS
     """

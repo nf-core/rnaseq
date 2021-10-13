@@ -64,7 +64,7 @@ process SALMON_QUANT {
         -o $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    SALMON_QUANT:
+    ${task.process.tokenize(':').last()}:
         salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
     END_VERSIONS
     """

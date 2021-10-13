@@ -29,7 +29,7 @@ process RSEQC_READDUPLICATION {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    RSEQC_READDUPLICATION:
+    ${task.process.tokenize(':').last()}:
         rseqc: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
     END_VERSIONS
     """

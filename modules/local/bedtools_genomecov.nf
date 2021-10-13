@@ -45,7 +45,7 @@ process BEDTOOLS_GENOMECOV {
         | bedtools sort > ${prefix_reverse}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml
-    BEDTOOLS_GENOMECOV:
+    ${task.process.tokenize(':').last()}:
         bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
     END_VERSIONS
     """

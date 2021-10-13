@@ -30,7 +30,7 @@ process UMITOOLS_EXTRACT {
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
-        UMITOOLS_EXTRACT:
+        ${task.process.tokenize(':').last()}:
             umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """
@@ -46,7 +46,7 @@ process UMITOOLS_EXTRACT {
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
-        UMITOOLS_EXTRACT:
+        ${task.process.tokenize(':').last()}:
             umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """

@@ -51,7 +51,7 @@ process HISAT2_ALIGN {
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
         cat <<-END_VERSIONS > versions.yml
-        HISAT2_ALIGN:
+        ${task.process.tokenize(':').last()}:
             hisat2: \$(echo $VERSION)
             samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         END_VERSIONS
@@ -83,7 +83,7 @@ process HISAT2_ALIGN {
         fi
 
         cat <<-END_VERSIONS > versions.yml
-        HISAT2_ALIGN:
+        ${task.process.tokenize(':').last()}:
             hisat2: \$(echo $VERSION)
             samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         END_VERSIONS

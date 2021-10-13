@@ -38,7 +38,7 @@ process FASTQC {
         fastqc $args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
-        FASTQC:
+        ${task.process.tokenize(':').last()}:
             fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
         END_VERSIONS
         """

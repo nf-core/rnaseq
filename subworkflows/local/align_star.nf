@@ -7,8 +7,8 @@ params.samtools_sort_options  = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { STAR_ALIGN        } from '../../modules/local/star_align' addParams( options: params.align_options )
-include { BAM_SORT_SAMTOOLS } from '../nf-core/bam_sort_samtools'   addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
+include { STAR_ALIGN        } from '../../modules/local/star_align'    addParams( options: params.align_options )
+include { BAM_SORT_SAMTOOLS } from '../nf-core/bam_sort_samtools/main' addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
 
 workflow ALIGN_STAR {
     take:

@@ -1,13 +1,5 @@
-// Import generic module functions
-include { saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-
 process SALMON_MERGE_COUNTS {
     label "process_medium"
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -95,7 +87,7 @@ process SALMON_MERGE_COUNTS {
     paste transcript_ids.txt tmp/isoforms_tpm/* > salmon.merged.transcript_tpm.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    ${task.process.tokenize(':').last()}:
         sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
     END_VERSIONS
     """

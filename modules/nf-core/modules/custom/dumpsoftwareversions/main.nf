@@ -1,14 +1,5 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process CUSTOM_DUMPSOFTWAREVERSIONS {
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'pipeline_info', meta:[:], publish_by_meta:[]) }
 
     // Requires `pyyaml` which does not have a dedicated container but is in the MultiQC container
     conda (params.enable_conda ? "bioconda::multiqc=1.11" : null)
@@ -73,7 +64,7 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
         return "\\n".join(html)
 
     module_versions = {}
-    module_versions["${getProcessName(task.process)}"] = {
+    module_versions["${task.process.tokenize(':').last()}"] = {
         'python': platform.python_version(),
         'yaml': yaml.__version__
     }

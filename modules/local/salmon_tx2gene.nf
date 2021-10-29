@@ -1,14 +1,6 @@
-// Import generic module functions
-include { saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-
 process SALMON_TX2GENE {
     tag "$gtf"
     label "process_low"
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -35,7 +27,7 @@ process SALMON_TX2GENE {
         -o salmon_tx2gene.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    ${task.process.tokenize(':').last()}:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

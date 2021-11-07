@@ -1,5 +1,6 @@
 lint:
   files_unchanged:
+    - .gitattributes
     - .markdownlint.yml
     - assets/email_template.html
     - assets/email_template.txt

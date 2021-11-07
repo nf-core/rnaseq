@@ -1,1 +1,6 @@
 *.config linguist-language=nextflow
+lib/NfcoreSchema.groovy linguist-generated
+lib/NfcoreTemplate.groovy linguist-generated
+lib/Utils.groovy linguist-generated
+modules/nf-core/* linguist-generated
+subworkflows/nf-core/* linguist-generated

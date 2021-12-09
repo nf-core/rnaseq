@@ -1,11 +1,13 @@
 lint:
   files_unchanged:
     - .gitattributes
+    - .github/CONTRIBUTING.md
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/linting_comment.yml
     - .markdownlint.yml
     - assets/email_template.html
     - assets/email_template.txt
+    - lib/NfcoreSchema.groovy
     - lib/NfcoreTemplate.groovy
     - assets/multiqc_config.yaml
   files_exist:
@@ -22,3 +24,4 @@ update:
     rseqc/junctionsaturation: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
     rseqc/readdistribution: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
     rseqc/readduplication: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+actions_ci: False

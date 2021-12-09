@@ -3,11 +3,9 @@ process SALMON_SUMMARIZEDEXPERIMENT {
     label "process_medium"
 
     conda (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.20.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.20.0--r40_0"
-    } else {
-        container "quay.io/biocontainers/bioconductor-summarizedexperiment:1.20.0--r40_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.20.0--r40_0' :
+        'quay.io/biocontainers/bioconductor-summarizedexperiment:1.20.0--r40_0' }"
 
     input:
     path counts
@@ -26,7 +24,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
         $tpm
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
     END_VERSIONS

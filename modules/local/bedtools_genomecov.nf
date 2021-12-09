@@ -3,11 +3,9 @@ process BEDTOOLS_GENOMECOV {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::bedtools=2.30.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bedtools:2.30.0--hc088bd4_0"
-    } else {
-        container "quay.io/biocontainers/bedtools:2.30.0--hc088bd4_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bedtools:2.30.0--hc088bd4_0' :
+        'quay.io/biocontainers/bedtools:2.30.0--hc088bd4_0' }"
 
     input:
     tuple val(meta), path(bam)
@@ -18,8 +16,8 @@ process BEDTOOLS_GENOMECOV {
     path "versions.yml"                        , emit: versions
 
     script:
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args   = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     def prefix_forward = "${prefix}.forward"
     def prefix_reverse = "${prefix}.reverse"
@@ -45,7 +43,7 @@ process BEDTOOLS_GENOMECOV {
         | bedtools sort > ${prefix_reverse}.bedGraph
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
     END_VERSIONS
     """

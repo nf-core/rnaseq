@@ -1,13 +1,5 @@
-// Import generic module functions
-include { saveFiles; getProcessName } from './functions'
-
-params.options = [:]
-
 process GTF_GENE_FILTER {
     tag "$fasta"
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'genome', meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -32,7 +24,7 @@ process GTF_GENE_FILTER {
         -o ${fasta.baseName}_genes.gtf
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    ${task.process.tokenize(':').last()}:
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

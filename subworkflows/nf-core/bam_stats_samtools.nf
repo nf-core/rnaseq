@@ -2,11 +2,11 @@
 // Run SAMtools stats, flagstat and idxstats
 //
 
-params.options = [:]
+// params.options = [:]
 
-include { SAMTOOLS_STATS    } from '../../modules/nf-core/modules/samtools/stats/main'    addParams( options: params.options )
-include { SAMTOOLS_IDXSTATS } from '../../modules/nf-core/modules/samtools/idxstats/main' addParams( options: params.options )
-include { SAMTOOLS_FLAGSTAT } from '../../modules/nf-core/modules/samtools/flagstat/main' addParams( options: params.options )
+include { SAMTOOLS_STATS    } from '../../modules/nf-core/modules/samtools/stats/main'    // addParams( options: params.options )
+include { SAMTOOLS_IDXSTATS } from '../../modules/nf-core/modules/samtools/idxstats/main' // addParams( options: params.options )
+include { SAMTOOLS_FLAGSTAT } from '../../modules/nf-core/modules/samtools/flagstat/main' // addParams( options: params.options )
 
 workflow BAM_STATS_SAMTOOLS {
     take:

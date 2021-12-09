@@ -1,15 +1,6 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process CAT_FASTQ {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'merged_fastq', meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -26,7 +17,7 @@ process CAT_FASTQ {
     path "versions.yml"                       , emit: versions
 
     script:
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     def readList = reads.collect{ it.toString() }
     if (meta.single_end) {
         if (readList.size > 1) {
@@ -34,8 +25,8 @@ process CAT_FASTQ {
             cat ${readList.sort().join(' ')} > ${prefix}.merged.fastq.gz
 
             cat <<-END_VERSIONS > versions.yml
-            ${getProcessName(task.process)}:
-                ${getSoftwareName(task.process)}: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+            ${task.process.tokenize(':').last()}:
+                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
             END_VERSIONS
             """
         }
@@ -49,8 +40,8 @@ process CAT_FASTQ {
             cat ${read2.sort().join(' ')} > ${prefix}_2.merged.fastq.gz
 
             cat <<-END_VERSIONS > versions.yml
-            ${getProcessName(task.process)}:
-                ${getSoftwareName(task.process)}: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+            ${task.process.tokenize(':').last()}:
+                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
             END_VERSIONS
             """
         }

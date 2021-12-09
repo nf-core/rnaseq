@@ -512,7 +512,7 @@
                     "fa_icon": "fas fa-users-cog"
                 },
                 "hostnames": {
-                    "type": "string",
+                    "type": "object",
                     "description": "Institutional configs hostname.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"

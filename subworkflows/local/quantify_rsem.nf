@@ -2,15 +2,15 @@
 // Gene/transcript quantification with RSEM
 //
 
-params.calculateexpression_options = [:]
-params.samtools_sort_options       = [:]
-params.samtools_index_options      = [:]
-params.samtools_stats_options      = [:]
-params.merge_counts_options        = [:]
+// params.calculateexpression_options = [:]
+// params.samtools_sort_options       = [:]
+// params.samtools_index_options      = [:]
+// params.samtools_stats_options      = [:]
+// params.merge_counts_options        = [:]
 
-include { RSEM_CALCULATEEXPRESSION } from '../../modules/nf-core/modules/rsem/calculateexpression/main' addParams( options: params.calculateexpression_options )
-include { RSEM_MERGE_COUNTS        } from '../../modules/local/rsem_merge_counts'                       addParams( options: params.merge_counts_options        )
-include { BAM_SORT_SAMTOOLS        } from '../nf-core/bam_sort_samtools'                                addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
+include { RSEM_CALCULATEEXPRESSION } from '../../modules/nf-core/modules/rsem/calculateexpression/main' // addParams( options: params.calculateexpression_options )
+include { RSEM_MERGE_COUNTS        } from '../../modules/local/rsem_merge_counts'                       // addParams( options: params.merge_counts_options        )
+include { BAM_SORT_SAMTOOLS        } from '../nf-core/bam_sort_samtools'                                // addParams( sort_options: params.samtools_sort_options, index_options: params.samtools_index_options, stats_options: params.samtools_stats_options )
 
 workflow QUANTIFY_RSEM {
     take:

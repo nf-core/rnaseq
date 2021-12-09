@@ -1,16 +1,7 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process PRESEQ_LCEXTRAP {
     tag "$meta.id"
     label 'process_medium'
     label 'error_ignore'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::preseq=3.1.2" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -28,20 +19,21 @@ process PRESEQ_LCEXTRAP {
     path  "versions.yml"                 , emit: versions
 
     script:
-    def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix     = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args       = task.ext.args ?: ''
     def paired_end = meta.single_end ? '' : '-pe'
     """
     preseq \\
         lc_extrap \\
-        $options.args \\
+        $args \\
         $paired_end \\
         -output ${prefix}.ccurve.txt \\
         $bam
     cp .command.err ${prefix}.command.log
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
+    ${task.process.tokenize(':').last()}:
+        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
     END_VERSIONS
     """
 }

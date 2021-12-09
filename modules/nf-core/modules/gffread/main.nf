@@ -3,11 +3,9 @@ process GFFREAD {
     label 'process_low'
 
     conda (params.enable_conda ? "bioconda::gffread=0.12.1" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gffread:0.12.1--h8b12597_0"
-    } else {
-        container "quay.io/biocontainers/gffread:0.12.1--h8b12597_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/gffread:0.12.1--h8b12597_0' :
+        'quay.io/biocontainers/gffread:0.12.1--h8b12597_0' }"
 
     input:
     path gff
@@ -17,15 +15,15 @@ process GFFREAD {
     path "versions.yml" , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${gff.baseName}${task.ext.suffix}" : "${gff.baseName}"
-    def args     = task.ext.args ?: ''
+    def args   = task.ext.args   ?: ''
+    def prefix = task.ext.prefix ?: "${gff.baseName}"
     """
     gffread \\
         $gff \\
         $args \\
         -o ${prefix}.gtf
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         gffread: \$(gffread --version 2>&1)
     END_VERSIONS
     """

@@ -3,11 +3,9 @@ process RSEM_CALCULATEEXPRESSION {
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::rsem=1.3.3 bioconda::star=2.7.6a" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:606b713ec440e799d53a2b51a6e79dbfd28ecf3e-0"
-    } else {
-        container "quay.io/biocontainers/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:606b713ec440e799d53a2b51a6e79dbfd28ecf3e-0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:606b713ec440e799d53a2b51a6e79dbfd28ecf3e-0' :
+        'quay.io/biocontainers/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:606b713ec440e799d53a2b51a6e79dbfd28ecf3e-0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -25,8 +23,8 @@ process RSEM_CALCULATEEXPRESSION {
     tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
 
     script:
-    prefix       = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -48,7 +46,7 @@ process RSEM_CALCULATEEXPRESSION {
         $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
         star: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS

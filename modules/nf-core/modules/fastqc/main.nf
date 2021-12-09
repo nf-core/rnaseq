@@ -3,11 +3,9 @@ process FASTQC {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::fastqc=0.11.9" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
-    } else {
-        container "quay.io/biocontainers/fastqc:0.11.9--0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0' :
+        'quay.io/biocontainers/fastqc:0.11.9--0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -18,16 +16,16 @@ process FASTQC {
     path  "versions.yml"           , emit: versions
 
     script:
+    def args = task.ext.args ?: ''
     // Add soft-links to original FastQs for consistent naming in pipeline
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args   = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         fastqc $args --threads $task.cpus ${prefix}.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
-        fastqc:
+        "${task.process}":
             fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
         END_VERSIONS
         """
@@ -38,7 +36,7 @@ process FASTQC {
         fastqc $args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
         END_VERSIONS
         """

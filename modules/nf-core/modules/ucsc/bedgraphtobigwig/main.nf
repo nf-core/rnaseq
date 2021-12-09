@@ -1,15 +1,13 @@
-def VERSION = '377'
+def VERSION = '377' // Version information not provided by tool on CLI
 
 process UCSC_BEDGRAPHTOBIGWIG {
     tag "$meta.id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::ucsc-bedgraphtobigwig=377" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/ucsc-bedgraphtobigwig:377--h446ed27_1"
-    } else {
-        container "quay.io/biocontainers/ucsc-bedgraphtobigwig:377--h446ed27_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ucsc-bedgraphtobigwig:377--h446ed27_1' :
+        'quay.io/biocontainers/ucsc-bedgraphtobigwig:377--h446ed27_1' }"
 
     input:
     tuple val(meta), path(bedgraph)
@@ -20,7 +18,8 @@ process UCSC_BEDGRAPHTOBIGWIG {
     path "versions.yml"              , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     bedGraphToBigWig \\
         $bedgraph \\
@@ -28,8 +27,8 @@ process UCSC_BEDGRAPHTOBIGWIG {
         ${prefix}.bigWig
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
-        ucsc: \$(echo $VERSION)
+    "${task.process}":
+        ucsc: $VERSION
     END_VERSIONS
     """
 }

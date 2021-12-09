@@ -15,6 +15,7 @@ tools:
             overrepresented sequences.
         homepage: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
         documentation: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
+        licence: ['GPL-2.0-only']
 input:
     - meta:
         type: map

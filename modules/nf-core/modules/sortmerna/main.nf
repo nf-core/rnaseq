@@ -3,11 +3,9 @@ process SORTMERNA {
     label "process_high"
 
     conda (params.enable_conda ? "bioconda::sortmerna=4.3.4" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sortmerna:4.3.4--h9ee0642_0"
-    } else {
-        container "quay.io/biocontainers/sortmerna:4.3.4--h9ee0642_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/sortmerna:4.3.4--h9ee0642_0' :
+        'quay.io/biocontainers/sortmerna:4.3.4--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -19,8 +17,8 @@ process SORTMERNA {
     path  "versions.yml"               , emit: versions
 
     script:
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args   = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         """
         sortmerna \\
@@ -36,7 +34,7 @@ process SORTMERNA {
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
         END_VERSIONS
         """
@@ -59,7 +57,7 @@ process SORTMERNA {
         mv rRNA_reads.log ${prefix}.sortmerna.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
         END_VERSIONS
         """

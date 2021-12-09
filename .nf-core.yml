@@ -11,10 +11,10 @@ lint:
     - modules/local/get_software_versions.nf
 update:
   nf-core/modules:
-    rseqc/bamstat: "49da8642876ae4d91128168cd0db4f1c858d7792"
-    rseqc/inferexperiment: "49da8642876ae4d91128168cd0db4f1c858d7792"
-    rseqc/innerdistance: "49da8642876ae4d91128168cd0db4f1c858d7792"
-    rseqc/junctionannotation: "49da8642876ae4d91128168cd0db4f1c858d7792"
-    rseqc/junctionsaturation: "49da8642876ae4d91128168cd0db4f1c858d7792"
-    rseqc/readdistribution: "49da8642876ae4d91128168cd0db4f1c858d7792"
-    rseqc/readduplication: "49da8642876ae4d91128168cd0db4f1c858d7792"
+    rseqc/bamstat: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+    rseqc/inferexperiment: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+    rseqc/innerdistance: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+    rseqc/junctionannotation: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+    rseqc/junctionsaturation: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+    rseqc/readdistribution: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+    rseqc/readduplication: "9d0cad583b9a71a6509b754fdf589cbfbed08961"

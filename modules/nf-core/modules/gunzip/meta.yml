@@ -8,7 +8,13 @@ tools:
         description: |
             gzip is a file format and a software application used for file compression and decompression.
         documentation: https://www.gnu.org/software/gzip/manual/gzip.html
+        licence: ['GPL-3.0-or-later']
 input:
+    - meta:
+        type: map
+        description: |
+          Optional groovy Map containing meta information
+          e.g. [ id:'test', single_end:false ]
     - archive:
         type: file
         description: File to be compressed/uncompressed
@@ -25,3 +31,4 @@ output:
 authors:
     - "@joseespinosa"
     - "@drpatelh"
+    - "@jfy133"

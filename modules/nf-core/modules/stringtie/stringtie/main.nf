@@ -3,11 +3,9 @@ process STRINGTIE {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::stringtie=2.1.7" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/stringtie:2.1.7--h978d192_0"
-    } else {
-        container "quay.io/biocontainers/stringtie:2.1.7--h978d192_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/stringtie:2.1.7--h978d192_0' :
+        'quay.io/biocontainers/stringtie:2.1.7--h978d192_0' }"
 
     input:
     tuple val(meta), path(bam)
@@ -21,8 +19,8 @@ process STRINGTIE {
     path  "versions.yml"                      , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -43,7 +41,7 @@ process STRINGTIE {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         stringtie: \$(stringtie --version 2>&1)
     END_VERSIONS
     """

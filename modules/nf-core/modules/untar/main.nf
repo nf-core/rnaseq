@@ -3,11 +3,9 @@ process UNTAR {
     label 'process_low'
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
-    } else {
-        container "biocontainers/biocontainers:v1.2.0_cv1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img' :
+        'biocontainers/biocontainers:v1.2.0_cv1' }"
 
     input:
     path archive
@@ -18,15 +16,17 @@ process UNTAR {
 
     script:
     def args = task.ext.args ?: ''
-    untar    = archive.toString() - '.tar.gz'
+    def args2 = task.ext.args2 ?: ''
+    untar        = archive.toString() - '.tar.gz'
     """
     tar \\
         -xzvf \\
         $args \\
-        $archive
+        $archive \\
+        $args2 \\
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         untar: \$(echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//')
     END_VERSIONS
     """

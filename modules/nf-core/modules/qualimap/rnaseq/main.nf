@@ -3,11 +3,9 @@ process QUALIMAP_RNASEQ {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::qualimap=2.2.2d" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1"
-    } else {
-        container "quay.io/biocontainers/qualimap:2.2.2d--1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1' :
+        'quay.io/biocontainers/qualimap:2.2.2d--1' }"
 
     input:
     tuple val(meta), path(bam)
@@ -18,8 +16,8 @@ process QUALIMAP_RNASEQ {
     path  "versions.yml"              , emit: versions
 
     script:
-    prefix         = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args       = task.ext.args ?: ''
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
     def paired_end = meta.single_end ? '' : '-pe'
     def memory     = task.memory.toGiga() + "G"
 
@@ -44,7 +42,7 @@ process QUALIMAP_RNASEQ {
         -outdir $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
     END_VERSIONS
     """

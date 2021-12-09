@@ -1,15 +1,13 @@
-def VERSION = '2.2.0'
+def VERSION = '2.2.0' // Version information not provided by tool on CLI
 
 process HISAT2_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::hisat2=2.2.0 bioconda::samtools=1.10" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
-    } else {
-        container "quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0' :
+        'quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2880dd9d8ad0a7b221d4eacda9a818e92983128d-0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -17,15 +15,14 @@ process HISAT2_ALIGN {
     path  splicesites
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
-    tuple val(meta), path("*.log"), emit: summary
-    path  "versions.yml"          , emit: versions
-
+    tuple val(meta), path("*.bam")                   , emit: bam
+    tuple val(meta), path("*.log")                   , emit: summary
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
+    path  "versions.yml"                             , emit: versions
 
     script:
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args   = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -51,8 +48,8 @@ process HISAT2_ALIGN {
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
-            hisat2: \$(echo $VERSION)
+        "${task.process}":
+            hisat2: $VERSION
             samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         END_VERSIONS
         """
@@ -83,8 +80,8 @@ process HISAT2_ALIGN {
         fi
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
-            hisat2: \$(echo $VERSION)
+        "${task.process}":
+            hisat2: $VERSION
             samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         END_VERSIONS
         """

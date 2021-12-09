@@ -512,7 +512,7 @@
                     "fa_icon": "fas fa-users-cog"
                 },
                 "hostnames": {
-                    "type": "string",
+                    "type": "object",
                     "description": "Institutional configs hostname.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
@@ -673,11 +673,6 @@
                     "hidden": true,
                     "fa_icon": "fas fa-toolbox",
                     "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
-                },
-                "process": {
-                    "type": "string",
-                    "description": "Use to override process specific options, e.g., --process.FASTQC.args '--quiet'.",
-                    "hidden": true
                 }
             }
         }

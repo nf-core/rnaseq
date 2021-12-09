@@ -1,12 +1,16 @@
 lint:
   files_unchanged:
     - .gitattributes
+    - .github/ISSUE_TEMPLATE/config.yml
+    - .github/workflows/linting_comment.yml
     - .markdownlint.yml
     - assets/email_template.html
     - assets/email_template.txt
     - lib/NfcoreTemplate.groovy
     - assets/multiqc_config.yaml
   files_exist:
+    - .github/ISSUE_TEMPLATE/bug_report.md
+    - .github/ISSUE_TEMPLATE/feature_request.md
     - bin/scrape_software_versions.py
     - modules/local/get_software_versions.nf
 update:

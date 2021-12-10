@@ -2,21 +2,13 @@
 // Run RSeQC modules
 //
 
-// params.bamstat_options            = [:]
-// params.innerdistance_options      = [:]
-// params.inferexperiment_options    = [:]
-// params.junctionannotation_options = [:]
-// params.junctionsaturation_options = [:]
-// params.readdistribution_options   = [:]
-// params.readduplication_options    = [:]
-
-include { RSEQC_BAMSTAT            } from '../../modules/nf-core/modules/rseqc/bamstat/main'            // addParams( options: params.bamstat_options            )
-include { RSEQC_INNERDISTANCE      } from '../../modules/nf-core/modules/rseqc/innerdistance/main'      // addParams( options: params.innerdistance_options      )
-include { RSEQC_INFEREXPERIMENT    } from '../../modules/nf-core/modules/rseqc/inferexperiment/main'    // addParams( options: params.inferexperiment_options    )
-include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/modules/rseqc/junctionannotation/main' // addParams( options: params.junctionannotation_options )
-include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/modules/rseqc/junctionsaturation/main' // addParams( options: params.junctionsaturation_options )
-include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/modules/rseqc/readdistribution/main'   // addParams( options: params.readdistribution_options   )
-include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/modules/rseqc/readduplication/main'    // addParams( options: params.readduplication_options    )
+include { RSEQC_BAMSTAT            } from '../../modules/nf-core/modules/rseqc/bamstat/main'
+include { RSEQC_INNERDISTANCE      } from '../../modules/nf-core/modules/rseqc/innerdistance/main'
+include { RSEQC_INFEREXPERIMENT    } from '../../modules/nf-core/modules/rseqc/inferexperiment/main'
+include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/modules/rseqc/junctionannotation/main'
+include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/modules/rseqc/junctionsaturation/main'
+include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/modules/rseqc/readdistribution/main'
+include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/modules/rseqc/readduplication/main'
 
 workflow RSEQC {
     take:

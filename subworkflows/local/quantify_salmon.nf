@@ -2,18 +2,14 @@
 // Pseudo-alignment and quantification with Salmon
 //
 
-// params.salmon_quant_options   = [:]
-// params.salmon_tx2gene_options = [:]
-// params.tximport_options       = [:]
-// params.merge_counts_options   = [:]
+include { SALMON_QUANT    } from '../../modules/nf-core/modules/salmon/quant/main'
+include { SALMON_TX2GENE  } from '../../modules/local/salmon_tx2gene'
+include { SALMON_TXIMPORT } from '../../modules/local/salmon_tximport'
 
-include { SALMON_QUANT        } from '../../modules/nf-core/modules/salmon/quant/main' // addParams( options: params.salmon_quant_options   )
-include { SALMON_TX2GENE      } from '../../modules/local/salmon_tx2gene'              // addParams( options: params.salmon_tx2gene_options )
-include { SALMON_TXIMPORT     } from '../../modules/local/salmon_tximport'             // addParams( options: params.tximport_options       )
-include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE
-        SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED
-        SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_SCALED
-        SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT } from '../../modules/local/salmon_summarizedexperiment' // addParams( options: params.merge_counts_options )
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE               } from '../../modules/local/salmon_summarizedexperiment'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED } from '../../modules/local/salmon_summarizedexperiment'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_SCALED        } from '../../modules/local/salmon_summarizedexperiment'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT         } from '../../modules/local/salmon_summarizedexperiment'
 
 workflow QUANTIFY_SALMON {
     take:
@@ -66,22 +62,22 @@ workflow QUANTIFY_SALMON {
     )
 
     emit:
-    results                          = SALMON_QUANT.out.results                      // channel: [ val(meta), results_dir ]
+    results                       = SALMON_QUANT.out.results                      // channel: [ val(meta), results_dir ]
 
-    tpm_gene                         = SALMON_TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
-    counts_gene                      = SALMON_TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]
-    counts_gene_length_scaled        = SALMON_TXIMPORT.out.counts_gene_length_scaled // channel: [ val(meta), counts ]
-    counts_gene_scaled               = SALMON_TXIMPORT.out.counts_gene_scaled        // channel: [ val(meta), counts ]
-    tpm_transcript                   = SALMON_TXIMPORT.out.tpm_transcript            // channel: [ val(meta), counts ]
-    counts_transcript                = SALMON_TXIMPORT.out.counts_transcript         // channel: [ val(meta), counts ]
+    tpm_gene                      = SALMON_TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
+    counts_gene                   = SALMON_TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]
+    counts_gene_length_scaled     = SALMON_TXIMPORT.out.counts_gene_length_scaled // channel: [ val(meta), counts ]
+    counts_gene_scaled            = SALMON_TXIMPORT.out.counts_gene_scaled        // channel: [ val(meta), counts ]
+    tpm_transcript                = SALMON_TXIMPORT.out.tpm_transcript            // channel: [ val(meta), counts ]
+    counts_transcript             = SALMON_TXIMPORT.out.counts_transcript         // channel: [ val(meta), counts ]
 
-    merged_gene_rds                  = SALMON_SE_GENE.out.rds                        //    path: *.rds
-    merged_gene_rds_length_scaled    = SALMON_SE_GENE_LENGTH_SCALED.out.rds          //    path: *.rds
-    merged_gene_rds_scaled           = SALMON_SE_GENE_SCALED.out.rds                 //    path: *.rds
+    merged_gene_rds               = SALMON_SE_GENE.out.rds                        //    path: *.rds
+    merged_gene_rds_length_scaled = SALMON_SE_GENE_LENGTH_SCALED.out.rds          //    path: *.rds
+    merged_gene_rds_scaled        = SALMON_SE_GENE_SCALED.out.rds                 //    path: *.rds
 
-    merged_counts_transcript         = SALMON_TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
-    merged_tpm_transcript            = SALMON_TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
-    merged_transcript_rds            = SALMON_SE_TRANSCRIPT.out.rds                  //    path: *.rds
+    merged_counts_transcript      = SALMON_TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
+    merged_tpm_transcript         = SALMON_TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
+    merged_transcript_rds         = SALMON_SE_TRANSCRIPT.out.rds                  //    path: *.rds
 
-    versions                         = ch_versions                                   // channel: [ versions.yml ]
+    versions                      = ch_versions                                   // channel: [ versions.yml ]
 }

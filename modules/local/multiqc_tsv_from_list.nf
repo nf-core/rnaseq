@@ -1,5 +1,6 @@
 process MULTIQC_TSV_FROM_LIST {
 
+    executor 'local'
     memory 100.MB
 
     input:

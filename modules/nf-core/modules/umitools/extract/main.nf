@@ -3,11 +3,9 @@ process UMITOOLS_EXTRACT {
     label "process_low"
 
     conda (params.enable_conda ? "bioconda::umi_tools=1.1.2" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/umi_tools:1.1.2--py38h4a8c8d9_0"
-    } else {
-        container "quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.2--py38h4a8c8d9_0' :
+        'quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -18,8 +16,8 @@ process UMITOOLS_EXTRACT {
     path  "versions.yml"               , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         """
         umi_tools \\
@@ -30,7 +28,7 @@ process UMITOOLS_EXTRACT {
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """
@@ -46,7 +44,7 @@ process UMITOOLS_EXTRACT {
             > ${prefix}.umi_extract.log
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
         END_VERSIONS
         """

@@ -2,11 +2,9 @@ process BBMAP_BBSPLIT {
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::bbmap=38.93" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bbmap:38.93--he522d1c_0"
-    } else {
-        container "quay.io/biocontainers/bbmap:38.93--he522d1c_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bbmap:38.93--he522d1c_0' :
+        'quay.io/biocontainers/bbmap:38.93--he522d1c_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -23,8 +21,8 @@ process BBMAP_BBSPLIT {
     path "versions.yml"                       , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     def avail_mem = 3
     if (!task.memory) {
@@ -49,7 +47,7 @@ process BBMAP_BBSPLIT {
                 $args
 
             cat <<-END_VERSIONS > versions.yml
-            ${task.process.tokenize(':').last()}:
+            "${task.process}":
                 bbmap: \$(bbversion.sh 2>&1)
             END_VERSIONS
             """
@@ -78,7 +76,7 @@ process BBMAP_BBSPLIT {
             $args
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             bbmap: \$(bbversion.sh 2>&1)
         END_VERSIONS
         """

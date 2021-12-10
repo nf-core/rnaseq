@@ -1,12 +1,10 @@
 process SAMPLESHEET_CHECK {
     tag "$samplesheet"
 
-    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/python:3.8.3"
-    } else {
-        container "quay.io/biocontainers/python:3.8.3"
-    }
+    conda (params.enable_conda ? "conda-forge::python=3.9.5" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/python:3.9--1' :
+        'quay.io/biocontainers/python:3.9--1' }"
 
     input:
     path samplesheet
@@ -22,7 +20,7 @@ process SAMPLESHEET_CHECK {
         samplesheet.valid.csv
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """

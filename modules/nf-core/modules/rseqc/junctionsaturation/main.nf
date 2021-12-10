@@ -3,11 +3,9 @@ process RSEQC_JUNCTIONSATURATION {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::rseqc=3.0.1 'conda-forge::r-base>=3.5'" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1"
-    } else {
-        container "quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1' :
+        'quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1' }"
 
     input:
     tuple val(meta), path(bam)
@@ -19,8 +17,8 @@ process RSEQC_JUNCTIONSATURATION {
     path  "versions.yml"          , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     junction_saturation.py \\
         -i $bam \\
@@ -29,7 +27,7 @@ process RSEQC_JUNCTIONSATURATION {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         rseqc: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
     END_VERSIONS
     """

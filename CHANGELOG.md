@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-* Fix version reporting of versions with trailing zeros.
+* Port pipeline to the updated Nextflow DSL2 syntax adopted on nf-core/modules
+    * Removed `--publish_dir_mode` as it is no longer required for the new syntax
+* Bump minimum Nextflow version from `21.04.0` -> `21.10.3`
 
 ### Parameters
 

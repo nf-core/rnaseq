@@ -2,13 +2,9 @@
 // UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
 //
 
-// params.umitools_options       = [:]
-// params.samtools_index_options = [:]
-// params.samtools_stats_options = [:]
-
-include { UMITOOLS_DEDUP     } from '../../modules/nf-core/modules/umitools/dedup/main' // addParams( options: params.umitools_options       )
-include { SAMTOOLS_INDEX     } from '../../modules/nf-core/modules/samtools/index/main' // addParams( options: params.samtools_index_options )
-include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'                              // addParams( options: params.samtools_stats_options )
+include { UMITOOLS_DEDUP     } from '../../modules/nf-core/modules/umitools/dedup/main'
+include { SAMTOOLS_INDEX     } from '../../modules/nf-core/modules/samtools/index/main'
+include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'
 
 workflow DEDUP_UMI_UMITOOLS {
     take:
@@ -47,13 +43,13 @@ workflow DEDUP_UMI_UMITOOLS {
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
-    bam              = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), [ bam ] ]
+    bam      = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), [ bam ] ]
 
-    bai              = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi              = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
-    stats            = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
-    flagstat         = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats         = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
+    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
+    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
+    stats    = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
+    flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
+    idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
 
-    versions         = ch_versions                     // channel: [ versions.yml ]
+    versions = ch_versions                     // channel: [ versions.yml ]
 }

@@ -3,11 +3,9 @@ process SALMON_QUANT {
     label "process_medium"
 
     conda (params.enable_conda ? 'bioconda::salmon=1.5.2' : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/salmon:1.5.2--h84f40af_0"
-    } else {
-        container "quay.io/biocontainers/salmon:1.5.2--h84f40af_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/salmon:1.5.2--h84f40af_0' :
+        'quay.io/biocontainers/salmon:1.5.2--h84f40af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -22,8 +20,8 @@ process SALMON_QUANT {
     path  "versions.yml"              , emit: versions
 
     script:
-    prefix          = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args        = task.ext.args ?: ''
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
 
     def reference   = "--index $index"
     def input_reads = meta.single_end ? "-r $reads" : "-1 ${reads[0]} -2 ${reads[1]}"
@@ -64,7 +62,7 @@ process SALMON_QUANT {
         -o $prefix
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
     END_VERSIONS
     """

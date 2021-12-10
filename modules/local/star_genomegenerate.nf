@@ -4,11 +4,9 @@ process STAR_GENOMEGENERATE {
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda (params.enable_conda ? "bioconda::star=2.6.1d bioconda::samtools=1.10 conda-forge::gawk=5.1.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0"
-    } else {
-        container "quay.io/biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0' :
+        'quay.io/biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0' }"
 
     input:
     path fasta
@@ -19,8 +17,8 @@ process STAR_GENOMEGENERATE {
     path "versions.yml", emit: versions
 
     script:
-    def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     def args   = (task.ext.args ?: '').tokenize()
+    def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     if (args.contains('--genomeSAindexNbases')) {
         """
         mkdir star
@@ -34,7 +32,7 @@ process STAR_GENOMEGENERATE {
             ${args.join(' ')}
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             star: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """
@@ -55,7 +53,7 @@ process STAR_GENOMEGENERATE {
             ${args.join(' ')}
 
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             star: \$(STAR --version | sed -e "s/STAR_//g")
         END_VERSIONS
         """

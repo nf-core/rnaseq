@@ -3,11 +3,9 @@ process TRIMGALORE {
     label 'process_high'
 
     conda (params.enable_conda ? 'bioconda::trim-galore=0.6.7' : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/trim-galore:0.6.7--hdfd78af_0"
-    } else {
-        container "quay.io/biocontainers/trim-galore:0.6.7--hdfd78af_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/trim-galore:0.6.7--hdfd78af_0' :
+        'quay.io/biocontainers/trim-galore:0.6.7--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -21,6 +19,7 @@ process TRIMGALORE {
     tuple val(meta), path("*.zip") , emit: zip optional true
 
     script:
+    def args = task.ext.args ?: ''
     // Calculate number of --cores for TrimGalore based on value of task.cpus
     // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
     // See: https://github.com/nf-core/atacseq/pull/65
@@ -39,8 +38,7 @@ process TRIMGALORE {
     def tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
 
     // Added soft-links to original fastqs for consistent naming in MultiQC
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
@@ -52,8 +50,8 @@ process TRIMGALORE {
             $tpc_r1 \\
             ${prefix}.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
-            TRIMGALORE: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
+        "${task.process}":
+            trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
             cutadapt: \$(cutadapt --version)
         END_VERSIONS
         """
@@ -73,7 +71,7 @@ process TRIMGALORE {
             ${prefix}_1.fastq.gz \\
             ${prefix}_2.fastq.gz
         cat <<-END_VERSIONS > versions.yml
-        ${task.process.tokenize(':').last()}:
+        "${task.process}":
             trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
             cutadapt: \$(cutadapt --version)
         END_VERSIONS

@@ -14,6 +14,7 @@ tools:
         homepage: http://www.htslib.org/
         documentation: hhttp://www.htslib.org/doc/samtools.html
         doi: 10.1093/bioinformatics/btp352
+        licence: ['MIT']
 input:
     - meta:
         type: map
@@ -34,6 +35,10 @@ output:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai,sai}"
+    - crai:
+        type: file
+        description: BAM/CRAM/SAM index file
+        pattern: "*.{bai,crai,sai}"
     - csi:
         type: file
         description: CSI index file
@@ -45,3 +50,4 @@ output:
 authors:
     - "@drpatelh"
     - "@ewels"
+    - "@maxulysse"

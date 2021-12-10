@@ -18,10 +18,10 @@ jobs:
         aligner: ["star_salmon", "star_rsem", "hisat2"]
     steps:
       - name: Launch workflow via tower
-        uses: nf-core/tower-action@master
+        uses: nf-core/tower-action@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          bearer_token: ${{ secrets.TOWER_BEARER_TOKEN }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
           pipeline: ${{ github.repository }}
           revision: ${{ github.sha }}
@@ -31,4 +31,5 @@ jobs:
               "outdir" : "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}",
               "aligner": "${{ matrix.aligner }}"
             }
-          profiles: '[ "test_full", "aws_tower" ]'
+          profiles: test_full,aws_tower
+          pre_run_script: 'export NXF_VER=21.10.3'

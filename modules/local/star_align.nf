@@ -3,12 +3,10 @@ process STAR_ALIGN {
     label 'process_high'
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
-    conda (params.enable_conda ? 'bioconda::star=2.6.1d' : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container 'https://depot.galaxyproject.org/singularity/star:2.6.1d--0'
-    } else {
-        container 'quay.io/biocontainers/star:2.6.1d--0'
-    }
+    conda (params.enable_conda ? "bioconda::star=2.6.1d" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/star:2.6.1d--0' :
+        'quay.io/biocontainers/star:2.6.1d--0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -29,8 +27,8 @@ process STAR_ALIGN {
     tuple val(meta), path('*.tab')                   , optional:true, emit: tab
 
     script:
-    def prefix     = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args       = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def ignore_gtf = params.star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
     def seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
     def out_sam_type = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
@@ -58,7 +56,7 @@ process STAR_ALIGN {
     fi
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         star: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS
     """

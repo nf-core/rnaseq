@@ -3,11 +3,9 @@ process UMITOOLS_DEDUP {
     label "process_medium"
 
     conda (params.enable_conda ? "bioconda::umi_tools=1.1.2" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/umi_tools:1.1.2--py38h4a8c8d9_0"
-    } else {
-        container "quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.2--py38h4a8c8d9_0' :
+        'quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0' }"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -17,8 +15,8 @@ process UMITOOLS_DEDUP {
     path  "versions.yml"          , emit: versions
 
     script:
-    def prefix   = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def args     = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def paired   = meta.single_end ? "" : "--paired"
     """
     umi_tools dedup \\
@@ -28,7 +26,7 @@ process UMITOOLS_DEDUP {
         $args
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
     END_VERSIONS
     """

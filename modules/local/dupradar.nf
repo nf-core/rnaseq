@@ -3,11 +3,9 @@ process DUPRADAR {
     label 'process_long'
 
     conda (params.enable_conda ? "bioconda::bioconductor-dupradar=1.18.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.18.0--r40_1"
-    } else {
-        container "quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.18.0--r40_1' :
+        'quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_1' }"
 
     input:
     tuple val(meta), path(bam)
@@ -20,7 +18,7 @@ process DUPRADAR {
     path "versions.yml"               , emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     def strandedness = 0
     if (meta.strandedness == 'forward') {
@@ -39,7 +37,7 @@ process DUPRADAR {
         $task.cpus
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process.tokenize(':').last()}:
+    "${task.process}":
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
     END_VERSIONS

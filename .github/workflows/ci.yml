@@ -15,23 +15,31 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver:
-          - 'NXF_VER=21.10.3'
-        #  - 'NXF_EDGE=1'
+        # Nextflow versions
+        include:
+          # Test pipeline minimum Nextflow version
+          - NXF_VER: '21.10.3'
+            NXF_EDGE: ''
+          # Test latest edge release of Nextflow
+          - NXF_VER: ''
+            NXF_EDGE: '1'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
+          NXF_VER: ${{ matrix.NXF_VER }}
+          # Uncomment only if the edge release is more recent than the latest stable release
+          # See https://github.com/nextflow-io/nextflow/issues/2467
+          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          export ${{ matrix.nxf_ver }}
           nextflow self-update
 
       - name: Run pipeline with test data
@@ -43,7 +51,6 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -65,10 +72,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
+          NXF_VER: ${{ matrix.NXF_VER }}
+          # Uncomment only if the edge release is more recent than the latest stable release
+          # See https://github.com/nextflow-io/nextflow/issues/2467
+          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          export ${{ matrix.nxf_ver }}
           nextflow self-update
 
       - name: Run pipeline with STAR and various parameters
@@ -80,7 +92,6 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -94,10 +105,13 @@ jobs:
       - name: Install Nextflow
         env:
           CAPSULE_LOG: none
+          NXF_VER: ${{ matrix.NXF_VER }}
+          # Uncomment only if the edge release is more recent than the latest stable release
+          # See https://github.com/nextflow-io/nextflow/issues/2467
+          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          export ${{ matrix.nxf_ver }}
           nextflow self-update
 
       - name: Run pipeline with RSEM STAR and various parameters
@@ -109,7 +123,6 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -121,10 +134,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
+          NXF_VER: ${{ matrix.NXF_VER }}
+          # Uncomment only if the edge release is more recent than the latest stable release
+          # See https://github.com/nextflow-io/nextflow/issues/2467
+          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          export ${{ matrix.nxf_ver }}
           nextflow self-update
 
       - name: Run pipeline with HISAT2 and various parameters
@@ -136,7 +154,6 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
@@ -148,10 +165,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
+          NXF_VER: ${{ matrix.NXF_VER }}
+          # Uncomment only if the edge release is more recent than the latest stable release
+          # See https://github.com/nextflow-io/nextflow/issues/2467
+          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          export ${{ matrix.nxf_ver }}
           nextflow self-update
 
       - name: Run pipeline with Salmon and various parameters

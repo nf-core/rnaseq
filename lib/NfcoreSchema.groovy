@@ -362,7 +362,7 @@ class NfcoreSchema {
             }
         }
         for (ex in causingExceptions) {
-            printExceptions(ex, params_json, log)
+            printExceptions(ex, params_json, log, enums)
         }
     }
 

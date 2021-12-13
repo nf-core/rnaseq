@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Port pipeline to the updated Nextflow DSL2 syntax adopted on nf-core/modules
     * Removed `--publish_dir_mode` as it is no longer required for the new syntax
 * Bump minimum Nextflow version from `21.04.0` -> `21.10.3`
+* [[#720](https://github.com/nf-core/rnaseq/issues/720)] - KeyError 'gene_id' in salmon_tx2gene.py
+* [[#724](https://github.com/nf-core/rnaseq/issues/724)] - Deal with warnings generated when native NF processes are used
+* [[#725](https://github.com/nf-core/rnaseq/issues/725)] - Untar needs `--no-same-owner` on DNAnexus
+* [[#727](https://github.com/nf-core/rnaseq/issues/727)] - Fix transcriptome staging issues on DNAnexus for rsem/prepareference
 
 ### Parameters
 

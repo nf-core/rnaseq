@@ -79,7 +79,7 @@
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "samtools/index": {
-                "git_sha": "37c5cb495d40118b13a0ecda648da9512ee5a9fc"
+                "git_sha": "0fafaeebf52cc5ab554b83297ed02a48d852a848"
             },
             "samtools/sort": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"

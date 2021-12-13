@@ -43,7 +43,7 @@
                 "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
             },
             "rsem/preparereference": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "47a9cf8ecbe4de4dcb8b9cc6731fece82b934ab7"
             },
             "rseqc/bamstat": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"

@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>507 Insufficient Storage</title>
+</head><body>
+<h1>Insufficient Storage</h1>
+<p>The method could not be performed on the resource
+because the server is unable to store the
+representation needed to successfully complete the
+request.  There is insufficient free space left in
+your storage allocation.</p>
+<p>Additionally, a 507 Insufficient Storage
+error was encountered while trying to use an ErrorDocument to handle the request.</p>
+</body></html>

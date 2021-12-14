@@ -104,12 +104,6 @@
                     "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
                     "fa_icon": "fas fa-users-cog"
                 },
-                "hostnames": {
-                    "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
                 "config_profile_name": {
                     "type": "string",
                     "description": "Institutional config name.",
@@ -184,22 +178,6 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
-                "publish_dir_mode": {
-                    "type": "string",
-                    "default": "copy",
-                    "description": "Method used to save pipeline results to output directory.",
-                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
-                    "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ],
-                    "hidden": true
-                },
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",
@@ -260,13 +238,6 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         }

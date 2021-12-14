@@ -41,7 +41,6 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          nextflow self-update
 
       - name: Run pipeline with test data
         run: |
@@ -87,7 +86,6 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          nextflow self-update
 
       - name: Run pipeline with STAR and various parameters
         run: |
@@ -123,7 +121,6 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          nextflow self-update
 
       - name: Run pipeline with RSEM STAR and various parameters
         run: |
@@ -159,7 +156,6 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          nextflow self-update
 
       - name: Run pipeline with HISAT2 and various parameters
         run: |
@@ -195,7 +191,6 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          nextflow self-update
 
       - name: Run pipeline with Salmon and various parameters
         run: |

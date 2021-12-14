@@ -39,7 +39,6 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          nextflow self-update
 
       - name: Run pipeline with test data
         run: |

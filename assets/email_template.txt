@@ -9,9 +9,7 @@
 
 Run Name: $runName
 
-<% if (success){
-    out << "## nf-core/rnaseq execution completed successfully! ##"
-} else {
+<% if (!success){
     out << """####################################################
 ## nf-core/rnaseq execution completed unsuccessfully! ##
 ####################################################
@@ -20,7 +18,21 @@ The full error message was:
 
 ${errorReport}
 """
-} %>
+} else if (fail_percent_mapped.size() > 0) {
+    out << """##################################################
+## nf-core/rnaseq execution completed with warnings ##
+##################################################
+The pipeline finished successfully, but the following samples were skipped,
+due to very low alignment (less than ${min_mapped_reads}%):
+
+  - ${fail_percent_mapped.join("\n  - ")}
+"""
+} else {
+    out << "## nf-core/rnaseq execution completed successfully! ##"
+}
+%>
+
+
 
 
 The workflow was completed at $dateComplete (duration: $duration)

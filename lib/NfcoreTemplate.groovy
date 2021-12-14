@@ -24,7 +24,7 @@ class NfcoreTemplate {
     public static void checkConfigProvided(workflow, log) {
         if (workflow.profile == 'standard' && workflow.configFiles.size() <= 1) {
             log.warn "[$workflow.manifest.name] You are attempting to run the pipeline without any custom configuration!\n\n" +
-                    "This will be dependent on your local compute enviroment but can be acheived via one or more of the following:\n" +
+                    "This will be dependent on your local compute environment but can be achieved via one or more of the following:\n" +
                     "   (1) Using an existing pipeline profile e.g. `-profile docker` or `-profile singularity`\n" +
                     "   (2) Using an existing nf-core/configs for your Institution e.g. `-profile crick` or `-profile uppmax`\n" +
                     "   (3) Using your own local custom config e.g. `-c /path/to/your/custom.config`\n\n" +

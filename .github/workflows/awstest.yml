@@ -22,7 +22,7 @@ jobs:
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-${{ github.sha }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
             }
           profiles: test,aws_tower
           pre_run_script: 'export NXF_VER=21.10.3'

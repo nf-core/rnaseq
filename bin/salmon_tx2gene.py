@@ -44,7 +44,10 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
                         votes[item_pair[0].strip()] += 1
 
                     attr_dict[item_pair[0].strip()] = value
-            gene_dict[attr_dict[gene_id]].append(attr_dict)
+            try:
+                gene_dict[attr_dict[gene_id]].append(attr_dict)
+            except KeyError:
+                continue
 
     if not votes:
         logger.warning("No attribute in GTF matching transcripts")

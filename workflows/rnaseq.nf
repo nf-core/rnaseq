@@ -567,6 +567,7 @@ workflow RNASEQ {
             ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
             ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
+
         if (!params.skip_dupradar) {
             DUPRADAR (
                 ch_genome_bam,
@@ -575,6 +576,7 @@ workflow RNASEQ {
             ch_dupradar_multiqc = DUPRADAR.out.multiqc
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
+
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             RSEQC (
                 ch_genome_bam,

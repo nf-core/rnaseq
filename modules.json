@@ -7,7 +7,7 @@
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "cat/fastq": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "826a5603db5cf5b4f1e55cef9cc0b7c37d3c7e70"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
@@ -43,7 +43,7 @@
                 "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
             },
             "rsem/preparereference": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "47a9cf8ecbe4de4dcb8b9cc6731fece82b934ab7"
             },
             "rseqc/bamstat": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
@@ -79,7 +79,7 @@
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "samtools/index": {
-                "git_sha": "37c5cb495d40118b13a0ecda648da9512ee5a9fc"
+                "git_sha": "0fafaeebf52cc5ab554b83297ed02a48d852a848"
             },
             "samtools/sort": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"

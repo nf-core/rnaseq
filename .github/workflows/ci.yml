@@ -8,14 +8,16 @@ on:
   release:
     types: [published]
 
+env:
+  NXF_ANSI_LOG: false
+  CAPSULE_LOG: none
+
 jobs:
   test:
     name: Run workflow tests
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions
@@ -32,7 +34,6 @@ jobs:
 
       - name: Install Nextflow
         env:
-          CAPSULE_LOG: none
           NXF_VER: ${{ matrix.NXF_VER }}
           # Uncomment only if the edge release is more recent than the latest stable release
           # See https://github.com/nextflow-io/nextflow/issues/2467
@@ -50,8 +51,6 @@ jobs:
     name: Test STAR Salmon with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions
@@ -81,7 +80,6 @@ jobs:
 
       - name: Install Nextflow
         env:
-          CAPSULE_LOG: none
           NXF_VER: ${{ matrix.NXF_VER }}
           # Uncomment only if the edge release is more recent than the latest stable release
           # See https://github.com/nextflow-io/nextflow/issues/2467
@@ -99,8 +97,6 @@ jobs:
     name: Test STAR RSEM with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions
@@ -120,7 +116,6 @@ jobs:
 
       - name: Install Nextflow
         env:
-          CAPSULE_LOG: none
           NXF_VER: ${{ matrix.NXF_VER }}
           # Uncomment only if the edge release is more recent than the latest stable release
           # See https://github.com/nextflow-io/nextflow/issues/2467
@@ -138,8 +133,6 @@ jobs:
     name: Test HISAT2 with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions
@@ -159,7 +152,6 @@ jobs:
 
       - name: Install Nextflow
         env:
-          CAPSULE_LOG: none
           NXF_VER: ${{ matrix.NXF_VER }}
           # Uncomment only if the edge release is more recent than the latest stable release
           # See https://github.com/nextflow-io/nextflow/issues/2467
@@ -177,8 +169,6 @@ jobs:
     name: Test Salmon with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions
@@ -198,7 +188,6 @@ jobs:
 
       - name: Install Nextflow
         env:
-          CAPSULE_LOG: none
           NXF_VER: ${{ matrix.NXF_VER }}
           # Uncomment only if the edge release is more recent than the latest stable release
           # See https://github.com/nextflow-io/nextflow/issues/2467

@@ -7,7 +7,7 @@
 def valid_params = [
     aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
     pseudoaligners : ['salmon'],
-    rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication']
+    rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -558,6 +558,7 @@ workflow RNASEQ {
     ch_readdistribution_multiqc   = Channel.empty()
     ch_readduplication_multiqc    = Channel.empty()
     ch_fail_strand_multiqc        = Channel.empty()
+    ch_tin_multiqc                = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc) {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ (
@@ -590,6 +591,7 @@ workflow RNASEQ {
             ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
             ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
             ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
+            ch_tin_multiqc                = RSEQC.out.tin_txt
             ch_versions = ch_versions.mix(RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
@@ -694,7 +696,8 @@ workflow RNASEQ {
             ch_junctionannotation_multiqc.collect{it[1]}.ifEmpty([]),
             ch_junctionsaturation_multiqc.collect{it[1]}.ifEmpty([]),
             ch_readdistribution_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_readduplication_multiqc.collect{it[1]}.ifEmpty([])
+            ch_readduplication_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_tin_multiqc.collect{it[1]}.ifEmpty([])
         )
         multiqc_report = MULTIQC.out.report.toList()
     }

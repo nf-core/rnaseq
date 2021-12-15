@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#724](https://github.com/nf-core/rnaseq/issues/724)] - Deal with warnings generated when native NF processes are used
 * [[#725](https://github.com/nf-core/rnaseq/issues/725)] - Untar needs `--no-same-owner` on DNAnexus
 * [[#727](https://github.com/nf-core/rnaseq/issues/727)] - Fix transcriptome staging issues on DNAnexus for rsem/prepareference
+* [[#728](https://github.com/nf-core/rnaseq/issues/728)] - Add RSeQC TIN.py as a quality metric for the pipeline
 
 ### Parameters
 

@@ -1,10 +1,8 @@
 lint:
   files_unchanged:
-    - .markdownlint.yml
     - assets/email_template.html
     - assets/email_template.txt
     - lib/NfcoreTemplate.groovy
-    - assets/multiqc_config.yaml
 update:
   nf-core/modules:
     rseqc/bamstat: "9d0cad583b9a71a6509b754fdf589cbfbed08961"

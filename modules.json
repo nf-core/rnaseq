@@ -66,6 +66,9 @@
             "rseqc/readduplication": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
+            "rseqc/tin": {
+                "git_sha": "67571c4e791b48ceb5507eeb464d6e06599a6f96"
+            },
             "salmon/index": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },

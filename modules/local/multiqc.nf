@@ -40,6 +40,7 @@ process MULTIQC {
     path ('rseqc/junction_saturation/*')
     path ('rseqc/read_distribution/*')
     path ('rseqc/read_duplication/*')
+    path ('rseqc/tin/*')
 
     output:
     path "*multiqc_report.html", emit: report

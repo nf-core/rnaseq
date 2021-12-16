@@ -9,6 +9,7 @@ include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/modules/rseqc/j
 include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/modules/rseqc/junctionsaturation/main'
 include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/modules/rseqc/readdistribution/main'
 include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/modules/rseqc/readduplication/main'
+include { RSEQC_TIN                } from '../../modules/nf-core/modules/rseqc/tin/main'
 
 workflow RSEQC {
     take:
@@ -118,6 +119,16 @@ workflow RSEQC {
         ch_versions = ch_versions.mix(RSEQC_READDUPLICATION.out.versions.first())
     }
 
+    //
+    // Run RSeQC tin.py
+    //
+    tin_txt = Channel.empty()
+    if ('tin' in rseqc_modules) {
+        RSEQC_TIN ( bam, bed )
+        tin_txt     = RSEQC_TIN.out.txt
+        ch_versions = ch_versions.mix(RSEQC_TIN.out.versions.first())
+    }
+
     emit:
     bamstat_txt                     // channel: [ val(meta), txt ]
 
@@ -146,6 +157,8 @@ workflow RSEQC {
     readduplication_pos_xls         // channel: [ val(meta), xls ]
     readduplication_pdf             // channel: [ val(meta), pdf ]
     readduplication_rscript         // channel: [ val(meta), r   ]
+
+    tin_txt                         // channel: [ val(meta), txt ]
 
     versions = ch_versions          // channel: [ versions.yml ]
 }

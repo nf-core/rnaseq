@@ -1,0 +1,40 @@
+name: rseqc_tin
+description: Calculte TIN (transcript integrity number) from RNA-seq reads
+keywords:
+  - rnaseq
+  - transcript
+  - integrity
+tools:
+  - rseqc:
+      description: |
+        RSeQC package provides a number of useful modules that can comprehensively evaluate
+        high throughput sequence data especially RNA-seq data.
+      homepage: http://rseqc.sourceforge.net/
+      documentation: http://rseqc.sourceforge.net/
+      doi: 10.1093/bioinformatics/bts356
+      licence: ['GPL-3.0-or-later']
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: Input BAM file
+      pattern: "*.{bam}"
+  - bed:
+      type: file
+      description: BED file containing the reference gene model
+      pattern: "*.{bed}"
+output:
+  - txt:
+      type: file
+      description: tin.py results file
+      pattern: "*.tin.txt"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"

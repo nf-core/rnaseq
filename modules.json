@@ -31,7 +31,7 @@
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "picard/markduplicates": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "0d1e21686a586447b7592e40da9b3a7cdeedf03c"
             },
             "preseq/lcextrap": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"

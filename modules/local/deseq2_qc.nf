@@ -1,5 +1,3 @@
-params.multiqc_label = ''
-
 process DESEQ2_QC {
     label "process_medium"
 
@@ -27,9 +25,10 @@ process DESEQ2_QC {
     path "versions.yml"         , emit: versions
 
     script:
-    def args = task.ext.args ?: ''
-    def label_lower = params.multiqc_label.toLowerCase()
-    def label_upper = params.multiqc_label.toUpperCase()
+    def args  = task.ext.args  ?: ''
+    def args2 = task.ext.args2 ?: ''
+    def label_lower = args2.toLowerCase()
+    def label_upper = args2.toUpperCase()
     """
     deseq2_qc.r \\
         --count_file $counts \\

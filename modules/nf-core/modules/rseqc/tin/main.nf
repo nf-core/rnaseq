@@ -8,11 +8,12 @@ process RSEQC_TIN {
         'quay.io/biocontainers/rseqc:3.0.1--py37h516909a_1' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     path  bed
 
     output:
     tuple val(meta), path("*.txt"), emit: txt
+    tuple val(meta), path("*.xls"), emit: xls
     path "versions.yml"           , emit: versions
 
     script:
@@ -22,8 +23,7 @@ process RSEQC_TIN {
     tin.py \\
         -i $bam \\
         -r $bed \\
-        $args \\
-        > ${prefix}.tin.txt
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

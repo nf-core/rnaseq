@@ -103,7 +103,7 @@ sp:
     rseqc/infer_experiment:
         fn: '*.infer_experiment.txt'
     rseqc/tin:
-        fn: '*.summary.txt'
+        fn: '*.tin.txt'
 
     picard/markdups:
         fn: '*.MarkDuplicates.metrics.txt'

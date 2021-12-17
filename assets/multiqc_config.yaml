@@ -60,6 +60,7 @@ table_columns_visible:
 extra_fn_clean_exts:
     - '.umi_dedup'
     - '_val'
+    - '.markdup'
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

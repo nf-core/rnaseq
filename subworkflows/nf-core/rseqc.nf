@@ -14,6 +14,7 @@ include { RSEQC_TIN                } from '../../modules/nf-core/modules/rseqc/t
 workflow RSEQC {
     take:
     bam           // channel: [ val(meta), [ ban ] ]
+    bai           // channel: [ val(meta), [ bai ] ]
     bed           //    file: /path/to/genome.bed
     rseqc_modules //    list: rseqc modules to run
 
@@ -124,7 +125,7 @@ workflow RSEQC {
     //
     tin_txt = Channel.empty()
     if ('tin' in rseqc_modules) {
-        RSEQC_TIN ( bam, bed )
+        RSEQC_TIN ( bam.join(bai, by: [0]), bed )
         tin_txt     = RSEQC_TIN.out.txt
         ch_versions = ch_versions.mix(RSEQC_TIN.out.versions.first())
     }

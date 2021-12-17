@@ -581,6 +581,7 @@ workflow RNASEQ {
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             RSEQC (
                 ch_genome_bam,
+                ch_genome_bam_index,
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )

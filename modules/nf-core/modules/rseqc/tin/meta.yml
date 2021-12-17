@@ -23,6 +23,10 @@ input:
       type: file
       description: Input BAM file
       pattern: "*.{bam}"
+  - bai:
+    type: file
+    description: Index for input BAM file
+    pattern: "*.{bai}"
   - bed:
       type: file
       description: BED file containing the reference gene model
@@ -30,8 +34,12 @@ input:
 output:
   - txt:
       type: file
-      description: tin.py results file
-      pattern: "*.tin.txt"
+      description: TXT file containing tin.py results summary
+      pattern: "*.txt"
+  - xls:
+      type: file
+      description: XLS file containing tin.py results
+      pattern: "*.xls"
   - versions:
       type: file
       description: File containing software versions

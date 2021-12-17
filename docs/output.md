@@ -497,7 +497,8 @@ RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/tin/`
-    * `*.tin.txt`: File containing TIN score per gene.
+    * `*.summary.txt`: File containing TIN results summary.
+    * `*.tin.xls`: XLS file containing TIN results.
 
 </details>
 

@@ -48,6 +48,13 @@ if (params.pseudo_aligner)  { prepareToolIndices << params.pseudo_aligner }
 
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
+if (params.bam_csi_index) {
+    for (rseqc_module in ['read_distribution', 'inner_distance', 'tin']) {
+        if (rseqc_modules.contains(rseqc_module)) {
+            rseqc_modules.remove(rseqc_module)
+        }
+    }
+}
 
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[ params.genome ]?.readme

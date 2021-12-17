@@ -15,20 +15,25 @@ tools:
         homepage: http://www.htslib.org/
         documentation: hhttp://www.htslib.org/doc/samtools.html
         doi: 10.1093/bioinformatics/btp352
+        licence: ['MIT']
 input:
     - meta:
         type: map
         description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-    - bam:
-        type: file
-        description: BAM/CRAM/SAM file
-        pattern: "*.{bam,cram,sam}"
-    - bai:
-        type: file
-        description: Index for BAM/CRAM/SAM file
-        pattern: "*.{bai,crai,sai}"
+    - input:
+      type: file
+      description: BAM/CRAM file from alignment
+      pattern: "*.{bam,cram}"
+    - input_index:
+      type: file
+      description: BAI/CRAI file from alignment
+      pattern: "*.{bai,crai}"
+    - fasta:
+        type: optional file
+        description: Reference file the CRAM was created with
+        pattern: "*.{fasta,fa}"
 output:
     - meta:
         type: map
@@ -45,3 +50,4 @@ output:
         pattern: "versions.yml"
 authors:
     - "@drpatelh"
+    - "@FriederikeHanssen"

@@ -8,6 +8,7 @@ tools:
         description: |
             Extract tar.gz files.
         documentation: https://www.gnu.org/software/tar/manual/
+        licence: ['GPL-3.0-or-later']
 input:
     - archive:
         type: file

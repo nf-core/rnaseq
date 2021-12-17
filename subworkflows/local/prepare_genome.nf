@@ -2,41 +2,32 @@
 // Uncompress and prepare reference genome files
 //
 
-params.genome_options        = [:]
-params.index_options         = [:]
-params.gffread_options       = [:]
-params.bbsplit_untar_options = [:]
-params.bbsplit_index_options = [:]
-params.star_index_options    = [:]
-params.rsem_index_options    = [:]
-params.hisat2_index_options  = [:]
-params.salmon_index_options  = [:]
+include { GUNZIP as GUNZIP_FASTA            } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_GTF              } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_GFF              } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_GENE_BED         } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../modules/nf-core/modules/gunzip/main'
 
-include {
-    GUNZIP as GUNZIP_FASTA
-    GUNZIP as GUNZIP_GTF
-    GUNZIP as GUNZIP_GFF
-    GUNZIP as GUNZIP_GENE_BED
-    GUNZIP as GUNZIP_TRANSCRIPT_FASTA
-    GUNZIP as GUNZIP_ADDITIONAL_FASTA  } from '../../modules/nf-core/modules/gunzip/main'                    addParams( options: params.genome_options        )
-include { UNTAR as UNTAR_BBSPLIT_INDEX } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.bbsplit_untar_options )
-include { UNTAR as UNTAR_STAR_INDEX    } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.star_index_options    )
-include { UNTAR as UNTAR_RSEM_INDEX    } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options         )
-include { UNTAR as UNTAR_HISAT2_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.hisat2_index_options  )
-include { UNTAR as UNTAR_SALMON_INDEX  } from '../../modules/nf-core/modules/untar/main'                     addParams( options: params.index_options         )
-include { GFFREAD                      } from '../../modules/nf-core/modules/gffread/main'                   addParams( options: params.gffread_options       )
-include { BBMAP_BBSPLIT                } from '../../modules/nf-core/modules/bbmap/bbsplit/main'             addParams( options: params.bbsplit_index_options )
-include { HISAT2_EXTRACTSPLICESITES    } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main' addParams( options: params.hisat2_index_options  )
-include { HISAT2_BUILD                 } from '../../modules/nf-core/modules/hisat2/build/main'              addParams( options: params.hisat2_index_options  )
-include { SALMON_INDEX                 } from '../../modules/nf-core/modules/salmon/index/main'              addParams( options: params.salmon_index_options  )
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.rsem_index_options )
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main' addParams( options: params.genome_options     )
+include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../modules/nf-core/modules/untar/main'
+include { UNTAR as UNTAR_STAR_INDEX         } from '../../modules/nf-core/modules/untar/main'
+include { UNTAR as UNTAR_RSEM_INDEX         } from '../../modules/nf-core/modules/untar/main'
+include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../modules/nf-core/modules/untar/main'
+include { UNTAR as UNTAR_SALMON_INDEX       } from '../../modules/nf-core/modules/untar/main'
 
-include { GTF2BED              } from '../../modules/local/gtf2bed'              addParams( options: params.genome_options     )
-include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta' addParams( options: params.genome_options     )
-include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'      addParams( options: params.genome_options     )
-include { GET_CHROM_SIZES      } from '../../modules/local/get_chrom_sizes'      addParams( options: params.genome_options     )
-include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'  addParams( options: params.star_index_options )
+include { GFFREAD                           } from '../../modules/nf-core/modules/gffread/main'
+include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/modules/bbmap/bbsplit/main'
+include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
+include { HISAT2_BUILD                      } from '../../modules/nf-core/modules/hisat2/build/main'
+include { SALMON_INDEX                      } from '../../modules/nf-core/modules/salmon/index/main'
+include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main'
+
+include { GTF2BED              } from '../../modules/local/gtf2bed'
+include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta'
+include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'
+include { GET_CHROM_SIZES      } from '../../modules/local/get_chrom_sizes'
+include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'
 
 workflow PREPARE_GENOME {
     take:
@@ -52,7 +43,7 @@ workflow PREPARE_GENOME {
     // Uncompress genome fasta file if required
     //
     if (params.fasta.endsWith('.gz')) {
-        ch_fasta    = GUNZIP_FASTA ( params.fasta ).gunzip
+        ch_fasta    = GUNZIP_FASTA ( [ [:], params.fasta ] ).gunzip.map { it[1] }
         ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
     } else {
         ch_fasta = file(params.fasta)
@@ -63,14 +54,14 @@ workflow PREPARE_GENOME {
     //
     if (params.gtf) {
         if (params.gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ( params.gtf ).gunzip
+            ch_gtf      = GUNZIP_GTF ( [ [:], params.gtf ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
         } else {
             ch_gtf = file(params.gtf)
         }
     } else if (params.gff) {
         if (params.gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ( params.gff ).gunzip
+            ch_gff      = GUNZIP_GFF ( [ [:], params.gff ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
         } else {
             ch_gff = file(params.gff)
@@ -84,7 +75,7 @@ workflow PREPARE_GENOME {
     //
     if (params.additional_fasta) {
         if (params.additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( params.additional_fasta ).gunzip
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], params.additional_fasta ] ).gunzip.map { it[1] }
             ch_versions  = ch_versions.mix(GUNZIP_ADDITIONAL_FASTA.out.versions)
         } else {
             ch_add_fasta = file(params.additional_fasta)
@@ -100,7 +91,7 @@ workflow PREPARE_GENOME {
     //
     if (params.gene_bed) {
         if (params.gene_bed.endsWith('.gz')) {
-            ch_gene_bed = GUNZIP_GENE_BED ( params.gene_bed ).gunzip
+            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], params.gene_bed ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GENE_BED.out.versions)
         } else {
             ch_gene_bed = file(params.gene_bed)
@@ -115,7 +106,7 @@ workflow PREPARE_GENOME {
     //
     if (params.transcript_fasta) {
         if (params.transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( params.transcript_fasta ).gunzip
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [:], params.transcript_fasta ).gunzip.map { it[1] }
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
             ch_transcript_fasta = file(params.transcript_fasta)

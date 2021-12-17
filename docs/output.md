@@ -491,6 +491,21 @@ MultiQC plots each of these statistics in a dot plot. Each sample in the project
 
 RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 
+#### TIN
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/tin/`
+    * `*.summary.txt`: File containing TIN results summary.
+    * `*.tin.xls`: XLS file containing TIN results.
+
+</details>
+
+This script is designed to evaluate RNA integrity at the transcript level. TIN (transcript integrity number) is named in analogous to RIN (RNA integrity number). RIN (RNA integrity number) is the most widely used metric to evaluate RNA integrity at sample (or transcriptome) level. It is a very useful preventive measure to ensure good RNA quality and robust, reproducible RNA sequencing.
+
+RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
+
 ### Qualimap
 
 <details markdown="1">

@@ -12,6 +12,7 @@ tools:
       homepage: https://salmon.readthedocs.io/en/latest/salmon.html
       manual: https://salmon.readthedocs.io/en/latest/salmon.html
       doi: 10.1038/nmeth.4197
+      licence: ['GPL-3.0-or-later']
 input:
   - meta:
       type: map

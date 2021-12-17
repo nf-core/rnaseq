@@ -12,6 +12,7 @@ tools:
             Transcript assembly and quantification for RNA-Seq
         homepage: https://ccb.jhu.edu/software/stringtie/index.shtml
         documentation: https://ccb.jhu.edu/software/stringtie/index.shtml?t=manual
+        licence: ['MIT']
 input:
     - meta:
         type: map

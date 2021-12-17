@@ -1,23 +1,12 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process STAR_ALIGN {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
-    conda (params.enable_conda ? 'bioconda::star=2.6.1d' : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container 'https://depot.galaxyproject.org/singularity/star:2.6.1d--0'
-    } else {
-        container 'quay.io/biocontainers/star:2.6.1d--0'
-    }
+    conda (params.enable_conda ? "bioconda::star=2.6.1d" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/star:2.6.1d--0' :
+        'quay.io/biocontainers/star:2.6.1d--0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -38,11 +27,12 @@ process STAR_ALIGN {
     tuple val(meta), path('*.tab')                   , optional:true, emit: tab
 
     script:
-    def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def ignore_gtf = params.star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
     def seq_center = params.seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$params.seq_center' 'SM:$prefix'" : "--outSAMattrRGline ID:$prefix 'SM:$prefix'"
-    def out_sam_type = (options.args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
-    def mv_unsorted_bam = (options.args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
+    def out_sam_type = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
+    def mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
     """
     STAR \\
         --genomeDir $index \\
@@ -52,7 +42,7 @@ process STAR_ALIGN {
         $out_sam_type \\
         $ignore_gtf \\
         $seq_center \\
-        $options.args
+        $args
 
     $mv_unsorted_bam
 
@@ -66,8 +56,8 @@ process STAR_ALIGN {
     fi
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(STAR --version | sed -e "s/STAR_//g")
+    "${task.process}":
+        star: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS
     """
 }

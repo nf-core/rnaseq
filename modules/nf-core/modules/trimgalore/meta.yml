@@ -13,6 +13,7 @@ tools:
             MspI-digested RRBS-type (Reduced Representation Bisufite-Seq) libraries.
         homepage: https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
         documentation: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
+        licence: ['GPL-3.0-or-later']
 input:
     - meta:
         type: map

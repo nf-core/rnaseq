@@ -2,25 +2,19 @@
 // Run RSeQC modules
 //
 
-params.bamstat_options            = [:]
-params.innerdistance_options      = [:]
-params.inferexperiment_options    = [:]
-params.junctionannotation_options = [:]
-params.junctionsaturation_options = [:]
-params.readdistribution_options   = [:]
-params.readduplication_options    = [:]
-
-include { RSEQC_BAMSTAT            } from '../../modules/nf-core/modules/rseqc/bamstat/main'            addParams( options: params.bamstat_options            )
-include { RSEQC_INNERDISTANCE      } from '../../modules/nf-core/modules/rseqc/innerdistance/main'      addParams( options: params.innerdistance_options      )
-include { RSEQC_INFEREXPERIMENT    } from '../../modules/nf-core/modules/rseqc/inferexperiment/main'    addParams( options: params.inferexperiment_options    )
-include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/modules/rseqc/junctionannotation/main' addParams( options: params.junctionannotation_options )
-include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/modules/rseqc/junctionsaturation/main' addParams( options: params.junctionsaturation_options )
-include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/modules/rseqc/readdistribution/main'   addParams( options: params.readdistribution_options   )
-include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/modules/rseqc/readduplication/main'    addParams( options: params.readduplication_options    )
+include { RSEQC_BAMSTAT            } from '../../modules/nf-core/modules/rseqc/bamstat/main'
+include { RSEQC_INNERDISTANCE      } from '../../modules/nf-core/modules/rseqc/innerdistance/main'
+include { RSEQC_INFEREXPERIMENT    } from '../../modules/nf-core/modules/rseqc/inferexperiment/main'
+include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/modules/rseqc/junctionannotation/main'
+include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/modules/rseqc/junctionsaturation/main'
+include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/modules/rseqc/readdistribution/main'
+include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/modules/rseqc/readduplication/main'
+include { RSEQC_TIN                } from '../../modules/nf-core/modules/rseqc/tin/main'
 
 workflow RSEQC {
     take:
     bam           // channel: [ val(meta), [ ban ] ]
+    bai           // channel: [ val(meta), [ bai ] ]
     bed           //    file: /path/to/genome.bed
     rseqc_modules //    list: rseqc modules to run
 
@@ -126,6 +120,16 @@ workflow RSEQC {
         ch_versions = ch_versions.mix(RSEQC_READDUPLICATION.out.versions.first())
     }
 
+    //
+    // Run RSeQC tin.py
+    //
+    tin_txt = Channel.empty()
+    if ('tin' in rseqc_modules) {
+        RSEQC_TIN ( bam.join(bai, by: [0]), bed )
+        tin_txt     = RSEQC_TIN.out.txt
+        ch_versions = ch_versions.mix(RSEQC_TIN.out.versions.first())
+    }
+
     emit:
     bamstat_txt                     // channel: [ val(meta), txt ]
 
@@ -154,6 +158,8 @@ workflow RSEQC {
     readduplication_pos_xls         // channel: [ val(meta), xls ]
     readduplication_pdf             // channel: [ val(meta), pdf ]
     readduplication_rscript         // channel: [ val(meta), r   ]
+
+    tin_txt                         // channel: [ val(meta), txt ]
 
     versions = ch_versions          // channel: [ versions.yml ]
 }

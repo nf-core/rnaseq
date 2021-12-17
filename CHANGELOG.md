@@ -3,7 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-10-05
+## [[3.5](https://github.com/nf-core/rnaseq/releases/tag/3.5)] - 2021-12-17
+
+### Enhancements & fixes
+
+* Port pipeline to the updated Nextflow DSL2 syntax adopted on nf-core/modules
+    * Removed `--publish_dir_mode` as it is no longer required for the new syntax
+* Bump minimum Nextflow version from `21.04.0` -> `21.10.3`
+* Updated pipeline template to [nf-core/tools 2.2](https://github.com/nf-core/tools/releases/tag/2.2)
+* [[#664](https://github.com/nf-core/rnaseq/issues/664)] - Conflict of library names for technical replicates
+* [[#720](https://github.com/nf-core/rnaseq/issues/720)] - KeyError 'gene_id' in salmon_tx2gene.py
+* [[#724](https://github.com/nf-core/rnaseq/issues/724)] - Deal with warnings generated when native NF processes are used
+* [[#725](https://github.com/nf-core/rnaseq/issues/725)] - Untar needs `--no-same-owner` on DNAnexus
+* [[#727](https://github.com/nf-core/rnaseq/issues/727)] - Fix transcriptome staging issues on DNAnexus for rsem/prepareference
+* [[#728](https://github.com/nf-core/rnaseq/issues/728)] - Add RSeQC TIN.py as a quality metric for the pipeline
+
+### Parameters
+
+## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.4)] - 2021-10-05
 
 ### Enhancements & fixes
 

@@ -12,9 +12,9 @@ $email_html
 Content-Type: image/png;name="nf-core-rnaseq_logo.png"
 Content-Transfer-Encoding: base64
 Content-ID: <nfcorepipelinelogo>
-Content-Disposition: inline; filename="nf-core-rnaseq_logo.png"
+Content-Disposition: inline; filename="nf-core-rnaseq_logo_light.png"
 
-<% out << new File("$projectDir/assets/nf-core-rnaseq_logo.png").
+<% out << new File("$projectDir/assets/nf-core-rnaseq_logo_light.png").
     bytes.
     encodeBase64().
     toString().

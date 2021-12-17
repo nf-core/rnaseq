@@ -2,9 +2,7 @@
 // Check input samplesheet and get read channels
 //
 
-params.options = [:]
-
-include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check' addParams( options: params.options )
+include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 
 workflow INPUT_CHECK {
     take:

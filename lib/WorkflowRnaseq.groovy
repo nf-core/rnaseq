@@ -32,6 +32,16 @@ class WorkflowRnaseq {
             }
         }
 
+        if (!params.skip_bbsplit && !params.bbsplit_index && !params.bbsplit_fasta_list) {
+            log.error "Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit."
+            System.exit(1)
+        }
+
+        if (params.remove_ribo_rna && !params.ribo_database_manifest) {
+            log.error "Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA."
+            System.exit(1)
+        }
+
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {
                 log.error "Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}."
@@ -64,6 +74,23 @@ class WorkflowRnaseq {
             }
             if (params.rsem_index && params.star_index) {
                 rsemStarIndexWarn(log)
+            }
+        }
+
+        // Warn if --additional_fasta provided with aligner index
+        if (!params.skip_alignment && params.additional_fasta) {
+            def index = ''
+            if (params.aligner == 'star_salmon' && params.star_index) {
+                index = 'star'
+            }
+            if (params.aligner == 'star_rsem' && params.rsem_index) {
+                index = 'rsem'
+            }
+            if (params.aligner == 'hisat2' && params.hisat2_index) {
+                index = 'hisat2'
+            }
+            if (index) {
+                additionaFastaIndexWarn(index, log)
             }
         }
 
@@ -258,6 +285,23 @@ class WorkflowRnaseq {
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +
+            "==================================================================================="
+    }
+
+    //
+    // Print a warning if using '--additional_fasta' and '--<ALIGNER>_index'
+    //
+    private static void additionaFastaIndexWarn(index, log) {
+        log.warn "=============================================================================\n" +
+            "  When using '--additional_fasta <FASTA_FILE>' the aligner index will not\n" +
+            "  be re-built with the transgenes incorporated by default since you have \n" +
+            "  already provided an index via '--${index}_index <INDEX>'.\n\n" +
+            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --save_reference' to\n" +
+            "  re-build the index with transgenes included and the index will be saved in\n" +
+            "  'results/genome/index/${index}/' for re-use with '--${index}_index'.\n\n" +
+            "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
+            "  Please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/556\n" +
             "==================================================================================="
     }
 }

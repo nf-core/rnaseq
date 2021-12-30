@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Read a custom fasta file and create a custom GTF containing each entry
 """
@@ -7,7 +7,7 @@ from itertools import groupby
 import logging
 
 # Create a logger
-logging.basicConfig(format='%(name)s - %(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
@@ -38,10 +38,8 @@ def fasta2gtf(fasta, output, biotype):
     fiter = fasta_iter(fasta)
     # GTF output lines
     lines = []
-    attributes = \
-        'exon_id "{name}.1"; exon_number "1";{biotype} gene_id "{name}_gene"; gene_name "{name}_gene"; gene_source "custom"; transcript_id "{name}_gene"; transcript_name "{name}_gene";\n'
-    line_template = \
-        "{name}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
+    attributes = 'exon_id "{name}.1"; exon_number "1";{biotype} gene_id "{name}_gene"; gene_name "{name}_gene"; gene_source "custom"; transcript_id "{name}_gene"; transcript_name "{name}_gene";\n'
+    line_template = "{name}\ttransgene\texon\t1\t{length}\t.\t+\t.\t" + attributes
 
     for ff in fiter:
         name, seq = ff
@@ -49,29 +47,39 @@ def fasta2gtf(fasta, output, biotype):
         # (equivalent to "chromosome" in other cases)
         seqname = name.split()[0]
         # Remove all spaces
-        name = seqname.replace(' ', '_')
+        name = seqname.replace(" ", "_")
         length = len(seq)
-        biotype_attr = ''
+        biotype_attr = ""
         if biotype:
             biotype_attr = f' {biotype} "transgene";'
-        line = line_template.format(
-            name=name, length=length, biotype=biotype_attr)
+        line = line_template.format(name=name, length=length, biotype=biotype_attr)
         lines.append(line)
 
-    with open(output, 'w') as f:
-        f.write(''.join(lines))
+    with open(output, "w") as f:
+        f.write("".join(lines))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Convert a custom fasta (e.g. transgene)
-        to a GTF annotation.""")
+        to a GTF annotation."""
+    )
     parser.add_argument("fasta", type=str, help="Custom transgene sequence")
     parser.add_argument(
-        "-o", "--output", dest='output',
-        default='transgenes.gtf', type=str, help="Gene annotation GTF output")
+        "-o",
+        "--output",
+        dest="output",
+        default="transgenes.gtf",
+        type=str,
+        help="Gene annotation GTF output",
+    )
     parser.add_argument(
-        "-b", "--biotype", dest='biotype',
-        default='', type=str, help="Name of gene biotype attribute to use in last column of GTF entry")
+        "-b",
+        "--biotype",
+        dest="biotype",
+        default="",
+        type=str,
+        help="Name of gene biotype attribute to use in last column of GTF entry",
+    )
     args = parser.parse_args()
     fasta2gtf(args.fasta, args.output, args.biotype)

@@ -15,11 +15,11 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * [Preprocessing](#preprocessing)
-    * [ENA FTP](#ena-ftp) - Download FastQ files via SRA / ENA / GEO ids
     * [cat](#cat) - Merge re-sequenced FastQ files
     * [FastQC](#fastqc) - Raw read QC
     * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
     * [TrimGalore](#trimgalore) - Adapter and quality trimming
+    * [BBSplit](#bbsplit) - Removal of genome contaminants
     * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment and quantification](#alignment-and-quantification)
     * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
@@ -47,24 +47,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Preprocessing
-
-### ENA FTP
-
-<details markdown="1">
-<summary>Output files</summary>
-
-* `public_data/`
-    * `samplesheet.csv`: Auto-created samplesheet that can be used to run the pipeline.
-    * `*.fastq.gz`: Paired-end/single-end reads downloaded from the ENA / SRA.
-* `public_data/md5/`
-    * `*.md5`: Files containing `md5` sum for FastQ files downloaded from the ENA / SRA.
-* `public_data/runinfo/`
-    * `*.runinfo.tsv`: Original metadata file downloaded from the ENA
-    * `*.runinfo_ftp.tsv`: Re-formatted metadata file downloaded from the ENA
-
-</details>
-
-Please see the [usage documentation](https://nf-co.re/rnaseq/usage#direct-download-of-public-repository-data) for a list of supported public repository identifiers and how to provide them to the pipeline. The final sample information for all identifiers is obtained from the ENA which provides direct download links for FastQ files as well as their associated md5sums. If download links exist, the files will be downloaded in parallel by FTP otherwise they will NOT be downloaded. This is intentional because the tools such as `parallel-fastq-dump`, `fasterq-dump`, `prefetch` etc require pre-existing configuration files in the users home directory which makes automation tricky across different platforms and containerisation.
 
 ### cat
 
@@ -131,6 +113,31 @@ If multiple libraries/runs have been provided for the same sample in the input s
 > **NB:** TrimGalore! will only run using multiple cores if you are able to use more than > 5 and > 6 CPUs for single- and paired-end data, respectively. The total cores available to TrimGalore! will also be capped at 4 (7 and 8 CPUs in total for single- and paired-end data, respectively) because there is no longer a run-time benefit. See [release notes](https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019) and [discussion whilst adding this logic to the nf-core/atacseq pipeline](https://github.com/nf-core/atacseq/pull/65).
 
 ![MultiQC - cutadapt trimmed sequence length plot](images/mqc_cutadapt_trimmed.png)
+
+### BBSplit
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `bbsplit/`
+    * `*.fastq.gz`: If `--save_bbsplit_reads` is specified FastQ files split by reference will be saved to the results directory. Reads from the main reference genome will be named "*primary*.fastq.gz". Reads from contaminating genomes will be named "*<SHORT_NAME>*.fastq.gz" where `<SHORT_NAME>` is the first column in `--bbsplit_fasta_list` that needs to be provided to initially build the index.
+    * `*.txt`: File containing statistics on how many reads were assigned to each reference.
+
+</details>
+
+[BBSplit](http://seqanswers.com/forums/showthread.php?t=41288) is a tool that bins reads by mapping to multiple references simultaneously, using BBMap. The reads go to the bin of the reference they map to best. There are also disambiguation options, such that reads that map to multiple references can be binned with all of them, none of them, one of them, or put in a special "ambiguous" file for each of them.
+
+This functionality would be especially useful, for example, if you have [mouse PDX](https://en.wikipedia.org/wiki/Patient_derived_xenograft) samples that contain a mixture of human and mouse genomic DNA/RNA and you would like to filter out any mouse derived reads.
+
+The BBSplit index will have to be built at least once with this pipeline by providing [`--bbsplit_fasta_list`](https://nf-co.re/rnaseq/parameters#bbsplit_fasta_list) which has to be a file containing 2 columns: short name and full path to reference genome(s):
+
+```bash
+mm10,/path/to/mm10.fa
+ecoli,/path/to/ecoli.fa
+sarscov2,/path/to/sarscov2.fa
+```
+
+You can save the index by using the [`--save_reference`](https://nf-co.re/rnaseq/parameters#save_reference) parameter and then provide it via [`--bbsplit_index`](https://nf-co.re/rnaseq/parameters#bbsplit_index) for future runs. As described in the `Output files` dropdown box above the FastQ files relative to the main reference genome will always be called `*primary*.fastq.gz`.
 
 ### SortMeRNA
 
@@ -310,8 +317,8 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 <summary>Output files</summary>
 
 * `<ALIGNER>/bigwig/`
-    * `*.sense.bigWig`: bigWig coverage file relative to genes on the sense strand.
-    * `*.antisense.bigWig`: bigWig coverage file relative to genes on the anti-sense strand.
+    * `*.forward.bigWig`: bigWig coverage file relative to genes on the forward DNA strand.
+    * `*.reverse.bigWig`: bigWig coverage file relative to genes on the reverse DNA strand.
 
 </details>
 
@@ -484,6 +491,21 @@ MultiQC plots each of these statistics in a dot plot. Each sample in the project
 
 RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 
+#### TIN
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `<ALIGNER>/rseqc/tin/`
+    * `*.summary.txt`: File containing TIN results summary.
+    * `*.tin.xls`: XLS file containing TIN results.
+
+</details>
+
+This script is designed to evaluate RNA integrity at the transcript level. TIN (transcript integrity number) is named in analogous to RIN (RNA integrity number). RIN (RNA integrity number) is the most widely used metric to evaluate RNA integrity at sample (or transcriptome) level. It is a very useful preventive measure to ensure good RNA quality and robust, reproducible RNA sequencing.
+
+RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
+
 ### Qualimap
 
 <details markdown="1">
@@ -640,6 +662,7 @@ Results generated by MultiQC collate pipeline QC from supported tools i.e. FastQ
     * `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
     * `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
     * `salmon.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+    * `salmon_tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
 * `salmon/<SAMPLE>/`
     * `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
     * `cmd_info.json`: Information about the Salmon quantification command, version and options.
@@ -693,7 +716,7 @@ A number of genome-specific files are generated by the pipeline because they are
 
 * `pipeline_info/`
     * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-    * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
+    * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
     * Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
 
 </details>

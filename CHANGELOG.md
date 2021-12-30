@@ -7,14 +7,110 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-* [[#645](https://github.com/nf-core/rnaseq/issues/645)] - Remove trailing slash from `params.igenomes_base`
-* [[#646](https://github.com/nf-core/rnaseq/issues/646)] - Connection failed in `sra_ids_to_runinfo.py`
+### Parameters
+
+## [[3.5](https://github.com/nf-core/rnaseq/releases/tag/3.5)] - 2021-12-17
+
+### Enhancements & fixes
+
+* Port pipeline to the updated Nextflow DSL2 syntax adopted on nf-core/modules
+    * Removed `--publish_dir_mode` as it is no longer required for the new syntax
+* Bump minimum Nextflow version from `21.04.0` -> `21.10.3`
+* Updated pipeline template to [nf-core/tools 2.2](https://github.com/nf-core/tools/releases/tag/2.2)
+* [[#664](https://github.com/nf-core/rnaseq/issues/664)] - Conflict of library names for technical replicates
+* [[#720](https://github.com/nf-core/rnaseq/issues/720)] - KeyError 'gene_id' in salmon_tx2gene.py
+* [[#724](https://github.com/nf-core/rnaseq/issues/724)] - Deal with warnings generated when native NF processes are used
+* [[#725](https://github.com/nf-core/rnaseq/issues/725)] - Untar needs `--no-same-owner` on DNAnexus
+* [[#727](https://github.com/nf-core/rnaseq/issues/727)] - Fix transcriptome staging issues on DNAnexus for rsem/prepareference
+* [[#728](https://github.com/nf-core/rnaseq/issues/728)] - Add RSeQC TIN.py as a quality metric for the pipeline
+
+## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.4)] - 2021-10-05
+
+### Enhancements & fixes
+
+* Software version(s) will now be reported for every module imported during a given pipeline execution
+* Added `python3` shebang to appropriate scripts in `bin/` directory
+* [[#407](https://github.com/nf-core/rnaseq/issues/407)] - Filter mouse reads from PDX samples
+* [[#570](https://github.com/nf-core/rnaseq/issues/570)] - Update SortMeRNA to use SilvaDB 138 (for commercial use)
+* [[#690](https://github.com/nf-core/rnaseq/issues/690)] - Error with post-trimmed read 2 sample names from FastQC in MultiQC
+* [[#693](https://github.com/nf-core/rnaseq/issues/693)] - Cutadapt version missing from MultiQC report
+* [[#697](https://github.com/nf-core/rnaseq/issues/697)] - pipeline_report.{txt,html} missing from pipeline_info directory
+* [[#705](https://github.com/nf-core/rnaseq/issues/705)] - Sample sheet error check false positive
 
 ### Parameters
 
 | Old parameter               | New parameter                  |
 |-----------------------------|--------------------------------|
-|                             | `--ena_metadata_fields`        |
+|                             | `--bbsplit_fasta_list`         |
+|                             | `--bbsplit_index`              |
+|                             | `--save_bbsplit_reads`         |
+|                             | `--skip_bbsplit`               |
+
+> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
+> **NB:** Parameter has been __added__ if just the new parameter information is present.
+> **NB:** Parameter has been __removed__ if parameter information isn't present.
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency    | Old version | New version |
+|---------------|-------------|-------------|
+| `bbmap`       |             | 38.93       |
+| `hisat2`      | 2.2.0       | 2.2.1       |
+| `picard`      | 2.23.9      | 2.25.7      |
+| `salmon`      | 1.4.0       | 1.5.2       |
+| `samtools`    | 1.12        | 1.13        |
+| `sortmerna`   | 4.2.0       | 4.3.4       |
+| `trim-galore` | 0.6.6       | 0.6.7       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.
+> **NB:** Dependency has been __added__ if just the new version information is present.
+> **NB:** Dependency has been __removed__ if version information isn't present.
+
+## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-29
+
+### Enhancements & fixes
+
+* Updated pipeline template to [nf-core/tools 2.1](https://github.com/nf-core/tools/releases/tag/2.1)
+* [[#556](https://github.com/nf-core/rnaseq/issues/556)] - Genome index is not recreated with --additional_fasta unless --star_index false
+* [[#668](https://github.com/nf-core/rnaseq/issues/668)] - Salmon quant with UMI-tools does not work
+* [[#674](https://github.com/nf-core/rnaseq/issues/674)] - Launch pipeline regex fails
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency  | Old version | New version |
+|-------------|-------------|-------------|
+| `samtools`  | 1.10        | 1.12        |
+| `stringtie` | 2.1.4       | 2.1.7       |
+| `umi_tools` | 1.1.1       | 1.1.2       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.
+> **NB:** Dependency has been __added__ if just the new version information is present.
+> **NB:** Dependency has been __removed__ if version information isn't present.
+
+## [[3.2](https://github.com/nf-core/rnaseq/releases/tag/3.2)] - 2021-06-18
+
+### Enhancements & fixes
+
+* Removed workflow to download data from public databases in favour of using [nf-core/fetchngs](https://nf-co.re/fetchngs)
+* Added a stand-alone Python script [`bin/fastq_dir_to_samplesheet.py`](https://github.com/nf-core/rnaseq/blob/master/bin/fastq_dir_to_samplesheet.py) to auto-create samplesheet from a directory of FastQ files
+* Added docs about overwriting default container definitions to use latest versions e.g. Pangolin
+* [[#637](https://github.com/nf-core/rnaseq/issues/637)] - Add `--salmon_quant_libtype` parameter to provide the `--libType` option to salmon quantification
+* [[#645](https://github.com/nf-core/rnaseq/issues/645)] - Remove trailing slash from `params.igenomes_base`
+* [[#649](https://github.com/nf-core/rnaseq/issues/649)] - DESeq2 fails with only one sample
+* [[#652](https://github.com/nf-core/rnaseq/issues/652)] - Results files have incorrect file names
+* [[nf-core/viralrecon#201](https://github.com/nf-core/viralrecon/issues/201)] - Conditional include are not expected to work
+
+### Parameters
+
+| Old parameter               | New parameter                  |
+|-----------------------------|--------------------------------|
+| `--public_data_ids`         |                                |
+| `--skip_sra_fastq_download` |                                |
+|                             | `--salmon_quant_libtype`       |
 
 > **NB:** Parameter has been __updated__ if both old and new parameter information is present.
 > **NB:** Parameter has been __added__ if just the new parameter information is present.

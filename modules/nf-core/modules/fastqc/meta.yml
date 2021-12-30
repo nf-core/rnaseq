@@ -1,0 +1,52 @@
+name: fastqc
+description: Run FastQC on sequenced reads
+keywords:
+    - quality control
+    - qc
+    - adapters
+    - fastq
+tools:
+    - fastqc:
+        description: |
+            FastQC gives general quality metrics about your reads.
+            It provides information about the quality score distribution
+            across your reads, the per base sequence content (%A/C/G/T).
+            You get information about adapter contamination and other
+            overrepresented sequences.
+        homepage: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+        documentation: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
+        licence: ['GPL-2.0-only']
+input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+            List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+            respectively.
+output:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - html:
+        type: file
+        description: FastQC report
+        pattern: "*_{fastqc.html}"
+    - zip:
+        type: file
+        description: FastQC report archive
+        pattern: "*_{fastqc.zip}"
+    - versions:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+authors:
+    - "@drpatelh"
+    - "@grst"
+    - "@ewels"
+    - "@FelixKrueger"

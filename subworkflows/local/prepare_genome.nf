@@ -20,8 +20,8 @@ include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/module
 include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
 include { HISAT2_BUILD                      } from '../../modules/nf-core/modules/hisat2/build/main'
 include { SALMON_INDEX                      } from '../../modules/nf-core/modules/salmon/index/main'
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main'
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME      } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA } from '../../modules/nf-core/modules/rsem/preparereference/main'
 
 include { GTF2BED              } from '../../modules/local/gtf2bed'
 include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta'
@@ -113,9 +113,9 @@ workflow PREPARE_GENOME {
         }
     } else {
         ch_filter_gtf = GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf
-        ch_transcript_fasta = RSEM_PREPAREREFERENCE_TRANSCRIPTS ( ch_fasta, ch_filter_gtf ).transcript_fasta
+        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filter_gtf ).transcript_fasta
         ch_versions         = ch_versions.mix(GTF_GENE_FILTER.out.versions)
-        ch_versions         = ch_versions.mix(RSEM_PREPAREREFERENCE_TRANSCRIPTS.out.versions)
+        ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
 
     //
@@ -182,8 +182,8 @@ workflow PREPARE_GENOME {
                 ch_rsem_index = file(params.rsem_index)
             }
         } else {
-            ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
-            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE.out.versions)
+            ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
+            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
         }
     }
 

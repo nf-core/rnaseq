@@ -20,7 +20,7 @@ include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/module
 include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
 include { HISAT2_BUILD                      } from '../../modules/nf-core/modules/hisat2/build/main'
 include { SALMON_INDEX                      } from '../../modules/nf-core/modules/salmon/index/main'
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE             } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME      } from '../../modules/nf-core/modules/rsem/preparereference/main'
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_TRANSCRIPTS } from '../../modules/nf-core/modules/rsem/preparereference/main'
 
 include { GTF2BED              } from '../../modules/local/gtf2bed'
@@ -182,8 +182,8 @@ workflow PREPARE_GENOME {
                 ch_rsem_index = file(params.rsem_index)
             }
         } else {
-            ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
-            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE.out.versions)
+            ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
+            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
         }
     }
 

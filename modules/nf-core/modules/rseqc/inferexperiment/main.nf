@@ -15,6 +15,9 @@ process RSEQC_INFEREXPERIMENT {
     tuple val(meta), path("*.infer_experiment.txt"), emit: txt
     path  "versions.yml"                           , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"

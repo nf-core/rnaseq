@@ -18,6 +18,9 @@ process TRIMGALORE {
     tuple val(meta), path("*.html"), emit: html optional true
     tuple val(meta), path("*.zip") , emit: zip optional true
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     // Calculate number of --cores for TrimGalore based on value of task.cpus

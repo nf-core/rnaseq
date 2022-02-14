@@ -15,11 +15,19 @@ process SAMTOOLS_STATS {
     tuple val(meta), path("*.stats"), emit: stats
     path  "versions.yml"            , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def reference = fasta ? "--reference ${fasta}" : ""
     """
-    samtools stats --threads ${task.cpus-1} ${reference} ${input} > ${input}.stats
+    samtools \\
+        stats \\
+        --threads ${task.cpus-1} \\
+        ${reference} \\
+        ${input} \\
+        > ${input}.stats
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

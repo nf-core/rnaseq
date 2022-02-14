@@ -19,6 +19,9 @@ process SALMON_TXIMPORT {
     path "*transcript_counts.tsv"        , emit: counts_transcript
     path "versions.yml"                  , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     salmon_tximport.r \\

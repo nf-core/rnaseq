@@ -17,6 +17,9 @@ process RSEM_MERGE_COUNTS {
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
     path "versions.yml"                     , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     mkdir -p tmp/genes

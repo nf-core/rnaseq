@@ -14,6 +14,9 @@ process GET_CHROM_SIZES {
     path '*.fai'       , emit: fai
     path "versions.yml", emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     samtools \\

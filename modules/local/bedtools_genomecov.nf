@@ -15,6 +15,9 @@ process BEDTOOLS_GENOMECOV {
     tuple val(meta), path("*.reverse.bedGraph"), emit: bedgraph_reverse
     path "versions.yml"                        , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"

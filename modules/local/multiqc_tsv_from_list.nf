@@ -11,6 +11,9 @@ process MULTIQC_TSV_FROM_LIST {
     output:
     path "*.tsv"
 
+    when:
+    task.ext.when == null || task.ext.when
+
     exec:
     // Generate file contents
     def contents = ""

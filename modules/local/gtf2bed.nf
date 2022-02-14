@@ -14,6 +14,9 @@ process GTF2BED {
     path '*.bed'       , emit: bed
     path "versions.yml", emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     gtf2bed \\

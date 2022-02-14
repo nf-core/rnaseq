@@ -17,6 +17,9 @@ process CAT_ADDITIONAL_FASTA {
     path "${name}.gtf"  , emit: gtf
     path "versions.yml" , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def genome_name  = params.genome ? params.genome : fasta.getBaseName()
     def biotype_name = biotype ? "-b $biotype" : ''

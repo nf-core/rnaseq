@@ -20,8 +20,8 @@ include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/module
 include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
 include { HISAT2_BUILD                      } from '../../modules/nf-core/modules/hisat2/build/main'
 include { SALMON_INDEX                      } from '../../modules/nf-core/modules/salmon/index/main'
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME      } from '../../modules/nf-core/modules/rsem/preparereference/main'
-include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../modules/nf-core/modules/rsem/preparereference/main'
 
 include { GTF2BED              } from '../../modules/local/gtf2bed'
 include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta'

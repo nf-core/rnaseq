@@ -3,6 +3,11 @@ lint:
     - assets/email_template.html
     - assets/email_template.txt
     - lib/NfcoreTemplate.groovy
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/workflows/branch.yml
+    - .github/workflows/linting_comment.yml
+    - .github/workflows/linting.yml
+    - lib/NfcoreSchema.groovy
 update:
   nf-core/modules:
     rseqc/bamstat: "e745e167c1020928ef20ea1397b6b4d230681b4d"

@@ -16,6 +16,9 @@ process HISAT2_EXTRACTSPLICESITES {
     path "*.splice_sites.txt", emit: txt
     path "versions.yml"      , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     """

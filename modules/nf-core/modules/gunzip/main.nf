@@ -14,6 +14,9 @@ process GUNZIP {
     tuple val(meta), path("$gunzip"), emit: gunzip
     path "versions.yml"             , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     gunzip = archive.toString() - '.gz'

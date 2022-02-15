@@ -5,11 +5,11 @@ lint:
     - lib/NfcoreTemplate.groovy
 update:
   nf-core/modules:
-    rseqc/bamstat: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/inferexperiment: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/innerdistance: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/junctionannotation: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/junctionsaturation: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/readdistribution: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/readduplication: "9d0cad583b9a71a6509b754fdf589cbfbed08961"
-    rseqc/tin: "ce8c781bb494c2cc1f0a951c31c7b2f4af12e8af"
+    rseqc/bamstat: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/inferexperiment: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/innerdistance: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/junctionannotation: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/junctionsaturation: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/readdistribution: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/readduplication: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/tin: "e20e57f90b6787ac9a010a980cf6ea98bd990046"

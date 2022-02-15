@@ -1,10 +1,10 @@
 name: hisat2_extractsplicesites
 description: Extracts splicing sites from a gtf files
 keywords:
-    - splicing
-    - gtf
-    - genome
-    - reference
+  - splicing
+  - gtf
+  - genome
+  - reference
 
 tools:
   - hisat2:
@@ -12,7 +12,7 @@ tools:
       homepage: https://daehwankimlab.github.io/hisat2/
       documentation: https://daehwankimlab.github.io/hisat2/manual/
       doi: "10.1038/s41587-019-0201-4"
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - gtf:

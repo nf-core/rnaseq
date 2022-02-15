@@ -11,13 +11,13 @@ tools:
       documentation: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
       tool_dev_url: https://github.com/gpertea/gffread
       doi: 10.12688/f1000research.23297.1
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - gff:
-        type: file
-        description: A reference file in either the GFF3, GFF2 or GTF format.
-        pattern: "*.{gff, gtf}"
+      type: file
+      description: A reference file in either the GFF3, GFF2 or GTF format.
+      pattern: "*.{gff, gtf}"
 
 output:
   - gtf:

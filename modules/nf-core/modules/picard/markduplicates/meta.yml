@@ -14,7 +14,7 @@ tools:
         data and formats such as SAM/BAM/CRAM and VCF.
       homepage: https://broadinstitute.github.io/picard/
       documentation: https://broadinstitute.github.io/picard/
-      licence: ['MIT']
+      licence: ["MIT"]
 input:
   - meta:
       type: map

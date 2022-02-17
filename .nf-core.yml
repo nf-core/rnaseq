@@ -3,13 +3,18 @@ lint:
     - assets/email_template.html
     - assets/email_template.txt
     - lib/NfcoreTemplate.groovy
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/workflows/branch.yml
+    - .github/workflows/linting_comment.yml
+    - .github/workflows/linting.yml
+    - lib/NfcoreSchema.groovy
 update:
   nf-core/modules:
-    rseqc/bamstat: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/inferexperiment: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/innerdistance: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/junctionannotation: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/junctionsaturation: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/readdistribution: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/readduplication: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
-    rseqc/tin: "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+    rseqc/bamstat: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/inferexperiment: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/innerdistance: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/junctionannotation: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/junctionsaturation: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/readdistribution: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/readduplication: "e745e167c1020928ef20ea1397b6b4d230681b4d"
+    rseqc/tin: "e745e167c1020928ef20ea1397b6b4d230681b4d"

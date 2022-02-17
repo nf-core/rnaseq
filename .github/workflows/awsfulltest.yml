@@ -32,4 +32,6 @@ jobs:
               "aligner": "${{ matrix.aligner }}"
             }
           profiles: test_full,aws_tower
-          pre_run_script: 'export NXF_VER=21.10.3'
+          nextflow_config: |
+            process.errorStrategy = 'retry'
+            process.maxRetries = 3

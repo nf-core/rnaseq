@@ -12,7 +12,7 @@ tools:
       documentation: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
       tool_dev_url: None
       doi: ""
-      licence: ['UC-LBL license (see package)']
+      licence: ["UC-LBL license (see package)"]
 
 input:
   - meta:

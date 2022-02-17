@@ -21,7 +21,7 @@ input:
   - reads:
       type: file
       description: Input reads for quantification
-      pattern: "*.fastq.gz"#
+      pattern: "*.fastq.gz"
   - index:
       type: file
       description: RSEM index

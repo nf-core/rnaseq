@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* [[#734](https://github.com/nf-core/rnaseq/issues/734)] - Is a vulnerable picard still used ? log4j vulnerability
+* [[#752](https://github.com/nf-core/rnaseq/issues/752)] - How to set publishing mode for all processes?
+* [[#755](https://github.com/nf-core/rnaseq/issues/755)] - Rename RSEM_PREPAREREFERENCE_TRANSCRIPTS process
+
 ### Parameters
+
+| Old parameter                 | New parameter                         |
+|-------------------------------|---------------------------------------|
+|                               | `--publish_dir_mode`                  |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+>
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
 
 ## [[3.5](https://github.com/nf-core/rnaseq/releases/tag/3.5)] - 2021-12-17
 

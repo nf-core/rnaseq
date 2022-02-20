@@ -127,6 +127,28 @@ class WorkflowRnaseq {
     }
 
     //
+    // Function to generate an error if contigs in genome fasta file > 512 Mbp
+    //
+    public static void checkMaxContigSize(fai_file, log) {
+        def max_size = 512000000
+        fai_file.eachLine { line ->
+            def lspl  = line.split('\t')
+            def chrom = lspl[0]
+            def size  = lspl[1]
+            if (size.toInteger() > max_size) {
+                log.error "=============================================================================\n" +
+                    "  Contig longer than ${max_size}bp found in reference genome!\n\n" +
+                    "  ${chrom}: ${size}\n\n" +
+                    "  Provide the '--bam_csi_index' parameter to use a CSI instead of BAI index.\n\n" +
+                    "  Please see:\n" + 
+                    "  https://github.com/nf-core/rnaseq/issues/744\n" +
+                    "============================================================================="
+                System.exit(1)
+            }
+        }
+    }
+
+    //
     // Function that parses and returns the alignment rate from the STAR log output
     //
     public static ArrayList getStarPercentMapped(params, align_log) {

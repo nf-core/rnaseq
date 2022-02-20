@@ -15,6 +15,7 @@ include { UNTAR as UNTAR_RSEM_INDEX         } from '../../modules/nf-core/module
 include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../modules/nf-core/modules/untar/main'
 include { UNTAR as UNTAR_SALMON_INDEX       } from '../../modules/nf-core/modules/untar/main'
 
+include { CUSTOM_GETCHROMSIZES              } from '../../modules/nf-core/modules/custom/getchromsizes/main'
 include { GFFREAD                           } from '../../modules/nf-core/modules/gffread/main'
 include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/modules/bbmap/bbsplit/main'
 include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
@@ -26,7 +27,6 @@ include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../mo
 include { GTF2BED              } from '../../modules/local/gtf2bed'
 include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta'
 include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'
-include { GET_CHROM_SIZES      } from '../../modules/local/get_chrom_sizes'
 include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'
 
 workflow PREPARE_GENOME {
@@ -121,8 +121,10 @@ workflow PREPARE_GENOME {
     //
     // Create chromosome sizes file
     //
-    ch_chrom_sizes = GET_CHROM_SIZES ( ch_fasta ).sizes
-    ch_versions    = ch_versions.mix(GET_CHROM_SIZES.out.versions)
+    CUSTOM_GETCHROMSIZES ( ch_fasta )
+    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
+    ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes
+    ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //
     // Uncompress BBSplit index or generate from scratch if required
@@ -233,6 +235,7 @@ workflow PREPARE_GENOME {
     emit:
     fasta            = ch_fasta            //    path: genome.fasta
     gtf              = ch_gtf              //    path: genome.gtf
+    fai              = ch_fai              //    path: genome.fai
     gene_bed         = ch_gene_bed         //    path: gene.bed
     transcript_fasta = ch_transcript_fasta //    path: transcript.fasta
     chrom_sizes      = ch_chrom_sizes      //    path: genome.sizes

@@ -282,7 +282,7 @@ class WorkflowRnaseq {
     //
     private static void transcriptsFastaWarn(log) {
         log.warn "=============================================================================\n" +
-            "  '--transcript_fasta' parameter has been provided.\n" + 
+            "  '--transcript_fasta' parameter has been provided.\n" +
             "  Make sure transcript names in this file match those in the GFF/GTF file.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/753\n" +

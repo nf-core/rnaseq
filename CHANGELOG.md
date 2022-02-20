@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#744](https://github.com/nf-core/rnaseq/issues/744)] - Auto-detect and raise error if CSI is required for BAM indexing
 * [[#752](https://github.com/nf-core/rnaseq/issues/752)] - How to set publishing mode for all processes?
 * [[#753](https://github.com/nf-core/rnaseq/issues/753)] - Add warning when user provides `--transcript_fasta`
+* [[#754](https://github.com/nf-core/rnaseq/issues/754)] - DESeq2 QC issue linked to `--count_col` parameter
 * [[#755](https://github.com/nf-core/rnaseq/issues/755)] - Rename RSEM_PREPAREREFERENCE_TRANSCRIPTS process
 * [[#759](https://github.com/nf-core/rnaseq/issues/759)] - Empty lines in samplesheet.csv cause a crash
 

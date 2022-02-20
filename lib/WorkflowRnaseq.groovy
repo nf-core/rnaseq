@@ -32,6 +32,10 @@ class WorkflowRnaseq {
             }
         }
 
+        if (params.transcript_fasta) {
+            transcriptsFastaWarn(log)
+        }
+
         if (!params.skip_bbsplit && !params.bbsplit_index && !params.bbsplit_fasta_list) {
             log.error "Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit."
             System.exit(1)
@@ -270,6 +274,18 @@ class WorkflowRnaseq {
         log.warn "=============================================================================\n" +
             "  Both '--gtf' and '--gff' parameters have been provided.\n" +
             "  Using GTF file as priority.\n" +
+            "==================================================================================="
+    }
+
+    //
+    // Print a warning if using '--transcript_fasta'
+    //
+    private static void transcriptsFastaWarn(log) {
+        log.warn "=============================================================================\n" +
+            "  '--transcript_fasta' parameter has been provided.\n" + 
+            "  Make sure transcript names in this file match those in the GFF/GTF file.\n\n" +
+            "  Please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/753\n" +
             "==================================================================================="
     }
 

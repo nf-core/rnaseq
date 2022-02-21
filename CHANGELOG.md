@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* [nf-core/tools#1415](https://github.com/nf-core/tools/issues/1415) - Make `--outdir` a mandatory parameter
 * [[#734](https://github.com/nf-core/rnaseq/issues/734)] - Is a vulnerable picard still used ? log4j vulnerability
 * [[#744](https://github.com/nf-core/rnaseq/issues/744)] - Auto-detect and raise error if CSI is required for BAM indexing
 * [[#750](https://github.com/nf-core/rnaseq/issues/750)] - Optionally ignore R1 / R2 after UMI extraction process

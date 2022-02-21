@@ -62,7 +62,7 @@ The SRA download functionality has been removed from the pipeline (`>=3.2`) and 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
     ```console
-    nextflow run nf-core/rnaseq -profile test,YOURPROFILE
+    nextflow run nf-core/rnaseq -profile test,YOURPROFILE --outdir <OUTDIR>
     ```
 
     Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
@@ -77,6 +77,7 @@ The SRA download functionality has been removed from the pipeline (`>=3.2`) and 
     ```console
     nextflow run nf-core/rnaseq \
         --input samplesheet.csv \
+        --outdir <OUTDIR> \
         --genome GRCh37 \
         -profile <docker/singularity/podman/conda/institute>
     ```

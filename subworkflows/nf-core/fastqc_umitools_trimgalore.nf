@@ -8,10 +8,11 @@ include { TRIMGALORE       } from '../../modules/nf-core/modules/trimgalore/main
 
 workflow FASTQC_UMITOOLS_TRIMGALORE {
     take:
-    reads         // channel: [ val(meta), [ reads ] ]
-    skip_fastqc   // boolean: true/false
-    with_umi      // boolean: true/false
-    skip_trimming // boolean: true/false
+    reads            // channel: [ val(meta), [ reads ] ]
+    skip_fastqc      // boolean: true/false
+    with_umi         // boolean: true/false
+    skip_trimming    // boolean: true/false
+    umi_discard_read // integer: 0, 1 or 2
 
     main:
 
@@ -30,6 +31,26 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
         UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
         umi_log     = UMITOOLS_EXTRACT.out.log
         ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
+
+        // Discard R1 / R2 if required
+        if ([1,2].contains(umi_discard_read)) {
+            def keep_idx = 1
+            if (umi_discard_read == 2) {
+                keep_idx = 0
+            }
+
+            UMITOOLS_EXTRACT
+                .out
+                .reads
+                .map { meta, reads ->
+                    if (!meta.single_end) {
+                        meta['single_end'] = true
+                        reads = reads[keep_idx]
+                    }
+                    return [ meta, reads ]
+                }
+                .set { umi_reads }
+        }
     }
 
     trim_reads = umi_reads

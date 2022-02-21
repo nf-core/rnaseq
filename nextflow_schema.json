@@ -70,6 +70,11 @@
                     "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
                     "description": "The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI."
                 },
+                "umi_discard_read": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-barcode",
+                    "help_text": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively.",
+                },
                 "save_umi_intermeds": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",

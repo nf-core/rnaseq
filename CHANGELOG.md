@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * [[#734](https://github.com/nf-core/rnaseq/issues/734)] - Is a vulnerable picard still used ? log4j vulnerability
 * [[#744](https://github.com/nf-core/rnaseq/issues/744)] - Auto-detect and raise error if CSI is required for BAM indexing
+* [[#750](https://github.com/nf-core/rnaseq/issues/750)] - Optionally ignore R1 / R2 after UMI extraction process
 * [[#752](https://github.com/nf-core/rnaseq/issues/752)] - How to set publishing mode for all processes?
 * [[#753](https://github.com/nf-core/rnaseq/issues/753)] - Add warning when user provides `--transcript_fasta`
 * [[#754](https://github.com/nf-core/rnaseq/issues/754)] - DESeq2 QC issue linked to `--count_col` parameter

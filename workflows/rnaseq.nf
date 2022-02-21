@@ -166,6 +166,12 @@ workflow RNASEQ {
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
+    // Check if contigs in genome fasta file > 512 Mbp
+    PREPARE_GENOME
+        .out
+        .fai
+        .map { WorkflowRnaseq.checkMaxContigSize(it, log) }
+
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //

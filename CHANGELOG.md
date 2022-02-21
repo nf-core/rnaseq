@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#754](https://github.com/nf-core/rnaseq/issues/754)] - DESeq2 QC issue linked to `--count_col` parameter
 * [[#755](https://github.com/nf-core/rnaseq/issues/755)] - Rename RSEM_PREPAREREFERENCE_TRANSCRIPTS process
 * [[#759](https://github.com/nf-core/rnaseq/issues/759)] - Empty lines in samplesheet.csv cause a crash
+* [[#769](https://github.com/nf-core/rnaseq/issues/769)] - Do not run RSeQC tin.py by default
 
 ### Parameters
 

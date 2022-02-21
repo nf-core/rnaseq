@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Old parameter                 | New parameter                         |
 |-------------------------------|---------------------------------------|
 |                               | `--publish_dir_mode`                  |
+|                               | `--umi_discard_read`                  |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 >

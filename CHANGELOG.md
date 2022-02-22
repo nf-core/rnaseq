@@ -7,19 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+* [nf-core/tools#1415](https://github.com/nf-core/tools/issues/1415) - Make `--outdir` a mandatory parameter
 * [[#734](https://github.com/nf-core/rnaseq/issues/734)] - Is a vulnerable picard still used ? log4j vulnerability
 * [[#744](https://github.com/nf-core/rnaseq/issues/744)] - Auto-detect and raise error if CSI is required for BAM indexing
+* [[#750](https://github.com/nf-core/rnaseq/issues/750)] - Optionally ignore R1 / R2 after UMI extraction process
 * [[#752](https://github.com/nf-core/rnaseq/issues/752)] - How to set publishing mode for all processes?
 * [[#753](https://github.com/nf-core/rnaseq/issues/753)] - Add warning when user provides `--transcript_fasta`
 * [[#754](https://github.com/nf-core/rnaseq/issues/754)] - DESeq2 QC issue linked to `--count_col` parameter
 * [[#755](https://github.com/nf-core/rnaseq/issues/755)] - Rename RSEM_PREPAREREFERENCE_TRANSCRIPTS process
 * [[#759](https://github.com/nf-core/rnaseq/issues/759)] - Empty lines in samplesheet.csv cause a crash
+* [[#769](https://github.com/nf-core/rnaseq/issues/769)] - Do not run RSeQC tin.py by default
 
 ### Parameters
 
 | Old parameter                 | New parameter                         |
 |-------------------------------|---------------------------------------|
 |                               | `--publish_dir_mode`                  |
+|                               | `--umi_discard_read`                  |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 >

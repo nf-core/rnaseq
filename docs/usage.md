@@ -80,7 +80,7 @@ If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files
 The typical command for running the pipeline is as follows:
 
 ```console
-nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh37 -profile docker
+nextflow run nf-core/rnaseq --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

@@ -34,18 +34,13 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
 
         // Discard R1 / R2 if required
         if ([1,2].contains(umi_discard_read)) {
-            def keep_idx = 1
-            if (umi_discard_read == 2) {
-                keep_idx = 0
-            }
-
             UMITOOLS_EXTRACT
                 .out
                 .reads
                 .map { meta, reads ->
                     if (!meta.single_end) {
                         meta['single_end'] = true
-                        reads = reads[keep_idx]
+                        reads = reads[umi_discard_read % 2]
                     }
                     return [ meta, reads ]
                 }

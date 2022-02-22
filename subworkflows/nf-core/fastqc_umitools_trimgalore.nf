@@ -33,7 +33,7 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
         ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
         // Discard R1 / R2 if required
-        if ([1,2].contains(umi_discard_read)) {
+        if (umi_discard_read in [1,2]) {
             UMITOOLS_EXTRACT
                 .out
                 .reads

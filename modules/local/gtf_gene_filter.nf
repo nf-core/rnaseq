@@ -14,6 +14,9 @@ process GTF_GENE_FILTER {
     path "*.gtf"       , emit: gtf
     path "versions.yml", emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script: // filter_gtf_for_genes_in_genome.py is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     filter_gtf_for_genes_in_genome.py \\

@@ -18,6 +18,9 @@ process STRINGTIE {
     tuple val(meta), path("*.ballgown")       , emit: ballgown
     path  "versions.yml"                      , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"

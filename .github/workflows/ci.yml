@@ -44,7 +44,7 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
 
   star_salmon:
     name: Test STAR Salmon with workflow parameters
@@ -76,7 +76,7 @@ jobs:
 
       - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters
@@ -98,7 +98,7 @@ jobs:
 
       - name: Run pipeline with RSEM STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results
 
   hisat2:
     name: Test HISAT2 with workflow parameters
@@ -120,7 +120,7 @@ jobs:
 
       - name: Run pipeline with HISAT2 and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results
 
   salmon:
     name: Test Salmon with workflow parameters
@@ -142,4 +142,4 @@ jobs:
 
       - name: Run pipeline with Salmon and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }}
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results

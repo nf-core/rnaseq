@@ -1,6 +1,6 @@
 process RSEQC_TIN {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_high'
 
     conda (params.enable_conda ? "bioconda::rseqc=3.0.1 'conda-forge::r-base>=3.5'" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -15,6 +15,9 @@ process RSEQC_TIN {
     tuple val(meta), path("*.txt"), emit: txt
     tuple val(meta), path("*.xls"), emit: xls
     path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

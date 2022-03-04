@@ -1,10 +1,10 @@
 name: hisat2_align
 description: Align RNA-Seq reads to a reference with HISAT2
 keywords:
-    - align
-    - fasta
-    - genome
-    - reference
+  - align
+  - fasta
+  - genome
+  - reference
 
 tools:
   - hisat2:
@@ -12,19 +12,19 @@ tools:
       homepage: https://daehwankimlab.github.io/hisat2/
       documentation: https://daehwankimlab.github.io/hisat2/manual/
       doi: "10.1038/s41587-019-0201-4"
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - meta:
       type: map
       description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - reads:
       type: file
       description: |
-          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-          respectively.
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
   - index:
       type: file
       description: HISAT2 genome index file
@@ -38,8 +38,8 @@ output:
   - meta:
       type: map
       description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
       description: Output BAM file containing read alignments

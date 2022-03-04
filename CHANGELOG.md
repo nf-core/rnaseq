@@ -3,6 +3,34 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.6](https://github.com/nf-core/rnaseq/releases/tag/3.6)] - 2022-03-04
+
+### Enhancements & fixes
+
+* [nf-core/tools#1415](https://github.com/nf-core/tools/issues/1415) - Make `--outdir` a mandatory parameter
+* [[#734](https://github.com/nf-core/rnaseq/issues/734)] - Is a vulnerable picard still used ? log4j vulnerability
+* [[#744](https://github.com/nf-core/rnaseq/issues/744)] - Auto-detect and raise error if CSI is required for BAM indexing
+* [[#750](https://github.com/nf-core/rnaseq/issues/750)] - Optionally ignore R1 / R2 after UMI extraction process
+* [[#752](https://github.com/nf-core/rnaseq/issues/752)] - How to set publishing mode for all processes?
+* [[#753](https://github.com/nf-core/rnaseq/issues/753)] - Add warning when user provides `--transcript_fasta`
+* [[#754](https://github.com/nf-core/rnaseq/issues/754)] - DESeq2 QC issue linked to `--count_col` parameter
+* [[#755](https://github.com/nf-core/rnaseq/issues/755)] - Rename RSEM_PREPAREREFERENCE_TRANSCRIPTS process
+* [[#759](https://github.com/nf-core/rnaseq/issues/759)] - Empty lines in samplesheet.csv cause a crash
+* [[#769](https://github.com/nf-core/rnaseq/issues/769)] - Do not run RSeQC tin.py by default
+
+### Parameters
+
+| Old parameter                 | New parameter                         |
+|-------------------------------|---------------------------------------|
+|                               | `--publish_dir_mode`                  |
+|                               | `--umi_discard_read`                  |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+>
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
 ## [[3.5](https://github.com/nf-core/rnaseq/releases/tag/3.5)] - 2021-12-17
 
 ### Enhancements & fixes
@@ -17,8 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [[#725](https://github.com/nf-core/rnaseq/issues/725)] - Untar needs `--no-same-owner` on DNAnexus
 * [[#727](https://github.com/nf-core/rnaseq/issues/727)] - Fix transcriptome staging issues on DNAnexus for rsem/prepareference
 * [[#728](https://github.com/nf-core/rnaseq/issues/728)] - Add RSeQC TIN.py as a quality metric for the pipeline
-
-### Parameters
 
 ## [[3.4](https://github.com/nf-core/rnaseq/releases/tag/3.4)] - 2021-10-05
 
@@ -42,9 +68,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 |                             | `--save_bbsplit_reads`         |
 |                             | `--skip_bbsplit`               |
 
-> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
-> **NB:** Parameter has been __added__ if just the new parameter information is present.
-> **NB:** Parameter has been __removed__ if parameter information isn't present.
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if parameter information isn't present.
 
 ### Software dependencies
 
@@ -60,9 +86,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `sortmerna`   | 4.2.0       | 4.3.4       |
 | `trim-galore` | 0.6.6       | 0.6.7       |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-29
 
@@ -83,9 +109,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `stringtie` | 2.1.4       | 2.1.7       |
 | `umi_tools` | 1.1.1       | 1.1.2       |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ## [[3.2](https://github.com/nf-core/rnaseq/releases/tag/3.2)] - 2021-06-18
 
@@ -108,9 +134,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `--skip_sra_fastq_download` |                                |
 |                             | `--salmon_quant_libtype`       |
 
-> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
-> **NB:** Parameter has been __added__ if just the new parameter information is present.
-> **NB:** Parameter has been __removed__ if parameter information isn't present.
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if parameter information isn't present.
 
 ## [[3.1](https://github.com/nf-core/rnaseq/releases/tag/3.1)] - 2021-05-13
 
@@ -161,9 +187,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 |                             | `--validate_params`            |
 | `--clusterOptions`          |                                |
 
-> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
-> **NB:** Parameter has been __added__ if just the new parameter information is present.
-> **NB:** Parameter has been __removed__ if parameter information isn't present.
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if parameter information isn't present.
 
 ### Software dependencies
 
@@ -175,9 +201,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `multiqc`   | 1.9         | 1.10.1      |
 | `preseq`    | 2.0.3       | 3.1.2       |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ## [[3.0](https://github.com/nf-core/rnaseq/releases/tag/3.0)] - 2020-12-15
 
@@ -219,9 +245,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 |                              | `--singularity_pull_docker_container` |
 | `--skip_featurecounts`       |                                       |
 
-> **NB:** Parameter has been __updated__ if both old and new parameter information is present.
-> **NB:** Parameter has been __added__ if just the new parameter information is present.
-> **NB:** Parameter has been __removed__ if parameter information isn't present.
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if parameter information isn't present.
 
 ### Software dependencies
 
@@ -237,9 +263,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `ucsc-bedclip`                      |             | 377         |
 | `umi_tools`                         | 1.0.1       | 1.1.1       |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ## [[2.0](https://github.com/nf-core/rnaseq/releases/tag/2.0)] - 2020-11-12
 
@@ -403,9 +429,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `r-gplots`                          | -           | -           |
 | `r-markdown`                        | -           | -           |
 
-> **NB:** Dependency has been __updated__ if both old and new version information is present.
-> **NB:** Dependency has been __added__ if just the new version information is present.
-> **NB:** Dependency has been __removed__ if version information isn't present.
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ## [[1.4.2](https://github.com/nf-core/rnaseq/releases/tag/1.4.2)] - 2019-10-18
 

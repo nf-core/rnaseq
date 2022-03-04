@@ -61,79 +61,80 @@ def check_samplesheet(file_in, file_out):
 
         ## Check sample entries
         for line in fin:
-            lspl = [x.strip().strip('"') for x in line.strip().split(",")]
+            if line.strip():
+                lspl = [x.strip().strip('"') for x in line.strip().split(",")]
 
-            ## Check valid number of columns per row
-            if len(lspl) < len(HEADER):
-                print_error(
-                    f"Invalid number of columns (minimum = {len(HEADER)})!",
-                    "Line",
-                    line,
-                )
-
-            num_cols = len([x for x in lspl if x])
-            if num_cols < MIN_COLS:
-                print_error(
-                    f"Invalid number of populated columns (minimum = {MIN_COLS})!",
-                    "Line",
-                    line,
-                )
-
-            ## Check sample name entries
-            sample, fastq_1, fastq_2, strandedness = lspl[: len(HEADER)]
-            if sample.find(" ") != -1:
-                print(
-                    f"WARNING: Spaces have been replaced by underscores for sample: {sample}"
-                )
-                sample = sample.replace(" ", "_")
-            if not sample:
-                print_error("Sample entry has not been specified!", "Line", line)
-
-            ## Check FastQ file extension
-            for fastq in [fastq_1, fastq_2]:
-                if fastq:
-                    if fastq.find(" ") != -1:
-                        print_error("FastQ file contains spaces!", "Line", line)
-                    if not fastq.endswith(".fastq.gz") and not fastq.endswith(".fq.gz"):
-                        print_error(
-                            "FastQ file does not have extension '.fastq.gz' or '.fq.gz'!",
-                            "Line",
-                            line,
-                        )
-
-            ## Check strandedness
-            strandednesses = ["unstranded", "forward", "reverse"]
-            if strandedness:
-                if strandedness not in strandednesses:
+                ## Check valid number of columns per row
+                if len(lspl) < len(HEADER):
                     print_error(
-                        f"Strandedness must be one of '{', '.join(strandednesses)}'!",
+                        f"Invalid number of columns (minimum = {len(HEADER)})!",
                         "Line",
                         line,
                     )
-            else:
-                print_error(
-                    f"Strandedness has not been specified! Must be one of {', '.join(strandednesses)}.",
-                    "Line",
-                    line,
-                )
 
-            ## Auto-detect paired-end/single-end
-            sample_info = []  ## [single_end, fastq_1, fastq_2, strandedness]
-            if sample and fastq_1 and fastq_2:  ## Paired-end short reads
-                sample_info = ["0", fastq_1, fastq_2, strandedness]
-            elif sample and fastq_1 and not fastq_2:  ## Single-end short reads
-                sample_info = ["1", fastq_1, fastq_2, strandedness]
-            else:
-                print_error("Invalid combination of columns provided!", "Line", line)
+                num_cols = len([x for x in lspl if x])
+                if num_cols < MIN_COLS:
+                    print_error(
+                        f"Invalid number of populated columns (minimum = {MIN_COLS})!",
+                        "Line",
+                        line,
+                    )
 
-            ## Create sample mapping dictionary = {sample: [[ single_end, fastq_1, fastq_2, strandedness ]]}
-            if sample not in sample_mapping_dict:
-                sample_mapping_dict[sample] = [sample_info]
-            else:
-                if sample_info in sample_mapping_dict[sample]:
-                    print_error("Samplesheet contains duplicate rows!", "Line", line)
+                ## Check sample name entries
+                sample, fastq_1, fastq_2, strandedness = lspl[: len(HEADER)]
+                if sample.find(" ") != -1:
+                    print(
+                        f"WARNING: Spaces have been replaced by underscores for sample: {sample}"
+                    )
+                    sample = sample.replace(" ", "_")
+                if not sample:
+                    print_error("Sample entry has not been specified!", "Line", line)
+
+                ## Check FastQ file extension
+                for fastq in [fastq_1, fastq_2]:
+                    if fastq:
+                        if fastq.find(" ") != -1:
+                            print_error("FastQ file contains spaces!", "Line", line)
+                        if not fastq.endswith(".fastq.gz") and not fastq.endswith(".fq.gz"):
+                            print_error(
+                                "FastQ file does not have extension '.fastq.gz' or '.fq.gz'!",
+                                "Line",
+                                line,
+                            )
+
+                ## Check strandedness
+                strandednesses = ["unstranded", "forward", "reverse"]
+                if strandedness:
+                    if strandedness not in strandednesses:
+                        print_error(
+                            f"Strandedness must be one of '{', '.join(strandednesses)}'!",
+                            "Line",
+                            line,
+                        )
                 else:
-                    sample_mapping_dict[sample].append(sample_info)
+                    print_error(
+                        f"Strandedness has not been specified! Must be one of {', '.join(strandednesses)}.",
+                        "Line",
+                        line,
+                    )
+
+                ## Auto-detect paired-end/single-end
+                sample_info = []  ## [single_end, fastq_1, fastq_2, strandedness]
+                if sample and fastq_1 and fastq_2:  ## Paired-end short reads
+                    sample_info = ["0", fastq_1, fastq_2, strandedness]
+                elif sample and fastq_1 and not fastq_2:  ## Single-end short reads
+                    sample_info = ["1", fastq_1, fastq_2, strandedness]
+                else:
+                    print_error("Invalid combination of columns provided!", "Line", line)
+
+                ## Create sample mapping dictionary = {sample: [[ single_end, fastq_1, fastq_2, strandedness ]]}
+                if sample not in sample_mapping_dict:
+                    sample_mapping_dict[sample] = [sample_info]
+                else:
+                    if sample_info in sample_mapping_dict[sample]:
+                        print_error("Samplesheet contains duplicate rows!", "Line", line)
+                    else:
+                        sample_mapping_dict[sample].append(sample_info)
 
     ## Write validated samplesheet with appropriate columns
     if len(sample_mapping_dict) > 0:

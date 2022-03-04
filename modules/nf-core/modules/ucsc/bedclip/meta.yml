@@ -9,7 +9,7 @@ tools:
       documentation: None
       tool_dev_url: None
       doi: ""
-      licence: ['varies; see http://genome.ucsc.edu/license']
+      licence: ["varies; see http://genome.ucsc.edu/license"]
 
 input:
   - meta:

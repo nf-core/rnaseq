@@ -11,7 +11,7 @@ tools:
       homepage: http://rseqc.sourceforge.net/
       documentation: http://rseqc.sourceforge.net/
       doi: 10.1093/bioinformatics/bts356
-      licence: ['GPL-3.0-or-later']
+      licence: ["GPL-3.0-or-later"]
 input:
   - meta:
       type: map

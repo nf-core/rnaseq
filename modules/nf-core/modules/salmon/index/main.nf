@@ -15,6 +15,9 @@ process SALMON_INDEX {
     path "salmon"       , emit: index
     path "versions.yml" , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def get_decoy_ids = "grep '^>' $genome_fasta | cut -d ' ' -f 1 > decoys.txt"

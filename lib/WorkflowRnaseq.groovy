@@ -32,6 +32,10 @@ class WorkflowRnaseq {
             }
         }
 
+        if (params.transcript_fasta) {
+            transcriptsFastaWarn(log)
+        }
+
         if (!params.skip_bbsplit && !params.bbsplit_index && !params.bbsplit_fasta_list) {
             log.error "Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit."
             System.exit(1)
@@ -127,6 +131,28 @@ class WorkflowRnaseq {
     }
 
     //
+    // Function to generate an error if contigs in genome fasta file > 512 Mbp
+    //
+    public static void checkMaxContigSize(fai_file, log) {
+        def max_size = 512000000
+        fai_file.eachLine { line ->
+            def lspl  = line.split('\t')
+            def chrom = lspl[0]
+            def size  = lspl[1]
+            if (size.toInteger() > max_size) {
+                log.error "=============================================================================\n" +
+                    "  Contig longer than ${max_size}bp found in reference genome!\n\n" +
+                    "  ${chrom}: ${size}\n\n" +
+                    "  Provide the '--bam_csi_index' parameter to use a CSI instead of BAI index.\n\n" +
+                    "  Please see:\n" +
+                    "  https://github.com/nf-core/rnaseq/issues/744\n" +
+                    "============================================================================="
+                System.exit(1)
+            }
+        }
+    }
+
+    //
     // Function that parses and returns the alignment rate from the STAR log output
     //
     public static ArrayList getStarPercentMapped(params, align_log) {
@@ -206,11 +232,11 @@ class WorkflowRnaseq {
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "=============================================================================\n" +
+            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
                 "  Currently, the available genome keys are:\n" +
                 "  ${params.genomes.keySet().join(", ")}\n" +
-                "==================================================================================="
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             System.exit(1)
         }
     }
@@ -248,6 +274,18 @@ class WorkflowRnaseq {
         log.warn "=============================================================================\n" +
             "  Both '--gtf' and '--gff' parameters have been provided.\n" +
             "  Using GTF file as priority.\n" +
+            "==================================================================================="
+    }
+
+    //
+    // Print a warning if using '--transcript_fasta'
+    //
+    private static void transcriptsFastaWarn(log) {
+        log.warn "=============================================================================\n" +
+            "  '--transcript_fasta' parameter has been provided.\n" +
+            "  Make sure transcript names in this file match those in the GFF/GTF file.\n\n" +
+            "  Please see:\n" +
+            "  https://github.com/nf-core/rnaseq/issues/753\n" +
             "==================================================================================="
     }
 

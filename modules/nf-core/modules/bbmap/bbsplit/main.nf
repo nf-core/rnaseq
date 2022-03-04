@@ -20,6 +20,9 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*txt')             , optional:true, emit: stats
     path "versions.yml"                       , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"

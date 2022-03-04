@@ -1,10 +1,10 @@
 name: subread_featurecounts
 description: Count reads that map to genomic features
 keywords:
-    - counts
-    - fasta
-    - genome
-    - reference
+  - counts
+  - fasta
+  - genome
+  - reference
 
 tools:
   - featurecounts:
@@ -12,14 +12,14 @@ tools:
       homepage: http://bioinf.wehi.edu.au/featureCounts/
       documentation: http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf
       doi: "10.1093/bioinformatics/btt656"
-      licence: ['GPL v3']
+      licence: ["GPL v3"]
 
 input:
   - meta:
       type: map
       description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
       description: BAM/SAM file containing read alignments
@@ -33,8 +33,8 @@ output:
   - meta:
       type: map
       description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - counts:
       type: file
       description: Counts of reads mapping to features

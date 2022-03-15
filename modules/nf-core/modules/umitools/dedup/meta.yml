@@ -1,0 +1,47 @@
+name: umitools_dedup
+description: Deduplicate reads based on the mapping co-ordinate and the UMI attached to the read.
+keywords:
+  - umitools
+  - deduplication
+tools:
+  - umi_tools:
+    description: >
+      UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs)
+      and single cell RNA-Seq cell barcodes
+    documentation: https://umi-tools.readthedocs.io/en/latest/
+    license: ["MIT"]
+input:
+  - meta:
+    type: map
+    description: |
+      Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+    type: file
+    description: |
+      BAM file containing reads to be deduplicated via UMIs.
+    pattern: "*.{bam}"
+  - bai:
+    type: file
+    description: |
+      BAM index files corresponding to the input BAM file.
+    pattern: "*.{bai}"
+output:
+  - meta:
+    type: map
+    description: |
+      Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+    type: file
+    description: BAM file with deduplicated UMIs.
+    pattern: "*.{bam}"
+  - versions:
+    type: file
+    description: File containing software versions
+    pattern: "versions.yml"
+
+authors:
+  - "@drpatelh"
+  - "@grst"
+  - "@klkeys"

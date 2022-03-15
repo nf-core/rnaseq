@@ -1,0 +1,40 @@
+name: rseqc_inferexperiment
+description: Infer strandedness from sequencing reads
+keywords:
+  - rnaseq
+  - experiment
+tools:
+  - rseqc:
+      description: |
+        RSeQC package provides a number of useful modules that can comprehensively evaluate
+        high throughput sequence data especially RNA-seq data.
+      homepage: http://rseqc.sourceforge.net/
+      documentation: http://rseqc.sourceforge.net/
+      doi: 10.1093/bioinformatics/bts356
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: the bam file to calculate statistics of
+      pattern: "*.{bam}"
+  - bed:
+      type: file
+      description: a bed file for the reference gene model
+      pattern: "*.{bed}"
+output:
+  - txt:
+      type: file
+      description: infer_experiment results report
+      pattern: "*.infer_experiment.txt"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@kevinmenden"

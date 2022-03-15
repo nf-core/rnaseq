@@ -1,0 +1,56 @@
+name: salmon_quant
+description: gene/transcript quantification with Salmon
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - salmon:
+      description: |
+        Salmon is a tool for wicked-fast transcript quantification from RNA-seq data
+      homepage: https://salmon.readthedocs.io/en/latest/salmon.html
+      manual: https://salmon.readthedocs.io/en/latest/salmon.html
+      doi: 10.1038/nmeth.4197
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - index:
+      type: directory
+      description: Folder containing the star index files
+  - gtf:
+      type: file
+      description: GTF of the reference transcriptome
+  - transcriptome_fasta:
+      type: file
+      description: Fasta file of the reference transcriptome
+  - alignment_mode:
+    type: boolean
+    description: whether to run salmon in alignment mode
+  - lib_type:
+    type: string
+    description: |
+      Override library type inferred based on strandedness defined in meta object
+
+output:
+  - sample_output:
+      type: directory
+      description: Folder containing the quantification results for a specific sample
+      pattern: "${prefix}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@kevinmenden"
+  - "@drpatelh"

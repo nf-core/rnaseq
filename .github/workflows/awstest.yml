@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Launch workflow via tower
-        uses: nf-core/tower-action@v2
+        uses: nf-core/tower-action@v3
         
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
@@ -25,4 +25,6 @@ jobs:
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
             }
           profiles: test,aws_tower
-          pre_run_script: 'export NXF_VER=21.10.3'
+          nextflow_config: |
+            process.errorStrategy = 'retry'
+            process.maxRetries = 3

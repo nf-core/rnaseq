@@ -12,9 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '10'
+      - uses: actions/setup-node@v2
       - name: Install markdownlint
         run: npm install -g markdownlint-cli
       - name: Run Markdownlint
@@ -51,9 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '10'
+      - uses: actions/setup-node@v2
 
       - name: Install editorconfig-checker
         run: npm install -g editorconfig-checker
@@ -64,14 +60,13 @@ jobs:
   YAML:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: 'Yamllint'
+        uses: karancode/yamllint-github-action@master
         with:
-          node-version: '10'
-      - name: Install yaml-lint
-        run: npm install -g yaml-lint
-      - name: Run yaml-lint
-        run: yamllint $(find ${GITHUB_WORKSPACE} -type f -name "*.yml" -o -name "*.yaml")
+          yamllint_file_or_dir: '.'
+          yamllint_config_filepath: '.yamllint.yml'
 
       # If the above check failed, post a comment on the PR explaining the failure
       - name: Post PR comment
@@ -84,10 +79,11 @@ jobs:
             To keep the code consistent with lots of contributors, we run automated code consistency checks.
             To fix this CI test, please run:
 
-            * Install `yaml-lint`
-                * [Install `npm`](https://www.npmjs.com/get-npm) then [install `yaml-lint`](https://www.npmjs.com/package/yaml-lint) (`npm install -g yaml-lint`)
+            * Install `yamllint`
+                * Install `yamllint` following [this](https://yamllint.readthedocs.io/en/stable/quickstart.html#installing-yamllint)
+                instructions or alternative install it in your [conda environment](https://anaconda.org/conda-forge/yamllint)
             * Fix the markdown errors
-                * Run the test locally: `yamllint $(find . -type f -name "*.yml" -o -name "*.yaml")`
+                * Run the test locally: `yamllint $(find . -type f -name "*.yml" -o -name "*.yaml") -c ./.yamllint.yml`
                 * Fix any reported errors in your YAML files
 
             Once you push these changes the test should pass, and you can hide this comment :+1:

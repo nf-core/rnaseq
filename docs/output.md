@@ -15,36 +15,36 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * [Preprocessing](#preprocessing)
-  * [cat](#cat) - Merge re-sequenced FastQ files
-  * [FastQC](#fastqc) - Raw read QC
-  * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
-  * [TrimGalore](#trimgalore) - Adapter and quality trimming
-  * [BBSplit](#bbsplit) - Removal of genome contaminants
-  * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
+    * [cat](#cat) - Merge re-sequenced FastQ files
+    * [FastQC](#fastqc) - Raw read QC
+    * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
+    * [TrimGalore](#trimgalore) - Adapter and quality trimming
+    * [BBSplit](#bbsplit) - Removal of genome contaminants
+    * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
 * [Alignment and quantification](#alignment-and-quantification)
-  * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
-  * [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
-  * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
+    * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
+    * [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
+    * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
 * [Alignment post-processing](#alignment-post-processing)
-  * [SAMtools](#samtools) - Sort and index alignments
-  * [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
-  * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
+    * [SAMtools](#samtools) - Sort and index alignments
+    * [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
+    * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
 * [Other steps](#other-steps)
-  * [StringTie](#stringtie) - Transcript assembly and quantification
-  * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
+    * [StringTie](#stringtie) - Transcript assembly and quantification
+    * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
 * [Quality control](#quality-control)
-  * [RSeQC](#rseqc) - Various RNA-seq QC metrics
-  * [Qualimap](#qualimap) - Various RNA-seq QC metrics
-  * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
-  * [Preseq](#preseq) - Estimation of library complexity
-  * [featureCounts](#featurecounts) - Read counting relative to gene biotype
-  * [DESeq2](#deseq2) - PCA plot and sample pairwise distance heatmap and dendrogram
-  * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
+    * [RSeQC](#rseqc) - Various RNA-seq QC metrics
+    * [Qualimap](#qualimap) - Various RNA-seq QC metrics
+    * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
+    * [Preseq](#preseq) - Estimation of library complexity
+    * [featureCounts](#featurecounts) - Read counting relative to gene biotype
+    * [DESeq2](#deseq2) - PCA plot and sample pairwise distance heatmap and dendrogram
+    * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
 * [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
-  * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
+    * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
 * [Workflow reporting and genomes](#workflow-reporting-and-genomes)
-  * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
-  * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+    * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
+    * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Preprocessing
 
@@ -54,7 +54,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 * `fastq/`
-  * `*.merged.fastq.gz`: If `--save_merged_fastq` is specified, concatenated FastQ files will be placed in this directory.
+    * `*.merged.fastq.gz`: If `--save_merged_fastq` is specified, concatenated FastQ files will be placed in this directory.
 
 </details>
 
@@ -66,8 +66,8 @@ If multiple libraries/runs have been provided for the same sample in the input s
 <summary>Output files</summary>
 
 * `fastqc/`
-  * `*_fastqc.html`: FastQC report containing quality metrics.
-  * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+    * `*_fastqc.html`: FastQC report containing quality metrics.
+    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 > **NB:** The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look after adapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
 
@@ -87,8 +87,8 @@ If multiple libraries/runs have been provided for the same sample in the input s
 <summary>Output files</summary>
 
 * `umitools/`
-  * `*.fastq.gz`: If `--save_umi_intermeds` is specified, FastQ files **after** UMI extraction will be placed in this directory.
-  * `*.log`: Log file generated by the UMI-tools `extract` command.
+    * `*.fastq.gz`: If `--save_umi_intermeds` is specified, FastQ files **after** UMI extraction will be placed in this directory.
+    * `*.log`: Log file generated by the UMI-tools `extract` command.
 
 </details>
 
@@ -100,11 +100,11 @@ If multiple libraries/runs have been provided for the same sample in the input s
 <summary>Output files</summary>
 
 * `trimgalore/`
-  * `*.fq.gz`: If `--save_trimmed` is specified, FastQ files **after** adapter trimming will be placed in this directory.
-  * `*_trimming_report.txt`: Log file generated by Trim Galore!.
+    * `*.fq.gz`: If `--save_trimmed` is specified, FastQ files **after** adapter trimming will be placed in this directory.
+    * `*_trimming_report.txt`: Log file generated by Trim Galore!.
 * `trimgalore/fastqc/`
-  * `*_fastqc.html`: FastQC report containing quality metrics for read 1 (*and read2 if paired-end*) **after** adapter trimming.
-  * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+    * `*_fastqc.html`: FastQC report containing quality metrics for read 1 (*and read2 if paired-end*) **after** adapter trimming.
+    * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 </details>
 
@@ -120,8 +120,8 @@ If multiple libraries/runs have been provided for the same sample in the input s
 <summary>Output files</summary>
 
 * `bbsplit/`
-  * `*.fastq.gz`: If `--save_bbsplit_reads` is specified FastQ files split by reference will be saved to the results directory. Reads from the main reference genome will be named "*primary*.fastq.gz". Reads from contaminating genomes will be named "*<SHORT_NAME>*.fastq.gz" where `<SHORT_NAME>` is the first column in `--bbsplit_fasta_list` that needs to be provided to initially build the index.
-  * `*.txt`: File containing statistics on how many reads were assigned to each reference.
+    * `*.fastq.gz`: If `--save_bbsplit_reads` is specified FastQ files split by reference will be saved to the results directory. Reads from the main reference genome will be named "*primary*.fastq.gz". Reads from contaminating genomes will be named "*<SHORT_NAME>*.fastq.gz" where `<SHORT_NAME>` is the first column in `--bbsplit_fasta_list` that needs to be provided to initially build the index.
+    * `*.txt`: File containing statistics on how many reads were assigned to each reference.
 
 </details>
 
@@ -145,8 +145,8 @@ You can save the index by using the [`--save_reference`](https://nf-co.re/rnaseq
 <summary>Output files</summary>
 
 * `sortmerna/`
-  * `*.fastq.gz`: If `--save_non_ribo_reads` is specified, FastQ files containing non-rRNA reads will be placed in this directory.
-  * `*.log`: Log file generated by SortMeRNA with information regarding reads that matched the reference database(s).
+    * `*.fastq.gz`: If `--save_non_ribo_reads` is specified, FastQ files containing non-rRNA reads will be placed in this directory.
+    * `*.log`: Log file generated by SortMeRNA with information regarding reads that matched the reference database(s).
 
 </details>
 
@@ -162,14 +162,14 @@ When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://git
 <summary>Output files</summary>
 
 * `star_salmon/`
-  * `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
-  * `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+    * `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+    * `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
 * `star_salmon/log/`
-  * `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
-  * `*.Log.final.out`: STAR alignment report containing the mapping results summary.
-  * `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
+    * `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
+    * `*.Log.final.out`: STAR alignment report containing the mapping results summary.
+    * `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
 * `star_salmon/unmapped/`
-  * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
+    * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
 
 </details>
 
@@ -187,18 +187,18 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 <summary>Output files</summary>
 
 * `star_rsem/`
-  * `rsem.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
-  * `rsem.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  * `rsem.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  * `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  * `*.genes.results`: RSEM gene-level quantification results for each sample.
-  * `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
-  * `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
-  * `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+    * `rsem.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+    * `rsem.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+    * `rsem.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+    * `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+    * `*.genes.results`: RSEM gene-level quantification results for each sample.
+    * `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
+    * `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+    * `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
 * `star_rsem/<SAMPLE>.stat/`
-  * `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
-  * `star_rsem/log/`
-  * `*.log`: STAR alignment report containing the mapping results summary.
+    * `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
+    * `star_rsem/log/`
+    * `*.log`: STAR alignment report containing the mapping results summary.
 
 </details>
 
@@ -216,11 +216,11 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 <summary>Output files</summary>
 
 * `hisat2/`
-  * `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+    * `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
 * `hisat2/log/`
-  * `*.log`: HISAT2 alignment report containing the mapping results summary.
+    * `*.log`: HISAT2 alignment report containing the mapping results summary.
 * `hisat2/unmapped/`
-  * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
+    * `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
 
 </details>
 
@@ -240,11 +240,11 @@ The pipeline has been written in a way where all the files generated downstream 
 <summary>Output files</summary>
 
 * `<ALIGNER>/`
-  * `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory.
-  * `<SAMPLE>.sorted.bam.bai`: If `--save_align_intermeds` is specified the BAI index file for the original coordinate sorted BAM file will be placed in this directory.
-  * `<SAMPLE>.sorted.bam.csi`: If `--save_align_intermeds --bam_csi_index` is specified the CSI index file for the original coordinate sorted BAM file will be placed in this directory.
+    * `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory.
+    * `<SAMPLE>.sorted.bam.bai`: If `--save_align_intermeds` is specified the BAI index file for the original coordinate sorted BAM file will be placed in this directory.
+    * `<SAMPLE>.sorted.bam.csi`: If `--save_align_intermeds --bam_csi_index` is specified the CSI index file for the original coordinate sorted BAM file will be placed in this directory.
 * `<ALIGNER>/samtools_stats/`
-  * SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
+    * SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
 
 </details>
 
@@ -260,13 +260,13 @@ The original BAM files generated by the selected alignment algorithm are further
 <summary>Output files</summary>
 
 * `<ALIGNER>/`
-  * `<SAMPLE>.umi_dedup.sorted.bam`: If `--save_umi_intermeds` is specified the UMI deduplicated, coordinate sorted BAM file containing read alignments will be placed in this directory.
-  * `<SAMPLE>.umi_dedup.sorted.bam.bai`: If `--save_umi_intermeds` is specified the BAI index file for the UMI deduplicated, coordinate sorted BAM file will be placed in this directory.
-  * `<SAMPLE>.umi_dedup.sorted.bam.csi`: If `--save_umi_intermeds --bam_csi_index` is specified the CSI index file for the UMI deduplicated, coordinate sorted BAM file will be placed in this directory.
+    * `<SAMPLE>.umi_dedup.sorted.bam`: If `--save_umi_intermeds` is specified the UMI deduplicated, coordinate sorted BAM file containing read alignments will be placed in this directory.
+    * `<SAMPLE>.umi_dedup.sorted.bam.bai`: If `--save_umi_intermeds` is specified the BAI index file for the UMI deduplicated, coordinate sorted BAM file will be placed in this directory.
+    * `<SAMPLE>.umi_dedup.sorted.bam.csi`: If `--save_umi_intermeds --bam_csi_index` is specified the CSI index file for the UMI deduplicated, coordinate sorted BAM file will be placed in this directory.
 * `<ALIGNER>/umitools/`
-  * `*_edit_distance.tsv`: Reports the (binned) average edit distance between the UMIs at each position.
-  * `*_per_umi.tsv`: UMI-level summary statistics.
-  * `*_per_umi_per_position.tsv`: Tabulates the counts for unique combinations of UMI and position.
+    * `*_edit_distance.tsv`: Reports the (binned) average edit distance between the UMIs at each position.
+    * `*_per_umi.tsv`: UMI-level summary statistics.
+    * `*_per_umi_per_position.tsv`: Tabulates the counts for unique combinations of UMI and position.
 
 The content of the files above is explained in more detail in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/dedup.html#dedup-specific-options).
 
@@ -280,13 +280,13 @@ After extracting the UMI information from the read sequence (see [UMI-tools extr
 <summary>Output files</summary>
 
 * `<ALIGNER>/`
-  * `<SAMPLE>.markdup.sorted.bam`: Coordinate sorted BAM file after duplicate marking. This is the final post-processed BAM file and so will be saved by default in the results directory.
-  * `<SAMPLE>.markdup.sorted.bam.bai`: BAI index file for coordinate sorted BAM file after duplicate marking. This is the final post-processed BAM index file and so will be saved by default in the results directory.
-  * `<SAMPLE>.markdup.sorted.bam.csi`: CSI index file for coordinate sorted BAM file after duplicate marking. This is the final post-processed BAM index file and so will be saved by default in the results directory. Only generated if `--bam_csi_index` is specified as a parameter.
+    * `<SAMPLE>.markdup.sorted.bam`: Coordinate sorted BAM file after duplicate marking. This is the final post-processed BAM file and so will be saved by default in the results directory.
+    * `<SAMPLE>.markdup.sorted.bam.bai`: BAI index file for coordinate sorted BAM file after duplicate marking. This is the final post-processed BAM index file and so will be saved by default in the results directory.
+    * `<SAMPLE>.markdup.sorted.bam.csi`: CSI index file for coordinate sorted BAM file after duplicate marking. This is the final post-processed BAM index file and so will be saved by default in the results directory. Only generated if `--bam_csi_index` is specified as a parameter.
 * `<ALIGNER>/samtools_stats/`
-  * SAMtools `<SAMPLE>.markdup.sorted.bam.flagstat`, `<SAMPLE>.markdup.sorted.bam.idxstats` and `<SAMPLE>.markdup.sorted.bam.stats` files generated from the duplicate marked alignment files.
+    * SAMtools `<SAMPLE>.markdup.sorted.bam.flagstat`, `<SAMPLE>.markdup.sorted.bam.idxstats` and `<SAMPLE>.markdup.sorted.bam.stats` files generated from the duplicate marked alignment files.
 * `<ALIGNER>/picard_metrics/`
-  * `<SAMPLE>.markdup.sorted.MarkDuplicates.metrics.txt`: Metrics file from MarkDuplicates.
+    * `<SAMPLE>.markdup.sorted.MarkDuplicates.metrics.txt`: Metrics file from MarkDuplicates.
 
 </details>
 
@@ -302,9 +302,9 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 <summary>Output files</summary>
 
 * `<ALIGNER>/stringtie/`
-  * `*.coverage.gtf`: GTF file containing transcripts that are fully covered by reads.
-  * `*.transcripts.gtf`: GTF file containing all of the assembled transcipts from StringTie.
-  * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.
+    * `*.coverage.gtf`: GTF file containing transcripts that are fully covered by reads.
+    * `*.transcripts.gtf`: GTF file containing all of the assembled transcipts from StringTie.
+    * `*.gene_abundance.txt`: Text file containing gene aboundances and FPKM values.
 * `<ALIGNER>/stringtie/<SAMPLE>.ballgown/`: Ballgown output directory.
 
 </details>
@@ -317,8 +317,8 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 <summary>Output files</summary>
 
 * `<ALIGNER>/bigwig/`
-  * `*.forward.bigWig`: bigWig coverage file relative to genes on the forward DNA strand.
-  * `*.reverse.bigWig`: bigWig coverage file relative to genes on the reverse DNA strand.
+    * `*.forward.bigWig`: bigWig coverage file relative to genes on the forward DNA strand.
+    * `*.reverse.bigWig`: bigWig coverage file relative to genes on the reverse DNA strand.
 
 </details>
 
@@ -338,7 +338,7 @@ The majority of RSeQC scripts generate output files which can be plotted and sum
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/infer_experiment/`
-  * `*.infer_experiment.txt`: File containing fraction of reads mapping to given strandedness configurations.
+    * `*.infer_experiment.txt`: File containing fraction of reads mapping to given strandedness configurations.
 
 </details>
 
@@ -356,7 +356,7 @@ RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-e
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/read_distribution/`
-  * `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions etc.
+    * `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions etc.
 
 </details>
 
@@ -372,17 +372,17 @@ RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-d
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/junction_annotation/bed/`
-  * `*.junction.bed`: BED file containing splice junctions.
-  * `*.junction.Interact.bed`: BED file containing interacting splice junctions.
+    * `*.junction.bed`: BED file containing splice junctions.
+    * `*.junction.Interact.bed`: BED file containing interacting splice junctions.
 * `<ALIGNER>/rseqc/junction_annotation/log/`
-  * `*.junction_annotation.log`: Log file generated by the program.
+    * `*.junction_annotation.log`: Log file generated by the program.
 * `<ALIGNER>/rseqc/junction_annotation/pdf/`
-  * `*.splice_events.pdf`: PDF file containing splicing events plot.
-  * `*.splice_junction.pdf`: PDF file containing splice junctions plot.
+    * `*.splice_events.pdf`: PDF file containing splicing events plot.
+    * `*.splice_junction.pdf`: PDF file containing splice junctions plot.
 * `<ALIGNER>/rseqc/junction_annotation/rscript/`
-  * `*.junction_plot.r`: R script used to generate pdf plots above.
+    * `*.junction_plot.r`: R script used to generate pdf plots above.
 * `<ALIGNER>/rseqc/junction_annotation/xls/`
-  * `*.junction.xls`: Excel spreadsheet with junction information.
+    * `*.junction.xls`: Excel spreadsheet with junction information.
 
 </details>
 
@@ -398,12 +398,12 @@ RSeQC documentation: [junction_annotation.py](http://rseqc.sourceforge.net/#junc
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/inner_distance/pdf/`
-  * `*.inner_distance_plot.pdf`: PDF file containing inner distance plot.
+    * `*.inner_distance_plot.pdf`: PDF file containing inner distance plot.
 * `<ALIGNER>/rseqc/inner_distance/rscript/`
-  * `*.inner_distance_plot.r`: R script used to generate pdf plot above.
+    * `*.inner_distance_plot.r`: R script used to generate pdf plot above.
 * `<ALIGNER>/rseqc/inner_distance/txt/`
-  * `*.inner_distance_freq.txt`: File containing frequency of insert sizes.
-  * `*.inner_distance_mean.txt`: File containing mean, median and standard deviation of insert sizes.
+    * `*.inner_distance_freq.txt`: File containing frequency of insert sizes.
+    * `*.inner_distance_mean.txt`: File containing mean, median and standard deviation of insert sizes.
 
 </details>
 
@@ -421,9 +421,9 @@ RSeQC documentation: [inner_distance.py](http://rseqc.sourceforge.net/#inner-dis
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/junction_saturation/pdf/`
-  * `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
+    * `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
 * `<ALIGNER>/rseqc/junction_saturation/rscript/`
-  * `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
+    * `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
 
 </details>
 
@@ -439,12 +439,12 @@ RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junc
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/read_duplication/pdf/`
-  * `*.DupRate_plot.pdf`: PDF file containing read duplication plot.
+    * `*.DupRate_plot.pdf`: PDF file containing read duplication plot.
 * `<ALIGNER>/rseqc/read_duplication/rscript/`
-  * `*.DupRate_plot.r`: R script used to generate pdf plot above.
+    * `*.DupRate_plot.r`: R script used to generate pdf plot above.
 * `<ALIGNER>/rseqc/read_duplication/xls/`
-  * `*.pos.DupRate.xls`: Read duplication rate determined from mapping position of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
-  * `*.seq.DupRate.xls`: Read duplication rate determined from sequence of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
+    * `*.pos.DupRate.xls`: Read duplication rate determined from mapping position of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
+    * `*.seq.DupRate.xls`: Read duplication rate determined from sequence of read. First column is “occurrence” or duplication times, second column is number of uniquely mapped reads.
 
 </details>
 
@@ -460,7 +460,7 @@ RSeQC documentation: [read_duplication.py](http://rseqc.sourceforge.net/#read-du
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/bam_stat/`
-  * `*.bam_stat.txt`: Mapping statistics for the BAM file.
+    * `*.bam_stat.txt`: Mapping statistics for the BAM file.
 
 </details>
 
@@ -497,8 +497,8 @@ RSeQC documentation: [bam_stat.py](http://rseqc.sourceforge.net/#bam-stat-py)
 <summary>Output files</summary>
 
 * `<ALIGNER>/rseqc/tin/`
-  * `*.summary.txt`: File containing TIN results summary.
-  * `*.tin.xls`: XLS file containing TIN results.
+    * `*.summary.txt`: File containing TIN results summary.
+    * `*.tin.xls`: XLS file containing TIN results.
 
 </details>
 
@@ -512,8 +512,8 @@ RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
 <summary>Output files</summary>
 
 * `<ALIGNER>/qualimap/<SAMPLE>/`
-  * `qualimapReport.html`: Qualimap HTML report that can be viewed in a web browser.
-  * `rnaseq_qc_results.txt`: Textual results output.
+    * `qualimapReport.html`: Qualimap HTML report that can be viewed in a web browser.
+    * `rnaseq_qc_results.txt`: Textual results output.
 * `<ALIGNER>/qualimap/<SAMPLE>/images_qualimapReport/`: Images required for the HTML report.
 * `<ALIGNER>/qualimap/<SAMPLE>/raw_data_qualimapReport/`: Raw data required for the HTML report.
 * `<ALIGNER>/qualimap/<SAMPLE>/css/`: CSS files required for the HTML report.
@@ -537,15 +537,15 @@ The [Qualimap RNA-seq QC module](http://qualimap.bioinfo.cipf.es/doc_html/analys
 <summary>Output files</summary>
 
 * `<ALIGNER>/dupradar/box_plot/`
-  * `*_duprateExpBoxplot.pdf`: PDF file containing box plot for duplicate rate relative to mean expression.
+    * `*_duprateExpBoxplot.pdf`: PDF file containing box plot for duplicate rate relative to mean expression.
 * `<ALIGNER>/dupradar/gene_data/`
-  * `*_dupMatrix.txt`: Text file containing duplicate metrics per gene.
+    * `*_dupMatrix.txt`: Text file containing duplicate metrics per gene.
 * `<ALIGNER>/dupradar/histogram/`
-  * `*_expressionHist.pdf`: PDF file containing histogram of reads per kilobase values per gene.
+    * `*_expressionHist.pdf`: PDF file containing histogram of reads per kilobase values per gene.
 * `<ALIGNER>/dupradar/intercepts_slope/`
-  * `*_intercept_slope.txt`: Text file containing intercept slope values.
+    * `*_intercept_slope.txt`: Text file containing intercept slope values.
 * `<ALIGNER>/dupradar/scatter_plot/`
-  * `*_duprateExpDens.pdf`: PDF file containing typical dupRadar 2D density scatter plot.
+    * `*_duprateExpDens.pdf`: PDF file containing typical dupRadar 2D density scatter plot.
 
 See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/dupRadar/inst/doc/dupRadar.html) for further information regarding the content of these files.
 
@@ -563,9 +563,9 @@ See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/d
 <summary>Output files</summary>
 
 * `<ALIGNER>/preseq/`
-  * `*.ccurve.txt`: Preseq expected future yield file.
+    * `*.ccurve.txt`: Preseq expected future yield file.
 * `<ALIGNER>/preseq/log/`
-  * `*.command.log`: Standard error output from command.
+    * `*.command.log`: Standard error output from command.
 
 </details>
 
@@ -579,9 +579,9 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
 <summary>Output files</summary>
 
 * `<ALIGNER>/featurecounts/`
-  * `*.featureCounts.txt`: featureCounts biotype-level quantification results for each sample.
-  * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
-  * `*_mqc.tsv`: MultiQC custom content files used to plot biotypes in report.
+    * `*.featureCounts.txt`: featureCounts biotype-level quantification results for each sample.
+    * `*.featureCounts.txt.summary`: featureCounts summary file containing overall statistics about the counts.
+    * `*_mqc.tsv`: MultiQC custom content files used to plot biotypes in report.
 
 </details>
 
@@ -595,17 +595,17 @@ The [Preseq](http://smithlabresearch.org/software/preseq/) package is aimed at p
 <summary>Output files</summary>
 
 * `<ALIGNER/PSEUDOALIGNER>/deseq2_qc/`
-  * `*.plots.pdf`: File containing PCA and hierarchical clustering plots.
-  * `*.dds.RData`: File containing R `DESeqDataSet` object  generated
+    * `*.plots.pdf`: File containing PCA and hierarchical clustering plots.
+    * `*.dds.RData`: File containing R `DESeqDataSet` object  generated
         by DESeq2, with either an rlog or vst `assay` storing the
         variance-stabilised data.
-  * `*.rds`: Alternative version of the RData file suitable for
+    * `*.rds`: Alternative version of the RData file suitable for
         `readRDS` to give user control of the eventual object name.
-  * `*pca.vals.txt`: Matrix of values for the first 2 principal components.
-  * `*sample.dists.txt`: Sample distance matrix.
-  * `R_sessionInfo.log`: File containing information about R, the OS and attached or loaded packages.
+    * `*pca.vals.txt`: Matrix of values for the first 2 principal components.
+    * `*sample.dists.txt`: Sample distance matrix.
+    * `R_sessionInfo.log`: File containing information about R, the OS and attached or loaded packages.
 * `<ALIGNER/PSEUDOALIGNER>/deseq2_qc/size_factors/`
-  * `*.txt`, `*.RData`: Files containing DESeq2 sizeFactors per sample.
+    * `*.txt`, `*.RData`: Files containing DESeq2 sizeFactors per sample.
 
 </details>
 
@@ -635,8 +635,8 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 <summary>Output files</summary>
 
 * `multiqc/<ALIGNER>/`
-  * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
-  * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+    * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
+    * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
 
 </details>
 
@@ -652,25 +652,25 @@ Results generated by MultiQC collate pipeline QC from supported tools i.e. FastQ
 <summary>Output files</summary>
 
 * `salmon/`
-  * `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
-  * `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  * `salmon.merged.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  * `salmon.merged.gene_counts_scaled.tsv`: Matrix of gene-level scaled counts across all samples.
-  * `salmon.merged.gene_counts_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  * `salmon.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts across all samples.
-  * `salmon.merged.gene_counts_length_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  * `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  * `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  * `salmon.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
-  * `salmon_tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
+    * `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+    * `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+    * `salmon.merged.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+    * `salmon.merged.gene_counts_scaled.tsv`: Matrix of gene-level scaled counts across all samples.
+    * `salmon.merged.gene_counts_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+    * `salmon.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts across all samples.
+    * `salmon.merged.gene_counts_length_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+    * `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+    * `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+    * `salmon.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+    * `salmon_tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
 * `salmon/<SAMPLE>/`
-  * `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
-  * `cmd_info.json`: Information about the Salmon quantification command, version and options.
-  * `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
-  * `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
-  * `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
-  * `quant.genes.sf`: Salmon *gene*-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
-  * `quant.sf`: Salmon *transcript*-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+    * `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
+    * `cmd_info.json`: Information about the Salmon quantification command, version and options.
+    * `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
+    * `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
+    * `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
+    * `quant.genes.sf`: Salmon *gene*-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+    * `quant.sf`: Salmon *transcript*-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
 
 </details>
 
@@ -698,12 +698,12 @@ According to the `txtimport` documentation you can do one of the following:
 <summary>Output files</summary>
 
 * `genome/`
-  * `*.fa`, `*.gtf`, `*.gff`, `*.bed`, `.tsv`: If the `--save_reference` parameter is provided then all of the genome reference files will be placed in this directory.
+    * `*.fa`, `*.gtf`, `*.gff`, `*.bed`, `.tsv`: If the `--save_reference` parameter is provided then all of the genome reference files will be placed in this directory.
 * `genome/index/`
-  * `star/`: Directory containing STAR indices.
-  * `hisat2/`: Directory containing HISAT2 indices.
-  * `rsem/`: Directory containing STAR and RSEM indices.
-  * `salmon/`: Directory containing Salmon indices.
+    * `star/`: Directory containing STAR indices.
+    * `hisat2/`: Directory containing HISAT2 indices.
+    * `rsem/`: Directory containing STAR and RSEM indices.
+    * `salmon/`: Directory containing Salmon indices.
 
 </details>
 
@@ -715,9 +715,9 @@ A number of genome-specific files are generated by the pipeline because they are
 <summary>Output files</summary>
 
 * `pipeline_info/`
-  * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-  * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
-  * Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+    * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
+    * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
+    * Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
 
 </details>
 

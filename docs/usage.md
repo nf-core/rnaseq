@@ -80,6 +80,7 @@ If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files
 The default settings of the pipeline are mainly adapted for eukaryotes but have to be changed slightly for prokaryotes. The main reason for this is the different genetic architecure of prokaryotes. The below mentioned parameters work if a `gff` file is provided as reference.
 
 Changes and parameter specifications for prokaryotes:
+
 * `--featurecounts_feature_type transcript` since the default value `exon` does not contain the required `--featurecounts_group_type gene_biotype` specification.
 * You can use `--featurecounts_feature_type CDS` in combination with `--featurecoutns_group_type product` but than featureCounts will no longer reflect the biotypes of your RNA. It could be helpful to identify the number of hypothetical proteins.
 * If your execution struggle with Salmon as aligner, change `--alginer` to hisat2.
@@ -143,20 +144,20 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
 
 * `docker`
-    * A generic configuration profile to be used with [Docker](https://docker.com/)
+  * A generic configuration profile to be used with [Docker](https://docker.com/)
 * `singularity`
-    * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
+  * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
 * `podman`
-    * A generic configuration profile to be used with [Podman](https://podman.io/)
+  * A generic configuration profile to be used with [Podman](https://podman.io/)
 * `shifter`
-    * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
+  * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 * `charliecloud`
-    * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 * `conda`
-    * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
+  * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
 * `test`
-    * A profile with a complete configuration for automated testing
-    * Includes links to test data so needs no other parameters
+  * A profile with a complete configuration for automated testing
+  * Includes links to test data so needs no other parameters
 
 ### `-resume`
 

@@ -89,7 +89,6 @@ Changes and parameter specifications for prokaryotes:
 
 > **NB:** For older versions of the pipeline the names may be different. Check the paramters docs for details.
 
-
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:

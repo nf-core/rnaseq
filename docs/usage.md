@@ -84,7 +84,7 @@ Changes and parameter specifications for prokaryotes:
 * You can use `--featurecounts_feature_type CDS` in combination with `--featurecoutns_group_type product` but than featureCounts will no longer reflect the biotypes of your RNA. It could be helpful to identify the number of hypothetical proteins. 
 * If your execution struggle with Salmon as aligner, change `--alginer` to hisat2.
 * You can skip RSeQC with `--skip_rseqc` since it mainly focus on eukaryotic features like splice junctions, transcription start (TSS) and ending sites (TES)
-* If you aren't iterested in the biotypes of your RNA data, you can skip the whole process with `--skip_biotype_qc`
+* If you aren't interested in the biotypes of your RNA data, you can skip the whole process with `--skip_biotype_qc`
 
 > **NB:** For older versions of the pipeline the names may be different. Check the paramters docs for details. 
 

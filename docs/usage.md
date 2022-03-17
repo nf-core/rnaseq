@@ -75,6 +75,20 @@ If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files
 * The `--gtf_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively.
 * If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
 
+## Adapt pipeline parameters for prokaryotes
+
+The default settings of the pipeline are mainly adapted for eukaryotes but have to be changed slightly for prokaryotes. The main reason for this is the different genetic architecure of prokaryotes. The below mentioned parameters work if a `gff` file is provided as reference. 
+
+Changes and parameter specifications for prokaryotes:
+* `--featurecounts_feature_type transcript` since the default value `exon` does not contain the required `--featurecounts_group_type gene_biotype` specification.
+* You can use `--featurecounts_feature_type CDS` in combination with `--featurecoutns_group_type product` but than featureCounts will no longer reflect the biotypes of your RNA. It could be helpful to identify the number of hypothetical proteins. 
+* If your execution struggle with Salmon as aligner, change `--alginer` to hisat2.
+* You can skip RSeQC with `--skip_rseqc` since it mainly focus on eukaryotic features like splice junctions, transcription start (TSS) and ending sites (TES)
+* If you aren't iterested in the biotypes of your RNA data, you can skip the whole process with `--skip_biotype_qc`
+
+> **NB:** For older versions of the pipeline the names may be different. Check the paramters docs for details. 
+
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:

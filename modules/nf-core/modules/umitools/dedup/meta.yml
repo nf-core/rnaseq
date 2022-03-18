@@ -36,6 +36,18 @@ output:
     type: file
     description: BAM file with deduplicated UMIs.
     pattern: "*.{bam}"
+  - tsv_edit_distance:
+    type: file
+    description: Reports the (binned) average edit distance between the UMIs at each position.
+    pattern: "*edit_distance.tsv"
+  - tsv_per_umi:
+    type: file
+    description: UMI-level summary statistics.
+    pattern: "*per_umi.tsv"
+  - tsv_umi_per_position:
+    type: file
+    description: Tabulates the counts for unique combinations of UMI and position.
+    pattern: "*per_position.tsv"
   - versions:
     type: file
     description: File containing software versions

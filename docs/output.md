@@ -14,37 +14,48 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-* [Preprocessing](#preprocessing)
-    * [cat](#cat) - Merge re-sequenced FastQ files
-    * [FastQC](#fastqc) - Raw read QC
-    * [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
-    * [TrimGalore](#trimgalore) - Adapter and quality trimming
-    * [BBSplit](#bbsplit) - Removal of genome contaminants
-    * [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
-* [Alignment and quantification](#alignment-and-quantification)
-    * [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
-    * [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
-    * [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
-* [Alignment post-processing](#alignment-post-processing)
-    * [SAMtools](#samtools) - Sort and index alignments
-    * [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
-    * [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
-* [Other steps](#other-steps)
-    * [StringTie](#stringtie) - Transcript assembly and quantification
-    * [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
-* [Quality control](#quality-control)
-    * [RSeQC](#rseqc) - Various RNA-seq QC metrics
-    * [Qualimap](#qualimap) - Various RNA-seq QC metrics
-    * [dupRadar](#dupradar) - Assessment of technical / biological read duplication
-    * [Preseq](#preseq) - Estimation of library complexity
-    * [featureCounts](#featurecounts) - Read counting relative to gene biotype
-    * [DESeq2](#deseq2) - PCA plot and sample pairwise distance heatmap and dendrogram
-    * [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
-* [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
-    * [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
-* [Workflow reporting and genomes](#workflow-reporting-and-genomes)
-    * [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
-    * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+- [nf-core/rnaseq: Output](#nf-corernaseq-output)
+  - [Introduction](#introduction)
+  - [Pipeline overview](#pipeline-overview)
+  - [Preprocessing](#preprocessing)
+    - [cat](#cat)
+    - [FastQC](#fastqc)
+    - [UMI-tools extract](#umi-tools-extract)
+    - [TrimGalore](#trimgalore)
+    - [BBSplit](#bbsplit)
+    - [SortMeRNA](#sortmerna)
+  - [Alignment and quantification](#alignment-and-quantification)
+    - [STAR and Salmon](#star-and-salmon)
+    - [STAR via RSEM](#star-via-rsem)
+    - [HISAT2](#hisat2)
+  - [Alignment post-processing](#alignment-post-processing)
+    - [SAMtools](#samtools)
+    - [UMI-tools dedup](#umi-tools-dedup)
+    - [picard MarkDuplicates](#picard-markduplicates)
+  - [Other steps](#other-steps)
+    - [StringTie](#stringtie)
+    - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig)
+  - [Quality control](#quality-control)
+    - [RSeQC](#rseqc)
+      - [Infer experiment](#infer-experiment)
+      - [Read distribution](#read-distribution)
+      - [Junction annotation](#junction-annotation)
+      - [Inner distance](#inner-distance)
+      - [Junction saturation](#junction-saturation)
+      - [Read duplication](#read-duplication)
+      - [BAM stat](#bam-stat)
+      - [TIN](#tin)
+    - [Qualimap](#qualimap)
+    - [dupRadar](#dupradar)
+    - [Preseq](#preseq)
+    - [featureCounts](#featurecounts)
+    - [DESeq2](#deseq2)
+    - [MultiQC](#multiqc)
+  - [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
+    - [Salmon](#salmon)
+  - [Workflow reporting and genomes](#workflow-reporting-and-genomes)
+    - [Reference genome files](#reference-genome-files)
+    - [Pipeline information](#pipeline-information)
 
 ## Preprocessing
 
@@ -73,7 +84,7 @@ If multiple libraries/runs have been provided for the same sample in the input s
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/). For examples of failed QC steps and help deciphering them, see [QCfail](https://sequencing.qcfail.com/software/fastqc/).  
 
 ![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
 

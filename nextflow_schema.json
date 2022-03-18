@@ -113,7 +113,7 @@
                     "type": "boolean",
                     "default": true,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip BBSplit for removal of non-reference genome reads."
+                    "description": "Skip BBSplit for removal of non-reference genome reads. Mind that it stays true by default even if you provide files through the other BBSplit options."
                 },
                 "remove_ribo_rna": {
                     "type": "boolean",

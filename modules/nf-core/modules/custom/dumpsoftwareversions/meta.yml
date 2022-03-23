@@ -8,7 +8,7 @@ tools:
       description: Custom module used to dump software versions within the nf-core pipeline template
       homepage: https://github.com/nf-core/tools
       documentation: https://github.com/nf-core/tools
-      licence: ['MIT']
+      licence: ["MIT"]
 input:
   - versions:
       type: file

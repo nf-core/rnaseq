@@ -11,6 +11,8 @@ Initial release of nf-core/rnaseq, created with the [nf-core](https://nf-co.re/)
 
 ### `Fixed`
 
+- Clarified conda usage and added an installation tutorial for Singularity since the one on Syllabs' website uses an outdate version of GO Compiler
+
 ### `Dependencies`
 
 ### `Deprecated`

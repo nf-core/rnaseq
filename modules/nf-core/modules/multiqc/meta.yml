@@ -1,40 +1,40 @@
 name: MultiQC
 description: Aggregate results from bioinformatics analyses across many samples into a single report
 keywords:
-    - QC
-    - bioinformatics tools
-    - Beautiful stand-alone HTML report
+  - QC
+  - bioinformatics tools
+  - Beautiful stand-alone HTML report
 tools:
-    - multiqc:
-        description: |
-            MultiQC searches a given directory for analysis logs and compiles a HTML report.
-            It's a general use tool, perfect for summarising the output from numerous bioinformatics tools.
-        homepage: https://multiqc.info/
-        documentation: https://multiqc.info/docs/
-        licence: ['GPL-3.0-or-later']
+  - multiqc:
+      description: |
+        MultiQC searches a given directory for analysis logs and compiles a HTML report.
+        It's a general use tool, perfect for summarising the output from numerous bioinformatics tools.
+      homepage: https://multiqc.info/
+      documentation: https://multiqc.info/docs/
+      licence: ["GPL-3.0-or-later"]
 input:
-    - multiqc_files:
-        type: file
-        description: |
-            List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+  - multiqc_files:
+      type: file
+      description: |
+        List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
 output:
-    - report:
-        type: file
-        description: MultiQC report file
-        pattern: "multiqc_report.html"
-    - data:
-        type: dir
-        description: MultiQC data dir
-        pattern: "multiqc_data"
-    - plots:
-        type: file
-        description: Plots created by MultiQC
-        pattern: "*_data"
-    - versions:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
+  - report:
+      type: file
+      description: MultiQC report file
+      pattern: "multiqc_report.html"
+  - data:
+      type: dir
+      description: MultiQC data dir
+      pattern: "multiqc_data"
+  - plots:
+      type: file
+      description: Plots created by MultiQC
+      pattern: "*_data"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
 authors:
-    - "@abhi18av"
-    - "@bunop"
-    - "@drpatelh"
+  - "@abhi18av"
+  - "@bunop"
+  - "@drpatelh"

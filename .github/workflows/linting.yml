@@ -1,6 +1,7 @@
 name: nf-core linting
 # This workflow is triggered on pushes and PRs to the repository.
-# It runs the `nf-core lint` and markdown lint tests to ensure that the code meets the nf-core guidelines
+# It runs the `nf-core lint` and markdown lint tests to ensure
+# that the code meets the nf-core guidelines.
 on:
   push:
   pull_request:
@@ -8,42 +9,6 @@ on:
     types: [published]
 
 jobs:
-  Markdown:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - name: Install markdownlint
-        run: npm install -g markdownlint-cli
-      - name: Run Markdownlint
-        run: markdownlint .
-
-      # If the above check failed, post a comment on the PR explaining the failure
-      - name: Post PR comment
-        if: failure()
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            ## Markdown linting is failing
-
-            To keep the code consistent with lots of contributors, we run automated code consistency checks.
-            To fix this CI test, please run:
-
-            * Install `markdownlint-cli`
-                * On Mac: `brew install markdownlint-cli`
-                * Everything else: [Install `npm`](https://www.npmjs.com/get-npm) then [install `markdownlint-cli`](https://www.npmjs.com/package/markdownlint-cli) (`npm install -g markdownlint-cli`)
-            * Fix the markdown errors
-                * Automatically: `markdownlint . --fix`
-                * Manually resolve anything left from `markdownlint .`
-
-            Once you push these changes the test should pass, and you can hide this comment :+1:
-
-            We highly recommend setting up markdownlint in your code editor so that this formatting is done automatically on save. Ask about it on Slack for help!
-
-            Thanks again for your contribution!
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          allow-repeats: false
-
   EditorConfig:
     runs-on: ubuntu-latest
     steps:
@@ -55,49 +20,24 @@ jobs:
         run: npm install -g editorconfig-checker
 
       - name: Run ECLint check
-        run: editorconfig-checker -exclude README.md $(git ls-files | grep -v test)
+        run: editorconfig-checker -exclude README.md $(find .* -type f | grep -v '.git\|.py\|.md\|json\|yml\|yaml\|html\|css\|work\|.nextflow\|build\|nf_core.egg-info\|log.txt\|Makefile')
 
-  YAML:
+  Prettier:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: 'Yamllint'
-        uses: karancode/yamllint-github-action@master
-        with:
-          yamllint_file_or_dir: '.'
-          yamllint_config_filepath: '.yamllint.yml'
+      - uses: actions/checkout@v2
 
-      # If the above check failed, post a comment on the PR explaining the failure
-      - name: Post PR comment
-        if: failure()
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            ## YAML linting is failing
+      - uses: actions/setup-node@v2
 
-            To keep the code consistent with lots of contributors, we run automated code consistency checks.
-            To fix this CI test, please run:
+      - name: Install Prettier
+        run: npm install -g prettier
 
-            * Install `yamllint`
-                * Install `yamllint` following [this](https://yamllint.readthedocs.io/en/stable/quickstart.html#installing-yamllint)
-                instructions or alternative install it in your [conda environment](https://anaconda.org/conda-forge/yamllint)
-            * Fix the markdown errors
-                * Run the test locally: `yamllint $(find . -type f -name "*.yml" -o -name "*.yaml") -c ./.yamllint.yml`
-                * Fix any reported errors in your YAML files
-
-            Once you push these changes the test should pass, and you can hide this comment :+1:
-
-            We highly recommend setting up yaml-lint in your code editor so that this formatting is done automatically on save. Ask about it on Slack for help!
-
-            Thanks again for your contribution!
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          allow-repeats: false
+      - name: Run Prettier --check
+        run: prettier --check ${GITHUB_WORKSPACE}
 
   nf-core:
     runs-on: ubuntu-latest
     steps:
-
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
@@ -110,8 +50,8 @@ jobs:
 
       - uses: actions/setup-python@v1
         with:
-          python-version: '3.6'
-          architecture: 'x64'
+          python-version: "3.6"
+          architecture: "x64"
 
       - name: Install dependencies
         run: |
@@ -139,3 +79,4 @@ jobs:
             lint_results.md
             PR_number.txt
 
+#

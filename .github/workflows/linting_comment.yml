@@ -1,4 +1,3 @@
-
 name: nf-core linting comment
 # This workflow is triggered after the linting action is complete
 # It posts an automated comment to the PR, even if the PR is coming from a fork
@@ -27,4 +26,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ steps.pr_number.outputs.pr_number }}
           path: linting-logs/lint_results.md
-
+#

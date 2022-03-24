@@ -4,7 +4,7 @@ vscode:
   extensions: # based on nf-core.nf-core-extensionpack
     - codezombiech.gitignore # Language support for .gitignore files
     # - cssho.vscode-svgviewer                 # SVG viewer
-    - davidanson.vscode-markdownlint # Markdown/CommonMark linting and style checking for Visual Studio Code
+    - esbenp.prettier-vscode # Markdown/CommonMark linting and style checking for Visual Studio Code
     - eamodio.gitlens # Quickly glimpse into whom, why, and when a line or code block was changed
     - EditorConfig.EditorConfig # override user/workspace settings with settings found in .editorconfig files
     - Gruntfuggly.todo-tree # Display TODO and FIXME in a tree view in the activity bar

@@ -10,14 +10,13 @@ jobs:
     if: github.repository == 'nf-core/rnaseq'
     runs-on: ubuntu-latest
     steps:
+      # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
         uses: nf-core/tower-action@v3
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
-          pipeline: ${{ github.repository }}
-          revision: ${{ github.sha }}
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
           parameters: |
             {

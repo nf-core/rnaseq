@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 * [[#791](https://github.com/nf-core/rnaseq/issues/791)] - Add outputs for umitools dedup summary stats
-* Updated pipeline template to [nf-core/tools 2.3](https://github.com/nf-core/tools/releases/tag/2.3)
+* Updated pipeline template to [nf-core/tools 2.3.2](https://github.com/nf-core/tools/releases/tag/2.3.2)
 
 ### Parameters
 

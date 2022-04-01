@@ -74,7 +74,7 @@
                 "umi_discard_read": {
                     "type": "integer",
                     "fa_icon": "fas fa-barcode",
-                    "help_text": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
+                    "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
                 },
                 "save_umi_intermeds": {
                     "type": "boolean",

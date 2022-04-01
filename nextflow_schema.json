@@ -10,9 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": [
-                "outdir"
-            ],
+            "required": ["outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -76,7 +74,7 @@
                 "umi_discard_read": {
                     "type": "integer",
                     "fa_icon": "fas fa-barcode",
-                    "help_text": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
+                    "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
                 },
                 "save_umi_intermeds": {
                     "type": "boolean",
@@ -351,19 +349,13 @@
                     "default": "star_salmon",
                     "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
                     "fa_icon": "fas fa-map-signs",
-                    "enum": [
-                        "star_salmon",
-                        "star_rsem",
-                        "hisat2"
-                    ]
+                    "enum": ["star_salmon", "star_rsem", "hisat2"]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": [
-                        "salmon"
-                    ]
+                    "enum": ["salmon"]
                 },
                 "bam_csi_index": {
                     "type": "boolean",

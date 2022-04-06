@@ -62,11 +62,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: 'Yamllint'
+      - name: "Yamllint"
         uses: karancode/yamllint-github-action@master
         with:
-          yamllint_file_or_dir: '.'
-          yamllint_config_filepath: '.yamllint.yml'
+          yamllint_file_or_dir: "."
+          yamllint_config_filepath: ".yamllint.yml"
 
       # If the above check failed, post a comment on the PR explaining the failure
       - name: Post PR comment
@@ -97,7 +97,6 @@ jobs:
   nf-core:
     runs-on: ubuntu-latest
     steps:
-
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
@@ -110,8 +109,8 @@ jobs:
 
       - uses: actions/setup-python@v1
         with:
-          python-version: '3.6'
-          architecture: 'x64'
+          python-version: "3.6"
+          architecture: "x64"
 
       - name: Install dependencies
         run: |

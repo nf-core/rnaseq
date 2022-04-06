@@ -16,7 +16,7 @@ Contributions to the code are even more welcome ;)
 If you'd like to write some code for nf-core/rnaseq, the standard workflow is as follows:
 
 1. Check that there isn't already an issue about your idea in the [nf-core/rnaseq issues](https://github.com/nf-core/rnaseq/issues) to avoid duplicating work
-    * If there isn't one already, please create one so that others know you're working on this
+    - If there isn't one already, please create one so that others know you're working on this
 2. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the [nf-core/rnaseq repository](https://github.com/nf-core/rnaseq) to your GitHub account
 3. Make the necessary changes / additions within your forked repository following [Pipeline conventions](#pipeline-contribution-conventions)
 4. Use `nf-core schema build` and add any new parameters to the pipeline JSON schema (requires [nf-core tools](https://github.com/nf-core/tools) >= 1.10).
@@ -49,9 +49,9 @@ These tests are run both with the latest available version of `Nextflow` and als
 
 :warning: Only in the unlikely and regretful event of a release happening with a bug.
 
-* On your own fork, make a new branch `patch` based on `upstream/master`.
-* Fix the bug, and bump version (X.Y.Z+1).
-* A PR should be made on `master` from patch to directly this particular bug.
+-   On your own fork, make a new branch `patch` based on `upstream/master`.
+-   Fix the bug, and bump version (X.Y.Z+1).
+-   A PR should be made on `master` from patch to directly this particular bug.
 
 ## Getting help
 
@@ -92,8 +92,8 @@ The process resources can be passed on to the tool dynamically within the proces
 
 Please use the following naming schemes, to make it easy to understand what is going where.
 
-* initial process channel: `ch_output_from_<process>`
-* intermediate and terminal channels: `ch_<previousprocess>_for_<nextprocess>`
+-   initial process channel: `ch_output_from_<process>`
+-   intermediate and terminal channels: `ch_<previousprocess>_for_<nextprocess>`
 
 ### Nextflow version bumping
 

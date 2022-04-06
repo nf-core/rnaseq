@@ -4,19 +4,19 @@
 
 In the interest of fostering an open, collaborative, and welcoming environment, we as contributors and maintainers of nf-core, pledge to making participation in our projects and community a harassment-free experience for everyone, regardless of:
 
-- Age
-- Body size
-- Familial status
-- Gender identity and expression
-- Geographical location
-- Level of experience
-- Nationality and national origins
-- Native language
-- Physical and neurological ability
-- Race or ethnicity
-- Religion
-- Sexual identity and orientation
-- Socioeconomic status
+-   Age
+-   Body size
+-   Familial status
+-   Gender identity and expression
+-   Geographical location
+-   Level of experience
+-   Nationality and national origins
+-   Native language
+-   Physical and neurological ability
+-   Race or ethnicity
+-   Religion
+-   Sexual identity and orientation
+-   Socioeconomic status
 
 Please note that the list above is alphabetised and is therefore not ranked in any order of preference or importance.
 
@@ -48,38 +48,38 @@ Members of the core team or the safety officer who violate the CoC will be requi
 
 Participation in the nf-core community is contingent on following these guidelines in all our workspaces and events. This includes but is not limited to the following listed alphabetically and therefore in no order of preference:
 
-- Communicating with an official project email address.
-- Communicating with community members within the nf-core Slack channel.
-- Participating in hackathons organised by nf-core (both online and in-person events).
-- Participating in collaborative work on GitHub, Google Suite, community calls, mentorship meetings, email correspondence.
-- Participating in workshops, training, and seminar series organised by nf-core (both online and in-person events). This applies to events hosted on web-based platforms such as Zoom, Jitsi, YouTube live etc.
-- Representing nf-core on social media. This includes both official and personal accounts.
+-   Communicating with an official project email address.
+-   Communicating with community members within the nf-core Slack channel.
+-   Participating in hackathons organised by nf-core (both online and in-person events).
+-   Participating in collaborative work on GitHub, Google Suite, community calls, mentorship meetings, email correspondence.
+-   Participating in workshops, training, and seminar series organised by nf-core (both online and in-person events). This applies to events hosted on web-based platforms such as Zoom, Jitsi, YouTube live etc.
+-   Representing nf-core on social media. This includes both official and personal accounts.
 
 ## nf-core cares 😊
 
 nf-core's CoC and expectations of respectful behaviours for all participants (including organisers and the nf-core team) include but are not limited to the following (listed in alphabetical order):
 
-- Ask for consent before sharing another community member’s personal information (including photographs) on social media.
-- Be respectful of differing viewpoints and experiences. We are all here to learn from one another and a difference in opinion can present a good learning opportunity.
-- Celebrate your accomplishments at events! (Get creative with your use of emojis 🎉 🥳 💯 🙌 !)
-- Demonstrate empathy towards other community members. (We don’t all have the same amount of time to dedicate to nf-core. If tasks are pending, don’t hesitate to gently remind members of your team. If you are leading a task, ask for help if you feel overwhelmed.)
-- Engage with and enquire after others. (This is especially important given the geographically remote nature of the nf-core community, so let’s do this the best we can)
-- Focus on what is best for the team and the community. (When in doubt, ask)
-- Graciously accept constructive criticism, yet be unafraid to question, deliberate, and learn.
-- Introduce yourself to members of the community. (We’ve all been outsiders and we know that talking to strangers can be hard for some, but remember we’re interested in getting to know you and your visions for open science!)
-- Show appreciation and **provide clear feedback**. (This is especially important because we don’t see each other in person and it can be harder to interpret subtleties. Also remember that not everyone understands a certain language to the same extent as you do, so **be clear in your communications to be kind.**)
-- Take breaks when you feel like you need them.
-- Using welcoming and inclusive language. (Participants are encouraged to display their chosen pronouns on Zoom or in communication on Slack.)
+-   Ask for consent before sharing another community member’s personal information (including photographs) on social media.
+-   Be respectful of differing viewpoints and experiences. We are all here to learn from one another and a difference in opinion can present a good learning opportunity.
+-   Celebrate your accomplishments at events! (Get creative with your use of emojis 🎉 🥳 💯 🙌 !)
+-   Demonstrate empathy towards other community members. (We don’t all have the same amount of time to dedicate to nf-core. If tasks are pending, don’t hesitate to gently remind members of your team. If you are leading a task, ask for help if you feel overwhelmed.)
+-   Engage with and enquire after others. (This is especially important given the geographically remote nature of the nf-core community, so let’s do this the best we can)
+-   Focus on what is best for the team and the community. (When in doubt, ask)
+-   Graciously accept constructive criticism, yet be unafraid to question, deliberate, and learn.
+-   Introduce yourself to members of the community. (We’ve all been outsiders and we know that talking to strangers can be hard for some, but remember we’re interested in getting to know you and your visions for open science!)
+-   Show appreciation and **provide clear feedback**. (This is especially important because we don’t see each other in person and it can be harder to interpret subtleties. Also remember that not everyone understands a certain language to the same extent as you do, so **be clear in your communications to be kind.**)
+-   Take breaks when you feel like you need them.
+-   Using welcoming and inclusive language. (Participants are encouraged to display their chosen pronouns on Zoom or in communication on Slack.)
 
 ## nf-core frowns on 😕
 
 The following behaviours from any participants within the nf-core community (including the organisers) will be considered unacceptable under this code of conduct. Engaging or advocating for any of the following could result in expulsion from nf-core workspaces.
 
-- Deliberate intimidation, stalking or following and sustained disruption of communication among participants of the community. This includes hijacking shared screens through actions such as using the annotate tool in conferencing software such as Zoom.
-- “Doxing” i.e. posting (or threatening to post) another person’s personal identifying information online.
-- Spamming or trolling of individuals on social media.
-- Use of sexual or discriminatory imagery, comments, or jokes and unwelcome sexual attention.
-- Verbal and text comments that reinforce social structures of domination related to gender, gender identity and expression, sexual orientation, ability, physical appearance, body size, race, age, religion or work experience.
+-   Deliberate intimidation, stalking or following and sustained disruption of communication among participants of the community. This includes hijacking shared screens through actions such as using the annotate tool in conferencing software such as Zoom.
+-   “Doxing” i.e. posting (or threatening to post) another person’s personal identifying information online.
+-   Spamming or trolling of individuals on social media.
+-   Use of sexual or discriminatory imagery, comments, or jokes and unwelcome sexual attention.
+-   Verbal and text comments that reinforce social structures of domination related to gender, gender identity and expression, sexual orientation, ability, physical appearance, body size, race, age, religion or work experience.
 
 ### Online Trolling
 
@@ -99,13 +99,13 @@ All reports will be handled with utmost discretion and confidentially.
 
 ## Attribution and Acknowledgements
 
-- The [Contributor Covenant, version 1.4](http://contributor-covenant.org/version/1/4)
-- The [OpenCon 2017 Code of Conduct](http://www.opencon2017.org/code_of_conduct) (CC BY 4.0 OpenCon organisers, SPARC and Right to Research Coalition)
-- The [eLife innovation sprint 2020 Code of Conduct](https://sprint.elifesciences.org/code-of-conduct/)
-- The [Mozilla Community Participation Guidelines v3.1](https://www.mozilla.org/en-US/about/governance/policies/participation/) (version 3.1, CC BY-SA 3.0 Mozilla)
+-   The [Contributor Covenant, version 1.4](http://contributor-covenant.org/version/1/4)
+-   The [OpenCon 2017 Code of Conduct](http://www.opencon2017.org/code_of_conduct) (CC BY 4.0 OpenCon organisers, SPARC and Right to Research Coalition)
+-   The [eLife innovation sprint 2020 Code of Conduct](https://sprint.elifesciences.org/code-of-conduct/)
+-   The [Mozilla Community Participation Guidelines v3.1](https://www.mozilla.org/en-US/about/governance/policies/participation/) (version 3.1, CC BY-SA 3.0 Mozilla)
 
 ## Changelog
 
 ### v1.0 - March 12th, 2021
 
-- Complete rewrite from original [Contributor Covenant](http://contributor-covenant.org/) CoC.
+-   Complete rewrite from original [Contributor Covenant](http://contributor-covenant.org/) CoC.

@@ -11,6 +11,7 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
     reads            // channel: [ val(meta), [ reads ] ]
     skip_fastqc      // boolean: true/false
     with_umi         // boolean: true/false
+    skip_umi_extract // boolean: true/false
     skip_trimming    // boolean: true/false
     umi_discard_read // integer: 0, 1 or 2
 
@@ -27,7 +28,7 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
 
     umi_reads = reads
     umi_log   = Channel.empty()
-    if (with_umi) {
+    if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
         umi_log     = UMITOOLS_EXTRACT.out.log
         ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())

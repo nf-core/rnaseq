@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7dev] -
+
+### Enhancements & fixes
+
+* [[#797](https://github.com/nf-core/rnaseq/issues/797)] - Add `--skip_umi_extract` to account for pre-existing UMIs header embeddings.
+
+### Parameters
+
+| Old parameter                 | New parameter                         |
+|-------------------------------|---------------------------------------|
+|                               | `--skip_umi_extract`                  |
+
 ## [[3.6](https://github.com/nf-core/rnaseq/releases/tag/3.6)] - 2022-03-04
 
 ### Enhancements & fixes

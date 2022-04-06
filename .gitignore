@@ -6,3 +6,4 @@ results/
 testing/
 testing*
 *.pyc
+node_modules/*

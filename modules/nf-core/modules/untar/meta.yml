@@ -10,11 +10,21 @@ tools:
       documentation: https://www.gnu.org/software/tar/manual/
       licence: ["GPL-3.0-or-later"]
 input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - archive:
       type: file
       description: File to be untar
       pattern: "*.{tar}.{gz}"
 output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - untar:
       type: file
       description:

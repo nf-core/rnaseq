@@ -29,24 +29,25 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
     umi_reads = reads
     umi_log   = Channel.empty()
     if (with_umi && !skip_umi_extract) {
-        UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
-        umi_log     = UMITOOLS_EXTRACT.out.log
-        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
-        // Discard R1 / R2 if required
-        if (umi_discard_read in [1,2]) {
-            UMITOOLS_EXTRACT
-                .out
-                .reads
-                .map { meta, reads ->
-                    if (!meta.single_end) {
-                        meta['single_end'] = true
-                        reads = reads[umi_discard_read % 2]
+            UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
+            umi_log     = UMITOOLS_EXTRACT.out.log
+            ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
+
+            // Discard R1 / R2 if required
+            if (umi_discard_read in [1,2]) {
+                UMITOOLS_EXTRACT
+                    .out
+                    .reads
+                    .map { meta, reads ->
+                        if (!meta.single_end) {
+                            meta['single_end'] = true
+                            reads = reads[umi_discard_read % 2]
+                        }
+                        return [ meta, reads ]
                     }
-                    return [ meta, reads ]
-                }
-                .set { umi_reads }
-        }
+                    .set { umi_reads }
+            }
     }
 
     trim_reads = umi_reads

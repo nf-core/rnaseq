@@ -37,4 +37,14 @@ class Utils {
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         }
     }
+
+    //
+    // Get basename of file after removing optional extension
+    //
+    public static String getFileBasename(file_string, extension='') {
+        def file_no_extension = file_string - extension
+        def last_path = file_no_extension.lastIndexOf(File.separator)
+        def basename = file_no_extension.substring(last_path+1)
+        return basename
+    }
 }

@@ -69,9 +69,9 @@ ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 // Check if an AWS iGenome has been provided to use the appropriate version of STAR
 def is_aws_igenome = false
 if (params.fasta && params.gtf) {
-    if (Utils.getFileBasename(params.fasta, ext='.gz') == 'genome.fa' && Utils.getFileBasename(params.gtf, ext='.gz') == 'genes.gtf') {
+    if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
         is_aws_igenome = true
-    }
+    }    
 }
 
 /*

@@ -48,16 +48,18 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
         }
     }
 
-    trim_reads = umi_reads
-    trim_html  = Channel.empty()
-    trim_zip   = Channel.empty()
-    trim_log   = Channel.empty()
+    trim_reads    = umi_reads
+    trim_unpaired = Channel.empty()
+    trim_html     = Channel.empty()
+    trim_zip      = Channel.empty()
+    trim_log      = Channel.empty()
     if (!skip_trimming) {
         TRIMGALORE ( umi_reads ).reads.set { trim_reads }
-        trim_html   = TRIMGALORE.out.html
-        trim_zip    = TRIMGALORE.out.zip
-        trim_log    = TRIMGALORE.out.log
-        ch_versions = ch_versions.mix(TRIMGALORE.out.versions.first())
+        trim_unpaired = TRIMGALORE.out.unpaired
+        trim_html     = TRIMGALORE.out.html
+        trim_zip      = TRIMGALORE.out.zip
+        trim_log      = TRIMGALORE.out.log
+        ch_versions   = ch_versions.mix(TRIMGALORE.out.versions.first())
     }
 
     emit:
@@ -68,6 +70,7 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
 
     umi_log            // channel: [ val(meta), [ log ] ]
 
+    trim_unpaired      // channel: [ val(meta), [ reads ] ]
     trim_html          // channel: [ val(meta), [ html ] ]
     trim_zip           // channel: [ val(meta), [ zip ] ]
     trim_log           // channel: [ val(meta), [ txt ] ]

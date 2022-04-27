@@ -31,9 +31,9 @@ include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'
 
 workflow PREPARE_GENOME {
     take:
-    prepare_tool_indices // list  : tools to prepare indices for
-    biotype              // string: if additional fasta file is provided
-                        //         biotype value to use when appending entries to GTF file
+    prepare_tool_indices // list   : tools to prepare indices for
+    biotype              // string : if additional fasta file is provided biotype value to use when appending entries to GTF file
+    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
 
     main:
 
@@ -166,7 +166,7 @@ workflow PREPARE_GENOME {
                 ch_star_index = file(params.star_index)
             }
         } else {
-            ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+            ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, is_aws_igenome ).index
             ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
         }
     }

@@ -66,6 +66,14 @@ if (anno_readme && file(anno_readme).exists()) {
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
+// Check if an AWS iGenome has been provided to use the appropriate version of STAR
+def is_aws_igenome = false
+if (params.fasta && params.gtf) {
+    if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
+        is_aws_igenome = true
+    }    
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -162,7 +170,9 @@ workflow RNASEQ {
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     PREPARE_GENOME (
         prepareToolIndices,
-        biotype
+        biotype,
+        is_aws_igenome
+
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
@@ -269,7 +279,11 @@ workflow RNASEQ {
         ALIGN_STAR (
             ch_filtered_reads,
             PREPARE_GENOME.out.star_index,
-            PREPARE_GENOME.out.gtf
+            PREPARE_GENOME.out.gtf,
+            params.star_ignore_sjdbgtf,
+            '',
+            params.seq_center ?: '',
+            is_aws_igenome
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai

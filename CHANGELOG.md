@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#798](https://github.com/nf-core/rnaseq/issues/798)] - Decompress transcript fasta error
 - [[#799](https://github.com/nf-core/rnaseq/issues/799)] - Issue with using `--retain_unpaired` with the `FASTQC_UMITOOLS_TRIMGALORE:TRIMGALORE` module
 - [[#802](https://github.com/nf-core/rnaseq/issues/802)] - `--bam_csi_index` error generated if `--skip_alignment` specified
+- [[#808](https://github.com/nf-core/rnaseq/issues/808)] - Auto-detect usage of Illumina iGenomes reference
 - Updated pipeline template to [nf-core/tools 2.3.2](https://github.com/nf-core/tools/releases/tag/2.3.2)
 
 ### Parameters

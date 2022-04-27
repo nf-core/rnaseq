@@ -2,14 +2,14 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="540.17651mm"
-   height="248.70833mm"
-   viewBox="0 0 540.17652 248.70833"
+   width="540.37634mm"
+   height="248.70834mm"
+   viewBox="0 0 540.37635 248.70835"
    version="1.1"
    id="svg8"
    inkscape:version="1.1.2 (1:1.1+202202050950+0a00cf5339)"
    sodipodi:docname="pipeline_diagram_grey.svg"
-   inkscape:export-filename="/home/sarah/Code/Doc/nf-core-rnaseq/docs/images/pipeline_diagram_grey.png"
+   inkscape:export-filename="pipeline_diagram_grey.png"
    inkscape:export-xdpi="89"
    inkscape:export-ydpi="89"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -324,9 +324,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="790.71429"
-     inkscape:cy="634.28571"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="1205.112"
+     inkscape:cy="428.30468"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -349,8 +349,8 @@
     <inkscape:grid
        type="xygrid"
        id="grid66457"
-       originx="-25.929121"
-       originy="-15.875001" />
+       originx="-25.831981"
+       originy="-15.874999" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -367,7 +367,15 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-25.929122,107.12499)">
+     transform="translate(-25.831982,107.12499)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.17684;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke markers fill;stop-color:#000000"
+       id="rect107333"
+       width="529.16669"
+       height="248.70834"
+       x="26.458334"
+       y="-107.12499"
+       ry="0" />
     <g
        id="g125200"
        transform="translate(-82.05907,5.2628053)">

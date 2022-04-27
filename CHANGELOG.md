@@ -583,6 +583,7 @@ Major novel changes include:
 - HiSAT index build now requests `200GB` memory, enough to use the exons / splice junction option for building.
   - Added documentation about the `--hisatBuildMemory` option.
 - BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
+- Added a metro map diagram for the pipeline [#809](https://github.com/nf-core/rnaseq/issues/809)
 
 ### Bug Fixes
 

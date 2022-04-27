@@ -81,7 +81,7 @@ sp:
     fn: "meta_info.json"
 
   preseq:
-    fn: "*.ccurve.txt"
+    fn: "*.lc_extrap.txt"
 
   samtools/stats:
     fn: "*.stats"

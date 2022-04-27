@@ -563,7 +563,7 @@ See [dupRadar docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/d
 <summary>Output files</summary>
 
 - `<ALIGNER>/preseq/`
-  - `*.ccurve.txt`: Preseq expected future yield file.
+  - `*.lc_extrap.txt`: Preseq expected future yield file.
 - `<ALIGNER>/preseq/log/`
   - `*.command.log`: Standard error output from command.
 

@@ -482,7 +482,7 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
-        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.ccurve
+        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.lc_extrap
         ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 

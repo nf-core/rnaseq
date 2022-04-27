@@ -8,8 +8,8 @@ tools:
   - preseq:
       description: Software for predicting library complexity and genome coverage in high-throughput sequencing
       homepage: http://smithlabresearch.org/software/preseq/
-      documentation: None
-      tool_dev_url: None
+      documentation: http://smithlabresearch.org/wp-content/uploads/manual.pdf
+      tool_dev_url: https://github.com/smithlabcode/preseq
       doi: ""
       licence: ["GPL"]
 
@@ -34,10 +34,10 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - ccurve:
+  - lc_extrap:
       type: file
       description: File containing output of Preseq lcextrap
-      pattern: "*.{ccurve.txt}"
+      pattern: "*.{lc_extrap.txt}"
   - log:
       type: file
       description: Log file containing stderr produced by Preseq
@@ -45,3 +45,4 @@ output:
 
 authors:
   - "@drpatelh"
+  - "@Emiller88"

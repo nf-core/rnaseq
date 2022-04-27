@@ -43,10 +43,10 @@
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "rsem/calculateexpression": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
+                "git_sha": "1b5d3f5ac2ae61ee35dece20a2aeb8018b6438ce"
             },
             "rsem/preparereference": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "1b5d3f5ac2ae61ee35dece20a2aeb8018b6438ce"
             },
             "rseqc/bamstat": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

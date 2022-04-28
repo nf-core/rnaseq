@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#764](https://github.com/nf-core/rnaseq/issues/764)] - Test fails when using GCP due to missing tools in the basic biocontainer
 - [[#791](https://github.com/nf-core/rnaseq/issues/791)] - Add outputs for umitools dedup summary stats
 - Updated pipeline template to [nf-core/tools 2.3.2](https://github.com/nf-core/tools/releases/tag/2.3.2)
+- [[#809](https://github.com/nf-core/rnaseq/issues/809)] Added a metro map diagram for the pipeline
 
 ### Parameters
 
@@ -583,7 +584,6 @@ Major novel changes include:
 - HiSAT index build now requests `200GB` memory, enough to use the exons / splice junction option for building.
   - Added documentation about the `--hisatBuildMemory` option.
 - BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
-- Added a metro map diagram for the pipeline [#809](https://github.com/nf-core/rnaseq/issues/809)
 
 ### Bug Fixes
 

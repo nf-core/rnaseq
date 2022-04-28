@@ -324,12 +324,12 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="1785.3571"
-     inkscape:cy="306.42857"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="736.4012"
+     inkscape:cy="244.45692"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     showgrid="true"
+     inkscape:current-layer="g9404-0-1-4-4"
+     showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="0"
@@ -1125,7 +1125,7 @@
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.17684;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke markers fill;stop-color:#000000"
        id="rect107333"
-       width="529.16669"
+       width="529.16699"
        height="248.70834"
        x="42.333336"
        y="-96.541664"
@@ -2386,7 +2386,7 @@
            id="path10553-46-0-6-0" />
       </g>
       <flowRoot
-         transform="matrix(0.61667374,0,0,0.61667374,399.37572,-1609.0536)"
+         transform="matrix(0.61667374,0,0,0.61667374,401.20357,-1610.8815)"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot10545-2-9-88-6"
          xml:space="preserve"><flowRegion
@@ -2461,166 +2461,158 @@
        cx="386.07108"
        cy="-34.510906"
        r="2.6458333" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#002b6b;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 148.16667,127.59783 h 16.19312"
+       id="path2500-5-22-5-4-4-8-3"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="168.93257"
+       y="144.84937"
+       id="text2589-7-3"><tspan
+         sodipodi:role="line"
+         id="tspan2587-9-5"
+         x="168.93257"
+         y="144.84937"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Pseudo-aligner: Salmon, Quantification: Salmon</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="169.25996"
+       y="136.95491"
+       id="text2589-7-3-2"><tspan
+         sodipodi:role="line"
+         id="tspan2587-9-5-7"
+         x="169.25996"
+         y="136.95491"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Aligner: HISAT2, Quantification: None</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ffa140;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 148.16667,135.54944 h 16.19312"
+       id="path2500-5-22-5-4-4-8-3-7"
+       sodipodi:nodetypes="cc" />
     <g
-       id="g140635"
-       transform="translate(13.547359)">
-      <g
-         id="g26894"
-         transform="translate(-10.583333)">
-        <path
-           inkscape:connector-curvature="0"
-           style="fill:none;stroke:#002b6b;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 145.20264,127.03127 h 16.19312"
-           id="path2500-5-22-5-4-4-8-3"
-           sodipodi:nodetypes="cc" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-           x="165.96854"
-           y="144.79926"
-           id="text2589-7-3"><tspan
-             sodipodi:role="line"
-             id="tspan2587-9-5"
-             x="165.96854"
-             y="144.79926"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Pseudo-aligner: Salmon, Quantification: Salmon</tspan></text>
-        <path
-           inkscape:connector-curvature="0"
-           style="fill:none;stroke:#01862e;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 145.20264,119.09377 h 16.19312"
-           id="path2500-5-22-5-4-4-8-3-6"
-           sodipodi:nodetypes="cc" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-           x="166.29593"
-           y="136.9958"
-           id="text2589-7-3-2"><tspan
-             sodipodi:role="line"
-             id="tspan2587-9-5-7"
-             x="166.29593"
-             y="136.9958"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Aligner: HISAT2,               Quantification: None</tspan></text>
-        <path
-           inkscape:connector-curvature="0"
-           style="fill:none;stroke:#ffa140;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 145.20264,135.30744 h 16.19312"
-           id="path2500-5-22-5-4-4-8-3-7"
-           sodipodi:nodetypes="cc" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-           x="166.29593"
-           y="120.78216"
-           id="text2589-7-3-2-0"><tspan
-             sodipodi:role="line"
-             id="tspan2587-9-5-7-9"
-             x="166.29593"
-             y="120.78216"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Aligner: STAR,                  Quantification: Salmon</tspan></text>
-        <path
-           inkscape:connector-curvature="0"
-           style="fill:none;stroke:#e40481;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 145.20264,143.24494 h 16.19312"
-           id="path2500-5-22-5-4-4-8-3-6-5"
-           sodipodi:nodetypes="cc" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-           x="166.29593"
-           y="128.70905"
-           id="text2589-7-3-2-0-3"><tspan
-             sodipodi:role="line"
-             id="tspan2587-9-5-7-9-6"
-             x="166.29593"
-             y="128.70905"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Aligner: STAR,                  Quantification: RSEM</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-           x="144.70169"
-           y="109.33946"
-           id="text2589-0-9-2"><tspan
-             sodipodi:role="line"
-             id="tspan2587-6-2-8"
-             x="144.70169"
-             y="109.33946"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">METHOD</tspan></text>
-      </g>
+       id="g9121"
+       transform="translate(0,0.57113903)">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:none;stroke:#01862e;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 148.16667,118.91492 h 16.19312"
+         id="path2500-5-22-5-4-4-8-3-6"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+         x="169.25996"
+         y="120.60331"
+         id="text2589-7-3-2-0"><tspan
+           sodipodi:role="line"
+           id="tspan2587-9-5-7-9"
+           x="169.25996"
+           y="120.60331"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Aligner: STAR, Quantification: Salmon (default)</tspan></text>
     </g>
-    <g
-       id="g102376"
-       transform="translate(5.4045553,31.750003)">
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-         x="31.242001"
-         y="97.253296"
-         id="text2589-6-2"><tspan
-           sodipodi:role="line"
-           id="tspan2587-1-6"
-           x="31.242001"
-           y="97.253296"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">2. Genome alignment &amp; quantification</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-         x="31.333733"
-         y="105.2049"
-         id="text2589-7-1"><tspan
-           sodipodi:role="line"
-           id="tspan2587-9-8"
-           x="31.333733"
-           y="105.2049"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">3. Pseudo-alignment &amp; quantification</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-         x="31.256123"
-         y="121.34448"
-         id="text2589-5-7"><tspan
-           sodipodi:role="line"
-           id="tspan2587-92-5"
-           x="31.256123"
-           y="121.34448"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">5. Final QC</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-         x="31.411346"
-         y="89.33696"
-         id="text2589-0"><tspan
-           sodipodi:role="line"
-           id="tspan2587-6"
-           x="31.411346"
-           y="89.33696"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">1. Pre-processing</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-         x="31.411335"
-         y="77.603569"
-         id="text2589-0-9"><tspan
-           sodipodi:role="line"
-           id="tspan2587-6-2"
-           x="31.411335"
-           y="77.603569"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">STAGE</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-         x="81.639671"
-         y="113.01187"
-         id="text2589-2-0"><tspan
-           sodipodi:role="line"
-           x="81.639671"
-           y="113.01187"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:end;text-anchor:end;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-           id="tspan133244-3">4. Post-processing</tspan></text>
-    </g>
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#e40481;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 148.16667,143.44389 h 16.19312"
+       id="path2500-5-22-5-4-4-8-3-6-5"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="169.25996"
+       y="129.0033"
+       id="text2589-7-3-2-0-3"><tspan
+         sodipodi:role="line"
+         id="tspan2587-9-5-7-9-6"
+         x="169.25996"
+         y="129.0033"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">Aligner: STAR, Quantification: RSEM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="147.55284"
+       y="112.36629"
+       id="text2589-0-9-2"><tspan
+         sodipodi:role="line"
+         id="tspan2587-6-2-8"
+         x="147.55284"
+         y="112.36629"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">METHOD</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="36.702999"
+       y="112.3804"
+       id="text2589-0-9"><tspan
+         sodipodi:role="line"
+         id="tspan2587-6-2"
+         x="36.702999"
+         y="112.3804"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">STAGE</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="36.646557"
+       y="129.0033"
+       id="text2589-6-2"><tspan
+         sodipodi:role="line"
+         id="tspan2587-1-6"
+         x="36.646557"
+         y="129.0033"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">2. Genome alignment &amp; quantification</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="36.738289"
+       y="136.95491"
+       id="text2589-7-1"><tspan
+         sodipodi:role="line"
+         id="tspan2587-9-8"
+         x="36.738289"
+         y="136.95491"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">3. Pseudo-alignment &amp; quantification</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="36.660679"
+       y="153.09448"
+       id="text2589-5-7"><tspan
+         sodipodi:role="line"
+         id="tspan2587-92-5"
+         x="36.660679"
+         y="153.09448"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">5. Final QC</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="36.815903"
+       y="121.08696"
+       id="text2589-0"><tspan
+         sodipodi:role="line"
+         id="tspan2587-6"
+         x="36.815903"
+         y="121.08696"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1">1. Pre-processing</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+       x="87.044228"
+       y="144.76187"
+       id="text2589-2-0"><tspan
+         sodipodi:role="line"
+         x="87.044228"
+         y="144.76187"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:end;text-anchor:end;fill:#000000;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+         id="tspan133244-3">4. Post-processing</tspan></text>
     <g
        id="g125200"
-       transform="translate(-430.98797,-79.389989)">
+       transform="translate(-432.12929,-85.426309)">
       <g
          id="g95268"
          transform="translate(229.27198,-5.9260264)">

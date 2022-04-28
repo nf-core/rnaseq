@@ -3,7 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unpublished Version / DEV]
+## [[3.7](https://github.com/nf-core/rnaseq/releases/tag/3.7)] - 2022-04-29
+
+### :warning: Major enhancements
+
+- Updated default STAR version to latest available (`2.7.10a`; see [#808](https://github.com/nf-core/rnaseq/issues/808]))
+- Vanilla Linux Docker container changed from `biocontainers/biocontainers:v1.2.0_cv1` to `ubuntu:20.04` (see [#764](https://github.com/nf-core/rnaseq/issues/764]))
 
 ### Enhancements & fixes
 
@@ -15,7 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#808](https://github.com/nf-core/rnaseq/issues/808)] - Auto-detect usage of Illumina iGenomes reference
 - Updated pipeline template to [nf-core/tools 2.3.2](https://github.com/nf-core/tools/releases/tag/2.3.2)
 
-### Parameters
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `samtools`    | 1.14        | 1.15.1      |
+| `star`        | 2.6.1d      | 2.7.10a     |
+| `stringtie`   | 2.1.7       | 2.2.1       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
 
 ## [[3.6](https://github.com/nf-core/rnaseq/releases/tag/3.6)] - 2022-03-04
 

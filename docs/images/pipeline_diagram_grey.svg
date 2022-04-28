@@ -325,11 +325,11 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="736.4012"
-     inkscape:cy="244.45692"
+     inkscape:cx="1172.7871"
+     inkscape:cy="775.79715"
      inkscape:document-units="mm"
-     inkscape:current-layer="g9404-0-1-4-4"
-     showgrid="false"
+     inkscape:current-layer="layer1"
+     showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="0"
@@ -1123,12 +1123,12 @@
        y="27.057777"
        id="text2739" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.17684;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke markers fill;stop-color:#000000"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:5.34687;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke markers fill;stop-color:#000000"
        id="rect107333"
-       width="529.16699"
-       height="248.70834"
-       x="42.333336"
-       y="-96.541664"
+       width="555.625"
+       height="269.875"
+       x="26.458334"
+       y="-107.12498"
        ry="0" />
     <rect
        style="fill:#e7e7e7;fill-opacity:1;stroke:none;stroke-width:1.32292;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"

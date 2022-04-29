@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.7](https://github.com/nf-core/rnaseq/releases/tag/3.7)] - 2022-04-29
+## [[3.7](https://github.com/nf-core/rnaseq/releases/tag/3.7)] - 2022-05-03
 
 ### :warning: Major enhancements
 
@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+- [[#762](https://github.com/nf-core/rnaseq/issues/762)] - Explicitly set `--skip_bbsplit false` with `--bbsplit_fasta_list` to use BBSplit
 - [[#764](https://github.com/nf-core/rnaseq/issues/764)] - Test fails when using GCP due to missing tools in the basic biocontainer
+- [[#775](https://github.com/nf-core/rnaseq/issues/775)] - Incorrect columns in Salmon transcript files
 - [[#791](https://github.com/nf-core/rnaseq/issues/791)] - Add outputs for umitools dedup summary stats
 - [[#797](https://github.com/nf-core/rnaseq/issues/797)] - Add `--skip_umi_extract` to account for pre-existing UMIs header embeddings.
 - [[#798](https://github.com/nf-core/rnaseq/issues/798)] - Decompress transcript fasta error
@@ -25,9 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Old parameter                 | New parameter                         |
-|-------------------------------|---------------------------------------|
-|                               | `--skip_umi_extract`                  |
+| Old parameter | New parameter        |
+| ------------- | -------------------- |
+|               | `--skip_umi_extract` |
 
 ### Software dependencies
 

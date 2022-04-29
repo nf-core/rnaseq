@@ -37,6 +37,11 @@ output:
         List of input adapter trimmed FastQ files of size 1 and 2 for
         single-end and paired-end data, respectively.
       pattern: "*.{fq.gz}"
+  - unpaired:
+      type: file
+      description: |
+        FastQ files containing unpaired reads from read 1 or read 2
+      pattern: "*unpaired*.fq.gz"
   - html:
       type: file
       description: FastQC report (optional)

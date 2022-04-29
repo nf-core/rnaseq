@@ -8,11 +8,8 @@ trim_trailing_whitespace = true
 indent_size = 4
 indent_style = space
 
-[*.{yml,yaml}]
+[*.{md,yml,yaml,html,css,scss,js}]
 indent_size = 2
-
-[*.json]
-insert_final_newline = unset
 
 # These files are edited and tested upstream in nf-core/modules
 [/modules/nf-core/**]

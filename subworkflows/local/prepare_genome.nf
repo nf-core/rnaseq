@@ -31,9 +31,9 @@ include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'
 
 workflow PREPARE_GENOME {
     take:
-    prepare_tool_indices // list  : tools to prepare indices for
-    biotype              // string: if additional fasta file is provided
-                        //         biotype value to use when appending entries to GTF file
+    prepare_tool_indices // list   : tools to prepare indices for
+    biotype              // string : if additional fasta file is provided biotype value to use when appending entries to GTF file
+    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
 
     main:
 
@@ -106,7 +106,7 @@ workflow PREPARE_GENOME {
     //
     if (params.transcript_fasta) {
         if (params.transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [:], params.transcript_fasta ).gunzip.map { it[1] }
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], params.transcript_fasta ] ).gunzip.map { it[1] }
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
             ch_transcript_fasta = file(params.transcript_fasta)
@@ -133,7 +133,7 @@ workflow PREPARE_GENOME {
     if ('bbsplit' in prepare_tool_indices) {
         if (params.bbsplit_index) {
             if (params.bbsplit_index.endsWith('.tar.gz')) {
-                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( params.bbsplit_index ).untar
+                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( [ [:], params.bbsplit_index ] ).untar.map { it[1] }
                 ch_versions      = ch_versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
             } else {
                 ch_bbsplit_index = file(params.bbsplit_index)
@@ -160,13 +160,13 @@ workflow PREPARE_GENOME {
     if ('star_salmon' in prepare_tool_indices) {
         if (params.star_index) {
             if (params.star_index.endsWith('.tar.gz')) {
-                ch_star_index = UNTAR_STAR_INDEX ( params.star_index ).untar
+                ch_star_index = UNTAR_STAR_INDEX ( [ [:], params.star_index ] ).untar.map { it[1] }
                 ch_versions   = ch_versions.mix(UNTAR_STAR_INDEX.out.versions)
             } else {
                 ch_star_index = file(params.star_index)
             }
         } else {
-            ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+            ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, is_aws_igenome ).index
             ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
         }
     }
@@ -178,7 +178,7 @@ workflow PREPARE_GENOME {
     if ('star_rsem' in prepare_tool_indices) {
         if (params.rsem_index) {
             if (params.rsem_index.endsWith('.tar.gz')) {
-                ch_rsem_index = UNTAR_RSEM_INDEX ( params.rsem_index ).untar
+                ch_rsem_index = UNTAR_RSEM_INDEX ( [ [:], params.rsem_index ] ).untar.map { it[1] }
                 ch_versions   = ch_versions.mix(UNTAR_RSEM_INDEX.out.versions)
             } else {
                 ch_rsem_index = file(params.rsem_index)
@@ -203,7 +203,7 @@ workflow PREPARE_GENOME {
         }
         if (params.hisat2_index) {
             if (params.hisat2_index.endsWith('.tar.gz')) {
-                ch_hisat2_index = UNTAR_HISAT2_INDEX ( params.hisat2_index ).untar
+                ch_hisat2_index = UNTAR_HISAT2_INDEX ( [ [:], params.hisat2_index ] ).untar.map { it[1] }
                 ch_versions     = ch_versions.mix(UNTAR_HISAT2_INDEX.out.versions)
             } else {
                 ch_hisat2_index = file(params.hisat2_index)
@@ -221,7 +221,7 @@ workflow PREPARE_GENOME {
     if ('salmon' in prepare_tool_indices) {
         if (params.salmon_index) {
             if (params.salmon_index.endsWith('.tar.gz')) {
-                ch_salmon_index = UNTAR_SALMON_INDEX ( params.salmon_index ).untar
+                ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], params.salmon_index ] ).untar.map { it[1] }
                 ch_versions     = ch_versions.mix(UNTAR_SALMON_INDEX.out.versions)
             } else {
                 ch_salmon_index = file(params.salmon_index)

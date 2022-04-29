@@ -66,13 +66,21 @@ if (anno_readme && file(anno_readme).exists()) {
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
+// Check if an AWS iGenome has been provided to use the appropriate version of STAR
+def is_aws_igenome = false
+if (params.fasta && params.gtf) {
+    if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
+        is_aws_igenome = true
+    }    
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 // Header files for MultiQC
@@ -124,7 +132,7 @@ include { SAMTOOLS_SORT               } from '../modules/nf-core/modules/samtool
 include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/modules/preseq/lcextrap/main'
 include { QUALIMAP_RNASEQ             } from '../modules/nf-core/modules/qualimap/rnaseq/main'
 include { SORTMERNA                   } from '../modules/nf-core/modules/sortmerna/main'
-include { STRINGTIE                   } from '../modules/nf-core/modules/stringtie/stringtie/main'
+include { STRINGTIE_STRINGTIE         } from '../modules/nf-core/modules/stringtie/stringtie/main'
 include { SUBREAD_FEATURECOUNTS       } from '../modules/nf-core/modules/subread/featurecounts/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -162,15 +170,19 @@ workflow RNASEQ {
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     PREPARE_GENOME (
         prepareToolIndices,
-        biotype
+        biotype,
+        is_aws_igenome
+
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // Check if contigs in genome fasta file > 512 Mbp
-    PREPARE_GENOME
-        .out
-        .fai
-        .map { WorkflowRnaseq.checkMaxContigSize(it, log) }
+    if (!params.skip_alignment) {
+        PREPARE_GENOME
+            .out
+            .fai
+            .map { WorkflowRnaseq.checkMaxContigSize(it, log) }
+    }
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -268,7 +280,11 @@ workflow RNASEQ {
         ALIGN_STAR (
             ch_filtered_reads,
             PREPARE_GENOME.out.star_index,
-            PREPARE_GENOME.out.gtf
+            PREPARE_GENOME.out.gtf,
+            params.star_ignore_sjdbgtf,
+            '',
+            params.seq_center ?: '',
+            is_aws_igenome
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai
@@ -467,7 +483,7 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
-        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.ccurve
+        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.lc_extrap
         ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 
@@ -495,11 +511,11 @@ workflow RNASEQ {
     // MODULE: STRINGTIE
     //
     if (!params.skip_alignment && !params.skip_stringtie) {
-        STRINGTIE (
+        STRINGTIE_STRINGTIE (
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
         )
-        ch_versions = ch_versions.mix(STRINGTIE.out.versions.first())
+        ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
 
     //

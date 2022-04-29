@@ -2,10 +2,10 @@ process CUSTOM_GETCHROMSIZES {
     tag "$fasta"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::samtools=1.14" : null)
+    conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.14--hb421002_0' :
-        'quay.io/biocontainers/samtools:1.14--hb421002_0' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.15.1--h1170115_0' :
+        'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
     path fasta

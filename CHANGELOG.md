@@ -65,7 +65,9 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 |               | `--umi_discard_read` |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
 > **NB:** Parameter has been **added** if just the new parameter information is present.
+>
 > **NB:** Parameter has been **removed** if new parameter information isn't present.
 
 ## [[3.5](https://github.com/nf-core/rnaseq/releases/tag/3.5)] - 2021-12-17

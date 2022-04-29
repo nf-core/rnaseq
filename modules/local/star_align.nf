@@ -39,8 +39,8 @@ process STAR_ALIGN {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     // Note: 2.7X indices incompatible with AWS iGenomes so use older STAR version
-    conda_str = "bioconda::star=2.7.9a bioconda::samtools=1.13 conda-forge::gawk=5.1.0"
-    container_id = 'mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:a7908dfb0485a80ca94e4d17b0ac991532e4e989-0'
+    conda_str = "bioconda::star=2.7.10a bioconda::samtools=1.15.1 conda-forge::gawk=5.1.0"
+    container_id = 'mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:afaaa4c6f5b308b4b6aa2dd8e99e1466b2a6b0cd-0'
     if (is_aws_igenome) {
         conda_str = "bioconda::star=2.6.1d bioconda::samtools=1.10 conda-forge::gawk=5.1.0"
         container_id = 'mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0'

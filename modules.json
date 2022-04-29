@@ -13,10 +13,10 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "custom/getchromsizes": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "213403187932dbbdd936a04474cc8cd8abae7a08"
             },
             "fastqc": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "gffread": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -25,7 +25,7 @@
                 "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
             },
             "hisat2/align": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "hisat2/build": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -34,19 +34,19 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "picard/markduplicates": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "preseq/lcextrap": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "7111e571cc5b6069de4673cd6165af680f17b4d7"
             },
             "qualimap/rnaseq": {
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "rsem/calculateexpression": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
+                "git_sha": "1b5d3f5ac2ae61ee35dece20a2aeb8018b6438ce"
             },
             "rsem/preparereference": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "1b5d3f5ac2ae61ee35dece20a2aeb8018b6438ce"
             },
             "rseqc/bamstat": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -79,25 +79,25 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "samtools/flagstat": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/idxstats": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/index": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/sort": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/stats": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "sortmerna": {
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "stringtie/stringtie": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "6d88f2da8cc5d586456e801b535cc4213e0fa2f7"
             },
             "subread/featurecounts": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

@@ -132,7 +132,7 @@ include { SAMTOOLS_SORT               } from '../modules/nf-core/modules/samtool
 include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/modules/preseq/lcextrap/main'
 include { QUALIMAP_RNASEQ             } from '../modules/nf-core/modules/qualimap/rnaseq/main'
 include { SORTMERNA                   } from '../modules/nf-core/modules/sortmerna/main'
-include { STRINGTIE                   } from '../modules/nf-core/modules/stringtie/stringtie/main'
+include { STRINGTIE_STRINGTIE         } from '../modules/nf-core/modules/stringtie/stringtie/main'
 include { SUBREAD_FEATURECOUNTS       } from '../modules/nf-core/modules/subread/featurecounts/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -482,7 +482,7 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
-        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.ccurve
+        ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.lc_extrap
         ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 
@@ -510,11 +510,11 @@ workflow RNASEQ {
     // MODULE: STRINGTIE
     //
     if (!params.skip_alignment && !params.skip_stringtie) {
-        STRINGTIE (
+        STRINGTIE_STRINGTIE (
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
         )
-        ch_versions = ch_versions.mix(STRINGTIE.out.versions.first())
+        ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
 
     //

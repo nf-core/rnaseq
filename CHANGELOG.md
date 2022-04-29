@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#799](https://github.com/nf-core/rnaseq/issues/799)] - Issue with using `--retain_unpaired` with the `FASTQC_UMITOOLS_TRIMGALORE:TRIMGALORE` module
 - [[#802](https://github.com/nf-core/rnaseq/issues/802)] - `--bam_csi_index` error generated if `--skip_alignment` specified
 - [[#808](https://github.com/nf-core/rnaseq/issues/808)] - Auto-detect usage of Illumina iGenomes reference
+- [[#809](https://github.com/nf-core/rnaseq/issues/809)] - Add metro map for pipeline
 - [[#814](https://github.com/nf-core/rnaseq/issues/814)] - Use decimal values for `--min_mapped_reads`
 - Updated pipeline template to [nf-core/tools 2.3.2](https://github.com/nf-core/tools/releases/tag/2.3.2)
 

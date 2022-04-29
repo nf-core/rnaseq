@@ -98,7 +98,7 @@
                 "bbsplit_fasta_list": {
                     "type": "string",
                     "fa_icon": "fas fa-list-alt",
-                    "description": "Path to comma-separated file containing a list of reference genomes to filter reads against with BBSplit.",
+                    "description": "Path to comma-separated file containing a list of reference genomes to filter reads against with BBSplit. You have to also explicitly set `--skip_bbsplit false` if you want to use BBSplit.",
                     "help_text": "The file should contain 2 columns: short name and full path to reference genome(s) e.g. \n```\nmm10,/path/to/mm10.fa\necoli,/path/to/ecoli.fa\n```"
                 },
                 "bbsplit_index": {

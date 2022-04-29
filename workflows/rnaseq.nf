@@ -224,6 +224,7 @@ workflow RNASEQ {
         ch_cat_fastq,
         params.skip_fastqc || params.skip_qc,
         params.with_umi,
+        params.skip_umi_extract,
         params.skip_trimming,
         params.umi_discard_read
     )

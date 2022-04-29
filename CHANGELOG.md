@@ -14,12 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [[#764](https://github.com/nf-core/rnaseq/issues/764)] - Test fails when using GCP due to missing tools in the basic biocontainer
 - [[#791](https://github.com/nf-core/rnaseq/issues/791)] - Add outputs for umitools dedup summary stats
+- [[#797](https://github.com/nf-core/rnaseq/issues/797)] - Add `--skip_umi_extract` to account for pre-existing UMIs header embeddings.
 - [[#798](https://github.com/nf-core/rnaseq/issues/798)] - Decompress transcript fasta error
 - [[#799](https://github.com/nf-core/rnaseq/issues/799)] - Issue with using `--retain_unpaired` with the `FASTQC_UMITOOLS_TRIMGALORE:TRIMGALORE` module
 - [[#802](https://github.com/nf-core/rnaseq/issues/802)] - `--bam_csi_index` error generated if `--skip_alignment` specified
 - [[#808](https://github.com/nf-core/rnaseq/issues/808)] - Auto-detect usage of Illumina iGenomes reference
 - [[#814](https://github.com/nf-core/rnaseq/issues/814)] - Use decimal values for `--min_mapped_reads`
 - Updated pipeline template to [nf-core/tools 2.3.2](https://github.com/nf-core/tools/releases/tag/2.3.2)
+
+### Parameters
+
+| Old parameter                 | New parameter                         |
+|-------------------------------|---------------------------------------|
+|                               | `--skip_umi_extract`                  |
 
 ### Software dependencies
 

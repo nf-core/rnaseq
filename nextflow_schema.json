@@ -65,6 +65,11 @@
                     "description": "UMI pattern to use. Can be either 'string' (default) or 'regex'.",
                     "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).\n"
                 },
+                "skip_umi_extract": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-compress-alt",
+                    "description": "Skip the UMI extraction from the read in case the UMIs have been moved to the headers in advance of the pipeline run."
+                },
                 "umitools_bc_pattern": {
                     "type": "string",
                     "fa_icon": "fas fa-barcode",

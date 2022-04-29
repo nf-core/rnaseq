@@ -27,9 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Old parameter                 | New parameter                         |
-|-------------------------------|---------------------------------------|
-|                               | `--skip_umi_extract`                  |
+| Old parameter | New parameter        |
+| ------------- | -------------------- |
+|               | `--skip_umi_extract` |
 
 ### Software dependencies
 

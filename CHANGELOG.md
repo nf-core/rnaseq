@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 - [[#764](https://github.com/nf-core/rnaseq/issues/764)] - Test fails when using GCP due to missing tools in the basic biocontainer
+- [[#775](https://github.com/nf-core/rnaseq/issues/775)] - Incorrect columns in Salmon transcript files
 - [[#791](https://github.com/nf-core/rnaseq/issues/791)] - Add outputs for umitools dedup summary stats
 - [[#797](https://github.com/nf-core/rnaseq/issues/797)] - Add `--skip_umi_extract` to account for pre-existing UMIs header embeddings.
 - [[#798](https://github.com/nf-core/rnaseq/issues/798)] - Decompress transcript fasta error

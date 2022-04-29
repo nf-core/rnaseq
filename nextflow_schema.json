@@ -374,7 +374,7 @@
                     "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
                 },
                 "min_mapped_reads": {
-                    "type": "integer",
+                    "type": "number",
                     "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",

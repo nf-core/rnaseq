@@ -84,7 +84,7 @@ Changes and parameter specifications for prokaryotes:
 * Use `--featurecounts_feature_type transcript` since the default value `exon` does not contain the required `--featurecounts_group_type gene_biotype` specification.
 * You can use `--featurecounts_feature_type CDS` in combination with `--featurecoutns_group_type product` but than featureCounts will no longer reflect the biotypes of your RNA. It could be helpful to identify the number of hypothetical proteins.
 * If your execution struggle with Salmon as aligner, change `--alginer` to hisat2.
-* You can skip RSeQC with `--skip_rseqc` since it mainly focus on eukaryotic features like splice junctions, transcription start (TSS) and ending sites (TES)
+* `--skip_rseqc` skip RSeQC since features like splice junctions, transcription start (TSS) and ending sites (TES) are less informative in prokaryotes than in eukaryotes.
 * `--skip_biotype_qc` in case biotypes of your RNA data are of no interest.
 
 > **NB:** For older versions of the pipeline the names may be different. Check the paramters docs for details.

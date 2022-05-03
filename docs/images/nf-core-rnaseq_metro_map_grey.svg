@@ -17,7 +17,7 @@
    id="svg8"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="nf-core-rnaseq_metro_map_grey.svg"
-   inkscape:export-filename="pipeline_diagram_grey.png"
+   inkscape:export-filename="nf-core-rnaseq_metro_map_grey.png"
    inkscape:export-xdpi="89"
    inkscape:export-ydpi="89">
   <defs
@@ -324,9 +324,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.14"
-     inkscape:cx="1147.4164"
-     inkscape:cy="757.6895"
+     inkscape:zoom="0.57000002"
+     inkscape:cx="963.251"
+     inkscape:cy="617.456"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"

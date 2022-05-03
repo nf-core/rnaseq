@@ -77,19 +77,16 @@ If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files
 - The `--gtf_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively.
 - If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
 
-## Adapt pipeline parameters for prokaryotes
+## Prokaryotic genome annotations
 
-The default settings of the pipeline are mainly adapted for eukaryotes but have to be changed slightly for prokaryotes. The main reason for this is the different genetic architecure of prokaryotes. The below mentioned parameters work if a `gff` file is provided as reference.
+This pipeline uses featureCounts to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. The format of these annotation files can vary significantly depending on the source of the annotation and the type of organism. The default settings in the pipeline are tailored towards Ensembl GTF annotations available for eukaryotic genomes. Prokaryotic genome annotations tend to be distributed in GFF format which are structured differently in terms of the feature naming conventions. There are a number of ways you can tune the behaviour of the pipeline to cater for differences/absence of biotype information:
 
-Changes and parameter specifications for prokaryotes:
+- Use `--skip_biotype_qc` to bypass this step altogether in case biotype information is of no interest or isn't present in your annotation file.
+- Use `--skip_rseqc` since features like splice junctions, transcription start (TSS) and ending sites (TES) are less prevalent and therefore, less informative in prokaryotes compared to eukaryotes.
+- Use `--featurecounts_feature_type transcript` instead of `--featurecounts_feature_type transcript exon` (default) since entries for the latter may not contain a `--featurecounts_group_type gene_biotype` entry in the last column of the annotation. You should make sure that the value defined by `--featurecounts_feature_type` ideally contain corresponding entries for `featurecounts_group_type`.
+- Use `--featurecounts_feature_type 'CDS' --featurecounts_group_type 'product'` to identify the number of hypothetical proteins. However, the featureCounts QC will no longer reflect the biotype information from your RNA.
 
-* Use `--featurecounts_feature_type transcript` since the default value `exon` does not contain the required `--featurecounts_group_type gene_biotype` specification.
-* You can use `--featurecounts_feature_type CDS` in combination with `--featurecoutns_group_type product` but than featureCounts will no longer reflect the biotypes of your RNA. It could be helpful to identify the number of hypothetical proteins.
-* If your execution struggle with Salmon as aligner, change `--alginer` to hisat2.
-* `--skip_rseqc` skip RSeQC since features like splice junctions, transcription start (TSS) and ending sites (TES) are less informative in prokaryotes than in eukaryotes.
-* `--skip_biotype_qc` in case biotypes of your RNA data are of no interest.
-
-> **NB:** For older versions of the pipeline the names may be different. Check the paramters docs for details.
+Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspace](https://nf-co.re/join) if you are having problems or need any advice.
 
 ## Running the pipeline
 

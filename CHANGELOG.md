@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unpublished Version / DEV]
+
+### Enhancements & fixes
+
+### Parameters
+
 ## [[3.7](https://github.com/nf-core/rnaseq/releases/tag/3.7)] - 2022-05-03
 
 ### :warning: Major enhancements

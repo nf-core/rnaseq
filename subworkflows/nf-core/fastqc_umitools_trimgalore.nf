@@ -11,6 +11,7 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
     reads            // channel: [ val(meta), [ reads ] ]
     skip_fastqc      // boolean: true/false
     with_umi         // boolean: true/false
+    skip_umi_extract // boolean: true/false
     skip_trimming    // boolean: true/false
     umi_discard_read // integer: 0, 1 or 2
 
@@ -27,37 +28,40 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
 
     umi_reads = reads
     umi_log   = Channel.empty()
-    if (with_umi) {
-        UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
-        umi_log     = UMITOOLS_EXTRACT.out.log
-        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
+    if (with_umi && !skip_umi_extract) {
 
-        // Discard R1 / R2 if required
-        if (umi_discard_read in [1,2]) {
-            UMITOOLS_EXTRACT
-                .out
-                .reads
-                .map { meta, reads ->
-                    if (!meta.single_end) {
-                        meta['single_end'] = true
-                        reads = reads[umi_discard_read % 2]
+            UMITOOLS_EXTRACT ( reads ).reads.set { umi_reads }
+            umi_log     = UMITOOLS_EXTRACT.out.log
+            ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
+
+            // Discard R1 / R2 if required
+            if (umi_discard_read in [1,2]) {
+                UMITOOLS_EXTRACT
+                    .out
+                    .reads
+                    .map { meta, reads ->
+                        if (!meta.single_end) {
+                            meta['single_end'] = true
+                            reads = reads[umi_discard_read % 2]
+                        }
+                        return [ meta, reads ]
                     }
-                    return [ meta, reads ]
-                }
-                .set { umi_reads }
-        }
+                    .set { umi_reads }
+            }
     }
 
-    trim_reads = umi_reads
-    trim_html  = Channel.empty()
-    trim_zip   = Channel.empty()
-    trim_log   = Channel.empty()
+    trim_reads    = umi_reads
+    trim_unpaired = Channel.empty()
+    trim_html     = Channel.empty()
+    trim_zip      = Channel.empty()
+    trim_log      = Channel.empty()
     if (!skip_trimming) {
         TRIMGALORE ( umi_reads ).reads.set { trim_reads }
-        trim_html   = TRIMGALORE.out.html
-        trim_zip    = TRIMGALORE.out.zip
-        trim_log    = TRIMGALORE.out.log
-        ch_versions = ch_versions.mix(TRIMGALORE.out.versions.first())
+        trim_unpaired = TRIMGALORE.out.unpaired
+        trim_html     = TRIMGALORE.out.html
+        trim_zip      = TRIMGALORE.out.zip
+        trim_log      = TRIMGALORE.out.log
+        ch_versions   = ch_versions.mix(TRIMGALORE.out.versions.first())
     }
 
     emit:
@@ -68,6 +72,7 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
 
     umi_log            // channel: [ val(meta), [ log ] ]
 
+    trim_unpaired      // channel: [ val(meta), [ reads ] ]
     trim_html          // channel: [ val(meta), [ html ] ]
     trim_zip           // channel: [ val(meta), [ zip ] ]
     trim_log           // channel: [ val(meta), [ txt ] ]

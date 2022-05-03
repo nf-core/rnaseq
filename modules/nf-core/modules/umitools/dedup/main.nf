@@ -11,8 +11,11 @@ process UMITOOLS_DEDUP {
     tuple val(meta), path(bam), path(bai)
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
-    path  "versions.yml"          , emit: versions
+    tuple val(meta), path("*.bam")             , emit: bam
+    tuple val(meta), path("*edit_distance.tsv"), emit: tsv_edit_distance
+    tuple val(meta), path("*per_umi.tsv")      , emit: tsv_per_umi
+    tuple val(meta), path("*per_position.tsv") , emit: tsv_umi_per_position
+    path  "versions.yml"                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,11 +23,13 @@ process UMITOOLS_DEDUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def paired   = meta.single_end ? "" : "--paired"
+    def paired = meta.single_end ? "" : "--paired"
     """
-    umi_tools dedup \\
+    umi_tools \\
+        dedup \\
         -I $bam \\
         -S ${prefix}.bam \\
+        --output-stats $prefix \\
         $paired \\
         $args
 

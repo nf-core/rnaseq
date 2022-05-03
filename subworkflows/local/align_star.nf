@@ -7,9 +7,13 @@ include { BAM_SORT_SAMTOOLS } from '../nf-core/bam_sort_samtools'
 
 workflow ALIGN_STAR {
     take:
-    reads // channel: [ val(meta), [ reads ] ]
-    index // channel: /path/to/star/index/
-    gtf   // channel: /path/to/genome.gtf
+    reads               // channel: [ val(meta), [ reads ] ]
+    index               // channel: /path/to/star/index/
+    gtf                 // channel: /path/to/genome.gtf
+    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file 
+    seq_platform        // string : sequencing platform
+    seq_center          // string : sequencing center
+    is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
 
     main:
 
@@ -18,7 +22,7 @@ workflow ALIGN_STAR {
     //
     // Map reads with STAR
     //
-    STAR_ALIGN ( reads, index, gtf )
+    STAR_ALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center, is_aws_igenome )
     ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
     //

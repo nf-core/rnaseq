@@ -23,6 +23,3 @@ jobs:
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
             }
           profiles: test,aws_tower
-          nextflow_config: |
-            process.errorStrategy = 'retry'
-            process.maxRetries = 3

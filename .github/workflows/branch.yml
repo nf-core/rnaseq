@@ -13,7 +13,7 @@ jobs:
       - name: Check PRs
         if: github.repository == 'nf-core/rnaseq'
         run: |
-          "{ [[ ${{github.event.pull_request.head.repo.full_name }} == nf-core/rnaseq ]] && [[ $GITHUB_HEAD_REF = "dev" ]]; } || [[ $GITHUB_HEAD_REF == "patch" ]]"
+          { [[ ${{github.event.pull_request.head.repo.full_name }} == nf-core/rnaseq ]] && [[ $GITHUB_HEAD_REF = "dev" ]]; } || [[ $GITHUB_HEAD_REF == "patch" ]]
 
       # If the above check failed, post a comment on the PR explaining the failure
       # NOTE - this doesn't currently work if the PR is coming from a fork, due to limitations in GitHub actions secrets
@@ -42,4 +42,3 @@ jobs:
             Thanks again for your contribution!
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allow-repeats: false
-#

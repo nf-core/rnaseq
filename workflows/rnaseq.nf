@@ -97,6 +97,7 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 //
 // MODULE: Loaded from modules/local/
 //
+include { UMITOOLS_PREPAREFORRSEM            } from '../modules/local/umitools_prepareforrsem.nf'
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
@@ -194,7 +195,8 @@ workflow RNASEQ {
     .map {
         meta, fastq ->
             meta.id = meta.id.split('_')[0..-2].join('_')
-            [ meta, fastq ] }
+            [ meta, fastq ] 
+    }
     .groupTuple(by: [0])
     .branch {
         meta, fastq ->
@@ -328,11 +330,35 @@ workflow RNASEQ {
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
             )
 
+            // Only name sort paired-end BAM files
+            DEDUP_UMI_UMITOOLS_TRANSCRIPTOME
+                .out
+                .bam
+                .branch {
+                    meta, bam ->
+                        single_end: meta.single_end
+                            return [ meta, bam ]
+                        paired_end: !meta.single_end
+                            return [ meta, bam ]
+                }
+                .set { ch_umitools_dedup_bam }
+
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
+                ch_umitools_dedup_bam.paired_end
             )
-            ch_transcriptome_bam = SAMTOOLS_SORT.out.bam
+
+            // Fix paired-end reads in name sorted BAM file
+            // See: https://github.com/nf-core/rnaseq/issues/828
+            UMITOOLS_PREPAREFORRSEM (
+                SAMTOOLS_SORT.out.bam
+            )
+            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORRSEM.out.versions.first())
+
+            ch_umitools_dedup_bam
+                .single_end
+                .mix(UMITOOLS_PREPAREFORRSEM.out.bam)
+                .set { ch_transcriptome_bam }
         }
 
         //

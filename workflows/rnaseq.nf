@@ -330,8 +330,13 @@ workflow RNASEQ {
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
             )
 
-            // Only name sort paired-end BAM files
-            DEDUP_UMI_UMITOOLS_TRANSCRIPTOME
+            // Name sort BAM before passing to Salmon
+            SAMTOOLS_SORT (
+                DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
+            )
+
+            // Only run prepare_for_rsem.py on paired-end BAM files
+            SAMTOOLS_SORT
                 .out
                 .bam
                 .branch {
@@ -343,15 +348,10 @@ workflow RNASEQ {
                 }
                 .set { ch_umitools_dedup_bam }
 
-            // Name sort BAM before passing to Salmon
-            SAMTOOLS_SORT (
-                ch_umitools_dedup_bam.paired_end
-            )
-
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
             UMITOOLS_PREPAREFORRSEM (
-                SAMTOOLS_SORT.out.bam
+                ch_umitools_dedup_bam.paired_end
             )
             ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORRSEM.out.versions.first())
 

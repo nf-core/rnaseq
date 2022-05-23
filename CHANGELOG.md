@@ -3,15 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unpublished Version / DEV]
+## [[3.8](https://github.com/nf-core/rnaseq/releases/tag/3.8)] - 2022-05-25
+
+### :warning: Major enhancements
+
+Fixed quite a well hidden bug in the UMI processing mode of the pipeline when using `--with_umi --aligner star_salmon` as reported by [Lars Roed Ingerslev](https://github.com/lars-work-sund). Paired-end BAM files were not appropriately name sorted after `umi_tools dedup` which ultimately resulted in incorrect reading and quantification with Salmon. If you have used previous versions of the pipeline to analyse paired-end UMI data it will need to be reprocessed using this version of the pipeline. See [#828](https://github.com/nf-core/rnaseq/issues/828) for more context.
 
 ### Enhancements & fixes
 
 - [[#824](https://github.com/nf-core/rnaseq/issues/824)] - Add explicit docs for usage of featureCounts in the pipeline
+- [[#825](https://github.com/nf-core/rnaseq/issues/825)] - Pipeline fails due to trimming related removal of all reads from a sample
 - [[#828](https://github.com/nf-core/rnaseq/issues/828)] - Filter BAM output of UMI-tools dedup before passing to Salmon quant
 - Updated pipeline template to [nf-core/tools 2.4.1](https://github.com/nf-core/tools/releases/tag/2.4.1)
 
 ### Parameters
+
+| Old parameter | New parameter         |
+| ------------- | --------------------- |
+|               | `--min_trimmed_reads` |
 
 ## [[3.7](https://github.com/nf-core/rnaseq/releases/tag/3.7)] - 2022-05-03
 

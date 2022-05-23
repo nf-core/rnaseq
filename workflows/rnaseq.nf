@@ -106,6 +106,7 @@ include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_MAPPED  } from '../modules/local/multiqc_tsv_from_list'
+include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_TRIMMED } from '../modules/local/multiqc_tsv_from_list'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_STRAND_CHECK } from '../modules/local/multiqc_tsv_from_list'
 
 //
@@ -194,8 +195,9 @@ workflow RNASEQ {
     .reads
     .map {
         meta, fastq ->
-            meta.id = meta.id.split('_')[0..-2].join('_')
-            [ meta, fastq ] 
+            def meta_clone = meta.clone()
+            meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
+            [ meta_clone, fastq ] 
     }
     .groupTuple(by: [0])
     .branch {
@@ -233,9 +235,47 @@ workflow RNASEQ {
     ch_versions = ch_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
     //
+    // Filter channels to get samples that passed minimum trimmed read count
+    //
+    ch_fail_trimming_multiqc = Channel.empty()
+    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    if (!params.skip_trimming) {
+        ch_filtered_reads
+            .join(FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .map {
+                meta, reads, trim_log ->
+                    if (!meta.single_end) {
+                        trim_log = trim_log[-1]
+                    }
+                    num_reads = WorkflowRnaseq.getTrimGaloreReadsAfterFiltering(trim_log)
+                    [ meta, reads, num_reads ]
+            }
+            .set { ch_num_trimmed_reads  }
+
+        ch_num_trimmed_reads
+            .map { meta, reads, num_reads -> if (num_reads > params.min_trimmed_reads) [ meta, reads ] }
+            .set { ch_filtered_reads }
+
+        ch_num_trimmed_reads
+            .map {
+                meta, reads, num_reads ->
+                if (num_reads <= params.min_trimmed_reads) {
+                    return [ "$meta.id\t$num_reads" ]
+                }
+            }
+            .set { ch_num_trimmed_reads }
+        
+        MULTIQC_TSV_FAIL_TRIMMED (
+            ch_num_trimmed_reads.collect(),
+            ["Sample", "Reads after trimming"],
+            'fail_trimmed_samples'
+        )
+        .set { ch_fail_trimming_multiqc }
+    }
+
+    //
     // MODULE: Remove genome contaminant reads
     //
-    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_bbsplit) {
         BBMAP_BBSPLIT (
             ch_filtered_reads,
@@ -726,6 +766,7 @@ workflow RNASEQ {
             ch_multiqc_custom_config.collect().ifEmpty([]),
             CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+            ch_fail_trimming_multiqc.ifEmpty([]),
             ch_fail_mapping_multiqc.ifEmpty([]),
             ch_fail_strand_multiqc.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),

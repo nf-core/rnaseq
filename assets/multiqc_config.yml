@@ -28,6 +28,7 @@ run_modules:
 
 # Order of modules
 top_modules:
+  - "fail_trimmed_samples"
   - "fail_mapped_samples"
   - "fail_strand_check"
   - "star_rsem_deseq2_pca"
@@ -140,6 +141,15 @@ sp:
 
 # See https://github.com/ewels/MultiQC_TestData/blob/master/data/custom_content/with_config/table_headerconfig/multiqc_config.yaml
 custom_data:
+  fail_trimmed_samples:
+    section_name: "WARNING: Fail Trimming Check"
+    description: "List of samples that failed the minimum trimmed reads threshold specified via the '--min_trimmed_reads' parameter, and hence were ignored for the downstream processing steps."
+    plot_type: "table"
+    pconfig:
+      id: "fail_trimmed_samples_table"
+      table_title: "Samples failed trimming threshold"
+      namespace: "Samples failed trimming threshold"
+      format: "{:.0f}"
   fail_mapped_samples:
     section_name: "WARNING: Fail Alignment Check"
     description: "List of samples that failed the STAR minimum mapped reads threshold specified via the '--min_mapped_reads' parameter, and hence were ignored for the downstream processing steps."

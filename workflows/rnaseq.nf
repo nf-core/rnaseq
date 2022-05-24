@@ -346,7 +346,8 @@ workflow RNASEQ {
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
             DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0])
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                params.umitools_dedup_stats
             )
             ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
@@ -367,7 +368,8 @@ workflow RNASEQ {
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
             DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
-                ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
+                ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
+                params.umitools_dedup_stats
             )
 
             // Name sort BAM before passing to Salmon

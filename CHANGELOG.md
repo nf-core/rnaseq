@@ -13,14 +13,16 @@ Fixed quite a well hidden bug in the UMI processing mode of the pipeline when us
 
 - [[#824](https://github.com/nf-core/rnaseq/issues/824)] - Add explicit docs for usage of featureCounts in the pipeline
 - [[#825](https://github.com/nf-core/rnaseq/issues/825)] - Pipeline fails due to trimming related removal of all reads from a sample
+- [[#827](https://github.com/nf-core/rnaseq/issues/827)] - Control generation of --output-stats when running umi-tools dedup
 - [[#828](https://github.com/nf-core/rnaseq/issues/828)] - Filter BAM output of UMI-tools dedup before passing to Salmon quant
 - Updated pipeline template to [nf-core/tools 2.4.1](https://github.com/nf-core/tools/releases/tag/2.4.1)
 
 ### Parameters
 
-| Old parameter | New parameter         |
-| ------------- | --------------------- |
-|               | `--min_trimmed_reads` |
+| Old parameter | New parameter            |
+| ------------- | ------------------------ |
+|               | `--min_trimmed_reads`    |
+|               | `--umitools_dedup_stats` |
 
 ## [[3.7](https://github.com/nf-core/rnaseq/releases/tag/3.7)] - 2022-05-03
 

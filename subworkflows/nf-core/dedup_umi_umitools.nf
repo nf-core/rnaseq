@@ -8,7 +8,8 @@ include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'
 
 workflow DEDUP_UMI_UMITOOLS {
     take:
-    bam_bai // channel: [ val(meta), [ bam ], [ bai/csi ] ]
+    bam_bai         // channel: [ val(meta), [ bam ], [ bai/csi ] ]
+    get_dedup_stats // boolean: true/false
 
     main:
 
@@ -17,7 +18,7 @@ workflow DEDUP_UMI_UMITOOLS {
     //
     // UMI-tools dedup
     //
-    UMITOOLS_DEDUP ( bam_bai )
+    UMITOOLS_DEDUP ( bam_bai, get_dedup_stats )
     ch_versions = ch_versions.mix(UMITOOLS_DEDUP.out.versions.first())
 
     //

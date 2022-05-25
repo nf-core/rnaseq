@@ -97,6 +97,7 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 //
 // MODULE: Loaded from modules/local/
 //
+include { UMITOOLS_PREPAREFORRSEM            } from '../modules/local/umitools_prepareforrsem.nf'
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
@@ -105,6 +106,7 @@ include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_MAPPED  } from '../modules/local/multiqc_tsv_from_list'
+include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_TRIMMED } from '../modules/local/multiqc_tsv_from_list'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_STRAND_CHECK } from '../modules/local/multiqc_tsv_from_list'
 
 //
@@ -193,8 +195,10 @@ workflow RNASEQ {
     .reads
     .map {
         meta, fastq ->
-            meta.id = meta.id.split('_')[0..-2].join('_')
-            [ meta, fastq ] }
+            def meta_clone = meta.clone()
+            meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
+            [ meta_clone, fastq ] 
+    }
     .groupTuple(by: [0])
     .branch {
         meta, fastq ->
@@ -231,9 +235,47 @@ workflow RNASEQ {
     ch_versions = ch_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
     //
+    // Filter channels to get samples that passed minimum trimmed read count
+    //
+    ch_fail_trimming_multiqc = Channel.empty()
+    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    if (!params.skip_trimming) {
+        ch_filtered_reads
+            .join(FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .map {
+                meta, reads, trim_log ->
+                    if (!meta.single_end) {
+                        trim_log = trim_log[-1]
+                    }
+                    num_reads = WorkflowRnaseq.getTrimGaloreReadsAfterFiltering(trim_log)
+                    [ meta, reads, num_reads ]
+            }
+            .set { ch_num_trimmed_reads  }
+
+        ch_num_trimmed_reads
+            .map { meta, reads, num_reads -> if (num_reads > params.min_trimmed_reads) [ meta, reads ] }
+            .set { ch_filtered_reads }
+
+        ch_num_trimmed_reads
+            .map {
+                meta, reads, num_reads ->
+                if (num_reads <= params.min_trimmed_reads) {
+                    return [ "$meta.id\t$num_reads" ]
+                }
+            }
+            .set { ch_num_trimmed_reads }
+        
+        MULTIQC_TSV_FAIL_TRIMMED (
+            ch_num_trimmed_reads.collect(),
+            ["Sample", "Reads after trimming"],
+            'fail_trimmed_samples'
+        )
+        .set { ch_fail_trimming_multiqc }
+    }
+
+    //
     // MODULE: Remove genome contaminant reads
     //
-    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_bbsplit) {
         BBMAP_BBSPLIT (
             ch_filtered_reads,
@@ -304,7 +346,8 @@ workflow RNASEQ {
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
             DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0])
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                params.umitools_dedup_stats
             )
             ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
@@ -325,14 +368,39 @@ workflow RNASEQ {
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
             DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
-                ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
+                ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
+                params.umitools_dedup_stats
             )
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
                 DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
             )
-            ch_transcriptome_bam = SAMTOOLS_SORT.out.bam
+
+            // Only run prepare_for_rsem.py on paired-end BAM files
+            SAMTOOLS_SORT
+                .out
+                .bam
+                .branch {
+                    meta, bam ->
+                        single_end: meta.single_end
+                            return [ meta, bam ]
+                        paired_end: !meta.single_end
+                            return [ meta, bam ]
+                }
+                .set { ch_umitools_dedup_bam }
+
+            // Fix paired-end reads in name sorted BAM file
+            // See: https://github.com/nf-core/rnaseq/issues/828
+            UMITOOLS_PREPAREFORRSEM (
+                ch_umitools_dedup_bam.paired_end
+            )
+            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORRSEM.out.versions.first())
+
+            ch_umitools_dedup_bam
+                .single_end
+                .mix(UMITOOLS_PREPAREFORRSEM.out.bam)
+                .set { ch_transcriptome_bam }
         }
 
         //
@@ -700,6 +768,7 @@ workflow RNASEQ {
             ch_multiqc_custom_config.collect().ifEmpty([]),
             CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+            ch_fail_trimming_multiqc.ifEmpty([]),
             ch_fail_mapping_multiqc.ifEmpty([]),
             ch_fail_strand_multiqc.ifEmpty([]),
             FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),

@@ -26,6 +26,10 @@ input:
     description: |
       BAM index files corresponding to the input BAM file.
     pattern: "*.{bai}"
+  - get_output_stats:
+    type: boolean
+    description: |
+      Whether or not to generate output stats.
 output:
   - meta:
     type: map

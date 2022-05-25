@@ -153,6 +153,23 @@ class WorkflowRnaseq {
     }
 
     //
+    // Function that parses TrimGalore log output file to get total number of reads after trimming
+    //
+    public static Integer getTrimGaloreReadsAfterFiltering(log_file) {
+        def total_reads = 0
+        def filtered_reads = 0
+        log_file.eachLine { line ->
+            def total_reads_matcher = line =~ /([\d\.]+)\ssequences processed in total/
+            def se_filtered_reads_matcher = line =~ /shorter than the length cutoff of\s[\d\.]+\sbp:\s([\d\.]+)/
+            def pe_filtered_reads_matcher = line =~ /shorter than the length cutoff\s\([\d\.]+\sbp\):\s([\d\.]+)/
+            if (total_reads_matcher) total_reads = total_reads_matcher[0][1].toFloat()
+            if (se_filtered_reads_matcher) filtered_reads = se_filtered_reads_matcher[0][1].toFloat()
+            if (pe_filtered_reads_matcher) filtered_reads = pe_filtered_reads_matcher[0][1].toFloat()
+        }
+        return total_reads - filtered_reads
+    }
+
+    //
     // Function that parses and returns the alignment rate from the STAR log output
     //
     public static ArrayList getStarPercentMapped(params, align_log) {

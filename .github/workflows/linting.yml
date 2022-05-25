@@ -48,7 +48,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v3
         with:
           python-version: "3.6"
           architecture: "x64"
@@ -78,5 +78,3 @@ jobs:
             lint_log.txt
             lint_results.md
             PR_number.txt
-
-#

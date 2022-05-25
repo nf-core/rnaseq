@@ -143,5 +143,3 @@ jobs:
       - name: Run pipeline with Salmon and various parameters
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results
-
-#

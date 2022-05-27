@@ -2,15 +2,14 @@ process STAR_GENOMEGENERATE {
     tag "$fasta"
     label 'process_high'
 
-    conda (params.enable_conda ? conda_str : null)
+    conda (params.enable_conda ? "bioconda::star=2.7.10a bioconda::samtools=1.15.1 conda-forge::gawk=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        "https://depot.galaxyproject.org/singularity/${container_id}" :
-        "quay.io/biocontainers/${container_id}" }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:afaaa4c6f5b308b4b6aa2dd8e99e1466b2a6b0cd-0' :
+        'quay.io/biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:afaaa4c6f5b308b4b6aa2dd8e99e1466b2a6b0cd-0' }"
 
     input:
     path fasta
     path gtf
-    val  is_aws_igenome
 
     output:
     path "star"        , emit: index
@@ -22,15 +21,6 @@ process STAR_GENOMEGENERATE {
     script:
     def args = task.ext.args ?: ''
     def args_list = args.tokenize()
-
-    // Note: 2.7X indices incompatible with AWS iGenomes so use older STAR version
-    conda_str = "bioconda::star=2.7.10a bioconda::samtools=1.15.1 conda-forge::gawk=5.1.0"
-    container_id = 'mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:afaaa4c6f5b308b4b6aa2dd8e99e1466b2a6b0cd-0'
-    if (is_aws_igenome) {
-        conda_str = "bioconda::star=2.6.1d bioconda::samtools=1.10 conda-forge::gawk=5.1.0"
-        container_id = 'mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0'
-    }
-
     def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     if (args_list.contains('--genomeSAindexNbases')) {
         """

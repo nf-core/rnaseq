@@ -96,6 +96,12 @@
             "sortmerna": {
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
+            "star/align": {
+                "git_sha": "fb6c7bca3d55c19a793372513395e3a567bdd7ba"
+            },
+            "star/genomegenerate": {
+                "git_sha": "fb6c7bca3d55c19a793372513395e3a567bdd7ba"
+            },
             "stringtie/stringtie": {
                 "git_sha": "6d88f2da8cc5d586456e801b535cc4213e0fa2f7"
             },

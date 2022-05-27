@@ -3,9 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unpublished Version / DEV]
+## [[3.8.1](https://github.com/nf-core/rnaseq/releases/tag/3.8.1)] - 2022-05-27
 
-### Enhancements & fixes
+- [[#834](https://github.com/nf-core/rnaseq/issues/834)] - `nf-core download` fails with version 3.8 of the pipeline
 
 ## [[3.8](https://github.com/nf-core/rnaseq/releases/tag/3.8)] - 2022-05-25
 

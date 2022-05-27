@@ -18,16 +18,17 @@ include { UNTAR as UNTAR_SALMON_INDEX       } from '../../modules/nf-core/module
 include { CUSTOM_GETCHROMSIZES              } from '../../modules/nf-core/modules/custom/getchromsizes/main'
 include { GFFREAD                           } from '../../modules/nf-core/modules/gffread/main'
 include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/modules/bbmap/bbsplit/main'
+include { STAR_GENOMEGENERATE               } from '../../modules/nf-core/modules/star/genomegenerate/main'
 include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
 include { HISAT2_BUILD                      } from '../../modules/nf-core/modules/hisat2/build/main'
 include { SALMON_INDEX                      } from '../../modules/nf-core/modules/salmon/index/main'
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../modules/nf-core/modules/rsem/preparereference/main'
 include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../modules/nf-core/modules/rsem/preparereference/main'
 
-include { GTF2BED              } from '../../modules/local/gtf2bed'
-include { CAT_ADDITIONAL_FASTA } from '../../modules/local/cat_additional_fasta'
-include { GTF_GENE_FILTER      } from '../../modules/local/gtf_gene_filter'
-include { STAR_GENOMEGENERATE  } from '../../modules/local/star_genomegenerate'
+include { GTF2BED                      } from '../../modules/local/gtf2bed'
+include { CAT_ADDITIONAL_FASTA         } from '../../modules/local/cat_additional_fasta'
+include { GTF_GENE_FILTER              } from '../../modules/local/gtf_gene_filter'
+include { STAR_GENOMEGENERATE_IGENOMES } from '../../modules/local/star_genomegenerate_igenomes'
 
 workflow PREPARE_GENOME {
     take:
@@ -166,8 +167,13 @@ workflow PREPARE_GENOME {
                 ch_star_index = file(params.star_index)
             }
         } else {
-            ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf, is_aws_igenome ).index
-            ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
+            if (is_aws_igenome) {
+                ch_star_index = STAR_GENOMEGENERATE_IGENOMES ( ch_fasta, ch_gtf ).index
+                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)
+            } else {
+                ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
+            }
         }
     }
 

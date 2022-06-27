@@ -71,7 +71,7 @@ def is_aws_igenome = false
 if (params.fasta && params.gtf) {
     if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
         is_aws_igenome = true
-    }    
+    }
 }
 
 /*
@@ -197,7 +197,7 @@ workflow RNASEQ {
         meta, fastq ->
             def meta_clone = meta.clone()
             meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
-            [ meta_clone, fastq ] 
+            [ meta_clone, fastq ]
     }
     .groupTuple(by: [0])
     .branch {
@@ -264,7 +264,7 @@ workflow RNASEQ {
                 }
             }
             .set { ch_num_trimmed_reads }
-        
+
         MULTIQC_TSV_FAIL_TRIMMED (
             ch_num_trimmed_reads.collect(),
             ["Sample", "Reads after trimming"],
@@ -347,7 +347,8 @@ workflow RNASEQ {
             // Deduplicate genome BAM file before downstream analysis
             DEDUP_UMI_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                params.umitools_dedup_stats
+                params.umitools_dedup_stats,
+                params.umitools_umi_separator
             )
             ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
@@ -369,7 +370,7 @@ workflow RNASEQ {
             // Deduplicate transcriptome BAM file before read counting with Salmon
             DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
-                params.umitools_dedup_stats
+                params.umitools_dedup_stats,
             )
 
             // Name sort BAM before passing to Salmon

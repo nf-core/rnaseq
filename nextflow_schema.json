@@ -10,7 +10,9 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["outdir"],
+            "required": [
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -76,16 +78,40 @@
                     "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
                     "description": "The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI."
                 },
-                "umitools_dedup_stats": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-barcode",
-                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
-                    "description": "Generate output stats when running \"umi_tools dedup\"."
+                "umitools_bc_pattern2": {
+                    "type": "string",
+                    "default": null,
+                    "fa_icon": "fas fa-barcode"
                 },
                 "umi_discard_read": {
                     "type": "integer",
                     "fa_icon": "fas fa-barcode",
                     "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
+                },
+                "umitools_umi_separator": {
+                    "type": "string",
+                    "default": ":",
+                    "fa_icon": "fas fa-star-half-alt",
+                    "description": "How the extracted UMI is seperated from the read name."
+                },
+                "umitools_grouping_method": {
+                    "type": "string",
+                    "default": "directional",
+                    "fa_icon": "far fa-object-ungroup",
+                    "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
+                    "enum": [
+                        "unique",
+                        "percentile",
+                        "cluster",
+                        "adjacency",
+                        "directional"
+                    ]
+                },
+                "umitools_dedup_stats": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-barcode",
+                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
+                    "description": "Generate output stats when running \"umi_tools dedup\"."
                 },
                 "save_umi_intermeds": {
                     "type": "boolean",
@@ -366,13 +392,19 @@
                     "default": "star_salmon",
                     "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
                     "fa_icon": "fas fa-map-signs",
-                    "enum": ["star_salmon", "star_rsem", "hisat2"]
+                    "enum": [
+                        "star_salmon",
+                        "star_rsem",
+                        "hisat2"
+                    ]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": ["salmon"]
+                    "enum": [
+                        "salmon"
+                    ]
                 },
                 "bam_csi_index": {
                     "type": "boolean",
@@ -608,7 +640,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {

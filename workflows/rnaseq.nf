@@ -348,7 +348,6 @@ workflow RNASEQ {
             DEDUP_UMI_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 params.umitools_dedup_stats,
-                params.umitools_umi_separator
             )
             ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai

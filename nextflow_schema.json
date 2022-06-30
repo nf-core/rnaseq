@@ -90,7 +90,7 @@
                     "type": "string",
                     "default": ":",
                     "fa_icon": "fas fa-star-half-alt",
-                    "description": "How the extracted UMI is seperated from the read name."
+                    "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
                 },
                 "umitools_grouping_method": {
                     "type": "string",

@@ -46,6 +46,15 @@ class WorkflowRnaseq {
             System.exit(1)
         }
 
+
+        if (params.with_umi && !params.skip_umi_extract) {
+            if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
+            log.error "UMI-tools requires a barcode pattern to extract barcodes from the reads."
+            System.exit(1)
+            }
+        }
+
+
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {
                 log.error "Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}."

@@ -78,8 +78,9 @@
                 },
                 "umitools_bc_pattern2": {
                     "type": "string",
-                    "default": null,
-                    "fa_icon": "fas fa-barcode"
+                    "default": "None",
+                    "fa_icon": "fas fa-barcode",
+                    "description": "The UMI barcode pattern to use if the UMI is located in read 2."
                 },
                 "umi_discard_read": {
                     "type": "integer",
@@ -88,7 +89,7 @@
                 },
                 "umitools_umi_separator": {
                     "type": "string",
-                    "default": ":",
+                    "default": "_",
                     "fa_icon": "fas fa-star-half-alt",
                     "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
                 },

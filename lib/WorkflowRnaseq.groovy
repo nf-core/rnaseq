@@ -49,8 +49,8 @@ class WorkflowRnaseq {
 
         if (params.with_umi && !params.skip_umi_extract) {
             if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
-            log.error "UMI-tools requires a barcode pattern to extract barcodes from the reads."
-            System.exit(1)
+                log.error "UMI-tools requires a barcode pattern to extract barcodes from the reads."
+                System.exit(1)
             }
         }
 

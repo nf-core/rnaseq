@@ -71,7 +71,7 @@ def is_aws_igenome = false
 if (params.fasta && params.gtf) {
     if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
         is_aws_igenome = true
-    }    
+    }
 }
 
 /*
@@ -197,7 +197,7 @@ workflow RNASEQ {
         meta, fastq ->
             def meta_clone = meta.clone()
             meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
-            [ meta_clone, fastq ] 
+            [ meta_clone, fastq ]
     }
     .groupTuple(by: [0])
     .branch {
@@ -264,7 +264,7 @@ workflow RNASEQ {
                 }
             }
             .set { ch_num_trimmed_reads }
-        
+
         MULTIQC_TSV_FAIL_TRIMMED (
             ch_num_trimmed_reads.collect(),
             ["Sample", "Reads after trimming"],

@@ -76,16 +76,35 @@
                     "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
                     "description": "The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI."
                 },
-                "umitools_dedup_stats": {
-                    "type": "boolean",
+                "umitools_bc_pattern2": {
+                    "type": "string",
+                    "default": "None",
                     "fa_icon": "fas fa-barcode",
-                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
-                    "description": "Generate output stats when running \"umi_tools dedup\"."
+                    "description": "The UMI barcode pattern to use if the UMI is located in read 2."
                 },
                 "umi_discard_read": {
                     "type": "integer",
                     "fa_icon": "fas fa-barcode",
                     "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
+                },
+                "umitools_umi_separator": {
+                    "type": "string",
+                    "default": "_",
+                    "fa_icon": "fas fa-star-half-alt",
+                    "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
+                },
+                "umitools_grouping_method": {
+                    "type": "string",
+                    "default": "directional",
+                    "fa_icon": "far fa-object-ungroup",
+                    "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
+                    "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
+                },
+                "umitools_dedup_stats": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-barcode",
+                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
+                    "description": "Generate output stats when running \"umi_tools dedup\"."
                 },
                 "save_umi_intermeds": {
                     "type": "boolean",

@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9dev] - NA
+
+### :warning: Major enhancements
+
+### Enhancements & fixes
+
+- Expose additional arguments to UMI-tools as pipeline params: `--umitools_bc_pattern2` is required if the UMI is located on read 2. `--umitools_umi_separator` will often be needed in conjunction with `--skip_umi_extract` as most other tools such as Illumina's `BCL Convert` use a colon instead of an underscore to separate the UMIs. The `--umitools_grouping_method` allows to fine-tune handling of similar but non-identical UMIs.
+
+### Parameters
+
+| Old parameter | New parameter                |
+| ------------- | ---------------------------- |
+|               | `--umitools_bc_pattern2`     |
+|               | `--umitools_umi_separator`   |
+|               | `--umitools_grouping_method` |
+
 ## [[3.8.1](https://github.com/nf-core/rnaseq/releases/tag/3.8.1)] - 2022-05-27
 
 - [[#834](https://github.com/nf-core/rnaseq/issues/834)] - `nf-core download` fails with version 3.8 of the pipeline

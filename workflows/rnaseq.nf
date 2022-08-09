@@ -179,7 +179,7 @@ workflow RNASEQ {
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // Check if contigs in genome fasta file > 512 Mbp
-    if (!params.skip_alignment) {
+    if (!params.skip_alignment && !params.bam_csi_index) {
         PREPARE_GENOME
             .out
             .fai

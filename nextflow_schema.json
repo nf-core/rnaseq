@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/nextflow_schema.json",
     "title": "nf-core/rnaseq pipeline parameters",
-    "description": "Nextflow RNA-Seq analysis pipeline, part of the nf-core community.",
+    "description": "RNA sequencing analysis pipeline for gene/isoform quantification and extensive quality control.",
     "type": "object",
     "definitions": {
         "input_output_options": {

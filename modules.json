@@ -3,14 +3,20 @@
     "homePage": "https://github.com/nf-core/rnaseq",
     "repos": {
         "nf-core/modules": {
-            "custom/dumpsoftwareversions": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "fastqc": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "multiqc": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            "git_url": "https://github.com/nf-core/modules.git",
+            "modules": {
+                "custom/dumpsoftwareversions": {
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d",
+                    "branch": "master"
+                },
+                "fastqc": {
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d",
+                    "branch": "master"
+                },
+                "multiqc": {
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d",
+                    "branch": "master"
+                }
             }
         }
     }

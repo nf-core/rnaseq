@@ -98,7 +98,9 @@ class RowChecker:
         """Assert that read pairs have the same file extension. Report pair status."""
         if row[self._first_col] and row[self._second_col]:
             row[self._single_col] = False
-            if Path(row[self._first_col]).suffixes[-2:] != Path(row[self._second_col]).suffixes[-2:]:
+            first_col_suffix = Path(row[self._first_col]).suffixes[-2:]
+            second_col_suffix = Path(row[self._second_col]).suffixes[-2:]
+            if first_col_suffix != second_col_suffix:
                 raise AssertionError("FASTQ pairs must have the same file extensions.")
         else:
             row[self._single_col] = True
@@ -157,7 +159,7 @@ def sniff_format(handle):
     handle.seek(0)
     sniffer = csv.Sniffer()
     if not sniffer.has_header(peek):
-        logger.critical(f"The given sample sheet does not appear to contain a header.")
+        logger.critical("The given sample sheet does not appear to contain a header.")
         sys.exit(1)
     dialect = sniffer.sniff(peek)
     return dialect
@@ -195,7 +197,8 @@ def check_samplesheet(file_in, file_out):
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
         # Validate the existence of the expected header columns.
         if not required_columns.issubset(reader.fieldnames):
-            logger.critical(f"The sample sheet **must** contain the column headers: {', '.join(required_columns)}.")
+            req_cols = ", ".join(required_columns)
+            logger.critical(f"The sample sheet **must** contain these column headers: {req_cols}.")
             sys.exit(1)
         # Validate each row.
         checker = RowChecker()

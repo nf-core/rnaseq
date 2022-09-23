@@ -4,7 +4,7 @@ process HISAT2_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::hisat2=2.2.1" : null)
+    conda (params.enable_conda ? "bioconda::hisat2=2.2.1 bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
         'quay.io/biocontainers/hisat2:2.2.1--h1b792b2_3' }"

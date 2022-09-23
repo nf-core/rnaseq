@@ -1,4 +1,4 @@
-def VERSION = '2.2.0' // Version information not provided by tool on CLI
+def VERSION = '2.2.1' // Version information not provided by tool on CLI
 
 process HISAT2_BUILD {
     tag "$fasta"

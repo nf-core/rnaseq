@@ -47,16 +47,14 @@ def check_samplesheet(file_in, file_out):
     """
 
     sample_mapping_dict = {}
-    with open(file_in, "r", encoding='utf-8-sig') as fin:
+    with open(file_in, "r", encoding="utf-8-sig") as fin:
 
         ## Check header
         MIN_COLS = 3
         HEADER = ["sample", "fastq_1", "fastq_2", "strandedness"]
         header = [x.strip('"') for x in fin.readline().strip().split(",")]
         if header[: len(HEADER)] != HEADER:
-            print(
-                f"ERROR: Please check samplesheet header -> {','.join(header)} != {','.join(HEADER)}"
-            )
+            print(f"ERROR: Please check samplesheet header -> {','.join(header)} != {','.join(HEADER)}")
             sys.exit(1)
 
         ## Check sample entries
@@ -83,9 +81,7 @@ def check_samplesheet(file_in, file_out):
                 ## Check sample name entries
                 sample, fastq_1, fastq_2, strandedness = lspl[: len(HEADER)]
                 if sample.find(" ") != -1:
-                    print(
-                        f"WARNING: Spaces have been replaced by underscores for sample: {sample}"
-                    )
+                    print(f"WARNING: Spaces have been replaced by underscores for sample: {sample}")
                     sample = sample.replace(" ", "_")
                 if not sample:
                     print_error("Sample entry has not been specified!", "Line", line)
@@ -141,17 +137,11 @@ def check_samplesheet(file_in, file_out):
         out_dir = os.path.dirname(file_out)
         make_dir(out_dir)
         with open(file_out, "w") as fout:
-            fout.write(
-                ",".join(["sample", "single_end", "fastq_1", "fastq_2", "strandedness"])
-                + "\n"
-            )
+            fout.write(",".join(["sample", "single_end", "fastq_1", "fastq_2", "strandedness"]) + "\n")
             for sample in sorted(sample_mapping_dict.keys()):
 
                 ## Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-                if not all(
-                    x[0] == sample_mapping_dict[sample][0][0]
-                    for x in sample_mapping_dict[sample]
-                ):
+                if not all(x[0] == sample_mapping_dict[sample][0][0] for x in sample_mapping_dict[sample]):
                     print_error(
                         f"Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end!",
                         "Sample",
@@ -159,10 +149,7 @@ def check_samplesheet(file_in, file_out):
                     )
 
                 ## Check that multiple runs of the same sample are of the same strandedness
-                if not all(
-                    x[-1] == sample_mapping_dict[sample][0][-1]
-                    for x in sample_mapping_dict[sample]
-                ):
+                if not all(x[-1] == sample_mapping_dict[sample][0][-1] for x in sample_mapping_dict[sample]):
                     print_error(
                         f"Multiple runs of a sample must have the same strandedness!",
                         "Sample",

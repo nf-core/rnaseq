@@ -10,7 +10,9 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["outdir"],
+            "required": [
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -98,7 +100,13 @@
                     "default": "directional",
                     "fa_icon": "far fa-object-ungroup",
                     "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
-                    "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
+                    "enum": [
+                        "unique",
+                        "percentile",
+                        "cluster",
+                        "adjacency",
+                        "directional"
+                    ]
                 },
                 "umitools_dedup_stats": {
                     "type": "boolean",
@@ -385,13 +393,19 @@
                     "default": "star_salmon",
                     "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
                     "fa_icon": "fas fa-map-signs",
-                    "enum": ["star_salmon", "star_rsem", "hisat2"]
+                    "enum": [
+                        "star_salmon",
+                        "star_rsem",
+                        "hisat2"
+                    ]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": ["salmon"]
+                    "enum": [
+                        "salmon"
+                    ]
                 },
                 "bam_csi_index": {
                     "type": "boolean",
@@ -411,7 +425,7 @@
                 },
                 "min_mapped_reads": {
                     "type": "number",
-                    "default": 5.0,
+                    "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
                     "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
@@ -466,7 +480,8 @@
                     "type": "boolean",
                     "description": "Use vst transformation instead of rlog with DESeq2.",
                     "help_text": "See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization).",
-                    "fa_icon": "fas fa-dolly"
+                    "fa_icon": "fas fa-dolly",
+                    "default": true
                 },
                 "skip_bigwig": {
                     "type": "boolean",
@@ -627,7 +642,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {

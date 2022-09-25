@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 - [[#746](https://github.com/nf-core/rnaseq/issues/746)] - Add `tin.py` output to MultiQC report
+- [[#841](https://github.com/nf-core/rnaseq/issues/841)] - Turn `--deseq2_vst` on by default
 - Expose additional arguments to UMI-tools as pipeline params: `--umitools_bc_pattern2` is required if the UMI is located on read 2. `--umitools_umi_separator` will often be needed in conjunction with `--skip_umi_extract` as most other tools such as Illumina's `BCL Convert` use a colon instead of an underscore to separate the UMIs. The `--umitools_grouping_method` allows to fine-tune handling of similar but non-identical UMIs.
 - Updated pipeline template to [nf-core/tools 2.5.1](https://github.com/nf-core/tools/releases/tag/2.5.1)
 

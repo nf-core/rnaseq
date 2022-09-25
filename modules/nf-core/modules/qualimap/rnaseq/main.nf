@@ -20,7 +20,7 @@ process QUALIMAP_RNASEQ {
 
     script:
     def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    def prefix   = task.ext.prefix ?: "${meta.id}"
     def paired_end = meta.single_end ? '' : '-pe'
     def memory     = task.memory.toGiga() + "G"
 
@@ -43,6 +43,17 @@ process QUALIMAP_RNASEQ {
         -p $strandedness \\
         $paired_end \\
         -outdir $prefix
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix   = task.ext.prefix ?: "${meta.id}"
+    """
+    mkdir ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

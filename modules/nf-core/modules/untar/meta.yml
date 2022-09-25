@@ -26,9 +26,9 @@ output:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - untar:
-      type: file
-      description:
-      pattern: "*.*"
+      type: directory
+      description: Directory containing contents of archive
+      pattern: "*/"
   - versions:
       type: file
       description: File containing software versions
@@ -36,3 +36,5 @@ output:
 authors:
   - "@joseespinosa"
   - "@drpatelh"
+  - "@matthdsm"
+  - "@jfy133"

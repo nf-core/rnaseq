@@ -19,11 +19,13 @@ process SAMTOOLS_IDXSTATS {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
     samtools \\
         idxstats \\
         $bam \\
-        > ${bam}.idxstats
+        > ${prefix}.idxstats
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -6,6 +6,23 @@ include { FASTQC           } from '../../modules/nf-core/modules/fastqc/main'
 include { UMITOOLS_EXTRACT } from '../../modules/nf-core/modules/umitools/extract/main'
 include { TRIMGALORE       } from '../../modules/nf-core/modules/trimgalore/main'
 
+//
+// Function that parses TrimGalore log output file to get total number of reads after trimming
+//
+def getTrimGaloreReadsAfterFiltering(log_file) {
+    def total_reads = 0
+    def filtered_reads = 0
+    log_file.eachLine { line ->
+        def total_reads_matcher = line =~ /([\d\.]+)\ssequences processed in total/
+        def se_filtered_reads_matcher = line =~ /shorter than the length cutoff of\s[\d\.]+\sbp:\s([\d\.]+)/
+        def pe_filtered_reads_matcher = line =~ /shorter than the length cutoff\s\([\d\.]+\sbp\):\s([\d\.]+)/
+        if (total_reads_matcher) total_reads = total_reads_matcher[0][1].toFloat()
+        if (se_filtered_reads_matcher) filtered_reads = se_filtered_reads_matcher[0][1].toFloat()
+        if (pe_filtered_reads_matcher) filtered_reads = pe_filtered_reads_matcher[0][1].toFloat()
+    }
+    return total_reads - filtered_reads
+}
+
 workflow FASTQC_UMITOOLS_TRIMGALORE {
     take:
     reads            // channel: [ val(meta), [ reads ] ]
@@ -62,6 +79,22 @@ workflow FASTQC_UMITOOLS_TRIMGALORE {
         trim_zip      = TRIMGALORE.out.zip
         trim_log      = TRIMGALORE.out.log
         ch_versions   = ch_versions.mix(TRIMGALORE.out.versions.first())
+
+        //
+        // Filter empty FastQ files after adapter trimming
+        //
+        trim_reads
+            .join(trim_log)
+            .map {
+                meta, reads, trim_log ->
+                    if (!meta.single_end) {
+                        trim_log = trim_log[-1]
+                    }
+                    if (getTrimGaloreReadsAfterFiltering(trim_log) > 0) {
+                        [ meta, reads ]
+                    }
+            }
+            .set { trim_reads }
     }
 
     emit:

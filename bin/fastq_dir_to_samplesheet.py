@@ -86,9 +86,7 @@ def fastq_dir_to_samplesheet(
         sample = os.path.basename(path).replace(extension, "")
         if sanitise_name:
             sample = sanitise_name_delimiter.join(
-                os.path.basename(path).split(sanitise_name_delimiter)[
-                    :sanitise_name_index
-                ]
+                os.path.basename(path).split(sanitise_name_delimiter)[:sanitise_name_index]
             )
         return sample
 
@@ -99,9 +97,7 @@ def fastq_dir_to_samplesheet(
         sorted results.
         See also https://stackoverflow.com/questions/6773584/how-is-pythons-glob-glob-ordered
         """
-        return sorted(
-            glob.glob(os.path.join(fastq_dir, f"*{extension}"), recursive=False)
-        )
+        return sorted(glob.glob(os.path.join(fastq_dir, f"*{extension}"), recursive=False))
 
     read_dict = {}
 
@@ -135,9 +131,7 @@ def fastq_dir_to_samplesheet(
                     sample_info = ",".join([sample, read_1, read_2, strandedness])
                     fout.write(f"{sample_info}\n")
     else:
-        error_str = (
-            "\nWARNING: No FastQ files found so samplesheet has not been created!\n\n"
-        )
+        error_str = "\nWARNING: No FastQ files found so samplesheet has not been created!\n\n"
         error_str += "Please check the values provided for the:\n"
         error_str += "  - Path to the directory containing the FastQ files\n"
         error_str += "  - '--read1_extension' parameter\n"

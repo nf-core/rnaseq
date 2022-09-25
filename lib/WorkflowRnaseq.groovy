@@ -10,6 +10,7 @@ class WorkflowRnaseq {
     public static void initialise(params, log, valid_params) {
         genomeExistsError(params, log)
 
+
         if (!params.fasta) {
             log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
             System.exit(1)
@@ -251,9 +252,7 @@ class WorkflowRnaseq {
         yaml_file_text        += "data: |\n"
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
-    }
-
-    //
+    }//
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {

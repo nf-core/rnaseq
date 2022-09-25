@@ -4,7 +4,7 @@
             "name": "File options",
             "description": "Files needed for the analysis.",
             "properties": {
-                "annotation": {
+                "input": {
                     "name": "samplesheet",
                     "type": "file",
                     "pattern": "csv|xlsx",

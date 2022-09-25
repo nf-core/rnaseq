@@ -20,7 +20,7 @@ process QUALIMAP_RNASEQ {
 
     script:
     def args = task.ext.args   ?: ''
-    def prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${meta.id}"
     def paired_end = meta.single_end ? '' : '-pe'
     def memory     = task.memory.toGiga() + "G"
 
@@ -51,7 +51,7 @@ process QUALIMAP_RNASEQ {
     """
 
     stub:
-    def prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir ${prefix}
 

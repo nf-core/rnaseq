@@ -15,7 +15,7 @@
                 },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
-                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
+                    "git_sha": "82501fe6d0d12614db67751d30af98d16e63dc59"
                 },
                 "custom/getchromsizes": {
                     "branch": "master",
@@ -55,7 +55,7 @@
                 },
                 "qualimap/rnaseq": {
                     "branch": "master",
-                    "git_sha": "53108b6b51d4e968e5b1cc9b07ddb6559cb6d43d"
+                    "git_sha": "82501fe6d0d12614db67751d30af98d16e63dc59"
                 },
                 "rsem/calculateexpression": {
                     "branch": "master",
@@ -111,7 +111,7 @@
                 },
                 "samtools/idxstats": {
                     "branch": "master",
-                    "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
+                    "git_sha": "f0a86eaf5bf6ca73c5571193edd00c25bfa308f5"
                 },
                 "samtools/index": {
                     "branch": "master",

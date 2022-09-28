@@ -11,7 +11,7 @@
                 },
                 "cat/fastq": {
                     "branch": "master",
-                    "git_sha": "c13f2274fb9c93ad265640e0e56e6526bd4f42d4"
+                    "git_sha": "e9bc33485e420b51cfbed3cf63ac7463cd5739d3"
                 },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
@@ -19,7 +19,7 @@
                 },
                 "custom/getchromsizes": {
                     "branch": "master",
-                    "git_sha": "d75b37fef175f241230ee25c485bd574c768e282"
+                    "git_sha": "213403187932dbbdd936a04474cc8cd8abae7a08"
                 },
                 "fastqc": {
                     "branch": "master",
@@ -147,7 +147,7 @@
                 },
                 "trimgalore": {
                     "branch": "master",
-                    "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
+                    "git_sha": "bfbdc4f79bb26bc698d30b74abd081db8af77f4d"
                 },
                 "ucsc/bedclip": {
                     "branch": "master",

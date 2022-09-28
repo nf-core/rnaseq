@@ -1,6 +1,6 @@
 process CUSTOM_GETCHROMSIZES {
     tag "$fasta"
-    label 'process_single'
+    label 'process_low'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -8,13 +8,12 @@ process CUSTOM_GETCHROMSIZES {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(fasta)
+    path fasta
 
     output:
-    tuple val(meta), path ("*.sizes"), emit: sizes
-    tuple val(meta), path ("*.fai")  , emit: fai
-    tuple val(meta), path ("*.gzi")  , emit: gzi, optional: true
-    path  "versions.yml"             , emit: versions
+    path '*.sizes'      , emit: sizes
+    path '*.fai'        , emit: fai
+    path  "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,18 +26,7 @@ process CUSTOM_GETCHROMSIZES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        getchromsizes: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
-    """
-
-    stub:
-    """
-    touch ${fasta}.fai
-    touch ${fasta}.sizes
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        getchromsizes: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+        custom: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
 }

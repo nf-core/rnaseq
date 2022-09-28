@@ -14,22 +14,12 @@ tools:
       licence: ["MIT"]
 
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - fasta:
       type: file
       description: FASTA file
-      pattern: "*.{fa,fasta,fna,fas}"
+      pattern: "*.{fasta}"
 
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - sizes:
       type: file
       description: File containing chromosome lengths
@@ -38,16 +28,11 @@ output:
       type: file
       description: FASTA index file
       pattern: "*.{fai}"
-  - gzi:
-      type: file
-      description: Optional gzip index file for compressed inputs
-      pattern: "*.gzi"
   - versions:
       type: file
-      description: File containing software versions
+      description: File containing software version
       pattern: "versions.yml"
 
 authors:
   - "@tamara-hodgetts"
   - "@chris-cheshire"
-  - "@muffato"

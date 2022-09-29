@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [[#746](https://github.com/nf-core/rnaseq/issues/746)] - Add `tin.py` output to MultiQC report
 - [[#841](https://github.com/nf-core/rnaseq/issues/841)] - Turn `--deseq2_vst` on by default
+- [[#853](https://github.com/nf-core/rnaseq/issues/853)] - Pipeline fails at email step: Failed to invoke `workflow.onComplete` event handler
 - [[#857](https://github.com/nf-core/rnaseq/issues/857)] - Missing parameter required by StringTie if using STAR as aligner
 - [[#862](https://github.com/nf-core/rnaseq/issues/862)] - Filter samples that have no reads after trimming
 - Expose additional arguments to UMI-tools as pipeline params: `--umitools_bc_pattern2` is required if the UMI is located on read 2. `--umitools_umi_separator` will often be needed in conjunction with `--skip_umi_extract` as most other tools such as Illumina's `BCL Convert` use a colon instead of an underscore to separate the UMIs. The `--umitools_grouping_method` allows to fine-tune handling of similar but non-identical UMIs.

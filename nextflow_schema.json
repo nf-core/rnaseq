@@ -411,7 +411,7 @@
                 },
                 "min_mapped_reads": {
                     "type": "number",
-                    "default": 5.0,
+                    "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
                     "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
@@ -466,7 +466,8 @@
                     "type": "boolean",
                     "description": "Use vst transformation instead of rlog with DESeq2.",
                     "help_text": "See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization).",
-                    "fa_icon": "fas fa-dolly"
+                    "fa_icon": "fas fa-dolly",
+                    "default": true
                 },
                 "skip_bigwig": {
                     "type": "boolean",

@@ -1,6 +1,6 @@
 process SAMTOOLS_FLAGSTAT {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -19,12 +19,13 @@ process SAMTOOLS_FLAGSTAT {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     samtools \\
         flagstat \\
-        --threads ${task.cpus-1} \\
+        --threads ${task.cpus} \\
         $bam \\
-        > ${bam}.flagstat
+        > ${prefix}.flagstat
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,8 +1,9 @@
 name: bbmap_bbsplit
-description: write your description here
+description: Split sequencing reads by mapping them to multiple references simultaneously
 keywords:
   - align
   - map
+  - fastq
   - genome
   - reference
 tools:

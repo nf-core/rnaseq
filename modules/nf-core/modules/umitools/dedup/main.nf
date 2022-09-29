@@ -26,8 +26,10 @@ process UMITOOLS_DEDUP {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def paired = meta.single_end ? "" : "--paired"
     def stats = get_output_stats ? "--output-stats $prefix" : ""
+
+    if (!(args ==~ /.*--random-seed.*/)) {args += " --random-seed=100"}
     """
-    umi_tools \\
+    PYTHONHASHSEED=0 umi_tools \\
         dedup \\
         -I $bam \\
         -S ${prefix}.bam \\

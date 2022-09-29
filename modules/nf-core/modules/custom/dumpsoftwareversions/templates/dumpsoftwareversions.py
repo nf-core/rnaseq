@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
+import yaml
 import platform
 from textwrap import dedent
-
-import yaml
 
 
 def _make_versions_html(versions):

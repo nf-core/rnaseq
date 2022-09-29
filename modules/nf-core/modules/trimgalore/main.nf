@@ -32,7 +32,7 @@ process TRIMGALORE {
         cores = (task.cpus as int) - 4
         if (meta.single_end) cores = (task.cpus as int) - 3
         if (cores < 1) cores = 1
-        if (cores > 4) cores = 4
+        if (cores > 8) cores = 8
     }
 
     // Clipping presets have to be evaluated in the context of SE/PE

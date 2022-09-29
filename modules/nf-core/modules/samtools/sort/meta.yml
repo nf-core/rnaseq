@@ -39,6 +39,10 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
+  - csi:
+      type: file
+      description: BAM index file (optional)
+      pattern: "*.csi"
 authors:
   - "@drpatelh"
   - "@ewels"

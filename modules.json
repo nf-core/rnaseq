@@ -35,15 +35,15 @@
                 },
                 "hisat2/align": {
                     "branch": "master",
-                    "git_sha": "233fa70811a03a4cecb2ece483b5c8396e2cee1d"
+                    "git_sha": "4eed099a12a7d586ce830a662a33a9df5bd67a24"
                 },
                 "hisat2/build": {
                     "branch": "master",
-                    "git_sha": "233fa70811a03a4cecb2ece483b5c8396e2cee1d"
+                    "git_sha": "4eed099a12a7d586ce830a662a33a9df5bd67a24"
                 },
                 "hisat2/extractsplicesites": {
                     "branch": "master",
-                    "git_sha": "233fa70811a03a4cecb2ece483b5c8396e2cee1d"
+                    "git_sha": "4eed099a12a7d586ce830a662a33a9df5bd67a24"
                 },
                 "picard/markduplicates": {
                     "branch": "master",

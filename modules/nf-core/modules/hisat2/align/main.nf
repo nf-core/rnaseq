@@ -3,10 +3,10 @@ process HISAT2_ALIGN {
     label 'process_high'
 
     // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
-    conda (params.enable_conda ? "bioconda::hisat2=2.2.0 bioconda::samtools=1.15.1" : null)
+    conda (params.enable_conda ? "bioconda::hisat2=2.2.1 bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:0e773bb207600fcb4d38202226eb20a33c7909b6-0' :
-        'quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:0e773bb207600fcb4d38202226eb20a33c7909b6-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:38aed4501da19db366dc7c8d52d31d94e760cfaf-0' :
+        'quay.io/biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:38aed4501da19db366dc7c8d52d31d94e760cfaf-0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -25,7 +25,7 @@ process HISAT2_ALIGN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '2.2.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    def VERSION = '2.2.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {

@@ -70,4 +70,28 @@ process STAR_ALIGN {
         gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}Xd.out.bam
+    touch ${prefix}.Log.final.out
+    touch ${prefix}.Log.out
+    touch ${prefix}.Log.progress.out
+    touch ${prefix}.sortedByCoord.out.bam
+    touch ${prefix}.toTranscriptome.out.bam
+    touch ${prefix}.Aligned.unsort.out.bam
+    touch ${prefix}.unmapped_1.fastq.gz
+    touch ${prefix}.unmapped_2.fastq.gz
+    touch ${prefix}.tab
+    touch ${prefix}.Chimeric.out.junction
+    touch ${prefix}.out.sam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        star: \$(STAR --version | sed -e "s/STAR_//g")
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+        gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
+    END_VERSIONS
+    """
 }

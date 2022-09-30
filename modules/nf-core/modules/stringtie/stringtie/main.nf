@@ -48,4 +48,18 @@ process STRINGTIE_STRINGTIE {
         stringtie: \$(stringtie --version 2>&1)
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.transcripts.gtf
+    touch ${prefix}.gene.abundance.txt
+    touch ${prefix}.coverage.gtf
+    touch ${prefix}.ballgown
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        stringtie: \$(stringtie --version 2>&1)
+    END_VERSIONS
+    """
 }

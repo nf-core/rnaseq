@@ -1,6 +1,6 @@
 process PRESEQ_LCEXTRAP {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_single'
     label 'error_ignore'
 
     conda (params.enable_conda ? "bioconda::preseq=3.1.2" : null)

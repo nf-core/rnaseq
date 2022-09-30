@@ -1,0 +1,10 @@
+# Config file for Python. Mostly used to configure linting of bin/check_samplesheet.py with Black.
+# Should be kept the same as nf-core/tools to avoid fighting with template synchronisation.
+[tool.black]
+line-length = 120
+target_version = ["py37", "py38", "py39", "py310"]
+
+[tool.isort]
+profile = "black"
+known_first_party = ["nf_core"]
+multi_line_output = 3

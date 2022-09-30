@@ -1,6 +1,6 @@
 process CAT_FASTQ {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -20,9 +20,9 @@ process CAT_FASTQ {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def readList = reads.collect{ it.toString() }
+    def readList = reads instanceof List ? reads.collect{ it.toString() } : [reads.toString()]
     if (meta.single_end) {
-        if (readList.size > 1) {
+        if (readList.size >= 1) {
             """
             cat ${readList.join(' ')} > ${prefix}.merged.fastq.gz
 
@@ -33,7 +33,7 @@ process CAT_FASTQ {
             """
         }
     } else {
-        if (readList.size > 2) {
+        if (readList.size >= 2) {
             def read1 = []
             def read2 = []
             readList.eachWithIndex{ v, ix -> ( ix & 1 ? read2 : read1 ) << v }
@@ -48,4 +48,33 @@ process CAT_FASTQ {
             """
         }
     }
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def readList = reads instanceof List ? reads.collect{ it.toString() } : [reads.toString()]
+    if (meta.single_end) {
+        if (readList.size > 1) {
+            """
+            touch ${prefix}.merged.fastq.gz
+
+            cat <<-END_VERSIONS > versions.yml
+            "${task.process}":
+                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+            END_VERSIONS
+            """
+        }
+    } else {
+        if (readList.size > 2) {
+            """
+            touch ${prefix}_1.merged.fastq.gz
+            touch ${prefix}_2.merged.fastq.gz
+
+            cat <<-END_VERSIONS > versions.yml
+            "${task.process}":
+                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
+            END_VERSIONS
+            """
+        }
+    }
+
 }

@@ -1,10 +1,9 @@
-def VERSION = '2.2.1' // Version information not provided by tool on CLI
-
 process HISAT2_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::hisat2=2.2.1 bioconda::samtools=1.15.1" : null)
+    // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
+    conda (params.enable_conda ? "bioconda::hisat2=2.2.0 bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
         'quay.io/biocontainers/hisat2:2.2.1--h1b792b2_3' }"
@@ -26,6 +25,7 @@ process HISAT2_ALIGN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '2.2.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {

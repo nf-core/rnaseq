@@ -6,7 +6,7 @@
 
     <meta
       name="description"
-      content="nf-core/rnaseq: Nextflow RNA-Seq analysis pipeline, part of the nf-core community."
+      content="nf-core/rnaseq: RNA sequencing analysis pipeline for gene/isoform quantification and extensive quality control."
     />
     <title>nf-core/rnaseq Pipeline Report</title>
   </head>
@@ -52,8 +52,7 @@
           ${min_mapped_reads}%):
         </p>
         <ul>
-          <li><code>${fail_percent_mapped.join('</code></li>
-          <li><code>')}</code></li>
+          <li><code>${fail_percent_mapped.join('</code></li><li><code>')}</code></li>
         </ul>
         <p></p>
       </div>
@@ -101,32 +100,7 @@ $commandLine</pre
         "
       >
         <tbody style="border-bottom: 1px solid #ddd">
-          <% out << summary.collect{ k,v -> "
-          <tr>
-            <th
-              style="
-                text-align: left;
-                padding: 8px 0;
-                line-height: 1.42857143;
-                vertical-align: top;
-                border-top: 1px solid #ddd;
-              "
-            >
-              $k
-            </th>
-            <td
-              style="
-                text-align: left;
-                padding: 8px;
-                line-height: 1.42857143;
-                vertical-align: top;
-                border-top: 1px solid #ddd;
-              "
-            >
-              <pre style="white-space: pre-wrap; overflow: visible">$v</pre>
-            </td>
-          </tr>
-          " }.join("\n") %>
+          <% out << summary.collect{ k,v -> "<tr><th style='text-align:left; padding: 8px 0; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'>$k</th><td style='text-align:left; padding: 8px; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'><pre style='white-space: pre-wrap; overflow: visible;'>$v</pre></td></tr>" }.join("\n") %>
         </tbody>
       </table>
 

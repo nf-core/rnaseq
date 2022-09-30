@@ -10,6 +10,7 @@ class WorkflowRnaseq {
     public static void initialise(params, log, valid_params) {
         genomeExistsError(params, log)
 
+
         if (!params.fasta) {
             log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
             System.exit(1)
@@ -45,6 +46,15 @@ class WorkflowRnaseq {
             log.error "Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA."
             System.exit(1)
         }
+
+
+        if (params.with_umi && !params.skip_umi_extract) {
+            if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
+                log.error "UMI-tools requires a barcode pattern to extract barcodes from the reads."
+                System.exit(1)
+            }
+        }
+
 
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {
@@ -160,11 +170,9 @@ class WorkflowRnaseq {
         def filtered_reads = 0
         log_file.eachLine { line ->
             def total_reads_matcher = line =~ /([\d\.]+)\ssequences processed in total/
-            def se_filtered_reads_matcher = line =~ /shorter than the length cutoff of\s[\d\.]+\sbp:\s([\d\.]+)/
-            def pe_filtered_reads_matcher = line =~ /shorter than the length cutoff\s\([\d\.]+\sbp\):\s([\d\.]+)/
+            def filtered_reads_matcher = line =~ /shorter than the length cutoff[^:]+:\s([\d\.]+)/
             if (total_reads_matcher) total_reads = total_reads_matcher[0][1].toFloat()
-            if (se_filtered_reads_matcher) filtered_reads = se_filtered_reads_matcher[0][1].toFloat()
-            if (pe_filtered_reads_matcher) filtered_reads = pe_filtered_reads_matcher[0][1].toFloat()
+            if (filtered_reads_matcher) filtered_reads = filtered_reads_matcher[0][1].toFloat()
         }
         return total_reads - filtered_reads
     }
@@ -242,9 +250,7 @@ class WorkflowRnaseq {
         yaml_file_text        += "data: |\n"
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
-    }
-
-    //
+    }//
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {

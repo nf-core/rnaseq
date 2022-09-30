@@ -49,4 +49,15 @@ process QUALIMAP_RNASEQ {
         qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
     END_VERSIONS
     """
+
+    stub:
+    prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    mkdir ${prefix}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
+    END_VERSIONS
+    """
 }

@@ -25,10 +25,11 @@ include { SALMON_INDEX                      } from '../../modules/nf-core/module
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../modules/nf-core/modules/rsem/preparereference/main'
 include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../modules/nf-core/modules/rsem/preparereference/main'
 
-include { GTF2BED                      } from '../../modules/local/gtf2bed'
-include { CAT_ADDITIONAL_FASTA         } from '../../modules/local/cat_additional_fasta'
-include { GTF_GENE_FILTER              } from '../../modules/local/gtf_gene_filter'
-include { STAR_GENOMEGENERATE_IGENOMES } from '../../modules/local/star_genomegenerate_igenomes'
+include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../modules/local/preprocess_transcripts_fasta_gencode'
+include { GTF2BED                              } from '../../modules/local/gtf2bed'
+include { CAT_ADDITIONAL_FASTA                 } from '../../modules/local/cat_additional_fasta'
+include { GTF_GENE_FILTER                      } from '../../modules/local/gtf_gene_filter'
+include { STAR_GENOMEGENERATE_IGENOMES         } from '../../modules/local/star_genomegenerate_igenomes'
 
 workflow PREPARE_GENOME {
     take:
@@ -111,6 +112,11 @@ workflow PREPARE_GENOME {
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
             ch_transcript_fasta = file(params.transcript_fasta)
+        }
+        if (params.gencode) { 
+            PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
+            ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
+            ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
         ch_filter_gtf = GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf

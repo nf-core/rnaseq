@@ -35,6 +35,36 @@ jobs:
       - name: Run Prettier --check
         run: prettier --check ${GITHUB_WORKSPACE}
 
+  PythonBlack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check code lints with Black
+        uses: psf/black@stable
+
+      # If the above check failed, post a comment on the PR explaining the failure
+      - name: Post PR comment
+        if: failure()
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            ## Python linting (`black`) is failing
+
+            To keep the code consistent with lots of contributors, we run automated code consistency checks.
+            To fix this CI test, please run:
+
+            * Install [`black`](https://black.readthedocs.io/en/stable/): `pip install black`
+            * Fix formatting errors in your pipeline: `black .`
+
+            Once you push these changes the test should pass, and you can hide this comment :+1:
+
+            We highly recommend setting up Black in your code editor so that this formatting is done automatically on save. Ask about it on Slack for help!
+
+            Thanks again for your contribution!
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-repeats: false
+
   nf-core:
     runs-on: ubuntu-latest
     steps:
@@ -42,15 +72,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
-        env:
-          CAPSULE_LOG: none
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
+        uses: nf-core/setup-nextflow@v1
 
       - uses: actions/setup-python@v3
         with:
-          python-version: "3.6"
+          python-version: "3.7"
           architecture: "x64"
 
       - name: Install dependencies

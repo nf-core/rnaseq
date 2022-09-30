@@ -1,9 +1,8 @@
-def VERSION = '377' // Version information not provided by tool on CLI
-
 process UCSC_BEDGRAPHTOBIGWIG {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_single'
 
+    // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
     conda (params.enable_conda ? "bioconda::ucsc-bedgraphtobigwig=377" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ucsc-bedgraphtobigwig:377--h446ed27_1' :
@@ -23,6 +22,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '377' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     bedGraphToBigWig \\
         $bedgraph \\

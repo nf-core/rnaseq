@@ -1,6 +1,6 @@
 process SAMTOOLS_STATS {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -20,14 +20,15 @@ process SAMTOOLS_STATS {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
     """
     samtools \\
         stats \\
-        --threads ${task.cpus-1} \\
+        --threads ${task.cpus} \\
         ${reference} \\
         ${input} \\
-        > ${input}.stats
+        > ${prefix}.stats
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -38,7 +39,7 @@ process SAMTOOLS_STATS {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${input}.stats
+    touch ${prefix}.stats
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

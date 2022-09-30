@@ -1,10 +1,9 @@
-def VERSION = '2.2.0' // Version information not provided by tool on CLI
-
 process HISAT2_BUILD {
     tag "$fasta"
     label 'process_high'
     label 'process_high_memory'
 
+    // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
     conda (params.enable_conda ? 'bioconda::hisat2=2.2.1' : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
@@ -45,6 +44,7 @@ process HISAT2_BUILD {
         log.info "[HISAT2 index build] Less than ${hisat2_build_memory} GB available, so NOT using splice sites and exons to build HISAT2 index."
         log.info "[HISAT2 index build] Use --hisat2_build_memory [small number] to skip this check."
     }
+    def VERSION = '2.2.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     mkdir hisat2
     $extract_exons

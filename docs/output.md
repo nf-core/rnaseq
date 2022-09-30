@@ -4,7 +4,7 @@
 
 This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report generated from the [full-sized test dataset](https://github.com/nf-core/test-datasets/tree/rnaseq#full-test-dataset-origin) for the pipeline using a command similar to the one below:
 
-```console
+```bash
 nextflow run nf-core/rnaseq -profile test_full,<docker/singularity/institute>
 ```
 

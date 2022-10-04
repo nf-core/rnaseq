@@ -12,11 +12,25 @@ tools:
       homepage: https://multiqc.info/
       documentation: https://multiqc.info/docs/
       licence: ["GPL-3.0-or-later"]
+
 input:
   - multiqc_files:
       type: file
       description: |
         List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+  - multiqc_config:
+      type: file
+      description: Optional config yml for MultiQC
+      pattern: "*.{yml,yaml}"
+  - extra_multiqc_config:
+      type: file
+      description: Second optional config yml for MultiQC. Will override common sections in multiqc_config.
+      pattern: "*.{yml,yaml}"
+  - multiqc_logo:
+      type: file
+      description: Optional logo file for MultiQC
+      pattern: "*.{png}"
+
 output:
   - report:
       type: file
@@ -38,3 +52,4 @@ authors:
   - "@abhi18av"
   - "@bunop"
   - "@drpatelh"
+  - "@jfy133"

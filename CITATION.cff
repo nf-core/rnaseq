@@ -13,8 +13,8 @@ authors:
     given-names: Johannes
   - family-names: Wilm
     given-names: Andreas
-  - family-names: Ulysse Garcia
-    given-names: Maxime
+  - family-names: Garcia
+    given-names: Maxime Ulysse
   - family-names: Di Tommaso
     given-names: Paolo
   - family-names: Nahnsen
@@ -39,8 +39,8 @@ prefered-citation:
       given-names: Johannes
     - family-names: Wilm
       given-names: Andreas
-    - family-names: Ulysse Garcia
-      given-names: Maxime
+    - family-names: Garcia
+      given-names: Maxime Ulysse
     - family-names: Di Tommaso
       given-names: Paolo
     - family-names: Nahnsen

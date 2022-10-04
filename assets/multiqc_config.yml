@@ -3,9 +3,11 @@ report_comment: >
   analysis pipeline. For information about how to interpret these results, please see the
   <a href="https://nf-co.re/rnaseq" target="_blank">documentation</a>.
 report_section_order:
-  software_versions:
+  "nf-core-rnaseq-methods-description":
     order: -1000
-  "nf-core-rnaseq-summary":
+  software_versions:
     order: -1001
+  "nf-core-rnaseq-summary":
+    order: -1002
 
 export_plots: true

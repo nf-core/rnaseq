@@ -28,3 +28,7 @@ jobs:
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-${{ github.sha }}"
             }
           profiles: test_full,aws_tower
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log

@@ -1,4 +1,5 @@
 email_template.html
+adaptivecard.json
 .nextflow*
 work/
 data/

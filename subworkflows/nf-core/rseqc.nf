@@ -2,14 +2,14 @@
 // Run RSeQC modules
 //
 
-include { RSEQC_BAMSTAT            } from '../../modules/nf-core/modules/rseqc/bamstat/main'
-include { RSEQC_INNERDISTANCE      } from '../../modules/nf-core/modules/rseqc/innerdistance/main'
-include { RSEQC_INFEREXPERIMENT    } from '../../modules/nf-core/modules/rseqc/inferexperiment/main'
-include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/modules/rseqc/junctionannotation/main'
-include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/modules/rseqc/junctionsaturation/main'
-include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/modules/rseqc/readdistribution/main'
-include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/modules/rseqc/readduplication/main'
-include { RSEQC_TIN                } from '../../modules/nf-core/modules/rseqc/tin/main'
+include { RSEQC_BAMSTAT            } from '../../modules/nf-core/rseqc/bamstat/main'
+include { RSEQC_INNERDISTANCE      } from '../../modules/nf-core/rseqc/innerdistance/main'
+include { RSEQC_INFEREXPERIMENT    } from '../../modules/nf-core/rseqc/inferexperiment/main'
+include { RSEQC_JUNCTIONANNOTATION } from '../../modules/nf-core/rseqc/junctionannotation/main'
+include { RSEQC_JUNCTIONSATURATION } from '../../modules/nf-core/rseqc/junctionsaturation/main'
+include { RSEQC_READDISTRIBUTION   } from '../../modules/nf-core/rseqc/readdistribution/main'
+include { RSEQC_READDUPLICATION    } from '../../modules/nf-core/rseqc/readduplication/main'
+include { RSEQC_TIN                } from '../../modules/nf-core/rseqc/tin/main'
 
 workflow RSEQC {
     take:

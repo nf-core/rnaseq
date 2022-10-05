@@ -2,7 +2,8 @@
     "name": "nf-core/rnaseq",
     "homePage": "https://github.com/nf-core/rnaseq",
     "repos": {
-        "https://github.com/nf-core/modules.git": {
+        "nf-core/modules": {
+            "git_url": "https://github.com/nf-core/modules.git",
             "modules": {
                 "bbmap/bbsplit": {
                     "branch": "master",

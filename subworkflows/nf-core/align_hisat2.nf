@@ -2,7 +2,7 @@
 // Alignment with HISAT2
 //
 
-include { HISAT2_ALIGN      } from '../../modules/nf-core/modules/hisat2/align/main'
+include { HISAT2_ALIGN      } from '../../modules/nf-core/hisat2/align/main'
 include { BAM_SORT_SAMTOOLS } from './bam_sort_samtools'
 
 workflow ALIGN_HISAT2 {

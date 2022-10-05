@@ -2,8 +2,8 @@
 // Clip over-running ends from bedGraph file and convert to bigWig
 //
 
-include { UCSC_BEDCLIP          } from '../../modules/nf-core/modules/ucsc/bedclip/main'
-include { UCSC_BEDGRAPHTOBIGWIG } from '../../modules/nf-core/modules/ucsc/bedgraphtobigwig/main'
+include { UCSC_BEDCLIP          } from '../../modules/nf-core/ucsc/bedclip/main'
+include { UCSC_BEDGRAPHTOBIGWIG } from '../../modules/nf-core/ucsc/bedgraphtobigwig/main'
 
 workflow BEDGRAPH_TO_BIGWIG {
     take:

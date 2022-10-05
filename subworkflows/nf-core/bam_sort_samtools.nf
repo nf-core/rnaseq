@@ -2,8 +2,8 @@
 // Sort, index BAM file and run samtools stats, flagstat and idxstats
 //
 
-include { SAMTOOLS_SORT      } from '../../modules/nf-core/modules/samtools/sort/main'
-include { SAMTOOLS_INDEX     } from '../../modules/nf-core/modules/samtools/index/main'
+include { SAMTOOLS_SORT      } from '../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_INDEX     } from '../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'
 
 workflow BAM_SORT_SAMTOOLS {

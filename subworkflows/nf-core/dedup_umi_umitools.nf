@@ -2,8 +2,8 @@
 // UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
 //
 
-include { UMITOOLS_DEDUP     } from '../../modules/nf-core/modules/umitools/dedup/main'
-include { SAMTOOLS_INDEX     } from '../../modules/nf-core/modules/samtools/index/main'
+include { UMITOOLS_DEDUP     } from '../../modules/nf-core/umitools/dedup/main'
+include { SAMTOOLS_INDEX     } from '../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from './bam_stats_samtools'
 
 workflow DEDUP_UMI_UMITOOLS {

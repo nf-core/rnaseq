@@ -4,7 +4,6 @@
     nf-core/rnaseq
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/rnaseq
-
     Website: https://nf-co.re/rnaseq
     Slack  : https://nfcore.slack.com/channels/rnaseq
 ----------------------------------------------------------------------------------------
@@ -18,7 +17,15 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
+params.fasta         = WorkflowMain.getGenomeAttribute(params, 'fasta')
+params.gtf           = WorkflowMain.getGenomeAttribute(params, 'gtf')
+params.gff           = WorkflowMain.getGenomeAttribute(params, 'gff')
+params.gene_bed      = WorkflowMain.getGenomeAttribute(params, 'bed12')
+params.bbsplit_index = WorkflowMain.getGenomeAttribute(params, 'bbsplit')
+params.star_index    = WorkflowMain.getGenomeAttribute(params, 'star')
+params.hisat2_index  = WorkflowMain.getGenomeAttribute(params, 'hisat2')
+params.rsem_index    = WorkflowMain.getGenomeAttribute(params, 'rsem')
+params.salmon_index  = WorkflowMain.getGenomeAttribute(params, 'salmon')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

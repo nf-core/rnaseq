@@ -1,0 +1,41 @@
+name: ucsc_bedclip
+description: See http://hgdownload.cse.ucsc.edu/admin/exe/
+keywords:
+  - sort
+tools:
+  - ucsc:
+      description: Remove lines from bed file that refer to off-chromosome locations.
+      homepage: None
+      documentation: None
+      tool_dev_url: None
+      doi: ""
+      licence: ["varies; see http://genome.ucsc.edu/license"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bedgraph:
+      type: file
+      description: bedGraph file
+      pattern: "*.{bedgraph}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bedgraph:
+      type: file
+      description: bedGraph file
+      pattern: "*.{bedgraph}"
+
+authors:
+  - "@drpatelh"

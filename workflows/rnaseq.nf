@@ -130,15 +130,15 @@ include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ                   } from '../modules/nf-core/modules/cat/fastq/main'
-include { BBMAP_BBSPLIT               } from '../modules/nf-core/modules/bbmap/bbsplit/main'
-include { SAMTOOLS_SORT               } from '../modules/nf-core/modules/samtools/sort/main'
-include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/modules/preseq/lcextrap/main'
-include { QUALIMAP_RNASEQ             } from '../modules/nf-core/modules/qualimap/rnaseq/main'
-include { SORTMERNA                   } from '../modules/nf-core/modules/sortmerna/main'
-include { STRINGTIE_STRINGTIE         } from '../modules/nf-core/modules/stringtie/stringtie/main'
-include { SUBREAD_FEATURECOUNTS       } from '../modules/nf-core/modules/subread/featurecounts/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
+include { BBMAP_BBSPLIT               } from '../modules/nf-core/bbmap/bbsplit/main'
+include { SAMTOOLS_SORT               } from '../modules/nf-core/samtools/sort/main'
+include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/preseq/lcextrap/main'
+include { QUALIMAP_RNASEQ             } from '../modules/nf-core/qualimap/rnaseq/main'
+include { SORTMERNA                   } from '../modules/nf-core/sortmerna/main'
+include { STRINGTIE_STRINGTIE         } from '../modules/nf-core/stringtie/stringtie/main'
+include { SUBREAD_FEATURECOUNTS       } from '../modules/nf-core/subread/featurecounts/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules

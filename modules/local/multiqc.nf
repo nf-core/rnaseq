@@ -11,6 +11,8 @@ process MULTIQC {
     path multiqc_custom_config
     path software_versions
     path workflow_summary
+    path methods_description
+    path logo
     path fail_trimming_summary
     path fail_mapping_summary
     path fail_strand_check

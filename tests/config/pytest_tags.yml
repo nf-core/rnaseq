@@ -13,3 +13,8 @@ quantify_rsem:
   - tests/subworkflows/local/quantify_rsem/**
   - modules/nf-core/software/rsem/calculateexpression/**
   - modules/local/rsem_merge_counts.nf
+
+star:
+  - modules/nf-core/star/**
+  - subworkflows/local/align_star.nf
+  - modules/local/star_align_igenomes.nf

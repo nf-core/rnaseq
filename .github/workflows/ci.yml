@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       # HACK Remove after DSL2 rewrite is done
-      fail-fast: false
+      fail-fast: true
       matrix:
         NXF_VER:
           - "21.10.3"
@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       # HACK Remove after DSL2 rewrite is done
-      fail-fast: false
+      fail-fast: true
       matrix:
         NXF_VER:
           - "21.10.3"

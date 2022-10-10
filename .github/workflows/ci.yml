@@ -26,7 +26,7 @@ jobs:
           - "latest-everything"
         test:
           - "default"
-        profile: ["docker", "singularity", "conda"]
+        profile: ["docker"]
         exclude:
           - NXF_VER: "latest-everything"
             profile: "conda"

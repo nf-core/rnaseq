@@ -1,13 +1,13 @@
 # NOTE For now these tests don't support any containers beside docker
 - name: Test STAR Salmon with skip_qc workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --skip_qc
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --skip_qc --outdir results
   tags:
     - star
     - salmon
     - skip_qc
 
 - name: Test STAR Salmon with remove_ribo_rna workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --remove_ribo_rna
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --remove_ribo_rna --outdir results
   tags:
     - star
     - salmon
@@ -16,49 +16,49 @@
   exit_code: 1
 
 - name: Test STAR Salmon with skim_trimming workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --skim_trimming
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --skim_trimming --outdir results
   tags:
     - star
     - salmon
     - skim_trimming
 
 - name: Test STAR Salmon with gtf false workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --gtf false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --gtf false --outdir results
   tags:
     - star
     - salmon
     - "gtf false"
 
 - name: Test STAR Salmon with star_index false workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --star_index false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --star_index false --outdir results
   tags:
     - star
     - salmon
     - "star_index false"
 
 - name: Test STAR Salmon with transcript_fasta false workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --transcript_fasta false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --transcript_fasta false --outdir results
   tags:
     - star
     - salmon
     - "transcript_fasta"
 
 - name: Test STAR Salmon with min_mapped_reads 90 workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --min_mapped_reads 90
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --min_mapped_reads 90 --outdir results
   tags:
     - star
     - salmon
     - "min_mapped_reads 90"
 
 - name: Test STAR Salmon with with_umi workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --with_umi
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --with_umi --outdir results
   tags:
     - star
     - salmon
     - with_umi
 
 - name: Test STAR Salmon with with_umi skip_trimming workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --with_umi --skip_trimming
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --with_umi --skip_trimming --outdir results
   tags:
     - star
     - salmon
@@ -66,21 +66,21 @@
     - skip_trimming
 
 - name: Test STAR Salmon with bam_csi_index workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --bam_csi_index
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --bam_csi_index --outdir results
   tags:
     - star
     - salmon
     - "bam_csi_index"
 
 - name: Test STAR Salmon with save_align_intermeds save_reference workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --save_align_intermeds --save_reference
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --save_align_intermeds --save_reference --outdir results
   tags:
     - star
     - salmon
     - "save_reference"
 
 - name: Test STAR Salmon with featurecounts_group_type false workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --featurecounts_group_type false
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --featurecounts_group_type false --outdir results
   tags:
     - star
     - salmon

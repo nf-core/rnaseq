@@ -1,6 +1,6 @@
 # NOTE For now these tests don't support any containers beside docker
 - name: Run default pipeline with test data
-  command: nextflow run main.nf -profile test,docker
+  command: nextflow run main.nf -profile test,docker --outdir results
   tags:
     - default
   files:

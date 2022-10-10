@@ -38,26 +38,16 @@
     - path: results/salmon/salmon.merged.transcript_tpm.tsv
 
     # star_salmon
-    - md5sum: 777fc7806490edd2ce0a7cbfc742ceaa
-      path: results/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam
-    - md5sum: 76998f645d101fb06bec6df1f14acd1f
-      path: results/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai
-    - md5sum: a3d5a48db015dd9a1aeab92acf19d311
-      path: results/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam
-    - md5sum: 81c12f756d9f2c650ccaa0442d7c1207
-      path: results/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai
-    - md5sum: 7ce1704a8ac04afbb6d944c038144baf
-      path: results/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam
-    - md5sum: 2a0a2934001813bacb4dd36004acf487
-      path: results/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai
-    - md5sum: 9e346d843a583cbf32cb46fa92c2d5b3
-      path: results/star_salmon/WT_REP1.markdup.sorted.bam
-    - md5sum: 4959827b17abd9eb2d24c40e3fae7cae
-      path: results/star_salmon/WT_REP1.markdup.sorted.bam.bai
-    - md5sum: 127b085e48849f448dccde482f2c2991
-      path: results/star_salmon/WT_REP2.markdup.sorted.bam
-    - md5sum: 1b93886a4c71d1fb356dc36ca135390d
-      path: results/star_salmon/WT_REP2.markdup.sorted.bam.bai
+    - path: results/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam
+    - path: results/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai
+    - path: results/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam
+    - path: results/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai
+    - path: results/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam
+    - path: results/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai
+    - path: results/star_salmon/WT_REP1.markdup.sorted.bam
+    - path: results/star_salmon/WT_REP1.markdup.sorted.bam.bai
+    - path: results/star_salmon/WT_REP2.markdup.sorted.bam
+    - path: results/star_salmon/WT_REP2.markdup.sorted.bam.bai
 
     # Trimgalore
     - path: results/trimgalore/RAP1_IAA_30M_REP1_1.fastq.gz_trimming_report.txt

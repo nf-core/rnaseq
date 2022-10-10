@@ -121,7 +121,7 @@ jobs:
           - "salmon"
           - "skip_qc"
           - "skip_alignment"
-          - "skip_qc skip_alignment"
+          # FIXME - "skip_qc skip_alignment"
         profile: ["docker"]
     steps:
       - name: Check out pipeline code

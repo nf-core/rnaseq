@@ -18,10 +18,136 @@ jobs:
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
     runs-on: ubuntu-latest
     strategy:
+      # HACK Remove after DSL2 rewrite is done
+      fail-fast: false
       matrix:
         NXF_VER:
           - "21.10.3"
           - "latest-everything"
+        test:
+          - "default"
+        profile: ["docker", "singularity", "conda"]
+        exclude:
+          - NXF_VER: "latest-everything"
+            profile: "conda"
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - uses: actions/cache@v2
+        with:
+          path: /usr/local/bin/nextflow
+          key: ${{ runner.os }}
+          restore-keys: |
+            ${{ runner.os }}-nextflow-
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-singularity@v5
+        with:
+          singularity-version: 3.7.1
+
+      - name: Set up miniconda
+        if: matrix.profile == 'conda'
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          channels: conda-forge,bioconda,defaults
+          python-version: ${{ matrix.python-version }}
+
+      - name: Conda clean
+        if: matrix.profile == 'conda'
+        run: conda clean -a
+
+      - name: Run pipeline with tests settings
+        uses: Wandalen/wretry.action@v1.0.11
+        with:
+          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          attempt_limit: 3
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+            /tmp/pytest_workflow_*/*/work
+            /tmp/pytest_workflow_*/**/.command.log
+            !/tmp/pytest_workflow_*/*/work/conda
+            !/tmp/pytest_workflow_*/*/work/singularity
+
+  test_all:
+    name: Run pipeline with test data (complete)
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
+    runs-on: ubuntu-latest
+    strategy:
+      # HACK Remove after DSL2 rewrite is done
+      fail-fast: false
+      matrix:
+        NXF_VER:
+          - "21.10.3"
+        test:
+          - "aligner"
+          - "alignment_to_fastq"
+          - "annotation"
+          - "cnvkit"
+          - "controlfreec"
+          - "deepvariant"
+          - "freebayes"
+          - "gatk4_spark"
+          - "haplotypecaller"
+          - "intervals"
+          - "manta"
+          - "markduplicates"
+          - "mpileup"
+          - "msisensorpro"
+          - "mutect2"
+          - "prepare_recalibration"
+          - "recalibrate"
+          - "save_bam_mapped"
+          - "save_output_as_bam"
+          - "skip_markduplicates"
+          - "skip_qc"
+          - "split_fastq"
+          - "strelka"
+          - "strelkabp"
+          - "targeted"
+          - "tiddit"
+          - "trimming"
+          - "tumor_normal_pair"
+          - "umi"
+          - "variantcalling_channel"
+        profile: ["docker"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -31,104 +157,36 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Run pipeline with test data
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Run pipeline with tests settings
+        uses: Wandalen/wretry.action@v1.0.11
+        with:
+          command: PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          attempt_limit: 3
+
+      - name: Output log on failure
+        if: failure()
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
 
-  star_salmon:
-    name: Test STAR Salmon with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--skip_trimming"
-          - "--gtf false"
-          - "--star_index false"
-          - "--transcript_fasta false"
-          - "--min_mapped_reads 90"
-          - "--with_umi"
-          - "--with_umi --skip_trimming"
-          - "--remove_ribo_rna --skip_qualimap"
-          - "--bam_csi_index"
-          - "--save_align_intermeds --save_reference"
-          - "--featurecounts_group_type false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Run pipeline with STAR and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results
-
-  star_rsem:
-    name: Test STAR RSEM with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--rsem_index false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Run pipeline with RSEM STAR and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results
-
-  hisat2:
-    name: Test HISAT2 with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--hisat2_index false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Run pipeline with HISAT2 and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results
-
-  salmon:
-    name: Test Salmon with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc --skip_alignment"
-          - "--salmon_index false --transcript_fasta false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Run pipeline with Salmon and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+            /tmp/pytest_workflow_*/*/work
+            /tmp/pytest_workflow_*/**/.command.log
+            !/tmp/pytest_workflow_*/*/work/conda
+            !/tmp/pytest_workflow_*/*/work/singularity

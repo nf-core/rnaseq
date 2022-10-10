@@ -117,6 +117,9 @@ jobs:
         NXF_VER:
           - "21.10.3"
         test:
+          - "hisat2"
+          - "salmon"
+          - "skip_qc"
           - "skip_alignment"
           - "skip_qc skip_alignment"
         profile: ["docker"]

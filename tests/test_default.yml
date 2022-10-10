@@ -1,0 +1,70 @@
+# NOTE For now these tests don't support any containers beside docker
+- name: Run default pipeline with test data
+  command: nextflow run main.nf -profile test,docker
+  tags:
+    - default
+  files:
+    # fastqc
+    - path: results/fastqc/RAP1_IAA_30M_REP1_1_fastqc.html
+    - path: results/fastqc/RAP1_IAA_30M_REP1_1_fastqc.zip
+    - path: results/fastqc/RAP1_IAA_30M_REP1_2_fastqc.html
+    - path: results/fastqc/RAP1_IAA_30M_REP1_2_fastqc.zip
+    - path: results/fastqc/RAP1_UNINDUCED_REP1_fastqc.html
+    - path: results/fastqc/RAP1_UNINDUCED_REP1_fastqc.zip
+    - path: results/fastqc/RAP1_UNINDUCED_REP2_fastqc.html
+    - path: results/fastqc/RAP1_UNINDUCED_REP2_fastqc.zip
+    - path: results/fastqc/WT_REP1_1_fastqc.html
+    - path: results/fastqc/WT_REP1_1_fastqc.zip
+    - path: results/fastqc/WT_REP1_2_fastqc.html
+    - path: results/fastqc/WT_REP1_2_fastqc.zip
+    - path: results/fastqc/WT_REP2_1_fastqc.html
+    - path: results/fastqc/WT_REP2_1_fastqc.zip
+    - path: results/fastqc/WT_REP2_2_fastqc.html
+    - path: results/fastqc/WT_REP2_2_fastqc.zip
+
+    # multiqc
+    - path: results/multiqc/star_salmon/multiqc_report.html
+
+    # salmon
+    - path: results/salmon/salmon.merged.gene_counts_length_scaled.rds
+    - path: results/salmon/salmon.merged.gene_counts_length_scaled.tsv
+    - path: results/salmon/salmon.merged.gene_counts.rds
+    - path: results/salmon/salmon.merged.gene_counts_scaled.rds
+    - path: results/salmon/salmon.merged.gene_counts_scaled.tsv
+    - path: results/salmon/salmon.merged.gene_counts.tsv
+    - path: results/salmon/salmon.merged.gene_tpm.tsv
+    - path: results/salmon/salmon.merged.transcript_counts.rds
+    - path: results/salmon/salmon.merged.transcript_counts.tsv
+    - path: results/salmon/salmon.merged.transcript_tpm.tsv
+
+    # star_salmon
+    - md5sum: c35b111750b6dec93b2605a4efd05ecf
+      path: results/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam
+    - md5sum: e66938e03e213321e25bbf71a59dc0f7
+      path: results/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai
+    - md5sum: a428c6152079a33c8835d1dbe02080e1
+      path: results/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam
+    - md5sum: 51d711d916e06fb27f24e93207b99648
+      path: results/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai
+    - md5sum: 4f4f85c87e9212e8eb5f82accbe4a6ce
+      path: results/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam
+    - md5sum: f5bf66d3fba93b98ef7326a30bc2fd0f
+      path: results/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai
+    - md5sum: 16f89e27cbaf438883dd1708c5dfe631
+      path: results/star_salmon/WT_REP1.markdup.sorted.bam
+    - md5sum: 22e88cd06d331f84fb00d599851c0382
+      path: results/star_salmon/WT_REP1.markdup.sorted.bam.bai
+    - md5sum: bbe49353f4b18ba6445503c3b7a23cc5
+      path: results/star_salmon/WT_REP2.markdup.sorted.bam
+    - md5sum: 90df98e87262785a3776b9cf82b30457
+      path: results/star_salmon/WT_REP2.markdup.sorted.bam.bai
+
+    # Trimgalore
+    - path: results/trimgalore/RAP1_IAA_30M_REP1_1.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/RAP1_IAA_30M_REP1_2.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/RAP1_UNINDUCED_REP1.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/RAP1_UNINDUCED_REP2.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/WT_REP1_1.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/WT_REP1_2.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/WT_REP2_1.fastq.gz_trimming_report.txt
+    - path: results/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt

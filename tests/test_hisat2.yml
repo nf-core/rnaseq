@@ -1,0 +1,12 @@
+# NOTE For now these tests don't support any containers beside docker
+- name: Test HISAT2 with skip_qc workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner hisat2 --skip_qc
+  tags:
+    - hisat2
+    - skip_qc
+
+- name: Test HISAT2 with hisat2_index false workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner hisat2 --hisat2_index false
+  tags:
+    - hisat2
+    - "hisat2_index false"

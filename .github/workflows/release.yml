@@ -103,7 +103,7 @@ jobs:
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
 
       - name: Upload logs on failure
         if: failure()
@@ -111,10 +111,9 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /tmp/pytest_workflow_*/*/.nextflow.log
-            /tmp/pytest_workflow_*/*/log.out
-            /tmp/pytest_workflow_*/*/log.err
-            /tmp/pytest_workflow_*/*/work
-            /tmp/pytest_workflow_*/**/.command.log
-            !/tmp/pytest_workflow_*/*/work/conda
-            !/tmp/pytest_workflow_*/*/work/singularity
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity

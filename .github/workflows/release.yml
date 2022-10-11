@@ -18,8 +18,7 @@ jobs:
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
     runs-on: ubuntu-latest
     strategy:
-      # HACK Remove after DSL2 rewrite is done
-      fail-fast: true
+      fail-fast: false
       matrix:
         NXF_VER:
           - "21.10.3"

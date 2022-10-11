@@ -7,6 +7,11 @@ quantify_salmon:
   - modules/local/salmon_merge_counts.nf
   - modules/local/salmon_summarizedexperiment.nf
 
+hisat2:
+  - modules/nf-core/hisat2/**
+  - subworkflows/nf-core/align_hisat2.nf
+  - tests/pipeline/test_hisat2.yml
+
 quantify_rsem:
   - subworkflows/local/quantify_rsem.nf
   - subworkflows/nf-core/bam_sort_samtools.nf
@@ -14,7 +19,32 @@ quantify_rsem:
   - modules/nf-core/software/rsem/calculateexpression/**
   - modules/local/rsem_merge_counts.nf
 
+salmon:
+  - bin/salmon_summarizedexperiment.r
+  - bin/salmon_tx2gene.py
+  - bin/salmon_tximport.r
+  - modules/local/salmon_summarizedexperiment.nf
+  - modules/local/salmon_tx2gene.nf
+  - modules/local/salmon_tximport.nf
+  - modules/nf-core/salmon/**
+  - subworkflows/local/quantify_salmon.nf
+  - tests/pipeline/test_salmon.yml
+  - tests/pipeline/test_star_salmon.yml
+  # - tests/subworkflows/local/quantify_salmon/
+
 star:
+  - modules/local/star_align_igenomes.nf
+  - modules/local/star_genomegenerate_igenomes.nf
   - modules/nf-core/star/**
   - subworkflows/local/align_star.nf
-  - modules/local/star_align_igenomes.nf
+  - tests/pipeline/test_star_rsem.yml
+  - tests/pipeline/test_star_salmon.yml
+
+rsem:
+  - bin/prepare-for-rsem.py
+  - modules/local/rsem_merge_counts.nf
+  - modules/local/umitools_prepareforrsem.nf
+  - modules/nf-core/rsem/**
+  - subworkflows/local/quantify_rsem.nf
+  - tests/pipeline/test_star_rsem.yml
+  # - tests/subworkflows/local/quantify_rsem/

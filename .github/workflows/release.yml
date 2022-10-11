@@ -97,7 +97,7 @@ jobs:
         run: conda clean -a
 
       - name: Run pipeline with tests settings
-        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag "${{ matrix.test }}" --symlink --kwdof --git-aware --color=yes
 
       - name: Output log on failure
         if: failure()

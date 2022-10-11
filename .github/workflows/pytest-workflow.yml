@@ -1,4 +1,4 @@
-name: nf-core CI
+name: pytest-workflow
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
@@ -12,28 +12,31 @@ env:
   NXF_ANSI_LOG: false
 
 jobs:
-  test:
-    name: Run default pipeline test
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
+  changes:
+    name: Check for changes
     runs-on: ubuntu-latest
-    strategy:
-      # HACK Remove after DSL2 rewrite is done
-      fail-fast: true
-      matrix:
-        NXF_VER:
-          - "21.10.3"
-          - "latest-everything"
-        test:
-          - "default"
-        profile: ["docker"]
-        exclude:
-          - NXF_VER: "latest-everything"
-            profile: "conda"
+    outputs:
+      # Expose matched filters as job 'modules' output variable
+      tags: ${{ steps.filter.outputs.changes }}
     steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: "tests/config/pytest_tags.yml"
+
+  test_changes:
+    name: ${{ matrix.tags }} ${{ matrix.profile }}
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: needs.changes.outputs.tags != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        profile: ["docker"] # TODO Add singularity/conda
+    steps:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -57,9 +60,11 @@ jobs:
             ${{ runner.os }}-nextflow-
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
-        with:
-          version: "${{ matrix.NXF_VER }}"
+        env:
+          CAPSULE_LOG: none
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
 
       - name: Set up Singularity
         if: matrix.profile == 'singularity'
@@ -79,17 +84,16 @@ jobs:
         if: matrix.profile == 'conda'
         run: conda clean -a
 
-      - name: Run pipeline with tests settings
-        uses: Wandalen/wretry.action@v1.0.11
-        with:
-          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag default --symlink --kwdof --git-aware --color=yes
-          attempt_limit: 3
+      # Test the module
+      - name: Run pytest-workflow
+        # only use one thread for pytest-workflow to avoid race condition on conda cache.
+        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --git-aware --color=yes
 
       - name: Output log on failure
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
 
       - name: Upload logs on failure
         if: failure()
@@ -97,10 +101,9 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /tmp/pytest_workflow_*/*/.nextflow.log
-            /tmp/pytest_workflow_*/*/log.out
-            /tmp/pytest_workflow_*/*/log.err
-            /tmp/pytest_workflow_*/*/work
-            /tmp/pytest_workflow_*/**/.command.log
-            !/tmp/pytest_workflow_*/*/work/conda
-            !/tmp/pytest_workflow_*/*/work/singularity
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity

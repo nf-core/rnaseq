@@ -37,6 +37,9 @@ jobs:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker"] # TODO Add singularity/conda
     steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:

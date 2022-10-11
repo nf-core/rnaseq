@@ -9,4 +9,4 @@
   command: nextflow run main.nf -profile test,docker --aligner hisat2 --hisat2_index false --outdir results
   tags:
     - hisat2
-    - "hisat2_index false"
+    - hisat2_index-false

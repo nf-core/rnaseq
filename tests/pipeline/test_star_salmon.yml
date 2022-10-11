@@ -6,15 +6,6 @@
     - salmon
     - skip_qc
 
-- name: Test STAR Salmon with remove_ribo_rna workflow parameters
-  command: nextflow run main.nf -profile test,docker --aligner star_salmon --remove_ribo_rna --outdir results
-  tags:
-    - star
-    - salmon
-    - remove_ribo_rna
-    - failing
-  exit_code: 1
-
 - name: Test STAR Salmon with skim_trimming workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --skim_trimming --outdir results
   tags:
@@ -27,21 +18,21 @@
   tags:
     - star
     - salmon
-    - "gtf false"
+    - gtf-false
 
 - name: Test STAR Salmon with star_index false workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --star_index false --outdir results
   tags:
     - star
     - salmon
-    - "star_index false"
+    - star_index-false
 
 - name: Test STAR Salmon with transcript_fasta false workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --transcript_fasta false --outdir results
   tags:
     - star
     - salmon
-    - "transcript_fasta"
+    - transcript_fasta-false
 
 - name: Test STAR Salmon with min_mapped_reads 90 workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --min_mapped_reads 90 --outdir results
@@ -65,23 +56,34 @@
     - with_umi
     - skip_trimming
 
+- name: Test STAR Salmon with remove_ribo_rna and skip_qualimap workflow parameters
+  command: nextflow run main.nf -profile test,docker --aligner star_salmon --remove_ribo_rna --skip_qualimap --outdir results
+  tags:
+    - star
+    - salmon
+    - remove_ribo_rna
+    - skip_qualimap
+    - failing
+  exit_code: 1
+
 - name: Test STAR Salmon with bam_csi_index workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --bam_csi_index --outdir results
   tags:
     - star
     - salmon
-    - "bam_csi_index"
+    - bam_csi_index
 
 - name: Test STAR Salmon with save_align_intermeds save_reference workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --save_align_intermeds --save_reference --outdir results
   tags:
     - star
     - salmon
-    - "save_reference"
+    - save_align_intermeds
+    - save_reference
 
 - name: Test STAR Salmon with featurecounts_group_type false workflow parameters
   command: nextflow run main.nf -profile test,docker --aligner star_salmon --featurecounts_group_type false --outdir results
   tags:
     - star
     - salmon
-    - "featurecounts_group_type"
+    - featurecounts_group_type-false

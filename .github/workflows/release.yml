@@ -1,12 +1,9 @@
-name: nf-core CI
+name: Run all pytest workflow jobs
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
-  push:
-    branches:
-      - dev
-  pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   NXF_ANSI_LOG: false

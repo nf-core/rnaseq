@@ -97,10 +97,7 @@ jobs:
         run: conda clean -a
 
       - name: Run pipeline with tests settings
-        uses: Wandalen/wretry.action@v1.0.11
-        with:
-          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag release --symlink --kwdof --git-aware --color=yes
-          attempt_limit: 3
+        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
 
       - name: Output log on failure
         if: failure()

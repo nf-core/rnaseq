@@ -35,12 +35,6 @@ process TRIMGALORE {
         if (cores > 8) cores = 8
     }
 
-    // Clipping presets have to be evaluated in the context of SE/PE
-    def c_r1   = params.clip_r1 > 0             ? "--clip_r1 ${params.clip_r1}"                         : ''
-    def c_r2   = params.clip_r2 > 0             ? "--clip_r2 ${params.clip_r2}"                         : ''
-    def tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
-    def tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
-
     // Added soft-links to original fastqs for consistent naming in MultiQC
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
@@ -50,8 +44,6 @@ process TRIMGALORE {
             $args \\
             --cores $cores \\
             --gzip \\
-            $c_r1 \\
-            $tpc_r1 \\
             ${prefix}.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
@@ -69,10 +61,6 @@ process TRIMGALORE {
             --cores $cores \\
             --paired \\
             --gzip \\
-            $c_r1 \\
-            $c_r2 \\
-            $tpc_r1 \\
-            $tpc_r2 \\
             ${prefix}_1.fastq.gz \\
             ${prefix}_2.fastq.gz
 

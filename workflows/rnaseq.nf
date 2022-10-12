@@ -143,11 +143,11 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore'
-include { FASTQ_ALIGN_HISAT2         } from '../subworkflows/nf-core/fastq_align_hisat2/main'
-include { BAM_SORT_STATS_SAMTOOLS    } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
-include { BAM_MARKDUPLICATES_PICARD  } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
-include { BAM_RSEQC                  } from '../subworkflows/nf-core/bam_rseqc/main'
+include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
+include { FASTQ_ALIGN_HISAT2               } from '../subworkflows/nf-core/fastq_align_hisat2/main'
+include { BAM_SORT_STATS_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
+include { BAM_MARKDUPLICATES_PICARD        } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
+include { BAM_RSEQC                        } from '../subworkflows/nf-core/bam_rseqc/main'
 include {
     BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
     BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
@@ -230,7 +230,7 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters
     //
-    FASTQC_UMITOOLS_TRIMGALORE (
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
         ch_cat_fastq,
         params.skip_fastqc || params.skip_qc,
         params.with_umi,
@@ -238,16 +238,16 @@ workflow RNASEQ {
         params.skip_trimming,
         params.umi_discard_read
     )
-    ch_versions = ch_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.versions)
+    ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
     //
     // Filter channels to get samples that passed minimum trimmed read count
     //
     ch_fail_trimming_multiqc = Channel.empty()
-    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_trimming) {
         ch_filtered_reads
-            .join(FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .join(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
             .map {
                 meta, reads, trim_log ->
                     if (!meta.single_end) {
@@ -787,9 +787,9 @@ workflow RNASEQ {
             ch_fail_trimming_multiqc.ifEmpty([]),
             ch_fail_mapping_multiqc.ifEmpty([]),
             ch_fail_strand_multiqc.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),

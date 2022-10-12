@@ -148,7 +148,7 @@
                     },
                     "trimgalore": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "b51a69e30973c71950225c817ad07a3337d22c40"
                     },
                     "ucsc/bedclip": {
                         "branch": "master",
@@ -201,6 +201,10 @@
                     "fastq_align_hisat2": {
                         "branch": "master",
                         "git_sha": "9057e75e8ac959373a72a9402130fdea2e2d1398"
+                    },
+                    "fastq_fastqc_umitools_trimgalore": {
+                        "branch": "master",
+                        "git_sha": "b51a69e30973c71950225c817ad07a3337d22c40"
                     }
                 }
             }

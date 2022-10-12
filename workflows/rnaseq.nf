@@ -148,8 +148,10 @@ include { FASTQ_ALIGN_HISAT2         } from '../subworkflows/nf-core/fastq_align
 include { BAM_SORT_STATS_SAMTOOLS    } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
 include { BAM_MARKDUPLICATES_PICARD  } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
 include { BAM_RSEQC                  } from '../subworkflows/nf-core/bam_rseqc/main'
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools'
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools'
+include {
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
+} from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
 include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
 include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
 
@@ -348,19 +350,19 @@ workflow RNASEQ {
         //
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
-            DEDUP_UMI_UMITOOLS_GENOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 params.umitools_dedup_stats
             )
-            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_STATS_SAMTOOLS (
@@ -371,14 +373,14 @@ workflow RNASEQ {
             ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
-            DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
                 params.umitools_dedup_stats
             )
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
+                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
             )
 
             // Only run prepare_for_rsem.py on paired-end BAM files
@@ -491,18 +493,19 @@ workflow RNASEQ {
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
         if (params.with_umi) {
-            DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0])
+            BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                params.umitools_dedup_stats
             )
-            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.versions)
         }
     }
 

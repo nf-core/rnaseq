@@ -144,7 +144,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
 include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore'
-include { ALIGN_HISAT2               } from '../subworkflows/nf-core/align_hisat2'
+include { FASTQ_ALIGN_HISAT2         } from '../subworkflows/nf-core/fastq_align_hisat2/main'
 include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'
 include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'
@@ -468,21 +468,22 @@ workflow RNASEQ {
     //
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
-        ALIGN_HISAT2 (
+        FASTQ_ALIGN_HISAT2 (
             ch_filtered_reads,
             PREPARE_GENOME.out.hisat2_index,
-            PREPARE_GENOME.out.splicesites
+            PREPARE_GENOME.out.splicesites,
+            PREPARE_GENOME.out.fasta
         )
-        ch_genome_bam        = ALIGN_HISAT2.out.bam
-        ch_genome_bam_index  = ALIGN_HISAT2.out.bai
-        ch_samtools_stats    = ALIGN_HISAT2.out.stats
-        ch_samtools_flagstat = ALIGN_HISAT2.out.flagstat
-        ch_samtools_idxstats = ALIGN_HISAT2.out.idxstats
-        ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
+        ch_genome_bam        = FASTQ_ALIGN_HISAT2.out.bam
+        ch_genome_bam_index  = FASTQ_ALIGN_HISAT2.out.bai
+        ch_samtools_stats    = FASTQ_ALIGN_HISAT2.out.stats
+        ch_samtools_flagstat = FASTQ_ALIGN_HISAT2.out.flagstat
+        ch_samtools_idxstats = FASTQ_ALIGN_HISAT2.out.idxstats
+        ch_hisat2_multiqc    = FASTQ_ALIGN_HISAT2.out.summary
         if (params.bam_csi_index) {
-            ch_genome_bam_index = ALIGN_HISAT2.out.csi
+            ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.csi
         }
-        ch_versions = ch_versions.mix(ALIGN_HISAT2.out.versions)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs

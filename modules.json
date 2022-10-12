@@ -194,6 +194,10 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
                     },
+                    "bedgraph_bedclip_bedgraphtobigwig": {
+                        "branch": "master",
+                        "git_sha": "b81a313d8fac0a82a8a4ff0de80590b2f97f11ad"
+                    },
                     "fastq_align_hisat2": {
                         "branch": "master",
                         "git_sha": "9057e75e8ac959373a72a9402130fdea2e2d1398"

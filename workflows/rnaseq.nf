@@ -146,7 +146,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore'
 include { FASTQ_ALIGN_HISAT2         } from '../subworkflows/nf-core/fastq_align_hisat2/main'
 include { BAM_SORT_STATS_SAMTOOLS    } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
-include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'
+include { BAM_MARKDUPLICATES_PICARD  } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools'
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools'
@@ -565,19 +565,21 @@ workflow RNASEQ {
     //
     ch_markduplicates_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_markduplicates) {
-        MARK_DUPLICATES_PICARD (
-            ch_genome_bam
+        BAM_MARKDUPLICATES_PICARD (
+            ch_genome_bam,
+            PREPARE_GENOME.out.fasta,
+            PREPARE_GENOME.out.fai
         )
-        ch_genome_bam             = MARK_DUPLICATES_PICARD.out.bam
-        ch_genome_bam_index       = MARK_DUPLICATES_PICARD.out.bai
-        ch_samtools_stats         = MARK_DUPLICATES_PICARD.out.stats
-        ch_samtools_flagstat      = MARK_DUPLICATES_PICARD.out.flagstat
-        ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
-        ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
+        ch_genome_bam             = BAM_MARKDUPLICATES_PICARD.out.bam
+        ch_genome_bam_index       = BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_samtools_stats         = BAM_MARKDUPLICATES_PICARD.out.stats
+        ch_samtools_flagstat      = BAM_MARKDUPLICATES_PICARD.out.flagstat
+        ch_samtools_idxstats      = BAM_MARKDUPLICATES_PICARD.out.idxstats
+        ch_markduplicates_multiqc = BAM_MARKDUPLICATES_PICARD.out.metrics
         if (params.bam_csi_index) {
-            ch_genome_bam_index = MARK_DUPLICATES_PICARD.out.csi
+            ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.csi
         }
-        ch_versions = ch_versions.mix(MARK_DUPLICATES_PICARD.out.versions)
+        ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //

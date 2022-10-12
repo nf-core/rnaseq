@@ -178,6 +178,10 @@
                         "branch": "master",
                         "git_sha": "c9083a16a9a6c5e5beea40a88939b6e1138926f7"
                     },
+                    "bam_rseqc": {
+                        "branch": "master",
+                        "git_sha": "36a77f7c6decf2d1fb9f639ae982bc148d6828aa"
+                    },
                     "bam_sort_stats_samtools": {
                         "branch": "master",
                         "git_sha": "3911652a6b24249358f79e8b8466338d63efb2a2"

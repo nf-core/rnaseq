@@ -147,7 +147,7 @@ include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umit
 include { FASTQ_ALIGN_HISAT2         } from '../subworkflows/nf-core/fastq_align_hisat2/main'
 include { BAM_SORT_STATS_SAMTOOLS    } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
 include { BAM_MARKDUPLICATES_PICARD  } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
-include { RSEQC                      } from '../subworkflows/nf-core/rseqc'
+include { BAM_RSEQC                  } from '../subworkflows/nf-core/bam_rseqc/main'
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools'
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools'
 include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
@@ -685,21 +685,20 @@ workflow RNASEQ {
         }
 
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
-            RSEQC (
-                ch_genome_bam,
-                ch_genome_bam_index,
+            BAM_RSEQC (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
-            ch_bamstat_multiqc            = RSEQC.out.bamstat_txt
-            ch_inferexperiment_multiqc    = RSEQC.out.inferexperiment_txt
-            ch_innerdistance_multiqc      = RSEQC.out.innerdistance_freq
-            ch_junctionannotation_multiqc = RSEQC.out.junctionannotation_log
-            ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
-            ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
-            ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
-            ch_tin_multiqc                = RSEQC.out.tin_txt
-            ch_versions = ch_versions.mix(RSEQC.out.versions)
+            ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
+            ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
+            ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
+            ch_junctionannotation_multiqc = BAM_RSEQC.out.junctionannotation_log
+            ch_junctionsaturation_multiqc = BAM_RSEQC.out.junctionsaturation_rscript
+            ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
+            ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
+            ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
+            ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
                 .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }

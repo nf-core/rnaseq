@@ -145,7 +145,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore'
 include { FASTQ_ALIGN_HISAT2         } from '../subworkflows/nf-core/fastq_align_hisat2/main'
-include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'
+include { BAM_SORT_STATS_SAMTOOLS    } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
 include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'
 include { RSEQC                      } from '../subworkflows/nf-core/rseqc'
 include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools'
@@ -328,7 +328,8 @@ workflow RNASEQ {
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
-            is_aws_igenome
+            is_aws_igenome,
+            PREPARE_GENOME.out.fasta
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai
@@ -362,11 +363,12 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
-            BAM_SORT_SAMTOOLS (
-                ch_transcriptome_bam
+            BAM_SORT_STATS_SAMTOOLS (
+                ch_transcriptome_bam,
+                PREPARE_GENOME.out.fasta
             )
-            ch_transcriptome_sorted_bam = BAM_SORT_SAMTOOLS.out.bam
-            ch_transcriptome_sorted_bai = BAM_SORT_SAMTOOLS.out.bai
+            ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
+            ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
             DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (

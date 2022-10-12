@@ -62,8 +62,6 @@
     - salmon
     - remove_ribo_rna
     - skip_qualimap
-    - failing
-  exit_code: 1
 
 - name: Test STAR Salmon with bam_csi_index workflow parameters
   command: nextflow run main.nf -profile test --aligner star_salmon --bam_csi_index --outdir results

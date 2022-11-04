@@ -1,0 +1,38 @@
+nextflow_pipeline {
+
+    name "hisat2"
+    script "main.nf"
+
+    test("with skip_qc workflow parameters") {
+        when {
+            params {
+                aligner = "hisat2"
+                skip_qc = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 120
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with hisat2_index false workflow parameters") {
+        when {
+            params {
+                aligner = "hisat2"
+                hisat2_index = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 186
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+}

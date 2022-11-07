@@ -1,0 +1,19 @@
+nextflow_process {
+    name "samplesheet_check"
+    script "modules/local/samplesheet_check.nf"
+    process "SAMPLESHEET_CHECK"
+
+    test("Should run without failure") {
+        when {
+            process {
+                """
+                input[0] = file('https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/v3.4/samplesheet_test.csv', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+        }
+    }
+}

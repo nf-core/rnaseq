@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 - Update modules to latest restructuring on nf-core/modules
-- [[#883](https://github.com/nf-core/rnaseq/pull/883)] - Migrate CI tests to Pytest workflow
+- [[#883](https://github.com/nf-core/rnaseq/pull/883)] - Migrate CI tests to nf-test
 
 ### Parameters
 

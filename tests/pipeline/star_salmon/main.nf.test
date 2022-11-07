@@ -1,0 +1,187 @@
+nextflow_pipeline {
+
+    name "STAR Salmon"
+    script "main.nf"
+
+    test("with skip_qc workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                skip_qc = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 130
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with skim_trimming workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                skim_trimming = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 197
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with gtf false workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                gtf = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 198
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with star_index false workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                star_index = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 197
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with transcript_fasta false workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                transcript_fasta = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 199
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with min_mapped_reads 90 workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                min_mapped_reads = 152
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 186
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with with_umi workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                with_umi = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            // FIXME ValueError: Must supply --bc-pattern for single-end
+            assert workflow.failed
+            // assert workflow.trace.tasks().size() == 186
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with with_umi skip_trimming workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                with_umi = true
+                skip_trimming = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            // FIXME ValueError: Must supply --bc-pattern for single-end
+            assert workflow.failed
+            assert workflow.trace.tasks().size() == 186
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with remove_ribo_rna and skip_qualimap workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                remove_ribo_rna = true
+                skip_qualimap = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 197
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with save_align_intermeds save_reference workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                save_align_intermeds = true
+                save_reference = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 197
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with featurecounts_group_type false workflow parameters") {
+        when {
+            params {
+                aligner = "star_salmon"
+                featurecounts_group_type = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 187
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+}

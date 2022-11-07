@@ -1,0 +1,25 @@
+nextflow_workflow {
+
+    name "Test quantify_rsem subworkflow"
+    script "subworkflows/local/quantify_rsem.nf"
+    workflow "QUANTIFY_RSEM"
+
+    test("Basic test") {
+        when {
+            workflow {
+                """
+                input[0] = [ [ id:'test', single_end:true ],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true)]
+
+                input[1] = file('https://github.com/nf-core/test-datasets/raw/rnaseq/reference/rsem.tar.gz', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            // FIXME
+            assert workflow.failed
+        }
+    }
+
+}

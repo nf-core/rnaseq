@@ -1,23 +1,23 @@
-quantify_salmon:
-  - subworkflows/local/quantify_salmon.nf
-  - tests/subworkflows/local/quantify_salmon/**
-  - modules/nf-core/software/salmon/quant/**
-  - modules/local/salmon_tx2gene.nf
-  - modules/local/salmon_tximport.nf
-  - modules/local/salmon_merge_counts.nf
-  - modules/local/salmon_summarizedexperiment.nf
+# quantify_salmon:
+#   - subworkflows/local/quantify_salmon.nf
+#   - tests/subworkflows/local/quantify_salmon/**
+#   - modules/nf-core/software/salmon/quant/**
+#   - modules/local/salmon_tx2gene.nf
+#   - modules/local/salmon_tximport.nf
+#   - modules/local/salmon_merge_counts.nf
+#   - modules/local/salmon_summarizedexperiment.nf
 
 hisat2:
   - modules/nf-core/hisat2/**
   - subworkflows/nf-core/align_hisat2.nf
-  - tests/pipeline/test_hisat2.yml
+  - tests/pipeline/hisat2/**
 
-quantify_rsem:
-  - subworkflows/local/quantify_rsem.nf
-  - subworkflows/nf-core/bam_sort_samtools.nf
-  - tests/subworkflows/local/quantify_rsem/**
-  - modules/nf-core/software/rsem/calculateexpression/**
-  - modules/local/rsem_merge_counts.nf
+# quantify_rsem:
+#   - subworkflows/local/quantify_rsem.nf
+#   - subworkflows/nf-core/bam_sort_samtools.nf
+#   - tests/subworkflows/local/quantify_rsem/**
+#   - modules/nf-core/software/rsem/calculateexpression/**
+#   - modules/local/rsem_merge_counts.nf
 
 salmon:
   - bin/salmon_summarizedexperiment.r
@@ -28,23 +28,21 @@ salmon:
   - modules/local/salmon_tximport.nf
   - modules/nf-core/salmon/**
   - subworkflows/local/quantify_salmon.nf
-  - tests/pipeline/test_salmon.yml
-  - tests/pipeline/test_star_salmon.yml
+  - tests/pipeline/salmon/**
   # - tests/subworkflows/local/quantify_salmon/
 
-star:
+star_salmon:
   - modules/local/star_align_igenomes.nf
   - modules/local/star_genomegenerate_igenomes.nf
   - modules/nf-core/star/**
   - subworkflows/local/align_star.nf
-  - tests/pipeline/test_star_rsem.yml
-  - tests/pipeline/test_star_salmon.yml
+  - tests/pipeline/star_salmon/**
 
-rsem:
+star_rsem:
   - bin/prepare-for-rsem.py
   - modules/local/rsem_merge_counts.nf
   - modules/local/umitools_prepareforrsem.nf
   - modules/nf-core/rsem/**
   - subworkflows/local/quantify_rsem.nf
-  - tests/pipeline/test_star_rsem.yml
+  - tests/pipeline/star_rsem/**
   # - tests/subworkflows/local/quantify_rsem/

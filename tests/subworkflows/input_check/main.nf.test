@@ -1,0 +1,21 @@
+nextflow_workflow {
+
+    name "input_check subworkflow"
+    script "subworkflows/local/input_check.nf"
+    workflow "INPUT_CHECK"
+
+    test("Should run without failure") {
+        when {
+            workflow {
+                """
+                input[0] = file('https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/v3.4/samplesheet_test.csv', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+
+}

@@ -1,0 +1,71 @@
+nextflow_pipeline {
+
+    name "default"
+    script "main.nf"
+
+    test("default test config") {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 197
+
+            assert snapshot(
+                path("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.rds"),
+                path("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.tsv"),
+                path("$outputDir/salmon/salmon.merged.gene_counts.rds"),
+                path("$outputDir/salmon/salmon.merged.gene_counts_scaled.rds"),
+                path("$outputDir/salmon/salmon.merged.gene_counts_scaled.tsv"),
+                path("$outputDir/salmon/salmon.merged.gene_counts.tsv"),
+                path("$outputDir/salmon/salmon.merged.gene_tpm.tsv"),
+                path("$outputDir/salmon/salmon.merged.transcript_counts.rds"),
+                path("$outputDir/salmon/salmon.merged.transcript_counts.tsv"),
+                path("$outputDir/salmon/salmon.merged.transcript_tpm.tsv")
+            ).match()
+
+            assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_1_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_1_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_2_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_2_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/RAP1_UNINDUCED_REP1_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/RAP1_UNINDUCED_REP1_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/RAP1_UNINDUCED_REP2_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/RAP1_UNINDUCED_REP2_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/WT_REP1_1_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/WT_REP1_1_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/WT_REP1_2_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/WT_REP1_2_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/WT_REP2_1_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/WT_REP2_1_fastqc.zip").exists()
+            assert new File("$outputDir/fastqc/WT_REP2_2_fastqc.html").exists()
+            assert new File("$outputDir/fastqc/WT_REP2_2_fastqc.zip").exists()
+
+            assert new File("$outputDir/multiqc/star_salmon/multiqc_report.html").exists()
+
+            assert new File("$outputDir/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam").exists()
+            assert new File("$outputDir/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai").exists()
+            assert new File("$outputDir/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam").exists()
+            assert new File("$outputDir/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai").exists()
+            assert new File("$outputDir/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam").exists()
+            assert new File("$outputDir/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai").exists()
+            assert new File("$outputDir/star_salmon/WT_REP1.markdup.sorted.bam").exists()
+            assert new File("$outputDir/star_salmon/WT_REP1.markdup.sorted.bam.bai").exists()
+            assert new File("$outputDir/star_salmon/WT_REP2.markdup.sorted.bam").exists()
+            assert new File("$outputDir/star_salmon/WT_REP2.markdup.sorted.bam.bai").exists()
+
+            assert new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_1.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_2.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP1.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP2.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/WT_REP1_1.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/WT_REP1_2.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/WT_REP2_1.fastq.gz_trimming_report.txt").exists()
+            assert new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists()
+        }
+    }
+
+}

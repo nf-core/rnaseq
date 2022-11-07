@@ -1,0 +1,17 @@
+{
+    "default test config": {
+        "content": [
+            "salmon.merged.gene_counts_length_scaled.rds:md5,f8003e4bb35be88be899b101278b649a",
+            "salmon.merged.gene_counts_length_scaled.tsv:md5,156aa4f17a9bca0c02f6ced658d1441d",
+            "salmon.merged.gene_counts.rds:md5,5cd138a017b614b87332ab49cbe52cbf",
+            "salmon.merged.gene_counts_scaled.rds:md5,db353b0aa735f82fa191fc60488bea57",
+            "salmon.merged.gene_counts_scaled.tsv:md5,22da1c1e76dd4e015e19b450feeb3843",
+            "salmon.merged.gene_counts.tsv:md5,d8a058897b775f3f09eb71ee4b62f606",
+            "salmon.merged.gene_tpm.tsv:md5,db3651b0cf0583493c578f9b24c2f1c8",
+            "salmon.merged.transcript_counts.rds:md5,45574d7d5a63a4f690d532b0247dc29a",
+            "salmon.merged.transcript_counts.tsv:md5,05fe3760f6dbdde83e358a443f91528b",
+            "salmon.merged.transcript_tpm.tsv:md5,8b071524cbdff06a2d1cf0900608af18"
+        ],
+        "timestamp": "2022-11-07T15:06:34+0000"
+    }
+}

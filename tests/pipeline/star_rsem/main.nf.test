@@ -1,0 +1,39 @@
+nextflow_pipeline {
+
+    name "STAR RSEM"
+    script "main.nf"
+
+    test("with skip_qc workflow parameters") {
+        when {
+            params {
+                aligner = "star_rsem"
+                skip_qc = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 120
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with rsem_index false workflow parameters") {
+        when {
+            params {
+                pseudo_aligner = "salmon"
+                aligner = "star_rsem"
+                rsem_index = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 187
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+}

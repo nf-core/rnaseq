@@ -1,0 +1,29 @@
+nextflow_workflow {
+
+    name "Test quantify_salmon subworkflow"
+    script "subworkflows/local/quantify_salmon.nf"
+    workflow "QUANTIFY_SALMON"
+
+    test("Basic test") {
+        when {
+            workflow {
+                """
+                input[0] = [ [ id:'test', single_end: false ],
+                            file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                            ]
+                input[1] = file(params.test_data['homo_sapiens']['genome']['index_salmon'], checkIfExists: true)
+                input[2] = file(params.test_data['homo_sapiens']['genome']['transcriptome_fasta'], checkIfExists: true)
+                input[3] = file(params.test_data['homo_sapiens']['genome']['genome_gtf'], checkIfExists: true)
+                input[4] = true
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            // FIXME salmon index doesn't exist
+            assert workflow.failed
+        }
+    }
+
+}

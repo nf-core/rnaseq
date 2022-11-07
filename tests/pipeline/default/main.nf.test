@@ -14,18 +14,16 @@ nextflow_pipeline {
             assert workflow.success
             assert workflow.trace.tasks().size() == 197
 
-            assert snapshot(
-                path("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.rds"),
-                path("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.tsv"),
-                path("$outputDir/salmon/salmon.merged.gene_counts.rds"),
-                path("$outputDir/salmon/salmon.merged.gene_counts_scaled.rds"),
-                path("$outputDir/salmon/salmon.merged.gene_counts_scaled.tsv"),
-                path("$outputDir/salmon/salmon.merged.gene_counts.tsv"),
-                path("$outputDir/salmon/salmon.merged.gene_tpm.tsv"),
-                path("$outputDir/salmon/salmon.merged.transcript_counts.rds"),
-                path("$outputDir/salmon/salmon.merged.transcript_counts.tsv"),
-                path("$outputDir/salmon/salmon.merged.transcript_tpm.tsv")
-            ).match()
+            assert new File("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.rds")
+            assert new File("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.tsv")
+            assert new File("$outputDir/salmon/salmon.merged.gene_counts.rds")
+            assert new File("$outputDir/salmon/salmon.merged.gene_counts_scaled.rds")
+            assert new File("$outputDir/salmon/salmon.merged.gene_counts_scaled.tsv")
+            assert new File("$outputDir/salmon/salmon.merged.gene_counts.tsv")
+            assert new File("$outputDir/salmon/salmon.merged.gene_tpm.tsv")
+            assert new File("$outputDir/salmon/salmon.merged.transcript_counts.rds")
+            assert new File("$outputDir/salmon/salmon.merged.transcript_counts.tsv")
+            assert new File("$outputDir/salmon/salmon.merged.transcript_tpm.tsv")
 
             assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_1_fastqc.html").exists()
             assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_1_fastqc.zip").exists()

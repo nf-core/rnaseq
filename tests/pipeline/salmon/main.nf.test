@@ -1,0 +1,40 @@
+nextflow_pipeline {
+
+    name "Salmon"
+    script "main.nf"
+
+    test("with skip_qc skip_alignment workflow parameters") {
+        when {
+            params {
+                pseudo_aligner = "salmon"
+                skip_qc = true
+                skip_alignment = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 33
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+    test("with salmon_index false transcript_fasta false workflow parameters") {
+        when {
+            params {
+                pseudo_aligner = "salmon"
+                salmon_index = false
+                transcript_fasta = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 199
+            // FIXME assert snapshot(workflow).match()
+        }
+    }
+
+}

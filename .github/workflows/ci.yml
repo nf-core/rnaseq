@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: Run default pipeline test
+    name: Run ${{ matrix.profile }}-${{ matrix.NXF_VER }} pipeline test
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
     runs-on: ubuntu-latest
@@ -31,21 +31,6 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install Python dependencies
-        run: python -m pip install --upgrade pip pytest-workflow
-
       - uses: actions/cache@v2
         with:
           path: /usr/local/bin/nextflow
@@ -57,6 +42,11 @@ jobs:
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Install nf-test
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
 
       - name: Set up Singularity
         if: matrix.profile == 'singularity'
@@ -76,24 +66,10 @@ jobs:
         if: matrix.profile == 'conda'
         run: conda clean -a
 
-      - name: Run pipeline with tests settings
-        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag default --symlink --kwdof --git-aware --color=yes
+      - name: Run nf-test
+        run: nf-test test --profile=${{ matrix.profile }} tests/pipeline/default/*.nf.test --tap=test.tap
 
-      - name: Output log on failure
-        if: failure()
-        run: |
-          sudo apt-get install bat > /dev/null
-          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
-
-      - name: Upload logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v2
+      - uses: pcolby/tap-summary@v1
         with:
-          name: logs-${{ matrix.profile }}
-          path: |
-            /home/runner/pytest_workflow_*/*/.nextflow.log
-            /home/runner/pytest_workflow_*/*/log.out
-            /home/runner/pytest_workflow_*/*/log.err
-            /home/runner/pytest_workflow_*/*/work
-            !/home/runner/pytest_workflow_*/*/work/conda
-            !/home/runner/pytest_workflow_*/*/work/singularity
+          path: >-
+            test.tap

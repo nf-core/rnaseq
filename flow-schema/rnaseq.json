@@ -5,11 +5,11 @@
             "description": "Files needed for the analysis.",
             "properties": {
                 "input": {
-                    "name": "samplesheet",
-                    "type": "file",
+                    "name": "Sample",
+                    "type": "sample",
                     "pattern": "csv|xlsx",
                     "required": true,
-                    "description": "A CSV or XLSX file describing the sample."
+                    "description": "The sample to process."
                 },
                 "fasta": {
                     "name": "FASTA",

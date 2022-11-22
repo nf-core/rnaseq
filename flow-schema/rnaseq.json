@@ -14,7 +14,7 @@
                 "fasta": {
                     "name": "FASTA",
                     "type": "file",
-                    "pattern": "fasta|fa",
+                    "pattern": "fasta|fa$",
                     "required": true,
                     "description": "A raw genome FASTA file."
                 },

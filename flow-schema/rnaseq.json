@@ -28,5 +28,18 @@
             }
         }
     },
-    "outputs": []
+    "outputs": [
+        {
+            "name": "STAR Alignments",
+            "description": "Some alignments created by STAR. These are important for reason X.",
+            "filetype": "bam",
+            "process": "STAR_ALIGN_IGENOMES"
+        },
+        {
+            "name": "RDS Files",
+            "description": "An important file output from a Salmon process.",
+            "filetype": "rds",
+            "process": "SALMON_SE_GENE"
+        }
+    ]
 }

@@ -1,8 +1,8 @@
 {
     "inputs": {
-        "file_options": {
-            "name": "File options",
-            "description": "Files needed for the analysis.",
+        "sample_options": {
+            "name": "Sample options",
+            "description": "Parameters relating to the sample being analysed.",
             "properties": {
                 "input": {
                     "name": "Sample",
@@ -10,7 +10,13 @@
                     "pattern": "csv|xlsx",
                     "required": true,
                     "description": "The sample to process."
-                },
+                }
+            }
+        },
+        "genome_options": {
+            "name": "Genome options",
+            "description": "The genome being aligned to.",
+            "properties": {
                 "fasta": {
                     "name": "FASTA",
                     "type": "file",

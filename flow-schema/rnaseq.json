@@ -30,6 +30,20 @@
                     "pattern": "gtf",
                     "required": true,
                     "description": "An annotation for the genome."
+                },
+                "gene_bed": {
+                    "name": "BED",
+                    "type": "file",
+                    "pattern": "bed",
+                    "required": false,
+                    "description": "BED file containing gene intervals. This will be created from the GTF file if not specified."
+                },
+                "transcript_fasta": {
+                    "name": "Transcript FASTA",
+                    "type": "file",
+                    "pattern": "fasta|fa$",
+                    "required": false,
+                    "description": "FASTA transcriptome file."
                 }
             }
         }

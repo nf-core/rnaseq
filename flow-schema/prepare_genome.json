@@ -17,6 +17,13 @@
                     "pattern": "gtf",
                     "required": true,
                     "description": "An annotation for the genome."
+                },
+                "save_reference": {
+                    "name": "Save Reference",
+                    "type": "hidden",
+                    "default": "true",
+                    "required": true,
+                    "description": "."
                 }
             }
         }

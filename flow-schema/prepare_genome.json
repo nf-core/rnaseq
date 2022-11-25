@@ -29,6 +29,17 @@
         }
     },
     "outputs": [
-
+        {
+            "name": "Gene BED annotation",
+            "description": "An annotation of the genome's genes, generated from the GTF.",
+            "process": "GTF2BED",
+            "filetype": "bed"
+        },
+        {
+            "name": "Transcripts Fasta",
+            "description": "A subset of the genome's overall fasta containing transcript sequences only.",
+            "process": "MAKE_TRANSCRIPTS_FASTA",
+            "filetype": "fa"
+        }
     ]
 }

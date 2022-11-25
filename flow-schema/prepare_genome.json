@@ -1,0 +1,27 @@
+{
+    "inputs": {
+        "file_options": {
+            "name": "File options",
+            "description": "Files needed to build the genome.",
+            "properties": {
+                "fasta": {
+                    "name": "FASTA",
+                    "type": "file",
+                    "pattern": "fasta|fa$",
+                    "required": true,
+                    "description": "A raw genome FASTA file."
+                },
+                "gtf": {
+                    "name": "GTF",
+                    "type": "file",
+                    "pattern": "gtf",
+                    "required": true,
+                    "description": "An annotation for the genome."
+                }
+            }
+        }
+    },
+    "outputs": [
+
+    ]
+}

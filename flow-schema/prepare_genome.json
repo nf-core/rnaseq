@@ -40,6 +40,30 @@
             "description": "A subset of the genome's overall fasta containing transcript sequences only.",
             "process": "MAKE_TRANSCRIPTS_FASTA",
             "filetype": "fa"
+        },
+        {
+            "name": "STAR Index",
+            "description": "A genome index which STAR can align reads to.",
+            "process": "STAR_GENOMEGENERATE",
+            "filetype": ""
+        },
+        {
+            "name": "RSEM Index",
+            "description": "A genome index which RSEM can align reads to.",
+            "process": "RSEM_PREPAREREFERENCE_GENOME",
+            "filetype": ""
+        },
+        {
+            "name": "Salmon Index",
+            "description": "A genome index which Salmon can align reads to.",
+            "process": "SALMON_INDEX",
+            "filetype": ""
+        },
+        {
+            "name": "HISAT2 Index",
+            "description": "A genome index which HISAT2 can align reads to.",
+            "process": "HISAT2_BUILD",
+            "filetype": ""
         }
     ]
 }

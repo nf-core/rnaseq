@@ -6,6 +6,9 @@ include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome.nf'
 
 workflow {
     PREPARE_GENOME ( [
-
+        "star_salmon",
+        "star_rsem",
+        "hisat2",
+        "salmon"
     ], "", false )
 }

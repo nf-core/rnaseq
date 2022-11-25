@@ -43,7 +43,7 @@
                     "type": "file",
                     "pattern": "fasta|fa$",
                     "required": false,
-                    "description": "FASTA transcriptome file."
+                    "description": "FASTA transcriptome file - generated from the main FASTA if not provided."
                 }
             }
         }

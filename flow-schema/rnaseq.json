@@ -44,6 +44,41 @@
                     "pattern": "fasta|fa$",
                     "required": false,
                     "description": "FASTA transcriptome file - generated from the main FASTA if not provided."
+                },
+                "star_index": {
+                    "name": "STAR Index",
+                    "type": "file",
+                    "pattern": "",
+                    "required": false,
+                    "description": "A genome index built with STAR."
+                },
+                "rsem_index": {
+                    "name": "RSEM Index",
+                    "type": "file",
+                    "pattern": "",
+                    "required": false,
+                    "description": "A genome index built with RSEM."
+                },
+                "splicesites": {
+                    "name": "Splicesites",
+                    "type": "file",
+                    "pattern": "txt",
+                    "required": false,
+                    "description": "Splicesites needed for HISAT2 processing."
+                },
+                "hisat2_index": {
+                    "name": "HISAT2 Index",
+                    "type": "file",
+                    "pattern": "",
+                    "required": false,
+                    "description": "A genome index built with HISAT2."
+                },
+                "salmon_index": {
+                    "name": "Salmon Index",
+                    "type": "file",
+                    "pattern": "",
+                    "required": false,
+                    "description": "A genome index built with Salmon."
                 }
             }
         }

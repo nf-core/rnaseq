@@ -8,6 +8,7 @@
                     "name": "FASTA",
                     "type": "file",
                     "pattern": "fasta|fa$",
+                    "genome_file": "fasta",
                     "required": true,
                     "description": "A raw genome FASTA file."
                 },
@@ -15,6 +16,7 @@
                     "name": "GTF",
                     "type": "file",
                     "pattern": "gtf",
+                    "genome_file": "gtf",
                     "required": true,
                     "description": "An annotation for the genome."
                 },

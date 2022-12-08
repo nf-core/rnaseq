@@ -176,6 +176,12 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -217,7 +223,7 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {

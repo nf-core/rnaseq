@@ -24,7 +24,15 @@ input:
   - bam:
       type: file
       description: BAM file
-      pattern: "*.{bam}"
+      pattern: "*.{bam,cram,sam}"
+  - fasta:
+      type: file
+      description: Reference genome fasta file
+      pattern: "*.{fasta,fa}"
+  - fai:
+      type: file
+      description: Reference genome fasta index
+      pattern: "*.{fai}"
 output:
   - meta:
       type: map

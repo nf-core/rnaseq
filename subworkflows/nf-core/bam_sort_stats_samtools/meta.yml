@@ -1,0 +1,65 @@
+name: bam_sort_stats_samtools
+description: Sort SAM/BAM/CRAM file
+keywords:
+  - sort
+  - bam
+  - sam
+  - cram
+modules:
+  - samtools/sort
+  - samtools/index
+  - samtools/stats
+  - samtools/idxstats
+  - samtools/flagstat
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - fasta:
+      type: file
+      description: Reference genome fasta file
+      pattern: "*.{fasta,fa}"
+# TODO Update when we decide on a standard for subworkflow docs
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - bai:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - crai:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - stats:
+      type: file
+      description: File containing samtools stats output
+      pattern: "*.{stats}"
+  - flagstat:
+      type: file
+      description: File containing samtools flagstat output
+      pattern: "*.{flagstat}"
+  - idxstats:
+      type: file
+      description: File containing samtools idxstats output
+      pattern: "*.{idxstats}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@ewels"

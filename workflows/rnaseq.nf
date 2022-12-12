@@ -143,15 +143,19 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore'
-include { ALIGN_HISAT2               } from '../subworkflows/nf-core/align_hisat2'
-include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'
-include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'
-include { RSEQC                      } from '../subworkflows/nf-core/rseqc'
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools'
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools'
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
+include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
+include { FASTQ_ALIGN_HISAT2               } from '../subworkflows/nf-core/fastq_align_hisat2/main'
+include { BAM_SORT_STATS_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
+include { BAM_MARKDUPLICATES_PICARD        } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
+include { BAM_RSEQC                        } from '../subworkflows/nf-core/bam_rseqc/main'
+include {
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
+} from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
+include {
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE
+} from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -226,7 +230,7 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters
     //
-    FASTQC_UMITOOLS_TRIMGALORE (
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
         ch_cat_fastq,
         params.skip_fastqc || params.skip_qc,
         params.with_umi,
@@ -234,16 +238,16 @@ workflow RNASEQ {
         params.skip_trimming,
         params.umi_discard_read
     )
-    ch_versions = ch_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.versions)
+    ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
     //
     // Filter channels to get samples that passed minimum trimmed read count
     //
     ch_fail_trimming_multiqc = Channel.empty()
-    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_trimming) {
         ch_filtered_reads
-            .join(FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .join(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
             .map {
                 meta, reads, trim_log ->
                     if (!meta.single_end) {
@@ -328,7 +332,8 @@ workflow RNASEQ {
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
-            is_aws_igenome
+            is_aws_igenome,
+            PREPARE_GENOME.out.fasta
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai
@@ -347,36 +352,37 @@ workflow RNASEQ {
         //
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
-            DEDUP_UMI_UMITOOLS_GENOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 params.umitools_dedup_stats
             )
-            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
-            BAM_SORT_SAMTOOLS (
-                ch_transcriptome_bam
+            BAM_SORT_STATS_SAMTOOLS (
+                ch_transcriptome_bam,
+                PREPARE_GENOME.out.fasta
             )
-            ch_transcriptome_sorted_bam = BAM_SORT_SAMTOOLS.out.bam
-            ch_transcriptome_sorted_bai = BAM_SORT_SAMTOOLS.out.bai
+            ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
+            ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
-            DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
                 params.umitools_dedup_stats
             )
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
+                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
             )
 
             // Only run prepare_for_rsem.py on paired-end BAM files
@@ -468,38 +474,40 @@ workflow RNASEQ {
     //
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
-        ALIGN_HISAT2 (
+        FASTQ_ALIGN_HISAT2 (
             ch_filtered_reads,
             PREPARE_GENOME.out.hisat2_index,
-            PREPARE_GENOME.out.splicesites
+            PREPARE_GENOME.out.splicesites,
+            PREPARE_GENOME.out.fasta
         )
-        ch_genome_bam        = ALIGN_HISAT2.out.bam
-        ch_genome_bam_index  = ALIGN_HISAT2.out.bai
-        ch_samtools_stats    = ALIGN_HISAT2.out.stats
-        ch_samtools_flagstat = ALIGN_HISAT2.out.flagstat
-        ch_samtools_idxstats = ALIGN_HISAT2.out.idxstats
-        ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
+        ch_genome_bam        = FASTQ_ALIGN_HISAT2.out.bam
+        ch_genome_bam_index  = FASTQ_ALIGN_HISAT2.out.bai
+        ch_samtools_stats    = FASTQ_ALIGN_HISAT2.out.stats
+        ch_samtools_flagstat = FASTQ_ALIGN_HISAT2.out.flagstat
+        ch_samtools_idxstats = FASTQ_ALIGN_HISAT2.out.idxstats
+        ch_hisat2_multiqc    = FASTQ_ALIGN_HISAT2.out.summary
         if (params.bam_csi_index) {
-            ch_genome_bam_index = ALIGN_HISAT2.out.csi
+            ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.csi
         }
-        ch_versions = ch_versions.mix(ALIGN_HISAT2.out.versions)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
         if (params.with_umi) {
-            DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0])
+            BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                params.umitools_dedup_stats
             )
-            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.versions)
         }
     }
 
@@ -562,19 +570,21 @@ workflow RNASEQ {
     //
     ch_markduplicates_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_markduplicates) {
-        MARK_DUPLICATES_PICARD (
-            ch_genome_bam
+        BAM_MARKDUPLICATES_PICARD (
+            ch_genome_bam,
+            PREPARE_GENOME.out.fasta,
+            PREPARE_GENOME.out.fai
         )
-        ch_genome_bam             = MARK_DUPLICATES_PICARD.out.bam
-        ch_genome_bam_index       = MARK_DUPLICATES_PICARD.out.bai
-        ch_samtools_stats         = MARK_DUPLICATES_PICARD.out.stats
-        ch_samtools_flagstat      = MARK_DUPLICATES_PICARD.out.flagstat
-        ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
-        ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
+        ch_genome_bam             = BAM_MARKDUPLICATES_PICARD.out.bam
+        ch_genome_bam_index       = BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_samtools_stats         = BAM_MARKDUPLICATES_PICARD.out.stats
+        ch_samtools_flagstat      = BAM_MARKDUPLICATES_PICARD.out.flagstat
+        ch_samtools_idxstats      = BAM_MARKDUPLICATES_PICARD.out.idxstats
+        ch_markduplicates_multiqc = BAM_MARKDUPLICATES_PICARD.out.metrics
         if (params.bam_csi_index) {
-            ch_genome_bam_index = MARK_DUPLICATES_PICARD.out.csi
+            ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.csi
         }
-        ch_versions = ch_versions.mix(MARK_DUPLICATES_PICARD.out.versions)
+        ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //
@@ -634,13 +644,13 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
-        BEDGRAPH_TO_BIGWIG_FORWARD (
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_versions = ch_versions.mix(BEDGRAPH_TO_BIGWIG_FORWARD.out.versions)
+        ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
-        BEDGRAPH_TO_BIGWIG_REVERSE (
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
             PREPARE_GENOME.out.chrom_sizes
         )
@@ -680,21 +690,20 @@ workflow RNASEQ {
         }
 
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
-            RSEQC (
-                ch_genome_bam,
-                ch_genome_bam_index,
+            BAM_RSEQC (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
-            ch_bamstat_multiqc            = RSEQC.out.bamstat_txt
-            ch_inferexperiment_multiqc    = RSEQC.out.inferexperiment_txt
-            ch_innerdistance_multiqc      = RSEQC.out.innerdistance_freq
-            ch_junctionannotation_multiqc = RSEQC.out.junctionannotation_log
-            ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
-            ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
-            ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
-            ch_tin_multiqc                = RSEQC.out.tin_txt
-            ch_versions = ch_versions.mix(RSEQC.out.versions)
+            ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
+            ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
+            ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
+            ch_junctionannotation_multiqc = BAM_RSEQC.out.junctionannotation_log
+            ch_junctionsaturation_multiqc = BAM_RSEQC.out.junctionsaturation_rscript
+            ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
+            ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
+            ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
+            ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
                 .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }
@@ -778,9 +787,9 @@ workflow RNASEQ {
             ch_fail_trimming_multiqc.ifEmpty([]),
             ch_fail_mapping_multiqc.ifEmpty([]),
             ch_fail_strand_multiqc.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),

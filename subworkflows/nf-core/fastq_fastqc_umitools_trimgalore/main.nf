@@ -2,9 +2,9 @@
 // Read QC, UMI extraction and trimming
 //
 
-include { FASTQC           } from '../../modules/nf-core/fastqc/main'
-include { UMITOOLS_EXTRACT } from '../../modules/nf-core/umitools/extract/main'
-include { TRIMGALORE       } from '../../modules/nf-core/trimgalore/main'
+include { FASTQC           } from '../../../modules/nf-core/fastqc/main'
+include { UMITOOLS_EXTRACT } from '../../../modules/nf-core/umitools/extract/main'
+include { TRIMGALORE       } from '../../../modules/nf-core/trimgalore/main'
 
 //
 // Function that parses TrimGalore log output file to get total number of reads after trimming
@@ -21,7 +21,7 @@ def getTrimGaloreReadsAfterFiltering(log_file) {
     return total_reads - filtered_reads
 }
 
-workflow FASTQC_UMITOOLS_TRIMGALORE {
+workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     take:
     reads            // channel: [ val(meta), [ reads ] ]
     skip_fastqc      // boolean: true/false

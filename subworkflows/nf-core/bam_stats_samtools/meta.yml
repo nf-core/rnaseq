@@ -28,7 +28,6 @@ input:
       type: file
       description: Reference genome fasta file
       pattern: "*.{fasta,fa}"
-# TODO Update when we decide on a standard for subworkflow docs
 output:
   - meta:
       type: map

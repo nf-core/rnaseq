@@ -37,7 +37,7 @@ process RSEM_CALCULATEEXPRESSION {
     }
     def paired_end = meta.single_end ? "" : "--paired-end"
     """
-    INDEX=`find -L ./ -name "*.grp" | sed 's/.grp//'`
+    INDEX=`find -L ./ -name "*.grp" | sed 's/\\.grp\$//'`
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
         --temporary-folder ./tmp/ \\

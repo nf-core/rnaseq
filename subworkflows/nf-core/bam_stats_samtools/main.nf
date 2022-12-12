@@ -15,13 +15,13 @@ workflow BAM_STATS_SAMTOOLS {
     ch_versions = Channel.empty()
 
     SAMTOOLS_STATS ( bam_bai, fasta )
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
     SAMTOOLS_FLAGSTAT ( bam_bai )
-    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)
 
     SAMTOOLS_IDXSTATS ( bam_bai )
-    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions)
 
     emit:
     stats    = SAMTOOLS_STATS.out.stats       // channel: [ val(meta), [ stats ] ]

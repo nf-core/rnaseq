@@ -7,9 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-- Update modules to latest restructuring on nf-core/modules
-
-### Parameters
+- Updated pipeline template to [nf-core/tools 2.7.1](https://github.com/nf-core/tools/releases/tag/2.7.1)
 
 ## [[3.9](https://github.com/nf-core/rnaseq/releases/tag/3.9)] - 2022-09-30
 

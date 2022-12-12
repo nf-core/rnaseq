@@ -1,0 +1,46 @@
+name: ucsc_bedgraphtobigwig
+description: Convert a bedGraph file to bigWig format.
+keywords:
+  - bedgraph
+  - bigwig
+tools:
+  - ucsc:
+      description: Convert a bedGraph file to bigWig format.
+      homepage: None
+      documentation: None
+      tool_dev_url: None
+      doi: ""
+      licence: ["varies; see http://genome.ucsc.edu/license"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bedgraph:
+      type: file
+      description: bedGraph file
+      pattern: "*.{bedGraph}"
+  - sizes:
+      type: file
+      description: chromosome sizes file
+      pattern: "*.{sizes}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bigwig:
+      type: file
+      description: bigWig file
+      pattern: "*.{bigWig}"
+
+authors:
+  - "@drpatelh"

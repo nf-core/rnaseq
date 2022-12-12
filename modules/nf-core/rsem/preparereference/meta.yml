@@ -1,0 +1,38 @@
+name: rsem_preparereference
+description: Prepare a reference genome for RSEM
+keywords:
+  - rsem
+  - reference
+tools:
+  - rseqc:
+      description: |
+        RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome
+      homepage: https://github.com/deweylab/RSEM
+      documentation: https://github.com/deweylab/RSEM
+      doi: https://doi.org/10.1186/1471-2105-12-323
+      licence: ["GPL-3.0-or-later"]
+input:
+  - fasta:
+      type: file
+      description: The Fasta file of the reference genome
+      pattern: "*.{fasta,fa}"
+  - gtf:
+      type: file
+      description: The GTF file of the reference genome
+      pattern: "*.gtf"
+output:
+  - rsem:
+      type: directory
+      description: RSEM index directory
+      pattern: "rsem"
+  - transcript_fasta:
+      type: file
+      description: Fasta file of transcripts
+      pattern: "rsem/*transcripts.fa"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@kevinmenden"

@@ -2,7 +2,7 @@ process DUPRADAR {
     tag "$meta.id"
     label 'process_long'
 
-    conda (params.enable_conda ? "bioconda::bioconductor-dupradar=1.18.0" : null)
+    conda "bioconda::bioconductor-dupradar=1.18.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.18.0--r40_1' :
         'quay.io/biocontainers/bioconductor-dupradar:1.18.0--r40_1' }"

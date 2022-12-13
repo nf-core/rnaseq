@@ -2,7 +2,7 @@ process SALMON_QUANT {
     tag "$meta.id"
     label "process_medium"
 
-    conda (params.enable_conda ? 'bioconda::salmon=1.5.2' : null)
+    conda "bioconda::salmon=1.5.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/salmon:1.5.2--h84f40af_0' :
         'quay.io/biocontainers/salmon:1.5.2--h84f40af_0' }"

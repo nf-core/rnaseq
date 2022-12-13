@@ -2,7 +2,7 @@ process UMITOOLS_DEDUP {
     tag "$meta.id"
     label "process_medium"
 
-    conda (params.enable_conda ? "bioconda::umi_tools=1.1.2" : null)
+    conda "bioconda::umi_tools=1.1.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/umi_tools:1.1.2--py38h4a8c8d9_0' :
         'quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0' }"

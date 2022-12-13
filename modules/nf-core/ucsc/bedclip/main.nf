@@ -3,7 +3,7 @@ process UCSC_BEDCLIP {
     label 'process_medium'
 
     // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
-    conda (params.enable_conda ? "bioconda::ucsc-bedclip=377" : null)
+    conda "bioconda::ucsc-bedclip=377"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ucsc-bedclip:377--h0b8a92a_2' :
         'quay.io/biocontainers/ucsc-bedclip:377--h0b8a92a_2' }"

@@ -78,7 +78,6 @@
                 },
                 "umitools_bc_pattern2": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-barcode",
                     "description": "The UMI barcode pattern to use if the UMI is located in read 2."
                 },
@@ -89,7 +88,6 @@
                 },
                 "umitools_umi_separator": {
                     "type": "string",
-                    "default": "_",
                     "fa_icon": "fas fa-star-half-alt",
                     "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
                 },
@@ -622,6 +620,12 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -662,7 +666,7 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -702,12 +706,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 }
             }
         }

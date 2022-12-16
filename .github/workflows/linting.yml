@@ -4,6 +4,8 @@ name: nf-core linting
 # that the code meets the nf-core guidelines.
 on:
   push:
+    branches:
+      - dev
   pull_request:
   release:
     types: [published]
@@ -12,9 +14,9 @@ jobs:
   EditorConfig:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
 
       - name: Install editorconfig-checker
         run: npm install -g editorconfig-checker
@@ -25,9 +27,9 @@ jobs:
   Prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
 
       - name: Install Prettier
         run: npm install -g prettier
@@ -38,7 +40,7 @@ jobs:
   PythonBlack:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Check code lints with Black
         uses: psf/black@stable
@@ -69,12 +71,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
           architecture: "x64"
@@ -97,7 +99,7 @@ jobs:
 
       - name: Upload linting log file artifact
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: linting-logs
           path: |

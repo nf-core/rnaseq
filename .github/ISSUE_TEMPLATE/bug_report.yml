@@ -42,7 +42,7 @@ body:
     attributes:
       label: System information
       description: |
-        * Nextflow version _(eg. 21.10.3)_
+        * Nextflow version _(eg. 22.10.1)_
         * Hardware _(eg. HPC, Desktop, Cloud)_
         * Executor _(eg. slurm, local, awsbatch)_
         * Container engine: _(e.g. Docker, Singularity, Conda, Podman, Shifter or Charliecloud)_

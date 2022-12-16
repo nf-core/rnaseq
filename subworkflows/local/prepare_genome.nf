@@ -129,8 +129,8 @@ workflow PREPARE_GENOME {
     // Create chromosome sizes file
     //
     CUSTOM_GETCHROMSIZES ( ch_fasta )
-    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
     ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes
+    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
     ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //

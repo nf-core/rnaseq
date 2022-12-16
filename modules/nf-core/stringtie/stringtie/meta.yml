@@ -23,10 +23,10 @@ input:
       type: file
       description: |
         Stringtie transcript gtf output(s).
-  - gtf:
+  - annotation_gtf:
       type: file
       description: |
-        Annotation gtf file.
+        Annotation gtf file (optional).
 output:
   - meta:
       type: map

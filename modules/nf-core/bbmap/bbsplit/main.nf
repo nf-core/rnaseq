@@ -1,10 +1,10 @@
 process BBMAP_BBSPLIT {
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::bbmap=38.93" : null)
+    conda "bioconda::bbmap=39.01"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bbmap:38.93--he522d1c_0' :
-        'quay.io/biocontainers/bbmap:38.93--he522d1c_0' }"
+        'https://depot.galaxyproject.org/singularity/bbmap:39.01--h5c4e2a8_0':
+        'quay.io/biocontainers/bbmap:39.01--h5c4e2a8_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -51,7 +51,7 @@ process BBMAP_BBSPLIT {
 
             cat <<-END_VERSIONS > versions.yml
             "${task.process}":
-                bbmap: \$(bbversion.sh 2>&1)
+                bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
             END_VERSIONS
             """
         } else {
@@ -80,7 +80,7 @@ process BBMAP_BBSPLIT {
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
-            bbmap: \$(bbversion.sh 2>&1)
+            bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
         END_VERSIONS
         """
     }

@@ -485,7 +485,8 @@
                 "skip_preseq": {
                     "type": "boolean",
                     "description": "Skip Preseq.",
-                    "fa_icon": "fas fa-fast-forward"
+                    "fa_icon": "fas fa-fast-forward",
+                    "default": true
                 },
                 "skip_dupradar": {
                     "type": "boolean",

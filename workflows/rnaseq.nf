@@ -113,6 +113,7 @@ include { ALIGN_STAR     } from '../subworkflows/local/align_star'
 include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
+include { FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON } from '../subworkflows/local/fastq_sample_infer_strandedness_fq_salmon.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,19 +137,15 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
-include { FASTQ_ALIGN_HISAT2               } from '../subworkflows/nf-core/fastq_align_hisat2/main'
-include { BAM_SORT_STATS_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
-include { BAM_MARKDUPLICATES_PICARD        } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
-include { BAM_RSEQC                        } from '../subworkflows/nf-core/bam_rseqc/main'
-include {
-    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
-    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
-} from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
-include {
-    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD
-    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE
-} from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE          } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
+include { FASTQ_ALIGN_HISAT2                        } from '../subworkflows/nf-core/fastq_align_hisat2/main'
+include { BAM_SORT_STATS_SAMTOOLS                   } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
+include { BAM_MARKDUPLICATES_PICARD                 } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
+include { BAM_RSEQC                                 } from '../subworkflows/nf-core/bam_rseqc/main'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME        } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
+include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -220,11 +217,43 @@ workflow RNASEQ {
     .set { ch_cat_fastq }
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
+    // Branch FastQ channels if 'auto' specified to infer strandedness
+    ch_cat_fastq
+        .branch {
+            meta, fastq ->
+                auto_strand : meta.strandedness == 'auto'
+                    return [ meta, fastq ]
+                known_strand: meta.strandedness != 'auto'
+                    return [ meta, fastq ]
+        }
+        .set { ch_strand_fastq }
+
+    //
+    // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
+    //
+    FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON (
+        ch_strand_fastq.auto_strand,
+        PREPARE_GENOME.out.salmon_index,
+        ch_dummy_file,
+        PREPARE_GENOME.out.gtf
+    )
+    ch_versions = ch_versions.mix(FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON.out.versions)
+
+    FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON
+        .out
+        .json_info
+        .join(ch_strand_fastq.auto_strand)
+        .map { meta, json, reads ->
+            return [ meta + [ strandedness: WorkflowRnaseq.getSalmonInferredStrandedness(json) ], reads ]
+        }
+        .mix(ch_strand_fastq.known_strand)
+        .set { ch_strand_inferred_fastq }
+
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters
     //
     FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
-        ch_cat_fastq,
+        ch_strand_inferred_fastq,
         params.skip_fastqc || params.skip_qc,
         params.with_umi,
         params.skip_umi_extract,

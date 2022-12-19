@@ -2,6 +2,7 @@
 // This file holds several functions specific to the workflow/rnaseq.nf in the nf-core/rnaseq pipeline
 //
 
+import groovy.json.JsonSlurper
 import groovy.text.SimpleTemplateEngine
 
 class WorkflowRnaseq {
@@ -162,6 +163,24 @@ class WorkflowRnaseq {
                 System.exit(1)
             }
         }
+    }
+
+    //
+    // Function that parses Salmon quant 'meta_info.json' output file to get inferred strandedness
+    //
+    public static String getSalmonInferredStrandedness(json_file) {
+        def lib_type = new JsonSlurper().parseText(json_file.text).get('library_types')[0]
+        def strandedness = 'reverse'
+        if (lib_type) {
+            if (lib_type in ['U', 'IU']) {
+                strandedness = 'unstranded'
+            } else if (lib_type in ['SF', 'ISF']) {
+                strandedness = 'forward'
+            } else if (lib_type in ['SR', 'ISR']) {
+                strandedness = 'reverse'
+            }
+        }
+        return strandedness
     }
 
     //

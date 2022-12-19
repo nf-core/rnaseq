@@ -56,13 +56,6 @@ if (params.bam_csi_index) {
     }
 }
 
-// Save AWS IGenomes file containing annotation version
-def anno_readme = params.genomes[ params.genome ]?.readme
-if (anno_readme && file(anno_readme).exists()) {
-    file("${params.outdir}/genome/").mkdirs()
-    file(anno_readme).copyTo("${params.outdir}/genome/")
-}
-
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 

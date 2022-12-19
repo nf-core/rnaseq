@@ -70,7 +70,7 @@ def check_samplesheet(file_in, file_out):
                         line,
                     )
 
-                num_cols = len([x for x in lspl if x])
+                num_cols = len([x for x in lspl[: len(HEADER)] if x])
                 if num_cols < MIN_COLS:
                     print_error(
                         f"Invalid number of populated columns (minimum = {MIN_COLS})!",
@@ -124,6 +124,7 @@ def check_samplesheet(file_in, file_out):
                     print_error("Invalid combination of columns provided!", "Line", line)
 
                 ## Create sample mapping dictionary = {sample: [[ single_end, fastq_1, fastq_2, strandedness ]]}
+                sample_info = sample_info + lspl[len(HEADER) :]
                 if sample not in sample_mapping_dict:
                     sample_mapping_dict[sample] = [sample_info]
                 else:
@@ -137,7 +138,9 @@ def check_samplesheet(file_in, file_out):
         out_dir = os.path.dirname(file_out)
         make_dir(out_dir)
         with open(file_out, "w") as fout:
-            fout.write(",".join(["sample", "single_end", "fastq_1", "fastq_2", "strandedness"]) + "\n")
+            fout.write(
+                ",".join(["sample", "single_end", "fastq_1", "fastq_2", "strandedness"] + header[len(HEADER) :]) + "\n"
+            )
             for sample in sorted(sample_mapping_dict.keys()):
 
                 ## Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
@@ -149,7 +152,7 @@ def check_samplesheet(file_in, file_out):
                     )
 
                 ## Check that multiple runs of the same sample are of the same strandedness
-                if not all(x[-1] == sample_mapping_dict[sample][0][-1] for x in sample_mapping_dict[sample]):
+                if not all(x[3] == sample_mapping_dict[sample][0][3] for x in sample_mapping_dict[sample]):
                     print_error(
                         f"Multiple runs of a sample must have the same strandedness!",
                         "Sample",

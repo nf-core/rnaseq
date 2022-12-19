@@ -67,6 +67,13 @@ def parse_args(args=None):
         default=1,
         help="After splitting FastQ file name by --sanitise_name_delimiter all elements before this index (1-based) will be joined to create final sample name.",
     )
+    parser.add_argument(
+        "-re",
+        "--recursive",
+        dest="RECURSIVE",
+        action="store_true",
+        help="Whether or not to search for FastQ files recursively in <FASTQ_DIR>.",
+    )
     return parser.parse_args(args)
 
 
@@ -80,6 +87,7 @@ def fastq_dir_to_samplesheet(
     sanitise_name=False,
     sanitise_name_delimiter="_",
     sanitise_name_index=1,
+    recursive=False,
 ):
     def sanitize_sample(path, extension):
         """Retrieve sample id from filename"""
@@ -90,19 +98,22 @@ def fastq_dir_to_samplesheet(
             )
         return sample
 
-    def get_fastqs(extension):
+    def get_fastqs(extension, recursive=False):
         """
         Needs to be sorted to ensure R1 and R2 are in the same order
         when merging technical replicates. Glob is not guaranteed to produce
         sorted results.
         See also https://stackoverflow.com/questions/6773584/how-is-pythons-glob-glob-ordered
         """
-        return sorted(glob.glob(os.path.join(fastq_dir, f"*{extension}"), recursive=False))
+        search_path = f"*{extension}"
+        if recursive:
+            search_path = f"**/*{extension}"
+        return sorted(glob.glob(os.path.join(fastq_dir, search_path), recursive=recursive))
 
     read_dict = {}
 
     ## Get read 1 files
-    for read1_file in get_fastqs(read1_extension):
+    for read1_file in get_fastqs(read1_extension, recursive):
         sample = sanitize_sample(read1_file, read1_extension)
         if sample not in read_dict:
             read_dict[sample] = {"R1": [], "R2": []}
@@ -110,7 +121,7 @@ def fastq_dir_to_samplesheet(
 
     ## Get read 2 files
     if not single_end:
-        for read2_file in get_fastqs(read2_extension):
+        for read2_file in get_fastqs(read2_extension, recursive):
             sample = sanitize_sample(read2_file, read2_extension)
             read_dict[sample]["R2"].append(read2_file)
 
@@ -157,6 +168,7 @@ def main(args=None):
         sanitise_name=args.SANITISE_NAME,
         sanitise_name_delimiter=args.SANITISE_NAME_DELIMITER,
         sanitise_name_index=args.SANITISE_NAME_INDEX,
+        recursive=args.RECURSIVE,
     )
 
 

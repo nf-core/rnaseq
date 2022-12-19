@@ -424,6 +424,16 @@
                     "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
                     "fa_icon": "fas fa-ban"
                 },
+                "extra_star_align_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "extra_salmon_quant_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
                 "save_unaligned": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
@@ -485,7 +495,8 @@
                 "skip_preseq": {
                     "type": "boolean",
                     "description": "Skip Preseq.",
-                    "fa_icon": "fas fa-fast-forward"
+                    "fa_icon": "fas fa-fast-forward",
+                    "default": true
                 },
                 "skip_dupradar": {
                     "type": "boolean",

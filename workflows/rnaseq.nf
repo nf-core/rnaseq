@@ -562,7 +562,7 @@ workflow RNASEQ {
     // SUBWORKFLOW: Mark duplicate reads
     //
     ch_markduplicates_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_markduplicates) {
+    if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
             PREPARE_GENOME.out.fasta,

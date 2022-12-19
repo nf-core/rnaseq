@@ -2,7 +2,7 @@ process SAMPLESHEET_CHECK {
     tag "$samplesheet"
     label 'process_single'
 
-    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
+    conda "conda-forge::python=3.8.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/python:3.8.3' :
         'quay.io/biocontainers/python:3.8.3' }"

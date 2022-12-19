@@ -34,9 +34,9 @@ jobs:
         id: prettier_status
         run: |
           if prettier --check ${GITHUB_WORKSPACE}; then
-            echo "name=result::pass" >> $GITHUB_OUTPUT
+            echo "result=pass" >> $GITHUB_OUTPUT
           else
-            echo "name=result::fail" >> $GITHUB_OUTPUT
+            echo "result=fail" >> $GITHUB_OUTPUT
           fi
 
       - name: Run 'prettier --write'

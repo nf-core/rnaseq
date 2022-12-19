@@ -786,7 +786,7 @@ workflow RNASEQ {
     // MODULE: Pipeline reporting
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique{ it.text }.collectFile(name: 'collated_versions.yml')
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //

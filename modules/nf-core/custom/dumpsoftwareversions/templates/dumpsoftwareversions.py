@@ -4,10 +4,12 @@
 """Provide functions to merge multiple versions.yml files."""
 
 
+<<<<<<< HEAD
+=======
+import yaml
+>>>>>>> origin/dev
 import platform
 from textwrap import dedent
-
-import yaml
 
 
 def _make_versions_html(versions):

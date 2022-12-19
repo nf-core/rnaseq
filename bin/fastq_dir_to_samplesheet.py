@@ -87,7 +87,7 @@ def fastq_dir_to_samplesheet(
     sanitise_name=False,
     sanitise_name_delimiter="_",
     sanitise_name_index=1,
-    recursive=False
+    recursive=False,
 ):
     def sanitize_sample(path, extension):
         """Retrieve sample id from filename"""
@@ -168,7 +168,7 @@ def main(args=None):
         sanitise_name=args.SANITISE_NAME,
         sanitise_name_delimiter=args.SANITISE_NAME_DELIMITER,
         sanitise_name_index=args.SANITISE_NAME_INDEX,
-        recursive=args.RECURSIVE
+        recursive=args.RECURSIVE,
     )
 
 

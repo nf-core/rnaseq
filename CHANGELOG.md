@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump minimum Nextflow version from `21.10.3` -> `22.10.1`
 - Updated pipeline template to [nf-core/tools 2.7.2](https://github.com/nf-core/tools/releases/tag/2.7.2)
 - [[#729](https://github.com/nf-core/rnaseq/issues/729)] - Add 'auto' option to samplesheet to automatically detect strandedness for samples
+- [[#891](https://github.com/nf-core/rnaseq/issues/891)] - Skip MarkDuplicates when UMIs are used
 - [[#896](https://github.com/nf-core/rnaseq/issues/896)] - Remove `copyTo` call for iGenomes README
 - [[#897](https://github.com/nf-core/rnaseq/issues/897)] - Use `--skip_preseq` by default
 - [[#900](https://github.com/nf-core/rnaseq/issues/900)] - Add `--recursive` option to `fastq_dir_to_samplesheet.py` script

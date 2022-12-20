@@ -92,7 +92,6 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 //
 // MODULE: Loaded from modules/local/
 //
-include { UMITOOLS_PREPAREFORRSEM            } from '../modules/local/umitools_prepareforrsem.nf'
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
@@ -100,6 +99,7 @@ include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
+include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../modules/local/umitools_prepareforrsem.nf'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_MAPPED  } from '../modules/local/multiqc_tsv_from_list'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_TRIMMED } from '../modules/local/multiqc_tsv_from_list'
 include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_STRAND_CHECK } from '../modules/local/multiqc_tsv_from_list'
@@ -421,14 +421,14 @@ workflow RNASEQ {
 
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
-            UMITOOLS_PREPAREFORRSEM (
+            UMITOOLS_PREPAREFORSALMON (
                 ch_umitools_dedup_bam.paired_end
             )
-            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORRSEM.out.versions.first())
+            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
 
             ch_umitools_dedup_bam
                 .single_end
-                .mix(UMITOOLS_PREPAREFORRSEM.out.bam)
+                .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
                 .set { ch_transcriptome_bam }
         }
 

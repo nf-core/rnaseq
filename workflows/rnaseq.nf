@@ -191,11 +191,10 @@ workflow RNASEQ {
     .reads
     .map {
         meta, fastq ->
-            def meta_clone = meta.clone()
-            meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
-            [ meta_clone, fastq ]
+            new_id = meta.id - ~/_T\d+/
+            [ meta + [id: new_id], fastq ]
     }
-    .groupTuple(by: [0])
+    .groupTuple()
     .branch {
         meta, fastq ->
             single  : fastq.size() == 1
@@ -798,7 +797,7 @@ workflow RNASEQ {
 
         methods_description    = WorkflowRnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
         ch_methods_description = Channel.value(methods_description)
-    
+
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),

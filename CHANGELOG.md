@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#900](https://github.com/nf-core/rnaseq/issues/900)] - Add `--recursive` option to `fastq_dir_to_samplesheet.py` script
 - [[#902](https://github.com/nf-core/rnaseq/issues/902)] - `check_samplesheet.py` script doesn't output optional columns in samplesheet
 - [[#907](https://github.com/nf-core/rnaseq/issues/907)] - Add `--extra_star_align_args` and `--extra_salmon_quant_args` parameter
+- [[#912](https://github.com/nf-core/rnaseq/issues/912)] - Add UMI deduplication before quantification in tube map
 
 ### Parameters
 

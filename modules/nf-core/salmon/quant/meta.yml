@@ -42,10 +42,14 @@ input:
       Override library type inferred based on strandedness defined in meta object
 
 output:
-  - sample_output:
+  - results:
       type: directory
       description: Folder containing the quantification results for a specific sample
       pattern: "${prefix}"
+  - json_info:
+      type: file
+      description: File containing meta information from Salmon quant
+      pattern: "*info.json"
   - versions:
       type: file
       description: File containing software versions

@@ -31,6 +31,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore"]
                     },
+                    "fq/subsample": {
+                        "branch": "master",
+                        "git_sha": "ad462aa294faf9a8c42688a08daf81a580594f70",
+                        "installed_by": ["modules", "fastq_subsample_fq_salmon"]
+                    },
                     "gffread": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
@@ -123,13 +128,13 @@
                     },
                     "salmon/index": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "94b06f1683ddf893cf06525f6e7f0573ad8fbf83",
                         "installed_by": ["modules"]
                     },
                     "salmon/quant": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "git_sha": "94b06f1683ddf893cf06525f6e7f0573ad8fbf83",
+                        "installed_by": ["modules", "fastq_subsample_fq_salmon"]
                     },
                     "samtools/flagstat": {
                         "branch": "master",
@@ -261,6 +266,11 @@
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
                         "git_sha": "b51a69e30973c71950225c817ad07a3337d22c40",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fastq_subsample_fq_salmon": {
+                        "branch": "master",
+                        "git_sha": "0098bc93f6219c6194f443f0feb089ba83717384",
                         "installed_by": ["subworkflows"]
                     }
                 }

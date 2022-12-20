@@ -22,6 +22,8 @@
 
   > Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014 Apr 1;30(7):923-30. doi: 10.1093/bioinformatics/btt656. Epub 2013 Nov 13. PubMed PMID: 24227677.
 
+- [fq](https://github.com/stjude-rust-labs/fq)
+
 - [GffRead](https://pubmed.ncbi.nlm.nih.gov/32489650/)
 
   > Pertea G, Pertea M. GFF Utilities: GffRead and GffCompare. F1000Res. 2020 Apr 28;9:ISCB Comm J-304. doi: 10.12688/f1000research.23297.2. eCollection 2020. PubMed PMID: 32489650; PubMed Central PMCID: PMC7222033.

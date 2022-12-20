@@ -191,8 +191,8 @@ workflow RNASEQ {
     .reads
     .map {
         meta, fastq ->
-            without_technicalrep_number = meta.id - ~/_T\d+/
-            [ meta + [id: without_technicalrep_number], fastq ]
+            new_id = meta.id - ~/_T\d+/
+            [ meta + [id: new_id], fastq ]
     }
     .groupTuple()
     .branch {

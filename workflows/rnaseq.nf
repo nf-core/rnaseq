@@ -113,7 +113,6 @@ include { ALIGN_STAR     } from '../subworkflows/local/align_star'
 include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
-include { FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON } from '../subworkflows/local/fastq_sample_infer_strandedness_fq_salmon.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,6 +136,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
+include { FASTQ_SUBSAMPLE_FQ_SALMON                 } from '../subworkflows/nf-core/fastq_subsample_fq_salmon/main'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE          } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
 include { FASTQ_ALIGN_HISAT2                        } from '../subworkflows/nf-core/fastq_align_hisat2/main'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
@@ -231,15 +231,15 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
     //
-    FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON (
+    FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
         PREPARE_GENOME.out.salmon_index,
         ch_dummy_file,
         PREPARE_GENOME.out.gtf
     )
-    ch_versions = ch_versions.mix(FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON.out.versions)
+    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 
-    FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON
+    FASTQ_SUBSAMPLE_FQ_SALMON
         .out
         .json_info
         .join(ch_strand_fastq.auto_strand)

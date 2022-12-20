@@ -1,11 +1,12 @@
 //
-// Sub-sample FastQ files and pseudo-align with Salmon to infer strandedness
+// Sub-sample FastQ files and pseudo-align with Salmon
+//      can be used to infer strandedness of library
 //
 
-include { FQ_SUBSAMPLE } from '../../modules/nf-core/fq/subsample/main'
-include { SALMON_QUANT } from '../../modules/nf-core/salmon/quant/main'
+include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
+include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
 
-workflow FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON {
+workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
     ch_reads            // channel: [ val(meta), [ reads ] ]
     ch_index            // channel: /path/to/salmon/index/
@@ -32,7 +33,7 @@ workflow FASTQ_SAMPLE_INFER_STRANDEDNESS_FQ_SALMON {
 
     emit:
     reads     = FQ_SUBSAMPLE.out.fastq     // channel: [ val(meta), fastq ]
- 
+
     results   = SALMON_QUANT.out.results   // channel: [ val(meta), results_dir ]
     json_info = SALMON_QUANT.out.json_info // channel: [ val(meta), json_info
 

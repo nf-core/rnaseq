@@ -32,28 +32,29 @@ You can find numerous talks on the [nf-core events page](https://nf-co.re/events
 > The SRA download functionality has been removed from the pipeline (`>=3.2`) and ported to an independent workflow called [nf-core/fetchngs](https://nf-co.re/fetchngs). You can provide `--nf_core_pipeline rnaseq` when running nf-core/fetchngs to download and auto-create a samplesheet containing publicly available samples that can be accepted directly as input by this pipeline.
 
 1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
-2. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-3. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
-4. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
-5. Removal of genome contaminants ([`BBSplit`](http://seqanswers.com/forums/showthread.php?t=41288))
-6. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
-7. Choice of multiple alignment and quantification routes:
+2. Sub-sample FastQ files and auto-infer strandedness ([`fq`](https://github.com/stjude-rust-labs/fq), [`Salmon`](https://combine-lab.github.io/salmon/))
+3. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+4. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+6. Removal of genome contaminants ([`BBSplit`](http://seqanswers.com/forums/showthread.php?t=41288))
+7. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))
+9. Choice of multiple alignment and quantification routes:
    1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)
    2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
    3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> **NO QUANTIFICATION**
-8. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
-9. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
-10. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
-11. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
-12. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
-13. Extensive quality control:
+9. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+10. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
+11. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
+12. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
+13. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
+14. Extensive quality control:
     1. [`RSeQC`](http://rseqc.sourceforge.net/)
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
-14. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); _optional_)
-15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+15. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); _optional_)
+16. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 > **Warning**
 > Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
@@ -103,6 +104,9 @@ The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Hars
 The pipeline workflow diagram was designed by Sarah Guinchard ([@G-Sarah](https://github.com/G-Sarah)) and James Fellows Yates ([@jfy133](https://github.com/jfy133)).
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
+[@MatthiasZepper](https://github.com/MatthiasZepper),
+[@maxulysse](https://github.com/maxulysse),
+[@robsyme](https://github.com/robsyme),
 [@Galithil](https://github.com/Galithil),
 [@pditommaso](https://github.com/pditommaso),
 [@orzechoj](https://github.com/orzechoj),

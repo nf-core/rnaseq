@@ -324,9 +324,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.57000002"
-     inkscape:cx="1178.9473"
-     inkscape:cy="517.54384"
+     inkscape:zoom="0.40305088"
+     inkscape:cx="889.46587"
+     inkscape:cy="518.54495"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -1320,12 +1320,17 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
          x="111.95245"
          y="-9.4764786"
-         id="tspan2287-5">fq</tspan><tspan
+         id="tspan1732">sample</tspan><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
          x="111.95245"
          y="-0.65702844"
-         id="tspan1732">subsample</tspan></text>
+         id="tspan1322">fastq</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="111.95245"
+         y="8.1624222"
+         id="tspan1312">(fq)</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
@@ -1373,23 +1378,23 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
        x="205.70265"
-       y="-30.48645"
+       y="-30.052368"
        id="text10160-1-4-92"><tspan
          sodipodi:role="line"
          id="tspan10158-2-9-88"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';stroke-width:0.264583"
          x="205.70265"
-         y="-30.48645">FastQC</tspan></text>
+         y="-30.052368">FastQC</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
-       x="234.57138"
+       x="237.58554"
        y="-30.052368"
        id="text10160-1-4-8"><tspan
          sodipodi:role="line"
          id="tspan10158-2-9-6"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';stroke-width:0.264583"
-         x="234.57138"
+         x="237.58554"
          y="-30.052368">SortMeRNA</tspan></text>
     <text
        xml:space="preserve"
@@ -1846,46 +1851,46 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;letter-spacing:0px;text-anchor:middle;stroke-width:0.264583"
        x="529.18567"
-       y="26.689651"
+       y="17.916624"
        id="text10160-1-4-3-0"><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:start;text-anchor:start;stroke-width:0.264583"
          x="529.18567"
-         y="26.689651"
+         y="17.916624"
          id="tspan15887">BEDtools</tspan><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:start;text-anchor:start;stroke-width:0.264583"
          x="529.18567"
-         y="35.509102"
+         y="26.736074"
          id="tspan2683">genomecov</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.70278px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:end;letter-spacing:0px;text-anchor:end;stroke-width:0.264583"
        x="513.39197"
-       y="56.242657"
+       y="49.745159"
        id="text10160-1-4-3-6"><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.70278px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:end;text-anchor:end;stroke-width:0.264583"
          x="513.39197"
-         y="56.242657"
+         y="49.745159"
          id="tspan141169">bedGraphToBigWig</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
-       x="387.25073"
-       y="-37.64146"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
+       x="388.30908"
+       y="-38.523407"
        id="text10160-1-4-2-9"
        inkscape:transform-center-x="82.020833"
        inkscape:transform-center-y="-6.047619"><tspan
          sodipodi:role="line"
          id="tspan10158-2-9-2-7"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="387.25073"
-         y="-37.64146">UMI-tools</tspan><tspan
+         x="388.30908"
+         y="-38.523407">UMI-tools</tspan><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="387.25073"
-         y="-30.585899"
+         x="388.30908"
+         y="-29.703955"
          id="tspan2289-3">dedup</tspan></text>
     <text
        xml:space="preserve"
@@ -1956,11 +1961,11 @@
        style="fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill"
        id="path3447-6-9-4-1"
        cx="520.19812"
-       cy="-0.50604546"
+       cy="-6.9647865"
        r="2.6458333" />
     <g
        id="g1518"
-       transform="translate(0,2.5901169)">
+       transform="translate(0,-3.9073807)">
       <path
          sodipodi:nodetypes="cc"
          id="path2500-5-22-5-4-4-0-8-25-9-1-0"
@@ -2011,23 +2016,23 @@
        style="fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill"
        id="path3447-6-9-4-3"
        cx="520.19812"
-       cy="29.14945"
+       cy="20.376425"
        r="2.6458333" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
        x="513.80841"
-       y="-2.7815325"
+       y="-9.2402735"
        id="text10160-1-4-3-8"><tspan
          sodipodi:role="line"
          id="tspan10158-2-9-3-9"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:end;text-anchor:end;stroke-width:0.264583"
          x="513.80841"
-         y="-2.7815325">picard</tspan><tspan
+         y="-9.2402735">picard</tspan><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:end;text-anchor:end;stroke-width:0.264583"
          x="513.80841"
-         y="6.0379176"
+         y="-0.42082292"
          id="tspan2660-7">MarkDuplicates</tspan></text>
     <circle
        style="fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill"
@@ -2039,7 +2044,7 @@
        style="fill:#ffffff;stroke:#000000;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill"
        id="path3447-6-9-4-3-6"
        cx="520.19812"
-       cy="54.21513"
+       cy="47.717636"
        r="2.6458333" />
     <path
        inkscape:connector-curvature="0"
@@ -2260,7 +2265,7 @@
     </g>
     <g
        id="g9404-0-1-6-1"
-       transform="matrix(0.28950169,0,0,0.28950169,350.67294,189.09428)">
+       transform="matrix(0.28950169,0,0,0.28950169,350.67294,182.59678)">
       <g
          id="g10541-6-2-2-5"
          transform="matrix(0.61667376,0,0,-0.61667376,367.9137,699.73301)">
@@ -2757,17 +2762,22 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';letter-spacing:0px;stroke-width:0.264583"
        x="133.25325"
-       y="-38.814095"
+       y="-48.463814"
        id="text1567"><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
          x="133.25325"
-         y="-38.814095"
-         id="tspan1565">Salmon</tspan><tspan
+         y="-48.463814"
+         id="tspan1316">infer</tspan><tspan
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
          x="133.25325"
-         y="-29.994644"
-         id="tspan1752">inferstrand</tspan></text>
+         y="-39.644363"
+         id="tspan1324">strand</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:'DejaVu Sans Mono';-inkscape-font-specification:'DejaVu Sans Mono Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="133.25325"
+         y="-30.824913"
+         id="tspan1320">(Salmon)</tspan></text>
   </g>
 </svg>

@@ -136,12 +136,12 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { FASTQ_SUBSAMPLE_FQ_SALMON                 } from '../subworkflows/nf-core/fastq_subsample_fq_salmon/main'
-include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE          } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
-include { FASTQ_ALIGN_HISAT2                        } from '../subworkflows/nf-core/fastq_align_hisat2/main'
-include { BAM_SORT_STATS_SAMTOOLS                   } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
-include { BAM_MARKDUPLICATES_PICARD                 } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
-include { BAM_RSEQC                                 } from '../subworkflows/nf-core/bam_rseqc/main'
+include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../subworkflows/nf-core/fastq_subsample_fq_salmon/main'
+include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
+include { FASTQ_ALIGN_HISAT2               } from '../subworkflows/nf-core/fastq_align_hisat2/main'
+include { BAM_SORT_STATS_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
+include { BAM_MARKDUPLICATES_PICARD        } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
+include { BAM_RSEQC                        } from '../subworkflows/nf-core/bam_rseqc/main'
 include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME        } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
 include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'

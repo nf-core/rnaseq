@@ -42,7 +42,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `bioconductor-dupradar`             | 1.18.0      | 1.28.0      |
 | `bioconductor-summarizedexperiment` | 1.20.0      | 1.24.0      |
 | `bioconductor-tximeta`              | 1.8.0       | 1.12.0      |
-| `fq`                                | 0.9.1       |             |
+| `fq`                                |             | 0.9.1       |
 | `salmon`                            | 1.5.2       | 1.9.0       |
 | `samtools`                          | 1.15.1      | 1.16.1      |
 

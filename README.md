@@ -105,6 +105,7 @@ The pipeline workflow diagram was designed by Sarah Guinchard ([@G-Sarah](https:
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
 [@MatthiasZepper](https://github.com/MatthiasZepper),
+[@Emiller88](https://github.com/Emiller88),
 [@maxulysse](https://github.com/maxulysse),
 [@robsyme](https://github.com/robsyme),
 [@Galithil](https://github.com/Galithil),

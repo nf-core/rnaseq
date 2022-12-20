@@ -32,6 +32,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 > **NB:** Parameter has been **removed** if new parameter information isn't present.
 
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency                          | Old version | New version |
+| ----------------------------------- | ----------- | ----------- |
+| `bbmap`                             | 38.93       | 39.01       |
+| `bioconductor-dupradar`             | 1.18.0      | 1.28.0      |
+| `bioconductor-summarizedexperiment` | 1.20.0      | 1.24.0      |
+| `bioconductor-tximeta`              | 1.8.0       | 1.12.0      |
+| `fq`                                | 0.9.1       |             |
+| `salmon`                            | 1.5.2       | 1.9.0       |
+| `samtools`                          | 1.15.1      | 1.16.1      |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+> **NB:** Dependency has been **added** if just the new version information is present.
+> **NB:** Dependency has been **removed** if version information isn't present.
+
 ## [[3.9](https://github.com/nf-core/rnaseq/releases/tag/3.9)] - 2022-09-30
 
 ### Enhancements & fixes

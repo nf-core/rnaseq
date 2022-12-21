@@ -2,6 +2,9 @@
 // This file holds several functions specific to the workflow/rnaseq.nf in the nf-core/rnaseq pipeline
 //
 
+import groovy.json.JsonSlurper
+import groovy.text.SimpleTemplateEngine
+
 class WorkflowRnaseq {
 
     //
@@ -163,6 +166,24 @@ class WorkflowRnaseq {
     }
 
     //
+    // Function that parses Salmon quant 'meta_info.json' output file to get inferred strandedness
+    //
+    public static String getSalmonInferredStrandedness(json_file) {
+        def lib_type = new JsonSlurper().parseText(json_file.text).get('library_types')[0]
+        def strandedness = 'reverse'
+        if (lib_type) {
+            if (lib_type in ['U', 'IU']) {
+                strandedness = 'unstranded'
+            } else if (lib_type in ['SF', 'ISF']) {
+                strandedness = 'forward'
+            } else if (lib_type in ['SR', 'ISR']) {
+                strandedness = 'reverse'
+            }
+        }
+        return strandedness
+    }
+
+    //
     // Function that parses TrimGalore log output file to get total number of reads after trimming
     //
     public static Integer getTrimGaloreReadsAfterFiltering(log_file) {
@@ -250,6 +271,23 @@ class WorkflowRnaseq {
         yaml_file_text        += "data: |\n"
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
+    }
+
+    public static String methodsDescriptionText(run_workflow, mqc_methods_yaml) {
+        // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+        def meta = [:]
+        meta.workflow = run_workflow.toMap()
+        meta["manifest_map"] = run_workflow.manifest.toMap()
+
+        meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
+        meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
+
+        def methods_text = mqc_methods_yaml.text
+
+        def engine =  new SimpleTemplateEngine()
+        def description_html = engine.createTemplate(methods_text).make(meta)
+
+        return description_html
     }//
     // Exit pipeline if incorrect --genome key provided
     //

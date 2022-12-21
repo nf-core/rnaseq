@@ -2,7 +2,7 @@
 // Pseudo-alignment and quantification with Salmon
 //
 
-include { SALMON_QUANT    } from '../../modules/nf-core/modules/salmon/quant/main'
+include { SALMON_QUANT    } from '../../modules/nf-core/salmon/quant/main'
 include { SALMON_TX2GENE  } from '../../modules/local/salmon_tx2gene'
 include { SALMON_TXIMPORT } from '../../modules/local/salmon_tximport'
 

@@ -2,28 +2,28 @@
 // Uncompress and prepare reference genome files
 //
 
-include { GUNZIP as GUNZIP_FASTA            } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_GTF              } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_GFF              } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_GENE_BED         } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_FASTA            } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_GTF              } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_GFF              } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_GENE_BED         } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../modules/nf-core/gunzip/main'
 
-include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../modules/nf-core/modules/untar/main'
-include { UNTAR as UNTAR_STAR_INDEX         } from '../../modules/nf-core/modules/untar/main'
-include { UNTAR as UNTAR_RSEM_INDEX         } from '../../modules/nf-core/modules/untar/main'
-include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../modules/nf-core/modules/untar/main'
-include { UNTAR as UNTAR_SALMON_INDEX       } from '../../modules/nf-core/modules/untar/main'
+include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_STAR_INDEX         } from '../../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_RSEM_INDEX         } from '../../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_SALMON_INDEX       } from '../../modules/nf-core/untar/main'
 
-include { CUSTOM_GETCHROMSIZES              } from '../../modules/nf-core/modules/custom/getchromsizes/main'
-include { GFFREAD                           } from '../../modules/nf-core/modules/gffread/main'
-include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/modules/bbmap/bbsplit/main'
-include { STAR_GENOMEGENERATE               } from '../../modules/nf-core/modules/star/genomegenerate/main'
-include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/modules/hisat2/extractsplicesites/main'
-include { HISAT2_BUILD                      } from '../../modules/nf-core/modules/hisat2/build/main'
-include { SALMON_INDEX                      } from '../../modules/nf-core/modules/salmon/index/main'
-include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../modules/nf-core/modules/rsem/preparereference/main'
-include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../modules/nf-core/modules/rsem/preparereference/main'
+include { CUSTOM_GETCHROMSIZES              } from '../../modules/nf-core/custom/getchromsizes/main'
+include { GFFREAD                           } from '../../modules/nf-core/gffread/main'
+include { BBMAP_BBSPLIT                     } from '../../modules/nf-core/bbmap/bbsplit/main'
+include { STAR_GENOMEGENERATE               } from '../../modules/nf-core/star/genomegenerate/main'
+include { HISAT2_EXTRACTSPLICESITES         } from '../../modules/nf-core/hisat2/extractsplicesites/main'
+include { HISAT2_BUILD                      } from '../../modules/nf-core/hisat2/build/main'
+include { SALMON_INDEX                      } from '../../modules/nf-core/salmon/index/main'
+include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../modules/nf-core/rsem/preparereference/main'
+include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../modules/nf-core/rsem/preparereference/main'
 
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../modules/local/gtf2bed'
@@ -129,8 +129,8 @@ workflow PREPARE_GENOME {
     // Create chromosome sizes file
     //
     CUSTOM_GETCHROMSIZES ( ch_fasta )
-    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
     ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes
+    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
     ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //

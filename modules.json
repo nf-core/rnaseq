@@ -129,7 +129,7 @@
                     "salmon/index": {
                         "branch": "master",
                         "git_sha": "94b06f1683ddf893cf06525f6e7f0573ad8fbf83",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_subsample_fq_salmon"]
                     },
                     "salmon/quant": {
                         "branch": "master",
@@ -270,7 +270,7 @@
                     },
                     "fastq_subsample_fq_salmon": {
                         "branch": "master",
-                        "git_sha": "0098bc93f6219c6194f443f0feb089ba83717384",
+                        "git_sha": "82d60046b4519e9dbef4a934371a53fa7666eabc",
                         "installed_by": ["subworkflows"]
                     }
                 }

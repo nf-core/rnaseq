@@ -43,7 +43,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
     emit:
-    index     = SALMON_INDEX.out.index     // channel: [ index ]
+    index     = ch_index                   // channel: [ index ]
 
     reads     = FQ_SUBSAMPLE.out.fastq     // channel: [ val(meta), fastq ]
 

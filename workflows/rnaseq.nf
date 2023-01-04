@@ -232,9 +232,11 @@ workflow RNASEQ {
     //
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
+        PREPARE_GENOME.out.fasta,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
         PREPARE_GENOME.out.salmon_index,
-        ch_dummy_file,
-        PREPARE_GENOME.out.gtf
+        !params.salmon_index && !('salmon' in prepareToolIndices)
     )
     ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 

@@ -3,11 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.11](https://github.com/nf-core/rnaseq/releases/tag/3.11)] - 2023-01-05
+## [[3.10.1](https://github.com/nf-core/rnaseq/releases/tag/3.10.1)] - 2023-01-05
 
 ### Enhancements & fixes
 
 - [[#919](https://github.com/nf-core/rnaseq/issues/919)] - Salmon quant not run after FastQ subsampling if index not provided
+- [[#922](https://github.com/nf-core/rnaseq/issues/922)] - Passing TrimGalore `--hardtrim3` / `--hardtrim5` via custom config raises missing output filename error
 
 ## [[3.10](https://github.com/nf-core/rnaseq/releases/tag/3.10)] - 2022-12-21
 

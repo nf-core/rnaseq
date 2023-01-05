@@ -192,7 +192,7 @@
                     },
                     "trimgalore": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "72ffbd7128015a1d4b65b95ff8d37be8fee2f981",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore"]
                     },
                     "ucsc/bedclip": {
@@ -265,7 +265,7 @@
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
-                        "git_sha": "b51a69e30973c71950225c817ad07a3337d22c40",
+                        "git_sha": "72ffbd7128015a1d4b65b95ff8d37be8fee2f981",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

@@ -82,13 +82,17 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         // Filter empty FastQ files after adapter trimming
         //
         trim_reads
-            .join(trim_log)
+            .join(trim_log, remainder: true)
             .map {
                 meta, reads, trim_log ->
-                    if (!meta.single_end) {
-                        trim_log = trim_log[-1]
-                    }
-                    if (getTrimGaloreReadsAfterFiltering(trim_log) > 0) {
+                    if (trim_log) {
+                        if (!meta.single_end) {
+                            trim_log = trim_log[-1]
+                        }
+                        if (getTrimGaloreReadsAfterFiltering(trim_log) > 0) {
+                            [ meta, reads ]
+                        }
+                    } else {
                         [ meta, reads ]
                     }
             }

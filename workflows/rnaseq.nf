@@ -232,9 +232,11 @@ workflow RNASEQ {
     //
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
+        PREPARE_GENOME.out.fasta,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
         PREPARE_GENOME.out.salmon_index,
-        ch_dummy_file,
-        PREPARE_GENOME.out.gtf
+        !params.salmon_index && !('salmon' in prepareToolIndices)
     )
     ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 
@@ -268,16 +270,20 @@ workflow RNASEQ {
     ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
     if (!params.skip_trimming) {
         ch_filtered_reads
-            .join(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .join(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log, remainder: true)
             .map {
                 meta, reads, trim_log ->
-                    if (!meta.single_end) {
-                        trim_log = trim_log[-1]
+                    if (trim_log) {
+                        if (!meta.single_end) {
+                            trim_log = trim_log[-1]
+                        }
+                        num_reads = WorkflowRnaseq.getTrimGaloreReadsAfterFiltering(trim_log)
+                        [ meta, reads, num_reads ]
+                    } else {
+                        [ meta, reads, params.min_trimmed_reads + 1 ]
                     }
-                    num_reads = WorkflowRnaseq.getTrimGaloreReadsAfterFiltering(trim_log)
-                    [ meta, reads, num_reads ]
             }
-            .set { ch_num_trimmed_reads  }
+            .set { ch_num_trimmed_reads }
 
         ch_num_trimmed_reads
             .map { meta, reads, num_reads -> if (num_reads > params.min_trimmed_reads) [ meta, reads ] }

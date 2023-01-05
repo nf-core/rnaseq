@@ -3,19 +3,30 @@
 //      can be used to infer strandedness of library
 //
 
+include { SALMON_INDEX } from '../../../modules/nf-core/salmon/index/main'
 include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
 include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
 
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
     ch_reads            // channel: [ val(meta), [ reads ] ]
-    ch_index            // channel: /path/to/salmon/index/
+    ch_genome_fasta     // channel: /path/to/genome.fasta
     ch_transcript_fasta // channel: /path/to/transcript.fasta
     ch_gtf              // channel: /path/to/genome.gtf
+    ch_index            // channel: /path/to/salmon/index/
+    make_index          // boolean: Whether to create salmon index before running salmon quant
 
     main:
 
     ch_versions = Channel.empty()
+
+    //
+    // Create Salmon index if required
+    //
+    if (make_index) {
+        ch_index = SALMON_INDEX ( ch_genome_fasta, ch_transcript_fasta ).index
+        ch_versions = ch_versions.mix(SALMON_INDEX.out.versions)
+    }
 
     //
     // Sub-sample FastQ files with fq
@@ -32,6 +43,8 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
     emit:
+    index     = ch_index                   // channel: [ index ]
+
     reads     = FQ_SUBSAMPLE.out.fastq     // channel: [ val(meta), fastq ]
 
     results   = SALMON_QUANT.out.results   // channel: [ val(meta), results_dir ]

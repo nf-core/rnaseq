@@ -522,19 +522,19 @@ workflow RNASEQ {
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
         if (params.with_umi) {
-            BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 params.umitools_dedup_stats
             )
-            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
         }
     }
 

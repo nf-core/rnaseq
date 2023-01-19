@@ -88,6 +88,37 @@ The `--umitools_grouping_method` parameter affects [how similar, but non-identic
 
 > _No warranty for the accuracy or completeness of the parameters is implied_
 
+### 3′ digital gene expression assays
+
+Some bulk RNA-seq library preparation protocols capture only a 3' tag from each transcript, e.g. [3'Pool-seq](https://pubmed.ncbi.nlm.nih.gov/31959126/), [DRUG-seq](https://pubs.acs.org/doi/10.1021/acschembio.1c00920), [BRB-seq](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1671-x) or Lexogen's commercial [QuantSeq 3' mRNA-seq FWD](https://www.lexogen.com/quantseq-3mrna-sequencing/) protocol. The following parameters have been validated for `QuantSeq 3' mRNA-seq FWD` data, and provide useful starting points for other 3' RNA-seq protocols:
+
+#### Custom STAR parameters
+
+Lexogen provides an example analysis workflow [on their website](https://www.lexogen.com/quantseq-data-analysis/), which includes the _ENCODE standard options_ for the [STAR aligner](<[https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf](https://github.com/alexdobin/STAR)>). In addition, Lexogen also decreases the tolerance for mismatches and clips poly(A) tails. To apply these settings, add the following parameters when running the pipeline:
+
+```
+--extra_star_align_args "--alignIntronMax 1000000 --alignIntronMin 20 --alignMatesGapMax 1000000 --alignSJoverhangMin 8 --outFilterMismatchNmax 999 --outFilterMultimapNmax 20 --outFilterType BySJout --outFilterMismatchNoverLmax 0.1 --clip3pAdapterSeq AAAAAAAA"
+```
+
+#### Custom Salmon arguments
+
+[Salmon's default quantitation algorithm](https://www.nature.com/articles/nmeth.4197) takes into account transcript length.
+Because 3' tag protocols do not capture full transcripts, this feature needs to be deactivated by specifying:
+
+```
+--extra_salmon_quant_args "--noLengthCorrection"
+```
+
+#### QuantSeq analysis with UMIs
+
+If unique molecular identifiers were used to prepare the library, add the following arguments as well, to extract the UMIs and deduplicated alignments:
+
+```
+--with_umi
+--umitools_extract_method regex
+--umitools_bc_pattern "^(?P<umi_1>.{6})(?P<discard_1>.{4}).*"
+```
+
 ## Reference genome files
 
 Please refer to the [nf-core website](https://nf-co.re/usage/reference_genomes) for general usage docs and guidelines regarding reference genomes.

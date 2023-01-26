@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl=2
 
-include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome.nf'
+include { PREPARE_GENOME } from '../../subworkflows/local/prepare_genome.nf'
 
 workflow {
     PREPARE_GENOME ( [

@@ -52,7 +52,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in test-datasets/samplesheet/v3.10/*.csv; do
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
             sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
@@ -103,7 +103,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in test-datasets/samplesheet/v3.10/*.csv; do
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
             sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
@@ -149,7 +149,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in test-datasets/samplesheet/v3.10/*.csv; do
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
             sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
@@ -195,7 +195,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in test-datasets/samplesheet/v3.10/*.csv; do
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
             sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
@@ -241,7 +241,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in test-datasets/samplesheet/v3.10/*.csv; do
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
             sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f

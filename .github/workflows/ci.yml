@@ -40,7 +40,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3-test-data
+          key: rnaseq3_10-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -91,7 +91,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3-test-data
+          key: rnaseq3_10-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -137,7 +137,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3-test-data
+          key: rnaseq3_10-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -183,7 +183,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3-test-data
+          key: rnaseq3_10-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -229,7 +229,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3-test-data
+          key: rnaseq3_10-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'

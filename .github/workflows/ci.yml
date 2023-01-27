@@ -241,7 +241,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in tests/csv/3.10/*csv; do
+          for f in ${{ github.workspace }}/samplesheet/v3.10/*.csv; do
             sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f

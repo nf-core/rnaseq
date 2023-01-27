@@ -35,12 +35,12 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      # - name: Cache test data
-      #   id: cache-testdata
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: test-datasets/
-      #     key: rnaseq3-test-data
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: rnaseq3-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -86,12 +86,12 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
-      # - name: Cache test data
-      #   id: cache-testdata
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: test-datasets/
-      #     key: rnaseq3-test-data
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: rnaseq3-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -132,12 +132,12 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
-      # - name: Cache test data
-      #   id: cache-testdata
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: test-datasets/
-      #     key: rnaseq3-test-data
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: rnaseq3-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -178,12 +178,12 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
-      # - name: Cache test data
-      #   id: cache-testdata
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: test-datasets/
-      #     key: rnaseq3-test-data
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: rnaseq3-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -224,12 +224,12 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
-      # - name: Cache test data
-      #   id: cache-testdata
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: test-datasets/
-      #     key: rnaseq3-test-data
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: rnaseq3-test-data
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'

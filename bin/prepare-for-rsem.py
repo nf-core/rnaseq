@@ -68,7 +68,6 @@ def chunk_bam(bamfile):
     output_buffer = list()
 
     for read in bamfile:
-
         if last_query_name is not None and last_query_name != read.query_name:
             yield (output_buffer)
             output_buffer = list()
@@ -84,7 +83,6 @@ def copy_tags(tags, read1, read2):
     to read2, if the tag is set"""
 
     for tag in tags:
-
         try:
             read1_tag = read1.get_tag(tag, with_value_type=True)
             read2.set_tag(tag, value=read1_tag[0], value_type=read1_tag[1])
@@ -122,7 +120,6 @@ def pick_mate(read, template_dict, mate_key):
 
 
 def main(argv=None):
-
     if argv is None:
         argv = sys.argv
 
@@ -174,7 +171,6 @@ def main(argv=None):
     options.tags = options.tags.split(",")
 
     for template in chunk_bam(inbam):
-
         assert len(set(r.query_name for r in template)) == 1
         current_template = {True: defaultdict(list), False: defaultdict(list)}
 
@@ -185,7 +181,6 @@ def main(argv=None):
         output = set()
 
         for read in template:
-
             mate = None
 
             # if this read is a non_primary alignment, we first want to check if it has a mate
@@ -231,7 +226,6 @@ def main(argv=None):
             # each pair twice - once when we scan read1 and once when we scan read2. Thus we need
             # to make sure we don't output something already output.
             if read.is_read1:
-
                 mate = copy_tags(options.tags, read, mate)
                 output_key = str(read) + str(mate)
 
@@ -242,7 +236,6 @@ def main(argv=None):
                     skipped_stats["pairs_output"] += 1
 
             elif read.is_read2:
-
                 read = copy_tags(options.tags, mate, read)
                 output_key = str(mate) + str(read)
 

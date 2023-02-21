@@ -120,6 +120,54 @@
             }
         }
     },
+    "umi_options": {
+        "name": "UMI Settings",
+        "description": "Additional config",
+        "properties": {
+            "with_umi": {
+                "name": "Deduplicate based on UMIs",
+                "description": "Enable UMI-based read deduplication.",
+                "type": "boolean",
+                "default": false
+            },
+            "skip_umi_extract": {
+                "name": "Skip UMI Extraction",
+                "description": "Skip the UMI extraction from the read in case the UMIs have been moved to the headers in advance of the pipeline run.",
+                "type": "boolean"
+            },
+            "umitools_extract_method": {
+                "name": "Type of UMI pattern",
+                "description": "UMI pattern to use. Can be either 'string' (default) or 'regex'.",
+                "type": "string"
+            },
+            "umitools_dedup_stats": {
+                "name": "UMI Tools dedupe stats",
+                "description": "Generate output stats when running 'umi_tools dedup'.",
+                "type": "boolean"
+            },
+            "umitools_bc_pattern": {
+                "name": "UMI Tools read 1 barcode pattern",
+                "description": "The UMI barcode pattern to use if the UMI is on read 1 e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI.",
+                "type": "string"
+            },
+            "umitools_bc_pattern2": {
+                "name": "UMI Tools read 2 barcode pattern",
+                "description": "The UMI barcode pattern to use if the UMI is on read 2 e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI.",
+                "type": "string"
+            },
+            "umi_discard_read": {
+                "name": "Discard reads",
+                "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively.",
+                "type": "number"
+            },
+            "save_umi_intermeds": {
+                "name": "Save UMI Tools intermediates",
+                "description": "If this option is specified, intermediate FastQ and BAM files produced by UMI-tools are also saved in the results directory.",
+                "type": "boolean"
+            }
+        }
+    },
+
     "outputs": [
         {
             "name": "STAR Alignments",

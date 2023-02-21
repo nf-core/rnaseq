@@ -213,6 +213,82 @@
             }
         }
     },
+    "alignment_options": {
+        "name": "Alignment Settings",
+        "description": "Additional config",
+        "properties": {
+            "aligner": {
+                "name": "Aligner",
+                "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
+                "type": "string"
+            },
+            "pseudo_aligner": {
+                "name": "Pseudo-aligner",
+                "description": "Specifies the pseudo-aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
+                "type": "string"
+            },
+            "bam_csi_index": {
+                "name": "CSI index",
+                "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes.",
+                "type": "boolean"
+            },
+            "star_ignore_sjdbgtf": {
+                "name": "STAR ignore sjdbgtf",
+                "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file.",
+                "type": "boolean"
+            },
+            "salmon_quant_libtype": {
+                "name": "Salmon strandedness",
+                "description": "Override Salmon library type inferred based on strandedness defined in meta object.",
+                "type": "string"
+            },
+            "min_mapped_reads": {
+                "name": "Minimum mapped reads (%)",
+                "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
+                "type": "number"
+            },
+            "seq_center": {
+                "name": "Sequencing center",
+                "description": "Sequencing center information to be added to read group of BAM files.",
+                "type": "string"
+            },
+            "stringtie_ignore_gtf": {
+                "name": "Stringtie",
+                "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
+                "type": "boolean"
+            },
+             "extra_star_align_args": {
+                "name": "STAR arguments",
+                "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
+                "type": "string"
+            },
+            "extra_salmon_quant_args": {
+                "name": "Salmon quant arguments",
+                "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
+                "type": "string"
+            },
+             "save_unaligned": {
+                "name": "Save unaligned reads",
+                "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
+                "type": "boolean"
+            },
+            "save_align_intermeds": {
+                "name": "Save intermediate BAM",
+                "description": "Save the intermediate BAM files from the alignment step.",
+                "type": "boolean"
+            },
+            "skip_markduplicates": {
+                "name": "Skip MarkDuplicates",
+                "description": "Skip picard MarkDuplicates step.",
+                "type": "boolean"
+            },
+            "skip_alignment": {
+                "name": "Skip alignment",
+                "description": "Skip all of the alignment-based processes within the pipeline.",
+                "type": "boolean"
+            }
+        }
+    },
     "outputs": [
         {
             "name": "STAR Alignments",

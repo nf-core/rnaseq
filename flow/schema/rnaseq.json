@@ -289,6 +289,77 @@
             }
         }
     },
+    "process_options": {
+        "name": "Process skipping options",
+        "description": "Additional config",
+        "properties": {
+            "rseqc_modules": {
+                "name": "RSeQC",
+                "description": "Specify the RSeQC modules to run. Default: 'bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication'",
+                "type": "string"
+            },
+            "deseq2_vst": {
+                "name": "DeSeq2 VST",
+                "description": "Use vst transformation instead of rlog with DESeq2.",
+                "type": "boolean"
+            },
+            "skip_bigwig": {
+                "name": "Skip bigwig",
+                "description": "Skip bigWig file creation.",
+                "type": "boolean"
+            },
+            "skip_stringtie": {
+                "name": "Skip stringtie",
+                "description": "Skip StringTie.",
+                "type": "boolean"
+            },
+            "skip_fastqc": {
+                "name": "Skip FastQC",
+                "description": "Skip FastQC.",
+                "type": "boolean"
+            },
+            "skip_preseq": {
+                "name": "Skip preseq",
+                "description": "Skip Preseq.",
+                "type": "boolean"
+            },
+            "skip_dupradar": {
+                "name": "Skip dupRadar",
+                "description": "Skip dupRadar.",
+                "type": "string"
+            },
+            "skip_qualimap": {
+                "name": "Skip Qualimap",
+                "description": "Skip Qualimap.",
+                "type": "boolean"
+            },
+             "skip_rseqc": {
+                "name": "Skip RSeQC",
+                "description": "Skip RSeQC.",
+                "type": "boolean"
+            },
+            "skip_biotype_qc": {
+                "name": "Skip biotype QC",
+                "description": "Skip additional featureCounts process for biotype QC.",
+                "type": "boolean"
+            },
+             "skip_deseq2_qc": {
+                "name": "Skip DeSeq2 QC",
+                "description": "Skip DESeq2 PCA and heatmap plotting.",
+                "type": "boolean"
+            },
+            "skip_multiqc": {
+                "name": "Skip MultiQC",
+                "description": "Skip MultiQC.",
+                "type": "boolean"
+            },
+            "skip_qc": {
+                "name": "Skip QC",
+                "description": "Skip all QC steps except for MultiQC.",
+                "type": "boolean"
+            }
+        }
+    },
     "outputs": [
         {
             "name": "STAR Alignments",

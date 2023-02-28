@@ -3,6 +3,7 @@
         "sample_options": {
             "name": "Sample options",
             "description": "Parameters relating to the sample being analysed.",
+            "advanced" : false,
             "properties": {
                 "input": {
                     "name": "Sample",
@@ -22,6 +23,7 @@
         "genome_options": {
             "name": "Genome options",
             "description": "The genome being aligned to.",
+            "advanced" : false,
             "takes_genome": true,
             "properties": {
                 "fasta": {
@@ -122,7 +124,8 @@
     },
     "umi_options": {
         "name": "UMI Settings",
-        "description": "Additional config",
+        "description": "Settings for dealing with UMIs",
+        "advanced" : true,
         "properties": {
             "with_umi": {
                 "name": "Deduplicate based on UMIs",
@@ -169,7 +172,8 @@
     },
     "read_trimming_options": {
         "name": "Read Trimming Settings",
-        "description": "Additional config",
+        "description": "Settings to control read quality and adaptor trimming",
+        "advanced" : true,
         "properties": {
             "clip_r1": {
                 "name": "5' clip read 1",
@@ -215,7 +219,8 @@
     },
     "alignment_options": {
         "name": "Alignment Settings",
-        "description": "Additional config",
+        "description": "Settings to control alignment algorithms and quantification.",
+        "advanced" : true,
         "properties": {
             "aligner": {
                 "name": "Aligner",
@@ -291,7 +296,8 @@
     },
     "process_options": {
         "name": "Process skipping options",
-        "description": "Additional config",
+        "description": "Settings to control specific processes.",
+        "advanced" : true,
         "properties": {
             "rseqc_modules": {
                 "name": "RSeQC",

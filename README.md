@@ -80,7 +80,7 @@ For more details, please refer to the [usage documentation](https://nf-co.re/rna
 ## Pipeline output
 
 The output of the pipeline applied to a [full-sized example dataset](https://github.com/nf-core/test-datasets/tree/rnaseq#full-test-dataset-origin) can be found [here](https://nf-co.re/rnaseq/results).
-For more details, please refer to the [output documentation](https://nf-co.re/rnaseq/3.10.1/output).
+For more details, please refer to the [output documentation](https://nf-co.re/rnaseq/output).
 
 ## Online videos
 

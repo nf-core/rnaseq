@@ -75,7 +75,7 @@ nextflow run nf-core/rnaseq \
     -profile <docker/singularity/.../institute>
 ```
 
-For more details, please refer to the [usage documentation](https://nf-co.re/rnaseq/3.10.1/usage) and the [parameter documentation](https://nf-co.re/rnaseq/3.10.1/parameters).
+For more details, please refer to the [usage documentation](https://nf-co.re/rnaseq/usage) and the [parameter documentation](https://nf-co.re/rnaseq/parameters).
 
 ## Pipeline output
 

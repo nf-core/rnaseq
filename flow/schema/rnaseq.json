@@ -120,249 +120,249 @@
                     "description": "A genome index built with Salmon."
                 }
             }
-        }
-    },
-    "umi_options": {
-        "name": "UMI Settings",
-        "description": "Settings for dealing with UMIs",
-        "advanced" : true,
-        "properties": {
-            "with_umi": {
-                "name": "Deduplicate based on UMIs",
-                "description": "Enable UMI-based read deduplication.",
-                "type": "boolean",
-                "default": false
-            },
-            "skip_umi_extract": {
-                "name": "Skip UMI Extraction",
-                "description": "Skip the UMI extraction from the read in case the UMIs have been moved to the headers in advance of the pipeline run.",
-                "type": "boolean"
-            },
-            "umitools_extract_method": {
-                "name": "Type of UMI pattern",
-                "description": "UMI pattern to use. Can be either 'string' (default) or 'regex'.",
-                "type": "string"
-            },
-            "umitools_dedup_stats": {
-                "name": "UMI Tools dedupe stats",
-                "description": "Generate output stats when running 'umi_tools dedup'.",
-                "type": "boolean"
-            },
-            "umitools_bc_pattern": {
-                "name": "UMI Tools read 1 barcode pattern",
-                "description": "The UMI barcode pattern to use if the UMI is on read 1 e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI.",
-                "type": "string"
-            },
-            "umitools_bc_pattern2": {
-                "name": "UMI Tools read 2 barcode pattern",
-                "description": "The UMI barcode pattern to use if the UMI is on read 2 e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI.",
-                "type": "string"
-            },
-            "umi_discard_read": {
-                "name": "Discard reads",
-                "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively.",
-                "type": "number"
-            },
-            "save_umi_intermeds": {
-                "name": "Save UMI Tools intermediates",
-                "description": "If this option is specified, intermediate FastQ and BAM files produced by UMI-tools are also saved in the results directory.",
-                "type": "boolean"
+        },
+        "umi_options": {
+            "name": "UMI Settings",
+            "description": "Settings for dealing with UMIs",
+            "advanced" : true,
+            "properties": {
+                "with_umi": {
+                    "name": "Deduplicate based on UMIs",
+                    "description": "Enable UMI-based read deduplication.",
+                    "type": "boolean",
+                    "default": false
+                },
+                "skip_umi_extract": {
+                    "name": "Skip UMI Extraction",
+                    "description": "Skip the UMI extraction from the read in case the UMIs have been moved to the headers in advance of the pipeline run.",
+                    "type": "boolean"
+                },
+                "umitools_extract_method": {
+                    "name": "Type of UMI pattern",
+                    "description": "UMI pattern to use. Can be either 'string' (default) or 'regex'.",
+                    "type": "string"
+                },
+                "umitools_dedup_stats": {
+                    "name": "UMI Tools dedupe stats",
+                    "description": "Generate output stats when running 'umi_tools dedup'.",
+                    "type": "boolean"
+                },
+                "umitools_bc_pattern": {
+                    "name": "UMI Tools read 1 barcode pattern",
+                    "description": "The UMI barcode pattern to use if the UMI is on read 1 e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI.",
+                    "type": "string"
+                },
+                "umitools_bc_pattern2": {
+                    "name": "UMI Tools read 2 barcode pattern",
+                    "description": "The UMI barcode pattern to use if the UMI is on read 2 e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI.",
+                    "type": "string"
+                },
+                "umi_discard_read": {
+                    "name": "Discard reads",
+                    "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively.",
+                    "type": "number"
+                },
+                "save_umi_intermeds": {
+                    "name": "Save UMI Tools intermediates",
+                    "description": "If this option is specified, intermediate FastQ and BAM files produced by UMI-tools are also saved in the results directory.",
+                    "type": "boolean"
+                }
             }
-        }
-    },
-    "read_trimming_options": {
-        "name": "Read Trimming Settings",
-        "description": "Settings to control read quality and adaptor trimming",
-        "advanced" : true,
-        "properties": {
-            "clip_r1": {
-                "name": "5' clip read 1",
-                "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).",
-                "type": "number"
-            },
-            "clip_r2": {
-                "name": "5' clip read 2",
-                "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).",
-                "type": "number"
-            },
-            "three_prime_clip_r1": {
-                "name": "3' clip read 1",
-                "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed.",
-                "type": "number"
-            },
-            "three_prime_clip_r2": {
-                "name": "3' clip read 2",
-                "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
-                "type": "number"
-            },
-            "trim_nextseq": {
-                "name": "Nextseq quality trimming",
-                "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality, but ignoring the high quality G's. Input is the threshold PHRED score for quality trimming (eg. 20). See https://cutadapt.readthedocs.io/en/stable/guide.html#nextseq-trim for more details. ",
-                "type": "number"
-            },
-            "min_trimmed_reads": {
-                "name": "Minimum trimmed reads",
-                "description": "Minimum number of trimmed reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low.",
-                "type": "number"
-            },
-            "skip_trimming": {
-                "name": "Skip trimming",
-                "description": "Skip the adapter trimming step.",
-                "type": "boolean"
-            },
-            "save_trimmed": {
-                "name": "Save trimmed",
-                "description": "Save the trimmed FastQ files in the results directory.",
-                "type": "boolean"
+        },
+        "read_trimming_options": {
+            "name": "Read Trimming Settings",
+            "description": "Settings to control read quality and adaptor trimming",
+            "advanced" : true,
+            "properties": {
+                "clip_r1": {
+                    "name": "5' clip read 1",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).",
+                    "type": "number"
+                },
+                "clip_r2": {
+                    "name": "5' clip read 2",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).",
+                    "type": "number"
+                },
+                "three_prime_clip_r1": {
+                    "name": "3' clip read 1",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed.",
+                    "type": "number"
+                },
+                "three_prime_clip_r2": {
+                    "name": "3' clip read 2",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
+                    "type": "number"
+                },
+                "trim_nextseq": {
+                    "name": "Nextseq quality trimming",
+                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality, but ignoring the high quality G's. Input is the threshold PHRED score for quality trimming (eg. 20). See https://cutadapt.readthedocs.io/en/stable/guide.html#nextseq-trim for more details. ",
+                    "type": "number"
+                },
+                "min_trimmed_reads": {
+                    "name": "Minimum trimmed reads",
+                    "description": "Minimum number of trimmed reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low.",
+                    "type": "number"
+                },
+                "skip_trimming": {
+                    "name": "Skip trimming",
+                    "description": "Skip the adapter trimming step.",
+                    "type": "boolean"
+                },
+                "save_trimmed": {
+                    "name": "Save trimmed",
+                    "description": "Save the trimmed FastQ files in the results directory.",
+                    "type": "boolean"
+                }
             }
-        }
-    },
-    "alignment_options": {
-        "name": "Alignment Settings",
-        "description": "Settings to control alignment algorithms and quantification.",
-        "advanced" : true,
-        "properties": {
-            "aligner": {
-                "name": "Aligner",
-                "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
-                "type": "string"
-            },
-            "pseudo_aligner": {
-                "name": "Pseudo-aligner",
-                "description": "Specifies the pseudo-aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
-                "type": "string"
-            },
-            "bam_csi_index": {
-                "name": "CSI index",
-                "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes.",
-                "type": "boolean"
-            },
-            "star_ignore_sjdbgtf": {
-                "name": "STAR ignore sjdbgtf",
-                "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file.",
-                "type": "boolean"
-            },
-            "salmon_quant_libtype": {
-                "name": "Salmon strandedness",
-                "description": "Override Salmon library type inferred based on strandedness defined in meta object.",
-                "type": "string"
-            },
-            "min_mapped_reads": {
-                "name": "Minimum mapped reads (%)",
-                "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
-                "type": "number"
-            },
-            "seq_center": {
-                "name": "Sequencing center",
-                "description": "Sequencing center information to be added to read group of BAM files.",
-                "type": "string"
-            },
-            "stringtie_ignore_gtf": {
-                "name": "Stringtie",
-                "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
-                "type": "boolean"
-            },
-             "extra_star_align_args": {
-                "name": "STAR arguments",
-                "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
-                "type": "string"
-            },
-            "extra_salmon_quant_args": {
-                "name": "Salmon quant arguments",
-                "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
-                "type": "string"
-            },
-             "save_unaligned": {
-                "name": "Save unaligned reads",
-                "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
-                "type": "boolean"
-            },
-            "save_align_intermeds": {
-                "name": "Save intermediate BAM",
-                "description": "Save the intermediate BAM files from the alignment step.",
-                "type": "boolean"
-            },
-            "skip_markduplicates": {
-                "name": "Skip MarkDuplicates",
-                "description": "Skip picard MarkDuplicates step.",
-                "type": "boolean"
-            },
-            "skip_alignment": {
-                "name": "Skip alignment",
-                "description": "Skip all of the alignment-based processes within the pipeline.",
-                "type": "boolean"
+        },
+        "alignment_options": {
+            "name": "Alignment Settings",
+            "description": "Settings to control alignment algorithms and quantification.",
+            "advanced" : true,
+            "properties": {
+                "aligner": {
+                    "name": "Aligner",
+                    "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
+                    "type": "string"
+                },
+                "pseudo_aligner": {
+                    "name": "Pseudo-aligner",
+                    "description": "Specifies the pseudo-aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
+                    "type": "string"
+                },
+                "bam_csi_index": {
+                    "name": "CSI index",
+                    "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes.",
+                    "type": "boolean"
+                },
+                "star_ignore_sjdbgtf": {
+                    "name": "STAR ignore sjdbgtf",
+                    "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file.",
+                    "type": "boolean"
+                },
+                "salmon_quant_libtype": {
+                    "name": "Salmon strandedness",
+                    "description": "Override Salmon library type inferred based on strandedness defined in meta object.",
+                    "type": "string"
+                },
+                "min_mapped_reads": {
+                    "name": "Minimum mapped reads (%)",
+                    "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
+                    "type": "number"
+                },
+                "seq_center": {
+                    "name": "Sequencing center",
+                    "description": "Sequencing center information to be added to read group of BAM files.",
+                    "type": "string"
+                },
+                "stringtie_ignore_gtf": {
+                    "name": "Stringtie",
+                    "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
+                    "type": "boolean"
+                },
+                 "extra_star_align_args": {
+                    "name": "STAR arguments",
+                    "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
+                    "type": "string"
+                },
+                "extra_salmon_quant_args": {
+                    "name": "Salmon quant arguments",
+                    "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
+                    "type": "string"
+                },
+                 "save_unaligned": {
+                    "name": "Save unaligned reads",
+                    "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
+                    "type": "boolean"
+                },
+                "save_align_intermeds": {
+                    "name": "Save intermediate BAM",
+                    "description": "Save the intermediate BAM files from the alignment step.",
+                    "type": "boolean"
+                },
+                "skip_markduplicates": {
+                    "name": "Skip MarkDuplicates",
+                    "description": "Skip picard MarkDuplicates step.",
+                    "type": "boolean"
+                },
+                "skip_alignment": {
+                    "name": "Skip alignment",
+                    "description": "Skip all of the alignment-based processes within the pipeline.",
+                    "type": "boolean"
+                }
             }
-        }
-    },
-    "process_options": {
-        "name": "Process skipping options",
-        "description": "Settings to control specific processes.",
-        "advanced" : true,
-        "properties": {
-            "rseqc_modules": {
-                "name": "RSeQC",
-                "description": "Specify the RSeQC modules to run. Default: 'bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication'",
-                "type": "string"
-            },
-            "deseq2_vst": {
-                "name": "DeSeq2 VST",
-                "description": "Use vst transformation instead of rlog with DESeq2.",
-                "type": "boolean"
-            },
-            "skip_bigwig": {
-                "name": "Skip bigwig",
-                "description": "Skip bigWig file creation.",
-                "type": "boolean"
-            },
-            "skip_stringtie": {
-                "name": "Skip stringtie",
-                "description": "Skip StringTie.",
-                "type": "boolean"
-            },
-            "skip_fastqc": {
-                "name": "Skip FastQC",
-                "description": "Skip FastQC.",
-                "type": "boolean"
-            },
-            "skip_preseq": {
-                "name": "Skip preseq",
-                "description": "Skip Preseq.",
-                "type": "boolean"
-            },
-            "skip_dupradar": {
-                "name": "Skip dupRadar",
-                "description": "Skip dupRadar.",
-                "type": "string"
-            },
-            "skip_qualimap": {
-                "name": "Skip Qualimap",
-                "description": "Skip Qualimap.",
-                "type": "boolean"
-            },
-             "skip_rseqc": {
-                "name": "Skip RSeQC",
-                "description": "Skip RSeQC.",
-                "type": "boolean"
-            },
-            "skip_biotype_qc": {
-                "name": "Skip biotype QC",
-                "description": "Skip additional featureCounts process for biotype QC.",
-                "type": "boolean"
-            },
-             "skip_deseq2_qc": {
-                "name": "Skip DeSeq2 QC",
-                "description": "Skip DESeq2 PCA and heatmap plotting.",
-                "type": "boolean"
-            },
-            "skip_multiqc": {
-                "name": "Skip MultiQC",
-                "description": "Skip MultiQC.",
-                "type": "boolean"
-            },
-            "skip_qc": {
-                "name": "Skip QC",
-                "description": "Skip all QC steps except for MultiQC.",
-                "type": "boolean"
+        },
+        "process_options": {
+            "name": "Process skipping options",
+            "description": "Settings to control specific processes.",
+            "advanced" : true,
+            "properties": {
+                "rseqc_modules": {
+                    "name": "RSeQC",
+                    "description": "Specify the RSeQC modules to run. Default: 'bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication'",
+                    "type": "string"
+                },
+                "deseq2_vst": {
+                    "name": "DeSeq2 VST",
+                    "description": "Use vst transformation instead of rlog with DESeq2.",
+                    "type": "boolean"
+                },
+                "skip_bigwig": {
+                    "name": "Skip bigwig",
+                    "description": "Skip bigWig file creation.",
+                    "type": "boolean"
+                },
+                "skip_stringtie": {
+                    "name": "Skip stringtie",
+                    "description": "Skip StringTie.",
+                    "type": "boolean"
+                },
+                "skip_fastqc": {
+                    "name": "Skip FastQC",
+                    "description": "Skip FastQC.",
+                    "type": "boolean"
+                },
+                "skip_preseq": {
+                    "name": "Skip preseq",
+                    "description": "Skip Preseq.",
+                    "type": "boolean"
+                },
+                "skip_dupradar": {
+                    "name": "Skip dupRadar",
+                    "description": "Skip dupRadar.",
+                    "type": "string"
+                },
+                "skip_qualimap": {
+                    "name": "Skip Qualimap",
+                    "description": "Skip Qualimap.",
+                    "type": "boolean"
+                },
+                 "skip_rseqc": {
+                    "name": "Skip RSeQC",
+                    "description": "Skip RSeQC.",
+                    "type": "boolean"
+                },
+                "skip_biotype_qc": {
+                    "name": "Skip biotype QC",
+                    "description": "Skip additional featureCounts process for biotype QC.",
+                    "type": "boolean"
+                },
+                 "skip_deseq2_qc": {
+                    "name": "Skip DeSeq2 QC",
+                    "description": "Skip DESeq2 PCA and heatmap plotting.",
+                    "type": "boolean"
+                },
+                "skip_multiqc": {
+                    "name": "Skip MultiQC",
+                    "description": "Skip MultiQC.",
+                    "type": "boolean"
+                },
+                "skip_qc": {
+                    "name": "Skip QC",
+                    "description": "Skip all QC steps except for MultiQC.",
+                    "type": "boolean"
+                }
             }
         }
     },

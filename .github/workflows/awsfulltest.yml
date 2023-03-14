@@ -15,7 +15,7 @@ jobs:
     # Do a full-scale run with each of the three aligners
     strategy:
       matrix:
-        aligner: ["star_salmon", "star_rsem", "hisat2"]
+        aligner: ["star_salmon", "star_rsem"]
     steps:
       - name: Launch workflow via tower
         uses: nf-core/tower-action@v3

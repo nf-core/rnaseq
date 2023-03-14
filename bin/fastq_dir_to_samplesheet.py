@@ -18,8 +18,8 @@ def parse_args(args=None):
         "--strandedness",
         type=str,
         dest="STRANDEDNESS",
-        default="unstranded",
-        help="Value for 'strandedness' in samplesheet. Must be one of 'unstranded', 'forward', 'reverse'.",
+        default="auto",
+        help="Value for 'strandedness' in samplesheet. Must be one of 'unstranded', 'forward', 'reverse', 'auto'.",
     )
     parser.add_argument(
         "-r1",
@@ -80,7 +80,7 @@ def parse_args(args=None):
 def fastq_dir_to_samplesheet(
     fastq_dir,
     samplesheet_file,
-    strandedness="unstranded",
+    strandedness="auto",
     read1_extension="_R1_001.fastq.gz",
     read2_extension="_R2_001.fastq.gz",
     single_end=False,
@@ -154,8 +154,8 @@ def fastq_dir_to_samplesheet(
 def main(args=None):
     args = parse_args(args)
 
-    strandedness = "unstranded"
-    if args.STRANDEDNESS in ["unstranded", "forward", "reverse"]:
+    strandedness = "auto"
+    if args.STRANDEDNESS in ["unstranded", "forward", "reverse", "auto"]:
         strandedness = args.STRANDEDNESS
 
     fastq_dir_to_samplesheet(

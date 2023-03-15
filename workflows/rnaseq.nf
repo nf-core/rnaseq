@@ -167,10 +167,23 @@ workflow RNASEQ {
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     PREPARE_GENOME (
-        prepareToolIndices,
+        params.fasta,
+        params.gtf,
+        params.gff,
+        params.additional_fasta,
+        params.transcript_fasta,
+        params.gene_bed,
+        params.splicesites,
+        params.bbsplit_fasta_list,
+        params.star_index,
+        params.rsem_index,
+        params.salmon_index,
+        params.hisat2_index,
+        params.bbsplit_index,
+        params.gencode,
+        is_aws_igenome,
         biotype,
-        is_aws_igenome
-
+        prepareToolIndices
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 

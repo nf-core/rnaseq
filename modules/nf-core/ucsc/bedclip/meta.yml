@@ -5,10 +5,7 @@ keywords:
 tools:
   - ucsc:
       description: Remove lines from bed file that refer to off-chromosome locations.
-      homepage: None
-      documentation: None
-      tool_dev_url: None
-      doi: ""
+      homepage: http://hgdownload.cse.ucsc.edu/admin/exe/
       licence: ["varies; see http://genome.ucsc.edu/license"]
 
 input:

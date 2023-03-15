@@ -11,8 +11,7 @@ tools:
       description: BBMap is a short read aligner, as well as various other bioinformatic tools.
       homepage: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
       documentation: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
-      tool_dev_url: None
-      doi: ""
+
       licence: ["UC-LBL license (see package)"]
 
 input:

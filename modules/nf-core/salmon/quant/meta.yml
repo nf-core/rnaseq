@@ -34,12 +34,12 @@ input:
       type: file
       description: Fasta file of the reference transcriptome
   - alignment_mode:
-    type: boolean
-    description: whether to run salmon in alignment mode
+      type: boolean
+      description: whether to run salmon in alignment mode
   - lib_type:
-    type: string
-    description: |
-      Override library type inferred based on strandedness defined in meta object
+      type: string
+      description: |
+        Override library type inferred based on strandedness defined in meta object
 
 output:
   - results:

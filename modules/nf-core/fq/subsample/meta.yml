@@ -9,7 +9,7 @@ tools:
       homepage: "https://github.com/stjude-rust-labs/fq"
       documentation: "https://github.com/stjude-rust-labs/fq"
       tool_dev_url: "https://github.com/stjude-rust-labs/fq"
-      doi: ""
+
       licence: "['MIT']"
 
 input:

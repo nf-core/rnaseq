@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#944](https://github.com/nf-core/rnaseq/issues/944)] - Read clipping using clip_r1, clip_r2, three_prime_clip_r1, three_prime_clip_r2 disabled in 3.10
 - [[#956](https://github.com/nf-core/rnaseq/pull/956)] - Implement 'auto' as default strandedness argument in `fastq_dir_to_samplesheet.py` script
 - Remove HISAT2 from automated AWS full-sized tests
+- [[#958](https://github.com/nf-core/rnaseq/pull/958)] - Add '--no-sort-output' flag to TRANSCRIPTOME:UMITOOLS_DEDUP [as suggested by Lars Roed Ingerslev and Thomas Koefoed](https://nfcore.slack.com/archives/CE8SSJV3N/p1676885035327799)
 
 ### Software dependencies
 

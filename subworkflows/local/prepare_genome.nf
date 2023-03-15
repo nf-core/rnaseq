@@ -142,9 +142,9 @@ workflow PREPARE_GENOME {
     //
     // Create chromosome sizes file
     //
-    CUSTOM_GETCHROMSIZES ( ch_fasta )
-    ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes
-    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
+    CUSTOM_GETCHROMSIZES ( ch_fasta.map { [ [:], it ] } )
+    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
+    ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
     ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //
@@ -259,18 +259,18 @@ workflow PREPARE_GENOME {
     }
 
     emit:
-    fasta            = ch_fasta            //    path: genome.fasta
-    gtf              = ch_gtf              //    path: genome.gtf
-    fai              = ch_fai              //    path: genome.fai
-    gene_bed         = ch_gene_bed         //    path: gene.bed
-    transcript_fasta = ch_transcript_fasta //    path: transcript.fasta
-    chrom_sizes      = ch_chrom_sizes      //    path: genome.sizes
-    splicesites      = ch_splicesites      //    path: genome.splicesites.txt
-    bbsplit_index    = ch_bbsplit_index    //    path: bbsplit/index/
-    star_index       = ch_star_index       //    path: star/index/
-    rsem_index       = ch_rsem_index       //    path: rsem/index/
-    hisat2_index     = ch_hisat2_index     //    path: hisat2/index/
-    salmon_index     = ch_salmon_index     //    path: salmon/index/
+    fasta            = ch_fasta                  // channel: path(genome.fasta)
+    gtf              = ch_gtf                    // channel: path(genome.gtf)
+    fai              = ch_fai                    // channel: path(genome.fai)
+    gene_bed         = ch_gene_bed               // channel: path(gene.bed)
+    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
+    chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
+    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
+    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    star_index       = ch_star_index             // channel: path(star/index/)
+    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
+    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
+    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
 
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

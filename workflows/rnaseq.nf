@@ -100,9 +100,6 @@ include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../modules/local/umitools_prepareforrsem.nf'
-include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_MAPPED  } from '../modules/local/multiqc_tsv_from_list'
-include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_TRIMMED } from '../modules/local/multiqc_tsv_from_list'
-include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_STRAND_CHECK } from '../modules/local/multiqc_tsv_from_list'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -309,14 +306,13 @@ workflow RNASEQ {
                     return [ "$meta.id\t$num_reads" ]
                 }
             }
-            .set { ch_num_trimmed_reads }
-
-        MULTIQC_TSV_FAIL_TRIMMED (
-            ch_num_trimmed_reads.collect(),
-            ["Sample", "Reads after trimming"],
-            'fail_trimmed_samples'
-        )
-        .set { ch_fail_trimming_multiqc }
+            .collect()                
+            .map { 
+                tsv_data ->
+                    def header = ["Sample", "Reads after trimming"]
+                    WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+            }
+            .set { ch_fail_trimming_multiqc }
     }
 
     //
@@ -581,16 +577,15 @@ workflow RNASEQ {
             }
             .set { ch_pass_fail_mapped }
 
-        def header = [
-            "Sample",
-            "STAR uniquely mapped reads (%)"
-        ]
-        MULTIQC_TSV_FAIL_MAPPED (
-            ch_pass_fail_mapped.fail.collect(),
-            header,
-            'fail_mapped_samples'
-        )
-        .set { ch_fail_mapping_multiqc }
+        ch_pass_fail_mapped
+            .fail
+            .collect()
+            .map { 
+                tsv_data ->
+                    def header = ["Sample", "STAR uniquely mapped reads (%)"]
+                    WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+            }
+            .set { ch_fail_mapping_multiqc }
     }
 
     //
@@ -751,22 +746,20 @@ workflow RNASEQ {
                 .map { meta, strandedness, sense, antisense, undetermined ->
                     [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
                 }
-                .set { ch_fail_strand }
-
-            def header = [
-                "Sample",
-                "Provided strandedness",
-                "Inferred strandedness",
-                "Sense (%)",
-                "Antisense (%)",
-                "Undetermined (%)"
-            ]
-            MULTIQC_TSV_STRAND_CHECK (
-                ch_fail_strand.collect(),
-                header,
-                'fail_strand_check'
-            )
-            .set { ch_fail_strand_multiqc }
+                .collect()
+                .map { 
+                    tsv_data ->
+                        def header = [
+                            "Sample",
+                            "Provided strandedness",
+                            "Inferred strandedness",
+                            "Sense (%)",
+                            "Antisense (%)",
+                            "Undetermined (%)"
+                        ]
+                        WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+                }
+                .set { ch_fail_strand_multiqc }
         }
     }
 
@@ -824,9 +817,9 @@ workflow RNASEQ {
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
             ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
             ch_multiqc_logo.collect().ifEmpty([]),
-            ch_fail_trimming_multiqc.ifEmpty([]),
-            ch_fail_mapping_multiqc.ifEmpty([]),
-            ch_fail_strand_multiqc.ifEmpty([]),
+            ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv').ifEmpty([]),
+            ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv').ifEmpty([]),
+            ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').ifEmpty([]),
             FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
             FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
             FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),

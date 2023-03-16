@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#940](https://github.com/nf-core/rnaseq/issues/940)] - Bugfix in `salmon_summarizedexperiment.r` to ensure `rbind` doesn't fail when `rowdata` has no `tx` column. See ([[#941](https://github.com/nf-core/rnaseq/pull/941)]) for details.
 - [[#944](https://github.com/nf-core/rnaseq/issues/944)] - Read clipping using clip_r1, clip_r2, three_prime_clip_r1, three_prime_clip_r2 disabled in 3.10
 - [[#956](https://github.com/nf-core/rnaseq/pull/956)] - Implement 'auto' as default strandedness argument in `fastq_dir_to_samplesheet.py` script
+- [[#960](https://github.com/nf-core/rnaseq/pull/960)] - Failure with awsbatch when running processes that are using `executor: local`
 - Remove HISAT2 from automated AWS full-sized tests
 
 ### Software dependencies

@@ -301,7 +301,7 @@ class WorkflowRnaseq {
 
         return description_html
     }
-    
+
     //
     // Exit pipeline if incorrect --genome key provided
     //

@@ -245,7 +245,7 @@ class NfcoreTemplate {
             if (workflow.stats.ignoredCount != 0) {
                 color = colors.yellow
                 status += ['with errored process(es)']
-            } 
+            }
             if (fail_mapped_count > 0 || fail_trimmed_count > 0 || fail_strand_count > 0) {
                 color = colors.yellow
                 status += ['with skipped sampl(es)']

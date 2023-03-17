@@ -151,9 +151,10 @@ include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG
 */
 
 // Info required for completion email and summary
-def multiqc_report      = []
-def pass_percent_mapped = [:]
-def fail_percent_mapped = [:]
+def multiqc_report     = []
+def pass_mapped_reads  = [:]
+def pass_trimmed_reads = [:]
+def pass_strand_check  = [:]
 
 workflow RNASEQ {
 
@@ -302,9 +303,11 @@ workflow RNASEQ {
         ch_num_trimmed_reads
             .map {
                 meta, reads, num_reads ->
-                if (num_reads <= params.min_trimmed_reads) {
-                    return [ "$meta.id\t$num_reads" ]
-                }
+                    pass_trimmed_reads[meta.id] = true
+                    if (num_reads <= params.min_trimmed_reads) {
+                        pass_trimmed_reads[meta.id] = false
+                        return [ "$meta.id\t$num_reads" ]
+                    }
             }
             .collect()                
             .map { 
@@ -569,10 +572,10 @@ workflow RNASEQ {
         ch_percent_mapped
             .branch { meta, mapped, pass ->
                 pass: pass
-                    pass_percent_mapped[meta.id] = mapped
+                    pass_mapped_reads[meta.id] = true
                     return [ "$meta.id\t$mapped" ]
                 fail: !pass
-                    fail_percent_mapped[meta.id] = mapped
+                    pass_mapped_reads[meta.id] = false
                     return [ "$meta.id\t$mapped" ]
             }
             .set { ch_pass_fail_mapped }
@@ -741,10 +744,14 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }
-                .filter { it[0].strandedness != it[1] }
-                .map { meta, strandedness, sense, antisense, undetermined ->
-                    [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
+                .map { 
+                    meta, strand_log ->
+                        def inferred_strand = WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30)
+                        pass_strand_check[meta.id] = true
+                        if (meta.strandedness != inferred_strand[0]) {
+                            pass_strand_check[meta.id] = false
+                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                        }
                 }
                 .collect()
                 .map { 
@@ -861,14 +868,14 @@ workflow RNASEQ {
 
 workflow.onComplete {
     if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
 
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
 
-    NfcoreTemplate.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
+    NfcoreTemplate.summary(workflow, params, log, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 }
 
 /*

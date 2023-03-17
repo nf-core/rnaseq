@@ -54,12 +54,16 @@ class NfcoreTemplate {
     //
     // Construct and send completion email
     //
-    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
+    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
 
         // Set up the e-mail variables
+        def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+        def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+        def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
-        if (fail_percent_mapped.size() > 0) {
-            subject = "[$workflow.manifest.name] Partially successful (${fail_percent_mapped.size()} skipped): $workflow.runName"
+        if (fail_mapped_count + fail_trimmed_count + fail_strand_count > 0) {
+            subject = "[$workflow.manifest.name] Partially successful - samples skipped: $workflow.runName"
         }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
@@ -94,8 +98,7 @@ class NfcoreTemplate {
         email_fields['commandLine']  = workflow.commandLine
         email_fields['projectDir']   = workflow.projectDir
         email_fields['summary']      = summary << misc_fields
-        email_fields['fail_percent_mapped'] = fail_percent_mapped.keySet()
-        email_fields['min_mapped_reads']    = params.min_mapped_reads
+        email_fields['skip_sample_count'] = fail_mapped_count + fail_trimmed_count + fail_strand_count
 
         // On success try attach the multiqc report
         def mqc_report = null
@@ -230,36 +233,32 @@ class NfcoreTemplate {
     //
     // Print pipeline summary on completion
     //
-    public static void summary(workflow, params, log, fail_percent_mapped=[:], pass_percent_mapped=[:]) {
+    public static void summary(workflow, params, log, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
         Map colors = logColours(params.monochrome_logs)
 
-        def total_aln_count = pass_percent_mapped.size() + fail_percent_mapped.size()
-        if (pass_percent_mapped.size() > 0) {
-            def idx = 0
-            def samp_aln = ''
-            for (samp in pass_percent_mapped) {
-                samp_aln += "    ${samp.value}%: ${samp.key}\n"
-                idx += 1
-                if (idx > 5) {
-                    samp_aln += "    ..see pipeline reports for full list\n"
-                    break;
-                }
-            }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} ${pass_percent_mapped.size()}/$total_aln_count samples passed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
-        }
-        if (fail_percent_mapped.size() > 0) {
-            def samp_aln = ''
-            for (samp in fail_percent_mapped) {
-                samp_aln += "    ${samp.value}%: ${samp.key}\n"
-            }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${fail_percent_mapped.size()}/$total_aln_count samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
-        }
-
+        def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+        def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+        def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
         if (workflow.success) {
-            if (workflow.stats.ignoredCount == 0) {
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
-            } else {
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} Pipeline completed successfully, but with errored process(es) ${colors.reset}-"
+            def color = colors.green
+            def status = []
+            if (workflow.stats.ignoredCount != 0) {
+                color = colors.yellow
+                status += ['with errored process(es)']
+            }
+            if (fail_mapped_count > 0 || fail_trimmed_count > 0 || fail_strand_count > 0) {
+                color = colors.yellow
+                status += ['with skipped sampl(es)']
+            }
+            log.info "-${colors.purple}[$workflow.manifest.name]${color} Pipeline completed successfully ${status.join(', ')}${colors.reset}-"
+            if (fail_trimmed_count > 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_trimmed_count}/${pass_trimmed_reads.size()} samples skipped since they failed ${params.min_trimmed_reads} trimmed read threshold.${colors.reset}-"
+            }
+            if (fail_mapped_count > 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
+            }
+            if (fail_strand_count > 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_strand_count}/${pass_strand_check.size()} samples failed strandedness check.${colors.reset}-"
             }
         } else {
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"

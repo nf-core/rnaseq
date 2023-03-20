@@ -3,7 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.11.0](https://github.com/nf-core/rnaseq/releases/tag/3.11.0)] - 2023-03-24
+## [[3.11.0](https://github.com/nf-core/rnaseq/releases/tag/3.11.0)] - 2023-03-22
+
+### Credits
+
+Special thanks to the following for their code contributions to the release:
+- [J Lorent](https://github.com/jlorent)
+- [Luca Beltrame](https://github.com/lbeltrame)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Ryan Yordanoff](https://github.com/ryanyord)
+- [Thomas Sandmann](https://github.com/tomsing1)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 
 ### Enhancements & fixes
 

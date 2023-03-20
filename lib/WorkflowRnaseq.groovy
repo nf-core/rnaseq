@@ -58,6 +58,12 @@ class WorkflowRnaseq {
             }
         }
 
+        if (!params.skip_trimming) {
+            if (!valid_params['trimmers'].contains(params.trimmer)) {
+                log.error "Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}."
+                System.exit(1)
+            }
+        }
 
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {

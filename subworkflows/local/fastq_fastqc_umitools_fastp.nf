@@ -21,13 +21,14 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     take:
     reads             // channel: [ val(meta), [ reads ] ]
     skip_fastqc       // boolean: true/false
+    with_umi          // boolean: true/false
     skip_umi_extract  // boolean: true/false
     umi_discard_read  // integer: 0, 1 or 2
     skip_trimming     // boolean: true/false
-    min_trimmed_reads // integer: >0
     adapter_fasta     //    file: adapter.fasta
     save_trimmed_fail // boolean: true/false
     save_merged       // boolean: true/false
+    min_trimmed_reads // integer: > 0
 
     main:
 
@@ -46,7 +47,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
 
     umi_reads = reads
     umi_log   = Channel.empty()
-    if (!skip_umi_extract) {
+    if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT ( 
             reads 
         )
@@ -78,6 +79,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     trim_reads_merged = Channel.empty()
     fastqc_trim_html  = Channel.empty()
     fastqc_trim_zip   = Channel.empty()
+    trim_read_count   = Channel.empty()
     if (!skip_trimming) {
         FASTP (
             reads,
@@ -94,17 +96,29 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         ch_versions       = ch_versions.mix(FASTP.out.versions.first())
 
         //
-        // Filter empty FastQ files after adapter trimming so FastQC doesn't fail
+        // Filter FastQ files based on minimum trimmed read count after adapter trimming
         //
         trim_reads
             .join(trim_json)
             .map {
-                meta, reads, json ->
-                    if (getFastpReadsAfterFiltering(json) > 0) {
+                meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json) ]
+            }
+            .set { ch_num_trimmed_reads }
+
+        ch_num_trimmed_reads
+            .map { 
+                meta, reads, num_reads -> 
+                    if (num_reads >= min_trimmed_reads.toInteger()) {
                         [ meta, reads ]
                     }
             }
             .set { trim_reads }
+        
+        ch_num_trimmed_reads
+            .map {
+                meta, reads, num_reads -> [ meta, num_reads ]
+            }
+            .set { trim_read_count }
 
         if (!skip_fastqc) {
             FASTQC_TRIM (
@@ -129,6 +143,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     trim_log           // channel: [ val(meta), [ log ] ]
     trim_reads_fail    // channel: [ val(meta), [ fastq.gz ] ]
     trim_reads_merged  // channel: [ val(meta), [ fastq.gz ] ]
+    trim_read_count    // channel: [ val(meta), val(count) ]
 
     fastqc_trim_html   // channel: [ val(meta), [ html ] ]
     fastqc_trim_zip    // channel: [ val(meta), [ zip ] ]

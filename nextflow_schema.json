@@ -326,6 +326,13 @@
             "fa_icon": "fas fa-cut",
             "description": "Options to adjust read trimming criteria.",
             "properties": {
+                "trimmer": {
+                    "type": "string",
+                    "default": "trimgalore",
+                    "description": "Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'.",
+                    "fa_icon": "fas fa-cut",
+                    "enum": ["trimgalore", "fastp"]
+                },
                 "clip_r1": {
                     "type": "integer",
                     "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).",

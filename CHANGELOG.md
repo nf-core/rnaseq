@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Credits
 
 Special thanks to the following for their code contributions to the release:
+
 - [J Lorent](https://github.com/jlorent)
 - [Luca Beltrame](https://github.com/lbeltrame)
 - [Matthias Zepper](https://github.com/MatthiasZepper)

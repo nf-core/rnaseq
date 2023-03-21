@@ -42,6 +42,10 @@ input:
       type: integer
       description: |
         Discard R1 / R2 if required
+  - min_trimmed_reads:
+      type: integer
+      description: |
+        Inputs with fewer than this reads will be filtered out of the "reads" output channel
 
 output:
   - reads:
@@ -80,6 +84,9 @@ output:
       type: file
       description: Trim Galore! trimming report
       pattern: "*_{report.txt}"
+  - trim_read_count:
+      type: integer
+      description: Number of reads remaining after trimming for all input samples
   - versions:
       type: file
       description: File containing software versions

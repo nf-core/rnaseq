@@ -97,7 +97,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
 
         ch_num_trimmed_reads
             .filter { meta, reads, num_reads -> num_reads >= min_trimmed_reads.toFloat() }
-            .map { meta, reads, num_reads -> [ meta, num_reads ] }
+            .map { meta, reads, num_reads -> [ meta, reads ] }
             .set { trim_reads }
 
         ch_num_trimmed_reads

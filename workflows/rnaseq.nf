@@ -266,8 +266,11 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
     //
-    ch_filtered_reads  = Channel.empty()
-    ch_trim_read_count = Channel.empty()
+    ch_filtered_reads      = Channel.empty()
+    ch_fastqc_raw_multiqc  = Channel.empty()
+    ch_fastqc_trim_multiqc = Channel.empty()
+    ch_trim_log_multiqc    = Channel.empty()
+    ch_trim_read_count     = Channel.empty()
     if (params.trimmer == 'trimgalore') {
         FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
             ch_strand_inferred_fastq,
@@ -278,8 +281,11 @@ workflow RNASEQ {
             params.umi_discard_read,
             params.min_trimmed_reads
         )
-        ch_filtered_reads  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
-        ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
+        ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
+        ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
+        ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
+        ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
+        ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
     }
 
@@ -299,8 +305,11 @@ workflow RNASEQ {
             params.save_trimmed,
             params.min_trimmed_reads
         )
-        ch_filtered_reads  = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
-        ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
+        ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
+        ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip
+        ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip
+        ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json
+        ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
     }
 
@@ -833,9 +842,9 @@ workflow RNASEQ {
             ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv').ifEmpty([]),
             ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv').ifEmpty([]),
             ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').ifEmpty([]),
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+            ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_trim_log_multiqc.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),

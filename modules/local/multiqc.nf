@@ -16,9 +16,9 @@ process MULTIQC {
     path fail_trimming_summary
     path fail_mapping_summary
     path fail_strand_check
-    path ('fastqc/*')
-    path ('trimgalore/fastqc/*')
-    path ('trimgalore/*')
+    path ('fastqc/raw/*')
+    path ('fastqc/trim/*')
+    path ('trim_log/*')
     path ('sortmerna/*')
     path ('star/*')
     path ('hisat2/*')

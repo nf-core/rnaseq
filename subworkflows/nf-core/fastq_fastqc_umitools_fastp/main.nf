@@ -2,10 +2,10 @@
 // Read QC, UMI extraction and trimming
 //
 
-include { FASTQC as FASTQC_RAW  } from '../../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIM } from '../../modules/nf-core/fastqc/main'
-include { UMITOOLS_EXTRACT      } from '../../modules/nf-core/umitools/extract/main'
-include { FASTP                 } from '../../modules/nf-core/fastp/main'
+include { FASTQC as FASTQC_RAW  } from '../../../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIM } from '../../../modules/nf-core/fastqc/main'
+include { UMITOOLS_EXTRACT      } from '../../../modules/nf-core/umitools/extract/main'
+include { FASTP                 } from '../../../modules/nf-core/fastp/main'
 
 //
 // Function that parses fastp json output file to get total number of reads after trimming
@@ -31,9 +31,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     min_trimmed_reads // integer: > 0
 
     main:
-
     ch_versions = Channel.empty()
-
     fastqc_raw_html = Channel.empty()
     fastqc_raw_zip  = Channel.empty()
     if (!skip_fastqc) {
@@ -48,8 +46,8 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     umi_reads = reads
     umi_log   = Channel.empty()
     if (with_umi && !skip_umi_extract) {
-        UMITOOLS_EXTRACT ( 
-            reads 
+        UMITOOLS_EXTRACT (
+            reads
         )
         umi_reads   = UMITOOLS_EXTRACT.out.reads
         umi_log     = UMITOOLS_EXTRACT.out.log
@@ -60,12 +58,9 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             UMITOOLS_EXTRACT
                 .out
                 .reads
-                .map { meta, reads ->
-                    if (!meta.single_end) {
-                        meta['single_end'] = true
-                        reads = reads[umi_discard_read % 2]
-                    }
-                    return [ meta, reads ]
+                .map {
+                    meta, reads ->
+                        meta.single_end ? [ meta, reads ] : [ meta + [single_end: true], reads[umi_discard_read % 2] ]
                 }
                 .set { umi_reads }
         }
@@ -87,7 +82,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             save_trimmed_fail,
             save_merged
         )
-        trim_reads        = FASTP.out.reads
         trim_json         = FASTP.out.json
         trim_html         = FASTP.out.html
         trim_log          = FASTP.out.log
@@ -98,26 +92,20 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
         //
-        trim_reads
+        FASTP
+            .out
+            .reads
             .join(trim_json)
-            .map {
-                meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json) ]
-            }
+            .map { meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json) ] }
             .set { ch_num_trimmed_reads }
 
         ch_num_trimmed_reads
-            .map { 
-                meta, reads, num_reads -> 
-                    if (num_reads >= min_trimmed_reads.toInteger()) {
-                        [ meta, reads ]
-                    }
-            }
+            .filter { meta, reads, num_reads -> num_reads >= min_trimmed_reads.toInteger() }
+            .map { meta, reads, num_reads -> [ meta, reads ] }
             .set { trim_reads }
-        
+
         ch_num_trimmed_reads
-            .map {
-                meta, reads, num_reads -> [ meta, num_reads ]
-            }
+            .map { meta, reads, num_reads -> [ meta, num_reads ] }
             .set { trim_read_count }
 
         if (!skip_fastqc) {

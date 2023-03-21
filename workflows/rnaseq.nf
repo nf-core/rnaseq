@@ -270,7 +270,8 @@ workflow RNASEQ {
         params.with_umi,
         params.skip_umi_extract,
         params.skip_trimming,
-        params.umi_discard_read
+        params.umi_discard_read,
+        params.min_trimmed_reads
     )
     ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 

@@ -53,6 +53,9 @@ output:
       description: Rscript to reproduce the plots
       pattern: "*.r"
   - log:
+      type: file
+      description: Log file of execution
+      pattern: "*.junction_annotation.log"
   - versions:
       type: file
       description: File containing software versions

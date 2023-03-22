@@ -62,6 +62,9 @@ class WorkflowMain {
         // Print parameter summary log to screen
         log.info paramsSummaryLog(workflow, params, log)
 
+        // Warn about using custom configs to provide pipeline parameters
+        NfcoreTemplate.warnParamsProvidedInConfig(workflow, log)
+
         // Validate workflow parameters via the JSON schema
         if (params.validate_params) {
             NfcoreSchema.validateParameters(workflow, params, log)

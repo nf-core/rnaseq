@@ -80,6 +80,8 @@ You can find numerous talks on the [nf-core events page](https://nf-co.re/events
 
 4. Start running your own analysis!
 
+   > - Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration except for parameters; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+
    ```bash
    nextflow run nf-core/rnaseq --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```

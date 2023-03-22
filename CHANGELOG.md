@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.11.0](https://github.com/nf-core/rnaseq/releases/tag/3.11.0)] - 2023-03-22
+## [[3.11.0](https://github.com/nf-core/rnaseq/releases/tag/3.11.0)] - 2023-03-24
 
 ### Credits
 
@@ -62,6 +62,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 | `fastp`     |             | 0.23.2      |
 | `multiqc`   | 1.13        | 1.14        |
 | `picard`    | 2.27.4      | 3.0.0       |
+| `salmon`    | 1.9.0       | 1.10.1      |
 | `umi_tools` | 1.1.2       | 1.1.4       |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.

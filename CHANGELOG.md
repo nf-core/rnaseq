@@ -20,6 +20,12 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Enhancements & fixes
 
+- Added fastp support.
+  - Users can now select between `--trimmer trimgalore` (default) and `--trimmer fastp`.
+  - Trim Galore! specific pipeline parameters have been deprecated: `--clip_r1`, `--clip_r2`, `--three_prime_clip_r1`, `--three_prime_clip_r2`, `--tracedir` and `--trim_nextseq`
+  - Any additional options can now be specified via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.
+- [[#663](https://github.com/nf-core/rnaseq/pull/663)] - Alternative trimming step for polyA/T removal
+- [[#781](https://github.com/nf-core/rnaseq/pull/781)] - Add Warning for poly(A) libraries
 - [[#878](https://github.com/nf-core/rnaseq/pull/878)] - Allow tabs in fasta header when creating decoys for salmon index
 - [[#931](https://github.com/nf-core/rnaseq/pull/931)] - Save transcriptome BAM files when using `--save_umi_intermeds` / `--save_align_intermeds`
 - [[#934](https://github.com/nf-core/rnaseq/pull/934)] - Union of `ext.args` and `params.extra_star_align_args` prevents parameter clashes in the STAR module
@@ -32,9 +38,16 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Parameters
 
-| Old parameter | New parameter |
-| ------------- | ------------- |
-| `--tracedir`  |               |
+| Old parameter           | New parameter             |
+| ----------------------- | ------------------------- |
+|                         | `--trimmer`               |
+|                         | `--extra_trimgalore_args` |
+| `--clip_r1`             |                           |
+| `--clip_r2`             |                           |
+| `--three_prime_clip_r1` |                           |
+| `--three_prime_clip_r2` |                           |
+| `--tracedir`            |                           |
+| `--trim_nextseq`        |                           |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.
@@ -46,6 +59,7 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 
 | Dependency  | Old version | New version |
 | ----------- | ----------- | ----------- |
+| `fastp`     |             | 0.23.2      |
 | `multiqc`   | 1.13        | 1.14        |
 | `picard`    | 2.27.4      | 3.0.0       |
 | `umi_tools` | 1.1.2       | 1.1.4       |

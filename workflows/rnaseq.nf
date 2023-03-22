@@ -6,6 +6,7 @@
 
 def valid_params = [
     aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
+    trimmers       : ['trimgalore', 'fastp'],
     pseudoaligners : ['salmon'],
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
 ]
@@ -135,6 +136,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../subworkflows/nf-core/fastq_subsample_fq_salmon/main'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
+include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../subworkflows/nf-core/fastq_fastqc_umitools_fastp/main'
 include { FASTQ_ALIGN_HISAT2               } from '../subworkflows/nf-core/fastq_align_hisat2/main'
 include { BAM_SORT_STATS_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
 include { BAM_MARKDUPLICATES_PICARD        } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
@@ -262,62 +264,74 @@ workflow RNASEQ {
         .set { ch_strand_inferred_fastq }
 
     //
-    // SUBWORKFLOW: Read QC, extract UMI and trim adapters
+    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
     //
-    FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
-        ch_strand_inferred_fastq,
-        params.skip_fastqc || params.skip_qc,
-        params.with_umi,
-        params.skip_umi_extract,
-        params.skip_trimming,
-        params.umi_discard_read,
-        params.min_trimmed_reads
-    )
-    ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
-
-    //
-    // Filter channels to get samples that passed minimum trimmed read count
-    //
-    ch_fail_trimming_multiqc = Channel.empty()
-    ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
-    if (!params.skip_trimming) {
-        ch_filtered_reads
-            .join(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log, remainder: true)
-            .map {
-                meta, reads, trim_log ->
-                    if (trim_log) {
-                        if (!meta.single_end) {
-                            trim_log = trim_log[-1]
-                        }
-                        num_reads = WorkflowRnaseq.getTrimGaloreReadsAfterFiltering(trim_log)
-                        [ meta, reads, num_reads ]
-                    } else {
-                        [ meta, reads, params.min_trimmed_reads + 1 ]
-                    }
-            }
-            .set { ch_num_trimmed_reads }
-
-        ch_num_trimmed_reads
-            .map { meta, reads, num_reads -> if (num_reads > params.min_trimmed_reads) [ meta, reads ] }
-            .set { ch_filtered_reads }
-
-        ch_num_trimmed_reads
-            .map {
-                meta, reads, num_reads ->
-                    pass_trimmed_reads[meta.id] = true
-                    if (num_reads <= params.min_trimmed_reads) {
-                        pass_trimmed_reads[meta.id] = false
-                        return [ "$meta.id\t$num_reads" ]
-                    }
-            }
-            .collect()                
-            .map { 
-                tsv_data ->
-                    def header = ["Sample", "Reads after trimming"]
-                    WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
-            }
-            .set { ch_fail_trimming_multiqc }
+    ch_filtered_reads      = Channel.empty()
+    ch_fastqc_raw_multiqc  = Channel.empty()
+    ch_fastqc_trim_multiqc = Channel.empty()
+    ch_trim_log_multiqc    = Channel.empty()
+    ch_trim_read_count     = Channel.empty()
+    if (params.trimmer == 'trimgalore') {
+        FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
+            ch_strand_inferred_fastq,
+            params.skip_fastqc || params.skip_qc,
+            params.with_umi,
+            params.skip_umi_extract,
+            params.skip_trimming,
+            params.umi_discard_read,
+            params.min_trimmed_reads
+        )
+        ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
+        ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
+        ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
+        ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
+        ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
+        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
     }
+
+    //
+    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with fastp
+    //
+    if (params.trimmer == 'fastp') {
+        FASTQ_FASTQC_UMITOOLS_FASTP (
+            ch_strand_inferred_fastq,
+            params.skip_fastqc || params.skip_qc,
+            params.with_umi,
+            params.skip_umi_extract,
+            params.umi_discard_read,
+            params.skip_trimming,
+            [],
+            params.save_trimmed,
+            params.save_trimmed,
+            params.min_trimmed_reads
+        )
+        ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
+        ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip
+        ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip
+        ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json
+        ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
+        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
+    }
+
+    //
+    // Get list of samples that failed trimming threshold for MultiQC report
+    //        
+    ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                pass_trimmed_reads[meta.id] = true
+                if (num_reads <= params.min_trimmed_reads.toFloat()) {
+                    pass_trimmed_reads[meta.id] = false
+                    return [ "$meta.id\t$num_reads" ]
+                }
+        }
+        .collect()
+        .map { 
+            tsv_data ->
+                def header = ["Sample", "Reads after trimming"]
+                WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+        }
+        .set { ch_fail_trimming_multiqc }
 
     //
     // MODULE: Remove genome contaminant reads
@@ -828,9 +842,9 @@ workflow RNASEQ {
             ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv').ifEmpty([]),
             ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv').ifEmpty([]),
             ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').ifEmpty([]),
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+            ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_trim_log_multiqc.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),

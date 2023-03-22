@@ -82,6 +82,7 @@ jobs:
           - "--bam_csi_index"
           - "--save_align_intermeds --save_reference"
           - "--featurecounts_group_type false"
+          - "--trimmer fastp"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

@@ -25,10 +25,15 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
+                    "fastp": {
+                        "branch": "master",
+                        "git_sha": "20a508676f40d0fd3f911ac595af91ec845704c4",
+                        "installed_by": ["modules", "fastq_fastqc_umitools_fastp"]
+                    },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["fastq_fastqc_umitools_trimgalore"]
+                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"]
                     },
                     "fq/subsample": {
                         "branch": "master",
@@ -191,7 +196,7 @@
                     },
                     "trimgalore": {
                         "branch": "master",
-                        "git_sha": "72ffbd7128015a1d4b65b95ff8d37be8fee2f981",
+                        "git_sha": "64a3dbc0a30a94cdaed7869d8e34fbb85e886614",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore"]
                     },
                     "ucsc/bedclip": {
@@ -212,7 +217,7 @@
                     "umitools/extract": {
                         "branch": "master",
                         "git_sha": "6d9c7e43404e20a97d2f6f88548456afe78282e6",
-                        "installed_by": ["fastq_fastqc_umitools_trimgalore"]
+                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"]
                     },
                     "untar": {
                         "branch": "master",
@@ -260,6 +265,11 @@
                     "fastq_align_hisat2": {
                         "branch": "master",
                         "git_sha": "9057e75e8ac959373a72a9402130fdea2e2d1398",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fastq_fastqc_umitools_fastp": {
+                        "branch": "master",
+                        "git_sha": "4c8c5b5c084a99d9bf4f987040ebe88ec12b705d",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {

@@ -132,13 +132,13 @@
                     },
                     "salmon/index": {
                         "branch": "master",
-                        "git_sha": "cfef21995228c66af535b14c5efae1461ffb8981",
+                        "git_sha": "5d2c0dd6a8e2790e7ff511f7f4d761f4ed627a91",
                         "installed_by": ["fastq_subsample_fq_salmon"]
                     },
                     "salmon/quant": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
-                        "installed_by": ["fastq_subsample_fq_salmon", "modules"]
+                        "git_sha": "5d2c0dd6a8e2790e7ff511f7f4d761f4ed627a91",
+                        "installed_by": ["modules", "fastq_subsample_fq_salmon"]
                     },
                     "samtools/flagstat": {
                         "branch": "master",

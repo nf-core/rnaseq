@@ -20,6 +20,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Enhancements & fixes
 
+- Added fastp support. Users can now select between `--trimmer trimgalore` (default) and `--trimmer fastp`.
+Any additional options can now be specified via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.
 - [[#663](https://github.com/nf-core/rnaseq/pull/663)] - Alternative trimming step for polyA/T removal
 - [[#781](https://github.com/nf-core/rnaseq/pull/781)] - Add Warning for poly(A) libraries
 - [[#878](https://github.com/nf-core/rnaseq/pull/878)] - Allow tabs in fasta header when creating decoys for salmon index
@@ -34,10 +36,12 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Parameters
 
-| Old parameter | New parameter |
-| ------------- | ------------- |
-| `--tracedir`  |               |
-|               | `--trimmer`   |
+| Old parameter | New parameter             |
+| ------------- | ------------------------- |
+| `--tracedir`  |                           |
+|               | `--trimmer`               |
+|               | `--extra_trimgalore_args` |
+|               | `--extra_fastp_args`      |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.

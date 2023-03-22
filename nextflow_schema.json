@@ -359,6 +359,16 @@
                     "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.",
                     "fa_icon": "fas fa-cut"
                 },
+                "extra_trimgalore_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "extra_fastp_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to fastp command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
                 "min_trimmed_reads": {
                     "type": "integer",
                     "default": 10000,

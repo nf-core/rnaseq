@@ -65,6 +65,9 @@ CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,a
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end). Rows with the same sample identifier are considered technical replicates and merged automatically. The strandedness refers to the library preparation and will be automatically inferred if set to `auto`.
 
+> **Note**
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration except for parameters; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+
 Now, you can run the pipeline using:
 
 ```bash
@@ -75,11 +78,7 @@ nextflow run nf-core/rnaseq \
     -profile <docker/singularity/.../institute>
 ```
 
-> - Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration except for parameters; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
-
-```bash
-nextflow run nf-core/rnaseq --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
-```
+For more details, please refer to the [usage documentation](https://nf-co.re/rnaseq/usage) and the [parameter documentation](https://nf-co.re/rnaseq/parameters).
 
 ## Pipeline output
 
@@ -101,18 +100,19 @@ The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Hars
 The pipeline workflow diagram was designed by Sarah Guinchard ([@G-Sarah](https://github.com/G-Sarah)) and James Fellows Yates ([@jfy133](https://github.com/jfy133)).
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
-[@MatthiasZepper](https://github.com/MatthiasZepper),
-[@Emiller88](https://github.com/Emiller88),
-[@maxulysse](https://github.com/maxulysse),
-[@robsyme](https://github.com/robsyme),
-[@Galithil](https://github.com/Galithil),
-[@pditommaso](https://github.com/pditommaso),
-[@orzechoj](https://github.com/orzechoj),
-[@apeltzer](https://github.com/apeltzer),
-[@colindaven](https://github.com/colindaven),
-[@lpantano](https://github.com/lpantano),
-[@olgabot](https://github.com/olgabot),
-[@jburos](https://github.com/jburos).
+- [Alex Peltzer](https://github.com/apeltzer)
+- [Colin Davenport](https://github.com/colindaven)
+- [Denis Moreno](https://github.com/Galithil)
+- [Edumnd Miller](https://github.com/Emiller88)
+- [Gregor Sturm](https://github.com/grst)
+- [Jacki Buros Novik](https://github.com/jburos)
+- [Lorena Pantano](https://github.com/lpantano)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Olga Botvinnik](https://github.com/olgabot)
+- [@orzechoj](https://github.com/orzechoj)
+- [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Rob Syme](https://github.com/robsyme)
 
 ## Contributions and Support
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 """
-==============================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Credits
-==============================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This script is a clone of the "prepare-for-rsem.py" script written by
 Ian Sudbury, Tom Smith and other contributors to the UMI-tools package:
@@ -19,9 +19,9 @@ UMI-tools release this script will be replaced and deprecated.
 Commit:
 https://github.com/CGATOxford/UMI-tools/blob/bf8608d6a172c5ca0dcf33c126b4e23429177a72/umi_tools/prepare-for-rsem.py
 
-==============================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 prepare_for_rsem - make the output from dedup or group compatible with RSEM
-===============================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The SAM format specification states that the mnext and mpos fields should point
 to the primary alignment of a read's mate. However, not all aligners adhere to
 this standard. In addition, the RSEM software requires that the mate of a read1

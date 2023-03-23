@@ -37,13 +37,13 @@ class NfcoreTemplate {
     //
     public static void warnParamsProvidedInConfig(workflow, log) {
         if (workflow.configFiles.size() > 1) {
-            log.warn "=============================================================================\n" +
+            log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Multiple config files detected!\n" +
                 "  Please provide pipeline parameters via the CLI or Nextflow '-params-file' option.\n" +
                 "  Custom config files including those provided by the '-c' Nextflow option can be\n" +
                 "  used to provide any configuration except for parameters.\n\n" +
                 "  Docs: https://nf-co.re/usage/configuration#custom-configuration-files\n" +
-                "==================================================================================="
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         }
     }
 

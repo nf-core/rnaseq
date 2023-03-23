@@ -139,12 +139,12 @@ class WorkflowRnaseq {
         if (hits) {
             return true
         } else {
-            log.warn "=============================================================================\n" +
+            log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
                 "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
-                "==================================================================================="
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             return false
         }
     }
@@ -159,13 +159,13 @@ class WorkflowRnaseq {
             def chrom = lspl[0]
             def size  = lspl[1]
             if (size.toInteger() > max_size) {
-                log.error "=============================================================================\n" +
+                log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                     "  Contig longer than ${max_size}bp found in reference genome!\n\n" +
                     "  ${chrom}: ${size}\n\n" +
                     "  Provide the '--bam_csi_index' parameter to use a CSI instead of BAI index.\n\n" +
                     "  Please see:\n" +
                     "  https://github.com/nf-core/rnaseq/issues/744\n" +
-                    "============================================================================="
+                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 System.exit(1)
             }
         }
@@ -326,70 +326,70 @@ class WorkflowRnaseq {
     // Print a warning if using GRCh38 assembly from igenomes.config
     //
     private static void ncbiGenomeWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
             "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using a UCSC assembly from igenomes.config
     //
     private static void ucscGenomeWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
             "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if both GTF and GFF have been provided
     //
     private static void gtfGffWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  Both '--gtf' and '--gff' parameters have been provided.\n" +
             "  Using GTF file as priority.\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using '--transcript_fasta'
     //
     private static void transcriptsFastaWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  '--transcript_fasta' parameter has been provided.\n" +
             "  Make sure transcript names in this file match those in the GFF/GTF file.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/753\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if --skip_alignment has been provided
     //
     private static void skipAlignmentWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  '--skip_alignment' parameter has been provided.\n" +
             "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using '--aligner star_rsem' and '--with_umi'
     //
     private static void rsemUmiError(log) {
-        log.error "=============================================================================\n" +
+        log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
             "  not possible to remove UMIs before the quantification.\n\n" +
             "  If you would like to remove UMI barcodes using the '--with_umi' option\n" +
             "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
-            "============================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         System.exit(1)
     }
 
@@ -397,21 +397,21 @@ class WorkflowRnaseq {
     // Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
     //
     private static void rsemStarIndexWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
             "  be present in the path specified by '--rsem_index'.\n\n" +
             "  This warning has been generated because you have provided both\n" +
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using '--additional_fasta' and '--<ALIGNER>_index'
     //
     private static void additionaFastaIndexWarn(index, log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--additional_fasta <FASTA_FILE>' the aligner index will not\n" +
             "  be re-built with the transgenes incorporated by default since you have \n" +
             "  already provided an index via '--${index}_index <INDEX>'.\n\n" +
@@ -421,6 +421,6 @@ class WorkflowRnaseq {
             "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/556\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 }

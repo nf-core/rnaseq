@@ -50,7 +50,7 @@
 ## Usage
 
 > **Note**
-> If you are new to nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data. 
+> If you are new to nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, you need to prepare a samplesheet with your input data that looks as follows:
 
@@ -100,6 +100,7 @@ The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Hars
 The pipeline workflow diagram was designed by Sarah Guinchard ([@G-Sarah](https://github.com/G-Sarah)) and James Fellows Yates ([@jfy133](https://github.com/jfy133)).
 
 Many thanks to other who have helped out along the way too, including (but not limited to):
+
 - [Alex Peltzer](https://github.com/apeltzer)
 - [Colin Davenport](https://github.com/colindaven)
 - [Denis Moreno](https://github.com/Galithil)

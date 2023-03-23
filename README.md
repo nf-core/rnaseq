@@ -50,7 +50,7 @@
 ## Usage
 
 > **Note**
-> If you are new to nextflow and nf-core, please refer to [this page](https://nf-co.re/#TODO) on how to set-up nextflow. Make sure to [test your setup](https://nf-co.re/#TODO) with `-profile test` before running the workflow on actual data. 
+> If you are new to nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data. 
 
 First, you need to prepare a samplesheet with your input data that looks as follows:
 

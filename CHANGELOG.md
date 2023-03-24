@@ -22,7 +22,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 - Added fastp support.
   - Users can now select between `--trimmer trimgalore` (default) and `--trimmer fastp`.
-  - Trim Galore! specific pipeline parameters have been deprecated: `--clip_r1`, `--clip_r2`, `--three_prime_clip_r1`, `--three_prime_clip_r2`, `--tracedir` and `--trim_nextseq`
+  - Trim Galore! specific pipeline parameters have been deprecated: `--clip_r1`, `--clip_r2`, `--three_prime_clip_r1`, `--three_prime_clip_r2` and `--trim_nextseq`
   - Any additional options can now be specified via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.
 - [[#663](https://github.com/nf-core/rnaseq/pull/663)] - Alternative trimming step for polyA/T removal
 - [[#781](https://github.com/nf-core/rnaseq/pull/781)] - Add Warning for poly(A) libraries

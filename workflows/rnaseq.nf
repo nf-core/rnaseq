@@ -243,9 +243,15 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
     //
+    // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
+    PREPARE_GENOME.out.fasta
+        .combine(ch_strand_fastq.auto_strand)
+        .map { it.first() }
+        .set { ch_genome_fasta }
+
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
-        PREPARE_GENOME.out.fasta,
+        ch_genome_fasta,
         PREPARE_GENOME.out.transcript_fasta,
         PREPARE_GENOME.out.gtf,
         PREPARE_GENOME.out.salmon_index,

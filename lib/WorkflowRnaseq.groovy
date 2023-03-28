@@ -2,6 +2,7 @@
 // This file holds several functions specific to the workflow/rnaseq.nf in the nf-core/rnaseq pipeline
 //
 
+import nextflow.Nextflow
 import groovy.json.JsonSlurper
 import groovy.text.SimpleTemplateEngine
 
@@ -15,13 +16,11 @@ class WorkflowRnaseq {
 
 
         if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
-            System.exit(1)
+            Nextflow.error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
         }
 
         if (!params.gtf && !params.gff) {
-            log.error "No GTF or GFF3 annotation specified! The pipeline requires at least one of these files."
-            System.exit(1)
+            Nextflow.error("No GTF or GFF3 annotation specified! The pipeline requires at least one of these files.")
         }
 
         if (params.gtf) {
@@ -41,51 +40,43 @@ class WorkflowRnaseq {
         }
 
         if (!params.skip_bbsplit && !params.bbsplit_index && !params.bbsplit_fasta_list) {
-            log.error "Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit."
-            System.exit(1)
+            Nextflow.error("Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit.")
         }
 
         if (params.remove_ribo_rna && !params.ribo_database_manifest) {
-            log.error "Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA."
-            System.exit(1)
+            Nextflow.error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA.")
         }
 
 
         if (params.with_umi && !params.skip_umi_extract) {
             if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
-                log.error "UMI-tools requires a barcode pattern to extract barcodes from the reads."
-                System.exit(1)
+                Nextflow.error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")
             }
         }
 
         if (!params.skip_trimming) {
             if (!valid_params['trimmers'].contains(params.trimmer)) {
-                log.error "Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}."
-                System.exit(1)
+                Nextflow.error("Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}.")
             }
         }
 
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {
-                log.error "Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}."
-                System.exit(1)
+                Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
             }
         } else {
             if (!params.pseudo_aligner) {
-                log.error "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${valid_params['pseudoaligners'][0]}."
-                System.exit(1)
+                Nextflow.error("--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${valid_params['pseudoaligners'][0]}.")
             }
             skipAlignmentWarn(log)
         }
 
         if (params.pseudo_aligner) {
             if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
-                log.error "Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}."
-                System.exit(1)
+                Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
             } else {
                 if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
-                    log.error "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff."
-                    System.exit(1)
+                    Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
                 }
             }
         }
@@ -120,8 +111,7 @@ class WorkflowRnaseq {
         // Check which RSeQC modules we are running
         def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
         if ((valid_params['rseqc_modules'] + rseqc_modules).unique().size() != valid_params['rseqc_modules'].size()) {
-            log.error "Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_params['rseqc_modules'].join(', ')}"
-            System.exit(1)
+            Nextflow.error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_params['rseqc_modules'].join(', ')}")
         }
     }
 
@@ -159,14 +149,14 @@ class WorkflowRnaseq {
             def chrom = lspl[0]
             def size  = lspl[1]
             if (size.toInteger() > max_size) {
-                log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+                def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                     "  Contig longer than ${max_size}bp found in reference genome!\n\n" +
                     "  ${chrom}: ${size}\n\n" +
                     "  Provide the '--bam_csi_index' parameter to use a CSI instead of BAI index.\n\n" +
                     "  Please see:\n" +
                     "  https://github.com/nf-core/rnaseq/issues/744\n" +
                     "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                System.exit(1)
+                Nextflow.error(error_string)
             }
         }
     }
@@ -313,12 +303,12 @@ class WorkflowRnaseq {
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
                 "  Currently, the available genome keys are:\n" +
                 "  ${params.genomes.keySet().join(", ")}\n" +
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            System.exit(1)
+            Nextflow.error(error_string)
         }
     }
 
@@ -384,13 +374,13 @@ class WorkflowRnaseq {
     // Print a warning if using '--aligner star_rsem' and '--with_umi'
     //
     private static void rsemUmiError(log) {
-        log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
             "  not possible to remove UMIs before the quantification.\n\n" +
             "  If you would like to remove UMI barcodes using the '--with_umi' option\n" +
             "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        System.exit(1)
+        Nextflow.error(error_string)
     }
 
     //

@@ -1,0 +1,84 @@
+name: Run small tests on cloud providers
+run-name: Submitting workflow to all cloud providers
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+        platform:
+          description: 'Platform to run test'
+          required: true
+          default: 'all'
+          type: choice
+          options:
+            - all
+            - aws
+            - azure
+            - gcp
+jobs:
+  run-small-tests-on-aws:
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: seqeralabs/action-tower-launch@add-wait
+        with:
+          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
+          workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/${{ github.sha }}"
+          run_name: AWS_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          profiles: ${{ matrix.compute-environment.profile }}
+          parameters: |
+            {
+                "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/results/${{ github.sha }}"
+            }
+          wait: false
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log
+  run-small-tests-on-gcp:
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: seqeralabs/action-tower-launch@add-wait
+        with:
+          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
+          workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/${{ github.sha }}"
+          run_name: GCP_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          profiles: ${{ matrix.compute-environment.profile }}
+          parameters: |
+            {
+                "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/results/${{ github.sha }}"
+            }
+          wait: false
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log
+  run-small-tests-on-azure:
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: seqeralabs/action-tower-launch@add-wait
+        with:
+          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
+          workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/${{ github.sha }}"
+          run_name: AZURE_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          profiles: ${{ matrix.compute-environment.profile }}
+          parameters: |
+            {
+                "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/results/${{ github.sha }}"
+                "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
+            }
+          wait: false
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log

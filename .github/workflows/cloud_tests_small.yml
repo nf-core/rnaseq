@@ -20,14 +20,12 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
-        env:
-          LABEL: ${{ matrix.aligner }}_${{ github.head_ref || github.ref }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "aws_rnaseq_small_${LABEL/:/_}"
+          run_name: "aws_rnaseq_small_${{ matrix.aligner }}_${{ github.head_ref || github.ref }}"
           profiles: test
           parameters: |
             {
@@ -43,14 +41,12 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
-        env:
-          LABEL: ${{ matrix.aligner }}_${{ github.head_ref || github.ref }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "gcp_rnaseq_small_${LABEL/:/_}"
+          run_name: "gcp_rnaseq_small_${{ matrix.aligner }}_${{ github.head_ref || github.ref }}"
           profiles: test
           parameters: |
             {
@@ -66,14 +62,12 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
-        env:
-          LABEL: ${{ matrix.aligner }}_${{ github.head_ref || github.ref }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "azure_rnaseq_small_${LABEL/:/_}"
+          run_name: "azure_rnaseq_small_${{ matrix.aligner }}_${{ github.head_ref || github.ref }}"
           profiles: test
           parameters: |
             {

@@ -19,6 +19,9 @@ jobs:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on:
       group: azure-runner-1
+    strategy:
+      matrix:
+        aligner: ["star_salmon", "star_rsem"]
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         with:
@@ -42,6 +45,9 @@ jobs:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
     runs-on:
       group: azure-runner-1
+    strategy:
+      matrix:
+        aligner: ["star_salmon", "star_rsem"]
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         with:
@@ -65,6 +71,9 @@ jobs:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
     runs-on:
       group: azure-runner-1
+    strategy:
+      matrix:
+        aligner: ["star_salmon", "star_rsem"]
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         with:

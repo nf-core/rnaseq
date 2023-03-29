@@ -12,7 +12,7 @@ on:
 
 jobs:
   EditorConfig:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -25,7 +25,7 @@ jobs:
         run: editorconfig-checker -exclude README.md $(find .* -type f | grep -v '.git\|.py\|.md\|json\|yml\|yaml\|html\|css\|work\|.nextflow\|build\|nf_core.egg-info\|log.txt\|Makefile')
 
   Prettier:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -38,7 +38,7 @@ jobs:
         run: prettier --check ${GITHUB_WORKSPACE}
 
   PythonBlack:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -68,7 +68,7 @@ jobs:
           allow-repeats: false
 
   nf-core:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3

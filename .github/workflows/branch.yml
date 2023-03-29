@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       # PRs to the nf-core repo master branch are only ok if coming from the nf-core repo `dev` or any `patch` branches
       - name: Check PRs

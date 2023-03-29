@@ -20,6 +20,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Enhancements & fixes
 
+- Add infrastructure and CI for multi-cloud full-sized tests run via Nextflow Tower (see [#981](https://github.com/nf-core/rnaseq/pull/981))
 - Added fastp support.
   - Users can now select between `--trimmer trimgalore` (default) and `--trimmer fastp`.
   - Trim Galore! specific pipeline parameters have been deprecated: `--clip_r1`, `--clip_r2`, `--three_prime_clip_r1`, `--three_prime_clip_r2` and `--trim_nextseq`

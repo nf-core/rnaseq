@@ -3,16 +3,16 @@ run-name: Submitting workflow to all cloud providers using full sized data
 on:
   workflow_dispatch:
     inputs:
-        platform:
-          description: 'Platform to run test'
-          required: true
-          default: 'all'
-          type: choice
-          options:
-            - all
-            - aws
-            - azure
-            - gcp
+      platform:
+        description: "Platform to run test"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - aws
+          - azure
+          - gcp
 jobs:
   run-full-tests-on-aws:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}

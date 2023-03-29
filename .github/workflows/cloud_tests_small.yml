@@ -16,7 +16,7 @@ on:
             - gcp
 jobs:
   run-small-tests-on-aws:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
+    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on: ubuntu-latest
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
@@ -38,7 +38,7 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-small-tests-on-gcp:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
+    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
     runs-on: ubuntu-latest
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
@@ -60,7 +60,7 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-small-tests-on-azure:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
+    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
     runs-on: ubuntu-latest
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait

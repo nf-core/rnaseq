@@ -1,0 +1,13 @@
+Changes in module 'nf-core/umitools/dedup'
+--- modules/nf-core/umitools/dedup/main.nf
++++ modules/nf-core/umitools/dedup/main.nf
+@@ -1,6 +1,7 @@
+ process UMITOOLS_DEDUP {
+     tag "$meta.id"
+     label "process_single"
++    label "process_high_memory"
+ 
+     conda "bioconda::umi_tools=1.1.4"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+
+************************************************************

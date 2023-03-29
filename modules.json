@@ -212,12 +212,14 @@
                     "umitools/dedup": {
                         "branch": "master",
                         "git_sha": "6d9c7e43404e20a97d2f6f88548456afe78282e6",
-                        "installed_by": ["bam_dedup_stats_samtools_umitools"]
+                        "installed_by": ["bam_dedup_stats_samtools_umitools"],
+                        "patch": "modules/nf-core/umitools/dedup/umitools-dedup.diff"
                     },
                     "umitools/extract": {
                         "branch": "master",
                         "git_sha": "6d9c7e43404e20a97d2f6f88548456afe78282e6",
-                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"]
+                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"],
+                        "patch": "modules/nf-core/umitools/extract/umitools-extract.diff"
                     },
                     "untar": {
                         "branch": "master",

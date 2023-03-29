@@ -28,7 +28,7 @@ jobs:
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/${{ github.sha }}"
-          run_name: AWS_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          run_name: aws_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
           profiles: test_full
           parameters: |
             {
@@ -53,7 +53,7 @@ jobs:
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/${{ github.sha }}"
-          run_name: GCP_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          run_name: gcp_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
           profiles: test_full
           parameters: |
             {
@@ -78,7 +78,7 @@ jobs:
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/${{ github.sha }}"
-          run_name: AZURE_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          run_name: azure_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
           profiles: test_full
           parameters: |
             {

@@ -77,10 +77,10 @@ decompose       <- n_components!=1 && all(sapply(name_components, length)==n_com
 coldata         <- data.frame(samples.vec, sample=samples.vec, row.names=1)
 if (decompose) {
     groupings        <- as.data.frame(lapply(1:n_components, function(i) sapply(name_components, "[[", i)))
-    names(groupings) <- paste0("Group", 1:n_components)
     n_distinct       <- sapply(groupings, function(grp) length(unique(grp)))
     groupings        <- groupings[n_distinct!=1 & n_distinct!=length(samples.vec)]
     if (ncol(groupings)!=0) {
+        names(groupings) <- paste0("Group", 1:ncol(groupings))
         coldata <- cbind(coldata, groupings)
     } else {
         decompose <- FALSE

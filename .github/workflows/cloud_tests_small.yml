@@ -16,7 +16,7 @@ on:
 jobs:
   run-small-tests-on-aws:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: seqeralabs/action-tower-launch@v1
         with:
@@ -37,7 +37,7 @@ jobs:
           path: tower_action_*.log
   run-small-tests-on-gcp:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: seqeralabs/action-tower-launch@v1
         with:
@@ -58,7 +58,7 @@ jobs:
           path: tower_action_*.log
   run-small-tests-on-azure:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: seqeralabs/action-tower-launch@v1
         with:

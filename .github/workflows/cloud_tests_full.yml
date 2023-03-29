@@ -17,8 +17,7 @@ on:
 jobs:
   run-full-tests-on-aws:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
-    runs-on:
-      group: azure-runner-1
+    runs-on: self-hosted
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
@@ -43,8 +42,7 @@ jobs:
           path: tower_action_*.log
   run-full-tests-on-gcp:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
-    runs-on:
-      group: azure-runner-1
+    runs-on: self-hosted
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
@@ -69,8 +67,7 @@ jobs:
           path: tower_action_*.log
   run-full-tests-on-azure:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
-    runs-on:
-      group: azure-runner-1
+    runs-on: self-hosted
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]

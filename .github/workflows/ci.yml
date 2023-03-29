@@ -20,7 +20,7 @@ jobs:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         NXF_VER:
@@ -66,7 +66,7 @@ jobs:
   star_salmon:
     name: Test STAR Salmon with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         parameters:
@@ -123,7 +123,7 @@ jobs:
   star_rsem:
     name: Test STAR RSEM with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         parameters:
@@ -169,7 +169,7 @@ jobs:
   hisat2:
     name: Test HISAT2 with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         parameters:
@@ -215,7 +215,7 @@ jobs:
   salmon:
     name: Test Salmon with workflow parameters
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         parameters:

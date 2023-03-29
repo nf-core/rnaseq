@@ -52,8 +52,8 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+          for f in ./test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=./test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
@@ -61,7 +61,7 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --test_data_base ./test-datasets/
 
   star_salmon:
     name: Test STAR Salmon with workflow parameters
@@ -104,8 +104,8 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+          for f in ./test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=./test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
@@ -118,7 +118,7 @@ jobs:
 
       - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ./test-datasets/
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters
@@ -150,8 +150,8 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+          for f in ./test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=./test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
@@ -164,7 +164,7 @@ jobs:
 
       - name: Run pipeline with RSEM STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results --test_data_base ./test-datasets/
 
   hisat2:
     name: Test HISAT2 with workflow parameters
@@ -196,8 +196,8 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+          for f in ./test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=./test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
@@ -210,7 +210,7 @@ jobs:
 
       - name: Run pipeline with HISAT2 and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results --test_data_base ./test-datasets/
 
   salmon:
     name: Test Salmon with workflow parameters
@@ -242,8 +242,8 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+          for f in ./test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=./test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
@@ -256,4 +256,4 @@ jobs:
 
       - name: Run pipeline with Salmon and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ./test-datasets/

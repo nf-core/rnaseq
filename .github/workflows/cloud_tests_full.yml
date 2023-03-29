@@ -15,21 +15,19 @@ on:
             - gcp
 jobs:
   run-full-tests-on-aws:
-    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on: self-hosted
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@add-wait
-        env:
-          LABEL: ${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+      - uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "aws_rnaseq_full_${LABEL/:/_}"
+          run_name: "aws_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
           profiles: test_full_aws
           parameters: |
             {
@@ -42,21 +40,19 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-full-tests-on-gcp:
-    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
     runs-on: self-hosted
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@add-wait
-        env:
-          LABEL: ${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+      - uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "gcp_rnaseq_full_${LABEL/:/_}"
+          run_name: "gcp_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
           profiles: test_full_gcp
           parameters: |
             {
@@ -69,21 +65,19 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-full-tests-on-azure:
-    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
     runs-on: self-hosted
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@add-wait
-        env:
-          LABEL: ${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+      - uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "azure_rnaseq_full_${LABEL/:/_}"
+          run_name: "azure_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
           profiles: test_full_azure
           parameters: |
             {

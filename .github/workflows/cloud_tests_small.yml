@@ -1,7 +1,6 @@
 name: small-sized tests on cloud providers
 run-name: Submitting workflow to all cloud providers using small sized data
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
         platform:
@@ -16,10 +15,10 @@ on:
             - gcp
 jobs:
   run-small-tests-on-aws:
-    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on: self-hosted
     steps:
-      - uses: seqeralabs/action-tower-launch@add-wait
+      - uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -37,15 +36,15 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-small-tests-on-gcp:
-    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
     runs-on: self-hosted
     steps:
-      - uses: seqeralabs/action-tower-launch@add-wait
+      - uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
+          workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
           run_name: "gcp_rnaseq_small_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
           profiles: test
           parameters: |
@@ -58,10 +57,10 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-small-tests-on-azure:
-    # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
     runs-on: self-hosted
     steps:
-      - uses: seqeralabs/action-tower-launch@add-wait
+      - uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

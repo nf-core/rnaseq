@@ -74,8 +74,7 @@ jobs:
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/results/${{ github.sha }}",
-                "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/results/${{ github.sha }}"
             }
           wait: false
       - uses: actions/upload-artifact@v3

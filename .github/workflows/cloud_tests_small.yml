@@ -29,8 +29,7 @@ jobs:
           profiles: test
           parameters: |
             {
-                "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/results/${{ github.sha }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}"
             }
           wait: false
       - uses: actions/upload-artifact@v3
@@ -51,8 +50,7 @@ jobs:
           profiles: test
           parameters: |
             {
-                "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/results/${{ github.sha }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-test-${{ github.sha }}"
             }
           wait: false
       - uses: actions/upload-artifact@v3
@@ -73,8 +71,7 @@ jobs:
           profiles: test
           parameters: |
             {
-                "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/results/${{ github.sha }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-test-${{ github.sha }}"
             }
           wait: false
       - uses: actions/upload-artifact@v3

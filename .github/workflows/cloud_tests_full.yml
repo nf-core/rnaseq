@@ -17,7 +17,8 @@ on:
 jobs:
   run-full-tests-on-aws:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
-    runs-on: ubuntu-latest
+    runs-on:
+      group: azure-runner-1
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         with:
@@ -39,7 +40,8 @@ jobs:
           path: tower_action_*.log
   run-full-tests-on-gcp:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
-    runs-on: ubuntu-latest
+    runs-on:
+      group: azure-runner-1
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         with:
@@ -61,7 +63,8 @@ jobs:
           path: tower_action_*.log
   run-full-tests-on-azure:
     # if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
-    runs-on: ubuntu-latest
+    runs-on:
+      group: azure-runner-1
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         with:

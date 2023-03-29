@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         env:
-          LABEL: ${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          LABEL: ${{ matrix.aligner }}_${{ github.head_ref || github.ref }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         env:
-          LABEL: ${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          LABEL: ${{ matrix.aligner }}_${{ github.head_ref || github.ref }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -67,7 +67,7 @@ jobs:
     steps:
       - uses: seqeralabs/action-tower-launch@add-wait
         env:
-          LABEL: ${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+          LABEL: ${{ matrix.aligner }}_${{ github.head_ref || github.ref }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

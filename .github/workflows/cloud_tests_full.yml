@@ -1,7 +1,6 @@
 name: full-sized tests on cloud providers
 run-name: Submitting workflow to all cloud providers using full sized data
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
         platform:

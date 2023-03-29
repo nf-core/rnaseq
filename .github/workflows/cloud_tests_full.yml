@@ -1,5 +1,5 @@
-name: Run full-sized tests on cloud providers
-run-name: Submitting workflow to all cloud providers
+name: full-sized tests on cloud providers
+run-name: Submitting workflow to all cloud providers using full sized data
 on:
   pull_request:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/${{ github.sha }}"
+          workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
           run_name: aws_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
           profiles: test_full
           parameters: |
@@ -52,7 +52,7 @@ jobs:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/${{ github.sha }}"
+          workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
           run_name: gcp_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
           profiles: test_full
           parameters: |
@@ -77,7 +77,7 @@ jobs:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/${{ github.sha }}"
+          workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
           run_name: azure_rnaseq_full_${{ matrix.aligner }}_${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
           profiles: test_full
           parameters: |

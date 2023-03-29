@@ -10,7 +10,7 @@ jobs:
       contains(github.event.comment.html_url, '/pull/') &&
       contains(github.event.comment.body, '@nf-core-bot fix linting') &&
       github.repository == 'nf-core/rnaseq'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       # Use the @nf-core-bot token to check out so we can push later
       - uses: actions/checkout@v3

@@ -17,6 +17,7 @@ Special thanks to the following for their code contributions to the release:
 - [[#988](https://github.com/nf-core/rnaseq/issues/988)] - `DESEQ2_QC_STAR_SALMON` fails when sample names have many components
 - Remove `wait: false` option from Tower Actions which is the default
 - Fix release trigger for full-sized multi-cloud tests
+- Adding `[ci fast]` to commit message now skips all tests except for standard `-profile test` pipeline run
 
 ## [[3.11.0](https://github.com/nf-core/rnaseq/releases/tag/3.11.0)] - 2023-03-30
 

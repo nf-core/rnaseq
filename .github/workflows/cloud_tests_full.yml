@@ -36,7 +36,6 @@ jobs:
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}"
             }
-          wait: false
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
@@ -61,7 +60,6 @@ jobs:
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}"
             }
-          wait: false
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
@@ -87,7 +85,6 @@ jobs:
                 "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}",
                 "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
             }
-          wait: false
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file

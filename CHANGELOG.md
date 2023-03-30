@@ -15,6 +15,7 @@ Special thanks to the following for their code contributions to the release:
 
 ### Enhancements & fixes
 
+- [[#987](https://github.com/nf-core/rnaseq/pull/987)] - Fix issue with incorrect cacheing of test datasets during CI/CD
 - [[#988](https://github.com/nf-core/rnaseq/issues/988)] - `DESEQ2_QC_STAR_SALMON` fails when sample names have many components
 - Remove `wait: false` option from Tower Actions which is the default
 - Fix release trigger for full-sized multi-cloud tests

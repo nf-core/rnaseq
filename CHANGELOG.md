@@ -38,6 +38,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [[#975](https://github.com/nf-core/rnaseq/issues/975)] - `SALMON_INDEX` runs when using `--aligner star_rsem` even if samples have explicit strandedness
 - Remove HISAT2 from automated AWS full-sized tests
 - [[#988](https://github.com/nf-core/rnaseq/issues/988)] - `DESEQ2_QC_STAR_SALMON` fails when sample names have many components
+- [[#987](https://github.com/nf-core/rnaseq/pull/987)] - Fix issue with incorrect cacheing of test datasets during CI/CD
 
 ### Parameters
 

@@ -35,12 +35,17 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3_10-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -87,12 +92,17 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3_10-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -133,12 +143,17 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3_10-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -179,12 +194,17 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3_10-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
@@ -225,12 +245,17 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: rnaseq3_10-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'

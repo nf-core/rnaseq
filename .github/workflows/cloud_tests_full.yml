@@ -17,7 +17,7 @@ on:
           - gcp
 jobs:
   run-full-tests-on-aws:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' || !github.event.inputs }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,6 +34,7 @@ jobs:
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+                "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}"
             }
       - uses: actions/upload-artifact@v3
@@ -41,7 +42,7 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-full-tests-on-gcp:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' || !github.event.inputs }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -58,6 +59,7 @@ jobs:
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+                "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}"
             }
       - uses: actions/upload-artifact@v3
@@ -65,7 +67,7 @@ jobs:
           name: Tower debug log file
           path: tower_action_*.log
   run-full-tests-on-azure:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' || !github.event.inputs }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -82,6 +84,7 @@ jobs:
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+                "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}",
                 "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
             }

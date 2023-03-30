@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their code contributions to the release:
 
+- [Adam Talbot](https://github.com/adamrtalbot)
 - [Rob Syme](https://github.com/robsyme)
 - [suhrig](https://github.com/suhrig)
 

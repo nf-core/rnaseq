@@ -211,13 +211,13 @@
                     },
                     "umitools/dedup": {
                         "branch": "master",
-                        "git_sha": "6d9c7e43404e20a97d2f6f88548456afe78282e6",
+                        "git_sha": "ffe2f5865f608848e440a52b73c304ea79aaf818",
                         "installed_by": ["bam_dedup_stats_samtools_umitools"]
                     },
                     "umitools/extract": {
                         "branch": "master",
-                        "git_sha": "6d9c7e43404e20a97d2f6f88548456afe78282e6",
-                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"]
+                        "git_sha": "ffe2f5865f608848e440a52b73c304ea79aaf818",
+                        "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
                     },
                     "untar": {
                         "branch": "master",

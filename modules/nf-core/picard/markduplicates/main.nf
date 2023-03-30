@@ -2,10 +2,10 @@ process PICARD_MARKDUPLICATES {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::picard=2.27.4"
+    conda "bioconda::picard=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/picard:2.27.4--hdfd78af_0' :
-        'quay.io/biocontainers/picard:2.27.4--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/picard:3.0.0--hdfd78af_1' :
+        'quay.io/biocontainers/picard:3.0.0--hdfd78af_1' }"
 
     input:
     tuple val(meta), path(bam)
@@ -24,15 +24,15 @@ process PICARD_MARKDUPLICATES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
     picard \\
-        -Xmx${avail_mem}g \\
+        -Xmx${avail_mem}M \\
         MarkDuplicates \\
         $args \\
         --INPUT $bam \\

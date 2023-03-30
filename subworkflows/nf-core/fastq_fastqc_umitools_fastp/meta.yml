@@ -1,4 +1,4 @@
-name: "fastq_fastqc_umitools_trimgalore"
+name: "fastq_fastqc_umitools_fastp"
 description: Read QC, UMI extraction and trimming
 keywords:
   - fastq
@@ -6,11 +6,11 @@ keywords:
   - qc
   - UMI
   - trimming
-  - trimgalore
+  - fastp
 modules:
   - fastqc
   - umitools/extract
-  - trimgalore
+  - fastp
 input:
   - meta:
       type: map
@@ -34,20 +34,36 @@ input:
       type: boolean
       description: |
         With or without umi extrection
-  - skip_trimming:
-      type: boolean
-      description: |
-        Allows to skip trimgalore execution
   - umi_discard_read:
       type: integer
       description: |
         Discard R1 / R2 if required
+  - skip_trimming:
+      type: boolean
+      description: |
+        Allows to skip trimgalore execution
+  - adapter_fasta:
+      type: file
+      description: |
+        Fasta file of adapter sequences
+  - save_trimmed_fail:
+      type: boolean
+      description: |
+        Save trimmed fastqs of failed samples
+  - save_merged:
+      type: boolean
+      description: |
+        Save merged fastqs
   - min_trimmed_reads:
       type: integer
       description: |
         Inputs with fewer than this reads will be filtered out of the "reads" output channel
-
 output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
   - reads:
     type: file
     description: >
@@ -67,30 +83,40 @@ output:
       type: file
       description: Logfile for umi_tools
       pattern: "*.{log}"
-  - trim_unpaired:
+  - trim_json:
       type: file
-      description: |
-        FastQ files containing unpaired reads from read 1 or read 2
-      pattern: "*unpaired*.fq.gz"
+      description: FastP Trimming report
+      pattern: "*.{fastp.json}"
   - trim_html:
       type: file
-      description: FastQC report (optional)
-      pattern: "*_{fastqc.html}"
-  - trim_zip:
+      description: FastP Trimming report
+      pattern: "*.{fastp.html}"
+  - log:
       type: file
-      description: FastQC report archive (optional)
-      pattern: "*_{fastqc.zip}"
-  - trim_log:
-      type: file
-      description: Trim Galore! trimming report
-      pattern: "*_{report.txt}"
+      description: Logfile FastP
+      pattern: "*.{fastp.log}"
+  - trim_reads_fail:
+    type: file
+    description: Trimmed fastq files failing QC
+    pattern: "*.{fastq.gz}"
+  - trim_reads_merged:
+    type: file
+    description: Trimmed and merged fastq files
+    pattern: "*.{fastq.gz}"
   - trim_read_count:
-      type: integer
-      description: Number of reads remaining after trimming for all input samples
+    type: integer
+    description: Number of reads after trimming
+  - fastqc_trim_html:
+      type: file
+      description: FastQC report
+      pattern: "*_{fastqc.html}"
+  - fastqc_trim_zip:
+      type: file
+      description: FastQC report archive
+      pattern: "*_{fastqc.zip}"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@drpatelh"
-  - "@KamilMaliszArdigen"
+  - "@robsyme"

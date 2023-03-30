@@ -11,44 +11,30 @@ modules:
   - samtools/idxstats
   - samtools/flagstat
 input:
-  - meta:
-      type: map
+  - ch_bam_bai:
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - bai:
-      type: file
-      description: Index for BAM/CRAM/SAM file
-      pattern: "*.{bai,crai,sai}"
-  - fasta:
-      type: file
-      description: Reference genome fasta file
-      pattern: "*.{fasta,fa}"
+        The input channel containing the BAM/CRAM and it's index
+        Structure: [ val(meta), path(bam), path(bai) ]
+  - ch_fasta:
+      description: |
+        Reference genome fasta file
+        Structure: [ path(fasta) ]
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - stats:
-      type: file
-      description: File containing samtools stats output
-      pattern: "*.{stats}"
+      description: |
+        File containing samtools stats output
+        Structure: [ val(meta), path(stats) ]
   - flagstat:
-      type: file
-      description: File containing samtools flagstat output
-      pattern: "*.{flagstat}"
+      description: |
+        File containing samtools flagstat output
+        Structure: [ val(meta), path(flagstat) ]
   - idxstats:
-      type: file
-      description: File containing samtools idxstats output
-      pattern: "*.{idxstats}"
+      description: |
+        File containing samtools idxstats output
+        Structure: [ val(meta), path(idxstats)]
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: |
+        Files containing software versions
+        Structure: [ path(versions.yml) ]
 authors:
   - "@drpatelh"

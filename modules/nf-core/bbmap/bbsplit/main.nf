@@ -27,11 +27,11 @@ process BBMAP_BBSPLIT {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[BBSplit] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
 
     def other_refs = []
@@ -42,7 +42,7 @@ process BBMAP_BBSPLIT {
         if (primary_ref && other_ref_names && other_ref_paths) {
             """
             bbsplit.sh \\
-                -Xmx${avail_mem}g \\
+                -Xmx${avail_mem}M \\
                 ref_primary=$primary_ref \\
                 ${other_refs.join(' ')} \\
                 path=bbsplit \\
@@ -70,7 +70,7 @@ process BBMAP_BBSPLIT {
         def fastq_out = meta.single_end ? "basename=${prefix}_%.fastq.gz" : "basename=${prefix}_%_#.fastq.gz"
         """
         bbsplit.sh \\
-            -Xmx${avail_mem}g \\
+            -Xmx${avail_mem}M \\
             $index_files \\
             threads=$task.cpus \\
             $fastq_in \\

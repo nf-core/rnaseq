@@ -31,9 +31,9 @@ input:
       description: BAM file to calculate statistics
       pattern: "*.{bam}"
   - bai:
-    type: file
-    description: Index for input BAM file
-    pattern: "*.{bai}"
+      type: file
+      description: Index for input BAM file
+      pattern: "*.{bai}"
   - bed:
       type: file
       description: BED file for the reference gene model

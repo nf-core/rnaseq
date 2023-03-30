@@ -24,7 +24,6 @@ mqc_pconf = """#    percent_{ft}:
 
 
 def mqc_feature_stat(bfile, features, outfile, sname=None):
-
     # If sample name not given use file name
     if not sname:
         sname = os.path.splitext(os.path.basename(bfile))[0]

@@ -1,11 +1,11 @@
 process UMITOOLS_DEDUP {
     tag "$meta.id"
-    label "process_medium"
+    label "process_single"
 
-    conda "bioconda::umi_tools=1.1.2"
+    conda "bioconda::umi_tools=1.1.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.2--py38h4a8c8d9_0' :
-        'quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0' }"
+        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.4--py38hbff2b2d_1' :
+        'quay.io/biocontainers/umi_tools:1.1.4--py38hbff2b2d_1' }"
 
     input:
     tuple val(meta), path(bam), path(bai)

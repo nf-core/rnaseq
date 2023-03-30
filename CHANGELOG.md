@@ -37,6 +37,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [[#961](https://github.com/nf-core/rnaseq/issues/961)] - Add warnings to STDOUT for all skipped and failed strandedness check samples
 - [[#975](https://github.com/nf-core/rnaseq/issues/975)] - `SALMON_INDEX` runs when using `--aligner star_rsem` even if samples have explicit strandedness
 - Remove HISAT2 from automated AWS full-sized tests
+- Fix issue with incorrect cacheing of test datasets during CI/CD
 
 ### Parameters
 

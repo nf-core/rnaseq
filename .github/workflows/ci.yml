@@ -70,7 +70,7 @@ jobs:
 
   star_salmon:
     name: Test STAR Salmon with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -132,7 +132,7 @@ jobs:
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -183,7 +183,7 @@ jobs:
 
   hisat2:
     name: Test HISAT2 with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -234,7 +234,7 @@ jobs:
 
   salmon:
     name: Test Salmon with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:

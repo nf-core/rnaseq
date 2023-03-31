@@ -1,0 +1,64 @@
+name: ngscheckmate_ncm
+description: Determining whether sequencing data comes from the same individual by using SNP matching. Designed for humans on vcf or bam files.
+keywords:
+  - ngscheckmate
+  - matching
+  - snp
+tools:
+  - ngscheckmate:
+      description: NGSCheckMate is a software package for identifying next generation sequencing (NGS) data files from the same individual, including matching between DNA and RNA.
+      homepage: https://github.com/parklab/NGSCheckMate
+      documentation: https://github.com/parklab/NGSCheckMate
+      tool_dev_url: https://github.com/parklab/NGSCheckMate
+      doi: "10.1093/nar/gkx193"
+      licence: ["MIT"]
+
+input:
+  - files:
+      type: file
+      description: VCF or BAM files for each sample, in a merged channel (possibly gzipped). BAM files require an index too.
+      pattern: "*.{vcf,vcf.gz,bam,bai}"
+
+  - snp_bed:
+      type: file
+      description: BED file containing the SNPs to analyse
+      pattern: "*.{bed}"
+
+  - fasta:
+      type: file
+      description: fasta file for the genome, only used in the bam mode
+      pattern: "*.{bed}"
+
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+  - pdf:
+      type: file
+      description: A pdf containing a dendrogram showing how the samples match up
+      pattern: "*.{pdf}"
+
+  - corr_matrix:
+      type: file
+      description: A text file containing the correlation matrix between each sample
+      pattern: "*corr_matrix.txt"
+
+  - matched:
+      type: file
+      description: A txt file containing only the samples that match with each other
+      pattern: "*matched.txt"
+
+  - all:
+      type: file
+      description: A txt file containing all the sample comparisons, whether they match or not
+      pattern: "*all.txt"
+
+  - vcf:
+      type: file
+      description: If ran in bam mode, vcf files for each sample giving the SNP calls used
+      pattern: "*.vcf"
+
+authors:
+  - "@sppearce"

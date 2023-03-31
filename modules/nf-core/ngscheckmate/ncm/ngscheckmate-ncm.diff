@@ -1,0 +1,14 @@
+Changes in module 'nf-core/ngscheckmate/ncm'
+--- modules/nf-core/ngscheckmate/ncm/main.nf
++++ modules/nf-core/ngscheckmate/ncm/main.nf
+@@ -34,7 +34,7 @@
+         done
+     fi
+ 
+-    NCM_REF="./"${fasta} ncm.py -d . -bed ${snp_bed} -O . -N ${prefix} $args
++    NCM_REF="./"${fasta} ncm_edited.py -d . -bed ${snp_bed} -O . -N ${prefix} $args
+ 
+     if $unzip
+     then
+
+************************************************************

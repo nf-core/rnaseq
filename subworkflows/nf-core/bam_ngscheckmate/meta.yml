@@ -1,0 +1,55 @@
+name: "bam_ngscheckmate"
+description: Take a set of bam files and run NGSCheckMate to determine whether samples match with each other, using a set of SNPs.
+keywords:
+  - ngscheckmate
+  - qc
+modules:
+  - bcftools/mpileup
+  - ngscheckmate/ncm
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - bam:
+      type: file
+      description: BAM files for each sample
+      pattern: "*.{bam}"
+  - snp_bed:
+      type: file
+      description: BED file containing the SNPs to analyse. NGSCheckMate provides some default ones for hg19/hg38.
+      pattern: "*.{bed}"
+
+  - fasta:
+      type: file
+      description: fasta file for the genome
+      pattern: "*.{fasta}"
+
+output:
+  - pdf:
+      type: file
+      description: A pdf containing a dendrogram showing how the samples match up
+      pattern: "*.{pdf}"
+  - corr_matrix:
+      type: file
+      description: A text file containing the correlation matrix between each sample
+      pattern: "*corr_matrix.txt"
+  - matched:
+      type: file
+      description: A txt file containing only the samples that match with each other
+      pattern: "*matched.txt"
+  - all:
+      type: file
+      description: A txt file containing all the sample comparisons, whether they match or not
+      pattern: "*all.txt"
+  - vcf:
+      type: file
+      description: vcf files for each sample giving the SNP calls
+      pattern: "*.vcf"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@SPPearce"

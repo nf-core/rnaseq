@@ -21,7 +21,8 @@ checkPathParamList = [
     params.fasta, params.transcript_fasta, params.additional_fasta,
     params.gtf, params.gff, params.gene_bed,
     params.ribo_database_manifest, params.splicesites,
-    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index
+    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index,
+    params.ngscheckmate_bed
 ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
@@ -55,6 +56,8 @@ if (params.bam_csi_index) {
         }
     }
 }
+
+ch_ngscheckmate_bed   = params.ngscheckmate_bed ? Channel.fromPath( params.ngscheckmate_bed, checkIfExists: true ) : Channel.empty()
 
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
@@ -146,6 +149,7 @@ include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS
 include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+include { BAM_NGSCHECKMATE                 } from '../subworkflows/nf-core/bam_ngscheckmate/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -714,6 +718,15 @@ workflow RNASEQ {
             )
             ch_dupradar_multiqc = DUPRADAR.out.multiqc
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
+        }
+
+        if (params.ngscheckmate_bed) {
+            BAM_NGSCHECKMATE (
+                ch_genome_bam,
+                ch_ngscheckmate_bed,
+                PREPARE_GENOME.out.fasta
+            )
+            ch_versions = ch_versions.mix(BAM_NGSCHECKMATE.out.versions.first())
         }
 
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {

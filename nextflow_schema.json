@@ -532,6 +532,12 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip all QC steps except for MultiQC."
+                },
+                "ngscheckmate_bed": {
+                    "type": "string",
+                    "format": "path",
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to bed file containing a set of SNPs for NGSCheckMate."
                 }
             }
         },

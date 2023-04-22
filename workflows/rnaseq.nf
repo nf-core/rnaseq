@@ -247,6 +247,7 @@ workflow RNASEQ {
     PREPARE_GENOME.out.fasta
         .combine(ch_strand_fastq.auto_strand)
         .map { it.first() }
+        .first()
         .set { ch_genome_fasta }
 
     FASTQ_SUBSAMPLE_FQ_SALMON (
@@ -321,7 +322,7 @@ workflow RNASEQ {
 
     //
     // Get list of samples that failed trimming threshold for MultiQC report
-    //        
+    //
     ch_trim_read_count
         .map {
             meta, num_reads ->
@@ -332,7 +333,7 @@ workflow RNASEQ {
                 }
         }
         .collect()
-        .map { 
+        .map {
             tsv_data ->
                 def header = ["Sample", "Reads after trimming"]
                 WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
@@ -604,7 +605,7 @@ workflow RNASEQ {
         ch_pass_fail_mapped
             .fail
             .collect()
-            .map { 
+            .map {
                 tsv_data ->
                     def header = ["Sample", "STAR uniquely mapped reads (%)"]
                     WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
@@ -765,7 +766,7 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
-                .map { 
+                .map {
                     meta, strand_log ->
                         def inferred_strand = WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30)
                         pass_strand_check[meta.id] = true
@@ -775,7 +776,7 @@ workflow RNASEQ {
                         }
                 }
                 .collect()
-                .map { 
+                .map {
                     tsv_data ->
                         def header = [
                             "Sample",

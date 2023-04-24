@@ -2,7 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    options "-profile test,docker"
+    options "-profile test"
     tag "pipeline"
 
     test("STAR RSEM (Skip QC) (GSE110004)") {

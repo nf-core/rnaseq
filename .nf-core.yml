@@ -3,5 +3,5 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
-    - lib/NfcoreSchema.groovy
     - lib/NfcoreTemplate.groovy
+  actions_ci: False

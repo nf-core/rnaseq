@@ -1,47 +1,56 @@
-name: nf-core CI
+name: nf-test on changes
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   pull_request:
     branches:
       - dev
-  release:
-    types: [published]
 
 env:
   NXF_ANSI_LOG: false
 
 jobs:
-  test:
-    name: Run ${{ matrix.profile }}-${{ matrix.NXF_VER }} pipeline test
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
+  changes:
+    name: Check for changes
     runs-on: ubuntu-latest
+    outputs:
+      # Expose matched filters as job 'modules' output variable
+      tags: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: "tests/config/tags.yml"
+
+  test_changes:
+    name: ${{ matrix.tags }} ${{ matrix.component }} ${{ matrix.profile }}
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: needs.changes.outputs.tags != '[]'
     strategy:
+      fail-fast: false
       matrix:
-        NXF_VER:
-          - "21.10.3"
-          - "latest-everything"
-        test:
-          - "default"
-        profile: ["docker"]
-        exclude:
-          - NXF_VER: "latest-everything"
-            profile: "conda"
+        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        profile: ["docker"] # TODO Add singularity/conda
+        component: ["pipeline"] # TODO , "subworkflows", "modules"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
       - uses: actions/cache@v2
         with:
-          path: /usr/local/bin/nextflow
+          path: /usr/local/bin/
           key: ${{ runner.os }}
           restore-keys: |
             ${{ runner.os }}-nextflow-
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
-        with:
-          version: "${{ matrix.NXF_VER }}"
+        env:
+          CAPSULE_LOG: none
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
 
       - name: Install nf-test
         run: |
@@ -67,10 +76,10 @@ jobs:
         run: conda clean -a
 
       - name: Run nf-test
-        run: nf-test test --profile=${{ matrix.profile }} tests/pipeline/default/*.nf.test --junitxml=default.xml
+        run: nf-test test --profile=${{ matrix.profile }} tests/${{ matrix.component }}/${{ matrix.tags }}/*.nf.test --junitxml=${{ matrix.tags }}.xml
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
-          report_paths: "default.xml"
+          report_paths: "${{ matrix.tags }}.xml"

@@ -17,7 +17,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "b6d4d476aee074311c89d82a69c1921bd70c8180",
+                        "git_sha": "7101db4432d3268b7fcb5b8f75fa0a022dc5561b",
                         "installed_by": ["modules"]
                     },
                     "custom/getchromsizes": {
@@ -77,7 +77,7 @@
                     },
                     "qualimap/rnaseq": {
                         "branch": "master",
-                        "git_sha": "75027bf77472b1f4fd2cdd7e46f83119dfb0f2c6",
+                        "git_sha": "0a9c4eb264cce197707491861ce058a4c79d9c4f",
                         "installed_by": ["modules"]
                     },
                     "rsem/calculateexpression": {

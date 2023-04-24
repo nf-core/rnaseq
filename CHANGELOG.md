@@ -15,7 +15,7 @@ Special thanks to the following for their code contributions to the release:
 
 ### Enhancements & fixes
 
-- [[#1003](https://github.com/nf-core/rnaseq/pull/1003)] - `FASTQ_SUBSAMPLE_FQ_SALMON:SALMON_INDEX` is launched multiple times and fails
+- [[#1003](https://github.com/nf-core/rnaseq/pull/1003)] - `FASTQ_SUBSAMPLE_FQ_SALMON:SALMON_INDEX` is launched multiple times
 
 ## [[3.11.1](https://github.com/nf-core/rnaseq/releases/tag/3.11.1)] - 2023-03-31
 

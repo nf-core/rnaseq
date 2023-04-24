@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
-Special thanks to the following for their code contributions to the release:
+Special thanks to the following for their contributions to the release:
 
+- [Jonathan Manning](https://github.com/pinin4fjords)
 - [Maxime Garcia](https://github.com/maxulysse)
 - [Rob Syme](https://github.com/robsyme)
 - [W. Lee Pang](https://github.com/wleepang)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 
 ### Enhancements & fixes
 

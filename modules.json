@@ -17,7 +17,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "b6d4d476aee074311c89d82a69c1921bd70c8180",
+                        "git_sha": "7101db4432d3268b7fcb5b8f75fa0a022dc5561b",
                         "installed_by": ["modules"]
                     },
                     "custom/getchromsizes": {

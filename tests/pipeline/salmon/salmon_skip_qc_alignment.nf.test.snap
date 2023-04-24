@@ -1,0 +1,41 @@
+{
+    "samplesheet": {
+        "content": [
+            "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
+        ],
+        "timestamp": "2023-04-24T20:09:13+0000"
+    },
+    "software_versions": {
+        "content": [
+            "software_versions.yml:md5,1feb67230721db8e1c6d1bf8d23d6279"
+        ],
+        "timestamp": "2023-04-24T20:09:13+0000"
+    },
+    "salmon": {
+        "content": [
+            "salmon.merged.gene_counts.tsv:md5,69fe1bd4668b04176f3f72fc71d6fb09",
+            "salmon.merged.transcript_counts.tsv:md5,a205d29830c3f0f3a5586d6bc463b560",
+            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
+        ],
+        "timestamp": "2023-04-24T20:09:13+0000"
+    },
+    "bbsplit": {
+        "content": [
+            "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
+            "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
+            "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
+            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
+            "WT_REP2.stats.txt:md5,002ddf6b828d34979652a40f05462843"
+        ],
+        "timestamp": "2023-04-24T20:09:13+0000"
+    },
+    "multiqc": {
+        "content": [
+            "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
+            "multiqc_fastqc.txt:md5,e3ebd5c2676bebb3c0176c4e985f3580",
+            "multiqc_salmon.txt:md5,0a719c5688a8400d774bc7c1cdd59c49",
+            "multiqc_general_stats.txt:md5,f104b6e2d71dd9ed5f4a9159e700c373"
+        ],
+        "timestamp": "2023-04-24T20:09:13+0000"
+    }
+}

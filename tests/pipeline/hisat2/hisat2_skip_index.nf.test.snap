@@ -160,8 +160,6 @@
     },
     "multiqc": {
         "content": [
-            "mqc_cutadapt_filtered_reads_plot_1.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
-            "mqc_cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,40b5266668504b74060c89d4f81f20c7",
             "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
             "multiqc_general_stats.txt:md5,ad9d57a12cd7a03890b41dbd38a991f1",

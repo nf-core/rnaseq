@@ -3,7 +3,7 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/bigwig/": {
         "content": [
@@ -18,7 +18,7 @@
             "WT_REP2.forward.bigWig:md5,2b3a15b511efdbc838574200ee2bec0c",
             "WT_REP2.reverse.bigWig:md5,d10cbea27b82745b46077191d3ff2820"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/featurecounts/": {
         "content": [
@@ -28,13 +28,13 @@
             "WT_REP1.featureCounts.txt:md5,112001ddbe917d935ee276d1685840bd",
             "WT_REP2.featureCounts.txt:md5,59e23ae18cfe6aa2e5a884bc03cbff15"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "software_versions": {
         "content": [
             "software_versions.yml:md5,85748c1fcaa9c0209e5997448d5f24c9"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/dupradar/": {
         "content": [
@@ -49,7 +49,7 @@
             "WT_REP1_intercept_slope.txt:md5,7fca16a894adc1cd2bdd9dc8c10c4609",
             "WT_REP2_intercept_slope.txt:md5,0121e2107103373c66da352a2888fb2d"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "salmon": {
         "content": [
@@ -58,7 +58,7 @@
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/samtools_stats/": {
         "content": [
@@ -93,13 +93,13 @@
             "WT_REP2.sorted.bam.idxstats:md5,e8bf92716dc2dbae6c3dbdadefbebc68",
             "WT_REP2.sorted.bam.stats:md5,b5318c40d0946089619e6f0c6b99b5a3"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/rseqc/": {
         "content": [
@@ -127,7 +127,7 @@
             "WT_REP1.read_distribution.txt:md5,7521690f215bf27fe161b8e6d7c38769",
             "WT_REP2.read_distribution.txt:md5,c11d02cba5674017b90c8372abee3e39"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "bbsplit": {
         "content": [
@@ -137,29 +137,33 @@
             "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
             "WT_REP2.stats.txt:md5,002ddf6b828d34979652a40f05462843"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "multiqc": {
         "content": [
             "junction_saturation_known.txt:md5,7fb002deec1752d8e2065b693624191c",
             "junction_saturation_novel.txt:md5,7fb002deec1752d8e2065b693624191c",
-            "mqc_cutadapt_filtered_reads_plot_1.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
-            "mqc_cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,40b5266668504b74060c89d4f81f20c7",
-            "mqc_cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,d86862a659300f0c3c2e3c20b2035c6f",
-            "mqc_fastqc_adapter_content_plot_1.txt:md5,139427aa712fa7bfdbdb295ea047dda2",
-            "mqc_fastqc_overrepresented_sequences_plot_1.txt:md5,7a889d820abb3b16768339c8335e8f25",
-            "mqc_fastqc_overrepresented_sequences_plot-2_1.txt:md5,d84ed8c4f718a93435f56ac95f656b3b",
-            "mqc_fastqc_per_base_n_content_plot_1.txt:md5,b7feb1a4d410536bdb09a5cfa6ed8fe2",
-            "mqc_fastqc_per_base_n_content_plot-2_1.txt:md5,9cb898b357550bcb7fde93cc8eeed4f6",
-            "mqc_fastqc_per_base_sequence_quality_plot_1.txt:md5,fa885d26b1fa4c473e10afd2aea51ace",
-            "mqc_fastqc_per_base_sequence_quality_plot-2_1.txt:md5,985a33033c507662e5ca0b4a13538626",
-            "mqc_fastqc_per_sequence_gc_content_plot-2_Counts.txt:md5,138443c81b5f59d4d66b7a13b6598dcb",
-            "mqc_fastqc_per_sequence_gc_content_plot-2_Percentages.txt:md5,568189d5a82fb905e595258dcb4a437e",
-            "mqc_fastqc_per_sequence_gc_content_plot_Counts.txt:md5,336631f9e7bc6103fca28f27e692e66b",
-            "mqc_fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,b034ed82b7d4fc3d5c5106b06b3f81f3",
+            "multiqc_dupradar-plot.txt:md5,ebce5cd8f3d6c6c33b77f1ab429e59bc",
+            "multiqc_fail_strand_check_table.txt:md5,7797d69bfc52161c55e12f29e1bf51b4",
+            "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
+            "multiqc_featurecounts_biotype_plot.txt:md5,49114c02ced51d9a257365cd4c4ad0e8",
+            "multiqc_general_stats.txt:md5,f7ac3b98e2a54f74a54344e6384e750e",
+            "multiqc_rseqc_bam_stat.txt:md5,1aa9eeb5b9d283ba77e98f0f5ea0f712",
+            "multiqc_rseqc_infer_experiment.txt:md5,03ecee8f93cc95c3552d78e154694566",
+            "multiqc_rseqc_junction_annotation.txt:md5,e78e23f7f32cc2c58136df6ed89d7638",
+            "multiqc_rseqc_read_distribution.txt:md5,b7106d48346fe4150a8094ef1744f8b3",
+            "multiqc_salmon.txt:md5,04ea38bdb89f412eee6b991b3cf47288",
+            "multiqc_samtools_flagstat.txt:md5,5412464d55f4c921286c648a3aa2e64f",
+            "multiqc_samtools_idxstats.txt:md5,fd7d03a91f0b9e01a6939941f7f2243f",
+            "multiqc_samtools_stats.txt:md5,9b0a1fc438e166355c5d27179a4b7ee8",
+            "multiqc_star.txt:md5,ccb27f09de86d66d025b2716d241532e",
+            "qualimap_rnaseq_cov_hist.txt:md5,0a68d01772598371eddbd98e20daaf75",
+            "qualimap_rnaseq_genome_results.txt:md5,ef64e555aae46c31d415276ef6551a62",
+            "rseqc_inner_distance.txt:md5,b5bb283762047ab06c17c2e188382335",
+            "rseqc_read_dups.txt:md5,e4edf12f49c1b12c97fa9a630a0bbacb",
             "rseqc_junction_saturation_all.txt:md5,7fb002deec1752d8e2065b693624191c"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/qualimap/": {
         "content": [
@@ -169,12 +173,12 @@
             "rnaseq_qc_results.txt:md5,6bb8c2b18eb67b015bba7d92944cd687",
             "rnaseq_qc_results.txt:md5,401d4141bd4d884b35faa4cb497311f7"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-24T21:08:18+0000"
+        "timestamp": "2023-04-25T03:38:29+0000"
     }
 }

@@ -2,7 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    options "-profile test"
+    options "-profile test,docker"
     tag "pipeline"
 
     test("STAR Salmon (With UMI) (GSE110004)") {
@@ -31,20 +31,24 @@ nextflow_pipeline {
                 { assert new File("$outputDir/fastqc/WT_REP2_2_fastqc.html").exists() },
                 { assert snapshot(path("$outputDir/multiqc/star_salmon/multiqc_data/junction_saturation_known.txt"),
                                   path("$outputDir/multiqc/star_salmon/multiqc_data/junction_saturation_novel.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_cutadapt_filtered_reads_plot_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_cutadapt_trimmed_sequences_plot_3_Counts.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_adapter_content_plot_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_overrepresented_sequences_plot_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_overrepresented_sequences_plot-2_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_base_n_content_plot_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_base_n_content_plot-2_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_base_sequence_quality_plot_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_base_sequence_quality_plot-2_1.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_sequence_gc_content_plot-2_Counts.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_sequence_gc_content_plot-2_Percentages.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_sequence_gc_content_plot_Counts.txt"),
-                                  path("$outputDir/multiqc/star_salmon/multiqc_data/mqc_fastqc_per_sequence_gc_content_plot_Percentages.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_dupradar-plot.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_fail_strand_check_table.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_fastqc.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_featurecounts_biotype_plot.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_general_stats.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_rseqc_bam_stat.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_rseqc_infer_experiment.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_rseqc_junction_annotation.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_rseqc_read_distribution.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_salmon.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_samtools_flagstat.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_samtools_idxstats.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_samtools_stats.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_star.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/qualimap_rnaseq_cov_hist.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/qualimap_rnaseq_genome_results.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/rseqc_inner_distance.txt"),
+                                  path("$outputDir/multiqc/star_salmon/multiqc_data/rseqc_read_dups.txt"),
                                   path("$outputDir/multiqc/star_salmon/multiqc_data/rseqc_junction_saturation_all.txt")).match("multiqc") },
                 { assert snapshot(path("$outputDir/salmon/salmon.merged.gene_counts.tsv"),
                                   path("$outputDir/salmon/salmon.merged.transcript_counts.tsv"),

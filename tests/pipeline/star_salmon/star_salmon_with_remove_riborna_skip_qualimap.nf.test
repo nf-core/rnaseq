@@ -2,7 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    options "-profile test"
+    options "-profile test,docker"
     tag "pipeline"
 
     test("STAR Salmon (Remove Ribo RNA & Skip Qualimap) (GSE110004)") {

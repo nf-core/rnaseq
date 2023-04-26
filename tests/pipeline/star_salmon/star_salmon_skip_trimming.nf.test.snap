@@ -5,21 +5,6 @@
         ],
         "timestamp": "2023-04-24T21:16:57+0000"
     },
-    "star_salmon/bigwig/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.forward.bigWig:md5,144ee7ad2a203f9aae92bbbea2b0cb08",
-            "RAP1_IAA_30M_REP1.reverse.bigWig:md5,704c33703cfdac86ab7d0b8d8f22571f",
-            "RAP1_UNINDUCED_REP1.forward.bigWig:md5,2456003706227a40e7a2ee3c1a5ce4f4",
-            "RAP1_UNINDUCED_REP1.reverse.bigWig:md5,dcb3e2adc62bc362edd64f9437cd1915",
-            "RAP1_UNINDUCED_REP2.forward.bigWig:md5,2b638cb1444e569c489fa036735b925a",
-            "RAP1_UNINDUCED_REP2.reverse.bigWig:md5,fb77ad58dfd9691d0de4765839fec485",
-            "WT_REP1.forward.bigWig:md5,d73594a99dfa3f0fb77b134111736591",
-            "WT_REP1.reverse.bigWig:md5,29c0fd2793afd055d92526fc7a95f230",
-            "WT_REP2.forward.bigWig:md5,da54ae7eb0307dd02812e4671b7ffd92",
-            "WT_REP2.reverse.bigWig:md5,a1320fcf2a4d053ea315ced1454d6ed7"
-        ],
-        "timestamp": "2023-04-24T21:16:57+0000"
-    },
     "star_salmon/featurecounts/": {
         "content": [
             "RAP1_IAA_30M_REP1.featureCounts.txt:md5,e8ec41e6e79f378e2f301e245a4f8e73",
@@ -36,21 +21,6 @@
         ],
         "timestamp": "2023-04-24T21:16:57+0000"
     },
-    "star_salmon/dupradar/": {
-        "content": [
-            "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,fdeebc4f056cbb52fee53e82c2e0096f",
-            "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,05447ce299d4ba341f5f325ab58a6f9a",
-            "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,bf065e266566c3fb96dc9319a3ed12cf",
-            "WT_REP1_dupMatrix.txt:md5,04512c8be70c1898d0262935ed5ec5bd",
-            "WT_REP2_dupMatrix.txt:md5,5052efd01f5086d394499b9c4626deb1",
-            "RAP1_IAA_30M_REP1_intercept_slope.txt:md5,7962ee6ba989f9af6465aaf1101ba13b",
-            "RAP1_UNINDUCED_REP1_intercept_slope.txt:md5,7e676fca3013805d11da63d200a7f542",
-            "RAP1_UNINDUCED_REP2_intercept_slope.txt:md5,147b051de3f1e5c75821176851d13612",
-            "WT_REP1_intercept_slope.txt:md5,395cde13da1a90cf4378be2597c4f297",
-            "WT_REP2_intercept_slope.txt:md5,7ddae43baa3c4e499fbc319b95627c41"
-        ],
-        "timestamp": "2023-04-24T21:16:57+0000"
-    },
     "salmon": {
         "content": [
             "salmon.merged.gene_counts.tsv:md5,71ca8ae8ccf92e786979b2e91f172e1d",
@@ -60,82 +30,9 @@
         ],
         "timestamp": "2023-04-24T21:16:57+0000"
     },
-    "star_salmon/samtools_stats/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat:md5,1c541ffc31671136810db9586f150155",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats:md5,cc2766e4a48241322c2528aa61f7d208",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.stats:md5,0127e293b40f6b09a2e1d2c4d5b7e480",
-            "RAP1_IAA_30M_REP1.sorted.bam.flagstat:md5,94c8742a1292d77da53a27c535483247",
-            "RAP1_IAA_30M_REP1.sorted.bam.idxstats:md5,cc2766e4a48241322c2528aa61f7d208",
-            "RAP1_IAA_30M_REP1.sorted.bam.stats:md5,e487327e2113d07b8430ee29614b167d",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.flagstat:md5,083e57d9f4bbb14e0b46622bbaeaae8c",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.idxstats:md5,e27c453209fefead3f703e3ab1c0b3f7",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.stats:md5,860f0c76b95ffdfc7d8deeb4828ba252",
-            "RAP1_UNINDUCED_REP1.sorted.bam.flagstat:md5,b67e1eb8b5bc947d670ac81ef8f3aeda",
-            "RAP1_UNINDUCED_REP1.sorted.bam.idxstats:md5,e27c453209fefead3f703e3ab1c0b3f7",
-            "RAP1_UNINDUCED_REP1.sorted.bam.stats:md5,b62b16dfba5d794de8d0cbc25289f8c0",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.flagstat:md5,36cebb6188f9fd742562493e6a6640fe",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.idxstats:md5,79cebfe8ad6602dffd2199f5472b28d0",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.stats:md5,e7191b0de2e328d0a60a26080a9101bb",
-            "RAP1_UNINDUCED_REP2.sorted.bam.flagstat:md5,ef6a9825af30377b0781a4d4a29b932b",
-            "RAP1_UNINDUCED_REP2.sorted.bam.idxstats:md5,79cebfe8ad6602dffd2199f5472b28d0",
-            "RAP1_UNINDUCED_REP2.sorted.bam.stats:md5,27056a9531cbd65be99d0f79f38382bb",
-            "WT_REP1.markdup.sorted.bam.flagstat:md5,6d3457815eb053088f68f84efcd20280",
-            "WT_REP1.markdup.sorted.bam.idxstats:md5,0da68758394dbc7470b2a2ea50bb8814",
-            "WT_REP1.markdup.sorted.bam.stats:md5,8e4f8898f79f9f17d001ddb30debcd3a",
-            "WT_REP1.sorted.bam.flagstat:md5,b1909dcb78af39009545b03fe1584cc5",
-            "WT_REP1.sorted.bam.idxstats:md5,0da68758394dbc7470b2a2ea50bb8814",
-            "WT_REP1.sorted.bam.stats:md5,c299cb05e04e242a8f73e317b75eac5d",
-            "WT_REP2.markdup.sorted.bam.flagstat:md5,5cd1d564776bee679329d90de069b2d6",
-            "WT_REP2.markdup.sorted.bam.idxstats:md5,22d51757c5b252c030984f169a131237",
-            "WT_REP2.markdup.sorted.bam.stats:md5,c66968b7b980e8939b2bfc8b5c29931f",
-            "WT_REP2.sorted.bam.flagstat:md5,84f3a9290292d1a47ed095616b506ebd",
-            "WT_REP2.sorted.bam.idxstats:md5,22d51757c5b252c030984f169a131237",
-            "WT_REP2.sorted.bam.stats:md5,ff6014227b91ad6ab73aa59d78d7bb42"
-        ],
-        "timestamp": "2023-04-24T21:16:57+0000"
-    },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
-        ],
-        "timestamp": "2023-04-24T21:16:57+0000"
-    },
-    "star_salmon/rseqc/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.bam_stat.txt:md5,61b223c87d780480bd9a2e0562278762",
-            "RAP1_UNINDUCED_REP1.bam_stat.txt:md5,7d933b77abe7a59ef47b5671321076b8",
-            "RAP1_UNINDUCED_REP2.bam_stat.txt:md5,6e95c51796b5b4b18131d534cde8647b",
-            "WT_REP1.bam_stat.txt:md5,08ff5d55d751c523390130b79e85e8ce",
-            "WT_REP2.bam_stat.txt:md5,7f5195602e20002ac974ff360b2e2b0e",
-            "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,e1de3aba230cf3d40f04d682dfe4e803",
-            "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,0bc268f09da1676522f8adda63509f14",
-            "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,be4b322faffa736ab6ac39ff39c7aa9d",
-            "WT_REP1.infer_experiment.txt:md5,7e8c79fa27780693523ad7acd8f109c4",
-            "WT_REP2.infer_experiment.txt:md5,c895dbd41b5a075ad4032e2732145b6a",
-            "RAP1_IAA_30M_REP1.junction.bed:md5,3d1fc27ee28ef0a8716c23c99d73ccce",
-            "RAP1_UNINDUCED_REP1.junction.bed:md5,98a8e6a9ededb15b9f83e97714079caf",
-            "RAP1_UNINDUCED_REP2.junction.bed:md5,e7897b9cfcb9bcffd8db2781b9d40e67",
-            "WT_REP1.junction.bed:md5,4adb3e4b552e73263758031dc68746d5",
-            "WT_REP2.junction.bed:md5,d61d0bb164246171e64c1dcb1ca3c1d9",
-            "RAP1_IAA_30M_REP1.junction_annotation.log:md5,4250bcd7ba194aa6ffa2613ea6981f05",
-            "WT_REP1.junction_annotation.log:md5,bf2f4f1a4e8e4b8dd94d1673c5df1945",
-            "WT_REP2.junction_annotation.log:md5,b8ca9ee3e7d796ab1c89b3fe5dfc8318",
-            "RAP1_IAA_30M_REP1.read_distribution.txt:md5,d2265f322b4239ee0e50a5b35937290a",
-            "RAP1_UNINDUCED_REP1.read_distribution.txt:md5,6b4338726b40a96a1aafec8804e63a07",
-            "RAP1_UNINDUCED_REP2.read_distribution.txt:md5,bbfbd17329509ec89ca9a1b673b2476e",
-            "WT_REP1.read_distribution.txt:md5,4b2b087bcb6e978aa7b39a86cb4f9e6d",
-            "WT_REP2.read_distribution.txt:md5,df27f1be0e2f7452f13fd35d6fa5a694"
-        ],
-        "timestamp": "2023-04-24T21:16:57+0000"
-    },
-    "bbsplit": {
-        "content": [
-            "RAP1_IAA_30M_REP1.stats.txt:md5,73f44a18148f208e2202d70e1db867d5",
-            "RAP1_UNINDUCED_REP1.stats.txt:md5,7556dbe6062c94f91d25d474b88c8ed3",
-            "RAP1_UNINDUCED_REP2.stats.txt:md5,d920f45697802b25da9558e978bf2ea5",
-            "WT_REP1.stats.txt:md5,85a04631ae7da2d29ebe413864e9218f",
-            "WT_REP2.stats.txt:md5,09924c6d00da519be6e87e0f741574a8"
         ],
         "timestamp": "2023-04-24T21:16:57+0000"
     },
@@ -146,32 +43,7 @@
             "multiqc_dupradar-plot.txt:md5,870765cd060f69c500ddcae1e9025c94",
             "multiqc_fail_strand_check_table.txt:md5,5b601d93ea6ec67be56f25fee7f320b8",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
-            "multiqc_featurecounts_biotype_plot.txt:md5,05d05d2d8290d73ac06b1e226c7fc7a1",
-            "multiqc_general_stats.txt:md5,b21987c994f1bd9b4813e93408615fa5",
-            "multiqc_rseqc_bam_stat.txt:md5,9efab740d8eb05854150f2bfa787edf3",
-            "multiqc_rseqc_infer_experiment.txt:md5,a1a7662a50430755e056366f84eda882",
-            "multiqc_rseqc_junction_annotation.txt:md5,a5bc9a08fbb3451d83e70cded2e09d19",
-            "multiqc_rseqc_read_distribution.txt:md5,c0fec0553634b5ed819b0d9ebaae55a5",
-            "multiqc_salmon.txt:md5,d99146bb9b3c429b5eb23c366a944ff9",
-            "multiqc_samtools_flagstat.txt:md5,bf80f50f550a21ad49ea241dfd0ff3cb",
-            "multiqc_samtools_idxstats.txt:md5,adf5f32fa1485ad0f4dacdfedc7b4bbc",
-            "multiqc_samtools_stats.txt:md5,515dd0d31b4cb70fa9cd27655a25731e",
-            "multiqc_star.txt:md5,a60d7b135f83bc67e2a5395a4224ac99",
-            "qualimap_rnaseq_cov_hist.txt:md5,0a68d01772598371eddbd98e20daaf75",
-            "qualimap_rnaseq_genome_results.txt:md5,beecb8715d39cfb25711bff24ee6e1f4",
-            "rseqc_inner_distance.txt:md5,b5bb283762047ab06c17c2e188382335",
-            "rseqc_read_dups.txt:md5,6e587067ca20c948802328ceb6d3cffc",
-            "rseqc_junction_saturation_all.txt:md5,7fb002deec1752d8e2065b693624191c"
-        ],
-        "timestamp": "2023-04-24T21:16:57+0000"
-    },
-    "star_salmon/qualimap/": {
-        "content": [
-            "rnaseq_qc_results.txt:md5,8f0abfb35f53c1f7618cc6f80482db23",
-            "rnaseq_qc_results.txt:md5,cf0d48567d30a0141608385f5d93b920",
-            "rnaseq_qc_results.txt:md5,c2d014351b3b4b412806fea4b6b04e93",
-            "rnaseq_qc_results.txt:md5,64194a3c85869b302ccf725975b854ab",
-            "rnaseq_qc_results.txt:md5,7333f74e4a3377e6cfe65eaf3a19ab62"
+            "multiqc_featurecounts_biotype_plot.txt:md5,05d05d2d8290d73ac06b1e226c7fc7a1"
         ],
         "timestamp": "2023-04-24T21:16:57+0000"
     },

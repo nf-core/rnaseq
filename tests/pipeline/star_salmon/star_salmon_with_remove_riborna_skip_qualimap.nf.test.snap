@@ -5,21 +5,6 @@
         ],
         "timestamp": "2023-04-24T21:57:56+0000"
     },
-    "star_salmon/bigwig/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.forward.bigWig:md5,3f792ce1bbb5150ebdca9cc6ba3d624b",
-            "RAP1_IAA_30M_REP1.reverse.bigWig:md5,fed2e9026362a9d05245b17358c8d7f6",
-            "RAP1_UNINDUCED_REP1.forward.bigWig:md5,00de9f9cb68295cfa4aed0140d961675",
-            "RAP1_UNINDUCED_REP1.reverse.bigWig:md5,b0a67389e984cb0ab53a6a1f0188ba4f",
-            "RAP1_UNINDUCED_REP2.forward.bigWig:md5,17bb3e8ae1093e8f34c75958bb241340",
-            "RAP1_UNINDUCED_REP2.reverse.bigWig:md5,ecaa5e602147059501f441f7c7b7f9c2",
-            "WT_REP1.forward.bigWig:md5,6101b00105e45858d498156b0375f2ac",
-            "WT_REP1.reverse.bigWig:md5,ed5809ec296692ef211470d89b5af880",
-            "WT_REP2.forward.bigWig:md5,c773770995dd4c31fbbec065bc67e72f",
-            "WT_REP2.reverse.bigWig:md5,f76eb87eca6c4bcb7c2e1f1a705f27e7"
-        ],
-        "timestamp": "2023-04-24T21:57:56+0000"
-    },
     "star_salmon/featurecounts/": {
         "content": [
             "RAP1_IAA_30M_REP1.featureCounts.txt:md5,c5865ded7168476d93057d2aedaec694",
@@ -36,21 +21,6 @@
         ],
         "timestamp": "2023-04-24T21:57:56+0000"
     },
-    "star_salmon/dupradar/": {
-        "content": [
-            "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,ddadea4a08511aae6faeb632eb6aafea",
-            "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,c19e22deef48e940e1a46f6e76e913e3",
-            "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,c0bf1135d2d70c5918d87f706c0c54bc",
-            "WT_REP1_dupMatrix.txt:md5,b0de1683f2a9bfa42437e924a11648fd",
-            "WT_REP2_dupMatrix.txt:md5,bab18079153627205e5d907d8dfba677",
-            "RAP1_IAA_30M_REP1_intercept_slope.txt:md5,b21a53b0156b0afdfc28c237cb11218d",
-            "RAP1_UNINDUCED_REP1_intercept_slope.txt:md5,508eb26de2d52ade41dd15394b218432",
-            "RAP1_UNINDUCED_REP2_intercept_slope.txt:md5,b0cbd0122c0fc5dd1821450eb41ba577",
-            "WT_REP1_intercept_slope.txt:md5,f38c8525b7fcb990b7158f1518e451ad",
-            "WT_REP2_intercept_slope.txt:md5,c16fb72dbde510dc74ac0286b635d0aa"
-        ],
-        "timestamp": "2023-04-24T21:57:56+0000"
-    },
     "salmon": {
         "content": [
             "salmon.merged.gene_counts.tsv:md5,f77ecd6c421632d65b83ae13cc840f61",
@@ -60,82 +30,9 @@
         ],
         "timestamp": "2023-04-24T21:57:56+0000"
     },
-    "star_salmon/samtools_stats/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat:md5,9cb85f4008ba88f43e15fae47baad525",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats:md5,ba4001c9dec79a99b79e3162ba939f85",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.stats:md5,df94fc7178c51ead1963b869382fe6e6",
-            "RAP1_IAA_30M_REP1.sorted.bam.flagstat:md5,8ac0db45c52a28d167582874992e5833",
-            "RAP1_IAA_30M_REP1.sorted.bam.idxstats:md5,ba4001c9dec79a99b79e3162ba939f85",
-            "RAP1_IAA_30M_REP1.sorted.bam.stats:md5,36c6d4bb73414c13ba41d30f7846f1fc",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.flagstat:md5,0496e26c6be67b341255761a447b1569",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.idxstats:md5,fd9be758f872e026a22b3ed86628daed",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.stats:md5,642b6284c45426ce0967dcd127f2816b",
-            "RAP1_UNINDUCED_REP1.sorted.bam.flagstat:md5,12fb0d3b2c65e4738f30d530a329efb1",
-            "RAP1_UNINDUCED_REP1.sorted.bam.idxstats:md5,fd9be758f872e026a22b3ed86628daed",
-            "RAP1_UNINDUCED_REP1.sorted.bam.stats:md5,2be0c486233e7984a5c7dda6e35dc989",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.flagstat:md5,2df8940452346d9d82b95206d4b304e1",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.idxstats:md5,b42aae33316d4a5a58459143eab2e4f0",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.stats:md5,2f4478aacafc932e77f0d86c6ac83d33",
-            "RAP1_UNINDUCED_REP2.sorted.bam.flagstat:md5,3535e1cbe40f90e3749dad930251dd9f",
-            "RAP1_UNINDUCED_REP2.sorted.bam.idxstats:md5,b42aae33316d4a5a58459143eab2e4f0",
-            "RAP1_UNINDUCED_REP2.sorted.bam.stats:md5,ecebb85575f5ea01a09c3422b606004d",
-            "WT_REP1.markdup.sorted.bam.flagstat:md5,d931e8e7fd82c493d12e78f404b13f2c",
-            "WT_REP1.markdup.sorted.bam.idxstats:md5,d2c9dce1a6fcf97a65e3b4313d8a29ef",
-            "WT_REP1.markdup.sorted.bam.stats:md5,a69fe19f50275cf8c737dbec4d36fedd",
-            "WT_REP1.sorted.bam.flagstat:md5,7bffb4d7dff374febb1ca99c1436ebf7",
-            "WT_REP1.sorted.bam.idxstats:md5,d2c9dce1a6fcf97a65e3b4313d8a29ef",
-            "WT_REP1.sorted.bam.stats:md5,44e784d9ee43c97d76d2a8534a7935a3",
-            "WT_REP2.markdup.sorted.bam.flagstat:md5,ca4330f24cf0d98ceb18c617294aed9e",
-            "WT_REP2.markdup.sorted.bam.idxstats:md5,47d975efef6048ae120f71124e2b378f",
-            "WT_REP2.markdup.sorted.bam.stats:md5,4be8bac1ae2a2cb2e602b692aac2912e",
-            "WT_REP2.sorted.bam.flagstat:md5,41d560c31aa88088efffe62d0f488583",
-            "WT_REP2.sorted.bam.idxstats:md5,47d975efef6048ae120f71124e2b378f",
-            "WT_REP2.sorted.bam.stats:md5,54fc7167e4d7643f94f9b183e4063aee"
-        ],
-        "timestamp": "2023-04-24T21:57:56+0000"
-    },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
-        ],
-        "timestamp": "2023-04-24T21:57:56+0000"
-    },
-    "star_salmon/rseqc/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.bam_stat.txt:md5,4256d7f43715daff481bf0010b695981",
-            "RAP1_UNINDUCED_REP1.bam_stat.txt:md5,d04cb03c42168319cb306f0b866b6b59",
-            "RAP1_UNINDUCED_REP2.bam_stat.txt:md5,5e114cb96f02f9fadd21e2a9826a68a6",
-            "WT_REP1.bam_stat.txt:md5,bc6521a8455de55571a3ae6ef5a07aa2",
-            "WT_REP2.bam_stat.txt:md5,22fd302c0f8ab19b114caa4b8d47a92c",
-            "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,ee69422d6e76fba223aa6b20a13027d2",
-            "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,ec9ec42ddfd3ffbb5373d3d6b6713b2c",
-            "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,484e2860c6c496b1da5fac475a0cd3e4",
-            "WT_REP1.infer_experiment.txt:md5,298c430c61cb7a46b48af867a0dfe00b",
-            "WT_REP2.infer_experiment.txt:md5,18758f433cf5c19bce599e5329da39a9",
-            "RAP1_IAA_30M_REP1.junction.bed:md5,abc741dcce71900d4145f3aaf3bd9c64",
-            "RAP1_UNINDUCED_REP1.junction.bed:md5,ce6b9b387adbad82a9bf798d07e65b15",
-            "RAP1_UNINDUCED_REP2.junction.bed:md5,112233f4d8b6c929e1b7d5ef74556436",
-            "WT_REP1.junction.bed:md5,f9214aec5c178ffae736308615d2535e",
-            "WT_REP2.junction.bed:md5,0b01bf3d08378094bc063f123ed201d4",
-            "RAP1_IAA_30M_REP1.junction_annotation.log:md5,0c83bfd72c550d18a389ffebfb7549fc",
-            "WT_REP1.junction_annotation.log:md5,e26d4111fd4e731a9f2a10fcadee9090",
-            "WT_REP2.junction_annotation.log:md5,1b95af725477bbe771ed4e7b7d693729",
-            "RAP1_IAA_30M_REP1.read_distribution.txt:md5,37fadf8a5d3e6d4276fdcc217a0df8ab",
-            "RAP1_UNINDUCED_REP1.read_distribution.txt:md5,ac45c5dfa40382fd2613c85754dde373",
-            "RAP1_UNINDUCED_REP2.read_distribution.txt:md5,de16f30d41f987f875e880bd3356d3f0",
-            "WT_REP1.read_distribution.txt:md5,b72fac25d0cf554a657029290ca20bdd",
-            "WT_REP2.read_distribution.txt:md5,9042fc9da71efb3f68ab254088dcba54"
-        ],
-        "timestamp": "2023-04-24T21:57:56+0000"
-    },
-    "bbsplit": {
-        "content": [
-            "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
-            "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
-            "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-            "WT_REP2.stats.txt:md5,002ddf6b828d34979652a40f05462843"
         ],
         "timestamp": "2023-04-24T21:57:56+0000"
     },
@@ -147,20 +44,7 @@
             "multiqc_fail_strand_check_table.txt:md5,0298cedc2afece259aaddea4ea1dbef6",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
             "multiqc_featurecounts_biotype_plot.txt:md5,1fed8ad7b56cdf9484f2210b1c94b8de",
-            "multiqc_general_stats.txt:md5,905e5597431fb76ffce0b28d2c304854",
-            "multiqc_rseqc_bam_stat.txt:md5,e4408b581842f3458e1b4efcdd178bc0",
-            "multiqc_rseqc_infer_experiment.txt:md5,8ea3c3c4386cea512681c05eb8f53a10",
-            "multiqc_rseqc_junction_annotation.txt:md5,e67493668e9b93f6e15c145d8d844372",
-            "multiqc_rseqc_read_distribution.txt:md5,0132183561c399a5b57eee5f82bda19e",
-            "multiqc_salmon.txt:md5,c0a88b9bb610af6af1324ce6e2e3a3ca",
-            "multiqc_samtools_flagstat.txt:md5,ab8399fc1e4621672086f43efe4c056b",
-            "multiqc_samtools_idxstats.txt:md5,413ba06f3d8e4ab0dbde8ef8952c4b32",
-            "multiqc_samtools_stats.txt:md5,1f0bcc33d97fbdaab1804c6a43735621",
-            "multiqc_star.txt:md5,cbab653e0813e2767f3d1f15c4b9d895",
-            "multiqc_sortmerna.txt:md5,8656e26e65c9ad2d3017003b00052796",
-            "rseqc_inner_distance.txt:md5,b5bb283762047ab06c17c2e188382335",
-            "rseqc_read_dups.txt:md5,a54ee32e3e70661ad4c29d973cc58335",
-            "rseqc_junction_saturation_all.txt:md5,7fb002deec1752d8e2065b693624191c"
+            "multiqc_sortmerna.txt:md5,8656e26e65c9ad2d3017003b00052796"
         ],
         "timestamp": "2023-04-24T21:57:56+0000"
     },

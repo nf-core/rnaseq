@@ -11,45 +11,8 @@
         ],
         "timestamp": "2023-04-22T21:07:00+0000"
     },
-    "star_rsem/samtools_stats/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat:md5,b4655647adf50bc443313ad150fe2afb",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats:md5,99f719593d131af1a215fbb5032acc1e",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.stats:md5,a40309d55640f6e049be12ae2e5cc3d2",
-            "RAP1_IAA_30M_REP1.sorted.bam.flagstat:md5,c2f5d38f0b54990850f4aee711080c99",
-            "RAP1_IAA_30M_REP1.sorted.bam.idxstats:md5,99f719593d131af1a215fbb5032acc1e",
-            "RAP1_IAA_30M_REP1.sorted.bam.stats:md5,08ff57de77707bb474d8a511278462e7",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.flagstat:md5,8678d9c4f5280b7b2f7a69034c240551",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.idxstats:md5,d33f03663678f3c9a063a9cf55b1b1ec",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.stats:md5,f229cbfd2278230b1f3df0c41af60cdb",
-            "RAP1_UNINDUCED_REP1.sorted.bam.flagstat:md5,25e061e1ffb777d0f7f405ffd26533b8",
-            "RAP1_UNINDUCED_REP1.sorted.bam.idxstats:md5,d33f03663678f3c9a063a9cf55b1b1ec",
-            "RAP1_UNINDUCED_REP1.sorted.bam.stats:md5,5b739196fbfb8cb343e7824c385d767d",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.flagstat:md5,df6f55cec42df6fdf56f768af3cb8d24",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.idxstats:md5,37150ce5f3ee6d27ef1994a285ecf7be",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.stats:md5,5254f8aa1601f7d764ba5e1ab72e9066",
-            "RAP1_UNINDUCED_REP2.sorted.bam.flagstat:md5,4a55cc0140668a8d572e820159cecf55",
-            "RAP1_UNINDUCED_REP2.sorted.bam.idxstats:md5,37150ce5f3ee6d27ef1994a285ecf7be",
-            "RAP1_UNINDUCED_REP2.sorted.bam.stats:md5,d9dd341f9558ca6a4e2ce2d28508ef2a",
-            "WT_REP1.markdup.sorted.bam.flagstat:md5,35022e2aa70234da8122867da4207ccf",
-            "WT_REP1.markdup.sorted.bam.idxstats:md5,7be99ac4f46a81fa42302aea5da5db8e",
-            "WT_REP1.markdup.sorted.bam.stats:md5,5f086797ad69555b9958a8c018cbf797",
-            "WT_REP1.sorted.bam.flagstat:md5,afc212aa6cc3394a49d0c550ef202df5",
-            "WT_REP1.sorted.bam.idxstats:md5,7be99ac4f46a81fa42302aea5da5db8e",
-            "WT_REP1.sorted.bam.stats:md5,a5c65ba88d2dd9f1bd9311a6ba28cceb",
-            "WT_REP2.markdup.sorted.bam.flagstat:md5,83d7c8478012ea4151e2403f5e7ddf4d",
-            "WT_REP2.markdup.sorted.bam.idxstats:md5,1ba7c78390228420132e3f675184b278",
-            "WT_REP2.markdup.sorted.bam.stats:md5,dbb98624b367b98fa9befaa41698d9b4",
-            "WT_REP2.sorted.bam.flagstat:md5,52b11d4fd7c618f880f16be0083e8514",
-            "WT_REP2.sorted.bam.idxstats:md5,1ba7c78390228420132e3f675184b278",
-            "WT_REP2.sorted.bam.stats:md5,765d2c8d5294ba1fdc75a988a3606fac"
-        ],
-        "timestamp": "2023-04-22T21:07:00+0000"
-    },
     "salmon": {
         "content": [
-            "salmon.merged.gene_counts.tsv:md5,69fe1bd4668b04176f3f72fc71d6fb09",
-            "salmon.merged.transcript_counts.tsv:md5,a205d29830c3f0f3a5586d6bc463b560",
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
         "timestamp": "2023-04-22T21:07:00+0000"
@@ -59,8 +22,7 @@
             "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
             "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
             "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-            "WT_REP2.stats.txt:md5,002ddf6b828d34979652a40f05462843"
+            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de"
         ],
         "timestamp": "2023-04-22T21:07:00+0000"
     },
@@ -70,11 +32,7 @@
             "multiqc_fastqc.txt:md5,e3ebd5c2676bebb3c0176c4e985f3580",
             "multiqc_picard_dups.txt:md5,1942ec1ae3f0b11b12dd52fdac925b32",
             "multiqc_rsem.txt:md5,6485689490e140f2cf7812133fd04b88",
-            "multiqc_samtools_flagstat.txt:md5,a775f9ed23a3c2d83547c86ab0069aa0",
-            "multiqc_samtools_idxstats.txt:md5,1cbc64fc9713831a6f45effc0cfe6a39",
-            "multiqc_samtools_stats.txt:md5,1f2f93543482db5627bd91503e5fa622",
-            "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797",
-            "multiqc_general_stats.txt:md5,3bbe642b0aebf6bf08868c9a0d9e4058"
+            "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
         "timestamp": "2023-04-22T21:07:00+0000"
     },
@@ -87,9 +45,7 @@
             "RAP1_UNINDUCED_REP2.forward.bigWig:md5,a8bb05aa1e0029deb72e491c60e59e04",
             "RAP1_UNINDUCED_REP2.reverse.bigWig:md5,65e9aefc9928bf43d7a6f520443e6315",
             "WT_REP1.forward.bigWig:md5,40a41e03064aa1e2a2fc00400a6dd9f8",
-            "WT_REP1.reverse.bigWig:md5,823282b3f27b0c26db805f497f47bf9c",
-            "WT_REP2.forward.bigWig:md5,533a41105e3156e4b2432799915d973e",
-            "WT_REP2.reverse.bigWig:md5,f249db92bb377867f2be8a2bced917f4"
+            "WT_REP1.reverse.bigWig:md5,823282b3f27b0c26db805f497f47bf9c"
         ],
         "timestamp": "2023-04-22T21:07:00+0000"
     },

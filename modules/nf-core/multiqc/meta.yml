@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/yaml-schema.json
 name: MultiQC
 description: Aggregate results from bioinformatics analyses across many samples into a single report
 keywords:
@@ -37,7 +38,7 @@ output:
       description: MultiQC report file
       pattern: "multiqc_report.html"
   - data:
-      type: dir
+      type: directory
       description: MultiQC data dir
       pattern: "multiqc_data"
   - plots:

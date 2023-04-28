@@ -4,7 +4,6 @@
     nf-core/rnaseq
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/rnaseq
-
     Website: https://nf-co.re/rnaseq
     Slack  : https://nfcore.slack.com/channels/rnaseq
 ----------------------------------------------------------------------------------------

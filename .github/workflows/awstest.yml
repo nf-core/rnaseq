@@ -12,7 +12,7 @@ jobs:
     steps:
       # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
-        uses: nf-core/tower-action@v3
+        uses: seqeralabs/action-tower-launch@v1
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

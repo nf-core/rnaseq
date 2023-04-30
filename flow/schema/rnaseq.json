@@ -6,11 +6,11 @@
             "advanced" : false,
             "properties": {
                 "input": {
-                    "name": "Sample",
+                    "name": "Samples",
                     "type": "sample",
                     "pattern": "csv|xlsx",
                     "required": true,
-                    "description": "The sample to process.",
+                    "description": "The samples to process.",
                     "csv": {
                         "sample": "name",
                         "fastq_1": "input.1",

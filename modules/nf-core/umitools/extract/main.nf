@@ -6,7 +6,7 @@ process UMITOOLS_EXTRACT {
     conda "bioconda::umi_tools=1.1.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/umi_tools:1.1.4--py38hbff2b2d_1' :
-        'quay.io/biocontainers/umi_tools:1.1.4--py38hbff2b2d_1' }"
+        'biocontainers/umi_tools:1.1.4--py38hbff2b2d_1' }"
 
     input:
     tuple val(meta), path(reads)

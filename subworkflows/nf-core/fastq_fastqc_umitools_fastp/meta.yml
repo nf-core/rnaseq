@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=yaml-schema.json
 name: "fastq_fastqc_umitools_fastp"
 description: Read QC, UMI extraction and trimming
 keywords:
@@ -65,12 +67,12 @@ output:
         Groovy Map containing sample information
         e.g. [ id:'test' ]
   - reads:
-    type: file
-    description: >
-      Extracted FASTQ files. |
-      For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
-        For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
-    pattern: "*.{fastq.gz}"
+      type: file
+      description: >
+        Extracted FASTQ files. |
+        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+          For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+      pattern: "*.{fastq.gz}"
   - fastqc_html:
       type: file
       description: FastQC report
@@ -96,16 +98,16 @@ output:
       description: Logfile FastP
       pattern: "*.{fastp.log}"
   - trim_reads_fail:
-    type: file
-    description: Trimmed fastq files failing QC
-    pattern: "*.{fastq.gz}"
+      type: file
+      description: Trimmed fastq files failing QC
+      pattern: "*.{fastq.gz}"
   - trim_reads_merged:
-    type: file
-    description: Trimmed and merged fastq files
-    pattern: "*.{fastq.gz}"
+      type: file
+      description: Trimmed and merged fastq files
+      pattern: "*.{fastq.gz}"
   - trim_read_count:
-    type: integer
-    description: Number of reads after trimming
+      type: integer
+      description: Number of reads after trimming
   - fastqc_trim_html:
       type: file
       description: FastQC report

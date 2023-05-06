@@ -27,8 +27,12 @@ process STAR_ALIGN {
     tuple val(meta), path('*Aligned.unsort.out.bam') , optional:true, emit: bam_unsorted
     tuple val(meta), path('*fastq.gz')               , optional:true, emit: fastq
     tuple val(meta), path('*.tab')                   , optional:true, emit: tab
+    tuple val(meta), path('*.SJ.out.tab')            , optional:true, emit: spl_junc_tab
+    tuple val(meta), path('*.ReadsPerGene.out.tab')  , optional:true, emit: read_per_gene_tab
     tuple val(meta), path('*.out.junction')          , optional:true, emit: junction
     tuple val(meta), path('*.out.sam')               , optional:true, emit: sam
+    tuple val(meta), path('*.wig')                   , optional:true, emit: wig
+    tuple val(meta), path('*.bg')                    , optional:true, emit: bedgraph
 
     when:
     task.ext.when == null || task.ext.when
@@ -81,11 +85,16 @@ process STAR_ALIGN {
     touch ${prefix}.sortedByCoord.out.bam
     touch ${prefix}.toTranscriptome.out.bam
     touch ${prefix}.Aligned.unsort.out.bam
+    touch ${prefix}.Aligned.sortedByCoord.out.bam
     touch ${prefix}.unmapped_1.fastq.gz
     touch ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}.tab
+    touch ${prefix}.SJ.out.tab
+    touch ${prefix}.ReadsPerGene.out.tab
     touch ${prefix}.Chimeric.out.junction
     touch ${prefix}.out.sam
+    touch ${prefix}.Signal.UniqueMultiple.str1.out.wig
+    touch ${prefix}.Signal.UniqueMultiple.str1.out.bg
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

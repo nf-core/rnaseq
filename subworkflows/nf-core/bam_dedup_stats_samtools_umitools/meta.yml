@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "bam_dedup_stats_samtools_umitools"
 description: UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
 keywords:

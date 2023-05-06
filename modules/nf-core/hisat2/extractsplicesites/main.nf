@@ -6,7 +6,7 @@ process HISAT2_EXTRACTSPLICESITES {
     conda "bioconda::hisat2=2.2.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
-        'quay.io/biocontainers/hisat2:2.2.1--h1b792b2_3' }"
+        'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
 
     input:
     path gtf

@@ -3,6 +3,7 @@ description: Extract files.
 keywords:
   - untar
   - uncompress
+  - extract
 tools:
   - untar:
       description: |

@@ -84,6 +84,7 @@ class NfcoreSchema {
             'stub-run',
             'test',
             'w',
+            'with-apptainer',
             'with-charliecloud',
             'with-conda',
             'with-dag',

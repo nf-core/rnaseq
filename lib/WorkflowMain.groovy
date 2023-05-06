@@ -11,9 +11,8 @@ class WorkflowMain {
     //
     public static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-            // TODO nf-core: Add Zenodo DOI for pipeline after first release
-            //"* The pipeline\n" +
-            //"  https://doi.org/10.5281/zenodo.XXXXXXX\n\n" +
+            "* The pipeline\n" +
+            "  https://doi.org/10.5281/zenodo.1400710\n\n" +
             "* The nf-core framework\n" +
             "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
             "* Software dependencies\n" +
@@ -24,7 +23,7 @@ class WorkflowMain {
     // Generate help string
     //
     public static String help(workflow, params) {
-        def command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
+        def command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker"
         def help_string = ''
         help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
         help_string += NfcoreSchema.paramsHelp(workflow, params, command)
@@ -64,6 +63,9 @@ class WorkflowMain {
 
         // Print parameter summary log to screen
         log.info paramsSummaryLog(workflow, params)
+
+        // Warn about using custom configs to provide pipeline parameters
+        NfcoreTemplate.warnParamsProvidedInConfig(workflow, log)
 
         // Validate workflow parameters via the JSON schema
         if (params.validate_params) {

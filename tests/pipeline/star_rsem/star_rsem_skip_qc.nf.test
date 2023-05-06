@@ -36,7 +36,7 @@ nextflow_pipeline {
                 { assert new File("$outputDir/multiqc/star_rsem/multiqc_data/multiqc_samtools_stats.txt").exists() },
                 { assert snapshot(path("$outputDir/salmon/salmon_tx2gene.tsv")).match("salmon") },
                 { assert new File("$outputDir/salmon/salmon.merged.gene_counts.tsv").exists() },
-                { assert new File("$outputDir/salmon/salmon.merged.transcript_counts.tsv").exists() },                  
+                { assert new File("$outputDir/salmon/salmon.merged.transcript_counts.tsv").exists() },
                 { assert new File("$outputDir/salmon/RAP1_IAA_30M_REP1/quant.sf").exists() },
                 { assert new File("$outputDir/salmon/RAP1_IAA_30M_REP1/quant.genes.sf").exists() },
                 { assert new File("$outputDir/salmon/RAP1_UNINDUCED_REP1/quant.sf").exists() },
@@ -139,7 +139,7 @@ nextflow_pipeline {
                 { assert new File("$outputDir/trimgalore/WT_REP1_1.fastq.gz_trimming_report.txt").exists() },
                 { assert new File("$outputDir/trimgalore/WT_REP1_2.fastq.gz_trimming_report.txt").exists() },
                 { assert new File("$outputDir/trimgalore/WT_REP2_1.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists() }                                                                                                   
+                { assert new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists() }
             )
         }
 

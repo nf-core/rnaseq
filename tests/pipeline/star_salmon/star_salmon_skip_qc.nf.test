@@ -58,7 +58,7 @@ nextflow_pipeline {
                 { assert new File("$outputDir/salmon/salmon.merged.gene_counts_length_scaled.rds").exists() },
                 { assert new File("$outputDir/salmon/salmon.merged.gene_counts.rds").exists() },
                 { assert new File("$outputDir/salmon/salmon.merged.gene_counts_scaled.rds").exists() },
-                { assert new File("$outputDir/salmon/salmon.merged.transcript_counts.rds").exists() },                  
+                { assert new File("$outputDir/salmon/salmon.merged.transcript_counts.rds").exists() },
                 { assert snapshot(path("$outputDir/star_salmon/salmon_tx2gene.tsv")).match("star_salmon") },
                 { assert new File("$outputDir/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam").exists() },
                 { assert new File("$outputDir/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai").exists() },

@@ -24,7 +24,7 @@ nextflow_pipeline {
                 { assert new File("$outputDir/bbsplit/RAP1_UNINDUCED_REP1.stats.txt").exists() },
                 { assert new File("$outputDir/bbsplit/RAP1_UNINDUCED_REP2.stats.txt").exists() },
                 { assert new File("$outputDir/bbsplit/WT_REP1.stats.txt").exists() },
-                { assert new File("$outputDir/bbsplit/WT_REP2.stats.txt").exists() },       
+                { assert new File("$outputDir/bbsplit/WT_REP2.stats.txt").exists() },
                 { assert snapshot(path("$outputDir/hisat2/bigwig/RAP1_IAA_30M_REP1.forward.bigWig"),
                                   path("$outputDir/hisat2/bigwig/RAP1_IAA_30M_REP1.reverse.bigWig"),
                                   path("$outputDir/hisat2/bigwig/RAP1_UNINDUCED_REP1.forward.bigWig"),
@@ -181,7 +181,7 @@ nextflow_pipeline {
                 { assert new File("$outputDir/salmon/deseq2_qc/deseq2.dds.RData").exists() },
                 { assert new File("$outputDir/salmon/deseq2_qc/deseq2.pca.vals.txt").exists() },
                 { assert new File("$outputDir/salmon/deseq2_qc/deseq2.plots.pdf").exists() },
-                { assert new File("$outputDir/salmon/deseq2_qc/deseq2.sample.dists.txt").exists() }                                            
+                { assert new File("$outputDir/salmon/deseq2_qc/deseq2.sample.dists.txt").exists() }
             )
         }
 

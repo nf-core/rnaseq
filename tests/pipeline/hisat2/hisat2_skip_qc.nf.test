@@ -137,7 +137,7 @@ nextflow_pipeline {
                 { assert new File("$outputDir/trimgalore/WT_REP1_1.fastq.gz_trimming_report.txt").exists() },
                 { assert new File("$outputDir/trimgalore/WT_REP1_2.fastq.gz_trimming_report.txt").exists() },
                 { assert new File("$outputDir/trimgalore/WT_REP2_1.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists() }                                                    
+                { assert new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists() }
             )
         }
 

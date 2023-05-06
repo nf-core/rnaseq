@@ -28,7 +28,7 @@ jobs:
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker"] # TODO Add singularity/conda
-        component: ["pipeline"] # TODO , "subworkflows", "modules"]
+        component: ['hisat2', 'salmon', 'star_rsem', 'star_salmon'] # TODO , "subworkflows", "modules"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

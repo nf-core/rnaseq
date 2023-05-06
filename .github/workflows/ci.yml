@@ -23,7 +23,7 @@ jobs:
         test:
           - "default"
         profile: ["docker"]
-        component: ['hisat2', 'salmon', 'star_rsem', 'star_salmon']
+        aligner: ["hisat2", "salmon", "star_rsem", "star_salmon"]
         exclude:
           - NXF_VER: "latest-everything"
             profile: "conda"
@@ -67,10 +67,9 @@ jobs:
         run: conda clean -a
 
       - name: Run nf-test
-        run: nf-test test --profile=${{ matrix.profile }} tests/pipeline/${{ matrix.component }}/${{ matrix.tags }}/*.nf.test --junitxml=${{ matrix.tags }}.xml
+        run: nf-test test tests/pipeline/${{ matrix.aligner }}/*.nf.test --tap=test.tap
 
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: always() # always run even if the previous step fails
+      - uses: pcolby/tap-summary@v1
         with:
-          report_paths: "default.xml"
+          path: >-
+            test.tap

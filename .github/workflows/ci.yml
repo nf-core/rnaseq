@@ -23,6 +23,7 @@ jobs:
         test:
           - "default"
         profile: ["docker"]
+        component: ['hisat2', 'salmon', 'star_rsem', 'star_salmon']
         exclude:
           - NXF_VER: "latest-everything"
             profile: "conda"

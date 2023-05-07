@@ -3,7 +3,7 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-04-24T21:57:56+0000"
+        "timestamp": "2023-05-07T04:06:28+0000"
     },
     "star_salmon/featurecounts/": {
         "content": [
@@ -13,13 +13,19 @@
             "WT_REP1.featureCounts.txt:md5,7aadafd0a26f5047a9ae7266eccfce05",
             "WT_REP2.featureCounts.txt:md5,809af01851125c401d576c21efca7b5a"
         ],
-        "timestamp": "2023-04-24T21:57:56+0000"
+        "timestamp": "2023-05-07T04:06:28+0000"
     },
     "software_versions": {
         "content": [
             "software_versions.yml:md5,542e9861aa6537191c81facaa9da6349"
         ],
-        "timestamp": "2023-04-24T21:57:56+0000"
+        "timestamp": "2023-05-07T04:06:28+0000"
+    },
+    "star_salmon": {
+        "content": [
+            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
+        ],
+        "timestamp": "2023-05-07T04:06:28+0000"
     },
     "salmon": {
         "content": [
@@ -28,13 +34,7 @@
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-24T21:57:56+0000"
-    },
-    "star_salmon": {
-        "content": [
-            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
-        ],
-        "timestamp": "2023-04-24T21:57:56+0000"
+        "timestamp": "2023-05-07T04:06:28+0000"
     },
     "multiqc": {
         "content": [
@@ -44,14 +44,14 @@
             "multiqc_fail_strand_check_table.txt:md5,0298cedc2afece259aaddea4ea1dbef6",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
             "multiqc_featurecounts_biotype_plot.txt:md5,1fed8ad7b56cdf9484f2210b1c94b8de",
-            "multiqc_sortmerna.txt:md5,8656e26e65c9ad2d3017003b00052796"
+            "multiqc_sortmerna.txt:md5,797ebb14c37c3a4d10eb0731db4b671c"
         ],
-        "timestamp": "2023-04-24T21:57:56+0000"
+        "timestamp": "2023-05-07T04:06:28+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-24T21:57:56+0000"
+        "timestamp": "2023-05-07T04:06:28+0000"
     }
 }

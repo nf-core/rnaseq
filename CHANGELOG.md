@@ -3,6 +3,23 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.11.2](https://github.com/nf-core/rnaseq/releases/tag/3.11.2)] - 2023-04-25
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Rob Syme](https://github.com/robsyme)
+- [W. Lee Pang](https://github.com/wleepang)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
+### Enhancements & fixes
+
+- [[#1003](https://github.com/nf-core/rnaseq/pull/1003)] - `FASTQ_SUBSAMPLE_FQ_SALMON:SALMON_INDEX` is launched multiple times and fails
+
 ## [[3.11.1](https://github.com/nf-core/rnaseq/releases/tag/3.11.1)] - 2023-03-31
 
 ### Credits

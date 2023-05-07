@@ -5,32 +5,9 @@
         ],
         "timestamp": "2023-05-07T01:30:14+0000"
     },
-    "hisat2/bigwig/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.forward.bigWig:md5,b00167c81cf99d088ef36cfbe73dd4c0",
-            "RAP1_IAA_30M_REP1.reverse.bigWig:md5,49c91447415fe58e0e12a42d1e204413",
-            "RAP1_UNINDUCED_REP1.forward.bigWig:md5,5bafde76df98023212350e1d0c77ee97",
-            "RAP1_UNINDUCED_REP1.reverse.bigWig:md5,eb5ecce02b6b206e9970070c4e1dad22",
-            "RAP1_UNINDUCED_REP2.forward.bigWig:md5,40916b3a8a8bc183795573ed5014f5f2",
-            "RAP1_UNINDUCED_REP2.reverse.bigWig:md5,c49afa16b0e2be87a043ceb45fd6b13b",
-            "WT_REP1.forward.bigWig:md5,b41fa148408c0969f53886d66236f844",
-            "WT_REP1.reverse.bigWig:md5,bd0a7dbda673cada114ab2f5609faae6"
-        ],
-        "timestamp": "2023-05-07T01:30:14+0000"
-    },
     "software_versions": {
         "content": [
             "software_versions.yml:md5,0c6fefa328fb51e088ae4245bba4f8e2"
-        ],
-        "timestamp": "2023-05-07T01:30:14+0000"
-    },
-    "hisat2/qualimap/": {
-        "content": [
-            "rnaseq_qc_results.txt:md5,cf517b84668790f3abddedc79246a3fe",
-            "rnaseq_qc_results.txt:md5,675566093da1bb93e0ba2195a029706a",
-            "rnaseq_qc_results.txt:md5,200ad62a93ce4995af9ffe686c6cc1f4",
-            "rnaseq_qc_results.txt:md5,2d7ef162c95fede85dca466bab3ba605",
-            "rnaseq_qc_results.txt:md5,09508917659c8448598bf8b4f1a8f938"
         ],
         "timestamp": "2023-05-07T01:30:14+0000"
     },
@@ -50,15 +27,6 @@
         ],
         "timestamp": "2023-05-07T01:30:14+0000"
     },
-    "hisat2/log/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.hisat2.summary.log:md5,bd2d1301bb24a91adf4ac50157d76a81",
-            "RAP1_UNINDUCED_REP1.hisat2.summary.log:md5,e322e4f7bce12d889a59db517c2ad678",
-            "RAP1_UNINDUCED_REP2.hisat2.summary.log:md5,3f41605b1fbd4d40983915617f8a91f9",
-            "WT_REP1.hisat2.summary.log:md5,50cd2a4fe1f041774c572d09156d4ae8"
-        ],
-        "timestamp": "2023-05-07T01:30:14+0000"
-    },
     "hisat2/featurecounts/": {
         "content": [
             "RAP1_IAA_30M_REP1.featureCounts.txt:md5,eedff929765dbc950528ee499e6d63ba",
@@ -71,25 +39,20 @@
     },
     "hisat2/rseqc/": {
         "content": [
-            "RAP1_IAA_30M_REP1.bam_stat.txt:md5,29b2037af7dcbfba1bb9622e55e4213c",
             "RAP1_UNINDUCED_REP1.bam_stat.txt:md5,ae7a5e0ec19906b5f9e2fdb397ad14f3",
             "RAP1_UNINDUCED_REP2.bam_stat.txt:md5,494fd84c2550aab95335092b9a12b582",
             "WT_REP1.bam_stat.txt:md5,ae49a89df9a95984e0dcbde12b4f6c95",
             "WT_REP2.bam_stat.txt:md5,3dc7a3e286e4c244b08df72010060696",
-            "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,1d4348685fa61819ff8076213d0873b3",
             "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,3ee0f64e82f0b1ac16b5f3e2b30b024c",
             "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,3d17628d178e5a3cc9dc03f32614bff7",
             "WT_REP1.infer_experiment.txt:md5,13e3c748f5b968455a39eb9fefd87053",
             "WT_REP2.infer_experiment.txt:md5,230910b354a5531d1c4bf711ccd6e493",
-            "RAP1_IAA_30M_REP1.junction.bed:md5,c7fe9b702a48df88e7020bde09735448",
             "RAP1_UNINDUCED_REP1.junction.bed:md5,52a8150e3e4605f94519072fee16449b",
             "RAP1_UNINDUCED_REP2.junction.bed:md5,de5f7324e1e1958713b7460c9881e42e",
             "WT_REP1.junction.bed:md5,f5a188b82b4b993abf101b046043852c",
             "WT_REP2.junction.bed:md5,3d32038159734b9f1c9d366a090127d4",
-            "RAP1_IAA_30M_REP1.junction_annotation.log:md5,7c085356639afa10cc4e32433b74ab36",
             "WT_REP1.junction_annotation.log:md5,934d6b1d55cb31cbfe183c7f838dc580",
             "WT_REP2.junction_annotation.log:md5,02bf2e27dfd72fb89f3689c955dc57ed",
-            "RAP1_IAA_30M_REP1.read_distribution.txt:md5,3da3f5cd6f2176581126d18f79a4a1f7",
             "RAP1_UNINDUCED_REP1.read_distribution.txt:md5,8324ffb159a4e40555e6d088d7aa6e7f",
             "RAP1_UNINDUCED_REP2.read_distribution.txt:md5,a658f427236d094aef6e65ea512a2642",
             "WT_REP1.read_distribution.txt:md5,4202e7e0b800e897e76a5ce8bdd804d1",

@@ -5,19 +5,6 @@
         ],
         "timestamp": "2023-05-07T00:57:43+0000"
     },
-    "hisat2/bigwig/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.forward.bigWig:md5,b00167c81cf99d088ef36cfbe73dd4c0",
-            "RAP1_IAA_30M_REP1.reverse.bigWig:md5,c9ae036650d73b275dfa1348c17fb773",
-            "RAP1_UNINDUCED_REP1.forward.bigWig:md5,5bafde76df98023212350e1d0c77ee97",
-            "RAP1_UNINDUCED_REP1.reverse.bigWig:md5,eb5ecce02b6b206e9970070c4e1dad22",
-            "RAP1_UNINDUCED_REP2.forward.bigWig:md5,40916b3a8a8bc183795573ed5014f5f2",
-            "RAP1_UNINDUCED_REP2.reverse.bigWig:md5,c49afa16b0e2be87a043ceb45fd6b13b",
-            "WT_REP1.forward.bigWig:md5,b41fa148408c0969f53886d66236f844",
-            "WT_REP1.reverse.bigWig:md5,bd0a7dbda673cada114ab2f5609faae6"
-        ],
-        "timestamp": "2023-05-07T00:57:43+0000"
-    },
     "software_versions": {
         "content": [
             "software_versions.yml:md5,eb948ada21aa4d9347d8b9b51fc74fd2"
@@ -27,15 +14,6 @@
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
-        ],
-        "timestamp": "2023-05-07T00:57:43+0000"
-    },
-    "hisat2/log/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.hisat2.summary.log:md5,4273e7a9d0fa8a93ec62e25a70a7e212",
-            "RAP1_UNINDUCED_REP1.hisat2.summary.log:md5,e322e4f7bce12d889a59db517c2ad678",
-            "RAP1_UNINDUCED_REP2.hisat2.summary.log:md5,3f41605b1fbd4d40983915617f8a91f9",
-            "WT_REP1.hisat2.summary.log:md5,50cd2a4fe1f041774c572d09156d4ae8"
         ],
         "timestamp": "2023-05-07T00:57:43+0000"
     },

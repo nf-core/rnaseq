@@ -40,7 +40,6 @@
         "content": [
             "junction_saturation_known.txt:md5,7fb002deec1752d8e2065b693624191c",
             "junction_saturation_novel.txt:md5,7fb002deec1752d8e2065b693624191c",
-            "multiqc_dupradar-plot.txt:md5,4fe4e29233fc3923e235c78f45bfdd44",
             "multiqc_fail_strand_check_table.txt:md5,0298cedc2afece259aaddea4ea1dbef6",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
             "multiqc_featurecounts_biotype_plot.txt:md5,1fed8ad7b56cdf9484f2210b1c94b8de",

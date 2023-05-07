@@ -3,7 +3,7 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "star_salmon/bigwig/": {
         "content": [
@@ -18,19 +18,19 @@
             "WT_REP2.forward.bigWig:md5,2b3a15b511efdbc838574200ee2bec0c",
             "WT_REP2.reverse.bigWig:md5,d10cbea27b82745b46077191d3ff2820"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,ac84cffebf7d5223d2a97f0b156db063"
+            "software_versions.yml:md5,f6b9cea45ca8190d5c3470bdc1594be9"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "star_salmon/dupradar/": {
         "content": [
@@ -45,13 +45,13 @@
             "WT_REP1_intercept_slope.txt:md5,7fca16a894adc1cd2bdd9dc8c10c4609",
             "WT_REP2_intercept_slope.txt:md5,0121e2107103373c66da352a2888fb2d"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "star_salmon/rseqc/": {
         "content": [
@@ -79,7 +79,7 @@
             "WT_REP1.read_distribution.txt:md5,7521690f215bf27fe161b8e6d7c38769",
             "WT_REP2.read_distribution.txt:md5,c11d02cba5674017b90c8372abee3e39"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "bbsplit": {
         "content": [
@@ -88,7 +88,7 @@
             "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
             "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "multiqc": {
         "content": [
@@ -102,7 +102,7 @@
             "rseqc_read_dups.txt:md5,e4edf12f49c1b12c97fa9a630a0bbacb",
             "rseqc_junction_saturation_all.txt:md5,7fb002deec1752d8e2065b693624191c"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "star_salmon/qualimap/": {
         "content": [
@@ -112,12 +112,12 @@
             "rnaseq_qc_results.txt:md5,6bb8c2b18eb67b015bba7d92944cd687",
             "rnaseq_qc_results.txt:md5,401d4141bd4d884b35faa4cb497311f7"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-26T20:14:45+0000"
+        "timestamp": "2023-05-07T16:08:23+0000"
     }
 }

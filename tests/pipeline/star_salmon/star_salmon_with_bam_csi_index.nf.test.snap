@@ -3,7 +3,7 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "star_salmon/featurecounts/": {
         "content": [
@@ -13,28 +13,28 @@
             "WT_REP1.featureCounts.txt:md5,112001ddbe917d935ee276d1685840bd",
             "WT_REP2.featureCounts.txt:md5,59e23ae18cfe6aa2e5a884bc03cbff15"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,17b75814a322452ffd4003c525d7f0c6"
+            "software_versions.yml:md5,427a3fbecbaf15de334a3f1b3fbaece6"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "salmon": {
         "content": [
-            "salmon.merged.gene_counts.tsv:md5,b6022a5dcd91020e7922a4f421ec41e2",
-            "salmon.merged.transcript_counts.tsv:md5,4a39870dd438ed74b57220b1bf968e0e",
+            "salmon.merged.gene_counts.tsv:md5,69fe1bd4668b04176f3f72fc71d6fb09",
+            "salmon.merged.transcript_counts.tsv:md5,a205d29830c3f0f3a5586d6bc463b560",
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "star_salmon/rseqc/": {
         "content": [
@@ -62,7 +62,7 @@
             "WT_REP1.DupRate_plot.r:md5,99e3eac32a2a2b508501c35c1cccd2bc",
             "WT_REP2.DupRate_plot.r:md5,c61f96c3761940feed3f60950ef8ac84"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "multiqc": {
         "content": [
@@ -72,12 +72,12 @@
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
             "multiqc_featurecounts_biotype_plot.txt:md5,49114c02ced51d9a257365cd4c4ad0e8"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-05-07T02:28:55+0000"
+        "timestamp": "2023-05-07T17:17:57+0000"
     }
 }

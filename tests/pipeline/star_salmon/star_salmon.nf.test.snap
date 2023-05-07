@@ -3,7 +3,7 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-04-25T03:38:29+0000"
+        "timestamp": "2023-05-07T17:53:15+0000"
     },
     "star_salmon/featurecounts/": {
         "content": [
@@ -13,13 +13,19 @@
             "WT_REP1.featureCounts.txt:md5,112001ddbe917d935ee276d1685840bd",
             "WT_REP2.featureCounts.txt:md5,59e23ae18cfe6aa2e5a884bc03cbff15"
         ],
-        "timestamp": "2023-04-25T03:38:29+0000"
+        "timestamp": "2023-05-07T17:53:15+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,85748c1fcaa9c0209e5997448d5f24c9"
+            "software_versions.yml:md5,c7123026d75281438774d84885757f27"
         ],
-        "timestamp": "2023-04-25T03:38:29+0000"
+        "timestamp": "2023-05-07T17:53:15+0000"
+    },
+    "star_salmon": {
+        "content": [
+            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
+        ],
+        "timestamp": "2023-05-07T17:53:15+0000"
     },
     "salmon": {
         "content": [
@@ -28,13 +34,7 @@
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-25T03:38:29+0000"
-    },
-    "star_salmon": {
-        "content": [
-            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
-        ],
-        "timestamp": "2023-04-25T03:38:29+0000"
+        "timestamp": "2023-05-07T17:53:15+0000"
     },
     "multiqc": {
         "content": [
@@ -44,12 +44,12 @@
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
             "multiqc_featurecounts_biotype_plot.txt:md5,49114c02ced51d9a257365cd4c4ad0e8"
         ],
-        "timestamp": "2023-04-25T03:38:29+0000"
+        "timestamp": "2023-05-07T17:53:15+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-04-25T03:38:29+0000"
+        "timestamp": "2023-05-07T17:53:15+0000"
     }
 }

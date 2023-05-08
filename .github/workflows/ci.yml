@@ -44,20 +44,13 @@ jobs:
           wget -qO- https://code.askimed.com/install/nf-test | bash
           sudo mv nf-test /usr/local/bin/
 
-      - name: Run nf-test
-        run: nf-test test tests/pipeline/${{ matrix.aligner }}/ --tap=test.tap
+      - name: Run nf-test and cat software_versions.yml
+        run: |
+          nf-test test tests/pipeline/${{ matrix.aligner }}/hisat2_skip_qc.nf.test --tap=test.tap
+          cp output/pipeline_info/software_versions.yml > software_versions.yml
+          cat software_versions.yml
+
       - uses: pcolby/tap-summary@v1
         with:
           path: >-
             test.tap
-
-      - name: cat software_versions.yml
-        run: cp output/pipeline_info/software_versions.yml > software_versions.yml
-      - uses: pCYSl5EDgo/cat@master
-        id: versions
-        with:
-          path: software_versions.yml
-
-      - run: echo $TEXT
-        env:
-          TEXT: ${{ steps.versions.output.text }}

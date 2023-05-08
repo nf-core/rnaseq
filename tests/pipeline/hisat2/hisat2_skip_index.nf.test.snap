@@ -68,15 +68,5 @@
             "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
         "timestamp": "2023-05-08T18:26:41+0000"
-    },
-    "hisat2/dupradar/intercepts_slope/": {
-        "content": [
-            "RAP1_IAA_30M_REP1_intercept_slope.txt:md5,1285c70833b46849b726412858736ed7",
-            "RAP1_UNINDUCED_REP1_intercept_slope.txt:md5,dbe157a43a322bee6ed1a93045bfb892",
-            "RAP1_UNINDUCED_REP2_intercept_slope.txt:md5,117712525fcbd396f77710f4f4b605d9",
-            "WT_REP1_intercept_slope.txt:md5,df33cbc6c3cb1c85c0c06cdba7df3873",
-            "WT_REP2_intercept_slope.txt:md5,24bca92fb74f62cb079a01b9a86d3882"
-        ],
-        "timestamp": "2023-05-08T18:26:41+0000"
     }
 }

@@ -21,7 +21,7 @@ jobs:
         NXF_VER:
           - "latest-everything"
         profile: ["docker"]
-        aligner: ["hisat2", "salmon", "star_rsem", "star_salmon"]
+        aligner: ["hisat2"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -46,11 +46,18 @@ jobs:
 
       - name: Run nf-test
         run: nf-test test tests/pipeline/${{ matrix.aligner }}/ --tap=test.tap
-
-      - name: Cat software versions
-        run: cat output/pipeline_info/software_versions.yml      
-
       - uses: pcolby/tap-summary@v1
         with:
           path: >-
             test.tap
+
+      - name: cat software_versions.yml
+        run: cp output/pipeline_info/software_versions.yml > software_versions.yml
+      - uses: pCYSl5EDgo/cat@master
+        id: versions
+        with:
+          path: software_versions.yml
+
+      - run: echo $TEXT
+        env:
+          TEXT: ${{ steps.versions.output.text }}

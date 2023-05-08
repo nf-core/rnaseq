@@ -30,8 +30,6 @@
         "content": [
             "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
             "multiqc_fastqc.txt:md5,e3ebd5c2676bebb3c0176c4e985f3580",
-            "multiqc_picard_dups.txt:md5,0e258d3ce451fa5233c81a631c807636",
-            "multiqc_rsem.txt:md5,426cfb38a96c0d7111336be3164171fb",
             "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
         "timestamp": "2023-05-08T18:41:34+0000"

@@ -52,7 +52,7 @@ jobs:
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /home/runner/.nf-test/*/output/pipeline_info/software_versions.yml
+          batcat --decorations=always --color=always /home/runner/work/rnaseq/rnaseq/.nf-test/*/output/pipeline_info/software_versions.yml
 
       - uses: pcolby/tap-summary@v1
         with:

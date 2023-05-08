@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: Run ${{ matrix.profile }}-${{ matrix.NXF_VER }} pipeline test
+    name: Run ${{ matrix.profile }}-${{ matrix.NXF_VER }}-${{ matrix.aligner }} pipeline test
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
     runs-on: ubuntu-latest
@@ -20,13 +20,9 @@ jobs:
       matrix:
         NXF_VER:
           - "latest-everything"
-        test:
-          - "default"
         profile: ["docker"]
         aligner: ["hisat2", "salmon", "star_rsem", "star_salmon"]
-        exclude:
-          - NXF_VER: "latest-everything"
-            profile: "conda"
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3

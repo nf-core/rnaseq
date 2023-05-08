@@ -21,7 +21,7 @@ jobs:
         NXF_VER:
           - "latest-everything"
         profile: ["docker"]
-        aligner: ["salmon"]
+        aligner: ["salmon", "hisat2", "star_rsem", "star_salmon"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -46,13 +46,12 @@ jobs:
 
       - name: Run nf-test and cat software_versions.yml
         run: |
-          nf-test test tests/pipeline/${{ matrix.aligner }}/salmon_skip_qc_alignment.nf.test --tap=test.tap
+          nf-test test tests/pipeline/${{ matrix.aligner }}/ --tap=test.tap
 
       - name: Output log on failure
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          ls -a /home/runner/work/rnaseq/rnaseq/
           batcat --decorations=always --color=always /home/runner/work/rnaseq/rnaseq/.nf-test/tests/*/output/pipeline_info/software_versions.yml
 
       - uses: pcolby/tap-summary@v1

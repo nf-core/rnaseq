@@ -46,7 +46,7 @@ jobs:
 
       - name: Run nf-test and cat software_versions.yml
         run: |
-          nf-test test tests/pipeline/${{ matrix.aligner }}/hisat2_skip_qc.nf.test --tap=test.tap
+          nf-test test tests/pipeline/${{ matrix.aligner }}/salmon_skip_qc_alignment.nf.test --tap=test.tap
 
       - name: Output log on failure
         if: failure()

@@ -3,7 +3,7 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "star_salmon/featurecounts/": {
         "content": [
@@ -13,19 +13,19 @@
             "WT_REP1.featureCounts.txt:md5,ed8d30e9af41ea3d27aa8c478cd07393",
             "WT_REP2.featureCounts.txt:md5,7b6767ffad35944fb3b236abec9b22f3"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,d3b0b11806061248c8d7aa039f6078ba"
+            "software_versions.yml:md5,266e759d921bdca8b665d8dc35a408c9"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "salmon": {
         "content": [
@@ -34,7 +34,7 @@
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "multiqc": {
         "content": [
@@ -45,13 +45,13 @@
             "multiqc_fastp.txt:md5,85af4aa53b468193e26e104636ec0fec",
             "multiqc_featurecounts_biotype_plot.txt:md5,9797a1fab36e640a9413050abf7adf3b"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     },
     "fastp": {
         "content": [
@@ -61,6 +61,6 @@
             "WT_REP1.fastp.json:md5,dcc63871de44796c2be69c2b4ab41b2f",
             "WT_REP2.fastp.json:md5,d5d6dcccbb39ed923b97c4c3f4c06d69"
         ],
-        "timestamp": "2023-05-07T17:35:45+0000"
+        "timestamp": "2023-05-08T20:12:07+0000"
     }
 }

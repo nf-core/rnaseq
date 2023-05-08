@@ -3,13 +3,13 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,3a7d1904049112c58db5918cac2706a6"
+            "software_versions.yml:md5,5f53c021fd14a3351ae720e61cfbb8ab"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "hisat2/dupradar/gene_data/": {
         "content": [
@@ -19,13 +19,13 @@
             "WT_REP1_dupMatrix.txt:md5,11371da7a087879340c2e7e6842a5d89",
             "WT_REP2_dupMatrix.txt:md5,5176c7447c4295f94e2683dd9995cea0"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "hisat2/featurecounts/": {
         "content": [
@@ -35,7 +35,7 @@
             "WT_REP1.featureCounts.txt:md5,39721c0d981304996438bc2f505bf98c",
             "WT_REP2.featureCounts.txt:md5,702446d50a5019c84fcef85d1cfef78c"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "hisat2/rseqc/": {
         "content": [
@@ -58,7 +58,7 @@
             "WT_REP1.read_distribution.txt:md5,4202e7e0b800e897e76a5ce8bdd804d1",
             "WT_REP2.read_distribution.txt:md5,b16004cf92f131094bc87c1aa3a9bd73"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "multiqc": {
         "content": [
@@ -67,7 +67,7 @@
             "multiqc_picard_dups.txt:md5,71d5bafee1a4916951349018f387f7a0",
             "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     },
     "hisat2/dupradar/intercepts_slope/": {
         "content": [
@@ -77,6 +77,6 @@
             "WT_REP1_intercept_slope.txt:md5,df33cbc6c3cb1c85c0c06cdba7df3873",
             "WT_REP2_intercept_slope.txt:md5,24bca92fb74f62cb079a01b9a86d3882"
         ],
-        "timestamp": "2023-05-07T15:45:30+0000"
+        "timestamp": "2023-05-08T18:26:41+0000"
     }
 }

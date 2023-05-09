@@ -167,7 +167,7 @@ Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspa
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/rnaseq --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/rnaseq --input <SAMPLESHEET> --outdir <OUTDIR> --genome GRCh37 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -196,8 +196,8 @@ nextflow run nf-core/rnaseq -profile docker -params-file params.yaml
 with `params.yaml` containing:
 
 ```yaml
-input: './samplesheet.csv'
-outdir: './results/'
+input: <SAMPLESHEET>
+outdir: <OUTDIR>
 genome: 'GRCh37'
 <...>
 ```

@@ -3,19 +3,19 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,692debbb3d98fde9a2a1762078a8af6b"
+            "software_versions.yml:md5,b5ecb4c9bfd283f0ef4eae1a240f689a"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     },
     "bbsplit": {
         "content": [
@@ -24,7 +24,7 @@
             "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
             "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     },
     "multiqc": {
         "content": [
@@ -32,7 +32,7 @@
             "multiqc_fastqc.txt:md5,e3ebd5c2676bebb3c0176c4e985f3580",
             "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     },
     "star_rsem/bigwig/": {
         "content": [
@@ -45,7 +45,7 @@
             "WT_REP1.forward.bigWig:md5,40a41e03064aa1e2a2fc00400a6dd9f8",
             "WT_REP1.reverse.bigWig:md5,823282b3f27b0c26db805f497f47bf9c"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     },
     "star_rsem": {
         "content": [
@@ -60,6 +60,6 @@
             "WT_REP2.genes.results:md5,78387c8f57175756fda9c153790f3d37",
             "WT_REP2.isoforms.results:md5,89bd225b6702ec3edbe13d9443fce40f"
         ],
-        "timestamp": "2023-05-08T18:41:34+0000"
+        "timestamp": "2023-05-09T20:29:23+0000"
     }
 }

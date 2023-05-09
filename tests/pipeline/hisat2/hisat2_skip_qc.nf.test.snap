@@ -3,19 +3,19 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-05-08T18:31:28+0000"
+        "timestamp": "2023-05-09T20:02:00+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,3ef1180b059398ea06240e301111ff4d"
+            "software_versions.yml:md5,2c8d0339a8a5269c3c73fb3945f48a54"
         ],
-        "timestamp": "2023-05-08T18:31:28+0000"
+        "timestamp": "2023-05-09T20:02:00+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-08T18:31:28+0000"
+        "timestamp": "2023-05-09T20:02:00+0000"
     },
     "multiqc": {
         "content": [
@@ -24,6 +24,6 @@
             "multiqc_picard_dups.txt:md5,71d5bafee1a4916951349018f387f7a0",
             "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
-        "timestamp": "2023-05-08T18:31:28+0000"
+        "timestamp": "2023-05-09T20:02:00+0000"
     }
 }

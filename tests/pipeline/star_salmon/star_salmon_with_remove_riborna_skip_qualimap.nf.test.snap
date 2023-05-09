@@ -3,25 +3,25 @@
         "content": [
             "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
         ],
-        "timestamp": "2023-05-08T21:27:54+0000"
+        "timestamp": "2023-05-09T22:54:41+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,4c40a41c26da8858467bd524bd7ff9e6"
+            "software_versions.yml:md5,137f680d3792379252af2798d91c82b2"
         ],
-        "timestamp": "2023-05-08T21:27:54+0000"
+        "timestamp": "2023-05-09T22:54:41+0000"
     },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-08T21:27:54+0000"
+        "timestamp": "2023-05-09T22:54:41+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-08T21:27:54+0000"
+        "timestamp": "2023-05-09T22:54:41+0000"
     },
     "multiqc": {
         "content": [
@@ -30,12 +30,12 @@
             "multiqc_fail_strand_check_table.txt:md5,0298cedc2afece259aaddea4ea1dbef6",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3"
         ],
-        "timestamp": "2023-05-08T21:27:54+0000"
+        "timestamp": "2023-05-09T22:54:41+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-05-08T21:27:54+0000"
+        "timestamp": "2023-05-09T22:54:41+0000"
     }
 }

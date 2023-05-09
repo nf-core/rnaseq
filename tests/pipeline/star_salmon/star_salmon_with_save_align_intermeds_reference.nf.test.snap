@@ -17,16 +17,6 @@
         ],
         "timestamp": "2023-05-08T19:39:48+0000"
     },
-    "star_salmon/featurecounts/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.featureCounts.txt:md5,b38da3230d4d29ebc8d4af36852d7212",
-            "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,e6fde600eb75c3ac4dc8521e5c55090d",
-            "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,480b2586a878bc22f5b73f94051b41d8",
-            "WT_REP1.featureCounts.txt:md5,112001ddbe917d935ee276d1685840bd",
-            "WT_REP2.featureCounts.txt:md5,59e23ae18cfe6aa2e5a884bc03cbff15"
-        ],
-        "timestamp": "2023-05-08T19:39:48+0000"
-    },
     "software_versions": {
         "content": [
             "software_versions.yml:md5,1dacbb94b6df6b5e05448e60967d828e"
@@ -41,10 +31,7 @@
     },
     "salmon": {
         "content": [
-            "salmon.merged.gene_counts.tsv:md5,69fe1bd4668b04176f3f72fc71d6fb09",
-            "salmon.merged.transcript_counts.tsv:md5,a205d29830c3f0f3a5586d6bc463b560",
-            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
-            "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
+            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
         "timestamp": "2023-05-08T19:39:48+0000"
     },
@@ -53,8 +40,7 @@
             "junction_saturation_known.txt:md5,7fb002deec1752d8e2065b693624191c",
             "junction_saturation_novel.txt:md5,7fb002deec1752d8e2065b693624191c",
             "multiqc_fail_strand_check_table.txt:md5,7797d69bfc52161c55e12f29e1bf51b4",
-            "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3",
-            "multiqc_featurecounts_biotype_plot.txt:md5,49114c02ced51d9a257365cd4c4ad0e8"
+            "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3"
         ],
         "timestamp": "2023-05-08T19:39:48+0000"
     },

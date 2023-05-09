@@ -5,16 +5,6 @@
         ],
         "timestamp": "2023-05-08T19:29:52+0000"
     },
-    "star_salmon/featurecounts/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.featureCounts.txt:md5,fec4e1a7d6388721e7ebac6645b90844",
-            "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,519349e9146b11d1d38da3326bbf0661",
-            "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,85253e33d8ce66e93f35ab066694e807",
-            "WT_REP1.featureCounts.txt:md5,f221db0a4e34c472f19d49b7b35cf19f",
-            "WT_REP2.featureCounts.txt:md5,185c289d11bcb512bfa83b8006fa5126"
-        ],
-        "timestamp": "2023-05-08T19:29:52+0000"
-    },
     "software_versions": {
         "content": [
             "software_versions.yml:md5,9263c89456b9b295107c88a222937be0"
@@ -29,10 +19,7 @@
     },
     "salmon": {
         "content": [
-            "salmon.merged.gene_counts.tsv:md5,93a82b984e99ad8233e4f236e82350ca",
-            "salmon.merged.transcript_counts.tsv:md5,76e6c6fe186574832e58f0522e410b05",
-            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e",
-            "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
+            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
         "timestamp": "2023-05-08T19:29:52+0000"
     },

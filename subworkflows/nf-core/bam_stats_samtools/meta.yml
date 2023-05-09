@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: bam_stats_samtools
 description: Produces comprehensive statistics from SAM/BAM/CRAM file
 keywords:

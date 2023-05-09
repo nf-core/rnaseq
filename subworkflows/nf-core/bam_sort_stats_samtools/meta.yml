@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: bam_sort_stats_samtools
 description: Sort SAM/BAM/CRAM file
 keywords:

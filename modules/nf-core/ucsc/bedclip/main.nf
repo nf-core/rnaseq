@@ -6,7 +6,7 @@ process UCSC_BEDCLIP {
     conda "bioconda::ucsc-bedclip=377"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ucsc-bedclip:377--h0b8a92a_2' :
-        'quay.io/biocontainers/ucsc-bedclip:377--h0b8a92a_2' }"
+        'biocontainers/ucsc-bedclip:377--h0b8a92a_2' }"
 
     input:
     tuple val(meta), path(bedgraph)

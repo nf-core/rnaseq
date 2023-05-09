@@ -1,6 +1,7 @@
 name: cat_fastq
 description: Concatenates fastq files
 keywords:
+  - cat
   - fastq
   - concatenate
 tools:
@@ -16,7 +17,7 @@ input:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - reads:
-      type: list
+      type: file
       description: |
         List of input FastQ files to be concatenated.
 output:

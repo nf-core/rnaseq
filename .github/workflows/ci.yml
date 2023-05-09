@@ -1,35 +1,54 @@
+# This is the nf-core CI workflow configuration for GitHub Actions
 name: nf-core CI
-# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+
+# This workflow is triggered when a pull request is made to the 'dev' branch or when a new release is published
 on:
-  push:
+  pull_request:
     branches:
       - dev
-  pull_request:
   release:
     types: [published]
 
+# Setting environment variable for Nextflow logs
 env:
   NXF_ANSI_LOG: false
 
-concurrency:
-  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
-  cancel-in-progress: true
-
+# Define the jobs to be run in parallel
 jobs:
   test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
+    # Name the job with the corresponding profile, Nextflow version and aligner
+    name: Run ${{ matrix.profile }}-${{ matrix.NXF_VER }}-${{ matrix.aligner }} pipeline test
+
+    # Set the condition for running the job
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
+
+    # Specify the OS for the job
     runs-on: ubuntu-latest
+
+    # Define the matrix for different Nextflow versions, profiles and aligners
     strategy:
       matrix:
         NXF_VER:
-          - "22.10.1"
           - "latest-everything"
+        profile: ["docker"]
+        aligner: ["salmon", "hisat2", "star_rsem", "star_salmon"]
+
+    # Define the steps for the job
     steps:
+      # Checkout the pipeline code from the repository
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
+      # Cache Test Data
+      - name: Cache test data
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/bin/nextflow
+          key: ${{ runner.os }}
+          restore-keys: |
+            ${{ runner.os }}-nextflow-
+
+      # Install the specified version of Nextflow
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
@@ -57,49 +76,17 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
-            echo "========== $f ============"
-            cat $f
-            echo "========================================"
-          done;
+          nf-test test tests/pipeline/${{ matrix.aligner }}/ --tap=test.tap
 
-      - name: Run pipeline with test data
+      # If the test fails, output the software_versions.yml using the 'batcat' utility
+      - name: Output log on failure
+        if: failure()
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /home/runner/work/rnaseq/rnaseq/.nf-test/tests/*/output/pipeline_info/software_versions.yml
 
-  star_salmon:
-    name: Test STAR Salmon with workflow parameters
-    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--skip_trimming"
-          - "--gtf false"
-          - "--star_index false"
-          - "--transcript_fasta false"
-          - "--min_mapped_reads 90"
-          - "--with_umi"
-          - "--with_umi --skip_trimming"
-          - "--remove_ribo_rna --skip_qualimap"
-          - "--bam_csi_index"
-          - "--save_align_intermeds --save_reference"
-          - "--featurecounts_group_type false"
-          - "--trimmer fastp"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Hash Github Workspace
-        id: hash_workspace
-        run: |
-          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
-
-      - name: Cache test data
-        id: cache-testdata
-        uses: actions/cache@v3
+      # Use TAP summary to display test results
+      - uses: pcolby/tap-summary@v1
         with:
           path: test-datasets/
           key: ${{ steps.hash_workspace.outputs.digest }}

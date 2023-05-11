@@ -104,7 +104,7 @@ Many thanks to other who have helped out along the way too, including (but not l
 - [Alex Peltzer](https://github.com/apeltzer)
 - [Colin Davenport](https://github.com/colindaven)
 - [Denis Moreno](https://github.com/Galithil)
-- [Edumnd Miller](https://github.com/Emiller88)
+- [Edmund Miller](https://github.com/Emiller88)
 - [Gregor Sturm](https://github.com/grst)
 - [Jacki Buros Novik](https://github.com/jburos)
 - [Lorena Pantano](https://github.com/lpantano)

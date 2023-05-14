@@ -25,7 +25,7 @@ jobs:
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
           run_name: "aws_rnaseq_small"
-          profiles: test
+          profiles: test,public_aws_ecr
           parameters: |
             {
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}"

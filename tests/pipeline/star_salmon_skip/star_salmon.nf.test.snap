@@ -3,13 +3,13 @@
         "content": [
             "samplesheet.valid.csv:md5,21387c48b43947403fb84f5e33be9e9b"
         ],
-        "timestamp": "2023-05-25T15:52:40+0000"
+        "timestamp": "2023-05-25T16:54:59+0000"
     },
     "star_salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-25T15:52:40+0000"
+        "timestamp": "2023-05-25T16:54:59+0000"
     },
     "software_versions": {
         "content": [
@@ -54,18 +54,11 @@
                 "GTF2BED": {
                     "perl": "5.26.2"
                 },
-                "GTF_GENE_FILTER": {
-                    "python": "3.9.5"
-                },
                 "GUNZIP_ADDITIONAL_FASTA": {
                     "gunzip": "1.10"
                 },
                 "GUNZIP_GTF": {
                     "gunzip": "1.10"
-                },
-                "MAKE_TRANSCRIPTS_FASTA": {
-                    "rsem": "1.3.1",
-                    "star": "2.7.10a"
                 },
                 "MULTIQC_CUSTOM_BIOTYPE": {
                     "python": "3.9.5"
@@ -96,9 +89,6 @@
                 },
                 "RSEQC_READDUPLICATION": {
                     "rseqc": "3.0.1"
-                },
-                "SALMON_INDEX": {
-                    "salmon": "1.10.1"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.1"
@@ -158,70 +148,21 @@
                 "UCSC_BEDGRAPHTOBIGWIG": {
                     "ucsc": "377"
                 },
+                "UNTAR_SALMON_INDEX": {
+                    "untar": "1.30"
+                },
                 "Workflow": {
                     "nf-core/rnaseq": "3.12.0dev"
                 }
             }
         ],
-        "timestamp": "2023-05-25T15:52:40+0000"
-    },
-    "star_salmon/dupradar/": {
-        "content": [
-            "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,2e0d518a450bb57801cdd075d4e9c217",
-            "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,69e430072a4718482a375bf62a124877",
-            "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,28c30ce734d78d53b1c47c3f87414e4b",
-            "WT_REP1_dupMatrix.txt:md5,b6aa1b99d91f5fa7a94efeed1c496c00",
-            "WT_REP2_dupMatrix.txt:md5,02236769150436cf31b7339f612119a5",
-            "RAP1_IAA_30M_REP1_intercept_slope.txt:md5,b0762300e01b6daf5f743290e02affac",
-            "RAP1_UNINDUCED_REP1_intercept_slope.txt:md5,fbba759ef68dd7552f68f80ffd9e48ab",
-            "RAP1_UNINDUCED_REP2_intercept_slope.txt:md5,42a2c064ceb479cc462cac448824f1da",
-            "WT_REP1_intercept_slope.txt:md5,7fca16a894adc1cd2bdd9dc8c10c4609",
-            "WT_REP2_intercept_slope.txt:md5,0121e2107103373c66da352a2888fb2d"
-        ],
-        "timestamp": "2023-05-25T15:52:40+0000"
+        "timestamp": "2023-05-25T16:54:59+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-25T15:52:40+0000"
-    },
-    "star_salmon/rseqc/": {
-        "content": [
-            "RAP1_IAA_30M_REP1.bam_stat.txt:md5,b882e444c89be4ceed80e29865166b1a",
-            "RAP1_UNINDUCED_REP1.bam_stat.txt:md5,d00442929f8a18945d4597167fe3bb6d",
-            "RAP1_UNINDUCED_REP2.bam_stat.txt:md5,447c12933610cb3e0aeb4560906332c6",
-            "WT_REP1.bam_stat.txt:md5,85d14e5c3943407e636186424fd766cb",
-            "WT_REP2.bam_stat.txt:md5,12ae5d98f3e5cf7b3a70eed45f12cbe2",
-            "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,169d25b95c008bebe9ce886fea6a4e33",
-            "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,2ca0ce0fd3204bd2cc4812c4655b1f1f",
-            "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,7d5705880188f9beab1939e08d6b8f40",
-            "WT_REP1.infer_experiment.txt:md5,bf0c137f5fca06e7c40e1984a1acb06d",
-            "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
-            "RAP1_IAA_30M_REP1.junction.bed:md5,abc741dcce71900d4145f3aaf3bd9c64",
-            "RAP1_UNINDUCED_REP1.junction.bed:md5,ce6b9b387adbad82a9bf798d07e65b15",
-            "RAP1_UNINDUCED_REP2.junction.bed:md5,112233f4d8b6c929e1b7d5ef74556436",
-            "WT_REP1.junction.bed:md5,a0082fba0e4222d41fc5e5c6ba6db453",
-            "WT_REP2.junction.bed:md5,0b01bf3d08378094bc063f123ed201d4",
-            "RAP1_IAA_30M_REP1.junction_annotation.log:md5,0c83bfd72c550d18a389ffebfb7549fc",
-            "WT_REP1.junction_annotation.log:md5,93ff20da87153de88c5686588330abd2",
-            "WT_REP2.junction_annotation.log:md5,1b95af725477bbe771ed4e7b7d693729",
-            "RAP1_IAA_30M_REP1.read_distribution.txt:md5,a181a8045a4aaee911e6acd60cc25d43",
-            "RAP1_UNINDUCED_REP1.read_distribution.txt:md5,1d91e11972e9b0a55035f4d9b2fa9b86",
-            "RAP1_UNINDUCED_REP2.read_distribution.txt:md5,ece206e073f3410f6e40d2ff91c9a714",
-            "WT_REP1.read_distribution.txt:md5,7521690f215bf27fe161b8e6d7c38769",
-            "WT_REP2.read_distribution.txt:md5,c11d02cba5674017b90c8372abee3e39"
-        ],
-        "timestamp": "2023-05-25T15:52:40+0000"
-    },
-    "bbsplit": {
-        "content": [
-            "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
-            "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
-            "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de"
-        ],
-        "timestamp": "2023-05-25T15:52:40+0000"
+        "timestamp": "2023-05-25T16:54:59+0000"
     },
     "multiqc": {
         "content": [
@@ -229,22 +170,12 @@
             "junction_saturation_novel.txt:md5,7fb002deec1752d8e2065b693624191c",
             "multiqc_fastqc.txt:md5,68bdc9b37911a79484e0333e82679fa3"
         ],
-        "timestamp": "2023-05-25T15:52:40+0000"
-    },
-    "star_salmon/qualimap/": {
-        "content": [
-            "rnaseq_qc_results.txt:md5,fdf42ac95316d03a8ed66ab87d1b3d23",
-            "rnaseq_qc_results.txt:md5,2b6d7547d70ba83af88132253a123558",
-            "rnaseq_qc_results.txt:md5,3eed764ef657161586b04670aad512d6",
-            "rnaseq_qc_results.txt:md5,6bb8c2b18eb67b015bba7d92944cd687",
-            "rnaseq_qc_results.txt:md5,401d4141bd4d884b35faa4cb497311f7"
-        ],
-        "timestamp": "2023-05-25T15:52:40+0000"
+        "timestamp": "2023-05-25T16:54:59+0000"
     },
     "star_salmon/deseq2_qc/": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
         ],
-        "timestamp": "2023-05-25T15:52:40+0000"
+        "timestamp": "2023-05-25T16:54:59+0000"
     }
 }

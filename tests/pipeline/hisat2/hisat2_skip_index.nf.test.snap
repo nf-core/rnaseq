@@ -1,41 +1,178 @@
 {
     "samplesheet": {
         "content": [
-            "samplesheet.valid.csv:md5,3d40bf3d424290cec0dbe9ee95b7dd12"
+            "samplesheet.valid.csv:md5,21387c48b43947403fb84f5e33be9e9b"
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     },
     "software_versions": {
         "content": [
-            "software_versions.yml:md5,3560641d972b6dc9f9b4eb39c2b6bee8"
+            {
+                "BBMAP_BBSPLIT": {
+                    "bbmap": "39.01"
+                },
+                "BEDTOOLS_GENOMECOV": {
+                    "bedtools": "2.30.0"
+                },
+                "CAT_ADDITIONAL_FASTA": {
+                    "python": "3.9.5"
+                },
+                "CAT_FASTQ": {
+                    "cat": "8.30"
+                },
+                "CUSTOM_DUMPSOFTWAREVERSIONS": {
+                    "python": "3.11.0",
+                    "yaml": "6.0"
+                },
+                "CUSTOM_GETCHROMSIZES": {
+                    "getchromsizes": "1.16.1"
+                },
+                "DESEQ2_QC_SALMON": {
+                    "bioconductor-deseq2": "1.28.0",
+                    "r-base": "4.0.3"
+                },
+                "DUPRADAR": {
+                    "bioconductor-dupradar": "1.28.0",
+                    "r-base": "4.2.1"
+                },
+                "FASTQC": {
+                    "fastqc": "0.11.9"
+                },
+                "FQ_SUBSAMPLE": {
+                    "fq": "0.9.1 (2022-02-22)"
+                },
+                "GTF2BED": {
+                    "perl": "5.26.2"
+                },
+                "GUNZIP_ADDITIONAL_FASTA": {
+                    "gunzip": "1.10"
+                },
+                "GUNZIP_GTF": {
+                    "gunzip": "1.10"
+                },
+                "HISAT2_ALIGN": {
+                    "hisat2": "2.2.1",
+                    "samtools": "1.16.1"
+                },
+                "HISAT2_BUILD": {
+                    "hisat2": "2.2.1"
+                },
+                "HISAT2_EXTRACTSPLICESITES": {
+                    "hisat2": "2.2.1"
+                },
+                "MULTIQC_CUSTOM_BIOTYPE": {
+                    "python": "3.9.5"
+                },
+                "PICARD_MARKDUPLICATES": {
+                    "picard": "3.0.0"
+                },
+                "QUALIMAP_RNASEQ": {
+                    "qualimap": "2.2.2-dev"
+                },
+                "RSEQC_BAMSTAT": {
+                    "rseqc": "3.0.1"
+                },
+                "RSEQC_INFEREXPERIMENT": {
+                    "rseqc": "3.0.1"
+                },
+                "RSEQC_INNERDISTANCE": {
+                    "rseqc": "3.0.1"
+                },
+                "RSEQC_JUNCTIONANNOTATION": {
+                    "rseqc": "3.0.1"
+                },
+                "RSEQC_JUNCTIONSATURATION": {
+                    "rseqc": "3.0.1"
+                },
+                "RSEQC_READDISTRIBUTION": {
+                    "rseqc": "3.0.1"
+                },
+                "RSEQC_READDUPLICATION": {
+                    "rseqc": "3.0.1"
+                },
+                "SALMON_QUANT": {
+                    "salmon": "1.10.1"
+                },
+                "SALMON_SE_GENE": {
+                    "bioconductor-summarizedexperiment": "1.24.0",
+                    "r-base": "4.1.1"
+                },
+                "SALMON_TX2GENE": {
+                    "python": "3.9.5"
+                },
+                "SALMON_TXIMPORT": {
+                    "bioconductor-tximeta": "1.12.0",
+                    "r-base": "4.1.1"
+                },
+                "SAMPLESHEET_CHECK": {
+                    "python": "3.9.5"
+                },
+                "SAMTOOLS_FLAGSTAT": {
+                    "samtools": "1.17"
+                },
+                "SAMTOOLS_IDXSTATS": {
+                    "samtools": "1.17"
+                },
+                "SAMTOOLS_INDEX": {
+                    "samtools": "1.17"
+                },
+                "SAMTOOLS_SORT": {
+                    "samtools": "1.17"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.17"
+                },
+                "STRINGTIE_STRINGTIE": {
+                    "stringtie": "2.2.1"
+                },
+                "SUBREAD_FEATURECOUNTS": {
+                    "subread": "2.0.1"
+                },
+                "TRIMGALORE": {
+                    "cutadapt": "3.4",
+                    "trimgalore": "0.6.7"
+                },
+                "UCSC_BEDCLIP": {
+                    "ucsc": "377"
+                },
+                "UCSC_BEDGRAPHTOBIGWIG": {
+                    "ucsc": "377"
+                },
+                "UNTAR_SALMON_INDEX": {
+                    "untar": "1.30"
+                },
+                "Workflow": {
+                    "nf-core/rnaseq": "3.12.0dev"
+                }
+            }
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     },
     "hisat2/dupradar/gene_data/": {
         "content": [
             "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,8a6bf324a928534cb7ed7a5522aff7d0",
-            "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,bb475eb39eb93eb65e455fa861bef853",
+            "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,ae3e70edc98ec8117608f8f608effab9",
             "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,9a5c2672c5817e930c7b884ada8fd92c",
             "WT_REP1_dupMatrix.txt:md5,11371da7a087879340c2e7e6842a5d89",
             "WT_REP2_dupMatrix.txt:md5,5176c7447c4295f94e2683dd9995cea0"
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     },
     "hisat2/featurecounts/": {
         "content": [
             "RAP1_IAA_30M_REP1.featureCounts.txt:md5,eedff929765dbc950528ee499e6d63ba",
-            "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,1463eaf888f8d46029606407368f8e2d",
+            "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,b007abbc78b08d8d2bb37a267665947d",
             "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,ea897231d1c447d8e395716741b876ab",
             "WT_REP1.featureCounts.txt:md5,39721c0d981304996438bc2f505bf98c",
             "WT_REP2.featureCounts.txt:md5,702446d50a5019c84fcef85d1cfef78c"
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     },
     "hisat2/rseqc/": {
         "content": [
@@ -58,7 +195,7 @@
             "WT_REP1.read_distribution.txt:md5,4202e7e0b800e897e76a5ce8bdd804d1",
             "WT_REP2.read_distribution.txt:md5,b16004cf92f131094bc87c1aa3a9bd73"
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     },
     "multiqc": {
         "content": [
@@ -67,6 +204,6 @@
             "multiqc_picard_dups.txt:md5,71d5bafee1a4916951349018f387f7a0",
             "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
         ],
-        "timestamp": "2023-05-09T19:56:15+0000"
+        "timestamp": "2023-05-25T15:30:17+0000"
     }
 }

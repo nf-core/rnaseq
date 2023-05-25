@@ -2,7 +2,6 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    options "-profile test,docker"
     tag "pipeline"
 
     test("SALMON (Skip QC & Alignment) (GSE110004)") {
@@ -17,9 +16,12 @@ nextflow_pipeline {
         }
 
         then {
+            def softwareVersions = path("$outputDir/pipeline_info/software_versions.yml").yaml
+            if (softwareVersions.containsKey("Workflow")) { softwareVersions.Workflow.remove("Nextflow") }
+
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(path("$outputDir/pipeline_info/software_versions.yml")).match("software_versions") },
+                { assert snapshot(softwareVersions).match("software_versions") },
                 { assert snapshot(path("$outputDir/pipeline_info/samplesheet.valid.csv")).match("samplesheet") },
                 { assert snapshot(path("$outputDir/bbsplit/RAP1_IAA_30M_REP1.stats.txt"),
                                 path("$outputDir/bbsplit/RAP1_UNINDUCED_REP1.stats.txt"),

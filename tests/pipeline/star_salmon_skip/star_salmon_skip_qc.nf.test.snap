@@ -3,7 +3,13 @@
         "content": [
             "samplesheet.valid.csv:md5,21387c48b43947403fb84f5e33be9e9b"
         ],
-        "timestamp": "2023-05-25T15:35:06+0000"
+        "timestamp": "2023-05-25T17:43:14+0000"
+    },
+    "star_salmon": {
+        "content": [
+            "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
+        ],
+        "timestamp": "2023-05-25T17:43:14+0000"
     },
     "software_versions": {
         "content": [
@@ -38,13 +44,6 @@
                 },
                 "GUNZIP_GTF": {
                     "gunzip": "1.10"
-                },
-                "HISAT2_ALIGN": {
-                    "hisat2": "2.2.1",
-                    "samtools": "1.16.1"
-                },
-                "HISAT2_EXTRACTSPLICESITES": {
-                    "hisat2": "2.2.1"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.0.0"
@@ -81,6 +80,16 @@
                 "SAMTOOLS_STATS": {
                     "samtools": "1.17"
                 },
+                "STAR_ALIGN": {
+                    "gawk": "5.1.0",
+                    "samtools": "1.16.1",
+                    "star": "2.7.9a"
+                },
+                "STAR_GENOMEGENERATE": {
+                    "gawk": "5.1.0",
+                    "samtools": "1.16.1",
+                    "star": "2.7.9a"
+                },
                 "STRINGTIE_STRINGTIE": {
                     "stringtie": "2.2.1"
                 },
@@ -94,9 +103,6 @@
                 "UCSC_BEDGRAPHTOBIGWIG": {
                     "ucsc": "377"
                 },
-                "UNTAR_HISAT2_INDEX": {
-                    "untar": "1.30"
-                },
                 "UNTAR_SALMON_INDEX": {
                     "untar": "1.30"
                 },
@@ -105,21 +111,20 @@
                 }
             }
         ],
-        "timestamp": "2023-05-25T15:35:06+0000"
+        "timestamp": "2023-05-25T17:43:14+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-25T15:35:06+0000"
+        "timestamp": "2023-05-25T17:43:14+0000"
     },
     "multiqc": {
         "content": [
             "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
             "multiqc_fastqc.txt:md5,e3ebd5c2676bebb3c0176c4e985f3580",
-            "multiqc_picard_dups.txt:md5,71d5bafee1a4916951349018f387f7a0",
-            "picard_histogram.txt:md5,c9aa8a5ac6841ffb3a6cc2de45b44797"
+            "multiqc_picard_dups.txt:md5,4f4aca636444de555500207fec553076"
         ],
-        "timestamp": "2023-05-25T15:35:06+0000"
+        "timestamp": "2023-05-25T17:43:14+0000"
     }
 }

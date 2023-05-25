@@ -2,21 +2,25 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    options "-profile test,docker"
     tag "pipeline"
 
-    test("STAR Salmon (GSE110004)") {
+    test("STAR Salmon (Skip STAR Index) (GSE110004)") {
 
         when {
             params {
-                outdir = "$outputDir"
+                outdir     = "$outputDir"
+                aligner    = "star_salmon"
+                star_index = false
             }
         }
 
         then {
+            def softwareVersions = path("$outputDir/pipeline_info/software_versions.yml").yaml
+            if (softwareVersions.containsKey("Workflow")) { softwareVersions.Workflow.remove("Nextflow") }
+
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(path("$outputDir/pipeline_info/software_versions.yml")).match("software_versions") },
+                { assert snapshot(softwareVersions).match("software_versions") },
                 { assert snapshot(path("$outputDir/pipeline_info/samplesheet.valid.csv")).match("samplesheet") },
                 { assert new File("$outputDir/bbsplit/RAP1_IAA_30M_REP1.stats.txt").exists() },
                 { assert new File("$outputDir/bbsplit/RAP1_UNINDUCED_REP1.stats.txt").exists() },
@@ -33,7 +37,6 @@ nextflow_pipeline {
                 { assert new File("$outputDir/fastqc/WT_REP2_2_fastqc.html").exists() },
                 { assert snapshot(path("$outputDir/multiqc/star_salmon/multiqc_data/junction_saturation_known.txt"),
                                 path("$outputDir/multiqc/star_salmon/multiqc_data/junction_saturation_novel.txt"),
-                                path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_fail_strand_check_table.txt"),
                                 path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_fastqc.txt")).match("multiqc") },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_featurecounts_biotype_plot.txt").exists() },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_dupradar-plot.txt").exists() },

@@ -2,24 +2,25 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    options "-profile test,docker"
     tag "pipeline"
 
-    test("STAR Salmon (Remove Ribo RNA & Skip Qualimap) (GSE110004)") {
+    test("STAR Salmon (Skip Trimming) (GSE110004)") {
 
         when {
             params {
-                outdir          = "$outputDir"
-                aligner         = "star_salmon"
-                remove_ribo_rna = true
-                skip_qualimap   = true
+                outdir        = "$outputDir"
+                aligner       = "star_salmon"
+                skip_trimming = true
             }
         }
 
         then {
+            def softwareVersions = path("$outputDir/pipeline_info/software_versions.yml").yaml
+            if (softwareVersions.containsKey("Workflow")) { softwareVersions.Workflow.remove("Nextflow") }
+
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(path("$outputDir/pipeline_info/software_versions.yml")).match("software_versions") },
+                { assert snapshot(softwareVersions).match("software_versions") },
                 { assert snapshot(path("$outputDir/pipeline_info/samplesheet.valid.csv")).match("samplesheet") },
                 { assert new File("$outputDir/bbsplit/RAP1_IAA_30M_REP1.stats.txt").exists() },
                 { assert new File("$outputDir/bbsplit/RAP1_UNINDUCED_REP1.stats.txt").exists() },
@@ -36,10 +37,8 @@ nextflow_pipeline {
                 { assert new File("$outputDir/fastqc/WT_REP2_2_fastqc.html").exists() },
                 { assert snapshot(path("$outputDir/multiqc/star_salmon/multiqc_data/junction_saturation_known.txt"),
                                 path("$outputDir/multiqc/star_salmon/multiqc_data/junction_saturation_novel.txt"),
-                                path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_fail_strand_check_table.txt"),
                                 path("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_fastqc.txt")).match("multiqc") },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_featurecounts_biotype_plot.txt").exists() },
-                { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_sortmerna.txt").exists() },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_dupradar-plot.txt").exists() },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_general_stats.txt").exists() },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_salmon.txt").exists() },
@@ -54,9 +53,13 @@ nextflow_pipeline {
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_samtools_flagstat.txt").exists() },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_samtools_idxstats.txt").exists() },
                 { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/multiqc_samtools_stats.txt").exists() },
-                { assert !new File("$outputDir/multiqc/star_salmon/multiqc_data/qualimap_rnaseq_cov_hist.txt").exists() },
-                { assert !new File("$outputDir/multiqc/star_salmon/multiqc_data/qualimap_rnaseq_genome_results.txt").exists() },
+                { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/qualimap_rnaseq_cov_hist.txt").exists() },
+                { assert new File("$outputDir/multiqc/star_salmon/multiqc_data/qualimap_rnaseq_genome_results.txt").exists() },
+                { assert !new File("$outputDir/multiqc/star_salmon/multiqc_data/mqc_cutadapt_filtered_reads_plot_1.txt").exists() },
+                { assert !new File("$outputDir/multiqc/star_salmon/multiqc_data/mqc_cutadapt_trimmed_sequences_plot_3_Counts.txt").exists() },
+                { assert !new File("$outputDir/multiqc/star_salmon/multiqc_data/mqc_cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt").exists() },
                 { assert snapshot(path("$outputDir/salmon/salmon_tx2gene.tsv")).match("salmon") },
+                { assert new File("$outputDir/salmon/deseq2_qc/R_sessionInfo.log").exists() },
                 { assert new File("$outputDir/salmon/RAP1_IAA_30M_REP1/quant.sf").exists() },
                 { assert new File("$outputDir/salmon/RAP1_IAA_30M_REP1/quant.genes.sf").exists() },
                 { assert new File("$outputDir/salmon/RAP1_UNINDUCED_REP1/quant.sf").exists() },
@@ -140,11 +143,11 @@ nextflow_pipeline {
                 { assert new File("$outputDir/star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt").exists() },
                 { assert new File("$outputDir/star_salmon/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt").exists() },
                 { assert new File("$outputDir/star_salmon/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt").exists() },
-                { assert !new File("$outputDir/star_salmon/qualimap/RAP1_IAA_30M_REP1/rnaseq_qc_results.txt").exists() },
-                { assert !new File("$outputDir/star_salmon/qualimap/RAP1_UNINDUCED_REP1/rnaseq_qc_results.txt").exists() },
-                { assert !new File("$outputDir/star_salmon/qualimap/RAP1_UNINDUCED_REP2/rnaseq_qc_results.txt").exists() },
-                { assert !new File("$outputDir/star_salmon/qualimap/WT_REP1/rnaseq_qc_results.txt").exists() },
-                { assert !new File("$outputDir/star_salmon/qualimap/WT_REP2/rnaseq_qc_results.txt").exists() },
+                { assert new File("$outputDir/star_salmon/qualimap/RAP1_IAA_30M_REP1/rnaseq_qc_results.txt").exists() },
+                { assert new File("$outputDir/star_salmon/qualimap/RAP1_UNINDUCED_REP1/rnaseq_qc_results.txt").exists() },
+                { assert new File("$outputDir/star_salmon/qualimap/RAP1_UNINDUCED_REP2/rnaseq_qc_results.txt").exists() },
+                { assert new File("$outputDir/star_salmon/qualimap/WT_REP1/rnaseq_qc_results.txt").exists() },
+                { assert new File("$outputDir/star_salmon/qualimap/WT_REP2/rnaseq_qc_results.txt").exists() },
                 { assert new File("$outputDir/star_salmon/rseqc/bam_stat/RAP1_IAA_30M_REP1.bam_stat.txt").exists() },
                 { assert new File("$outputDir/star_salmon/rseqc/bam_stat/RAP1_UNINDUCED_REP1.bam_stat.txt").exists() },
                 { assert new File("$outputDir/star_salmon/rseqc/bam_stat/RAP1_UNINDUCED_REP2.bam_stat.txt").exists() },
@@ -225,19 +228,14 @@ nextflow_pipeline {
                 { assert new File("$outputDir/star_salmon/stringtie/RAP1_UNINDUCED_REP2.transcripts.gtf").exists() },
                 { assert new File("$outputDir/star_salmon/stringtie/WT_REP1.transcripts.gtf").exists() },
                 { assert new File("$outputDir/star_salmon/stringtie/WT_REP2.transcripts.gtf").exists() },
-                { assert new File("$outputDir/sortmerna/RAP1_IAA_30M_REP1.sortmerna.log").exists() },
-                { assert new File("$outputDir/sortmerna/RAP1_UNINDUCED_REP1.sortmerna.log").exists() },
-                { assert new File("$outputDir/sortmerna/RAP1_UNINDUCED_REP2.sortmerna.log").exists() },
-                { assert new File("$outputDir/sortmerna/WT_REP1.sortmerna.log").exists() },
-                { assert new File("$outputDir/sortmerna/WT_REP2.sortmerna.log").exists() },
-                { assert new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_1.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_2.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP1.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP2.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/WT_REP1_1.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/WT_REP1_2.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/WT_REP2_1.fastq.gz_trimming_report.txt").exists() },
-                { assert new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists() }
+                { assert !new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_1.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_2.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP1.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP2.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/WT_REP1_1.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/WT_REP1_2.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/WT_REP2_1.fastq.gz_trimming_report.txt").exists() },
+                { assert !new File("$outputDir/trimgalore/WT_REP2_2.fastq.gz_trimming_report.txt").exists() }
             )
         }
 

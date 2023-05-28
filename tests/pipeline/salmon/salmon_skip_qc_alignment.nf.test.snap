@@ -3,75 +3,19 @@
         "content": [
             "samplesheet.valid.csv:md5,21387c48b43947403fb84f5e33be9e9b"
         ],
-        "timestamp": "2023-05-25T15:41:05+0000"
+        "timestamp": "2023-05-28T16:47:11+0000"
     },
     "software_versions": {
         "content": [
-            {
-                "BBMAP_BBSPLIT": {
-                    "bbmap": "39.01"
-                },
-                "CAT_ADDITIONAL_FASTA": {
-                    "python": "3.9.5"
-                },
-                "CAT_FASTQ": {
-                    "cat": "8.30"
-                },
-                "CUSTOM_DUMPSOFTWAREVERSIONS": {
-                    "python": "3.11.0",
-                    "yaml": "6.0"
-                },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": "1.16.1"
-                },
-                "FQ_SUBSAMPLE": {
-                    "fq": "0.9.1 (2022-02-22)"
-                },
-                "GTF2BED": {
-                    "perl": "5.26.2"
-                },
-                "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": "1.10"
-                },
-                "GUNZIP_GTF": {
-                    "gunzip": "1.10"
-                },
-                "SALMON_QUANT": {
-                    "salmon": "1.10.1"
-                },
-                "SALMON_SE_GENE": {
-                    "bioconductor-summarizedexperiment": "1.24.0",
-                    "r-base": "4.1.1"
-                },
-                "SALMON_TX2GENE": {
-                    "python": "3.9.5"
-                },
-                "SALMON_TXIMPORT": {
-                    "bioconductor-tximeta": "1.12.0",
-                    "r-base": "4.1.1"
-                },
-                "SAMPLESHEET_CHECK": {
-                    "python": "3.9.5"
-                },
-                "TRIMGALORE": {
-                    "cutadapt": "3.4",
-                    "trimgalore": "0.6.7"
-                },
-                "UNTAR_SALMON_INDEX": {
-                    "untar": "1.30"
-                },
-                "Workflow": {
-                    "nf-core/rnaseq": "3.12.0dev"
-                }
-            }
+            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_ADDITIONAL_FASTA={python=3.9.5}, CAT_FASTQ={cat=8.30}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, CUSTOM_GETCHROMSIZES={getchromsizes=1.16.1}, FQ_SUBSAMPLE={fq=0.9.1 (2022-02-22)}, GTF2BED={perl=5.26.2}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.10}, GUNZIP_GTF={gunzip=1.10}, SALMON_QUANT={salmon=1.10.1}, SALMON_SE_GENE={bioconductor-summarizedexperiment=1.24.0, r-base=4.1.1}, SALMON_TX2GENE={python=3.9.5}, SALMON_TXIMPORT={bioconductor-tximeta=1.12.0, r-base=4.1.1}, SAMPLESHEET_CHECK={python=3.9.5}, TRIMGALORE={cutadapt=3.4, trimgalore=0.6.7}, UNTAR_SALMON_INDEX={untar=1.30}, Workflow={nf-core/rnaseq=3.12.0dev}}"
         ],
-        "timestamp": "2023-05-25T15:41:05+0000"
+        "timestamp": "2023-05-28T16:47:11+0000"
     },
     "salmon": {
         "content": [
             "salmon_tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
         ],
-        "timestamp": "2023-05-25T15:41:05+0000"
+        "timestamp": "2023-05-28T16:47:11+0000"
     },
     "bbsplit": {
         "content": [
@@ -80,13 +24,13 @@
             "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
             "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de"
         ],
-        "timestamp": "2023-05-25T15:41:05+0000"
+        "timestamp": "2023-05-28T16:47:11+0000"
     },
     "multiqc": {
         "content": [
             "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
             "multiqc_fastqc.txt:md5,e3ebd5c2676bebb3c0176c4e985f3580"
         ],
-        "timestamp": "2023-05-25T15:41:05+0000"
+        "timestamp": "2023-05-28T16:47:11+0000"
     }
 }

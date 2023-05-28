@@ -2,7 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    tag "pipeline"
+    tag "star_salmon"
 
     test("STAR Salmon (CSI index for BAM files) (GSE110004)") {
 
@@ -15,12 +15,9 @@ nextflow_pipeline {
         }
 
         then {
-            def softwareVersions = path("$outputDir/pipeline_info/software_versions.yml").yaml
-            if (softwareVersions.containsKey("Workflow")) { softwareVersions.Workflow.remove("Nextflow") }
-
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(softwareVersions).match("software_versions") },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
                 { assert snapshot(path("$outputDir/pipeline_info/samplesheet.valid.csv")).match("samplesheet") },
                 { assert new File("$outputDir/bbsplit/RAP1_IAA_30M_REP1.stats.txt").exists() },
                 { assert new File("$outputDir/bbsplit/RAP1_UNINDUCED_REP1.stats.txt").exists() },

@@ -4,16 +4,32 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { validateParameters; paramsHelp; paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
+
 def valid_params = [
-    aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
-    trimmers       : ['trimgalore', 'fastp'],
     pseudoaligners : ['salmon'],
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
 ]
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
+
+// Print help message if needed
+if (params.help) {
+    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
+    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
+    System.exit(0)
+}
 
 // Validate input parameters
+if (params.validate_params) {
+    validateParameters()
+}
+
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
 WorkflowRnaseq.initialise(params, log, valid_params)
 
 // Check input path parameters to see if they exist
@@ -25,9 +41,6 @@ checkPathParamList = [
     params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index
 ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 // Check rRNA databases for sortmerna
 if (params.remove_ribo_rna) {
@@ -105,7 +118,6 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK    } from '../subworkflows/local/input_check'
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome'
 include { ALIGN_STAR     } from '../subworkflows/local/align_star'
 include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'
@@ -196,27 +208,28 @@ workflow RNASEQ {
     }
 
     //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    // Create input channel from input file provided through params.input
     //
-    INPUT_CHECK (
-        ch_input
-    )
-    .reads
+    ch_input = Channel.fromSamplesheet("input")
+
+    ch_input
     .map {
-        meta, fastq ->
+        meta, fastq1, fastq2 ->
             new_id = meta.id - ~/_T\d+/
-            [ meta + [id: new_id], fastq ]
+            [ meta + [id: new_id], fastq1, fastq2 ]
     }
     .groupTuple()
     .branch {
-        meta, fastq ->
-            single  : fastq.size() == 1
-                return [ meta, fastq.flatten() ]
-            multiple: fastq.size() > 1
-                return [ meta, fastq.flatten() ]
+        meta, fastq1, fastq2 ->
+            single  : fastq2 == []
+                return [ meta, fastq1 ]
+            multiple: fastq2.size() > 1
+                return [ meta, fastq1, fastq2 ]
     }
     .set { ch_fastq }
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+
+    ch_fastq.single.view()
+    ch_fastq.multiple.view()
 
     //
     // MODULE: Concatenate FastQ files from same sample if required

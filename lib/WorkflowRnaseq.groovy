@@ -54,17 +54,7 @@ class WorkflowRnaseq {
             }
         }
 
-        if (!params.skip_trimming) {
-            if (!valid_params['trimmers'].contains(params.trimmer)) {
-                Nextflow.error("Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}.")
-            }
-        }
-
-        if (!params.skip_alignment) {
-            if (!valid_params['aligners'].contains(params.aligner)) {
-                Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
-            }
-        } else {
+        if (params.skip_alignment) {
             if (!params.pseudo_aligner) {
                 Nextflow.error("--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${valid_params['pseudoaligners'][0]}.")
             }
@@ -72,12 +62,8 @@ class WorkflowRnaseq {
         }
 
         if (params.pseudo_aligner) {
-            if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
-                Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
-            } else {
-                if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
-                    Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
-                }
+            if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
+                Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
             }
         }
 

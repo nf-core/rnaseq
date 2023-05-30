@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR #1016](https://github.com/nf-core/rnaseq/pull/1016) - Updated pipeline template to [nf-core/tools 2.8](https://github.com/nf-core/tools/releases/tag/2.8)
 - [PR #1025](https://github.com/nf-core/fetchngs/pull/1025) - Add `public_aws_ecr.config` to source mulled containers when using `public.ecr.aws` Docker Biocontainer registry
-- [PR ###]() - Remove additional `_gene` on gene and transcript identifiers supplied by `--additional_fasta`
+- [PR #1035](https://github.com/nf-core/rnaseq/pull/1035) - Remove additional `_gene` on gene and transcript identifiers supplied by `--additional_fasta`
 
 ### Software dependencies
 

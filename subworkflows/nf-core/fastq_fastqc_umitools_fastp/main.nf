@@ -77,7 +77,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     trim_read_count   = Channel.empty()
     if (!skip_trimming) {
         FASTP (
-            reads,
+            umi_reads,
             adapter_fasta,
             save_trimmed_fail,
             save_merged

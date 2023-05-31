@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "e228790f2957152ad2534e39abd7b3878963e89d",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -230,7 +230,7 @@
                 "nf-core": {
                     "bam_dedup_stats_samtools_umitools": {
                         "branch": "master",
-                        "git_sha": "735e1e04e7e01751d2d6e97055bbdb6f70683cc1",
+                        "git_sha": "e228790f2957152ad2534e39abd7b3878963e89d",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_markduplicates_picard": {

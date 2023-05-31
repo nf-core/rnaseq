@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test Workflow main.nf"
     script "main.nf"
     tag "star_salmon"
+    tag "pipeline"
 
     test("STAR Salmon (Skip QC) (GSE110004)") {
 

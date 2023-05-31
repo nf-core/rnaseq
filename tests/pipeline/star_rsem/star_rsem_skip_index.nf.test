@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test Workflow main.nf"
     script "main.nf"
     tag "star_rsem"
+    tag "pipeline"
 
     test("STAR RSEM With Salmon (Skip Index) with Salmon (GSE110004)") {
 

@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test Workflow main.nf"
     script "main.nf"
     tag "hisat2"
+    tag "pipeline"
 
     test("HISAT2 (Skip Index) (GSE110004)") {
 

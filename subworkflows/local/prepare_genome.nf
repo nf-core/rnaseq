@@ -222,7 +222,7 @@ workflow PREPARE_GENOME {
     ch_hisat2_index = Channel.empty()
     if ('hisat2' in prepare_tool_indices) {
         if (!splicesites) {
-            ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
+            ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf.map { [ [:], it ] } ).txt.map { it[1] }
             ch_versions    = ch_versions.mix(HISAT2_EXTRACTSPLICESITES.out.versions)
         } else {
             ch_splicesites = Channel.value(file(splicesites))
@@ -235,7 +235,7 @@ workflow PREPARE_GENOME {
                 ch_hisat2_index = Channel.value(file(hisat2_index))
             }
         } else {
-            ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
+            ch_hisat2_index = HISAT2_BUILD ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] }, ch_splicesites.map { [ [:], it ] } ).index.map { it[1] }
             ch_versions     = ch_versions.mix(HISAT2_BUILD.out.versions)
         }
     }

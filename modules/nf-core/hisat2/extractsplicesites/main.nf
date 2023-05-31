@@ -9,11 +9,11 @@ process HISAT2_EXTRACTSPLICESITES {
         'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
 
     input:
-    path gtf
+    tuple val(meta), path(gtf)
 
     output:
-    path "*.splice_sites.txt", emit: txt
-    path "versions.yml"      , emit: versions
+    tuple val(meta), path("*.splice_sites.txt"), emit: txt
+    path "versions.yml"                        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

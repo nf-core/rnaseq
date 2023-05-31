@@ -43,9 +43,9 @@ if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) 
 
 // Check alignment parameters
 def prepareToolIndices  = []
-if (!params.skip_bbsplit)   { prepareToolIndices << 'bbsplit'             }
-if (!params.skip_alignment) { prepareToolIndices << params.aligner        }
-if (params.pseudo_aligner)  { prepareToolIndices << params.pseudo_aligner }
+if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
+if (!params.skip_alignment) { prepareToolIndices << params.aligner }
+if (!params.skip_pseudo_alignment) { prepareToolIndices << params.pseudo_aligner }
 
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
@@ -799,7 +799,7 @@ workflow RNASEQ {
     ch_salmon_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    if (params.pseudo_aligner == 'salmon') {
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon') {
         QUANTIFY_SALMON (
             ch_filtered_reads,
             PREPARE_GENOME.out.salmon_index,

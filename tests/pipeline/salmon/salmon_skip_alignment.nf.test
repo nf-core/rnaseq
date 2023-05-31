@@ -5,14 +5,14 @@ nextflow_pipeline {
     tag "salmon"
     tag "pipeline"
 
-    test("SALMON (Skip QC & Alignment) (GSE110004)") {
+    test("SALMON (Skip Alignment & Pseudo-Alignment) (GSE110004)") {
 
         when {
             params {
                 outdir         = "$outputDir"
                 pseudo_aligner = "salmon"
-                skip_qc        = true
                 skip_alignment = true
+                skip_pseudo_alignment = true
             }
         }
 
@@ -29,19 +29,7 @@ nextflow_pipeline {
                 { assert snapshot(path("$outputDir/multiqc/multiqc_data/multiqc_cutadapt.txt"),
                                 path("$outputDir/multiqc/multiqc_data/multiqc_fastqc.txt")).match("multiqc") },
                 { assert new File("$outputDir/multiqc/multiqc_data/multiqc_general_stats.txt").exists() },
-                { assert snapshot(path("$outputDir/salmon/salmon_tx2gene.tsv")).match("salmon") },
-                { assert new File("$outputDir/salmon/salmon.merged.gene_counts.tsv").exists() },
-                { assert new File("$outputDir/salmon/salmon.merged.transcript_counts.tsv").exists() },
-                { assert new File("$outputDir/salmon/RAP1_IAA_30M_REP1/quant.sf").exists() },
-                { assert new File("$outputDir/salmon/RAP1_IAA_30M_REP1/quant.genes.sf").exists() },
-                { assert new File("$outputDir/salmon/RAP1_UNINDUCED_REP1/quant.sf").exists() },
-                { assert new File("$outputDir/salmon/RAP1_UNINDUCED_REP1/quant.genes.sf").exists() },
-                { assert new File("$outputDir/salmon/RAP1_UNINDUCED_REP2/quant.sf").exists() },
-                { assert new File("$outputDir/salmon/RAP1_UNINDUCED_REP2/quant.genes.sf").exists() },
-                { assert new File("$outputDir/salmon/WT_REP1/quant.sf").exists() },
-                { assert new File("$outputDir/salmon/WT_REP1/quant.genes.sf").exists() },
-                { assert new File("$outputDir/salmon/WT_REP2/quant.sf").exists() },
-                { assert new File("$outputDir/salmon/WT_REP2/quant.genes.sf").exists() },
+                { assert !new File("$outputDir/salmon/").exists() },
                 { assert new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_1.fastq.gz_trimming_report.txt").exists() },
                 { assert new File("$outputDir/trimgalore/RAP1_IAA_30M_REP1_2.fastq.gz_trimming_report.txt").exists() },
                 { assert new File("$outputDir/trimgalore/RAP1_UNINDUCED_REP1.fastq.gz_trimming_report.txt").exists() },

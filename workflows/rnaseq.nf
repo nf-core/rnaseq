@@ -504,7 +504,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         QUANTIFY_RSEM (
             ch_filtered_reads,
-            PREPARE_GENOME.out.rsem_index
+            PREPARE_GENOME.out.rsem_index,
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = QUANTIFY_RSEM.out.bam
         ch_genome_bam_index  = QUANTIFY_RSEM.out.bai

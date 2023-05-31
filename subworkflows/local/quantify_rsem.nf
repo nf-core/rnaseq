@@ -10,6 +10,7 @@ workflow QUANTIFY_RSEM {
     take:
     reads // channel: [ val(meta), [ reads ] ]
     index // channel: /path/to/rsem/index/
+    fasta // channel: [ val(meta), [ fasta ] ]
 
     main:
 
@@ -24,7 +25,7 @@ workflow QUANTIFY_RSEM {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star, [] )
+    BAM_SORT_STATS_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star, fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     //

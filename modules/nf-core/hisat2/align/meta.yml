@@ -25,10 +25,20 @@ input:
       description: |
         List of input FastQ files of size 1 and 2 for single-end and paired-end data,
         respectively.
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - index:
       type: file
       description: HISAT2 genome index file
       pattern: "*.ht2"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - splicesites:
       type: file
       description: Splices sites in gtf file
@@ -55,3 +65,4 @@ output:
 
 authors:
   - "@ntoda03"
+  - "@ramprasadn"

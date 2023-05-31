@@ -1,5 +1,6 @@
 process BBMAP_BBSPLIT {
     label 'process_high'
+    label 'error_retry'
 
     conda "bioconda::bbmap=39.01"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

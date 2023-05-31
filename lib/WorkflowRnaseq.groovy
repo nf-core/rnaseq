@@ -65,13 +65,10 @@ class WorkflowRnaseq {
                 Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
             }
         } else {
-            if (!params.pseudo_aligner) {
-                Nextflow.error("--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${valid_params['pseudoaligners'][0]}.")
-            }
             skipAlignmentWarn(log)
         }
 
-        if (params.pseudo_aligner) {
+        if (!params.skip_pseudo_alignment) {
             if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
                 Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
             } else {

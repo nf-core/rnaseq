@@ -402,13 +402,9 @@ class WorkflowRnaseq {
             "  When using '--additional_fasta <FASTA_FILE>' the aligner index will not\n" +
             "  be re-built with the transgenes incorporated by default since you have \n" +
             "  already provided an index via '--${index}_index <INDEX>'.\n\n" +
-            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --save_reference' to\n" +
-            "  re-build the index with transgenes included and the index will be saved in\n" +
+            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --gene_bed false --save_reference'\n" +
+            "  to re-build the index with transgenes included and the index and gene BED file will be saved in\n" +
             "  'results/genome/index/${index}/' for re-use with '--${index}_index'.\n\n" +
-            "  In addition, regions in '--additional_fasta' will not be included in count \n" +
-            "  values. If you wish to include this supply a '--gene_bed' file including \n" +
-            "  of interest or use '--gene_bed false to generate a new one containing all \n" +
-            "  of the '--additional_fasta' regions.\n\n" +
             "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/556\n" +

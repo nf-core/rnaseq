@@ -68,7 +68,7 @@ class WorkflowRnaseq {
             skipAlignmentWarn(log)
         }
 
-        if (!params.skip_pseudo_alignment) {
+        if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
             if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
                 Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
             } else {

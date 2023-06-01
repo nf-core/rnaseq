@@ -45,7 +45,7 @@ if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) 
 def prepareToolIndices  = []
 if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 if (!params.skip_alignment) { prepareToolIndices << params.aligner }
-if (!params.skip_pseudo_alignment) { prepareToolIndices << params.pseudo_aligner }
+if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []

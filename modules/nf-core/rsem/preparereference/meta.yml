@@ -2,7 +2,8 @@ name: rsem_preparereference
 description: Prepare a reference genome for RSEM
 keywords:
   - rsem
-  - reference
+  - genome
+  - index
 tools:
   - rseqc:
       description: |

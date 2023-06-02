@@ -30,7 +30,7 @@ jobs:
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
           run_name: "aws_rnaseq_full_${{ matrix.aligner }}"
-          profiles: test_full_aws
+          profiles: test_full_aws,public_aws_ecr
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "fastq_fastqc_umitools_trimgalore"
 description: Read QC, UMI extraction and trimming
 keywords:
@@ -49,12 +50,12 @@ input:
 
 output:
   - reads:
-    type: file
-    description: >
-      Extracted FASTQ files. |
-      For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
-        For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
-    pattern: "*.{fastq.gz}"
+      type: file
+      description: >
+        Extracted FASTQ files. |
+        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+          For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+      pattern: "*.{fastq.gz}"
   - fastqc_html:
       type: file
       description: FastQC report

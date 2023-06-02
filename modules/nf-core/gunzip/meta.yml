@@ -3,6 +3,7 @@ description: Compresses and decompresses files.
 keywords:
   - gunzip
   - compression
+  - decompression
 tools:
   - gunzip:
       description: |

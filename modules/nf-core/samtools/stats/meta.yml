@@ -30,9 +30,14 @@ input:
       type: file
       description: BAI/CRAI file from alignment
       pattern: "*.{bai,crai}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fasta:
-      type: optional file
-      description: Reference file the CRAM was created with
+      type: file
+      description: Reference file the CRAM was created with (optional)
       pattern: "*.{fasta,fa}"
 output:
   - meta:
@@ -51,3 +56,4 @@ output:
 authors:
   - "@drpatelh"
   - "@FriederikeHanssen"
+  - "@ramprasadn"

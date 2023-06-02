@@ -25,6 +25,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1016](https://github.com/nf-core/rnaseq/pull/1016) - Updated pipeline template to [nf-core/tools 2.8](https://github.com/nf-core/tools/releases/tag/2.8)
 - [PR #1025](https://github.com/nf-core/fetchngs/pull/1025) - Add `public_aws_ecr.config` to source mulled containers when using `public.ecr.aws` Docker Biocontainer registry
 - [PR #1038](https://github.com/nf-core/rnaseq/pull/1038) - Updated error log for count values when supplying `--additional_fasta`
+- [PR #1042](https://github.com/nf-core/rnaseq/pull/1042) - revert samtools_sort modules to no memory assignement
 
 ### Parameters
 

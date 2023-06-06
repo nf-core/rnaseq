@@ -18,32 +18,36 @@ jobs:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v1.2.4
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
+          revision: ${{ github.sha }}
           run_name: "aws_rnaseq_small"
           profiles: test,public_aws_ecr
           parameters: |
             {
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}"
-            }
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
-          path: tower_action_*.log
+          path: |
+            tower_action_*.log
+            tower_action_*.json
+
   run-small-tests-on-gcp:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v1.2.4
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
+          revision: ${{ github.sha }}
           run_name: "gcp_rnaseq_small"
           profiles: test
           parameters: |
@@ -53,17 +57,21 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
-          path: tower_action_*.log
+          path: |
+            tower_action_*.log
+            tower_action_*.json
+
   run-small-tests-on-azure:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v1.2.4
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
+          revision: ${{ github.sha }}
           run_name: "azure_rnaseq_small"
           profiles: test
           parameters: |
@@ -73,4 +81,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
-          path: tower_action_*.log
+          path: |
+            tower_action_*.log
+            tower_action_*.json

@@ -2,6 +2,8 @@
 // This file holds several functions specific to the main.nf workflow in the nf-core/rnaseq pipeline
 //
 
+import nextflow.Nextflow
+
 class WorkflowMain {
 
     //
@@ -20,7 +22,7 @@ class WorkflowMain {
     //
     // Generate help string
     //
-    public static String help(workflow, params, log) {
+    public static String help(workflow, params) {
         def command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker"
         def help_string = ''
         help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
@@ -33,7 +35,7 @@ class WorkflowMain {
     //
     // Generate parameter summary log string
     //
-    public static String paramsSummaryLog(workflow, params, log) {
+    public static String paramsSummaryLog(workflow, params) {
         def summary_log = ''
         summary_log += NfcoreTemplate.logo(workflow, params.monochrome_logs)
         summary_log += NfcoreSchema.paramsSummaryLog(workflow, params)
@@ -48,7 +50,7 @@ class WorkflowMain {
     public static void initialise(workflow, params, log) {
         // Print help to screen if required
         if (params.help) {
-            log.info help(workflow, params, log)
+            log.info help(workflow, params)
             System.exit(0)
         }
 
@@ -60,7 +62,10 @@ class WorkflowMain {
         }
 
         // Print parameter summary log to screen
-        log.info paramsSummaryLog(workflow, params, log)
+        log.info paramsSummaryLog(workflow, params)
+
+        // Warn about using custom configs to provide pipeline parameters
+        NfcoreTemplate.warnParamsProvidedInConfig(workflow, log)
 
         // Validate workflow parameters via the JSON schema
         if (params.validate_params) {
@@ -80,8 +85,7 @@ class WorkflowMain {
 
         // Check input has been provided
         if (!params.input) {
-            log.error "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
-            System.exit(1)
+            Nextflow.error("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
         }
     }
     //

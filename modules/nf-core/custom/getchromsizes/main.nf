@@ -5,16 +5,16 @@ process CUSTOM_GETCHROMSIZES {
     conda "bioconda::samtools=1.16.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.16.1--h6899075_1' :
-        'quay.io/biocontainers/samtools:1.16.1--h6899075_1' }"
+        'biocontainers/samtools:1.16.1--h6899075_1' }"
 
     input:
-    path fasta
+    tuple val(meta), path(fasta)
 
     output:
-    path "*.sizes"     , emit: sizes
-    path "*.fai"       , emit: fai
-    path "*.gzi"       , emit: gzi, optional: true
-    path "versions.yml", emit: versions
+    tuple val(meta), path ("*.sizes"), emit: sizes
+    tuple val(meta), path ("*.fai")  , emit: fai
+    tuple val(meta), path ("*.gzi")  , emit: gzi, optional: true
+    path  "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

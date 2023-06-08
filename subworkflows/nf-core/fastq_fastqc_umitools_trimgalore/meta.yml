@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "fastq_fastqc_umitools_trimgalore"
 description: Read QC, UMI extraction and trimming
 keywords:
@@ -42,15 +43,19 @@ input:
       type: integer
       description: |
         Discard R1 / R2 if required
+  - min_trimmed_reads:
+      type: integer
+      description: |
+        Inputs with fewer than this reads will be filtered out of the "reads" output channel
 
 output:
   - reads:
-    type: file
-    description: >
-      Extracted FASTQ files. |
-      For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
-        For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
-    pattern: "*.{fastq.gz}"
+      type: file
+      description: >
+        Extracted FASTQ files. |
+        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+          For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+      pattern: "*.{fastq.gz}"
   - fastqc_html:
       type: file
       description: FastQC report
@@ -80,6 +85,9 @@ output:
       type: file
       description: Trim Galore! trimming report
       pattern: "*_{report.txt}"
+  - trim_read_count:
+      type: integer
+      description: Number of reads remaining after trimming for all input samples
   - versions:
       type: file
       description: File containing software versions

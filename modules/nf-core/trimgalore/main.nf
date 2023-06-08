@@ -5,7 +5,7 @@ process TRIMGALORE {
     conda "bioconda::trim-galore=0.6.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/trim-galore:0.6.7--hdfd78af_0' :
-        'quay.io/biocontainers/trim-galore:0.6.7--hdfd78af_0' }"
+        'biocontainers/trim-galore:0.6.7--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -37,10 +37,12 @@ process TRIMGALORE {
     // Added soft-links to original fastqs for consistent naming in MultiQC
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
+        def args_list = args.split("\\s(?=--)").toList()
+        args_list.removeAll { it.toLowerCase().contains('_r2 ') }
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         trim_galore \\
-            $args \\
+            ${args_list.join(' ')} \\
             --cores $cores \\
             --gzip \\
             ${prefix}.fastq.gz

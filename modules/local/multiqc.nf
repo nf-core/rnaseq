@@ -1,10 +1,10 @@
 process MULTIQC {
     label 'process_medium'
 
-    conda "bioconda::multiqc=1.13"
+    conda "bioconda::multiqc=1.14"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.13--pyhdfd78af_0' :
-        'quay.io/biocontainers/multiqc:1.13--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/multiqc:1.14--pyhdfd78af_0' :
+        'biocontainers/multiqc:1.14--pyhdfd78af_0' }"
 
     input:
     path multiqc_config
@@ -16,9 +16,9 @@ process MULTIQC {
     path fail_trimming_summary
     path fail_mapping_summary
     path fail_strand_check
-    path ('fastqc/*')
-    path ('trimgalore/fastqc/*')
-    path ('trimgalore/*')
+    path ('fastqc/raw/*')
+    path ('fastqc/trim/*')
+    path ('trim_log/*')
     path ('sortmerna/*')
     path ('star/*')
     path ('hisat2/*')

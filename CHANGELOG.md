@@ -3,6 +3,158 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Esha Joshi](https://github.com/ejseqera)
+- [Ghepardo](https://github.com/Ghepardo)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Rob Syme](https://github.com/robsyme)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
+### Enhancements & fixes
+
+- [[#1011](https://github.com/nf-core/rnaseq/issues/1011)] - FastQ files from UMI-tools not being passed to fastp
+- [[#1018](https://github.com/nf-core/rnaseq/issues/1018)] - Ability to skip both alignment and pseudo-alignment to only run pre-processing QC steps.
+- [PR #1016](https://github.com/nf-core/rnaseq/pull/1016) - Updated pipeline template to [nf-core/tools 2.8](https://github.com/nf-core/tools/releases/tag/2.8)
+- [PR #1025](https://github.com/nf-core/fetchngs/pull/1025) - Add `public_aws_ecr.config` to source mulled containers when using `public.ecr.aws` Docker Biocontainer registry
+- [PR #1038](https://github.com/nf-core/rnaseq/pull/1038) - Updated error log for count values when supplying `--additional_fasta`
+- [PR #1042](https://github.com/nf-core/rnaseq/pull/1042) - revert samtools_sort modules to no memory assignement
+
+### Parameters
+
+| Old parameter | New parameter             |
+| ------------- | ------------------------- |
+|               | `--skip_pseudo_alignment` |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `fastp`    | 0.23.2      | 0.23.4      |
+| `samtools` | 1.16.1      | 1.17        |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+## [[3.11.2](https://github.com/nf-core/rnaseq/releases/tag/3.11.2)] - 2023-04-25
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Rob Syme](https://github.com/robsyme)
+- [W. Lee Pang](https://github.com/wleepang)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
+### Enhancements & fixes
+
+- [[#1003](https://github.com/nf-core/rnaseq/pull/1003)] - `FASTQ_SUBSAMPLE_FQ_SALMON:SALMON_INDEX` is launched multiple times and fails
+
+## [[3.11.1](https://github.com/nf-core/rnaseq/releases/tag/3.11.1)] - 2023-03-31
+
+### Credits
+
+Special thanks to the following for their code contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Rob Syme](https://github.com/robsyme)
+- [suhrig](https://github.com/suhrig)
+
+### Enhancements & fixes
+
+- [[#987](https://github.com/nf-core/rnaseq/pull/987)] - Fix issue with incorrect cacheing of test datasets during CI/CD
+- [[#988](https://github.com/nf-core/rnaseq/issues/988)] - `DESEQ2_QC_STAR_SALMON` fails when sample names have many components
+- Remove `wait: false` option from Tower Actions which is the default
+- Fix release trigger for full-sized multi-cloud tests
+- Adding `[ci fast]` to commit message now skips all tests except for standard `-profile test` pipeline run
+
+## [[3.11.0](https://github.com/nf-core/rnaseq/releases/tag/3.11.0)] - 2023-03-30
+
+### Credits
+
+Special thanks to the following for their code contributions to the release:
+
+- [J Lorent](https://github.com/jlorent)
+- [Luca Beltrame](https://github.com/lbeltrame)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Ryan Yordanoff](https://github.com/ryanyord)
+- [Thomas Sandmann](https://github.com/tomsing1)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
+### Enhancements & fixes
+
+- Add infrastructure and CI for multi-cloud full-sized tests run via Nextflow Tower (see [#981](https://github.com/nf-core/rnaseq/pull/981))
+- Added fastp support.
+  - Users can now select between `--trimmer trimgalore` (default) and `--trimmer fastp`.
+  - Trim Galore! specific pipeline parameters have been deprecated: `--clip_r1`, `--clip_r2`, `--three_prime_clip_r1`, `--three_prime_clip_r2` and `--trim_nextseq`
+  - Any additional options can now be specified via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.
+- [[#663](https://github.com/nf-core/rnaseq/issues/663)] - Alternative trimming step for polyA/T removal
+- [[#781](https://github.com/nf-core/rnaseq/issues/781)] - Add Warning for poly(A) libraries
+- [[#878](https://github.com/nf-core/rnaseq/issues/878)] - Allow tabs in fasta header when creating decoys for salmon index
+- [[#931](https://github.com/nf-core/rnaseq/issues/931)] - Save transcriptome BAM files when using `--save_umi_intermeds` / `--save_align_intermeds`
+- [[#934](https://github.com/nf-core/rnaseq/pull/934)] - Union of `ext.args` and `params.extra_star_align_args` prevents parameter clashes in the STAR module
+- [[#940](https://github.com/nf-core/rnaseq/issues/940)] - Bugfix in `salmon_summarizedexperiment.r` to ensure `rbind` doesn't fail when `rowdata` has no `tx` column.
+- [[#944](https://github.com/nf-core/rnaseq/issues/944)] - Read clipping using clip_r1, clip_r2, three_prime_clip_r1, three_prime_clip_r2 disabled in 3.10
+- [[#956](https://github.com/nf-core/rnaseq/pull/956)] - Implement 'auto' as default strandedness argument in `fastq_dir_to_samplesheet.py` script
+- [[#960](https://github.com/nf-core/rnaseq/issues/960)] - Failure with awsbatch when running processes that are using `executor: local`
+- [[#961](https://github.com/nf-core/rnaseq/issues/961)] - Add warnings to STDOUT for all skipped and failed strandedness check samples
+- [[#975](https://github.com/nf-core/rnaseq/issues/975)] - `SALMON_INDEX` runs when using `--aligner star_rsem` even if samples have explicit strandedness
+- Remove HISAT2 from automated AWS full-sized tests
+
+### Parameters
+
+| Old parameter           | New parameter             |
+| ----------------------- | ------------------------- |
+|                         | `--trimmer`               |
+|                         | `--extra_trimgalore_args` |
+| `--clip_r1`             |                           |
+| `--clip_r2`             |                           |
+| `--three_prime_clip_r1` |                           |
+| `--three_prime_clip_r2` |                           |
+| `--tracedir`            |                           |
+| `--trim_nextseq`        |                           |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency  | Old version | New version |
+| ----------- | ----------- | ----------- |
+| `fastp`     |             | 0.23.2      |
+| `multiqc`   | 1.13        | 1.14        |
+| `picard`    | 2.27.4      | 3.0.0       |
+| `salmon`    | 1.9.0       | 1.10.1      |
+| `umi_tools` | 1.1.2       | 1.1.4       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.10.1](https://github.com/nf-core/rnaseq/releases/tag/3.10.1)] - 2023-01-05
 
 ### Enhancements & fixes

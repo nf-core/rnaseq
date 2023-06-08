@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "fastq_align_hisat2"
 description: Align reads to a reference genome using hisat2 then sort with samtools
 keywords:

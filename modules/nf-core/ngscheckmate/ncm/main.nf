@@ -4,7 +4,7 @@ process NGSCHECKMATE_NCM {
     conda "bioconda::ngscheckmate=1.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ngscheckmate:1.0.0--py27r41hdfd78af_3':
-        'quay.io/biocontainers/ngscheckmate:1.0.0--py27r41hdfd78af_3' }"
+        'biocontainers/ngscheckmate:1.0.0--py27r41hdfd78af_3' }"
 
     input:
     path files

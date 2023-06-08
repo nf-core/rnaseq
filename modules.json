@@ -12,9 +12,9 @@
                     },
                     "bcftools/mpileup": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["bam_ngscheckmate"]
-                    },                    
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
@@ -72,10 +72,10 @@
                     },
                     "ngscheckmate/ncm": {
                         "branch": "master",
-                        "git_sha": "3cfd245a0b7f5e43eb0ef5480b30b36999b8cdcf",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["bam_ngscheckmate"],
                         "patch": "modules/nf-core/ngscheckmate/ncm/ngscheckmate-ncm.diff"
-                    },                    
+                    },
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "735e1e04e7e01751d2d6e97055bbdb6f70683cc1",

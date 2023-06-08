@@ -6,14 +6,14 @@ process HISAT2_EXTRACTSPLICESITES {
     conda "bioconda::hisat2=2.2.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
-        'quay.io/biocontainers/hisat2:2.2.1--h1b792b2_3' }"
+        'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
 
     input:
-    path gtf
+    tuple val(meta), path(gtf)
 
     output:
-    path "*.splice_sites.txt", emit: txt
-    path "versions.yml"      , emit: versions
+    tuple val(meta), path("*.splice_sites.txt"), emit: txt
+    path "versions.yml"                        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -2,6 +2,7 @@
 // This file holds several functions specific to the workflow/rnaseq.nf in the nf-core/rnaseq pipeline
 //
 
+import nextflow.Nextflow
 import groovy.json.JsonSlurper
 import groovy.text.SimpleTemplateEngine
 
@@ -15,13 +16,11 @@ class WorkflowRnaseq {
 
 
         if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
-            System.exit(1)
+            Nextflow.error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
         }
 
         if (!params.gtf && !params.gff) {
-            log.error "No GTF or GFF3 annotation specified! The pipeline requires at least one of these files."
-            System.exit(1)
+            Nextflow.error("No GTF or GFF3 annotation specified! The pipeline requires at least one of these files.")
         }
 
         if (params.gtf) {
@@ -41,45 +40,40 @@ class WorkflowRnaseq {
         }
 
         if (!params.skip_bbsplit && !params.bbsplit_index && !params.bbsplit_fasta_list) {
-            log.error "Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit."
-            System.exit(1)
+            Nextflow.error("Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit.")
         }
 
         if (params.remove_ribo_rna && !params.ribo_database_manifest) {
-            log.error "Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA."
-            System.exit(1)
+            Nextflow.error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA.")
         }
 
 
         if (params.with_umi && !params.skip_umi_extract) {
             if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
-                log.error "UMI-tools requires a barcode pattern to extract barcodes from the reads."
-                System.exit(1)
+                Nextflow.error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")
             }
         }
 
+        if (!params.skip_trimming) {
+            if (!valid_params['trimmers'].contains(params.trimmer)) {
+                Nextflow.error("Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}.")
+            }
+        }
 
         if (!params.skip_alignment) {
             if (!valid_params['aligners'].contains(params.aligner)) {
-                log.error "Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}."
-                System.exit(1)
+                Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
             }
         } else {
-            if (!params.pseudo_aligner) {
-                log.error "--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${valid_params['pseudoaligners'][0]}."
-                System.exit(1)
-            }
             skipAlignmentWarn(log)
         }
 
-        if (params.pseudo_aligner) {
+        if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
             if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
-                log.error "Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}."
-                System.exit(1)
+                Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
             } else {
                 if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
-                    log.error "To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff."
-                    System.exit(1)
+                    Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
                 }
             }
         }
@@ -114,8 +108,7 @@ class WorkflowRnaseq {
         // Check which RSeQC modules we are running
         def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
         if ((valid_params['rseqc_modules'] + rseqc_modules).unique().size() != valid_params['rseqc_modules'].size()) {
-            log.error "Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_params['rseqc_modules'].join(', ')}"
-            System.exit(1)
+            Nextflow.error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_params['rseqc_modules'].join(', ')}")
         }
     }
 
@@ -133,12 +126,12 @@ class WorkflowRnaseq {
         if (hits) {
             return true
         } else {
-            log.warn "=============================================================================\n" +
+            log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
                 "  Biotype QC will be skipped to circumvent the issue below:\n" +
                 "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
                 "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
-                "==================================================================================="
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             return false
         }
     }
@@ -153,14 +146,14 @@ class WorkflowRnaseq {
             def chrom = lspl[0]
             def size  = lspl[1]
             if (size.toInteger() > max_size) {
-                log.error "=============================================================================\n" +
+                def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                     "  Contig longer than ${max_size}bp found in reference genome!\n\n" +
                     "  ${chrom}: ${size}\n\n" +
                     "  Provide the '--bam_csi_index' parameter to use a CSI instead of BAI index.\n\n" +
                     "  Please see:\n" +
                     "  https://github.com/nf-core/rnaseq/issues/744\n" +
-                    "============================================================================="
-                System.exit(1)
+                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                Nextflow.error(error_string)
             }
         }
     }
@@ -273,6 +266,18 @@ class WorkflowRnaseq {
         return yaml_file_text
     }
 
+    //
+    // Create MultiQC tsv custom content from a list of values
+    //
+    public static String multiqcTsvFromList(tsv_data, header) {
+        def tsv_string = ""
+        if (tsv_data.size() > 0) {
+            tsv_string += "${header.join('\t')}\n"
+            tsv_string += tsv_data.join('\n')
+        }
+        return tsv_string
+    }
+
     public static String methodsDescriptionText(run_workflow, mqc_methods_yaml) {
         // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
         def meta = [:]
@@ -288,17 +293,19 @@ class WorkflowRnaseq {
         def description_html = engine.createTemplate(methods_text).make(meta)
 
         return description_html
-    }//
+    }
+
+    //
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
                 "  Currently, the available genome keys are:\n" +
                 "  ${params.genomes.keySet().join(", ")}\n" +
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            System.exit(1)
+            Nextflow.error(error_string)
         }
     }
 
@@ -306,101 +313,101 @@ class WorkflowRnaseq {
     // Print a warning if using GRCh38 assembly from igenomes.config
     //
     private static void ncbiGenomeWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--genome GRCh38' the assembly is from the NCBI and NOT Ensembl.\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
             "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using a UCSC assembly from igenomes.config
     //
     private static void ucscGenomeWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using UCSC assemblies the 'gene_biotype' field is absent from the GTF file.\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
             "  If you would like to use the soft-masked Ensembl assembly instead please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/159#issuecomment-501184312\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if both GTF and GFF have been provided
     //
     private static void gtfGffWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  Both '--gtf' and '--gff' parameters have been provided.\n" +
             "  Using GTF file as priority.\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using '--transcript_fasta'
     //
     private static void transcriptsFastaWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  '--transcript_fasta' parameter has been provided.\n" +
             "  Make sure transcript names in this file match those in the GFF/GTF file.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/753\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if --skip_alignment has been provided
     //
     private static void skipAlignmentWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  '--skip_alignment' parameter has been provided.\n" +
             "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using '--aligner star_rsem' and '--with_umi'
     //
     private static void rsemUmiError(log) {
-        log.error "=============================================================================\n" +
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
             "  not possible to remove UMIs before the quantification.\n\n" +
             "  If you would like to remove UMI barcodes using the '--with_umi' option\n" +
             "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
-            "============================================================================="
-        System.exit(1)
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        Nextflow.error(error_string)
     }
 
     //
     // Print a warning if using '--aligner star_rsem' and providing both '--rsem_index' and '--star_index'
     //
     private static void rsemStarIndexWarn(log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--aligner star_rsem', both the STAR and RSEM indices should\n" +
             "  be present in the path specified by '--rsem_index'.\n\n" +
             "  This warning has been generated because you have provided both\n" +
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 
     //
     // Print a warning if using '--additional_fasta' and '--<ALIGNER>_index'
     //
     private static void additionaFastaIndexWarn(index, log) {
-        log.warn "=============================================================================\n" +
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  When using '--additional_fasta <FASTA_FILE>' the aligner index will not\n" +
             "  be re-built with the transgenes incorporated by default since you have \n" +
             "  already provided an index via '--${index}_index <INDEX>'.\n\n" +
-            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --save_reference' to\n" +
-            "  re-build the index with transgenes included and the index will be saved in\n" +
+            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --gene_bed false --save_reference'\n" +
+            "  to re-build the index with transgenes included and the index and gene BED file will be saved in\n" +
             "  'results/genome/index/${index}/' for re-use with '--${index}_index'.\n\n" +
             "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/556\n" +
-            "==================================================================================="
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 }

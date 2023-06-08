@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "bam_dedup_stats_samtools_umitools"
 description: UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
 keywords:
@@ -14,43 +15,44 @@ modules:
   - samtools/idxstats
   - samtools/flagstat
 input:
-  - bam_bai:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - get_dedup_stats:
+  - ch_bam_bai:
+      description: |
+        input BAM file
+        Structure: [ val(meta), path(bam), path(bai) ]
+  - val_get_dedup_stats:
       type: boolean
       description: |
         Generate output stats when running "umi_tools dedup"
 output:
   - bam:
-      type: file
-      description: Umi deduplicated BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
+      description: |
+        Umi deduplicated BAM/SAM file
+        Structure: [ val(meta), path(bam) ]
   - bai:
-      type: file
-      description: Umi deduplicated BAM/CRAM/SAM samtools index
-      pattern: "*.{bai,crai,sai}"
+      description: |
+        Umi deduplicated BAM/SAM samtools index
+        Structure: [ val(meta), path(bai) ]
   - csi:
-      type: file
-      description: CSI samtools index
-      pattern: "*.csi"
+      description: |
+        CSI samtools index
+        Structure: [ val(meta), path(csi) ]
   - stats:
-      type: file
-      description: File containing samtools stats output
-      pattern: "*.{stats}"
+      description: |
+        File containing samtools stats output
+        Structure: [ val(meta), path(stats) ]
   - flagstat:
-      type: file
-      description: File containing samtools flagstat output
-      pattern: "*.{flagstat}"
+      description: |
+        File containing samtools flagstat output
+        Structure: [ val(meta), path(flagstat) ]
   - idxstats:
-      type: file
-      description: File containing samtools idxstats output
-      pattern: "*.{idxstats}"
+      description: |
+        File containing samtools idxstats output
+        Structure: [ val(meta), path(idxstats) ]
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: |
+        Files containing software versions
+        Structure: [ path(versions.yml) ]
+
 authors:
   - "@drpatelh"
   - "@KamilMaliszArdigen"

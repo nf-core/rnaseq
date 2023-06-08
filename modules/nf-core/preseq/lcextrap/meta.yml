@@ -10,7 +10,7 @@ tools:
       homepage: http://smithlabresearch.org/software/preseq/
       documentation: http://smithlabresearch.org/wp-content/uploads/manual.pdf
       tool_dev_url: https://github.com/smithlabcode/preseq
-      doi: ""
+
       licence: ["GPL"]
 
 input:

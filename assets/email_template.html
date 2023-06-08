@@ -34,7 +34,7 @@
         <p>The full error message was:</p>
         <pre style="white-space: pre-wrap; overflow: visible; margin-bottom: 0">${errorReport}</pre>
       </div>
-      """ } else if(fail_percent_mapped.size() > 0) { out << """
+      """ } else if(skip_sample_count > 0) { out << """
       <div
         style="
           color: #856404;
@@ -48,12 +48,8 @@
       >
         <h4 style="margin-top: 0; color: inherit">nf-core/rnaseq execution completed with warnings!</h4>
         <p>
-          The pipeline finished successfully, but the following samples were skipped due to very low alignment (&lt;
-          ${min_mapped_reads}%):
+          The pipeline finished successfully, but samples were skipped. Please check warnings at the top of the MultiQC report.
         </p>
-        <ul>
-          <li><code>${fail_percent_mapped.join('</code></li><li><code>')}</code></li>
-        </ul>
         <p></p>
       </div>
 

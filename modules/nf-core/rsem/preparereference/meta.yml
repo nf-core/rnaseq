@@ -2,14 +2,15 @@ name: rsem_preparereference
 description: Prepare a reference genome for RSEM
 keywords:
   - rsem
-  - reference
+  - genome
+  - index
 tools:
   - rseqc:
       description: |
         RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome
       homepage: https://github.com/deweylab/RSEM
       documentation: https://github.com/deweylab/RSEM
-      doi: https://doi.org/10.1186/1471-2105-12-323
+      doi: 10.1186/1471-2105-12-323
       licence: ["GPL-3.0-or-later"]
 input:
   - fasta:

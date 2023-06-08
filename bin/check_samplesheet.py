@@ -48,7 +48,6 @@ def check_samplesheet(file_in, file_out):
 
     sample_mapping_dict = {}
     with open(file_in, "r", encoding="utf-8-sig") as fin:
-
         ## Check header
         MIN_COLS = 3
         HEADER = ["sample", "fastq_1", "fastq_2", "strandedness"]
@@ -142,7 +141,6 @@ def check_samplesheet(file_in, file_out):
                 ",".join(["sample", "single_end", "fastq_1", "fastq_2", "strandedness"] + header[len(HEADER) :]) + "\n"
             )
             for sample in sorted(sample_mapping_dict.keys()):
-
                 ## Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
                 if not all(x[0] == sample_mapping_dict[sample][0][0] for x in sample_mapping_dict[sample]):
                     print_error(

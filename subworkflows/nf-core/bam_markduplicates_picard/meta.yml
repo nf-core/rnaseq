@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "bam_markduplicates_picard"
 description: Picard MarkDuplicates, index BAM file and run samtools stats, flagstat and idxstats
 keywords:
@@ -14,48 +15,47 @@ modules:
   - samtools/flagstat
 
 input:
-  - meta:
-      type: map
+  - ch_bam:
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
-  - bam:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - fasta:
-      type: file
-      description: Reference genome fasta file
-      pattern: "*.{fasta,fa}"
-
+        BAM/CRAM/SAM file
+        Structure: [ val(meta), path(bam) ]
+  - ch_fasta:
+      description: |
+        Reference genome fasta file
+        Structure: [ path(fasta) ]
+  - ch_fasta:
+      description: |
+        Index of the reference genome fasta file
+        Structure: [ path(fai) ]
 output:
-  - meta:
-      type: map
+  - bam:
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
+        processed BAM/CRAM/SAM file
+        Structure: [ val(meta), path(bam) ]
   - bai:
-      type: file
-      description: BAM/CRAM/SAM samtools index
-      pattern: "*.{bai,crai,sai}"
+      description: |
+        BAM/CRAM/SAM samtools index
+        Structure: [ val(meta), path(bai) ]
   - csi:
-      type: file
-      description: CSI samtools index
-      pattern: "*.csi"
+      description: |
+        CSI samtools index
+        Structure: [ val(meta), path(csi) ]
   - stats:
-      type: file
-      description: File containing samtools stats output
+      description: |
+        File containing samtools stats output
+        Structure: [ val(meta), path(stats) ]
   - flagstat:
-      type: file
-      description: File containing samtools flagstat output
+      description: |
+        File containing samtools flagstat output
+        Structure: [ val(meta), path(flagstat) ]
   - idxstats:
-      type: file
-      description: File containing samtools idxstats output
-      pattern: "*.{idxstats}"
+      description: |
+        File containing samtools idxstats output
+        Structure: [ val(meta), path(idxstats) ]
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: |
+        Files containing software versions
+        Structure: [ path(versions.yml) ]
 authors:
   - "@dmarron"
   - "@drpatelh"

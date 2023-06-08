@@ -35,13 +35,42 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
+
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
 
   star_salmon:
     name: Test STAR Salmon with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -58,9 +87,39 @@ jobs:
           - "--bam_csi_index"
           - "--save_align_intermeds --save_reference"
           - "--featurecounts_group_type false"
+          - "--trimmer fastp"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
+
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
 
       - name: Install Nextflow
         run: |
@@ -69,11 +128,11 @@ jobs:
 
       - name: Run pipeline with STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
 
   star_rsem:
     name: Test STAR RSEM with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -84,6 +143,35 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
+
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
@@ -91,11 +179,11 @@ jobs:
 
       - name: Run pipeline with RSEM STAR and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
 
   hisat2:
     name: Test HISAT2 with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -106,6 +194,35 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
+
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
@@ -113,20 +230,50 @@ jobs:
 
       - name: Run pipeline with HISAT2 and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
 
   salmon:
     name: Test Salmon with workflow parameters
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}
+    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         parameters:
-          - "--skip_qc --skip_alignment"
+          - "--skip_qc"
+          - "--skip_alignment --skip_pseudo_alignment"
           - "--salmon_index false --transcript_fasta false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
+
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
 
       - name: Install Nextflow
         run: |
@@ -135,4 +282,4 @@ jobs:
 
       - name: Run pipeline with Salmon and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/

@@ -17,6 +17,7 @@ run_modules:
   - custom_content
   - fastqc
   - cutadapt
+  - fastp
   - sortmerna
   - star
   - hisat2
@@ -47,13 +48,14 @@ module_order:
       name: "FastQC (raw)"
       info: "This section of the report shows FastQC results before adapter trimming."
       path_filters:
-        - "./fastqc/*.zip"
+        - "./fastqc/raw/*.zip"
   - cutadapt
+  - fastp
   - fastqc:
       name: "FastQC (trimmed)"
       info: "This section of the report shows FastQC results after adapter trimming."
       path_filters:
-        - "./trimgalore/fastqc/*.zip"
+        - "./fastqc/trim/*.zip"
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:
@@ -73,6 +75,9 @@ extra_fn_clean_exts:
 sp:
   cutadapt:
     fn: "*trimming_report.txt"
+
+  fastp:
+    fn: "*.fastp.json"
 
   sortmerna:
     fn: "*.sortmerna.log"

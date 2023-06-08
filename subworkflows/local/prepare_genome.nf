@@ -33,9 +33,23 @@ include { STAR_GENOMEGENERATE_IGENOMES         } from '../../modules/local/star_
 
 workflow PREPARE_GENOME {
     take:
-    prepare_tool_indices // list   : tools to prepare indices for
-    biotype              // string : if additional fasta file is provided biotype value to use when appending entries to GTF file
-    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
+    fasta                //      file: /path/to/genome.fasta
+    gtf                  //      file: /path/to/genome.gtf
+    gff                  //      file: /path/to/genome.gff
+    additional_fasta     //      file: /path/to/additional.fasta
+    transcript_fasta     //      file: /path/to/transcript.fasta
+    gene_bed             //      file: /path/to/gene.bed
+    splicesites          //      file: /path/to/splicesites.txt
+    bbsplit_fasta_list   //      file: /path/to/bbsplit_fasta_list.txt
+    star_index           // directory: /path/to/star/index/
+    rsem_index           // directory: /path/to/rsem/index/
+    salmon_index         // directory: /path/to/salmon/index/
+    hisat2_index         // directory: /path/to/hisat2/index/ 
+    bbsplit_index        // directory: /path/to/rsem/index/
+    gencode              //   boolean: whether the genome is from GENCODE
+    is_aws_igenome       //   boolean: whether the genome files are from AWS iGenomes
+    biotype              //    string: if additional fasta file is provided biotype value to use when appending entries to GTF file
+    prepare_tool_indices //      list: tools to prepare indices for
 
     main:
 
@@ -44,29 +58,29 @@ workflow PREPARE_GENOME {
     //
     // Uncompress genome fasta file if required
     //
-    if (params.fasta.endsWith('.gz')) {
-        ch_fasta    = GUNZIP_FASTA ( [ [:], params.fasta ] ).gunzip.map { it[1] }
+    if (fasta.endsWith('.gz')) {
+        ch_fasta    = GUNZIP_FASTA ( [ [:], fasta ] ).gunzip.map { it[1] }
         ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
     } else {
-        ch_fasta = file(params.fasta)
+        ch_fasta = Channel.value(file(fasta))
     }
 
     //
     // Uncompress GTF annotation file or create from GFF3 if required
     //
-    if (params.gtf) {
-        if (params.gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ( [ [:], params.gtf ] ).gunzip.map { it[1] }
+    if (gtf) {
+        if (gtf.endsWith('.gz')) {
+            ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
         } else {
-            ch_gtf = file(params.gtf)
+            ch_gtf = Channel.value(file(gtf))
         }
-    } else if (params.gff) {
-        if (params.gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ( [ [:], params.gff ] ).gunzip.map { it[1] }
+    } else if (gff) {
+        if (gff.endsWith('.gz')) {
+            ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
         } else {
-            ch_gff = file(params.gff)
+            ch_gff = Channel.value(file(gff))
         }
         ch_gtf      = GFFREAD ( ch_gff ).gtf
         ch_versions = ch_versions.mix(GFFREAD.out.versions)
@@ -75,12 +89,12 @@ workflow PREPARE_GENOME {
     //
     // Uncompress additional fasta file and concatenate with reference fasta and gtf files
     //
-    if (params.additional_fasta) {
-        if (params.additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], params.additional_fasta ] ).gunzip.map { it[1] }
+    if (additional_fasta) {
+        if (additional_fasta.endsWith('.gz')) {
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], additional_fasta ] ).gunzip.map { it[1] }
             ch_versions  = ch_versions.mix(GUNZIP_ADDITIONAL_FASTA.out.versions)
         } else {
-            ch_add_fasta = file(params.additional_fasta)
+            ch_add_fasta = Channel.value(file(additional_fasta))
         }
         CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta, biotype )
         ch_fasta    = CAT_ADDITIONAL_FASTA.out.fasta
@@ -91,12 +105,12 @@ workflow PREPARE_GENOME {
     //
     // Uncompress gene BED annotation file or create from GTF if required
     //
-    if (params.gene_bed) {
-        if (params.gene_bed.endsWith('.gz')) {
-            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], params.gene_bed ] ).gunzip.map { it[1] }
+    if (gene_bed) {
+        if (gene_bed.endsWith('.gz')) {
+            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], gene_bed ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GENE_BED.out.versions)
         } else {
-            ch_gene_bed = file(params.gene_bed)
+            ch_gene_bed = Channel.value(file(gene_bed))
         }
     } else {
         ch_gene_bed = GTF2BED ( ch_gtf ).bed
@@ -106,14 +120,14 @@ workflow PREPARE_GENOME {
     //
     // Uncompress transcript fasta file / create if required
     //
-    if (params.transcript_fasta) {
-        if (params.transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], params.transcript_fasta ] ).gunzip.map { it[1] }
+    if (transcript_fasta) {
+        if (transcript_fasta.endsWith('.gz')) {
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], transcript_fasta ] ).gunzip.map { it[1] }
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
-            ch_transcript_fasta = file(params.transcript_fasta)
+            ch_transcript_fasta = Channel.value(file(transcript_fasta))
         }
-        if (params.gencode) { 
+        if (gencode) { 
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
             ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
@@ -128,9 +142,9 @@ workflow PREPARE_GENOME {
     //
     // Create chromosome sizes file
     //
-    CUSTOM_GETCHROMSIZES ( ch_fasta )
-    ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes
-    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai
+    CUSTOM_GETCHROMSIZES ( ch_fasta.map { [ [:], it ] } )
+    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
+    ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
     ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //
@@ -138,16 +152,16 @@ workflow PREPARE_GENOME {
     //
     ch_bbsplit_index = Channel.empty()
     if ('bbsplit' in prepare_tool_indices) {
-        if (params.bbsplit_index) {
-            if (params.bbsplit_index.endsWith('.tar.gz')) {
-                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( [ [:], params.bbsplit_index ] ).untar.map { it[1] }
+        if (bbsplit_index) {
+            if (bbsplit_index.endsWith('.tar.gz')) {
+                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( [ [:], bbsplit_index ] ).untar.map { it[1] }
                 ch_versions      = ch_versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
             } else {
-                ch_bbsplit_index = file(params.bbsplit_index)
+                ch_bbsplit_index = Channel.value(file(bbsplit_index))
             }
         } else {
             Channel
-                .from(file(params.bbsplit_fasta_list))
+                .from(file(bbsplit_fasta_list))
                 .splitCsv() // Read in 2 column csv file: short_name,path_to_fasta
                 .flatMap { id, fasta -> [ [ 'id', id ], [ 'fasta', file(fasta, checkIfExists: true) ] ] } // Flatten entries to be able to groupTuple by a common key
                 .groupTuple()
@@ -165,12 +179,12 @@ workflow PREPARE_GENOME {
     //
     ch_star_index = Channel.empty()
     if ('star_salmon' in prepare_tool_indices) {
-        if (params.star_index) {
-            if (params.star_index.endsWith('.tar.gz')) {
-                ch_star_index = UNTAR_STAR_INDEX ( [ [:], params.star_index ] ).untar.map { it[1] }
+        if (star_index) {
+            if (star_index.endsWith('.tar.gz')) {
+                ch_star_index = UNTAR_STAR_INDEX ( [ [:], star_index ] ).untar.map { it[1] }
                 ch_versions   = ch_versions.mix(UNTAR_STAR_INDEX.out.versions)
             } else {
-                ch_star_index = file(params.star_index)
+                ch_star_index = Channel.value(file(star_index))
             }
         } else {
             if (is_aws_igenome) {
@@ -188,12 +202,12 @@ workflow PREPARE_GENOME {
     //
     ch_rsem_index = Channel.empty()
     if ('star_rsem' in prepare_tool_indices) {
-        if (params.rsem_index) {
-            if (params.rsem_index.endsWith('.tar.gz')) {
-                ch_rsem_index = UNTAR_RSEM_INDEX ( [ [:], params.rsem_index ] ).untar.map { it[1] }
+        if (rsem_index) {
+            if (rsem_index.endsWith('.tar.gz')) {
+                ch_rsem_index = UNTAR_RSEM_INDEX ( [ [:], rsem_index ] ).untar.map { it[1] }
                 ch_versions   = ch_versions.mix(UNTAR_RSEM_INDEX.out.versions)
             } else {
-                ch_rsem_index = file(params.rsem_index)
+                ch_rsem_index = Channel.value(file(rsem_index))
             }
         } else {
             ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
@@ -207,21 +221,21 @@ workflow PREPARE_GENOME {
     ch_splicesites  = Channel.empty()
     ch_hisat2_index = Channel.empty()
     if ('hisat2' in prepare_tool_indices) {
-        if (!params.splicesites) {
-            ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf ).txt
+        if (!splicesites) {
+            ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf.map { [ [:], it ] } ).txt.map { it[1] }
             ch_versions    = ch_versions.mix(HISAT2_EXTRACTSPLICESITES.out.versions)
         } else {
-            ch_splicesites = file(params.splicesites)
+            ch_splicesites = Channel.value(file(splicesites))
         }
-        if (params.hisat2_index) {
-            if (params.hisat2_index.endsWith('.tar.gz')) {
-                ch_hisat2_index = UNTAR_HISAT2_INDEX ( [ [:], params.hisat2_index ] ).untar.map { it[1] }
+        if (hisat2_index) {
+            if (hisat2_index.endsWith('.tar.gz')) {
+                ch_hisat2_index = UNTAR_HISAT2_INDEX ( [ [:], hisat2_index ] ).untar.map { it[1] }
                 ch_versions     = ch_versions.mix(UNTAR_HISAT2_INDEX.out.versions)
             } else {
-                ch_hisat2_index = file(params.hisat2_index)
+                ch_hisat2_index = Channel.value(file(hisat2_index))
             }
         } else {
-            ch_hisat2_index = HISAT2_BUILD ( ch_fasta, ch_gtf, ch_splicesites ).index
+            ch_hisat2_index = HISAT2_BUILD ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] }, ch_splicesites.map { [ [:], it ] } ).index.map { it[1] }
             ch_versions     = ch_versions.mix(HISAT2_BUILD.out.versions)
         }
     }
@@ -230,12 +244,12 @@ workflow PREPARE_GENOME {
     // Uncompress Salmon index or generate from scratch if required
     //
     ch_salmon_index = Channel.empty()
-    if (params.salmon_index) {
-        if (params.salmon_index.endsWith('.tar.gz')) {
-            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], params.salmon_index ] ).untar.map { it[1] }
+    if (salmon_index) {
+        if (salmon_index.endsWith('.tar.gz')) {
+            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.map { it[1] }
             ch_versions     = ch_versions.mix(UNTAR_SALMON_INDEX.out.versions)
         } else {
-            ch_salmon_index = file(params.salmon_index)
+            ch_salmon_index = Channel.value(file(salmon_index))
         }
     } else {
         if ('salmon' in prepare_tool_indices) {
@@ -245,18 +259,18 @@ workflow PREPARE_GENOME {
     }
 
     emit:
-    fasta            = ch_fasta            //    path: genome.fasta
-    gtf              = ch_gtf              //    path: genome.gtf
-    fai              = ch_fai              //    path: genome.fai
-    gene_bed         = ch_gene_bed         //    path: gene.bed
-    transcript_fasta = ch_transcript_fasta //    path: transcript.fasta
-    chrom_sizes      = ch_chrom_sizes      //    path: genome.sizes
-    splicesites      = ch_splicesites      //    path: genome.splicesites.txt
-    bbsplit_index    = ch_bbsplit_index    //    path: bbsplit/index/
-    star_index       = ch_star_index       //    path: star/index/
-    rsem_index       = ch_rsem_index       //    path: rsem/index/
-    hisat2_index     = ch_hisat2_index     //    path: hisat2/index/
-    salmon_index     = ch_salmon_index     //    path: salmon/index/
+    fasta            = ch_fasta                  // channel: path(genome.fasta)
+    gtf              = ch_gtf                    // channel: path(genome.gtf)
+    fai              = ch_fai                    // channel: path(genome.fai)
+    gene_bed         = ch_gene_bed               // channel: path(gene.bed)
+    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
+    chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
+    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
+    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    star_index       = ch_star_index             // channel: path(star/index/)
+    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
+    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
+    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
 
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

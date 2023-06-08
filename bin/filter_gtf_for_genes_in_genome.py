@@ -46,7 +46,6 @@ def extract_genes_in_genome(fasta, gtf_in, gtf_out):
     n_lines_in_genome = 0
     with open(gtf_out, "w") as f:
         with open(gtf_in) as g:
-
             for line in g.readlines():
                 n_total_lines += 1
                 seq_name_gtf = line.split("\t")[0]

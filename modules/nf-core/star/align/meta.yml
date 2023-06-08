@@ -74,6 +74,14 @@ output:
       type: file
       description: STAR chimeric junction output file (optional)
       pattern: "*.out.junction"
+  - wig:
+      type: file
+      description: STAR output wiggle format file(s) (optional)
+      pattern: "*.wig"
+  - bedgraph:
+      type: file
+      description: STAR output bedGraph format file(s) (optional)
+      pattern: "*.bg"
 
 authors:
   - "@kevinmenden"

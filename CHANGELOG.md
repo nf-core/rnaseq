@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [dev]
-- [PR #995] Added NGSCheckMate for checking that samples come from the same individual 
+- [PR #993] Added NGSCheckMate for checking that samples come from the same individual 
 
 ### Parameters
 

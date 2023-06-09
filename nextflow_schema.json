@@ -700,7 +700,6 @@
                 "multiqc_config": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true

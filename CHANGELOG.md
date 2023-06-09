@@ -3,6 +3,32 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev]
+- [PR #995] Added NGSCheckMate for checking that samples come from the same individual 
+
+### Parameters
+
+| Old parameter | New parameter         |
+| ------------- | --------------------- |
+|               | `--ngscheckmate_bed`  |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency     | Old version | New version |
+| -------------- | ----------- | ----------- |
+| `bcftools`     |             | 1.17        |
+| `ngscheckmate` |             | 1.0.0       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 
 ### Credits

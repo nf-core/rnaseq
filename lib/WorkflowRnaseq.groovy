@@ -54,17 +54,7 @@ class WorkflowRnaseq {
             }
         }
 
-        if (!params.skip_trimming) {
-            if (!valid_params['trimmers'].contains(params.trimmer)) {
-                Nextflow.error("Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}.")
-            }
-        }
-
-        if (!params.skip_alignment) {
-            if (!valid_params['aligners'].contains(params.aligner)) {
-                Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
-            }
-        } else {
+        if (params.skip_alignment) {
             skipAlignmentWarn(log)
         }
 

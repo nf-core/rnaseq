@@ -10,13 +10,13 @@ process HISAT2_BUILD {
         'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
 
     input:
-    path fasta
-    path gtf
-    path splicesites
+    tuple val(meta), path(fasta)
+    tuple val(meta2), path(gtf)
+    tuple val(meta3), path(splicesites)
 
     output:
-    path "hisat2"       , emit: index
-    path "versions.yml" , emit: versions
+    tuple val(meta), path("hisat2") , emit: index
+    path "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

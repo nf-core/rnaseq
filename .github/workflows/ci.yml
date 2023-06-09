@@ -239,7 +239,8 @@ jobs:
     strategy:
       matrix:
         parameters:
-          - "--skip_qc --skip_alignment"
+          - "--skip_qc"
+          - "--skip_alignment --skip_pseudo_alignment"
           - "--salmon_index false --transcript_fasta false"
     steps:
       - name: Check out pipeline code

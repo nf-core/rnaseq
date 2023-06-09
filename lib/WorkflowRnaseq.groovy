@@ -54,16 +54,27 @@ class WorkflowRnaseq {
             }
         }
 
-        if (params.skip_alignment) {
-            if (!params.pseudo_aligner) {
-                Nextflow.error("--skip_alignment specified without --pseudo_aligner...please specify e.g. --pseudo_aligner ${valid_params['pseudoaligners'][0]}.")
+        if (!params.skip_trimming) {
+            if (!valid_params['trimmers'].contains(params.trimmer)) {
+                Nextflow.error("Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}.")
             }
+        }
+
+        if (!params.skip_alignment) {
+            if (!valid_params['aligners'].contains(params.aligner)) {
+                Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
+            }
+        } else {
             skipAlignmentWarn(log)
         }
 
-        if (params.pseudo_aligner) {
-            if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
-                Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
+        if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+            if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
+                Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
+            } else {
+                if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
+                    Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
+                }
             }
         }
 
@@ -391,8 +402,8 @@ class WorkflowRnaseq {
             "  When using '--additional_fasta <FASTA_FILE>' the aligner index will not\n" +
             "  be re-built with the transgenes incorporated by default since you have \n" +
             "  already provided an index via '--${index}_index <INDEX>'.\n\n" +
-            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --save_reference' to\n" +
-            "  re-build the index with transgenes included and the index will be saved in\n" +
+            "  Set '--additional_fasta <FASTA_FILE> --${index}_index false --gene_bed false --save_reference'\n" +
+            "  to re-build the index with transgenes included and the index and gene BED file will be saved in\n" +
             "  'results/genome/index/${index}/' for re-use with '--${index}_index'.\n\n" +
             "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
             "  Please see:\n" +

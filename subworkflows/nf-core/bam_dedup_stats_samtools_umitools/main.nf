@@ -39,7 +39,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
                 }
         }
 
-    BAM_STATS_SAMTOOLS ( ch_bam_bai_dedup, [] )
+    BAM_STATS_SAMTOOLS ( ch_bam_bai_dedup, [ [:], [] ] )
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:

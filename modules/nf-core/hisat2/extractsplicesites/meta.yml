@@ -15,12 +15,22 @@ tools:
       licence: ["MIT"]
 
 input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - gtf:
       type: file
       description: Reference gtf annotation file
       pattern: "*.{gtf}"
 
 output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - versions:
       type: file
       description: File containing software versions
@@ -32,3 +42,4 @@ output:
 
 authors:
   - "@ntoda03"
+  - "@ramprasadn"

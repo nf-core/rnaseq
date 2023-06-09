@@ -20,6 +20,16 @@ log.info logo + paramsSummaryLog(workflow) + citation
 
 WorkflowRnaseq.initialise(params, log, valid_params)
 
+// Check input path parameters to see if they exist
+checkPathParamList = [
+    params.input, params.multiqc_config,
+    params.fasta, params.transcript_fasta, params.additional_fasta,
+    params.gtf, params.gff, params.gene_bed,
+    params.ribo_database_manifest, params.splicesites,
+    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index
+]
+for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+
 // Check rRNA databases for sortmerna
 if (params.remove_ribo_rna) {
     ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)

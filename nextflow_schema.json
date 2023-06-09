@@ -15,7 +15,6 @@
                 "input": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "schema": "assets/schema_input.json",
@@ -151,7 +150,6 @@
                 "ribo_database_manifest": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "default": "${projectDir}/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database",
                     "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
@@ -180,7 +178,6 @@
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
@@ -190,7 +187,6 @@
                 "gtf": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
@@ -200,7 +196,6 @@
                 "gff": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
@@ -210,7 +205,6 @@
                 "gene_bed": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
@@ -219,7 +213,6 @@
                 "transcript_fasta": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
@@ -228,7 +221,6 @@
                 "additional_fasta": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
@@ -238,7 +230,6 @@
                 "splicesites": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "fa_icon": "fas fa-hand-scissors",
                     "description": "Splice sites file required for HISAT2."
@@ -246,28 +237,24 @@
                 "star_index": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built STAR index."
                 },
                 "hisat2_index": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built HISAT2 index."
                 },
                 "rsem_index": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built RSEM index."
                 },
                 "salmon_index": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Salmon index."
                 },

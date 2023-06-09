@@ -206,9 +206,6 @@ workflow RNASEQ {
     }
     .set { ch_fastq }
 
-    ch_fastq.single.view()
-    ch_fastq.multiple.view()
-
     //
     // MODULE: Concatenate FastQ files from same sample if required
     //

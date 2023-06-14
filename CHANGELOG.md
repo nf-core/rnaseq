@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-- [PR #1049](https://github.com/nf-core/rnaseq/pull/1049) - RSEM imposes own arguments to STAR, therefore `--star_extra_alignment_args` are ignored for this route. A warning is displayed when both are used together.
+- [PR #1049](https://github.com/nf-core/rnaseq/pull/1049) - RSEM imposes own arguments to STAR, therefore `--extra_star_align_args` are ignored for this route. A warning is displayed when both are used together.
 
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 

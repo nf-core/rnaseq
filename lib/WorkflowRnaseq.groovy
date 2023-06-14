@@ -86,7 +86,7 @@ class WorkflowRnaseq {
             if (params.rsem_index && params.star_index) {
                 rsemStarIndexWarn(log)
             }
-            if (params.star_extra_alignment_args) {
+            if (params.aligner  == 'star_rsem' && params.extra_star_align_args) {
                 rsemStarExtraArgumentsWarn(log)
             }
         }

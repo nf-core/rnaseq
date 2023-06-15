@@ -417,7 +417,7 @@
                 },
                 "extra_star_align_args": {
                     "type": "string",
-                    "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
+                    "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline. Only available for the STAR-Salmon route.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_salmon_quant_args": {

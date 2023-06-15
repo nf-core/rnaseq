@@ -86,6 +86,9 @@ class WorkflowRnaseq {
             if (params.rsem_index && params.star_index) {
                 rsemStarIndexWarn(log)
             }
+            if (params.aligner  == 'star_rsem' && params.extra_star_align_args) {
+                rsemStarExtraArgumentsWarn(log)
+            }
         }
 
         // Warn if --additional_fasta provided with aligner index
@@ -391,6 +394,19 @@ class WorkflowRnaseq {
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    }
+
+    //
+    // Print a warning if using '--aligner star_rsem' and providing '--star_extra_alignment_args'
+    //
+    private static void rsemStarExtraArgumentsWarn(log) {
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            "  No additional arguments can be passed to STAR when using RSEM.\n" +
+            "  Because RSEM enforces its own parameters for STAR, any extra arguments\n" +
+            "  to STAR will be ignored. Alternatively, choose the STAR+Salmon route.\n\n" +
+            "  This warning has been generated because you have provided both\n" +
+            "  '--aligner star_rsem' and '--extra_star_align_args'.\n\n" +
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 

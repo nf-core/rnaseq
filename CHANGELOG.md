@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Remove public_aws_ecr profile.
+- [PR #1051](https://github.com/nf-core/rnaseq/pull/1051) - Remove public_aws_ecr profile.
 
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 

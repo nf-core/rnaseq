@@ -5,4 +5,5 @@ lint:
     - assets/email_template.txt
     - lib/NfcoreSchema.groovy
     - lib/NfcoreTemplate.groovy
+    - .gitattributes
   actions_ci: False

@@ -1,93 +1,112 @@
-# This is the nf-core CI workflow configuration for GitHub Actions
+# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 name: nf-core CI
-# This workflow is triggered when a pull request is made to the 'dev' branch or when a new release is published
 on:
   push:
     branches:
-      - dev
+      - "dev"
   pull_request:
     branches:
-      - dev
-      - master
+      - "dev"
+      - "master"
   release:
-    types: [published]
+    types:
+      - "published"
 
-# Setting environment variable for Nextflow logs
 env:
   NXF_ANSI_LOG: false
+  NFTEST_VER: "0.7.3"
 
-# Define the jobs to be run in parallel
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
   cancel-in-progress: true
 
-# Define the jobs to be run
 jobs:
-  test:
-    # Name the job with the corresponding profile, Nextflow version and aligner
-    name: Run ${{ matrix.profile }}-${{ matrix.NXF_VER }}-${{ matrix.aligner }} pipeline test
-
-      # Comment on the PR with the test results
-      - name: PR comment with file
-        if: github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          filePath: test.tap
-
-  test-master:
-    # Only run this job if the base branch is 'master'
-    if: github.base_ref == 'master'
-    name: Run pipeline with test data on master
+  define_nxf_versions:
+    name: Choose nextflow versions to test against depending on target branch
     runs-on: ubuntu-latest
-    # Define the matrix of variables to be used in the job
-    strategy:
-      matrix:
-        NXF_VER: ["22.10.1", "latest-everything"]
-        profile: ["docker"]
-        aligner: ["salmon", "hisat2", "star_rsem", "star_salmon_skip", "star_salmon_with"]
-
-    # Define the steps for the job
+    outputs:
+      matrix: ${{ steps.nxf_versions.outputs.matrix }}
     steps:
-      # Checkout the pipeline code from the repository
+      - id: nxf_versions
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "dev" && "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
+            echo matrix='["latest-everything"]' | tee -a $GITHUB_OUTPUT
+          else
+            echo matrix='["latest-everything", "22.10.1"]' | tee -a $GITHUB_OUTPUT
+          fi
+
+  test:
+    name: nf-test
+    needs: define_nxf_versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        NXF_VER: ${{ fromJson(needs.define_nxf_versions.outputs.matrix) }}
+        tags:
+          - "hisat2"
+          - "salmon"
+          - "star_rsem"
+          - "star_salmon_skip"
+          - "star_salmon_with"
+        profile:
+          - "docker"
+
+    steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
-      # Cache Test Data
-      - name: Cache test data
-        uses: actions/cache@v2
-        with:
-          path: /usr/local/bin/nextflow
-          key: ${{ runner.os }}
-          restore-keys: |
-            ${{ runner.os }}-nextflow-
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
 
-      # Install the specified version of Nextflow
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      # Install nf-test
       - name: Install nf-test
         run: |
-          wget -qO- https://code.askimed.com/install/nf-test | bash
+          wget -qO- https://code.askimed.com/install/nf-test | bash -s $NFTEST_VER
           sudo mv nf-test /usr/local/bin/
 
-      # Run nf-test with the specified aligner and output test results in TAP format
       - name: Run nf-test
         run: |
-          nf-test test tests/pipeline/${{ matrix.aligner }}/ --tap=test.tap
+          nf-test test --tag ${{ matrix.tags }} --profile test,${{ matrix.profile }} --junitxml=test.xml
 
-      # If the test fails, output the software_versions.yml using the 'batcat' utility
       - name: Output log on failure
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /home/runner/work/rnaseq/rnaseq/.nf-test/tests/*/output/pipeline_info/software_versions.yml
+          batcat --decorations=always --color=always ${{ github.workspace }}/.nf-test/tests/*/output/pipeline_info/software_versions.yml
 
-      # Comment on the PR with the test results
-      - name: PR comment with file
-        if: github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v2
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
         with:
-          filePath: test.tap
+          report_paths: "*.xml"

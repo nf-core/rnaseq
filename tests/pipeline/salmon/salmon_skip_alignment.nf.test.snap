@@ -7,7 +7,7 @@
     },
     "software_versions": {
         "content": [
-            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_ADDITIONAL_FASTA={python=3.9.5}, CAT_FASTQ={cat=8.30}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, CUSTOM_GETCHROMSIZES={getchromsizes=1.16.1}, FASTQC={fastqc=0.11.9}, FQ_SUBSAMPLE={fq=0.9.1 (2022-02-22)}, GTF2BED={perl=5.26.2}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.10}, GUNZIP_GTF={gunzip=1.10}, SALMON_QUANT={salmon=1.10.1}, SAMPLESHEET_CHECK={python=3.9.5}, TRIMGALORE={cutadapt=3.4, trimgalore=0.6.7}, UNTAR_SALMON_INDEX={untar=1.30}, Workflow={nf-core/rnaseq=3.12.0dev}}"
+            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_ADDITIONAL_FASTA={python=3.9.5}, CAT_FASTQ={cat=8.30}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, CUSTOM_GETCHROMSIZES={getchromsizes=1.16.1}, FASTQC={fastqc=0.11.9}, FQ_SUBSAMPLE={fq=0.9.1 (2022-02-22)}, GTF2BED={perl=5.26.2}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.10}, GUNZIP_GTF={gunzip=1.10}, SALMON_QUANT={salmon=1.10.1}, SAMPLESHEET_CHECK={python=3.9.5}, TRIMGALORE={cutadapt=3.4, trimgalore=0.6.7}, UNTAR_SALMON_INDEX={untar=1.30}, Workflow={nf-core/rnaseq=3.12.0}}"
         ],
         "timestamp": "2023-05-31T21:21:39+0000"
     },

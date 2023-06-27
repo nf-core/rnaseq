@@ -71,9 +71,7 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="""Get tx to gene names for tximport"""
-    )
+    parser = argparse.ArgumentParser(description="""Get tx to gene names for tximport""")
     parser.add_argument("--gtf", type=str, help="GTF file")
     parser.add_argument("--salmon", type=str, help="output of salmon")
     parser.add_argument("--id", type=str, help="gene id in the gtf file")

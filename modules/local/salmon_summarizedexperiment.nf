@@ -2,10 +2,10 @@ process SALMON_SUMMARIZEDEXPERIMENT {
     tag "$tx2gene"
     label "process_medium"
 
-    conda (params.enable_conda ? "bioconda::bioconductor-summarizedexperiment=1.20.0" : null)
+    conda "bioconda::bioconductor-summarizedexperiment=1.24.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.20.0--r40_0' :
-        'quay.io/biocontainers/bioconductor-summarizedexperiment:1.20.0--r40_0' }"
+        'https://depot.galaxyproject.org/singularity/bioconductor-summarizedexperiment:1.24.0--r41hdfd78af_0' :
+        'biocontainers/bioconductor-summarizedexperiment:1.24.0--r41hdfd78af_0' }"
 
     input:
     path counts

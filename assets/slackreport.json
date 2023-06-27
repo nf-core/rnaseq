@@ -1,0 +1,34 @@
+{
+    "attachments": [
+        {
+            "fallback": "Plain-text summary of the attachment.",
+            "color": "<% if (success) { %>good<% } else { %>danger<%} %>",
+            "author_name": "nf-core/rnaseq ${version} - ${runName}",
+            "author_icon": "https://www.nextflow.io/docs/latest/_static/favicon.ico",
+            "text": "<% if (success) { %>Pipeline completed successfully!<% } else { %>Pipeline completed with errors<% } %>",
+            "fields": [
+                {
+                    "title": "Command used to launch the workflow",
+                    "value": "```${commandLine}```",
+                    "short": false
+                }
+                <%
+                    if (!success) { %>
+                    ,
+                    {
+                        "title": "Full error message",
+                        "value": "```${errorReport}```",
+                        "short": false
+                    },
+                    {
+                        "title": "Pipeline configuration",
+                        "value": "<% out << summary.collect{ k,v -> k == "hook_url" ? "_${k}_: (_hidden_)" : ( ( v.class.toString().contains('Path') || ( v.class.toString().contains('String') && v.contains('/') ) ) ? "_${k}_: `${v}`" : (v.class.toString().contains('DateTime') ? ("_${k}_: " + v.format(java.time.format.DateTimeFormatter.ofLocalizedDateTime(java.time.format.FormatStyle.MEDIUM))) : "_${k}_: ${v}") ) }.join(",\n") %>",
+                        "short": false
+                    }
+                    <% }
+                %>
+            ],
+            "footer": "Completed at <% out << dateComplete.format(java.time.format.DateTimeFormatter.ofLocalizedDateTime(java.time.format.FormatStyle.MEDIUM)) %> (duration: ${duration})"
+        }
+    ]
+}

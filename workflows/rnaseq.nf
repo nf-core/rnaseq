@@ -6,6 +6,7 @@
 
 def valid_params = [
     aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
+    trimmers       : ['trimgalore', 'fastp'],
     pseudoaligners : ['salmon'],
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
 ]
@@ -42,9 +43,9 @@ if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) 
 
 // Check alignment parameters
 def prepareToolIndices  = []
-if (!params.skip_bbsplit)   { prepareToolIndices << 'bbsplit'             }
-if (!params.skip_alignment) { prepareToolIndices << params.aligner        }
-if (params.pseudo_aligner)  { prepareToolIndices << params.pseudo_aligner }
+if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
+if (!params.skip_alignment) { prepareToolIndices << params.aligner }
+if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
@@ -56,13 +57,6 @@ if (params.bam_csi_index) {
     }
 }
 
-// Save AWS IGenomes file containing annotation version
-def anno_readme = params.genomes[ params.genome ]?.readme
-if (anno_readme && file(anno_readme).exists()) {
-    file("${params.outdir}/genome/").mkdirs()
-    file(anno_readme).copyTo("${params.outdir}/genome/")
-}
-
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
@@ -71,7 +65,7 @@ def is_aws_igenome = false
 if (params.fasta && params.gtf) {
     if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
         is_aws_igenome = true
-    }    
+    }
 }
 
 /*
@@ -80,8 +74,10 @@ if (params.fasta && params.gtf) {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 // Header files for MultiQC
 ch_pca_header_multiqc        = file("$projectDir/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
@@ -97,7 +93,6 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 //
 // MODULE: Loaded from modules/local/
 //
-include { UMITOOLS_PREPAREFORRSEM            } from '../modules/local/umitools_prepareforrsem.nf'
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
@@ -105,9 +100,7 @@ include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
-include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_MAPPED  } from '../modules/local/multiqc_tsv_from_list'
-include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_FAIL_TRIMMED } from '../modules/local/multiqc_tsv_from_list'
-include { MULTIQC_TSV_FROM_LIST as MULTIQC_TSV_STRAND_CHECK } from '../modules/local/multiqc_tsv_from_list'
+include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../modules/local/umitools_prepareforrsem.nf'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -128,28 +121,30 @@ include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ                   } from '../modules/nf-core/modules/cat/fastq/main'
-include { BBMAP_BBSPLIT               } from '../modules/nf-core/modules/bbmap/bbsplit/main'
-include { SAMTOOLS_SORT               } from '../modules/nf-core/modules/samtools/sort/main'
-include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/modules/preseq/lcextrap/main'
-include { QUALIMAP_RNASEQ             } from '../modules/nf-core/modules/qualimap/rnaseq/main'
-include { SORTMERNA                   } from '../modules/nf-core/modules/sortmerna/main'
-include { STRINGTIE_STRINGTIE         } from '../modules/nf-core/modules/stringtie/stringtie/main'
-include { SUBREAD_FEATURECOUNTS       } from '../modules/nf-core/modules/subread/featurecounts/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
+include { BBMAP_BBSPLIT               } from '../modules/nf-core/bbmap/bbsplit/main'
+include { SAMTOOLS_SORT               } from '../modules/nf-core/samtools/sort/main'
+include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/preseq/lcextrap/main'
+include { QUALIMAP_RNASEQ             } from '../modules/nf-core/qualimap/rnaseq/main'
+include { SORTMERNA                   } from '../modules/nf-core/sortmerna/main'
+include { STRINGTIE_STRINGTIE         } from '../modules/nf-core/stringtie/stringtie/main'
+include { SUBREAD_FEATURECOUNTS       } from '../modules/nf-core/subread/featurecounts/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastqc_umitools_trimgalore'
-include { ALIGN_HISAT2               } from '../subworkflows/nf-core/align_hisat2'
-include { BAM_SORT_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_samtools'
-include { MARK_DUPLICATES_PICARD     } from '../subworkflows/nf-core/mark_duplicates_picard'
-include { RSEQC                      } from '../subworkflows/nf-core/rseqc'
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_GENOME        } from '../subworkflows/nf-core/dedup_umi_umitools'
-include { DEDUP_UMI_UMITOOLS as DEDUP_UMI_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/dedup_umi_umitools'
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
-include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE       } from '../subworkflows/nf-core/bedgraph_to_bigwig'
+include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../subworkflows/nf-core/fastq_subsample_fq_salmon/main'
+include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
+include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../subworkflows/nf-core/fastq_fastqc_umitools_fastp/main'
+include { FASTQ_ALIGN_HISAT2               } from '../subworkflows/nf-core/fastq_align_hisat2/main'
+include { BAM_SORT_STATS_SAMTOOLS          } from '../subworkflows/nf-core/bam_sort_stats_samtools/main'
+include { BAM_MARKDUPLICATES_PICARD        } from '../subworkflows/nf-core/bam_markduplicates_picard/main'
+include { BAM_RSEQC                        } from '../subworkflows/nf-core/bam_rseqc/main'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME        } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools/main'
+include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -158,9 +153,10 @@ include { BEDGRAPH_TO_BIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE       } from '../subw
 */
 
 // Info required for completion email and summary
-def multiqc_report      = []
-def pass_percent_mapped = [:]
-def fail_percent_mapped = [:]
+def multiqc_report     = []
+def pass_mapped_reads  = [:]
+def pass_trimmed_reads = [:]
+def pass_strand_check  = [:]
 
 workflow RNASEQ {
 
@@ -171,15 +167,28 @@ workflow RNASEQ {
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     PREPARE_GENOME (
-        prepareToolIndices,
+        params.fasta,
+        params.gtf,
+        params.gff,
+        params.additional_fasta,
+        params.transcript_fasta,
+        params.gene_bed,
+        params.splicesites,
+        params.bbsplit_fasta_list,
+        params.star_index,
+        params.rsem_index,
+        params.salmon_index,
+        params.hisat2_index,
+        params.bbsplit_index,
+        params.gencode,
+        is_aws_igenome,
         biotype,
-        is_aws_igenome
-
+        prepareToolIndices
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // Check if contigs in genome fasta file > 512 Mbp
-    if (!params.skip_alignment) {
+    if (!params.skip_alignment && !params.bam_csi_index) {
         PREPARE_GENOME
             .out
             .fai
@@ -195,11 +204,10 @@ workflow RNASEQ {
     .reads
     .map {
         meta, fastq ->
-            def meta_clone = meta.clone()
-            meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
-            [ meta_clone, fastq ] 
+            new_id = meta.id - ~/_T\d+/
+            [ meta + [id: new_id], fastq ]
     }
-    .groupTuple(by: [0])
+    .groupTuple()
     .branch {
         meta, fastq ->
             single  : fastq.size() == 1
@@ -221,57 +229,116 @@ workflow RNASEQ {
     .set { ch_cat_fastq }
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
+    // Branch FastQ channels if 'auto' specified to infer strandedness
+    ch_cat_fastq
+        .branch {
+            meta, fastq ->
+                auto_strand : meta.strandedness == 'auto'
+                    return [ meta, fastq ]
+                known_strand: meta.strandedness != 'auto'
+                    return [ meta, fastq ]
+        }
+        .set { ch_strand_fastq }
+
     //
-    // SUBWORKFLOW: Read QC, extract UMI and trim adapters
+    // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
     //
-    FASTQC_UMITOOLS_TRIMGALORE (
-        ch_cat_fastq,
-        params.skip_fastqc || params.skip_qc,
-        params.with_umi,
-        params.skip_umi_extract,
-        params.skip_trimming,
-        params.umi_discard_read
+    // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
+    PREPARE_GENOME.out.fasta
+        .combine(ch_strand_fastq.auto_strand)
+        .map { it.first() }
+        .first()
+        .set { ch_genome_fasta }
+
+    FASTQ_SUBSAMPLE_FQ_SALMON (
+        ch_strand_fastq.auto_strand,
+        ch_genome_fasta,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
+        PREPARE_GENOME.out.salmon_index,
+        !params.salmon_index && !('salmon' in prepareToolIndices)
     )
-    ch_versions = ch_versions.mix(FASTQC_UMITOOLS_TRIMGALORE.out.versions)
+    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
+
+    FASTQ_SUBSAMPLE_FQ_SALMON
+        .out
+        .json_info
+        .join(ch_strand_fastq.auto_strand)
+        .map { meta, json, reads ->
+            return [ meta + [ strandedness: WorkflowRnaseq.getSalmonInferredStrandedness(json) ], reads ]
+        }
+        .mix(ch_strand_fastq.known_strand)
+        .set { ch_strand_inferred_fastq }
 
     //
-    // Filter channels to get samples that passed minimum trimmed read count
+    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
     //
-    ch_fail_trimming_multiqc = Channel.empty()
-    ch_filtered_reads = FASTQC_UMITOOLS_TRIMGALORE.out.reads
-    if (!params.skip_trimming) {
-        ch_filtered_reads
-            .join(FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
-            .map {
-                meta, reads, trim_log ->
-                    if (!meta.single_end) {
-                        trim_log = trim_log[-1]
-                    }
-                    num_reads = WorkflowRnaseq.getTrimGaloreReadsAfterFiltering(trim_log)
-                    [ meta, reads, num_reads ]
-            }
-            .set { ch_num_trimmed_reads  }
+    ch_filtered_reads      = Channel.empty()
+    ch_fastqc_raw_multiqc  = Channel.empty()
+    ch_fastqc_trim_multiqc = Channel.empty()
+    ch_trim_log_multiqc    = Channel.empty()
+    ch_trim_read_count     = Channel.empty()
+    if (params.trimmer == 'trimgalore') {
+        FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
+            ch_strand_inferred_fastq,
+            params.skip_fastqc || params.skip_qc,
+            params.with_umi,
+            params.skip_umi_extract,
+            params.skip_trimming,
+            params.umi_discard_read,
+            params.min_trimmed_reads
+        )
+        ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
+        ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
+        ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
+        ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
+        ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
+        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
+    }
 
-        ch_num_trimmed_reads
-            .map { meta, reads, num_reads -> if (num_reads > params.min_trimmed_reads) [ meta, reads ] }
-            .set { ch_filtered_reads }
+    //
+    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with fastp
+    //
+    if (params.trimmer == 'fastp') {
+        FASTQ_FASTQC_UMITOOLS_FASTP (
+            ch_strand_inferred_fastq,
+            params.skip_fastqc || params.skip_qc,
+            params.with_umi,
+            params.skip_umi_extract,
+            params.umi_discard_read,
+            params.skip_trimming,
+            [],
+            params.save_trimmed,
+            params.save_trimmed,
+            params.min_trimmed_reads
+        )
+        ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
+        ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip
+        ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip
+        ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json
+        ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
+        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
+    }
 
-        ch_num_trimmed_reads
-            .map {
-                meta, reads, num_reads ->
-                if (num_reads <= params.min_trimmed_reads) {
+    //
+    // Get list of samples that failed trimming threshold for MultiQC report
+    //
+    ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                pass_trimmed_reads[meta.id] = true
+                if (num_reads <= params.min_trimmed_reads.toFloat()) {
+                    pass_trimmed_reads[meta.id] = false
                     return [ "$meta.id\t$num_reads" ]
                 }
-            }
-            .set { ch_num_trimmed_reads }
-        
-        MULTIQC_TSV_FAIL_TRIMMED (
-            ch_num_trimmed_reads.collect(),
-            ["Sample", "Reads after trimming"],
-            'fail_trimmed_samples'
-        )
+        }
+        .collect()
+        .map {
+            tsv_data ->
+                def header = ["Sample", "Reads after trimming"]
+                WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+        }
         .set { ch_fail_trimming_multiqc }
-    }
 
     //
     // MODULE: Remove genome contaminant reads
@@ -326,7 +393,8 @@ workflow RNASEQ {
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
-            is_aws_igenome
+            is_aws_igenome,
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai
@@ -345,36 +413,37 @@ workflow RNASEQ {
         //
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
-            DEDUP_UMI_UMITOOLS_GENOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 params.umitools_dedup_stats
             )
-            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
-            BAM_SORT_SAMTOOLS (
-                ch_transcriptome_bam
+            BAM_SORT_STATS_SAMTOOLS (
+                ch_transcriptome_bam,
+                PREPARE_GENOME.out.fasta.map { [ [:], it ] }
             )
-            ch_transcriptome_sorted_bam = BAM_SORT_SAMTOOLS.out.bam
-            ch_transcriptome_sorted_bai = BAM_SORT_SAMTOOLS.out.bai
+            ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
+            ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
-            DEDUP_UMI_UMITOOLS_TRANSCRIPTOME (
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
                 params.umitools_dedup_stats
             )
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                DEDUP_UMI_UMITOOLS_TRANSCRIPTOME.out.bam
+                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
             )
 
             // Only run prepare_for_rsem.py on paired-end BAM files
@@ -392,14 +461,14 @@ workflow RNASEQ {
 
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
-            UMITOOLS_PREPAREFORRSEM (
+            UMITOOLS_PREPAREFORSALMON (
                 ch_umitools_dedup_bam.paired_end
             )
-            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORRSEM.out.versions.first())
+            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
 
             ch_umitools_dedup_bam
                 .single_end
-                .mix(UMITOOLS_PREPAREFORRSEM.out.bam)
+                .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
                 .set { ch_transcriptome_bam }
         }
 
@@ -435,7 +504,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         QUANTIFY_RSEM (
             ch_filtered_reads,
-            PREPARE_GENOME.out.rsem_index
+            PREPARE_GENOME.out.rsem_index,
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = QUANTIFY_RSEM.out.bam
         ch_genome_bam_index  = QUANTIFY_RSEM.out.bai
@@ -466,38 +536,40 @@ workflow RNASEQ {
     //
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
-        ALIGN_HISAT2 (
+        FASTQ_ALIGN_HISAT2 (
             ch_filtered_reads,
-            PREPARE_GENOME.out.hisat2_index,
-            PREPARE_GENOME.out.splicesites
+            PREPARE_GENOME.out.hisat2_index.map { [ [:], it ] },
+            PREPARE_GENOME.out.splicesites.map { [ [:], it ] },
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
         )
-        ch_genome_bam        = ALIGN_HISAT2.out.bam
-        ch_genome_bam_index  = ALIGN_HISAT2.out.bai
-        ch_samtools_stats    = ALIGN_HISAT2.out.stats
-        ch_samtools_flagstat = ALIGN_HISAT2.out.flagstat
-        ch_samtools_idxstats = ALIGN_HISAT2.out.idxstats
-        ch_hisat2_multiqc    = ALIGN_HISAT2.out.summary
+        ch_genome_bam        = FASTQ_ALIGN_HISAT2.out.bam
+        ch_genome_bam_index  = FASTQ_ALIGN_HISAT2.out.bai
+        ch_samtools_stats    = FASTQ_ALIGN_HISAT2.out.stats
+        ch_samtools_flagstat = FASTQ_ALIGN_HISAT2.out.flagstat
+        ch_samtools_idxstats = FASTQ_ALIGN_HISAT2.out.idxstats
+        ch_hisat2_multiqc    = FASTQ_ALIGN_HISAT2.out.summary
         if (params.bam_csi_index) {
-            ch_genome_bam_index = ALIGN_HISAT2.out.csi
+            ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.csi
         }
-        ch_versions = ch_versions.mix(ALIGN_HISAT2.out.versions)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
         if (params.with_umi) {
-            DEDUP_UMI_UMITOOLS_GENOME (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0])
+            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                params.umitools_dedup_stats
             )
-            ch_genome_bam        = DEDUP_UMI_UMITOOLS_GENOME.out.bam
-            ch_genome_bam_index  = DEDUP_UMI_UMITOOLS_GENOME.out.bai
-            ch_samtools_stats    = DEDUP_UMI_UMITOOLS_GENOME.out.stats
-            ch_samtools_flagstat = DEDUP_UMI_UMITOOLS_GENOME.out.flagstat
-            ch_samtools_idxstats = DEDUP_UMI_UMITOOLS_GENOME.out.idxstats
+            ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_samtools_stats    = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats
+            ch_samtools_flagstat = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat
+            ch_samtools_idxstats = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats
             if (params.bam_csi_index) {
-                ch_genome_bam_index = DEDUP_UMI_UMITOOLS_GENOME.out.csi
+                ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(DEDUP_UMI_UMITOOLS_GENOME.out.versions)
+            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
         }
     }
 
@@ -523,24 +595,23 @@ workflow RNASEQ {
         ch_percent_mapped
             .branch { meta, mapped, pass ->
                 pass: pass
-                    pass_percent_mapped[meta.id] = mapped
+                    pass_mapped_reads[meta.id] = true
                     return [ "$meta.id\t$mapped" ]
                 fail: !pass
-                    fail_percent_mapped[meta.id] = mapped
+                    pass_mapped_reads[meta.id] = false
                     return [ "$meta.id\t$mapped" ]
             }
             .set { ch_pass_fail_mapped }
 
-        def header = [
-            "Sample",
-            "STAR uniquely mapped reads (%)"
-        ]
-        MULTIQC_TSV_FAIL_MAPPED (
-            ch_pass_fail_mapped.fail.collect(),
-            header,
-            'fail_mapped_samples'
-        )
-        .set { ch_fail_mapping_multiqc }
+        ch_pass_fail_mapped
+            .fail
+            .collect()
+            .map {
+                tsv_data ->
+                    def header = ["Sample", "STAR uniquely mapped reads (%)"]
+                    WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+            }
+            .set { ch_fail_mapping_multiqc }
     }
 
     //
@@ -559,20 +630,22 @@ workflow RNASEQ {
     // SUBWORKFLOW: Mark duplicate reads
     //
     ch_markduplicates_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_markduplicates) {
-        MARK_DUPLICATES_PICARD (
-            ch_genome_bam
+    if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
+        BAM_MARKDUPLICATES_PICARD (
+            ch_genome_bam,
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+            PREPARE_GENOME.out.fai.map { [ [:], it ] }
         )
-        ch_genome_bam             = MARK_DUPLICATES_PICARD.out.bam
-        ch_genome_bam_index       = MARK_DUPLICATES_PICARD.out.bai
-        ch_samtools_stats         = MARK_DUPLICATES_PICARD.out.stats
-        ch_samtools_flagstat      = MARK_DUPLICATES_PICARD.out.flagstat
-        ch_samtools_idxstats      = MARK_DUPLICATES_PICARD.out.idxstats
-        ch_markduplicates_multiqc = MARK_DUPLICATES_PICARD.out.metrics
+        ch_genome_bam             = BAM_MARKDUPLICATES_PICARD.out.bam
+        ch_genome_bam_index       = BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_samtools_stats         = BAM_MARKDUPLICATES_PICARD.out.stats
+        ch_samtools_flagstat      = BAM_MARKDUPLICATES_PICARD.out.flagstat
+        ch_samtools_idxstats      = BAM_MARKDUPLICATES_PICARD.out.idxstats
+        ch_markduplicates_multiqc = BAM_MARKDUPLICATES_PICARD.out.metrics
         if (params.bam_csi_index) {
-            ch_genome_bam_index = MARK_DUPLICATES_PICARD.out.csi
+            ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.csi
         }
-        ch_versions = ch_versions.mix(MARK_DUPLICATES_PICARD.out.versions)
+        ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //
@@ -632,13 +705,13 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
-        BEDGRAPH_TO_BIGWIG_FORWARD (
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_versions = ch_versions.mix(BEDGRAPH_TO_BIGWIG_FORWARD.out.versions)
+        ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
-        BEDGRAPH_TO_BIGWIG_REVERSE (
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
             PREPARE_GENOME.out.chrom_sizes
         )
@@ -678,44 +751,45 @@ workflow RNASEQ {
         }
 
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
-            RSEQC (
-                ch_genome_bam,
-                ch_genome_bam_index,
+            BAM_RSEQC (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
-            ch_bamstat_multiqc            = RSEQC.out.bamstat_txt
-            ch_inferexperiment_multiqc    = RSEQC.out.inferexperiment_txt
-            ch_innerdistance_multiqc      = RSEQC.out.innerdistance_freq
-            ch_junctionannotation_multiqc = RSEQC.out.junctionannotation_log
-            ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript
-            ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt
-            ch_readduplication_multiqc    = RSEQC.out.readduplication_pos_xls
-            ch_tin_multiqc                = RSEQC.out.tin_txt
-            ch_versions = ch_versions.mix(RSEQC.out.versions)
+            ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
+            ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
+            ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
+            ch_junctionannotation_multiqc = BAM_RSEQC.out.junctionannotation_log
+            ch_junctionsaturation_multiqc = BAM_RSEQC.out.junctionsaturation_rscript
+            ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
+            ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
+            ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
+            ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
-                .map { meta, strand_log -> [ meta ] + WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30) }
-                .filter { it[0].strandedness != it[1] }
-                .map { meta, strandedness, sense, antisense, undetermined ->
-                    [ "$meta.id\t$meta.strandedness\t$strandedness\t$sense\t$antisense\t$undetermined" ]
+                .map {
+                    meta, strand_log ->
+                        def inferred_strand = WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30)
+                        pass_strand_check[meta.id] = true
+                        if (meta.strandedness != inferred_strand[0]) {
+                            pass_strand_check[meta.id] = false
+                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                        }
                 }
-                .set { ch_fail_strand }
-
-            def header = [
-                "Sample",
-                "Provided strandedness",
-                "Inferred strandedness",
-                "Sense (%)",
-                "Antisense (%)",
-                "Undetermined (%)"
-            ]
-            MULTIQC_TSV_STRAND_CHECK (
-                ch_fail_strand.collect(),
-                header,
-                'fail_strand_check'
-            )
-            .set { ch_fail_strand_multiqc }
+                .collect()
+                .map {
+                    tsv_data ->
+                        def header = [
+                            "Sample",
+                            "Provided strandedness",
+                            "Inferred strandedness",
+                            "Sense (%)",
+                            "Antisense (%)",
+                            "Undetermined (%)"
+                        ]
+                        WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+                }
+                .set { ch_fail_strand_multiqc }
         }
     }
 
@@ -725,7 +799,7 @@ workflow RNASEQ {
     ch_salmon_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    if (params.pseudo_aligner == 'salmon') {
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon') {
         QUANTIFY_SALMON (
             ch_filtered_reads,
             PREPARE_GENOME.out.salmon_index,
@@ -763,17 +837,22 @@ workflow RNASEQ {
         workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
+        methods_description    = WorkflowRnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+        ch_methods_description = Channel.value(methods_description)
+
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
             CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-            ch_fail_trimming_multiqc.ifEmpty([]),
-            ch_fail_mapping_multiqc.ifEmpty([]),
-            ch_fail_strand_multiqc.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]),
+            ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
+            ch_multiqc_logo.collect().ifEmpty([]),
+            ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv').ifEmpty([]),
+            ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv').ifEmpty([]),
+            ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').ifEmpty([]),
+            ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_trim_log_multiqc.collect{it[1]}.ifEmpty([]),
             ch_sortmerna_multiqc.collect{it[1]}.ifEmpty([]),
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
@@ -812,9 +891,14 @@ workflow RNASEQ {
 
 workflow.onComplete {
     if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, fail_percent_mapped)
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
-    NfcoreTemplate.summary(workflow, params, log, fail_percent_mapped, pass_percent_mapped)
+
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
+
+    NfcoreTemplate.summary(workflow, params, log, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 }
 
 /*

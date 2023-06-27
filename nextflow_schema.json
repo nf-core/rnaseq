@@ -76,16 +76,33 @@
                     "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
                     "description": "The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI."
                 },
-                "umitools_dedup_stats": {
-                    "type": "boolean",
+                "umitools_bc_pattern2": {
+                    "type": "string",
                     "fa_icon": "fas fa-barcode",
-                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
-                    "description": "Generate output stats when running \"umi_tools dedup\"."
+                    "description": "The UMI barcode pattern to use if the UMI is located in read 2."
                 },
                 "umi_discard_read": {
                     "type": "integer",
                     "fa_icon": "fas fa-barcode",
                     "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively."
+                },
+                "umitools_umi_separator": {
+                    "type": "string",
+                    "fa_icon": "fas fa-star-half-alt",
+                    "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
+                },
+                "umitools_grouping_method": {
+                    "type": "string",
+                    "default": "directional",
+                    "fa_icon": "far fa-object-ungroup",
+                    "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
+                    "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
+                },
+                "umitools_dedup_stats": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-barcode",
+                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
+                    "description": "Generate output stats when running \"umi_tools dedup\"."
                 },
                 "save_umi_intermeds": {
                     "type": "boolean",
@@ -309,31 +326,22 @@
             "fa_icon": "fas fa-cut",
             "description": "Options to adjust read trimming criteria.",
             "properties": {
-                "clip_r1": {
-                    "type": "integer",
-                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).",
-                    "fa_icon": "fas fa-cut"
+                "trimmer": {
+                    "type": "string",
+                    "default": "trimgalore",
+                    "description": "Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'.",
+                    "fa_icon": "fas fa-cut",
+                    "enum": ["trimgalore", "fastp"]
                 },
-                "clip_r2": {
-                    "type": "integer",
-                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).",
-                    "fa_icon": "fas fa-cut"
+                "extra_trimgalore_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
                 },
-                "three_prime_clip_r1": {
-                    "type": "integer",
-                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed.",
-                    "fa_icon": "fas fa-cut"
-                },
-                "three_prime_clip_r2": {
-                    "type": "integer",
-                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
-                    "fa_icon": "fas fa-cut"
-                },
-                "trim_nextseq": {
-                    "type": "integer",
-                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails.",
-                    "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.",
-                    "fa_icon": "fas fa-cut"
+                "extra_fastp_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to fastp command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
                 },
                 "min_trimmed_reads": {
                     "type": "integer",
@@ -407,6 +415,16 @@
                     "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
                     "fa_icon": "fas fa-ban"
                 },
+                "extra_star_align_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "extra_salmon_quant_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
                 "save_unaligned": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
@@ -428,6 +446,11 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip all of the alignment-based processes within the pipeline."
+                },
+                "skip_pseudo_alignment": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip all of the pseudo-alignment-based processes within the pipeline."
                 }
             }
         },
@@ -447,7 +470,8 @@
                     "type": "boolean",
                     "description": "Use vst transformation instead of rlog with DESeq2.",
                     "help_text": "See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization).",
-                    "fa_icon": "fas fa-dolly"
+                    "fa_icon": "fas fa-dolly",
+                    "default": true
                 },
                 "skip_bigwig": {
                     "type": "boolean",
@@ -467,7 +491,8 @@
                 "skip_preseq": {
                     "type": "boolean",
                     "description": "Skip Preseq.",
-                    "fa_icon": "fas fa-fast-forward"
+                    "fa_icon": "fas fa-fast-forward",
+                    "default": true
                 },
                 "skip_dupradar": {
                     "type": "boolean",
@@ -551,6 +576,13 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                },
+                "test_data_base": {
+                    "type": "string",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq3",
+                    "description": "Base path / URL for data used in the test profiles",
+                    "help_text": "Warning: The `-profile test` samplesheet file itself contains remote paths. Setting this parameter does not alter the contents of that file.",
+                    "hidden": true
                 }
             }
         },
@@ -602,6 +634,12 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -638,18 +676,29 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "hidden": true
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
-                "tracedir": {
+                "multiqc_logo": {
                     "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
+                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
+                    "fa_icon": "fas fa-image",
                     "hidden": true
+                },
+                "multiqc_methods_description": {
+                    "type": "string",
+                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
+                    "fa_icon": "fas fa-cog"
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -664,12 +713,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 }
             }
         }

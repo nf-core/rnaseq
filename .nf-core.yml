@@ -3,14 +3,5 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
+    - lib/NfcoreSchema.groovy
     - lib/NfcoreTemplate.groovy
-update:
-  nf-core/modules:
-    rseqc/bamstat: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/inferexperiment: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/innerdistance: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/junctionannotation: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/junctionsaturation: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/readdistribution: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/readduplication: "e745e167c1020928ef20ea1397b6b4d230681b4d"
-    rseqc/tin: "4dbc166a7c30e963511fb5c9870fbcaa158a53a9"

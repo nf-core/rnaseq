@@ -174,31 +174,6 @@
             "description": "Settings to control read quality and adaptor trimming",
             "advanced" : true,
             "properties": {
-                "clip_r1": {
-                    "name": "5' clip read 1",
-                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads).",
-                    "type": "number"
-                },
-                "clip_r2": {
-                    "name": "5' clip read 2",
-                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only).",
-                    "type": "number"
-                },
-                "three_prime_clip_r1": {
-                    "name": "3' clip read 1",
-                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed.",
-                    "type": "number"
-                },
-                "three_prime_clip_r2": {
-                    "name": "3' clip read 2",
-                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.",
-                    "type": "number"
-                },
-                "trim_nextseq": {
-                    "name": "Nextseq quality trimming",
-                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality, but ignoring the high quality G's. Input is the threshold PHRED score for quality trimming (eg. 20). See https://cutadapt.readthedocs.io/en/stable/guide.html#nextseq-trim for more details. ",
-                    "type": "number"
-                },
                 "min_trimmed_reads": {
                     "name": "Minimum trimmed reads",
                     "description": "Minimum number of trimmed reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low.",

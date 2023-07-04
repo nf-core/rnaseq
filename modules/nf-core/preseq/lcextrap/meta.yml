@@ -1,0 +1,48 @@
+name: preseq_lcextrap
+description: Software for predicting library complexity and genome coverage in high-throughput sequencing
+keywords:
+  - preseq
+  - library
+  - complexity
+tools:
+  - preseq:
+      description: Software for predicting library complexity and genome coverage in high-throughput sequencing
+      homepage: http://smithlabresearch.org/software/preseq/
+      documentation: http://smithlabresearch.org/wp-content/uploads/manual.pdf
+      tool_dev_url: https://github.com/smithlabcode/preseq
+
+      licence: ["GPL"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - lc_extrap:
+      type: file
+      description: File containing output of Preseq lcextrap
+      pattern: "*.{lc_extrap.txt}"
+  - log:
+      type: file
+      description: Log file containing stderr produced by Preseq
+      pattern: "*.{log}"
+
+authors:
+  - "@drpatelh"
+  - "@Emiller88"

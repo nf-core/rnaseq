@@ -33,6 +33,21 @@ class NfcoreTemplate {
     }
 
     //
+    //  Warn if using custom configs to provide pipeline parameters
+    //
+    public static void warnParamsProvidedInConfig(workflow, log) {
+        if (workflow.configFiles.size() > 1) {
+            log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+                "  Multiple config files detected!\n" +
+                "  Please provide pipeline parameters via the CLI or Nextflow '-params-file' option.\n" +
+                "  Custom config files including those provided by the '-c' Nextflow option can be\n" +
+                "  used to provide any configuration except for parameters.\n\n" +
+                "  Docs: https://nf-co.re/usage/configuration#custom-configuration-files\n" +
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        }
+    }
+
+    //
     // Generate version string
     //
     public static String version(workflow) {
@@ -54,10 +69,17 @@ class NfcoreTemplate {
     //
     // Construct and send completion email
     //
-    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
+    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
 
         // Set up the e-mail variables
+        def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+        def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+        def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
+        if (fail_mapped_count + fail_trimmed_count + fail_strand_count > 0) {
+            subject = "[$workflow.manifest.name] Partially successful - samples skipped: $workflow.runName"
+        }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
@@ -91,11 +113,12 @@ class NfcoreTemplate {
         email_fields['commandLine']  = workflow.commandLine
         email_fields['projectDir']   = workflow.projectDir
         email_fields['summary']      = summary << misc_fields
+        email_fields['skip_sample_count'] = fail_mapped_count + fail_trimmed_count + fail_strand_count
 
         // On success try attach the multiqc report
         def mqc_report = null
         try {
-            if (workflow.success) {
+            if (workflow.success && !params.skip_multiqc) {
                 mqc_report = multiqc_report.getVal()
                 if (mqc_report.getClass() == ArrayList && mqc_report.size() >= 1) {
                     if (mqc_report.size() > 1) {
@@ -225,13 +248,32 @@ class NfcoreTemplate {
     //
     // Print pipeline summary on completion
     //
-    public static void summary(workflow, params, log) {
+    public static void summary(workflow, params, log, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
         Map colors = logColours(params.monochrome_logs)
+
+        def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+        def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+        def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
         if (workflow.success) {
-            if (workflow.stats.ignoredCount == 0) {
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
-            } else {
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} Pipeline completed successfully, but with errored process(es) ${colors.reset}-"
+            def color = colors.green
+            def status = []
+            if (workflow.stats.ignoredCount != 0) {
+                color = colors.yellow
+                status += ['with errored process(es)']
+            }
+            if (fail_mapped_count > 0 || fail_trimmed_count > 0 || fail_strand_count > 0) {
+                color = colors.yellow
+                status += ['with skipped sampl(es)']
+            }
+            log.info "-${colors.purple}[$workflow.manifest.name]${color} Pipeline completed successfully ${status.join(', ')}${colors.reset}-"
+            if (fail_trimmed_count > 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_trimmed_count}/${pass_trimmed_reads.size()} samples skipped since they failed ${params.min_trimmed_reads} trimmed read threshold.${colors.reset}-"
+            }
+            if (fail_mapped_count > 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
+            }
+            if (fail_strand_count > 0) {
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_strand_count}/${pass_strand_check.size()} samples failed strandedness check.${colors.reset}-"
             }
         } else {
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"

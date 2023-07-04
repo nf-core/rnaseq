@@ -1,0 +1,53 @@
+name: custom_getchromsizes
+description: Generates a FASTA file of chromosome sizes and a fasta index file
+keywords:
+  - fasta
+  - chromosome
+  - indexing
+tools:
+  - samtools:
+      description: Tools for dealing with SAM, BAM and CRAM files
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      tool_dev_url: https://github.com/samtools/samtools
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: FASTA file
+      pattern: "*.{fa,fasta,fna,fas}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - sizes:
+      type: file
+      description: File containing chromosome lengths
+      pattern: "*.{sizes}"
+  - fai:
+      type: file
+      description: FASTA index file
+      pattern: "*.{fai}"
+  - gzi:
+      type: file
+      description: Optional gzip index file for compressed inputs
+      pattern: "*.gzi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@tamara-hodgetts"
+  - "@chris-cheshire"
+  - "@muffato"

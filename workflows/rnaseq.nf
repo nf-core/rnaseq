@@ -26,27 +26,17 @@ def valid_params = [
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
 ]
 
-// Check input path parameters to see if they exist
-checkPathParamList = [
-    params.input, params.multiqc_config,
-    params.fasta, params.transcript_fasta, params.additional_fasta,
-    params.gtf, params.gff, params.gene_bed,
-    params.ribo_database_manifest, params.splicesites,
-    params.star_index, params.hisat2_index, params.rsem_index, params.salmon_index
-]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
 WorkflowRnaseq.initialise(params, log, valid_params)
 
 // Check rRNA databases for sortmerna
 if (params.remove_ribo_rna) {
-    ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
+    ch_ribo_db = file(params.ribo_database_manifest)
     if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
 }
 
 // Check if file with list of fastas is provided when running BBSplit
 if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
-    ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list, checkIfExists: true)
+    ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
     if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
 }
 
@@ -84,9 +74,9 @@ if (params.fasta && params.gtf) {
 */
 
 ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo)   : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 // Header files for MultiQC
 ch_pca_header_multiqc        = file("$projectDir/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)

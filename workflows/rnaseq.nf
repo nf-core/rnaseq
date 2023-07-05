@@ -19,14 +19,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def valid_params = [
-    aligners       : ['star_salmon', 'star_rsem', 'hisat2'],
-    trimmers       : ['trimgalore', 'fastp'],
-    pseudoaligners : ['salmon'],
-    rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
-]
-
-WorkflowRnaseq.initialise(params, log, valid_params)
+WorkflowRnaseq.initialise(params, log)
 
 // Check rRNA databases for sortmerna
 if (params.remove_ribo_rna) {

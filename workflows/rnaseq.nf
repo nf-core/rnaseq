@@ -1,5 +1,20 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    PRINT PARAMS SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
+
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
+
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -11,11 +26,6 @@ def valid_params = [
     rseqc_modules  : ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
 ]
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
-
-// Validate input parameters
-WorkflowRnaseq.initialise(params, log, valid_params)
-
 // Check input path parameters to see if they exist
 checkPathParamList = [
     params.input, params.multiqc_config,
@@ -26,8 +36,7 @@ checkPathParamList = [
 ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+WorkflowRnaseq.initialise(params, log, valid_params)
 
 // Check rRNA databases for sortmerna
 if (params.remove_ribo_rna) {
@@ -199,7 +208,7 @@ workflow RNASEQ {
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK (
-        ch_input
+        file(params.input)
     )
     .reads
     .map {
@@ -217,6 +226,9 @@ workflow RNASEQ {
     }
     .set { ch_fastq }
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
+    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
+    // ! There is currently no tooling to help you write a sample sheet schema
 
     //
     // MODULE: Concatenate FastQ files from same sample if required
@@ -837,7 +849,7 @@ workflow RNASEQ {
         workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
-        methods_description    = WorkflowRnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+        methods_description    = WorkflowRnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
         ch_methods_description = Channel.value(methods_description)
 
         MULTIQC (

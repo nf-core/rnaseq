@@ -1,4 +1,9 @@
 image: nfcore/gitpod:latest
+tasks:
+  - name: Update Nextflow and setup pre-commit
+    command: |
+      pre-commit install --install-hooks
+      nextflow self-update
 
 vscode:
   extensions: # based on nf-core.nf-core-extensionpack

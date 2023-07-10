@@ -1,0 +1,69 @@
+name: goodwright CI
+# This workflow runs goodwright specific tests
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
+
+env:
+  NXF_ANSI_LOG: false
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  test-prepare-genome:
+    name: Run prepare-genome wrapper
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        NXF_VER:
+          - "22.10.1"
+          - "latest-everything"
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v3
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo RNA_3.10.1_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: rnaseq3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in ${{ github.workspace }}/test-datasets/samplesheet/v3.10/*.csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
+
+      - name: Run pipeline with test data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE}/flow/wrappers/prepare_genome.nf -profile test_cache,docker -c ./nextflow.config -c ./flow/conf/test_wrapper.config --outdir ./results

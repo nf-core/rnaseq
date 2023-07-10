@@ -122,6 +122,7 @@
                 "bbsplit_fasta_list": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "fa_icon": "fas fa-list-alt",
                     "description": "Path to comma-separated file containing a list of reference genomes to filter reads against with BBSplit. You have to also explicitly set `--skip_bbsplit false` if you want to use BBSplit.",
@@ -130,6 +131,7 @@
                 "bbsplit_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built BBSplit index.",
                     "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference` to save index). It can then be provided via `--bbsplit_index` for future runs."
@@ -154,6 +156,7 @@
                 "ribo_database_manifest": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "default": "${projectDir}/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database",
@@ -193,6 +196,7 @@
                 "gtf": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
@@ -202,6 +206,7 @@
                 "gff": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
@@ -211,6 +216,7 @@
                 "gene_bed": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
@@ -219,6 +225,7 @@
                 "transcript_fasta": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
@@ -227,6 +234,7 @@
                 "additional_fasta": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
@@ -236,6 +244,7 @@
                 "splicesites": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "fa_icon": "fas fa-hand-scissors",
                     "description": "Splice sites file required for HISAT2."
@@ -243,24 +252,28 @@
                 "star_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built STAR index."
                 },
                 "hisat2_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built HISAT2 index."
                 },
                 "rsem_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built RSEM index."
                 },
                 "salmon_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Salmon index."
                 },
@@ -694,6 +707,7 @@
                 "multiqc_config": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
@@ -702,6 +716,7 @@
                 "multiqc_logo": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
@@ -710,6 +725,7 @@
                 "multiqc_methods_description": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"

@@ -193,19 +193,12 @@ workflow RNASEQ {
         .fromSamplesheet("input")
         .map {
             meta, fastq_1, fastq_2 ->
-                if (!fastq_1.exists()) {
-                    error("Please check input samplesheet -> Read 1 FastQ file does not exist!\n${fastq_1}")
-                }
-                if (fastq_2) {
-                    if(!fastq_2.exists()) {
-                        error("Please check input samplesheet -> Read 2 FastQ file does not exist!\n${fastq_2}")
-                    }
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                } else {
+                if (!fastq_2) {
                     return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+                } else {
+                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
                 }
         }
-        .unique()
         .groupTuple()
         .map {
             WorkflowRnaseq.validateInput(it)

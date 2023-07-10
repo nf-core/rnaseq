@@ -3,12 +3,12 @@
         "sample_options": {
             "name": "Sample options",
             "description": "Parameters relating to the sample being analysed.",
-            "advanced" : false,
+            "advanced": false,
             "properties": {
                 "input": {
                     "name": "Samples",
                     "type": "sample",
-                    "pattern": "csv|xlsx",
+                    "pattern": "^\\S+\\.csv$",
                     "required": true,
                     "description": "The samples to process.",
                     "csv": {
@@ -23,13 +23,13 @@
         "genome_options": {
             "name": "Genome options",
             "description": "The genome being aligned to.",
-            "advanced" : false,
+            "advanced": false,
             "takes_genome": true,
             "properties": {
                 "fasta": {
                     "name": "FASTA",
                     "type": "file",
-                    "pattern": "fasta|fa$",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "required": true,
                     "genome_file": "fasta",
                     "description": "A raw genome FASTA file."
@@ -37,10 +37,52 @@
                 "gtf": {
                     "name": "GTF",
                     "type": "file",
-                    "pattern": "gtf",
+                    "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "required": true,
                     "genome_file": "gtf",
                     "description": "An annotation for the genome."
+                },
+                "gff": {
+                    "name": "GFF",
+                    "required": false,
+                    "description": "Path to GFF3 annotation file.",
+                    "pattern": "^\\S+\\.gff(\\.gz)?$",
+                    "type": "file",
+                    "genome_file": "gff"
+                },
+                "gencode": {
+                    "name": "gencode",
+                    "required": false,
+                    "description": "Specify if your GTF annotation is in GENCODE format.",
+                    "type": "boolean"
+                },
+                "gtf_extra_attributes": {
+                    "name": "GTF Extra Attributes",
+                    "required": false,
+                    "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file when running Salmon.",
+                    "default": "gene_name",
+                    "type": "string"
+                },
+                "gtf_group_features": {
+                    "name": "GTF Group Features",
+                    "required": false,
+                    "description": "Define the attribute type used to group features in the GTF file when running Salmon.",
+                    "default": "gene_id",
+                    "type": "string"
+                },
+                "featurecounts_group_type": {
+                    "name": "Featurecounts Group Type",
+                    "required": false,
+                    "description": "The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts.",
+                    "default": "gene_biotype",
+                    "type": "string"
+                },
+                "featurecounts_feature_type": {
+                    "name": "Featurecounts Feature Type",
+                    "required": false,
+                    "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file.",
+                    "default": "exon",
+                    "type": "string"
                 },
                 "gene_bed": {
                     "name": "BED",
@@ -52,6 +94,13 @@
                         "filetype": "bed"
                     },
                     "description": "BED file containing gene intervals. This will be created from the GTF file if not specified."
+                },
+                "additional_fasta": {
+                    "name": "Additional FASTA",
+                    "type": "file",
+                    "pattern": "fasta|fa$",
+                    "required": false,
+                    "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences."
                 },
                 "transcript_fasta": {
                     "name": "Transcript FASTA",
@@ -124,7 +173,7 @@
         "umi_options": {
             "name": "UMI Settings",
             "description": "Settings for dealing with UMIs",
-            "advanced" : true,
+            "advanced": true,
             "properties": {
                 "with_umi": {
                     "name": "Deduplicate based on UMIs",
@@ -162,6 +211,16 @@
                     "description": "After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively.",
                     "type": "number"
                 },
+                "umitools_umi_separator": {
+                    "name": "UMI Tools UMI Seperator",
+                    "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software.",
+                    "type": "string"
+                },
+                "umitools_grouping_method": {
+                    "name": "UMI Tools Grouping Method",
+                    "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
+                    "type": "string"
+                },
                 "save_umi_intermeds": {
                     "name": "Save UMI Tools intermediates",
                     "description": "If this option is specified, intermediate FastQ and BAM files produced by UMI-tools are also saved in the results directory.",
@@ -172,8 +231,15 @@
         "read_trimming_options": {
             "name": "Read Trimming Settings",
             "description": "Settings to control read quality and adaptor trimming",
-            "advanced" : true,
+            "advanced": true,
             "properties": {
+                "trimmer": {
+                    "name": "trimmer",
+                    "required": false,
+                    "description": "Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'.",
+                    "default": "trimgalore",
+                    "type": "string"
+                },
                 "min_trimmed_reads": {
                     "name": "Minimum trimmed reads",
                     "description": "Minimum number of trimmed reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low.",
@@ -188,13 +254,25 @@
                     "name": "Save trimmed",
                     "description": "Save the trimmed FastQ files in the results directory.",
                     "type": "boolean"
+                },
+                "extra_trimgalore_args": {
+                    "name": "extra_trimgalore_args",
+                    "required": false,
+                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline.",
+                    "type": "string"
+                },
+                "extra_fastp_args": {
+                    "name": "extra_fastp_args",
+                    "required": false,
+                    "description": "Extra arguments to pass to fastp command in addition to defaults defined by the pipeline.",
+                    "type": "string"
                 }
             }
         },
         "alignment_options": {
             "name": "Alignment Settings",
             "description": "Settings to control alignment algorithms and quantification.",
-            "advanced" : true,
+            "advanced": true,
             "properties": {
                 "aligner": {
                     "name": "Aligner",
@@ -236,7 +314,7 @@
                     "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",
                     "type": "boolean"
                 },
-                 "extra_star_align_args": {
+                "extra_star_align_args": {
                     "name": "STAR arguments",
                     "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline.",
                     "type": "string"
@@ -246,7 +324,7 @@
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "type": "string"
                 },
-                 "save_unaligned": {
+                "save_unaligned": {
                     "name": "Save unaligned reads",
                     "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
                     "type": "boolean"
@@ -265,13 +343,42 @@
                     "name": "Skip alignment",
                     "description": "Skip all of the alignment-based processes within the pipeline.",
                     "type": "boolean"
+                },
+                "skip_pseudo_alignment": {
+                    "name": "Skip Pseudo-alignment",
+                    "required": false,
+                    "description": "Skip all of the pseudo-alignment-based processes within the pipeline.",
+                    "type": "boolean"
+                }
+            }
+        },
+        "ribosomal_options": {
+            "name": "Ribosomal RNA Settings",
+            "description": "Settings to control how ribsomal RNa is handled.",
+            "advanced": true,
+            "properties": {
+                "remove_ribo_rna": {
+                    "name": "Remove Ribo RNA",
+                    "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
+                    "type": "boolean"
+                },
+                "ribo_database_manifest": {
+                    "name": "Ribo Database Manifest",
+                    "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
+                    "type": "string",
+                    "default": "${projectDir}/assets/rrna-db-defaults.txt"
+                },
+                "save_non_ribo_reads": {
+                    "name": "Save non-ribo Reads",
+                    "description": "If this option is specified, intermediate FastQ files containing non-rRNA reads will be saved in the results directory.",
+                    "type": "boolean"
                 }
             }
         },
         "process_options": {
             "name": "Process skipping options",
             "description": "Settings to control specific processes.",
-            "advanced" : true,
+            "advanced": true,
             "properties": {
                 "rseqc_modules": {
                     "name": "RSeQC",
@@ -313,7 +420,7 @@
                     "description": "Skip Qualimap.",
                     "type": "boolean"
                 },
-                 "skip_rseqc": {
+                "skip_rseqc": {
                     "name": "Skip RSeQC",
                     "description": "Skip RSeQC.",
                     "type": "boolean"
@@ -323,7 +430,7 @@
                     "description": "Skip additional featureCounts process for biotype QC.",
                     "type": "boolean"
                 },
-                 "skip_deseq2_qc": {
+                "skip_deseq2_qc": {
                     "name": "Skip DeSeq2 QC",
                     "description": "Skip DESeq2 PCA and heatmap plotting.",
                     "type": "boolean"
@@ -339,6 +446,28 @@
                     "type": "boolean"
                 }
             }
+        },
+        "pipeline_options": {
+            "name": "General pipeline options",
+            "description": "Settings to control general pipeline options.",
+            "advanced": true,
+            "properties": {
+                "email": {
+                    "name": "Email",
+                    "description": "Email address for completion summary.",
+                    "type": "string"
+                },
+                "multiqc_title": {
+                    "name": "MultiQC Report Title",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "type": "string"
+                },
+                "multiqc_methods_description": {
+                    "name": "multiqc_methods_description",
+                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
+                    "type": "string"
+                }
+            }
         }
     },
     "outputs": [
@@ -347,18 +476,18 @@
             "description": "Report aggregating all QC reporting including FastQC, alignment stats and DeSeq2 plots.",
             "filetype": "html",
             "process": "MULTIQC"
-        }, 
+        },
         {
             "name": "Normalised bigwig fwd",
             "description": "Genome-wide coverage bigwig to be viewed in genome browser. Contains reads mapping to fwd strand.",
             "filetype": "bigwig",
-            "process": "BEDGRAPH_TO_BIGWIG_FORWARD"
+            "process": "BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD:UCSC_BEDGRAPHTOBIGWIG"
         },
         {
             "name": "Normalised bigwig rev",
             "description": "Genome-wide coverage bigwig to be viewed in genome browser. Contains reads mapping to rev strand.",
             "filetype": "bigwig",
-            "process": "BEDGRAPH_TO_BIGWIG_REVERSE"
+            "process": "BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE:UCSC_BEDGRAPHTOBIGWIG"
         },
         {
             "name": "Salmon transcript TPM table",

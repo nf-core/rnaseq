@@ -1,0 +1,7 @@
+save_reference
+save_merged_fastq
+hisat2_build_memory
+save_bbsplit_reads
+skip_bbsplit
+bbsplit_fasta_list
+bbsplit_index

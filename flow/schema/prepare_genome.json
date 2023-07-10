@@ -7,18 +7,46 @@
                 "fasta": {
                     "name": "FASTA",
                     "type": "file",
-                    "pattern": "fasta|fa$",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "genome_file": "fasta",
                     "required": true,
                     "description": "A raw genome FASTA file."
                 },
+                "additional_fasta": {
+                    "name": "Additional FASTA",
+                    "type": "file",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                    "required": false,
+                    "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences."
+                },
+                "transcript_fasta": {
+                    "name": "Transcript FASTA",
+                    "type": "file",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                    "required": false,
+                    "description": "Path to FASTA transcriptome file."
+                },
                 "gtf": {
                     "name": "GTF",
                     "type": "file",
-                    "pattern": "gtf",
+                    "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "genome_file": "gtf",
                     "required": true,
                     "description": "An annotation for the genome."
+                },
+                "gencode": {
+                    "name": "Is Gencode",
+                    "type": "boolean",
+                    "default": "false",
+                    "required": false,
+                    "description": "If your GTF file is in GENCODE format and you would like to run Salmon i.e. `--pseudo_aligner salmon`, you will need to provide this parameter in order to build the Salmon index appropriately."
+                },
+                "featurecounts_group_type": {
+                    "name": "Feature counts group type",
+                    "type": "string",
+                    "default": "gene_biotype",
+                    "required": true,
+                    "description": "If additional fasta file is provided and gencode is false, then this is the biotype value to use when appending entries to GTF file"
                 },
                 "save_reference": {
                     "name": "Save Reference",

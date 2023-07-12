@@ -4,4 +4,5 @@ lint:
     - assets/email_template.html
     - assets/email_template.txt
     - lib/NfcoreTemplate.groovy
+    - pyproject.toml
   multiqc_config: false

@@ -5,11 +5,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v3.13.0dev - [date]
 
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Júlia Mir Pedrol](https://github.com/mirpedrol)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
 ### Enhancements & fixes
 
 - [PR #1049](https://github.com/nf-core/rnaseq/pull/1049) - Display a warning when `--extra_star_align_args` are used with `--aligner star_rsem`
 - [PR #1051](https://github.com/nf-core/rnaseq/pull/1051) - Remove `public_aws_ecr` profile
 - [PR #1054](https://github.com/nf-core/rnaseq/pull/1054) - Template update to nf-core/tools v2.9
+- [PR #1058](https://github.com/nf-core/rnaseq/pull/1058) - Use `nf-validation` plugin for parameter and samplesheet validation
 
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 

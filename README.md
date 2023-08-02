@@ -95,7 +95,7 @@ To see the results of an example test run with a full size dataset refer to the 
 For more details about the output files and reports, please refer to the
 [output documentation](https://nf-co.re/rnaseq/output).
 
-This pipeline assigns the RNA/cDNA reads to genes in the genome, counts the number of reads per gene and normalizes the data. It does not compare the samples or assign P values to individual genes. For downstream analyses, the output files can be analysed directly in statistics environments like [R](https://www.r-project.org/) or [Julia](https://julialang.org/), or be forwarded to another workflow of Nextflow to determine transcripts with [differential abundance](https://github.com/nf-core/differentialabundance/).
+This pipeline quantifies RNA-sequenced reads relative to genes/transcripts in the genome and normalizes the resulting data. It does not compare the samples statistically in order to assign significance in the form of FDR or P-values. For downstream analyses, the output files from this pipeline can be analysed directly in statistical environments like [R](https://www.r-project.org/), [Julia](https://julialang.org/) or via the [nf-core/differentialabundance](https://github.com/nf-core/differentialabundance/) pipeline.
 
 ## Online videos
 

@@ -19,7 +19,6 @@ process UNTAR {
 
     script:
     def args  = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
     prefix    = task.ext.prefix ?: ( meta.id ? "${meta.id}" : archive.baseName.toString().replaceFirst(/\.tar$/, ""))
 
     """
@@ -33,14 +32,12 @@ process UNTAR {
             -xavf \\
             $args \\
             $archive \\
-            $args2
     else
         tar \\
             -C $prefix \\
             -xavf \\
             $args \\
             $archive \\
-            $args2
     fi
 
     cat <<-END_VERSIONS > versions.yml

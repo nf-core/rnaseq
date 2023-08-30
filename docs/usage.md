@@ -182,8 +182,8 @@ nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
     --outdir <OUTDIR> \
-    --gtf Homo_sapiens.GRCh38.110.gtf.gz \
-    --fasta Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz \
+    --gtf <GTF> \
+    --fasta <GENOME FASTA> \
     -profile docker
 ```
 

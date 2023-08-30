@@ -135,9 +135,18 @@ If unique molecular identifiers were used to prepare the library, add the follow
 
 Please refer to the [nf-core website](https://nf-co.re/usage/reference_genomes) for general usage docs and guidelines regarding reference genomes.
 
+:::warning
+When using the --genome parameter (e.g. --genome GRCh37), you are referring to references from AWS-iGenomes. Please be aware that:
+
+- The igenomes file usage triggered by this option is outdated with respect to gene annotations. This can be particularly problematic for RNA-seq analysis, which relies on accurate gene annotation.
+- Some iGenomes references (e.g., GRCh38) point to annotation files that use gene symbols as the primary identifier. This can cause issues for downstream analysis, such as the nf-core [differential abundance workflow](https://nf-co.re/differentialabundance) workflow.
+
+We recommend that you provide reference files directly, via `--gtf` and `--fasta`, and that supplied GTF files do not use gene names as `gene_id`.
+:::
+
 The minimum reference genome requirements for this pipeline are a FASTA and GTF file, all other files required to run the pipeline can be generated from these files. However, it is more storage and compute friendly if you are able to re-use reference genome files as efficiently as possible. It is recommended to use the `--save_reference` parameter if you are using the pipeline to build new indices (e.g. custom genomes that are unavailable on [AWS iGenomes](https://nf-co.re/usage/reference_genomes#custom-genomes)) so that you can save them somewhere locally. The index building step can be quite a time-consuming process and it permits their reuse for future runs of the pipeline to save disk space. You can then either provide the appropriate reference genome files on the command-line via the appropriate parameters (e.g. `--star_index '/path/to/STAR/index/'`) or via a custom config file. Another option is to run the pipeline once with `--save_reference --skip_alignment --skip_pseudo_alignment` to generate and save all of the required reference files and indices to the results directory. You can then move the reference files in `<RESULTS_DIR>/genome/` to a more permanent location and use these paths to override the relevant parameters in the pipeline e.g. `--star_index`.
 
-- If `--genome` is provided then the FASTA and GTF files (and existing indices) will be automatically obtained from AWS-iGenomes unless these have already been downloaded locally in the path specified by `--igenomes_base`.
+- If `--genome` (discouraged- see warning above) is provided then the FASTA and GTF files (and existing indices) will be automatically obtained from AWS-iGenomes unless these have already been downloaded locally in the path specified by `--igenomes_base`.
 - If `--gff` is provided as input then this will be converted to a GTF file, or the latter will be used if both are provided.
 - If `--gene_bed` is not provided then it will be generated from the GTF file.
 - If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
@@ -169,7 +178,13 @@ Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspa
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/rnaseq --input <SAMPLESHEET> --outdir <OUTDIR> --genome GRCh37 -profile docker
+nextflow run \
+    nf-core/rnaseq \
+    --input <SAMPLESHEET> \
+    --outdir <OUTDIR> \
+    --gtf Homo_sapiens.GRCh38.110.gtf.gz \
+    --fasta Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz \
+    -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

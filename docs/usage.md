@@ -91,9 +91,9 @@ The `--umitools_grouping_method` parameter affects [how similar, but non-identic
 
 #### Examples:
 
-| UMI type     | Source                                                                                                                                                                                                                                               | Pipeline parameters                                                                                                                            |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| In read name | [Illumina BCL convert >3.7.5](https://emea.support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl_convert/bcl-convert-v3-7-5-software-guide-1000000163594-00.pdf)                                      | `--with_umi --skip_umi_extract --umitools_umi_separator ":"`                                                                                   |
+| UMI type     | Source                                                                                                                                                                                                                                              | Pipeline parameters                                                                                                                            |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| In read name | [Illumina BCL convert >3.7.5](https://emea.support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl_convert/bcl-convert-v3-7-5-software-guide-1000000163594-00.pdf)                                     | `--with_umi --skip_umi_extract --umitools_umi_separator ":"`                                                                                   |
 | In sequence  | [Lexogen QuantSeq® 3’ mRNA-Seq V2 FWD](https://www.lexogen.com/quantseq-3mrna-sequencing) + [UMI Second Strand Synthesis Module](https://faqs.lexogen.com/faq/how-can-i-add-umis-to-my-quantseq-libraries)                                          | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{6})(?P<discard_1>.{4}).*"`                                   |
 | In sequence  | [Lexogen CORALL® Total RNA-Seq V1](https://www.lexogen.com/corall-total-rna-seq/)<br> > _mind [Appendix H](https://www.lexogen.com/wp-content/uploads/2020/04/095UG190V0130_CORALL-Total-RNA-Seq_2020-03-31.pdf) regarding optional trimming_       | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{12}).*"`<br>Optional: `--clip_r2 9 --three_prime_clip_r2 12` |
 | In sequence  | [Takara Bio SMARTer® Stranded Total RNA-Seq Kit v3](https://www.takarabio.com/documents/User%20Manual/SMARTer%20Stranded%20Total%20RNA/SMARTer%20Stranded%20Total%20RNA-Seq%20Kit%20v3%20-%20Pico%20Input%20Mammalian%20User%20Manual-a_114949.pdf) | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern2 "^(?P<umi_1>.{8})(?P<discard_1>.{6}).*"`                                  |
@@ -145,7 +145,7 @@ wget -L ftp://ftp.ensembl.org/pub/release-${latest_release}/fasta/homo_sapiens/d
 wget -L ftp://ftp.ensembl.org/pub/release-${latest_release}/gtf/homo_sapiens/Homo_sapiens.GRCh38.${latest_release}.gtf.gz
 ```
 
-These files can then be specified to the workflow with the `--fasta` and `--gtf` parameters. 
+These files can then be specified to the workflow with the `--fasta` and `--gtf` parameters.
 
 Notes:
 
@@ -160,7 +160,7 @@ Notes:
 By default, indices are generated dynamically by the workflow for tools such as STAR and Salmon. Since indexing is an expensive process in time and resources you should ensure that it is only done once, by retaining the indices generated from each batch of reference files:
 
 - the `--save_reference` parameter will save your indices in your results directory
-- the `--skip_alignment --skip_pseudo_alignment` will disable other processes if you'd like to do an 'indexing only' workflow run. 
+- the `--skip_alignment --skip_pseudo_alignment` will disable other processes if you'd like to do an 'indexing only' workflow run.
 
 Once you have the indices from a workflow run you should save them somewhere central and reuse them in subsequent runs using custom config files or command line parameters such as `--star_index '/path/to/STAR/index/'`.
 

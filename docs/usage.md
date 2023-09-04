@@ -147,10 +147,9 @@ wget -L ftp://ftp.ensembl.org/pub/release-${latest_release}/gtf/homo_sapiens/Hom
 
 These files can then be specified to the workflow with the `--fasta` and `--gtf` parameters. 
 
-> **NB:** Compressed reference files are supported by the pipeline i.e. standard files with the `.gz` extension and indices folders with the `tar.gz` extension.
-
 Notes:
 
+- Compressed reference files are supported by the pipeline i.e. standard files with the `.gz` extension and indices folders with the `tar.gz` extension.
 - If `--gff` is provided as input then this will be converted to a GTF file, or the latter will be used if both are provided.
 - If `--gene_bed` is not provided then it will be generated from the GTF file.
 - If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.

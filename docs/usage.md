@@ -139,7 +139,7 @@ Please refer to the [nf-core website](https://nf-co.re/usage/reference_genomes) 
 When using the --genome parameter (e.g. --genome GRCh37), you are referring to references from AWS-iGenomes. Please be aware that:
 
 - The igenomes file usage triggered by this option is outdated with respect to gene annotations. This can be particularly problematic for RNA-seq analysis, which relies on accurate gene annotation.
-- Some iGenomes references (e.g., GRCh38) point to annotation files that use gene symbols as the primary identifier. This can cause issues for downstream analysis, such as the nf-core [differential abundance workflow](https://nf-co.re/differentialabundance) workflow.
+- Some iGenomes references (e.g., GRCh38) point to annotation files that use gene symbols as the primary identifier. This can cause issues for downstream analysis, such as the nf-core [differential abundance](https://nf-co.re/differentialabundance) workflow.
 
 We recommend that you provide reference files directly, via `--gtf` and `--fasta`, and that supplied GTF files do not use gene names as `gene_id`.
 :::

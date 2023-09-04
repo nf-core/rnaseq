@@ -206,8 +206,6 @@ nextflow run \
     --outdir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
-    --igenomes_ignore \
-    --genome null \
     -profile docker
 ```
 

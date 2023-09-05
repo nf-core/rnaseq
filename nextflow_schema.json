@@ -331,12 +331,12 @@
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
-                "load_igenomes": {
+                "igenomes_ignore": {
                     "type": "boolean",
-                    "description": "Load the iGenomes reference config.",
+                    "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "help_text": "Load `igenomes.config` when running the pipeline. You may choose this option if you want to use iGenomes reference configurations like `--genome GRCh38` rather than explicit reference file provision."
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 }
             },
             "required": ["fasta"]

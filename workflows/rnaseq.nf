@@ -97,9 +97,10 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome'
-include { ALIGN_STAR     } from '../subworkflows/local/align_star'
-include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'
+include { UNCOMPRESS_GENOME } from '../subworkflows/local/uncompress_genome'
+include { PREPARE_GENOME    } from '../subworkflows/local/prepare_genome'
+include { ALIGN_STAR        } from '../subworkflows/local/align_star'
+include { QUANTIFY_RSEM     } from '../subworkflows/local/quantify_rsem'
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
 
@@ -154,63 +155,106 @@ workflow RNASEQ {
     ch_versions = Channel.empty()
 
     //
-    // SUBWORKFLOW: Uncompress and prepare reference genome files
+    // SUBWORKFLOW: Uncompress reference genome files
+    //
+    UNCOMPRESS_GENOME (
+        (params.fasta            && params.fasta.endsWith('.gz')             ? params.fasta            : ''),
+        (params.gtf              && params.gtf.endsWith('.gz')               ? params.gtf              : ''),
+        (params.gff              && params.gff.endsWith('.gz')               ? params.gff              : ''),
+        (params.additional_fasta && params.additional_fasta.endsWith('.gz')  ? params.additional_fasta : ''),
+        (params.transcript_fasta && params.transcript_fasta.endsWith('.gz')  ? params.transcript_fasta : ''),
+        (params.gene_bed         && params.gene_bed.endsWith('.gz')          ? params.gene_bed         : ''),
+        (params.splicesites ?: ''),
+        (params.star_index       && params.star_index.endsWith('.tar.gz')    ? params.star_index       : ''),
+        (params.rsem_index       && params.rsem_index.endsWith('.tar.gz')    ? params.rsem_index       : ''),
+        (params.salmon_index     && params.salmon_index.endsWith('.tar.gz')  ? params.salmon_index     : ''),
+        (params.hisat2_index     && params.hisat2_index.endsWith('.tar.gz')  ? params.hisat2_index     : ''),
+        (params.bbsplit_index    && params.bbsplit_index.endsWith('.tar.gz') ? params.bbsplit_index    : ''),
+        prepareToolIndices
+    )
+    ch_versions = ch_versions.mix(UNCOMPRESS_GENOME.out.versions)
+
+    ch_fasta = params.fasta ? params.fasta.endsWith('.gz') ? UNCOMPRESS_GENOME.out.fasta : Channel.value(file(params.fasta)) : Channel.empty()
+    ch_gtf   = params.gtf   ? params.gtf.endsWith('.gz')   ? UNCOMPRESS_GENOME.out.gtf   : Channel.value(file(params.gtf))   : Channel.empty()
+    ch_gff   = params.gff   ? params.gff.endsWith('.gz')   ? UNCOMPRESS_GENOME.out.gff   : Channel.value(file(params.gff))   : Channel.empty()
+
+    ch_splicesites = params.splicesites ? Channel.value(file(splicesites)) : UNCOMPRESS_GENOME.out.splicesites
+    ch_gene_bed = params.gene_bed ? params.gene_bed.endsWith('.gz') ? UNCOMPRESS_GENOME.out.gene_bed : Channel.value(file(gene_bed)) : Channel.empty()
+
+    ch_additional_fasta = params.additional_fasta ? params.additional_fasta.endsWith('.gz') ?
+        UNCOMPRESS_GENOME.out.additional_fasta :
+        Channel.value(file(params.additional_fasta)) :
+        Channel.empty()
+
+    ch_transcript_fasta = params.transcript_fasta ? params.transcript_fasta.endsWith('.gz') ?
+        UNCOMPRESS_GENOME.out.transcript_fasta :
+        Channel.value(file(params.transcript_fasta)) :
+        Channel.empty()
+
+
+    ch_star_index    = params.star_index    ? params.star_index.endsWith('.tar.gz')    ? UNCOMPRESS_GENOME.out.star_index    : Channel.value(file(params.star_index))    : Channel.empty()
+    ch_rsem_index    = params.rsem_index    ? params.rsem_index.endsWith('.tar.gz')    ? UNCOMPRESS_GENOME.out.rsem_index    : Channel.value(file(params.rsem_index))    : Channel.empty()
+    ch_salmon_index  = params.salmon_index  ? params.salmon_index.endsWith('.tar.gz')  ? UNCOMPRESS_GENOME.out.salmon_index  : Channel.value(file(params.salmon_index))  : Channel.empty()
+    ch_hisat2_index  = params.hisat2_index  ? params.hisat2_index.endsWith('.tar.gz')  ? UNCOMPRESS_GENOME.out.hisat2_index  : Channel.value(file(params.hisat2_index))  : Channel.empty()
+    ch_bbsplit_index = params.bbsplit_index ? params.bbsplit_index.endsWith('.tar.gz') ? UNCOMPRESS_GENOME.out.bbsplit_index : Channel.value(file(params.bbsplit_index)) : Channel.empty()
+
+    //
+    // SUBWORKFLOW: Prepare reference genome files
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     PREPARE_GENOME (
-        params.fasta,
-        params.gtf,
-        params.gff,
-        params.additional_fasta,
-        params.transcript_fasta,
-        params.gene_bed,
-        params.splicesites,
+        ch_fasta,
+        ch_gtf,
+        ch_gff,
+        ch_additional_fasta,
+        ch_transcript_fasta,
+        ch_gene_bed,
+        ch_splicesites,
         params.bbsplit_fasta_list,
-        params.star_index,
-        params.rsem_index,
-        params.salmon_index,
-        params.hisat2_index,
-        params.bbsplit_index,
+        ch_star_index,
+        ch_rsem_index,
+        ch_salmon_index,
+        ch_hisat2_index,
+        ch_bbsplit_index,
         params.gencode,
         is_aws_igenome,
         biotype,
         prepareToolIndices
     )
+
+    ch_fasta       = PREPARE_GENOME.out.fasta
+    ch_fai         = PREPARE_GENOME.out.fai
+    ch_chrom_sizes = PREPARE_GENOME.out.chrom_sizes
+    ch_gtf              = params.gtf              ? ch_gtf              : PREPARE_GENOME.out.gtf
+    ch_transcript_fasta = params.transcript_fasta ? ch_transcript_fasta : PREPARE_GENOME.out.transcript_fasta
+    ch_bbsplit_index    = params.bbsplit_index    ? ch_bbsplit_index    : PREPARE_GENOME.out.bbsplit_index
+    ch_star_index       = params.star_index       ? ch_star_index       : PREPARE_GENOME.out.star_index
+    ch_rsem_index       = params.rsem_index       ? ch_rsem_index       : PREPARE_GENOME.out.rsem_index
+    ch_hisat2_index     = params.hisat2_index     ? ch_hisat2_index     : PREPARE_GENOME.out.hisat2_index
+    ch_salmon_index     = params.salmon_index     ? ch_salmon_index     : PREPARE_GENOME.out.salmon_index
+
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
-        PREPARE_GENOME
-            .out
-            .fai
-            .map { WorkflowRnaseq.checkMaxContigSize(it, log) }
+        ch_fai.map { WorkflowRnaseq.checkMaxContigSize(it, log) }
     }
 
     //
     // Create input channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
+    ch_fastq = Channel.fromSamplesheet("input").map{ meta, fastq_1, fastq_2 ->
+        if (!fastq_2) {
+            return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+        } else {
+            return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
         }
-        .groupTuple()
-        .map {
-            WorkflowRnaseq.validateInput(it)
-        }
-        .branch {
-            meta, fastqs ->
-                single  : fastqs.size() == 1
-                    return [ meta, fastqs.flatten() ]
-                multiple: fastqs.size() > 1
-                    return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_fastq }
+    }.groupTuple().map {WorkflowRnaseq.validateInput(it)}.branch{meta, fastqs ->
+        single  : fastqs.size() == 1
+            return [ meta, fastqs.flatten() ]
+        multiple: fastqs.size() > 1
+            return [ meta, fastqs.flatten() ]
+    }
 
     //
     // MODULE: Concatenate FastQ files from same sample if required
@@ -221,6 +265,7 @@ workflow RNASEQ {
     .reads
     .mix(ch_fastq.single)
     .set { ch_cat_fastq }
+
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
     // Branch FastQ channels if 'auto' specified to infer strandedness
@@ -238,18 +283,16 @@ workflow RNASEQ {
     // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
     //
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-    PREPARE_GENOME.out.fasta
-        .combine(ch_strand_fastq.auto_strand)
+    ch_genome_fasta = ch_fasta.combine(ch_strand_fastq.auto_strand)
         .map { it.first() }
         .first()
-        .set { ch_genome_fasta }
 
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
         ch_genome_fasta,
-        PREPARE_GENOME.out.transcript_fasta,
-        PREPARE_GENOME.out.gtf,
-        PREPARE_GENOME.out.salmon_index,
+        ch_transcript_fasta,
+        ch_gtf,
+        ch_salmon_index,
         !params.salmon_index && !('salmon' in prepareToolIndices)
     )
     ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
@@ -340,7 +383,7 @@ workflow RNASEQ {
     if (!params.skip_bbsplit) {
         BBMAP_BBSPLIT (
             ch_filtered_reads,
-            PREPARE_GENOME.out.bbsplit_index,
+            ch_bbsplit_index,
             [],
             [ [], [] ],
             false
@@ -382,13 +425,13 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         ALIGN_STAR (
             ch_filtered_reads,
-            PREPARE_GENOME.out.star_index,
-            PREPARE_GENOME.out.gtf,
+            ch_star_index,
+            ch_gtf,
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
             is_aws_igenome,
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+            ch_fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai
@@ -424,7 +467,7 @@ workflow RNASEQ {
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_STATS_SAMTOOLS (
                 ch_transcriptome_bam,
-                PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+                ch_fasta.map { [ [:], it ] }
             )
             ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
             ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
@@ -472,8 +515,8 @@ workflow RNASEQ {
         QUANTIFY_STAR_SALMON (
             ch_transcriptome_bam,
             ch_dummy_file,
-            PREPARE_GENOME.out.transcript_fasta,
-            PREPARE_GENOME.out.gtf,
+            ch_transcript_fasta,
+            ch_gtf,
             true,
             params.salmon_quant_libtype ?: ''
         )
@@ -498,8 +541,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         QUANTIFY_RSEM (
             ch_filtered_reads,
-            PREPARE_GENOME.out.rsem_index,
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+            ch_rsem_index,
+            ch_fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = QUANTIFY_RSEM.out.bam
         ch_genome_bam_index  = QUANTIFY_RSEM.out.bai
@@ -532,9 +575,9 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         FASTQ_ALIGN_HISAT2 (
             ch_filtered_reads,
-            PREPARE_GENOME.out.hisat2_index.map { [ [:], it ] },
-            PREPARE_GENOME.out.splicesites.map { [ [:], it ] },
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+            ch_hisat2_index.map { [ [:], it ] },
+            ch_splicesites.map { [ [:], it ] },
+            ch_fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = FASTQ_ALIGN_HISAT2.out.bam
         ch_genome_bam_index  = FASTQ_ALIGN_HISAT2.out.bai
@@ -627,8 +670,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] },
-            PREPARE_GENOME.out.fai.map { [ [:], it ] }
+            ch_fasta.map { [ [:], it ] },
+            ch_fai.map { [ [:], it ] }
         )
         ch_genome_bam             = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index       = BAM_MARKDUPLICATES_PICARD.out.bai
@@ -648,7 +691,7 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
-            PREPARE_GENOME.out.gtf
+            ch_gtf
         )
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
@@ -659,15 +702,11 @@ workflow RNASEQ {
     ch_featurecounts_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
 
-        PREPARE_GENOME
-            .out
-            .gtf
-            .map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
-            .set { biotype_in_gtf }
+        biotype_in_gtf = ch_gtf.map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
 
         // Prevent any samples from running if GTF file doesn't have a valid biotype
         ch_genome_bam
-            .combine(PREPARE_GENOME.out.gtf)
+            .combine(ch_gtf)
             .combine(biotype_in_gtf)
             .filter { it[-1] }
             .map { it[0..<it.size()-1] }
@@ -701,13 +740,13 @@ workflow RNASEQ {
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
-            PREPARE_GENOME.out.chrom_sizes
+            ch_chrom_sizes
         )
         ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
-            PREPARE_GENOME.out.chrom_sizes
+            ch_chrom_sizes
         )
     }
 
@@ -729,7 +768,7 @@ workflow RNASEQ {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ (
                 ch_genome_bam,
-                PREPARE_GENOME.out.gtf
+                ch_gtf
             )
             ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
             ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
@@ -738,7 +777,7 @@ workflow RNASEQ {
         if (!params.skip_dupradar) {
             DUPRADAR (
                 ch_genome_bam,
-                PREPARE_GENOME.out.gtf
+                ch_gtf
             )
             ch_dupradar_multiqc = DUPRADAR.out.multiqc
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
@@ -747,7 +786,7 @@ workflow RNASEQ {
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             BAM_RSEQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                PREPARE_GENOME.out.gene_bed,
+                ch_gene_bed,
                 rseqc_modules
             )
             ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
@@ -796,9 +835,9 @@ workflow RNASEQ {
     if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon') {
         QUANTIFY_SALMON (
             ch_filtered_reads,
-            PREPARE_GENOME.out.salmon_index,
+            ch_salmon_index,
             ch_dummy_file,
-            PREPARE_GENOME.out.gtf,
+            ch_gtf,
             false,
             params.salmon_quant_libtype ?: ''
         )

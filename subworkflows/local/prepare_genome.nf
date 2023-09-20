@@ -128,17 +128,8 @@ workflow PREPARE_GENOME {
     //
     ch_rsem_index = Channel.empty()
     if ('star_rsem' in prepare_tool_indices) {
-        if (rsem_index) {
-            if (rsem_index.endsWith('.tar.gz')) {
-                ch_rsem_index = UNTAR_RSEM_INDEX ( [ [:], rsem_index ] ).untar.map { it[1] }
-                ch_versions   = ch_versions.mix(UNTAR_RSEM_INDEX.out.versions)
-            } else {
-                ch_rsem_index = Channel.value(file(rsem_index))
-            }
-        } else {
-            ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
-            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
-        }
+        ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
+        ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
     }
 
     //

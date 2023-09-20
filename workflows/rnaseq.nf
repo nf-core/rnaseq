@@ -97,9 +97,10 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome'
-include { ALIGN_STAR     } from '../subworkflows/local/align_star'
-include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'
+include { UNCOMPRESS_GENOME } from '../subworkflows/local/uncompress_genome'
+include { PREPARE_GENOME    } from '../subworkflows/local/prepare_genome'
+include { ALIGN_STAR        } from '../subworkflows/local/align_star'
+include { QUANTIFY_RSEM     } from '../subworkflows/local/quantify_rsem'
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
 
@@ -154,23 +155,67 @@ workflow RNASEQ {
     ch_versions = Channel.empty()
 
     //
-    // SUBWORKFLOW: Uncompress and prepare reference genome files
+    // SUBWORKFLOW: Uncompress reference genome files
+    //
+    UNCOMPRESS_GENOME (
+        (params.fasta            && params.fasta.endsWith('.gz')             ? params.fasta            : ''),
+        (params.gtf              && params.gtf.endsWith('.gz')               ? params.gtf              : ''),
+        (params.gff              && params.gff.endsWith('.gz')               ? params.gff              : ''),
+        (params.additional_fasta && params.additional_fasta.endsWith('.gz')  ? params.additional_fasta : ''),
+        (params.transcript_fasta && params.transcript_fasta.endsWith('.gz')  ? params.transcript_fasta : ''),
+        (params.gene_bed         && params.gene_bed.endsWith('.gz')          ? params.gene_bed         : ''),
+        (params.splicesites ?: ''),
+        (params.star_index       && params.star_index.endsWith('.tar.gz')    ? params.star_index       : ''),
+        (params.rsem_index       && params.rsem_index.endsWith('.tar.gz')    ? params.rsem_index       : ''),
+        (params.salmon_index     && params.salmon_index.endsWith('.tar.gz')  ? params.salmon_index     : ''),
+        (params.hisat2_index     && params.hisat2_index.endsWith('.tar.gz')  ? params.hisat2_index     : ''),
+        (params.bbsplit_index    && params.bbsplit_index.endsWith('.tar.gz') ? params.bbsplit_index    : ''),
+        prepareToolIndices
+    )
+    ch_versions = ch_versions.mix(UNCOMPRESS_GENOME.out.versions)
+
+    ch_fasta = params.fasta ? params.fasta.endsWith('.gz') ? UNCOMPRESS_GENOME.out.fasta : Channel.value(file(params.fasta)) : Channel.empty()
+    ch_gtf   = params.gtf   ? params.gtf.endsWith('.gz')   ? UNCOMPRESS_GENOME.out.gtf   : Channel.value(file(params.gtf))   : Channel.empty()
+    ch_gff   = params.gff   ? params.gff.endsWith('.gz')   ? UNCOMPRESS_GENOME.out.gff   : Channel.value(file(params.gff))   : Channel.empty()
+
+    ch_splicesites = params.splicesites ? Channel.value(file(splicesites)) : UNCOMPRESS_GENOME.out.splicesites
+    ch_gene_bed = params.gene_bed ? params.gene_bed.endsWith('.gz') ? UNCOMPRESS_GENOME.out.gene_bed : Channel.value(file(gene_bed)) : Channel.empty()
+
+    ch_additional_fasta = params.additional_fasta ? params.additional_fasta.endsWith('.gz') ?
+        UNCOMPRESS_GENOME.out.additional_fasta :
+        Channel.value(file(params.additional_fasta)) :
+        Channel.empty()
+
+    ch_transcript_fasta = params.transcript_fasta ? params.transcript_fasta.endsWith('.gz') ?
+        UNCOMPRESS_GENOME.out.transcript_fasta :
+        Channel.value(file(params.transcript_fasta)) :
+        Channel.empty()
+
+
+    ch_star_index    = params.star_index    ? params.star_index.endsWith('.tar.gz')    ? UNCOMPRESS_GENOME.out.star_index    : Channel.value(file(params.star_index))    : Channel.empty()
+    ch_rsem_index    = params.rsem_index    ? params.rsem_index.endsWith('.tar.gz')    ? UNCOMPRESS_GENOME.out.rsem_index    : Channel.value(file(params.rsem_index))    : Channel.empty()
+    ch_salmon_index  = params.salmon_index  ? params.salmon_index.endsWith('.tar.gz')  ? UNCOMPRESS_GENOME.out.salmon_index  : Channel.value(file(params.salmon_index))  : Channel.empty()
+    ch_hisat2_index  = params.hisat2_index  ? params.hisat2_index.endsWith('.tar.gz')  ? UNCOMPRESS_GENOME.out.hisat2_index  : Channel.value(file(params.hisat2_index))  : Channel.empty()
+    ch_bbsplit_index = params.bbsplit_index ? params.bbsplit_index.endsWith('.tar.gz') ? UNCOMPRESS_GENOME.out.bbsplit_index : Channel.value(file(params.bbsplit_index)) : Channel.empty()
+
+    //
+    // SUBWORKFLOW: Prepare reference genome files
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     PREPARE_GENOME (
-        params.fasta,
-        params.gtf,
-        params.gff,
-        params.additional_fasta,
-        params.transcript_fasta,
-        params.gene_bed,
-        params.splicesites,
+        ch_fasta,
+        ch_gtf,
+        ch_gff,
+        ch_additional_fasta,
+        ch_transcript_fasta,
+        ch_gene_bed,
+        ch_splicesites,
         params.bbsplit_fasta_list,
-        params.star_index,
-        params.rsem_index,
-        params.salmon_index,
-        params.hisat2_index,
-        params.bbsplit_index,
+        ch_star_index,
+        ch_rsem_index,
+        ch_salmon_index,
+        ch_hisat2_index,
+        ch_bbsplit_index,
         params.gencode,
         is_aws_igenome,
         biotype,

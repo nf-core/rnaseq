@@ -30,7 +30,7 @@ workflow PREPARE_GENOME {
     star_index            // directory: /path/to/star/index/
     rsem_index            // directory: /path/to/rsem/index/
     salmon_index          // directory: /path/to/salmon/index/
-    ch_hisat2_index       // directory: /path/to/hisat2/index/
+    hisat2_index          // directory: /path/to/hisat2/index/
     bbsplit_index         // directory: /path/to/rsem/index/
     gencode               //   boolean: whether the genome is from GENCODE
     is_aws_igenome        //   boolean: whether the genome files are from AWS iGenomes
@@ -46,13 +46,13 @@ workflow PREPARE_GENOME {
     //
     if (!ch_gtf && ch_gff) {
         ch_gtf      = GFFREAD ( ch_gff ).gtf
-        ch_versions = ch_versions.mix(GFFREAD.out.versions)
+        ch_versions = ch_versions.mix(GFFREADch_additional_fasta.out.versions)
     }
 
     //
     // Concatenate additional fasta file with reference fasta and gtf files
     //
-    if (ch_additional_fasta) {
+    if () {
         CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_additional_fasta, biotype )
 
         ch_fasta    = CAT_ADDITIONAL_FASTA.out.fasta
@@ -127,7 +127,7 @@ workflow PREPARE_GENOME {
     // Uncompress RSEM index or generate from scratch if required
     //
     ch_rsem_index = Channel.empty()
-    if ('star_rsem' in prepare_tool_indices) {
+    if ('star_rsem' in prepare_tool_indices && !rsem_index) {
         ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
         ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
     }
@@ -136,7 +136,7 @@ workflow PREPARE_GENOME {
     // Uncompress HISAT2 index or generate from scratch if required
     //
     ch_hisat2_index = Channel.empty()
-    if ('hisat2' in prepare_tool_indices) {
+    if ('hisat2' in prepare_tool_indices && !hisat2_index) {
         ch_hisat2_index = HISAT2_BUILD ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] }, ch_splicesites.map { [ [:], it ] } ).index.map { it[1] }
         ch_versions     = ch_versions.mix(HISAT2_BUILD.out.versions)
     }
@@ -145,7 +145,7 @@ workflow PREPARE_GENOME {
     // Uncompress Salmon index or generate from scratch if required
     //
     ch_salmon_index = Channel.empty()
-    if (!salmon_index && 'salmon' in prepare_tool_indices) {
+    if ('salmon' in prepare_tool_indices && !salmon_index) {
         ch_salmon_index = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
         ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
     }

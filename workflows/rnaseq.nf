@@ -243,28 +243,18 @@ workflow RNASEQ {
     //
     // Create input channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
+    ch_fastq = Channel.fromSamplesheet("input").map{ meta, fastq_1, fastq_2 ->
+        if (!fastq_2) {
+            return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+        } else {
+            return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
         }
-        .groupTuple()
-        .map {
-            WorkflowRnaseq.validateInput(it)
-        }
-        .branch {
-            meta, fastqs ->
-                single  : fastqs.size() == 1
-                    return [ meta, fastqs.flatten() ]
-                multiple: fastqs.size() > 1
-                    return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_fastq }
+    }.groupTuple().map {WorkflowRnaseq.validateInput(it)}.branch{meta, fastqs ->
+        single  : fastqs.size() == 1
+            return [ meta, fastqs.flatten() ]
+        multiple: fastqs.size() > 1
+            return [ meta, fastqs.flatten() ]
+    }
 
     //
     // MODULE: Concatenate FastQ files from same sample if required
@@ -275,6 +265,7 @@ workflow RNASEQ {
     .reads
     .mix(ch_fastq.single)
     .set { ch_cat_fastq }
+
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
     // Branch FastQ channels if 'auto' specified to infer strandedness

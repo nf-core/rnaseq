@@ -52,7 +52,7 @@ workflow PREPARE_GENOME {
     //
     // Concatenate additional fasta file with reference fasta and gtf files
     //
-    if () {
+    if (ch_additional_fasta) {
         CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_additional_fasta, biotype )
 
         ch_fasta    = CAT_ADDITIONAL_FASTA.out.fasta

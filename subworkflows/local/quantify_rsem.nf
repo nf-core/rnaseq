@@ -19,6 +19,31 @@ workflow QUANTIFY_RSEM {
     //
     // Quantify reads with RSEM
     //
+    RSEM_CALCULATEEXPRESSION.config.ext.args   = [
+        '--star',
+        '--star-output-genome-bam',
+        '--star-gzipped-read-file',
+        '--estimate-rspd',
+        '--seed 1'
+    ].join(' ').trim()
+    RSEM_CALCULATEEXPRESSION.config.publishDir = [
+        [
+            path: "${params.outdir}/${params.aligner}",
+            mode: params.publish_dir_mode,
+            pattern: "*.{stat,results}"
+        ],
+        [
+            path: "${params.outdir}/${params.aligner}",
+            mode: params.publish_dir_mode,
+            pattern: "*.bam",
+            enabled: params.save_align_intermeds
+        ],
+        [
+            path: "${params.outdir}/${params.aligner}/log",
+            mode: params.publish_dir_mode,
+            pattern: "*.log"
+        ]
+    ]
     RSEM_CALCULATEEXPRESSION ( reads, index )
     ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
 
@@ -31,6 +56,11 @@ workflow QUANTIFY_RSEM {
     //
     // Merge counts across samples
     //
+    RSEM_MERGE_COUNTS.config.publishDir = [
+        path: "${params.outdir}/${params.aligner}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+    ]
     RSEM_MERGE_COUNTS (
         RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
         RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]}

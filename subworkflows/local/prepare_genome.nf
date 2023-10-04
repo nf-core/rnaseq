@@ -55,10 +55,24 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
+    genome_publish_dir = [
+        path: "${params.outdir}/genome",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
+        enabled: params.save_reference
+    ]
+    genome_index_publish_dir = [
+        path: "${params.outdir}/genome/index",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
+        enabled: params.save_reference
+    ]
+
     //
     // Uncompress genome fasta file if required
     //
     if (fasta.endsWith('.gz')) {
+        GUNZIP_FASTA.config.publishDir = genome_publish_dir
         ch_fasta    = GUNZIP_FASTA ( [ [:], fasta ] ).gunzip.map { it[1] }
         ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
     } else {
@@ -70,6 +84,7 @@ workflow PREPARE_GENOME {
     //
     if (gtf) {
         if (gtf.endsWith('.gz')) {
+            GUNZIP_GTF.config.publishDir = genome_publish_dir
             ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
         } else {
@@ -77,11 +92,15 @@ workflow PREPARE_GENOME {
         }
     } else if (gff) {
         if (gff.endsWith('.gz')) {
+            GUNZIP_GFF.config.publishDir = genome_publish_dir
             ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
         } else {
             ch_gff = Channel.value(file(gff))
         }
+
+        GFFREAD.config.ext.args   = '--keep-exon-attrs -F -T'
+        GFFREAD.config.publishDir = genome_publish_dir
         ch_gtf      = GFFREAD ( ch_gff ).gtf
         ch_versions = ch_versions.mix(GFFREAD.out.versions)
     }
@@ -91,11 +110,14 @@ workflow PREPARE_GENOME {
     //
     if (additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
+            GUNZIP_ADDITIONAL_FASTA.config.publishDir = genome_publish_dir
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], additional_fasta ] ).gunzip.map { it[1] }
             ch_versions  = ch_versions.mix(GUNZIP_ADDITIONAL_FASTA.out.versions)
         } else {
             ch_add_fasta = Channel.value(file(additional_fasta))
         }
+
+        CAT_ADDITIONAL_FASTA.config.publishDir = genome_publish_dir
         CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta, biotype )
         ch_fasta    = CAT_ADDITIONAL_FASTA.out.fasta
         ch_gtf      = CAT_ADDITIONAL_FASTA.out.gtf
@@ -107,12 +129,14 @@ workflow PREPARE_GENOME {
     //
     if (gene_bed) {
         if (gene_bed.endsWith('.gz')) {
+            GUNZIP_GENE_BED.config.publishDir = genome_publish_dir
             ch_gene_bed = GUNZIP_GENE_BED ( [ [:], gene_bed ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GENE_BED.out.versions)
         } else {
             ch_gene_bed = Channel.value(file(gene_bed))
         }
     } else {
+        GTF2BED.config.publishDir = genome_publish_dir
         ch_gene_bed = GTF2BED ( ch_gtf ).bed
         ch_versions = ch_versions.mix(GTF2BED.out.versions)
     }
@@ -122,18 +146,23 @@ workflow PREPARE_GENOME {
     //
     if (transcript_fasta) {
         if (transcript_fasta.endsWith('.gz')) {
+            GUNZIP_TRANSCRIPT_FASTA.config.publishDir = genome_publish_dir
             ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], transcript_fasta ] ).gunzip.map { it[1] }
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
             ch_transcript_fasta = Channel.value(file(transcript_fasta))
         }
         if (gencode) { 
+            PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.config.publishDir = genome_publish_dir
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
             ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
+        GTF_GENE_FILTER.config.publishDir = genome_publish_dir
         ch_filter_gtf = GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf
+
+        MAKE_TRANSCRIPTS_FASTA.config.publishDir = genome_publish_dir
         ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filter_gtf ).transcript_fasta
         ch_versions         = ch_versions.mix(GTF_GENE_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
@@ -142,6 +171,7 @@ workflow PREPARE_GENOME {
     //
     // Create chromosome sizes file
     //
+    CUSTOM_GETCHROMSIZES.config.publishDir = genome_publish_dir
     CUSTOM_GETCHROMSIZES ( ch_fasta.map { [ [:], it ] } )
     ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
     ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
@@ -154,6 +184,8 @@ workflow PREPARE_GENOME {
     if ('bbsplit' in prepare_tool_indices) {
         if (bbsplit_index) {
             if (bbsplit_index.endsWith('.tar.gz')) {
+                UNTAR_BBSPLIT_INDEX.config.ext.args2  = '--no-same-owner'
+                UNTAR_BBSPLIT_INDEX.config.publishDir = genome_index_publish_dir
                 ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( [ [:], bbsplit_index ] ).untar.map { it[1] }
                 ch_versions      = ch_versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
             } else {
@@ -169,6 +201,8 @@ workflow PREPARE_GENOME {
                 .collect { [ it ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module
                 .set { ch_bbsplit_fasta_list }
 
+            BBMAP_BBSPLIT.config.ext.args   = 'build=1'
+            BBMAP_BBSPLIT.config.publishDir = genome_index_publish_dir
             ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
             ch_versions      = ch_versions.mix(BBMAP_BBSPLIT.out.versions)
         }
@@ -181,6 +215,8 @@ workflow PREPARE_GENOME {
     if ('star_salmon' in prepare_tool_indices) {
         if (star_index) {
             if (star_index.endsWith('.tar.gz')) {
+                UNTAR_STAR_INDEX.config.ext.args2  = '--no-same-owner'
+                UNTAR_STAR_INDEX.config.publishDir = genome_index_publish_dir
                 ch_star_index = UNTAR_STAR_INDEX ( [ [:], star_index ] ).untar.map { it[1] }
                 ch_versions   = ch_versions.mix(UNTAR_STAR_INDEX.out.versions)
             } else {
@@ -188,9 +224,11 @@ workflow PREPARE_GENOME {
             }
         } else {
             if (is_aws_igenome) {
+                STAR_GENOMEGENERATE_IGENOMES.config.publishDir = genome_index_publish_dir
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES ( ch_fasta, ch_gtf ).index
                 ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)
             } else {
+                STAR_GENOMEGENERATE.config.publishDir = genome_index_publish_dir
                 ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
                 ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
             }
@@ -204,12 +242,16 @@ workflow PREPARE_GENOME {
     if ('star_rsem' in prepare_tool_indices) {
         if (rsem_index) {
             if (rsem_index.endsWith('.tar.gz')) {
+                UNTAR_RSEM_INDEX.config.ext.args2  = '--no-same-owner'
+                UNTAR_RSEM_INDEX.config.publishDir = genome_index_publish_dir
                 ch_rsem_index = UNTAR_RSEM_INDEX ( [ [:], rsem_index ] ).untar.map { it[1] }
                 ch_versions   = ch_versions.mix(UNTAR_RSEM_INDEX.out.versions)
             } else {
                 ch_rsem_index = Channel.value(file(rsem_index))
             }
         } else {
+            RSEM_PREPAREREFERENCE_GENOME.config.ext.args   = '--star'
+            RSEM_PREPAREREFERENCE_GENOME.config.publishDir = genome_index_publish_dir
             ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
             ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
         }
@@ -222,6 +264,7 @@ workflow PREPARE_GENOME {
     ch_hisat2_index = Channel.empty()
     if ('hisat2' in prepare_tool_indices) {
         if (!splicesites) {
+            HISAT2_EXTRACTSPLICESITES.config.publishDir = genome_index_publish_dir
             ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf.map { [ [:], it ] } ).txt.map { it[1] }
             ch_versions    = ch_versions.mix(HISAT2_EXTRACTSPLICESITES.out.versions)
         } else {
@@ -229,12 +272,15 @@ workflow PREPARE_GENOME {
         }
         if (hisat2_index) {
             if (hisat2_index.endsWith('.tar.gz')) {
+                UNTAR_HISAT2_INDEX.config.ext.args2  = '--no-same-owner'
+                UNTAR_HISAT2_INDEX.config.publishDir = genome_index_publish_dir
                 ch_hisat2_index = UNTAR_HISAT2_INDEX ( [ [:], hisat2_index ] ).untar.map { it[1] }
                 ch_versions     = ch_versions.mix(UNTAR_HISAT2_INDEX.out.versions)
             } else {
                 ch_hisat2_index = Channel.value(file(hisat2_index))
             }
         } else {
+            HISAT2_BUILD.config.publishDir = genome_index_publish_dir
             ch_hisat2_index = HISAT2_BUILD ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] }, ch_splicesites.map { [ [:], it ] } ).index.map { it[1] }
             ch_versions     = ch_versions.mix(HISAT2_BUILD.out.versions)
         }
@@ -246,6 +292,8 @@ workflow PREPARE_GENOME {
     ch_salmon_index = Channel.empty()
     if (salmon_index) {
         if (salmon_index.endsWith('.tar.gz')) {
+            UNTAR_SALMON_INDEX.config.ext.args2  = '--no-same-owner'
+            UNTAR_SALMON_INDEX.config.publishDir = genome_index_publish_dir
             ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.map { it[1] }
             ch_versions     = ch_versions.mix(UNTAR_SALMON_INDEX.out.versions)
         } else {
@@ -253,6 +301,8 @@ workflow PREPARE_GENOME {
         }
     } else {
         if ('salmon' in prepare_tool_indices) {
+            SALMON_INDEX.config.ext.args   = params.gencode ? '--gencode' : ''
+            SALMON_INDEX.config.publishDir = genome_index_publish_dir
             ch_salmon_index = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
             ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
         }

@@ -35,6 +35,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_raw_html = Channel.empty()
     fastqc_raw_zip  = Channel.empty()
     if (!skip_fastqc) {
+        FASTQC_RAW.config.ext.args   = '--quiet'
         FASTQC_RAW (
             reads
         )
@@ -46,6 +47,25 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     umi_reads = reads
     umi_log   = Channel.empty()
     if (with_umi && !skip_umi_extract) {
+        UMITOOLS_EXTRACT.config.ext.args   = [
+            params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : '',
+            params.umitools_bc_pattern     ? "--bc-pattern='${params.umitools_bc_pattern}'" : '',
+            params.umitools_bc_pattern2    ? "--bc-pattern2='${params.umitools_bc_pattern2}'" : '',
+            params.umitools_umi_separator  ? "--umi-separator='${params.umitools_umi_separator}'" : ''
+        ].join(' ').trim()
+        UMITOOLS_EXTRACT.config.publishDir = [
+            [
+                path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
+                pattern: "*.log"
+            ],
+            [
+                path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
+                pattern: "*.fastq.gz",
+                enabled: params.save_umi_intermeds
+            ]
+        ]
         UMITOOLS_EXTRACT (
             reads
         )
@@ -76,6 +96,25 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_trim_zip   = Channel.empty()
     trim_read_count   = Channel.empty()
     if (!skip_trimming) {
+        FASTP.config.ext.args   = params.extra_fastp_args ?: ''
+        FASTP.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
+                pattern: "*.{json,html}"
+            ],
+            [
+                path: "${params.outdir}/${params.trimmer}/log",
+                mode: params.publish_dir_mode,
+                pattern: "*.log"
+            ],
+            [
+                path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
+                pattern: "*.fastq.gz",
+                enabled: params.save_trimmed
+            ]
+        ]
         FASTP (
             umi_reads,
             adapter_fasta,
@@ -109,6 +148,12 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             .set { trim_read_count }
 
         if (!skip_fastqc) {
+            FASTQC_TRIM.config.ext.args   = '--quiet'
+            FASTQC_TRIM.config.publishDir = [
+                path: "${params.outdir}/${params.trimmer}/fastqc",
+                mode: params.publish_dir_mode,
+                saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+            ]
             FASTQC_TRIM (
                 trim_reads
             )

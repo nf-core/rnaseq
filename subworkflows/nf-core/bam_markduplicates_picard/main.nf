@@ -17,9 +17,30 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     ch_versions = Channel.empty()
 
+    PICARD_MARKDUPLICATES.config.ext.args   = '--ASSUME_SORTED true --REMOVE_DUPLICATES false --VALIDATION_STRINGENCY LENIENT --TMP_DIR tmp'
+    PICARD_MARKDUPLICATES.config.ext.prefix = { "${meta.id}.markdup.sorted" }
+    PICARD_MARKDUPLICATES.config.publishDir = [
+        [
+            path: "${params.outdir}/${params.aligner}/picard_metrics",
+            mode: params.publish_dir_mode,
+            pattern: '*metrics.txt'
+        ],
+        [
+            path: "${params.outdir}/${params.aligner}",
+            mode: params.publish_dir_mode,
+            pattern: '*.bam'
+        ]
+    ]
     PICARD_MARKDUPLICATES ( ch_bam, ch_fasta, ch_fai )
     ch_versions = ch_versions.mix(PICARD_MARKDUPLICATES.out.versions.first())
 
+    SAMTOOLS_INDEX.config.ext.args   = params.bam_csi_index ? '-c' : ''
+    SAMTOOLS_INDEX.config.ext.prefix = { "${meta.id}.markdup.sorted" }
+    SAMTOOLS_INDEX.config.publishDir = [
+        path: "${params.outdir}/${params.aligner}",
+        mode: params.publish_dir_mode,
+        pattern: '*.{bai,csi}'
+    ]
     SAMTOOLS_INDEX ( PICARD_MARKDUPLICATES.out.bam )
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 

@@ -32,7 +32,42 @@ workflow ALIGN_STAR {
     ch_bam_transcript = Channel.empty()
     ch_fastq          = Channel.empty()
     ch_tab            = Channel.empty()
+    align_ext_args    = [
+        '--quantMode TranscriptomeSAM',
+        '--twopassMode Basic',
+        '--outSAMtype BAM Unsorted',
+        '--readFilesCommand zcat',
+        '--runRNGseed 0',
+        '--outFilterMultimapNmax 20',
+        '--alignSJDBoverhangMin 1',
+        '--outSAMattributes NH HI AS NM MD',
+        '--quantTranscriptomeBan Singleend',
+        '--outSAMstrandField intronMotif',
+        params.save_unaligned ? '--outReadsUnmapped Fastx' : '',
+        params.extra_star_align_args ? params.extra_star_align_args.split("\\s(?=--)") : ''
+    ].flatten().unique(false).join(' ').trim()
+    align_publish_dir = [
+        [
+            path: { "${params.outdir}/${params.aligner}/log" },
+            mode: params.publish_dir_mode,
+            pattern: '*.{out,tab}'
+        ],
+        [
+            path: { "${params.outdir}/${params.aligner}" },
+            mode: params.publish_dir_mode,
+            pattern: '*.bam',
+            enabled: params.save_align_intermeds
+        ],
+        [
+            path: { "${params.outdir}/${params.aligner}/unmapped" },
+            mode: params.publish_dir_mode,
+            pattern: '*.fastq.gz',
+            enabled: params.save_unaligned
+        ]
+    ]
     if (is_aws_igenome) {
+        STAR_ALIGN_IGENOMES.config.ext.args = align_ext_args
+        STAR_ALIGN_IGENOMES.config.publishDir = align_publish_dir
         STAR_ALIGN_IGENOMES ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
         ch_orig_bam       = STAR_ALIGN_IGENOMES.out.bam
         ch_log_final      = STAR_ALIGN_IGENOMES.out.log_final
@@ -44,6 +79,8 @@ workflow ALIGN_STAR {
         ch_tab            = STAR_ALIGN_IGENOMES.out.tab
         ch_versions       = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
     } else {
+        STAR_ALIGN.config.ext.args = align_ext_args
+        STAR_ALIGN.config.publishDir = align_publish_dir
         STAR_ALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
         ch_orig_bam       = STAR_ALIGN.out.bam
         ch_log_final      = STAR_ALIGN.out.log_final

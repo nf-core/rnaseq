@@ -221,6 +221,12 @@ workflow RNASEQ {
     //
     // MODULE: Concatenate FastQ files from same sample if required
     //
+    CAT_FASTQ.config.publishDir = [
+        path: "${params.outdir}/fastq",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
+        enabled: params.save_merged_fastq
+    ]
     CAT_FASTQ (
         ch_fastq.multiple
     )
@@ -344,6 +350,20 @@ workflow RNASEQ {
     // MODULE: Remove genome contaminant reads
     //
     if (!params.skip_bbsplit) {
+        BBMAP_BBSPLIT.config.ext.args   = 'build=1 ambiguous2=all maxindel=150000'
+        BBMAP_BBSPLIT.config.publishDir = [
+            [
+                path: "${params.outdir}/bbsplit",
+                mode: params.publish_dir_mode,
+                pattern: '*.txt'
+            ],
+            [
+                path: "${params.outdir}/bbsplit",
+                mode: params.publish_dir_mode,
+                pattern: '*.fastq.gz',
+                enabled: params.save_bbsplit_reads
+            ]
+        ]
         BBMAP_BBSPLIT (
             ch_filtered_reads,
             PREPARE_GENOME.out.bbsplit_index,
@@ -363,6 +383,20 @@ workflow RNASEQ {
     if (params.remove_ribo_rna) {
         ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines()).map { row -> file(row, checkIfExists: true) }.collect()
 
+        SORTMERNA.config.ext.args   = '--num_alignments 1 -v'
+        SORTMERNA.config.publishDir = [
+            [
+                path: "${params.outdir}/sortmerna",
+                mode: params.publish_dir_mode,
+                pattern: "*.log"
+            ],
+            [
+                path: "${params.outdir}/sortmerna",
+                mode: params.publish_dir_mode,
+                pattern: "*.fastq.gz",
+                enabled: params.save_non_ribo_reads
+            ]
+        ]
         SORTMERNA (
             ch_filtered_reads,
             ch_sortmerna_fastas
@@ -442,6 +476,17 @@ workflow RNASEQ {
             )
 
             // Name sort BAM before passing to Salmon
+            SAMTOOLS_SORT.config.ext.args   = '-n'
+            SAMTOOLS_SORT.config.ext.prefix = { "${meta.id}.umi_dedup.transcriptome" }
+            SAMTOOLS_SORT.config.publishDir = [
+                path: "${params.outdir}/${params.aligner}",
+                mode: params.publish_dir_mode,
+                pattern: '*.bam',
+                enabled: (
+                    params.save_align_intermeds ||
+                    params.save_umi_intermeds
+                )
+            ]
             SAMTOOLS_SORT (
                 BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
             )
@@ -461,6 +506,23 @@ workflow RNASEQ {
 
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
+            UMITOOLS_PREPAREFORSALMON.config.ext.prefix = { "${meta.id}.umi_dedup.transcriptome.filtered" }
+            UMITOOLS_PREPAREFORSALMON.config.publishDir = [
+                [
+                    path: "${params.outdir}/${params.aligner}/umitools/log",
+                    mode: params.publish_dir_mode,
+                    pattern: '*.log'
+                ],
+                [
+                    path: "${params.outdir}/${params.aligner}",
+                    mode: params.publish_dir_mode,
+                    pattern: '*.bam',
+                    enabled: (
+                        params.save_align_intermeds ||
+                        params.save_umi_intermeds
+                    )
+                ]
+            ]
             UMITOOLS_PREPAREFORSALMON (
                 ch_umitools_dedup_bam.paired_end
             )
@@ -486,6 +548,19 @@ workflow RNASEQ {
         ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_STAR_SALMON.config.ext.args   = [
+                "--id_col 1",
+                "--sample_suffix ''",
+                "--outprefix deseq2",
+                "--count_col 3",
+                params.deseq2_vst ? '--vst TRUE' : ''
+            ].join(' ').trim()
+            DESEQ2_QC_STAR_SALMON.config.ext.args2  = 'star_salmon'
+            DESEQ2_QC_STAR_SALMON.config.publishDir = [
+                path: "${params.outdir}/${params.aligner}/deseq2_qc",
+                mode: params.publish_dir_mode,
+                pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
+            ]
             DESEQ2_QC_STAR_SALMON (
                 QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled,
                 ch_pca_header_multiqc,
@@ -520,6 +595,19 @@ workflow RNASEQ {
         ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_RSEM.config.ext.args   = [
+                "--id_col 1",
+                "--sample_suffix ''",
+                "--outprefix deseq2",
+                "--count_col 3",
+                params.deseq2_vst ? '--vst TRUE' : ''
+            ].join(' ').trim()
+            DESEQ2_QC_RSEM.config.ext.args2  = 'star_rsem'
+            DESEQ2_QC_RSEM.config.publishDir = [
+                path: "${params.outdir}/${params.aligner}/deseq2_qc",
+                mode: params.publish_dir_mode,
+                pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
+            ]
             DESEQ2_QC_RSEM (
                 QUANTIFY_RSEM.out.merged_counts_gene,
                 ch_pca_header_multiqc,
@@ -619,6 +707,19 @@ workflow RNASEQ {
     //
     ch_preseq_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq) {
+        PRESEQ_LCEXTRAP.config.ext.args   = '-verbose -bam -seed 1 -seg_len 100000000'
+        PRESEQ_LCEXTRAP.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.aligner}/preseq",
+                mode: params.publish_dir_mode,
+                pattern: "*.txt"
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/preseq/log",
+                mode: params.publish_dir_mode,
+                pattern: "*.log"
+            ]
+        ]
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
@@ -652,6 +753,15 @@ workflow RNASEQ {
     // MODULE: STRINGTIE
     //
     if (!params.skip_alignment && !params.skip_stringtie) {
+        STRINGTIE_STRINGTIE.config.ext.args   = [
+            '-v',
+            params.stringtie_ignore_gtf ? '' : '-e'
+        ].join(' ').trim()
+        STRINGTIE_STRINGTIE.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/stringtie",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
@@ -679,11 +789,26 @@ workflow RNASEQ {
             .map { it[0..<it.size()-1] }
             .set { ch_featurecounts }
 
+        SUBREAD_FEATURECOUNTS.config.ext.args   = [
+            '-B -C',
+            params.gencode ? "-g gene_type" : "-g $params.featurecounts_group_type",
+            "-t $params.featurecounts_feature_type"
+        ].join(' ').trim()
+        SUBREAD_FEATURECOUNTS.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/featurecounts",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         SUBREAD_FEATURECOUNTS (
             ch_featurecounts
         )
         ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
 
+        MULTIQC_CUSTOM_BIOTYPE.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/featurecounts",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         MULTIQC_CUSTOM_BIOTYPE (
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
@@ -697,6 +822,11 @@ workflow RNASEQ {
     //
     if (!params.skip_alignment && !params.skip_bigwig) {
 
+        BEDTOOLS_GENOMECOV.config.ext.args   = '-split -du'
+        BEDTOOLS_GENOMECOV.config.publishDir = [
+            path: { "${params.outdir}/bedtools/${meta.id}" },
+            enabled: false
+        ]
         BEDTOOLS_GENOMECOV (
             ch_genome_bam
         )
@@ -733,6 +863,11 @@ workflow RNASEQ {
     ch_tin_multiqc                = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc) {
         if (!params.skip_qualimap) {
+            QUALIMAP_RNASEQ.config.publishDir = [
+                path: "${params.outdir}/${params.aligner}/qualimap",
+                mode: params.publish_dir_mode,
+                saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+            ]
             QUALIMAP_RNASEQ (
                 ch_genome_bam,
                 PREPARE_GENOME.out.gtf
@@ -742,6 +877,33 @@ workflow RNASEQ {
         }
 
         if (!params.skip_dupradar) {
+            DUPRADAR.config.publishDir = [
+                [
+                    path: "${params.outdir}/${params.aligner}/dupradar/scatter_plot",
+                    mode: params.publish_dir_mode,
+                    pattern: "*Dens.pdf"
+                ],
+                [
+                    path: "${params.outdir}/${params.aligner}/dupradar/box_plot",
+                    mode: params.publish_dir_mode,
+                    pattern: "*Boxplot.pdf"
+                ],
+                [
+                    path: "${params.outdir}/${params.aligner}/dupradar/histogram",
+                    mode: params.publish_dir_mode,
+                    pattern: "*Hist.pdf"
+                ],
+                [
+                    path: "${params.outdir}/${params.aligner}/dupradar/gene_data",
+                    mode: params.publish_dir_mode,
+                    pattern: "*Matrix.txt"
+                ],
+                [
+                    path: "${params.outdir}/${params.aligner}/dupradar/intercepts_slope",
+                    mode: params.publish_dir_mode,
+                    pattern: "*slope.txt"
+                ]
+            ]
             DUPRADAR (
                 ch_genome_bam,
                 PREPARE_GENOME.out.gtf
@@ -812,6 +974,19 @@ workflow RNASEQ {
         ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_SALMON.config.ext.args   = [
+                "--id_col 1",
+                "--sample_suffix ''",
+                "--outprefix deseq2",
+                "--count_col 3",
+                params.deseq2_vst ? '--vst TRUE' : ''
+            ].join(' ').trim()
+            DESEQ2_QC_SALMON.config.ext.args2  = 'salmon'
+            DESEQ2_QC_SALMON.config.publishDir = [
+                path: "${params.outdir}/${params.pseudo_aligner}/deseq2_qc",
+                mode: params.publish_dir_mode,
+                pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
+            ]
             DESEQ2_QC_SALMON (
                 QUANTIFY_SALMON.out.counts_gene_length_scaled,
                 ch_pca_header_multiqc,
@@ -826,6 +1001,11 @@ workflow RNASEQ {
     //
     // MODULE: Pipeline reporting
     //
+    CUSTOM_DUMPSOFTWAREVERSIONS.config.publishDir = [
+        path: "${params.outdir}/pipeline_info",
+        mode: params.publish_dir_mode,
+        pattern: '*_versions.yml'
+    ]
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
@@ -840,6 +1020,15 @@ workflow RNASEQ {
         methods_description    = WorkflowRnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
         ch_methods_description = Channel.value(methods_description)
 
+        MULTIQC.config.ext.args   = params.multiqc_title ? "--title \"$params.multiqc_title\"" : ''
+        MULTIQC.config.publishDir = [
+            path: [
+                "${params.outdir}/multiqc",
+                params.skip_alignment ? '' : "/${params.aligner}"
+            ].join(''),
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),

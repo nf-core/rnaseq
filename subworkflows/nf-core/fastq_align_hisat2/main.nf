@@ -17,6 +17,26 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     // Map reads with HISAT2
     //
+    HISAT2_ALIGN.config.ext.args   = '--met-stderr --new-summary --dta'
+    HISAT2_ALIGN.config.publishDir = [
+        [
+            path: "${params.outdir}/${params.aligner}/log",
+            mode: params.publish_dir_mode,
+            pattern: '*.log'
+        ],
+        [
+            path: "${params.outdir}/${params.aligner}",
+            mode: params.publish_dir_mode,
+            pattern: '*.bam',
+            enabled: params.save_align_intermeds
+        ],
+        [
+            path: "${params.outdir}/${params.aligner}/unmapped",
+            mode: params.publish_dir_mode,
+            pattern: '*.fastq.gz',
+            enabled: params.save_unaligned
+        ]
+    ]
     HISAT2_ALIGN ( reads, index, splicesites )
     ch_versions = ch_versions.mix(HISAT2_ALIGN.out.versions.first())
 

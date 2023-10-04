@@ -36,6 +36,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     fastqc_html = Channel.empty()
     fastqc_zip  = Channel.empty()
     if (!skip_fastqc) {
+        FASTQC.config.ext.args   = '--quiet'
         FASTQC (reads)
         fastqc_html = FASTQC.out.html
         fastqc_zip  = FASTQC.out.zip
@@ -45,22 +46,41 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     umi_reads = reads
     umi_log   = Channel.empty()
     if (with_umi && !skip_umi_extract) {
-            UMITOOLS_EXTRACT (reads)
-            umi_reads   = UMITOOLS_EXTRACT.out.reads
-            umi_log     = UMITOOLS_EXTRACT.out.log
-            ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
+        UMITOOLS_EXTRACT.config.ext.args   = [
+            params.umitools_extract_method ? "--extract-method=${params.umitools_extract_method}" : '',
+            params.umitools_bc_pattern     ? "--bc-pattern='${params.umitools_bc_pattern}'" : '',
+            params.umitools_bc_pattern2    ? "--bc-pattern2='${params.umitools_bc_pattern2}'" : '',
+            params.umitools_umi_separator  ? "--umi-separator='${params.umitools_umi_separator}'" : ''
+        ].join(' ').trim()
+        UMITOOLS_EXTRACT.config.publishDir = [
+            [
+                path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
+                pattern: "*.log"
+            ],
+            [
+                path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
+                pattern: "*.fastq.gz",
+                enabled: params.save_umi_intermeds
+            ]
+        ]
+        UMITOOLS_EXTRACT (reads)
+        umi_reads   = UMITOOLS_EXTRACT.out.reads
+        umi_log     = UMITOOLS_EXTRACT.out.log
+        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
-            // Discard R1 / R2 if required
-            if (umi_discard_read in [1,2]) {
-                UMITOOLS_EXTRACT
-                    .out
-                    .reads
-                    .map {
-                        meta, reads ->
-                            meta.single_end ? [ meta, reads ] : [ meta + ['single_end': true], reads[umi_discard_read % 2] ]
-                    }
-                    .set { umi_reads }
-            }
+        // Discard R1 / R2 if required
+        if (umi_discard_read in [1,2]) {
+            UMITOOLS_EXTRACT
+                .out
+                .reads
+                .map {
+                    meta, reads ->
+                        meta.single_end ? [ meta, reads ] : [ meta + ['single_end': true], reads[umi_discard_read % 2] ]
+                }
+                .set { umi_reads }
+        }
     }
 
     trim_reads      = umi_reads
@@ -70,6 +90,30 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     trim_log        = Channel.empty()
     trim_read_count = Channel.empty()
     if (!skip_trimming) {
+        TRIMGALORE.config.ext.args   = {
+            [
+                "--fastqc_args '-t ${task.cpus}'",
+                params.extra_trimgalore_args ? params.extra_trimgalore_args.split("\\s(?=--)") : ''
+            ].flatten().unique(false).join(' ').trim()
+        }
+        TRIMGALORE.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.trimmer}/fastqc",
+                mode: params.publish_dir_mode,
+                pattern: "*.{html,zip}"
+            ],
+            [
+                path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
+                pattern: "*.fq.gz",
+                enabled: params.save_trimmed
+            ],
+            [
+                path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
+                pattern: "*.txt"
+            ]
+        ]
         TRIMGALORE (umi_reads)
         trim_unpaired = TRIMGALORE.out.unpaired
         trim_html     = TRIMGALORE.out.html

@@ -24,6 +24,13 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     // Create Salmon index if required
     //
     if (make_index) {
+        SALMON_INDEX.config.ext.args   = params.gencode ? '--gencode' : ''
+        SALMON_INDEX.config.publishDir = [
+            path: "${params.outdir}/genome/index",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
+            enabled: params.save_reference
+        ]
         ch_index = SALMON_INDEX ( ch_genome_fasta, ch_transcript_fasta ).index
         ch_versions = ch_versions.mix(SALMON_INDEX.out.versions)
     }
@@ -31,6 +38,14 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     // Sub-sample FastQ files with fq
     //
+    FQ_SUBSAMPLE.config.ext.args   = '--record-count 1000000 --seed 1'
+    FQ_SUBSAMPLE.config.ext.prefix = { "${meta.id}.subsampled" }
+    FQ_SUBSAMPLE.config.publishDir = [
+        path: "${params.outdir}/sample_fastq/fastq",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
+        enabled: false
+    ]
     FQ_SUBSAMPLE ( ch_reads )
     ch_versions = ch_versions.mix(FQ_SUBSAMPLE.out.versions.first())
 
@@ -39,6 +54,13 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     def lib_type = 'A'
     def alignment_mode = false
+    SALMON_QUANT.config.ext.args   = '--skipQuant'
+    SALMON_QUANT.config.publishDir = [
+        path: "${params.outdir}/sample_fastq/salmon",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') || filename.endsWith('_meta_info.json') ? null : filename },
+        enabled: false
+    ]
     SALMON_QUANT ( FQ_SUBSAMPLE.out.fastq, ch_index, ch_gtf, ch_transcript_fasta, alignment_mode, lib_type )
     ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 

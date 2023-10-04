@@ -30,6 +30,11 @@ workflow BAM_RSEQC {
     //
     bamstat_txt = Channel.empty()
     if ('bam_stat' in rseqc_modules) {
+        RSEQC_BAMSTAT.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/rseqc/bam_stat",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         RSEQC_BAMSTAT ( ch_bam )
         bamstat_txt = RSEQC_BAMSTAT.out.txt
         ch_versions = ch_versions.mix(RSEQC_BAMSTAT.out.versions.first())
@@ -44,6 +49,24 @@ workflow BAM_RSEQC {
     innerdistance_pdf      = Channel.empty()
     innerdistance_rscript  = Channel.empty()
     if ('inner_distance' in rseqc_modules) {
+        RSEQC_INNERDISTANCE.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/inner_distance/txt",
+                mode: params.publish_dir_mode,
+                pattern: '*.txt',
+                saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/inner_distance/pdf",
+                mode: params.publish_dir_mode,
+                pattern: '*.pdf'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/inner_distance/rscript",
+                mode: params.publish_dir_mode,
+                pattern: '*.r'
+            ]
+        ]
         RSEQC_INNERDISTANCE ( ch_bam, ch_bed )
         innerdistance_distance = RSEQC_INNERDISTANCE.out.distance
         innerdistance_freq     = RSEQC_INNERDISTANCE.out.freq
@@ -58,6 +81,11 @@ workflow BAM_RSEQC {
     //
     inferexperiment_txt = Channel.empty()
     if ('infer_experiment' in rseqc_modules) {
+        RSEQC_INFEREXPERIMENT.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/rseqc/infer_experiment",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         RSEQC_INFEREXPERIMENT ( ch_bam, ch_bed )
         inferexperiment_txt = RSEQC_INFEREXPERIMENT.out.txt
         ch_versions = ch_versions.mix(RSEQC_INFEREXPERIMENT.out.versions.first())
@@ -74,6 +102,33 @@ workflow BAM_RSEQC {
     junctionannotation_rscript      = Channel.empty()
     junctionannotation_log          = Channel.empty()
     if ('junction_annotation' in rseqc_modules) {
+        RSEQC_JUNCTIONANNOTATION.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/pdf",
+                mode: params.publish_dir_mode,
+                pattern: '*.pdf'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/bed",
+                mode: params.publish_dir_mode,
+                pattern: '*.bed'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/xls",
+                mode: params.publish_dir_mode,
+                pattern: '*.xls'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/log",
+                mode: params.publish_dir_mode,
+                pattern: '*.log'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/rscript",
+                mode: params.publish_dir_mode,
+                pattern: '*.r'
+            ]
+        ]
         RSEQC_JUNCTIONANNOTATION ( ch_bam, ch_bed )
         junctionannotation_bed          = RSEQC_JUNCTIONANNOTATION.out.bed
         junctionannotation_interact_bed = RSEQC_JUNCTIONANNOTATION.out.interact_bed
@@ -91,6 +146,18 @@ workflow BAM_RSEQC {
     junctionsaturation_pdf     = Channel.empty()
     junctionsaturation_rscript = Channel.empty()
     if ('junction_saturation' in rseqc_modules) {
+        RSEQC_JUNCTIONSATURATION.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_saturation/pdf",
+                mode: params.publish_dir_mode,
+                pattern: '*.pdf'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/junction_saturation/rscript",
+                mode: params.publish_dir_mode,
+                pattern: '*.r'
+            ]
+        ]
         RSEQC_JUNCTIONSATURATION ( ch_bam, ch_bed )
         junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.pdf
         junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.rscript
@@ -102,6 +169,11 @@ workflow BAM_RSEQC {
     //
     readdistribution_txt = Channel.empty()
     if ('read_distribution' in rseqc_modules) {
+        RSEQC_READDISTRIBUTION.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/rseqc/read_distribution",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         RSEQC_READDISTRIBUTION ( ch_bam, ch_bed )
         readdistribution_txt = RSEQC_READDISTRIBUTION.out.txt
         ch_versions = ch_versions.mix(RSEQC_READDISTRIBUTION.out.versions.first())
@@ -115,6 +187,23 @@ workflow BAM_RSEQC {
     readduplication_pdf     = Channel.empty()
     readduplication_rscript = Channel.empty()
     if ('read_duplication' in rseqc_modules) {
+        RSEQC_READDUPLICATION.config.publishDir = [
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/read_duplication/pdf",
+                mode: params.publish_dir_mode,
+                pattern: '*.pdf'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/read_duplication/xls",
+                mode: params.publish_dir_mode,
+                pattern: '*.xls'
+            ],
+            [
+                path: "${params.outdir}/${params.aligner}/rseqc/read_duplication/rscript",
+                mode: params.publish_dir_mode,
+                pattern: '*.r'
+            ]
+        ]
         RSEQC_READDUPLICATION ( ch_bam )
         readduplication_seq_xls = RSEQC_READDUPLICATION.out.seq_xls
         readduplication_pos_xls = RSEQC_READDUPLICATION.out.pos_xls
@@ -128,6 +217,11 @@ workflow BAM_RSEQC {
     //
     tin_txt = Channel.empty()
     if ('tin' in rseqc_modules) {
+        RSEQC_TIN.config.publishDir = [
+            path: "${params.outdir}/${params.aligner}/rseqc/tin",
+            mode: params.publish_dir_mode,
+            saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+        ]
         RSEQC_TIN ( ch_bam_bai, ch_bed )
         tin_txt     = RSEQC_TIN.out.txt
         ch_versions = ch_versions.mix(RSEQC_TIN.out.versions.first())

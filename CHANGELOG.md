@@ -23,7 +23,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1054](https://github.com/nf-core/rnaseq/pull/1054) - Template update to nf-core/tools v2.9
 - [PR #1058](https://github.com/nf-core/rnaseq/pull/1058) - Use `nf-validation` plugin for parameter and samplesheet validation
 - [PR #1068](https://github.com/nf-core/rnaseq/pull/1068) - Update `grep` version for `untar` module
-- [PR #XXX](https://github.com/nf-core/rnaseq/pull/xxx) - Move local modules to subfolder
+- [PR #1083](https://github.com/nf-core/rnaseq/pull/1084) - Move local modules and subworkflows to subfolders
 
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 

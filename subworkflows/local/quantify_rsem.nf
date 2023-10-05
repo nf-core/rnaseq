@@ -50,7 +50,38 @@ workflow QUANTIFY_RSEM {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star, fasta )
+    sort_ext_prefix = { "${meta.id}.sorted" }
+    sort_publish_dir = [
+        path: "${params.outdir}/${params.aligner}",
+        mode: params.publish_dir_mode,
+        pattern: "*.bam",
+        enabled: params.save_align_intermeds ||
+            params.skip_markduplicates
+    ]
+    index_ext_args = params.bam_csi_index ? '-c' : ''
+    index_publish_dir = [
+        path: "${params.outdir}/${params.aligner}",
+        mode: params.publish_dir_mode,
+        pattern: "*.{bai,csi}",
+        enabled: params.save_align_intermeds ||
+            params.skip_markduplicates
+    ]
+    stats_ext_prefix = { "${meta.id}.sorted.bam" }
+    stats_publish_dir = [
+        path: "${params.outdir}/${params.aligner}/samtools_stats",
+        mode: params.publish_dir_mode,
+        pattern: "*.{stats,flagstat,idxstats}"
+    ]
+    BAM_SORT_STATS_SAMTOOLS (
+        RSEM_CALCULATEEXPRESSION.out.bam_star,
+        fasta,
+        sort_ext_prefix,
+        sort_publish_dir,
+        index_ext_args,
+        index_publish_dir,
+        stats_ext_prefix,
+        stats_publish_dir
+    )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     //

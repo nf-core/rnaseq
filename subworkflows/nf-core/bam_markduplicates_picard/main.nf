@@ -56,7 +56,18 @@ workflow BAM_MARKDUPLICATES_PICARD {
                 }
         }
 
-    BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta )
+    samtools_ext_prefix = { "${meta.id}.markdup.sorted.bam" }
+    samtools_publish_dir = [
+        path: "${params.outdir}/${params.aligner}/samtools_stats",
+        mode: params.publish_dir_mode,
+        pattern: '*.{stats,flagstat,idxstats}'
+    ]
+    BAM_STATS_SAMTOOLS (
+        ch_bam_bai,
+        ch_fasta,
+        samtools_ext_prefix,
+        samtools_publish_dir
+    )
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:

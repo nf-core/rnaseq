@@ -10,16 +10,24 @@ workflow BAM_STATS_SAMTOOLS {
     take:
     ch_bam_bai // channel: [ val(meta), path(bam), path(bai) ]
     ch_fasta   // channel: [ val(meta), path(fasta) ]
+    ext_prefix
+    publish_dir
 
     main:
     ch_versions = Channel.empty()
 
+    SAMTOOLS_STATS.config.ext.prefix = ext_prefix
+    SAMTOOLS_STATS.config.publishDir = publish_dir
     SAMTOOLS_STATS ( ch_bam_bai, ch_fasta )
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
+    SAMTOOLS_FLAGSTAT.config.ext.prefix = ext_prefix
+    SAMTOOLS_FLAGSTAT.config.publishDir = publish_dir
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)
 
+    SAMTOOLS_IDXSTATS.config.ext.prefix = ext_prefix
+    SAMTOOLS_IDXSTATS.config.publishDir = publish_dir
     SAMTOOLS_IDXSTATS ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions)
 

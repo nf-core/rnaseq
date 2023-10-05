@@ -10,14 +10,24 @@ workflow BAM_SORT_STATS_SAMTOOLS {
     take:
     ch_bam   // channel: [ val(meta), [ bam ] ]
     ch_fasta // channel: [ val(meta), path(fasta) ]
+    sort_ext_prefix
+    sort_publish_dir
+    index_ext_args
+    index_publish_dir
+    stats_ext_prefix
+    stats_publish_dir
 
     main:
 
     ch_versions = Channel.empty()
 
+    SAMTOOLS_SORT.config.ext.prefix = sort_ext_prefix
+    SAMTOOLS_SORT.config.publishDir = sort_publish_dir
     SAMTOOLS_SORT ( ch_bam )
     ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
 
+    SAMTOOLS_INDEX.config.ext.args   = index_ext_args
+    SAMTOOLS_INDEX.config.publishDir = index_publish_dir
     SAMTOOLS_INDEX ( SAMTOOLS_SORT.out.bam )
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
@@ -34,7 +44,12 @@ workflow BAM_SORT_STATS_SAMTOOLS {
         }
         .set { ch_bam_bai }
 
-    BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta )
+    BAM_STATS_SAMTOOLS (
+        ch_bam_bai,
+        ch_fasta,
+        stats_ext_prefix,
+        stats_publish_dir
+    )
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:

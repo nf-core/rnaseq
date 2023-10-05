@@ -19,23 +19,39 @@ workflow QUANTIFY_SALMON {
     gtf              // channel: /path/to/genome.gtf
     alignment_mode   //    bool: Run Salmon in alignment mode
     lib_type         //     val: String to override salmon library type
+    publish_dir_path
 
     main:
 
     ch_versions = Channel.empty()
 
+    publish_dir = [
+        path: publish_dir_path,
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+    ]
+
     //
     // Quantify and merge counts across samples
     //
+    SALMON_QUANT.config.ext.args = params.extra_salmon_quant_args ?: ''
+    SALMON_QUANT.config.publishDir = [
+        path: publish_dir_path,
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> filename.equals('versions.yml') || filename.endsWith('_meta_info.json') ? null : filename }
+    ]
     SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
     ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
+    SALMON_TX2GENE.config.publishDir = publish_dir
     SALMON_TX2GENE ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
     ch_versions = ch_versions.mix(SALMON_TX2GENE.out.versions)
 
+    SALMON_TXIMPORT.config.publishDir = publish_dir
     SALMON_TXIMPORT ( SALMON_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
     ch_versions = ch_versions.mix(SALMON_TXIMPORT.out.versions)
 
+    SALMON_SE_GENE.config.publishDir = publish_dir
     SALMON_SE_GENE (
         SALMON_TXIMPORT.out.counts_gene,
         SALMON_TXIMPORT.out.tpm_gene,
@@ -43,18 +59,21 @@ workflow QUANTIFY_SALMON {
     )
     ch_versions = ch_versions.mix(SALMON_SE_GENE.out.versions)
 
+    SALMON_SE_GENE_LENGTH_SCALED.config.publishDir = publish_dir
     SALMON_SE_GENE_LENGTH_SCALED (
         SALMON_TXIMPORT.out.counts_gene_length_scaled,
         SALMON_TXIMPORT.out.tpm_gene,
         SALMON_TX2GENE.out.tsv.collect()
     )
 
+    SALMON_SE_GENE_SCALED.config.publishDir = publish_dir
     SALMON_SE_GENE_SCALED (
         SALMON_TXIMPORT.out.counts_gene_scaled,
         SALMON_TXIMPORT.out.tpm_gene,
         SALMON_TX2GENE.out.tsv.collect()
     )
 
+    SALMON_SE_TRANSCRIPT.config.publishDir = publish_dir
     SALMON_SE_TRANSCRIPT (
         SALMON_TXIMPORT.out.counts_transcript,
         SALMON_TXIMPORT.out.tpm_transcript,

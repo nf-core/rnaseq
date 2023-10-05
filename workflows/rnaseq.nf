@@ -447,9 +447,27 @@ workflow RNASEQ {
         //
         if (params.with_umi) {
             // Deduplicate genome BAM file before downstream analysis
+            dedup_ext_prefix  = { "${meta.id}.umi_dedup.sorted" }
+            index_ext_args    = params.bam_csi_index ? '-c' : ''
+            index_ext_prefix  = { "${meta.id}.umi_dedup.sorted" }
+            index_publish_dir = [
+                path: "${params.outdir}/${params.aligner}",
+                mode: params.publish_dir_mode,
+                pattern: '*.{bai,csi}',
+                enabled: (
+                    params.save_align_intermeds ||
+                    params.save_umi_intermeds
+                )
+            ]
+            stats_ext_prefix  = { "${meta.id}.umi_dedup.sorted.bam" }
             BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                params.umitools_dedup_stats
+                params.umitools_dedup_stats,
+                dedup_ext_prefix,
+                index_ext_args,
+                index_ext_prefix,
+                index_publish_dir,
+                stats_ext_prefix
             )
             ch_genome_bam        = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
@@ -462,17 +480,71 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
+            sort_ext_prefix  = { "${meta.id}.transcriptome.sorted" }
+            sort_publish_dir = [
+                path: "${params.outdir}/${params.aligner}",
+                mode: params.publish_dir_mode,
+                pattern: '*.bam',
+                enabled: (
+                    params.save_align_intermeds ||
+                    params.save_umi_intermeds
+                )
+            ]
+            index_ext_args    = ''
+            index_publish_dir = [
+                path: "${params.outdir}/${params.aligner}",
+                mode: params.publish_dir_mode,
+                pattern: '*.bai',
+                enabled: (
+                    params.save_align_intermeds ||
+                    params.save_umi_intermeds
+                )
+            ]
+            stats_ext_prefix  = { "${meta.id}.transcriptome.sorted.bam" }
+            stats_publish_dir = [
+                path: "${params.outdir}/${params.aligner}/samtools_stats",
+                mode: params.publish_dir_mode,
+                pattern: '*.{stats,flagstat,idxstats}',
+                enabled: (
+                    params.save_align_intermeds ||
+                    params.save_umi_intermeds
+                )
+            ]
             BAM_SORT_STATS_SAMTOOLS (
                 ch_transcriptome_bam,
-                PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+                PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+                sort_ext_prefix,
+                sort_publish_dir,
+                index_ext_args,
+                index_publish_dir,
+                stats_ext_prefix,
+                stats_publish_dir
             )
             ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
             ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
+            dedup_ext_prefix  = { "${meta.id}.umi_dedup.transcriptome.sorted" }
+            index_ext_args    = ''
+            index_ext_prefix  = ''
+            index_publish_dir = [
+                path: "${params.outdir}/${params.aligner}",
+                mode: params.publish_dir_mode,
+                pattern: '*.bai',
+                enabled: (
+                    params.save_align_intermeds ||
+                    params.save_umi_intermeds
+                )
+            ]
+            stats_ext_prefix = { "${meta.id}.umi_dedup.transcriptome.sorted.bam" }
             BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
-                params.umitools_dedup_stats
+                params.umitools_dedup_stats,
+                dedup_ext_prefix,
+                index_ext_args,
+                index_ext_prefix,
+                index_publish_dir,
+                stats_ext_prefix
             )
 
             // Name sort BAM before passing to Salmon
@@ -543,7 +615,8 @@ workflow RNASEQ {
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
             true,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            "${params.outdir}/${params.aligner}"
         )
         ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
@@ -835,15 +908,23 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
+        clip_ext_prefix = { "${meta.id}.clip.forward" }
+        bigwig_ext_prefix = { "${meta.id}.forward" }
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
-            PREPARE_GENOME.out.chrom_sizes
+            PREPARE_GENOME.out.chrom_sizes,
+            clip_ext_prefix,
+            bigwig_ext_prefix
         )
         ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
+        clip_ext_prefix = { "${meta.id}.clip.reverse" }
+        bigwig_ext_prefix = { "${meta.id}.reverse" }
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
-            PREPARE_GENOME.out.chrom_sizes
+            PREPARE_GENOME.out.chrom_sizes,
+            clip_ext_prefix,
+            bigwig_ext_prefix
         )
     }
 
@@ -968,7 +1049,8 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,
             false,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            "${params.outdir}/${params.pseudo_aligner}"
         )
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
         ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)

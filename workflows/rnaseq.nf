@@ -85,14 +85,14 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 //
 // MODULE: Loaded from modules/local/
 //
-include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
-include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
-include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
-include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
-include { DUPRADAR                           } from '../modules/local/dupradar'
-include { MULTIQC                            } from '../modules/local/multiqc'
-include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
-include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../modules/local/umitools_prepareforrsem.nf'
+include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov/main'
+include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc/main'
+include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc/main'
+include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc/main'
+include { DUPRADAR                           } from '../modules/local/dupradar/main'
+include { MULTIQC                            } from '../modules/local/multiqc/main'
+include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype/main'
+include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../modules/local/umitools_prepareforrsem/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules

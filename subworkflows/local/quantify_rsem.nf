@@ -3,7 +3,7 @@
 //
 
 include { RSEM_CALCULATEEXPRESSION } from '../../modules/nf-core/rsem/calculateexpression/main'
-include { RSEM_MERGE_COUNTS        } from '../../modules/local/rsem_merge_counts'
+include { RSEM_MERGE_COUNTS        } from '../../modules/local/rsem_merge_counts/main'
 include { BAM_SORT_STATS_SAMTOOLS } from '../nf-core/bam_sort_stats_samtools/main'
 
 workflow QUANTIFY_RSEM {

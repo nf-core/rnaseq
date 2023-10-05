@@ -97,11 +97,11 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome'
-include { ALIGN_STAR     } from '../subworkflows/local/align_star'
-include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'
-include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
-include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
+include { PREPARE_GENOME                          } from '../subworkflows/local/prepare_genome/main'
+include { ALIGN_STAR                              } from '../subworkflows/local/align_star/main'
+include { QUANTIFY_RSEM                           } from '../subworkflows/local/quantify_rsem/main'
+include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon/main'
+include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

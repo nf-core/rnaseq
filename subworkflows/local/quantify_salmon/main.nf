@@ -2,14 +2,14 @@
 // Pseudo-alignment and quantification with Salmon
 //
 
-include { SALMON_QUANT    } from '../../modules/nf-core/salmon/quant/main'
-include { SALMON_TX2GENE  } from '../../modules/local/salmon_tx2gene/main'
-include { SALMON_TXIMPORT } from '../../modules/local/salmon_tximport/main'
+include { SALMON_QUANT    } from '../../../modules/nf-core/salmon/quant/main'
+include { SALMON_TX2GENE  } from '../../../modules/local/salmon_tx2gene/main'
+include { SALMON_TXIMPORT } from '../../../modules/local/salmon_tximport/main'
 
-include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE               } from '../../modules/local/salmon_summarizedexperiment/main'
-include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED } from '../../modules/local/salmon_summarizedexperiment/main'
-include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_SCALED        } from '../../modules/local/salmon_summarizedexperiment/main'
-include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT         } from '../../modules/local/salmon_summarizedexperiment/main'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE               } from '../../../modules/local/salmon_summarizedexperiment/main'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED } from '../../../modules/local/salmon_summarizedexperiment/main'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_SCALED        } from '../../../modules/local/salmon_summarizedexperiment/main'
+include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT         } from '../../../modules/local/salmon_summarizedexperiment/main'
 
 workflow QUANTIFY_SALMON {
     take:

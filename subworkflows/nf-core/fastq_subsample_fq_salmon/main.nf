@@ -27,7 +27,6 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
         SALMON_INDEX.config.ext.args   = params.gencode ? '--gencode' : ''
         SALMON_INDEX.config.publishDir = [
             path: "${params.outdir}/genome/index",
-            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
             enabled: params.save_reference
         ]
@@ -42,7 +41,6 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     FQ_SUBSAMPLE.config.ext.prefix = { "${meta.id}.subsampled" }
     FQ_SUBSAMPLE.config.publishDir = [
         path: "${params.outdir}/sample_fastq/fastq",
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
         enabled: false
     ]
@@ -57,7 +55,6 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     SALMON_QUANT.config.ext.args   = '--skipQuant'
     SALMON_QUANT.config.publishDir = [
         path: "${params.outdir}/sample_fastq/salmon",
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') || filename.endsWith('_meta_info.json') ? null : filename },
         enabled: false
     ]

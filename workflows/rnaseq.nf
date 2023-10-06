@@ -223,7 +223,6 @@ workflow RNASEQ {
     //
     CAT_FASTQ.config.publishDir = [
         path: "${params.outdir}/fastq",
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
         enabled: params.save_merged_fastq
     ]
@@ -354,12 +353,10 @@ workflow RNASEQ {
         BBMAP_BBSPLIT.config.publishDir = [
             [
                 path: "${params.outdir}/bbsplit",
-                mode: params.publish_dir_mode,
                 pattern: '*.txt'
             ],
             [
                 path: "${params.outdir}/bbsplit",
-                mode: params.publish_dir_mode,
                 pattern: '*.fastq.gz',
                 enabled: params.save_bbsplit_reads
             ]
@@ -387,12 +384,10 @@ workflow RNASEQ {
         SORTMERNA.config.publishDir = [
             [
                 path: "${params.outdir}/sortmerna",
-                mode: params.publish_dir_mode,
                 pattern: "*.log"
             ],
             [
                 path: "${params.outdir}/sortmerna",
-                mode: params.publish_dir_mode,
                 pattern: "*.fastq.gz",
                 enabled: params.save_non_ribo_reads
             ]
@@ -452,7 +447,6 @@ workflow RNASEQ {
             index_ext_prefix  = { "${meta.id}.umi_dedup.sorted" }
             index_publish_dir = [
                 path: "${params.outdir}/${params.aligner}",
-                mode: params.publish_dir_mode,
                 pattern: '*.{bai,csi}',
                 enabled: (
                     params.save_align_intermeds ||
@@ -483,7 +477,6 @@ workflow RNASEQ {
             sort_ext_prefix  = { "${meta.id}.transcriptome.sorted" }
             sort_publish_dir = [
                 path: "${params.outdir}/${params.aligner}",
-                mode: params.publish_dir_mode,
                 pattern: '*.bam',
                 enabled: (
                     params.save_align_intermeds ||
@@ -493,7 +486,6 @@ workflow RNASEQ {
             index_ext_args    = ''
             index_publish_dir = [
                 path: "${params.outdir}/${params.aligner}",
-                mode: params.publish_dir_mode,
                 pattern: '*.bai',
                 enabled: (
                     params.save_align_intermeds ||
@@ -503,7 +495,6 @@ workflow RNASEQ {
             stats_ext_prefix  = { "${meta.id}.transcriptome.sorted.bam" }
             stats_publish_dir = [
                 path: "${params.outdir}/${params.aligner}/samtools_stats",
-                mode: params.publish_dir_mode,
                 pattern: '*.{stats,flagstat,idxstats}',
                 enabled: (
                     params.save_align_intermeds ||
@@ -529,7 +520,6 @@ workflow RNASEQ {
             index_ext_prefix  = ''
             index_publish_dir = [
                 path: "${params.outdir}/${params.aligner}",
-                mode: params.publish_dir_mode,
                 pattern: '*.bai',
                 enabled: (
                     params.save_align_intermeds ||
@@ -552,7 +542,6 @@ workflow RNASEQ {
             SAMTOOLS_SORT.config.ext.prefix = { "${meta.id}.umi_dedup.transcriptome" }
             SAMTOOLS_SORT.config.publishDir = [
                 path: "${params.outdir}/${params.aligner}",
-                mode: params.publish_dir_mode,
                 pattern: '*.bam',
                 enabled: (
                     params.save_align_intermeds ||
@@ -582,12 +571,10 @@ workflow RNASEQ {
             UMITOOLS_PREPAREFORSALMON.config.publishDir = [
                 [
                     path: "${params.outdir}/${params.aligner}/umitools/log",
-                    mode: params.publish_dir_mode,
                     pattern: '*.log'
                 ],
                 [
                     path: "${params.outdir}/${params.aligner}",
-                    mode: params.publish_dir_mode,
                     pattern: '*.bam',
                     enabled: (
                         params.save_align_intermeds ||
@@ -631,7 +618,6 @@ workflow RNASEQ {
             DESEQ2_QC_STAR_SALMON.config.ext.args2  = 'star_salmon'
             DESEQ2_QC_STAR_SALMON.config.publishDir = [
                 path: "${params.outdir}/${params.aligner}/deseq2_qc",
-                mode: params.publish_dir_mode,
                 pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
             ]
             DESEQ2_QC_STAR_SALMON (
@@ -678,7 +664,6 @@ workflow RNASEQ {
             DESEQ2_QC_RSEM.config.ext.args2  = 'star_rsem'
             DESEQ2_QC_RSEM.config.publishDir = [
                 path: "${params.outdir}/${params.aligner}/deseq2_qc",
-                mode: params.publish_dir_mode,
                 pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
             ]
             DESEQ2_QC_RSEM (
@@ -784,12 +769,10 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP.config.publishDir = [
             [
                 path: "${params.outdir}/${params.aligner}/preseq",
-                mode: params.publish_dir_mode,
                 pattern: "*.txt"
             ],
             [
                 path: "${params.outdir}/${params.aligner}/preseq/log",
-                mode: params.publish_dir_mode,
                 pattern: "*.log"
             ]
         ]
@@ -832,7 +815,6 @@ workflow RNASEQ {
         ].join(' ').trim()
         STRINGTIE_STRINGTIE.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/stringtie",
-            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         STRINGTIE_STRINGTIE (
@@ -869,7 +851,6 @@ workflow RNASEQ {
         ].join(' ').trim()
         SUBREAD_FEATURECOUNTS.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/featurecounts",
-            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         SUBREAD_FEATURECOUNTS (
@@ -879,7 +860,6 @@ workflow RNASEQ {
 
         MULTIQC_CUSTOM_BIOTYPE.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/featurecounts",
-            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         MULTIQC_CUSTOM_BIOTYPE (
@@ -946,7 +926,6 @@ workflow RNASEQ {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ.config.publishDir = [
                 path: "${params.outdir}/${params.aligner}/qualimap",
-                mode: params.publish_dir_mode,
                 saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
             ]
             QUALIMAP_RNASEQ (
@@ -961,27 +940,22 @@ workflow RNASEQ {
             DUPRADAR.config.publishDir = [
                 [
                     path: "${params.outdir}/${params.aligner}/dupradar/scatter_plot",
-                    mode: params.publish_dir_mode,
                     pattern: "*Dens.pdf"
                 ],
                 [
                     path: "${params.outdir}/${params.aligner}/dupradar/box_plot",
-                    mode: params.publish_dir_mode,
                     pattern: "*Boxplot.pdf"
                 ],
                 [
                     path: "${params.outdir}/${params.aligner}/dupradar/histogram",
-                    mode: params.publish_dir_mode,
                     pattern: "*Hist.pdf"
                 ],
                 [
                     path: "${params.outdir}/${params.aligner}/dupradar/gene_data",
-                    mode: params.publish_dir_mode,
                     pattern: "*Matrix.txt"
                 ],
                 [
                     path: "${params.outdir}/${params.aligner}/dupradar/intercepts_slope",
-                    mode: params.publish_dir_mode,
                     pattern: "*slope.txt"
                 ]
             ]
@@ -1066,7 +1040,6 @@ workflow RNASEQ {
             DESEQ2_QC_SALMON.config.ext.args2  = 'salmon'
             DESEQ2_QC_SALMON.config.publishDir = [
                 path: "${params.outdir}/${params.pseudo_aligner}/deseq2_qc",
-                mode: params.publish_dir_mode,
                 pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
             ]
             DESEQ2_QC_SALMON (
@@ -1085,7 +1058,6 @@ workflow RNASEQ {
     //
     CUSTOM_DUMPSOFTWAREVERSIONS.config.publishDir = [
         path: "${params.outdir}/pipeline_info",
-        mode: params.publish_dir_mode,
         pattern: '*_versions.yml'
     ]
     CUSTOM_DUMPSOFTWAREVERSIONS (
@@ -1108,7 +1080,6 @@ workflow RNASEQ {
                 "${params.outdir}/multiqc",
                 params.skip_alignment ? '' : "/${params.aligner}"
             ].join(''),
-            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         MULTIQC (

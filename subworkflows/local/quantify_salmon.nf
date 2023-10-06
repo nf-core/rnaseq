@@ -27,7 +27,6 @@ workflow QUANTIFY_SALMON {
 
     publish_dir = [
         path: publish_dir_path,
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
     ]
 
@@ -37,7 +36,6 @@ workflow QUANTIFY_SALMON {
     SALMON_QUANT.config.ext.args = params.extra_salmon_quant_args ?: ''
     SALMON_QUANT.config.publishDir = [
         path: publish_dir_path,
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') || filename.endsWith('_meta_info.json') ? null : filename }
     ]
     SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )

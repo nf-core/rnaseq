@@ -29,18 +29,15 @@ workflow QUANTIFY_RSEM {
     RSEM_CALCULATEEXPRESSION.config.publishDir = [
         [
             path: "${params.outdir}/${params.aligner}",
-            mode: params.publish_dir_mode,
             pattern: "*.{stat,results}"
         ],
         [
             path: "${params.outdir}/${params.aligner}",
-            mode: params.publish_dir_mode,
             pattern: "*.bam",
             enabled: params.save_align_intermeds
         ],
         [
             path: "${params.outdir}/${params.aligner}/log",
-            mode: params.publish_dir_mode,
             pattern: "*.log"
         ]
     ]
@@ -53,7 +50,6 @@ workflow QUANTIFY_RSEM {
     sort_ext_prefix = { "${meta.id}.sorted" }
     sort_publish_dir = [
         path: "${params.outdir}/${params.aligner}",
-        mode: params.publish_dir_mode,
         pattern: "*.bam",
         enabled: params.save_align_intermeds ||
             params.skip_markduplicates
@@ -61,7 +57,6 @@ workflow QUANTIFY_RSEM {
     index_ext_args = params.bam_csi_index ? '-c' : ''
     index_publish_dir = [
         path: "${params.outdir}/${params.aligner}",
-        mode: params.publish_dir_mode,
         pattern: "*.{bai,csi}",
         enabled: params.save_align_intermeds ||
             params.skip_markduplicates
@@ -69,7 +64,6 @@ workflow QUANTIFY_RSEM {
     stats_ext_prefix = { "${meta.id}.sorted.bam" }
     stats_publish_dir = [
         path: "${params.outdir}/${params.aligner}/samtools_stats",
-        mode: params.publish_dir_mode,
         pattern: "*.{stats,flagstat,idxstats}"
     ]
     BAM_SORT_STATS_SAMTOOLS (
@@ -89,7 +83,6 @@ workflow QUANTIFY_RSEM {
     //
     RSEM_MERGE_COUNTS.config.publishDir = [
         path: "${params.outdir}/${params.aligner}",
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
     ]
     RSEM_MERGE_COUNTS (

@@ -22,12 +22,10 @@ workflow BAM_MARKDUPLICATES_PICARD {
     PICARD_MARKDUPLICATES.config.publishDir = [
         [
             path: "${params.outdir}/${params.aligner}/picard_metrics",
-            mode: params.publish_dir_mode,
             pattern: '*metrics.txt'
         ],
         [
             path: "${params.outdir}/${params.aligner}",
-            mode: params.publish_dir_mode,
             pattern: '*.bam'
         ]
     ]
@@ -38,7 +36,6 @@ workflow BAM_MARKDUPLICATES_PICARD {
     SAMTOOLS_INDEX.config.ext.prefix = { "${meta.id}.markdup.sorted" }
     SAMTOOLS_INDEX.config.publishDir = [
         path: "${params.outdir}/${params.aligner}",
-        mode: params.publish_dir_mode,
         pattern: '*.{bai,csi}'
     ]
     SAMTOOLS_INDEX ( PICARD_MARKDUPLICATES.out.bam )
@@ -59,7 +56,6 @@ workflow BAM_MARKDUPLICATES_PICARD {
     samtools_ext_prefix = { "${meta.id}.markdup.sorted.bam" }
     samtools_publish_dir = [
         path: "${params.outdir}/${params.aligner}/samtools_stats",
-        mode: params.publish_dir_mode,
         pattern: '*.{stats,flagstat,idxstats}'
     ]
     BAM_STATS_SAMTOOLS (

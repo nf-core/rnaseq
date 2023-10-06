@@ -11,7 +11,6 @@ workflow INPUT_CHECK {
     main:
     SAMPLESHEET_CHECK.config.publishDir = [
         path: "${params.outdir}/pipeline_info",
-        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
     ]
     SAMPLESHEET_CHECK ( samplesheet )

@@ -1,0 +1,57 @@
+name: stringtie_stringtie
+description: Transcript assembly and quantification for RNA-Se
+keywords:
+  - transcript
+  - assembly
+  - quantification
+  - gtf
+
+tools:
+  - stringtie2:
+      description: |
+        Transcript assembly and quantification for RNA-Seq
+      homepage: https://ccb.jhu.edu/software/stringtie/index.shtml
+      documentation: https://ccb.jhu.edu/software/stringtie/index.shtml?t=manual
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: |
+        Stringtie transcript gtf output(s).
+  - annotation_gtf:
+      type: file
+      description: |
+        Annotation gtf file (optional).
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - transcript_gtf:
+      type: file
+      description: transcript gtf
+      pattern: "*.{transcripts.gtf}"
+  - coverage_gtf:
+      type: file
+      description: coverage gtf
+      pattern: "*.{coverage.gtf}"
+  - abudance:
+      type: file
+      description: abudance
+      pattern: "*.{abudance.txt}"
+  - ballgown:
+      type: file
+      description: for running ballgown
+      pattern: "*.{ballgown}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"

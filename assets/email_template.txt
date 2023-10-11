@@ -8,9 +8,7 @@
 ----------------------------------------------------
 Run Name: $runName
 
-<% if (success){
-    out << "## nf-core/rnaseq execution completed successfully! ##"
-} else {
+<% if (!success){
     out << """####################################################
 ## nf-core/rnaseq execution completed unsuccessfully! ##
 ####################################################
@@ -19,7 +17,19 @@ The full error message was:
 
 ${errorReport}
 """
-} %>
+} else if (skip_sample_count > 0) {
+    out << """##################################################
+## nf-core/rnaseq execution completed with warnings ##
+##################################################
+The pipeline finished successfully, but samples were skipped.
+Please check warnings at the top of the MultiQC report.
+"""
+} else {
+    out << "## nf-core/rnaseq execution completed successfully! ##"
+}
+%>
+
+
 
 
 The workflow was completed at $dateComplete (duration: $duration)

@@ -1,0 +1,75 @@
+name: bbmap_bbsplit
+description: Split sequencing reads by mapping them to multiple references simultaneously
+keywords:
+  - align
+  - map
+  - fastq
+  - genome
+  - reference
+tools:
+  - bbmap:
+      description: BBMap is a short read aligner, as well as various other bioinformatic tools.
+      homepage: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
+      documentation: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
+
+      licence: ["UC-LBL license (see package)"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - index:
+      type: directory
+      description: Directory to place generated index
+      pattern: "*"
+  - primary_ref:
+      type: file
+      description: Path to the primary reference
+      pattern: "*"
+  - other_ref_names:
+      type: list
+      description: List of other reference ids apart from the primary
+  - other_ref_paths:
+      type: list
+      description: Path to other references paths corresponding to "other_ref_names"
+  - only_build_index:
+      type: string
+      description: true = only build index; false = mapping
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - index:
+      type: directory
+      description: Directory with index files
+      pattern: "bbsplit"
+  - primary_fastq:
+      type: file
+      description: Output reads that map to the primary reference
+      pattern: "*primary*fastq.gz"
+  - all_fastq:
+      type: file
+      description: All reads mapping to any of the references
+      pattern: "*fastq.gz"
+  - stats:
+      type: file
+      description: Tab-delimited text file containing mapping statistics
+      pattern: "*.txt"
+
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"

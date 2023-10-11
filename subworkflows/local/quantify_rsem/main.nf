@@ -2,9 +2,9 @@
 // Gene/transcript quantification with RSEM
 //
 
-include { RSEM_CALCULATEEXPRESSION } from '../../../modules/nf-core/rsem/calculateexpression/main'
-include { RSEM_MERGE_COUNTS        } from '../../../modules/local/rsem_merge_counts/main'
-include { BAM_SORT_STATS_SAMTOOLS  } from '../../nf-core/bam_sort_stats_samtools/main'
+include { RSEM_CALCULATEEXPRESSION } from '../../../modules/nf-core/rsem/calculateexpression'
+include { RSEM_MERGE_COUNTS        } from '../../../modules/local/rsem_merge_counts'
+include { BAM_SORT_STATS_SAMTOOLS  } from '../../nf-core/bam_sort_stats_samtools'
 
 workflow QUANTIFY_RSEM {
     take:

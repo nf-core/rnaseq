@@ -382,8 +382,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         ALIGN_STAR (
             ch_filtered_reads,
-            PREPARE_GENOME.out.star_index,
-            PREPARE_GENOME.out.gtf,
+            PREPARE_GENOME.out.star_index.map { [ [:], it ] },
+            PREPARE_GENOME.out.gtf.map { [ [:], it ] },
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
@@ -729,7 +729,7 @@ workflow RNASEQ {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ (
                 ch_genome_bam,
-                PREPARE_GENOME.out.gtf
+                PREPARE_GENOME.out.gtf.map { [ [:], it ] }
             )
             ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
             ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())

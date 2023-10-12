@@ -191,7 +191,7 @@ workflow PREPARE_GENOME {
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES ( ch_fasta, ch_gtf ).index
                 ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)
             } else {
-                ch_star_index = STAR_GENOMEGENERATE ( ch_fasta, ch_gtf ).index
+                ch_star_index = STAR_GENOMEGENERATE ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] } ).index.map { it[1] }
                 ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
             }
         }

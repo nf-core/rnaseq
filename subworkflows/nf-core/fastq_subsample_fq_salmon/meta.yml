@@ -5,9 +5,10 @@ keywords:
   - fastq
   - subsample
   - strandedness
-modules:
+components:
   - fq/subsample
   - salmon/quant
+  - salmon/index
 input:
   - meta:
       type: map

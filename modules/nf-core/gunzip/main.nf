@@ -21,10 +21,14 @@ process GUNZIP {
     def args = task.ext.args ?: ''
     gunzip = archive.toString() - '.gz'
     """
-    gunzip \\
-        -f \\
+    # Not calling gunzip itself because it creates files
+    # with the original group ownership rather than the
+    # default one for that user / the work directory
+    gzip \\
+        -cd \\
         $args \\
-        $archive
+        $archive \\
+        > $gunzip
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

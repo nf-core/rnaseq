@@ -30,9 +30,11 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Software dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `fastqc`   | 0.11.9      | 0.12.1      |
+| Dependency              | Old version | New version |
+| ----------------------- | ----------- | ----------- |
+| `fastqc`                | 0.11.9      | 0.12.1      |
+| `multiqc`               | 1.14        | 1.15        |
+| `ucsc-bedgraphtobigwig` | 377         | 445         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

@@ -1,4 +1,5 @@
 process BBMAP_BBSPLIT {
+    tag "$meta.id"
     label 'process_high'
     label 'error_retry'
 

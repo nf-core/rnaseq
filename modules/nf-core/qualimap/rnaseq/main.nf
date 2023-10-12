@@ -9,7 +9,7 @@ process QUALIMAP_RNASEQ {
 
     input:
     tuple val(meta), path(bam)
-    path  gtf
+    tuple val(meta2), path(gtf)
 
     output:
     tuple val(meta), path("${prefix}"), emit: results

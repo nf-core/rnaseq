@@ -25,10 +25,34 @@ input:
       description: |
         List of input FastQ files of size 1 and 2 for single-end and paired-end data,
         respectively.
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
   - index:
       type: directory
       description: STAR genome index
       pattern: "star"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
+  - gtf:
+      type: file
+      description: Annotation GTF file
+      pattern: "*.{gtf}"
+  - star_ignore_sjdbgtf:
+      type: boolean
+      description: Ignore annotation GTF file
+  - seq_platform:
+      type: string
+      description: Sequencing platform
+  - seq_center:
+      type: string
+      description: Sequencing center
+
 output:
   - bam:
       type: file

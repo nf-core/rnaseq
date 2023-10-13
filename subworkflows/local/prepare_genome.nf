@@ -57,11 +57,13 @@ workflow PREPARE_GENOME {
 
     genome_publish_dir = [
         path: "${params.outdir}/genome",
+        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
         enabled: params.save_reference
     ]
     genome_index_publish_dir = [
         path: "${params.outdir}/genome/index",
+        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
         enabled: params.save_reference
     ]

@@ -32,10 +32,12 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     UMITOOLS_DEDUP.config.publishDir = [
         [
             path: "${params.outdir}/${params.aligner}/umitools",
+            mode: params.publish_dir_mode,
             pattern: '*.tsv'
         ],
         [
             path: "${params.outdir}/${params.aligner}",
+            mode: params.publish_dir_mode,
             pattern: '*.bam',
             enabled: (
                 params.save_align_intermeds ||
@@ -70,6 +72,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     BAM_STATS_SAMTOOLS.config.ext.prefix = stats_ext_prefix
     BAM_STATS_SAMTOOLS.config.publishDir = [
         path: "${params.outdir}/${params.aligner}/samtools_stats",
+        mode: params.publish_dir_mode,
         pattern: '*.{stats,flagstat,idxstats}'
     ]
     BAM_STATS_SAMTOOLS ( ch_bam_bai_dedup, [ [:], [] ] )

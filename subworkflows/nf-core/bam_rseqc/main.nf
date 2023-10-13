@@ -32,6 +32,7 @@ workflow BAM_RSEQC {
     if ('bam_stat' in rseqc_modules) {
         RSEQC_BAMSTAT.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/rseqc/bam_stat",
+            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         RSEQC_BAMSTAT ( ch_bam )
@@ -51,15 +52,18 @@ workflow BAM_RSEQC {
         RSEQC_INNERDISTANCE.config.publishDir = [
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/inner_distance/txt",
+                mode: params.publish_dir_mode,
                 pattern: '*.txt',
                 saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/inner_distance/pdf",
+                mode: params.publish_dir_mode,
                 pattern: '*.pdf'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/inner_distance/rscript",
+                mode: params.publish_dir_mode,
                 pattern: '*.r'
             ]
         ]
@@ -79,6 +83,7 @@ workflow BAM_RSEQC {
     if ('infer_experiment' in rseqc_modules) {
         RSEQC_INFEREXPERIMENT.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/rseqc/infer_experiment",
+            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         RSEQC_INFEREXPERIMENT ( ch_bam, ch_bed )
@@ -100,22 +105,27 @@ workflow BAM_RSEQC {
         RSEQC_JUNCTIONANNOTATION.config.publishDir = [
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/pdf",
+                mode: params.publish_dir_mode,
                 pattern: '*.pdf'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/bed",
+                mode: params.publish_dir_mode,
                 pattern: '*.bed'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/xls",
+                mode: params.publish_dir_mode,
                 pattern: '*.xls'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/log",
+                mode: params.publish_dir_mode,
                 pattern: '*.log'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_annotation/rscript",
+                mode: params.publish_dir_mode,
                 pattern: '*.r'
             ]
         ]
@@ -139,10 +149,12 @@ workflow BAM_RSEQC {
         RSEQC_JUNCTIONSATURATION.config.publishDir = [
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_saturation/pdf",
+                mode: params.publish_dir_mode,
                 pattern: '*.pdf'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/junction_saturation/rscript",
+                mode: params.publish_dir_mode,
                 pattern: '*.r'
             ]
         ]
@@ -159,6 +171,7 @@ workflow BAM_RSEQC {
     if ('read_distribution' in rseqc_modules) {
         RSEQC_READDISTRIBUTION.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/rseqc/read_distribution",
+            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         RSEQC_READDISTRIBUTION ( ch_bam, ch_bed )
@@ -177,14 +190,17 @@ workflow BAM_RSEQC {
         RSEQC_READDUPLICATION.config.publishDir = [
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/read_duplication/pdf",
+                mode: params.publish_dir_mode,
                 pattern: '*.pdf'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/read_duplication/xls",
+                mode: params.publish_dir_mode,
                 pattern: '*.xls'
             ],
             [
                 path: "${params.outdir}/${params.aligner}/rseqc/read_duplication/rscript",
+                mode: params.publish_dir_mode,
                 pattern: '*.r'
             ]
         ]
@@ -203,6 +219,7 @@ workflow BAM_RSEQC {
     if ('tin' in rseqc_modules) {
         RSEQC_TIN.config.publishDir = [
             path: "${params.outdir}/${params.aligner}/rseqc/tin",
+            mode: params.publish_dir_mode,
             saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
         ]
         RSEQC_TIN ( ch_bam_bai, ch_bed )

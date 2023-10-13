@@ -21,15 +21,18 @@ workflow FASTQ_ALIGN_HISAT2 {
     HISAT2_ALIGN.config.publishDir = [
         [
             path: "${params.outdir}/${params.aligner}/log",
+            mode: params.publish_dir_mode,
             pattern: '*.log'
         ],
         [
             path: "${params.outdir}/${params.aligner}",
+            mode: params.publish_dir_mode,
             pattern: '*.bam',
             enabled: params.save_align_intermeds
         ],
         [
             path: "${params.outdir}/${params.aligner}/unmapped",
+            mode: params.publish_dir_mode,
             pattern: '*.fastq.gz',
             enabled: params.save_unaligned
         ]
@@ -43,6 +46,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     sort_ext_prefix = { "${meta.id}.sorted" }
     sort_publish_dir = [
         path: "${params.outdir}/${params.aligner}",
+        mode: params.publish_dir_mode,
         pattern: "*.bam",
         enabled: ( !params.with_umi && params.skip_markduplicates ) ||
             params.save_align_intermeds ||
@@ -51,6 +55,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     index_ext_args = params.bam_csi_index ? '-c' : ''
     index_publish_dir = [
         path: "${params.outdir}/${params.aligner}",
+        mode: params.publish_dir_mode,
         pattern: "*.{bai,csi}",
         enabled: ( !params.with_umi && params.skip_markduplicates ) ||
             params.save_align_intermeds ||
@@ -59,6 +64,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     stats_ext_prefix = { "${meta.id}.sorted.bam" }
     stats_publish_dir = [
         path: "${params.outdir}/${params.aligner}/samtools_stats",
+        mode: params.publish_dir_mode,
         pattern: "*.{stats,flagstat,idxstats}"
     ]
     BAM_SORT_STATS_SAMTOOLS (

@@ -33,6 +33,7 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     UCSC_BEDGRAPHTOBIGWIG.config.ext.prefix = bigwig_ext_prefix
     UCSC_BEDGRAPHTOBIGWIG.config.publishDir = [
         path: "${params.outdir}/${params.aligner}/bigwig",
+        mode: params.publish_dir_mode,
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
     ]
     UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out.bedgraph, sizes )

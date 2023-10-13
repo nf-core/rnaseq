@@ -55,10 +55,12 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         UMITOOLS_EXTRACT.config.publishDir = [
             [
                 path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
                 pattern: "*.log"
             ],
             [
                 path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
                 pattern: "*.fastq.gz",
                 enabled: params.save_umi_intermeds
             ]
@@ -97,15 +99,18 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         TRIMGALORE.config.publishDir = [
             [
                 path: "${params.outdir}/${params.trimmer}/fastqc",
+                mode: params.publish_dir_mode,
                 pattern: "*.{html,zip}"
             ],
             [
                 path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
                 pattern: "*.fq.gz",
                 enabled: params.save_trimmed
             ],
             [
                 path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
                 pattern: "*.txt"
             ]
         ]

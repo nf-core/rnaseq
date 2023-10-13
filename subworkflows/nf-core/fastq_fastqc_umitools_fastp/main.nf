@@ -56,10 +56,12 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         UMITOOLS_EXTRACT.config.publishDir = [
             [
                 path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
                 pattern: "*.log"
             ],
             [
                 path: "${params.outdir}/umitools",
+                mode: params.publish_dir_mode,
                 pattern: "*.fastq.gz",
                 enabled: params.save_umi_intermeds
             ]
@@ -98,14 +100,17 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         FASTP.config.publishDir = [
             [
                 path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
                 pattern: "*.{json,html}"
             ],
             [
                 path: "${params.outdir}/${params.trimmer}/log",
+                mode: params.publish_dir_mode,
                 pattern: "*.log"
             ],
             [
                 path: "${params.outdir}/${params.trimmer}",
+                mode: params.publish_dir_mode,
                 pattern: "*.fastq.gz",
                 enabled: params.save_trimmed
             ]
@@ -146,6 +151,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             FASTQC_TRIM.config.ext.args   = '--quiet'
             FASTQC_TRIM.config.publishDir = [
                 path: "${params.outdir}/${params.trimmer}/fastqc",
+                mode: params.publish_dir_mode,
                 saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
             ]
             FASTQC_TRIM (

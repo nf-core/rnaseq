@@ -33,6 +33,7 @@ process HISAT2_ALIGN {
     } else if (meta.strandedness == 'reverse') {
         strandedness = meta.single_end ? '--rna-strandness R' : '--rna-strandness RF'
     }
+    ss = "$splicesites" ? "--known-splicesite-infile $splicesites" : ''
     def seq_center = params.seq_center ? "--rg-id ${prefix} --rg SM:$prefix --rg CN:${params.seq_center.replaceAll('\\s','_')}" : "--rg-id ${prefix} --rg SM:$prefix"
     if (meta.single_end) {
         def unaligned = params.save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -42,7 +43,7 @@ process HISAT2_ALIGN {
             -x \$INDEX \\
             -U $reads \\
             $strandedness \\
-            --known-splicesite-infile $splicesites \\
+            $ss \\
             --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
             $seq_center \\
@@ -65,7 +66,7 @@ process HISAT2_ALIGN {
             -1 ${reads[0]} \\
             -2 ${reads[1]} \\
             $strandedness \\
-            --known-splicesite-infile $splicesites \\
+            $ss \\
             --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
             $seq_center \\

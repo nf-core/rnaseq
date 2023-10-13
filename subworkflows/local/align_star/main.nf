@@ -9,8 +9,8 @@ include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
 workflow ALIGN_STAR {
     take:
     reads               // channel: [ val(meta), [ reads ] ]
-    index               // channel: /path/to/star/index/
-    gtf                 // channel: /path/to/genome.gtf
+    index               // channel: [ val(meta), [ index ] ]
+    gtf                 // channel: [ val(meta), [ gtf ] ]
     star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file 
     seq_platform        // string : sequencing platform
     seq_center          // string : sequencing center

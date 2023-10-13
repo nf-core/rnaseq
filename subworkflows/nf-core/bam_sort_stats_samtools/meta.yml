@@ -6,12 +6,13 @@ keywords:
   - bam
   - sam
   - cram
-modules:
+components:
   - samtools/sort
   - samtools/index
   - samtools/stats
   - samtools/idxstats
   - samtools/flagstat
+  - bam_stats_samtools
 input:
   - meta:
       type: map

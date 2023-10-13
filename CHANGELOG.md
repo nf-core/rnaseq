@@ -23,7 +23,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1054](https://github.com/nf-core/rnaseq/pull/1054) - Template update to nf-core/tools v2.9
 - [PR #1058](https://github.com/nf-core/rnaseq/pull/1058) - Use `nf-validation` plugin for parameter and samplesheet validation
 - [PR #1068](https://github.com/nf-core/rnaseq/pull/1068) - Update `grep` version for `untar` module
-- [PR #1073](https://github.com/nf-core/rnaseq/pull/1073) - Update documentation to discourage --genome
+- [PR #1073](https://github.com/nf-core/rnaseq/pull/1073) - Update documentation to discourage use of `--genome`
 - [PR #1078](https://github.com/nf-core/rnaseq/pull/1078) - Updated pipeline template to [nf-core/tools 2.10](https://github.com/nf-core/tools/releases/tag/2.10)
 - [PR #1083](https://github.com/nf-core/rnaseq/pull/1083) - Move local modules and subworkflows to subfolders
 - [PR #1088](https://github.com/nf-core/rnaseq/pull/1088) - Updates contributing and code of conduct documents with nf-core template 2.10
@@ -31,9 +31,11 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Software dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `fastqc`   | 0.11.9      | 0.12.1      |
+| Dependency              | Old version | New version |
+| ----------------------- | ----------- | ----------- |
+| `fastqc`                | 0.11.9      | 0.12.1      |
+| `multiqc`               | 1.14        | 1.15        |
+| `ucsc-bedgraphtobigwig` | 377         | 445         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

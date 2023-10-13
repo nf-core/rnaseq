@@ -1,0 +1,27 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "software_versions.yml:md5,a027f820f30b8191a20ca16465daaf37"
+                ],
+                "1": [
+                    "software_versions_mqc.yml:md5,ee4a1d028ad29987f9ac511f4668f17c"
+                ],
+                "2": [
+                    "versions.yml:md5,f47ebd22aba1dd987b7e5d5247b766c3"
+                ],
+                "mqc_yml": [
+                    "software_versions_mqc.yml:md5,ee4a1d028ad29987f9ac511f4668f17c"
+                ],
+                "versions": [
+                    "versions.yml:md5,f47ebd22aba1dd987b7e5d5247b766c3"
+                ],
+                "yml": [
+                    "software_versions.yml:md5,a027f820f30b8191a20ca16465daaf37"
+                ]
+            }
+        ],
+        "timestamp": "2023-10-11T17:10:02.930699"
+    }
+}

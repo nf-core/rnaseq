@@ -44,4 +44,11 @@ class Utils {
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         }
     }
+
+    public static Map publishDir(def params, String subPath, Map opts=[:]) {
+        final defaults = [
+            mode: params.publish_dir_mode
+        ]
+        return defaults + [path: "${params.outdir}/${subPath}"] + opts
+    }
 }

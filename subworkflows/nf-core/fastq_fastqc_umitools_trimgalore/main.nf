@@ -36,7 +36,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     fastqc_html = Channel.empty()
     fastqc_zip  = Channel.empty()
     if (!skip_fastqc) {
-        FASTQC.config.ext.args   = '--quiet'
+        FASTQC.config.ext.args   = params.fastqc_args
         FASTQC (reads)
         fastqc_html = FASTQC.out.html
         fastqc_zip  = FASTQC.out.zip

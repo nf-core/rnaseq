@@ -35,7 +35,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_raw_html = Channel.empty()
     fastqc_raw_zip  = Channel.empty()
     if (!skip_fastqc) {
-        FASTQC_RAW.config.ext.args   = '--quiet'
+        FASTQC_RAW.config.ext.args   = params.fastqc_args
         FASTQC_RAW (
             reads
         )
@@ -148,7 +148,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             .set { trim_read_count }
 
         if (!skip_fastqc) {
-            FASTQC_TRIM.config.ext.args   = '--quiet'
+            FASTQC_TRIM.config.ext.args   = params.fastqc_args
             FASTQC_TRIM.config.publishDir = [
                 path: "${params.outdir}/${params.trimmer}/fastqc",
                 mode: params.publish_dir_mode,

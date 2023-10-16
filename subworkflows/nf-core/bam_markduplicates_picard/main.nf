@@ -17,7 +17,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     ch_versions = Channel.empty()
 
-    PICARD_MARKDUPLICATES.config.ext.args   = '--ASSUME_SORTED true --REMOVE_DUPLICATES false --VALIDATION_STRINGENCY LENIENT --TMP_DIR tmp'
+    PICARD_MARKDUPLICATES.config.ext.args   = params.picard_args
     PICARD_MARKDUPLICATES.config.ext.prefix = { "${meta.id}.markdup.sorted" }
     PICARD_MARKDUPLICATES.config.publishDir = [
         [

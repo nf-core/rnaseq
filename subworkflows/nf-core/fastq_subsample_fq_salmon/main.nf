@@ -38,7 +38,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     // Sub-sample FastQ files with fq
     //
-    FQ_SUBSAMPLE.config.ext.args   = '--record-count 1000000 --seed 1'
+    FQ_SUBSAMPLE.config.ext.args   = params.subsample_fq_args
     FQ_SUBSAMPLE.config.ext.prefix = { "${meta.id}.subsampled" }
     FQ_SUBSAMPLE.config.publishDir = [
         path: "${params.outdir}/sample_fastq/fastq",
@@ -54,7 +54,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     def lib_type = 'A'
     def alignment_mode = false
-    SALMON_QUANT.config.ext.args   = '--skipQuant'
+    SALMON_QUANT.config.ext.args   = params.subsample_salmon_args
     SALMON_QUANT.config.publishDir = [
         path: "${params.outdir}/sample_fastq/salmon",
         mode: params.publish_dir_mode,

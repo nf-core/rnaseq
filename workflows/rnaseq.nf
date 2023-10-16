@@ -350,7 +350,7 @@ workflow RNASEQ {
     // MODULE: Remove genome contaminant reads
     //
     if (!params.skip_bbsplit) {
-        BBMAP_BBSPLIT.config.ext.args   = 'build=1 ambiguous2=all maxindel=150000'
+        BBMAP_BBSPLIT.config.ext.args   = params.bbsplit_args
         BBMAP_BBSPLIT.config.publishDir = [
             [
                 path: "${params.outdir}/bbsplit",
@@ -383,7 +383,7 @@ workflow RNASEQ {
     if (params.remove_ribo_rna) {
         ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines()).map { row -> file(row, checkIfExists: true) }.collect()
 
-        SORTMERNA.config.ext.args   = '--num_alignments 1 -v'
+        SORTMERNA.config.ext.args   = params.sortmerna_args
         SORTMERNA.config.publishDir = [
             [
                 path: "${params.outdir}/sortmerna",
@@ -548,7 +548,7 @@ workflow RNASEQ {
             )
 
             // Name sort BAM before passing to Salmon
-            SAMTOOLS_SORT.config.ext.args   = '-n'
+            SAMTOOLS_SORT.config.ext.args   = params.samtools_sort_args
             SAMTOOLS_SORT.config.ext.prefix = { "${meta.id}.umi_dedup.transcriptome" }
             SAMTOOLS_SORT.config.publishDir = [
                 path: "${params.outdir}/${params.aligner}",
@@ -780,7 +780,7 @@ workflow RNASEQ {
     //
     ch_preseq_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq) {
-        PRESEQ_LCEXTRAP.config.ext.args   = '-verbose -bam -seed 1 -seg_len 100000000'
+        PRESEQ_LCEXTRAP.config.ext.args   = params.preseq_lcextrap_args
         PRESEQ_LCEXTRAP.config.publishDir = [
             [
                 path: "${params.outdir}/${params.aligner}/preseq",
@@ -895,7 +895,7 @@ workflow RNASEQ {
     //
     if (!params.skip_alignment && !params.skip_bigwig) {
 
-        BEDTOOLS_GENOMECOV.config.ext.args   = '-split -du'
+        BEDTOOLS_GENOMECOV.config.ext.args   = params.bedtools_args
         BEDTOOLS_GENOMECOV.config.publishDir = [
             path: { "${params.outdir}/bedtools/${meta.id}" },
             enabled: false

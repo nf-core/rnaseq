@@ -65,6 +65,16 @@
                         "git_sha": "735e1e04e7e01751d2d6e97055bbdb6f70683cc1",
                         "installed_by": ["modules"]
                     },
+                    "kallisto/index": {
+                        "branch": "master",
+                        "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
+                        "installed_by": ["modules"]
+                    },
+                    "kallisto/quant": {
+                        "branch": "master",
+                        "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
+                        "installed_by": ["modules"]
+                    },
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "2ee934606f1fdf7fc1cb05d6e8abc13bec8ab448",

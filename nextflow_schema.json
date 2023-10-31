@@ -359,7 +359,7 @@
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": ["salmon"]
+                    "enum": ["salmon", "kallisto"]
                 },
                 "bam_csi_index": {
                     "type": "boolean",

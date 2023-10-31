@@ -102,6 +102,7 @@ include { ALIGN_STAR                              } from '../subworkflows/local/
 include { QUANTIFY_RSEM                           } from '../subworkflows/local/quantify_rsem'
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
+include { QUANTIFY_KALLISTO as QUANTIFY_KALLISTO  } from '../subworkflows/local/quantify_kallisto'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -816,6 +817,23 @@ workflow RNASEQ {
             ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
             ch_versions = ch_versions.mix(DESEQ2_QC_SALMON.out.versions)
         }
+    }
+    
+     //
+    // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
+    //
+    ch_kallisto_multiqc                 = Channel.empty()
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'kallisto') {
+        QUANTIFY_KALLISTO (
+            ch_filtered_reads,
+            PREPARE_GENOME.out.kallisto_index,
+            ch_dummy_file,
+            PREPARE_GENOME.out.gtf,
+            false,
+            params.salmon_quant_libtype ?: ''
+        )
+        ch_kallisto_multiqc = QUANTIFY_KALLISTO.out.results
+        ch_versions = ch_versions.mix(QUANTIFY_KALLISTO.out.versions)
     }
 
     //

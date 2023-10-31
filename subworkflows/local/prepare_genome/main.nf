@@ -274,7 +274,7 @@ workflow PREPARE_GENOME {
         }
     } else {
         if ('kallisto' in prepare_tool_indices) {
-            ch_kallisto_index = KALLISTO_INDEX ( ch_fasta, ch_transcript_fasta ).index
+            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta ).index
             ch_versions     = ch_versions.mix(KALLISTO_INDEX.out.versions)
         }
     }

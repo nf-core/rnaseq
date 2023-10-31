@@ -27,7 +27,7 @@ workflow QUANTIFY_KALLISTO {
     //
     // Quantify and merge counts across samples
     //
-    KALLISTO_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
+    KALLISTO_QUANT ( reads, index, gtf, [] )
     ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
 
     SALMON_TX2GENE ( KALLISTO_QUANT.out.results.collect{it[1]}, gtf )

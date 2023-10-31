@@ -149,6 +149,13 @@
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Salmon index."
                 },
+                "kallisto_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to directory or tar.gz archive for pre-built Kallisto index."
+                },
                 "hisat2_build_memory": {
                     "type": "string",
                     "default": "200.GB",

@@ -169,6 +169,7 @@ workflow RNASEQ {
         params.star_index,
         params.rsem_index,
         params.salmon_index,
+        params.kallisto_index,
         params.hisat2_index,
         params.bbsplit_index,
         params.gencode,

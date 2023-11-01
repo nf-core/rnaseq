@@ -4,7 +4,7 @@
 
 include { KALLISTO_QUANT    } from '../../../modules/nf-core/kallisto/quant'
 include { SALMON_TX2GENE  } from '../../../modules/local/salmon_tx2gene'
-include { SALMON_TXIMPORT } from '../../../modules/local/salmon_tximport'
+include { SALMON_TXIMPORT } from '../../../modules/local/tximport'
 
 include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE               } from '../../../modules/local/salmon_summarizedexperiment'
 include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED } from '../../../modules/local/salmon_summarizedexperiment'
@@ -27,13 +27,14 @@ workflow QUANTIFY_KALLISTO {
     //
     // Quantify and merge counts across samples
     //
-    KALLISTO_QUANT ( reads, index, gtf, [] )
+    reads.view()
+    KALLISTO_QUANT ( reads, index, gtf, [])
     ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
 
-    SALMON_TX2GENE ( KALLISTO_QUANT.out.results.collect{it[1]}, gtf )
+    SALMON_TX2GENE ( KALLISTO_QUANT.out.abundance_hdf5.collect{it[1]}, gtf )
     ch_versions = ch_versions.mix(SALMON_TX2GENE.out.versions)
 
-    SALMON_TXIMPORT ( KALLISTO_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
+    SALMON_TXIMPORT ( KALLISTO_QUANT.out.abundance_hdf5.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
     ch_versions = ch_versions.mix(SALMON_TXIMPORT.out.versions)
 
     SALMON_SE_GENE (
@@ -62,7 +63,7 @@ workflow QUANTIFY_KALLISTO {
     )
 
     emit:
-    results                       = KALLISTO_QUANT.out.results                      // channel: [ val(meta), results_dir ]
+    results                       = KALLISTO_QUANT.out.abundance_hdf5             // channel: [ val(meta), abundances ]
 
     tpm_gene                      = SALMON_TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
     counts_gene                   = SALMON_TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]

@@ -4,7 +4,7 @@
 
 include { SALMON_QUANT    } from '../../../modules/nf-core/salmon/quant'
 include { SALMON_TX2GENE  } from '../../../modules/local/salmon_tx2gene'
-include { SALMON_TXIMPORT } from '../../../modules/local/salmon_tximport'
+include { SALMON_TXIMPORT } from '../../../modules/local/tximport'
 
 include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE               } from '../../../modules/local/salmon_summarizedexperiment'
 include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_GENE_LENGTH_SCALED } from '../../../modules/local/salmon_summarizedexperiment'

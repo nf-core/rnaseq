@@ -403,6 +403,23 @@
                     "type": "string",
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
+                },
+                "extra_kallisto_quant_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Kallisto quant command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "kallisto_default_fraglen": {
+                    "type": "integer",
+		    "description": "In single-end mode Kallisto requires an estimated fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
+                    "default": 150,
+                    "fa_icon": "fas fa-ruler-horizontal"
+                },
+                "kallisto_default_fraglen_se": {
+                    "type": "integer",
+		    "description": "In single-end mode Kallisto requires an estimated standard error for fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
+                    "default": 75,
+                    "fa_icon": "fas fa-sort-amount-up-alt"
                 }
             }
         },

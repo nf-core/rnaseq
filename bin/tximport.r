@@ -4,13 +4,14 @@ library(SummarizedExperiment)
 library(tximport)
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 2) {
-    stop("Usage: salmon_tximport.r <coldata> <salmon_out>", call.=FALSE)
+if (length(args) < 3) {
+    stop("Usage: tximport.r <coldata> <quant_out> <type>", call.=FALSE)
 }
 
 coldata = args[1]
 path = args[2]
 sample_name = args[3]
+type = args[4]
 
 prefix = sample_name
 tx2gene = "salmon_tx2gene.tsv"
@@ -36,7 +37,7 @@ if (file.exists(coldata)) {
     coldata = data.frame(files = fns, names = names)
 }
 
-txi = tximport(fns, type = "salmon", txOut = TRUE)
+txi = tximport(fns, type = type, txOut = TRUE)
 rownames(coldata) = coldata[["names"]]
 extra = setdiff(rownames(txi[[1]]),  as.character(rowdata[["tx"]]))
 if (length(extra) > 0) {

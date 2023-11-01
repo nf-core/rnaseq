@@ -24,7 +24,7 @@ process SALMON_TXIMPORT {
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
-    salmon_tximport.r \\
+    tximport.r \\
         NULL \\
         salmon \\
         salmon.merged

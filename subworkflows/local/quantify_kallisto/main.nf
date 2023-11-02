@@ -14,7 +14,7 @@ include { SALMON_SUMMARIZEDEXPERIMENT as SALMON_SE_TRANSCRIPT         } from '..
 workflow QUANTIFY_KALLISTO {
     take:
     reads            // channel: [ val(meta), [ reads ] ]
-    index            // channel: /path/to/kallisto/index/
+    index            // channel: [ val(meta2), /path/to/kallisto/index/ ]
     transcript_fasta // channel: /path/to/transcript.fasta
     gtf              // channel: /path/to/genome.gtf
     alignment_mode   //    bool: Run Salmon in alignment mode
@@ -31,10 +31,10 @@ workflow QUANTIFY_KALLISTO {
     KALLISTO_QUANT ( reads, index, gtf, [])
     ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
 
-    SALMON_TX2GENE ( KALLISTO_QUANT.out.abundance_hdf5.collect{it[1]}, gtf )
+    SALMON_TX2GENE ( KALLISTO_QUANT.out.results.collect{it[1]}, gtf )
     ch_versions = ch_versions.mix(SALMON_TX2GENE.out.versions)
 
-    SALMON_TXIMPORT ( KALLISTO_QUANT.out.abundance_hdf5.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
+    SALMON_TXIMPORT ( KALLISTO_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
     ch_versions = ch_versions.mix(SALMON_TXIMPORT.out.versions)
 
     SALMON_SE_GENE (
@@ -63,7 +63,7 @@ workflow QUANTIFY_KALLISTO {
     )
 
     emit:
-    results                       = KALLISTO_QUANT.out.abundance_hdf5             // channel: [ val(meta), abundances ]
+    results                       = KALLISTO_QUANT.out.results                    // channel: [ val(meta), abundances ]
 
     tpm_gene                      = SALMON_TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
     counts_gene                   = SALMON_TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]

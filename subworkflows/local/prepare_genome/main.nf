@@ -267,14 +267,14 @@ workflow PREPARE_GENOME {
     ch_kallisto_index = Channel.empty()
     if (kallisto_index) {
         if (kallisto_index.endsWith('.tar.gz')) {
-            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar.map { it[1] }
+            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar
             ch_versions     = ch_versions.mix(UNTAR_KALLISTO_INDEX.out.versions)
         } else {
-            ch_kallisto_index = Channel.value(file(kallisto_index))
+            ch_kallisto_index = Channel.value([[:], file(kallisto_index)])
         }
     } else {
         if ('kallisto' in prepare_tool_indices) {
-            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map{[ [:], it]} ).index.map { it[1] }
+            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map{[ [:], it]} ).index
             ch_versions     = ch_versions.mix(KALLISTO_INDEX.out.versions)
         }
     }
@@ -292,7 +292,7 @@ workflow PREPARE_GENOME {
     rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
-    kallisto_index   = ch_kallisto_index         // channel: path(kallisto/index/)
+    kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
 
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

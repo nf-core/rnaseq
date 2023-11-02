@@ -117,15 +117,24 @@ def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene
         return False
 
     # Open GTF and output file to write the mappings
+    # Initialize the set to track seen combinations
+    seen = set()
+
     with open(gtf_file) as inh, open(output_file, 'w') as output_handle:
         # Parse each line of the GTF, mapping transcripts to genes
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\t")
             attr_dict = parse_attributes(cols[8])
             if gene_id in attr_dict and transcript_attribute in attr_dict:
-                # Write the mapping to the output file
-                extra_id = attr_dict.get(extra_id_field, attr_dict[gene_id])
-                output_handle.write(f"{attr_dict[transcript_attribute]}\t{attr_dict[gene_id]}\t{extra_id}\n")
+                # Create a unique identifier for the transcript-gene combination
+                transcript_gene_pair = (attr_dict[transcript_attribute], attr_dict[gene_id])
+            
+                # Check if the combination has already been seen
+                if transcript_gene_pair not in seen:
+                    # If it's a new combination, write it to the output and add to the seen set
+                    extra_id = attr_dict.get(extra_id_field, attr_dict[gene_id])
+                    output_handle.write(f"{attr_dict[transcript_attribute]}\t{attr_dict[gene_id]}\t{extra_id}\n")
+                    seen.add(transcript_gene_pair)
 
     return True
 

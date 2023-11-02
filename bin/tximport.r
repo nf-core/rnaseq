@@ -1,118 +1,92 @@
 #!/usr/bin/env Rscript
 
-# Summary:
-# This script performs the import of transcript quantification data, typically
-# from RNA-Seq analysis tools like Salmon or Kallisto, into R using the
-# tximport package. It then creates a SummarizedExperiment object containing
-# count, abundance, and length data for further analysis. The script also
-# provides functionality to summarize data at the gene level if a
-# transcript-to-gene mapping is provided. It expects command line arguments for
-# paths to data and configuration files and outputs various tables summarizing
-# the imported data.
-
-# Load required libraries
 library(SummarizedExperiment)
 library(tximport)
 
-# Function to safely read a CSV file
-read_csv_safe <- function(file, sep = "\t") {
-  if (file.exists(file)) {
-    read.csv(file, sep = sep, header = TRUE) 
-  } else {
-    message("File not available: ", file)
-    return(NULL)
-  }
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) < 4) {
+    stop("Usage: salmon_tximport.r <coldata> <salmon_out> <sample_name> <quant_type> <tx2gene_path>", call.=FALSE)
 }
 
-# Function to build tables from SummarizedExperiment objects
-build_table <- function(se, slot) {
-  cbind(rowData(se)[, 1:2], assays(se)[[slot]])
-}
+coldata = args[1]
+path = args[2]
+sample_name = args[3]
+quant_type = args[4]
+tx2gene_path = args[5]
 
-# Function to get list of files based on quant_type
-list_of_files <- function(path, quant_type) {
-  pattern <- if (quant_type == "salmon") "quant.sf" else "abundance.tsv" # Ideally we'd use .h5 files, but need additional dependency in env (`rhdf5')
-  files <- list.files(path, pattern = pattern, recursive = TRUE, full.names = TRUE)
-  setNames(files, basename(dirname(files)))
-}
+prefix = sample_name
 
-# Parse command line arguments
-args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 5) {
-  stop("Usage: tximport.r <coldata> <quant_out> <sample_name> <quant_type> <tx2gene>", 
-       call. = FALSE)
-}
-
-# Assign arguments to variables
-coldata_path <- args[1]
-quant_out_path <- args[2]
-sample_name <- args[3]
-quant_type <- args[4]
-tx2gene_path <- args[5]
-
-# Prepare tx2gene if it exists and is not empty
-tx2gene <- NULL
-print(paste0("tx2gene file is", tx2gene_path))
-if (file.size(tx2gene_path) > 0) {
-  print("reading tx2gene")
-  tx2gene_df <- read_csv_safe(tx2gene_path)
-  if (!is.null(tx2gene_df)) {
-    tx2gene <- tx2gene_df[, 1:2]
-    colnames(tx2gene) <- c("tx", "gene_id")
-  }
-}
-print(head(tx2gene))
-stop()
-
-# Process filenames based on quant_type
-quant_files <- list_of_files(quant_out_path, quant_type)
-coldata <- read_csv_safe(coldata_path)
-if (!is.null(coldata)) {
-  coldata <- cbind(files = quant_files, coldata[match(names(quant_files), coldata[,1]),])
+info = file.info(tx2gene_path)
+if (info$size == 0) {
+    tx2gene = NULL
 } else {
-  coldata <- data.frame(files = quant_files, names = names(quant_files))
+    rowdata = read.csv(tx2gene_path, sep="\t", header = FALSE)
+    colnames(rowdata) = c("tx", "gene_id", "gene_name")
+    tx2gene = rowdata[,1:2]
 }
 
-# Import transcript quantifications
-print(paste('reading', paste(quant_files, collapse = ', ')))
-txi <- tximport(quant_files, type = quant_type, txOut = TRUE)
+pattern <- ifelse(quant_type == "kallisto", "abundance.tsv", "quant.sf")
+fns = list.files(path, pattern = pattern, recursive = T, full.names = T)
+names = basename(dirname(fns))
+names(fns) = names
 
-# Prepare rowData and colData for SummarizedExperiment
-colData <- DataFrame(coldata)
-rowData <- if (!is.null(tx2gene)) {
-  print("row data from tx2gene")
-  tx2gene[match(rownames(txi$counts), tx2gene$tx), , drop = FALSE]
+if (file.exists(coldata)) {
+    coldata = read.csv(coldata, sep="\t")
+    coldata = coldata[match(names, coldata[,1]),]
+    coldata = cbind(files = fns, coldata)
 } else {
-  print("Row data without tx2gene")
-  data.frame(tx = rownames(txi$counts))
-}
-rownames(rowData) <- rowData$tx
-
-# Create SummarizedExperiment object
-se <- SummarizedExperiment(assays = Filter(is.matrix, txi), colData = colData, rowData = rowData)
-
-# Write output files function
-output_files <- function(se, prefix, suffix) {
-  file_name_abundance <- sprintf("%s_%s_abundance.tsv", prefix, suffix)
-  file_name_counts <- sprintf("%s_%s_counts.tsv", prefix, suffix)
-  write.table(build_table(se, "abundance"), file_name_abundance, 
-              sep = "\t", quote = FALSE, row.names = FALSE)
-  write.table(build_table(se, "counts"), file_name_counts, 
-              sep = "\t", quote = FALSE, row.names = FALSE)
+    message("ColData not available: ", coldata)
+    coldata = data.frame(files = fns, names = names)
 }
 
-# Process and write gene level data if tx2gene is provided
+dropInfReps = quant_type == "kallisto"
+
+txi = tximport(fns, type = quant_type, txOut = TRUE, dropInfReps = dropInfReps)
+rownames(coldata) = coldata[["names"]]
+extra = setdiff(rownames(txi[[1]]),  as.character(rowdata[["tx"]]))
+if (length(extra) > 0) {
+    rowdata = rbind(rowdata, data.frame(tx=extra, gene_id=extra, gene_name=extra))
+}
+rowdata = rowdata[match(rownames(txi[[1]]), as.character(rowdata[["tx"]])),]
+rownames(rowdata) = rowdata[["tx"]]
+se = SummarizedExperiment(assays = list(counts = txi[["counts"]], abundance = txi[["abundance"]], length = txi[["length"]]),
+                        colData = DataFrame(coldata),
+                        rowData = rowdata)
 if (!is.null(tx2gene)) {
-  se_gene <- summarizeToGene(se, tx2gene = tx2gene)
-  output_files(se_gene, sample_name, "gene")
+    gi = summarizeToGene(txi, tx2gene = tx2gene)
+    gi.ls = summarizeToGene(txi, tx2gene = tx2gene, countsFromAbundance = "lengthScaledTPM")
+    gi.s = summarizeToGene(txi, tx2gene = tx2gene, countsFromAbundance = "scaledTPM")
+    growdata = unique(rowdata[,2:3])
+    growdata = growdata[match(rownames(gi[[1]]), growdata[["gene_id"]]),]
+    rownames(growdata) = growdata[["tx"]]
+    gse = SummarizedExperiment(assays = list(counts = gi[["counts"]], abundance = gi[["abundance"]], length = gi[["length"]]),
+                                colData = DataFrame(coldata),
+                                rowData = growdata)
+    gse.ls = SummarizedExperiment(assays = list(counts = gi.ls[["counts"]], abundance = gi.ls[["abundance"]], length = gi.ls[["length"]]),
+                                colData = DataFrame(coldata),
+                                rowData = growdata)
+    gse.s = SummarizedExperiment(assays = list(counts = gi.s[["counts"]], abundance = gi.s[["abundance"]], length = gi.s[["length"]]),
+                                colData = DataFrame(coldata),
+                                rowData = growdata)
 }
 
-# Write transcript level data
-saveRDS(se, file = 'se.rds')
-output_files(se, sample_name, "transcript")
-stop(0)
+build_table = function(se.obj, slot) {
+    cbind(rowData(se.obj)[,1:2], assays(se.obj)[[slot]])
+}
 
-# Print session information to standard out
+if(exists("gse")){
+    write.table(build_table(gse, "abundance"), paste(c(prefix, "gene_tpm.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+    write.table(build_table(gse, "counts"), paste(c(prefix, "gene_counts.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+    write.table(build_table(gse.ls, "abundance"), paste(c(prefix, "gene_tpm_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+    write.table(build_table(gse.ls, "counts"), paste(c(prefix, "gene_counts_length_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+    write.table(build_table(gse.s, "abundance"), paste(c(prefix, "gene_tpm_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+    write.table(build_table(gse.s, "counts"), paste(c(prefix, "gene_counts_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+}
+
+write.table(build_table(se, "abundance"), paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+write.table(build_table(se, "counts"), paste(c(prefix, "transcript_counts.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+
+# Print sessioninfo to standard out
 citation("tximeta")
 sessionInfo()
 

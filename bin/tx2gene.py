@@ -12,7 +12,7 @@ logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
 
-def read_top_transcript(salmon):
+def read_salmon_top_transcript(salmon):
     txs = set()
     fn = glob.glob(os.path.join(salmon, "*", "quant.sf"))[0]
     with open(fn) as inh:
@@ -25,9 +25,24 @@ def read_top_transcript(salmon):
     logger.info("Transcripts found in FASTA: %s" % txs)
     return txs
 
+def read_kallisto_top_transcript(kallisto):
+    txs = set()
+    fn = glob.glob(os.path.join(kallisto, "*", "abundance.tsv"))[0]
+    with open(fn) as inh:
+        next(inh)  # Skip header line
+        for line in inh:
+            txs.add(line.split('\t')[0])
+            if len(txs) > 100:
+                break
+    logger.info("Transcripts found in FASTA: %s" % txs)
+    return txs
 
-def tx2gene(gtf, salmon, gene_id, extra, out):
-    txs = read_top_transcript(salmon)
+def tx2gene(quant_type, gtf, quants, gene_id, extra, out):
+    if quant_type == 'kallisto':
+        txs = read_kallisto_top_transcript(quants)
+    else:
+        txs = read_salmon_top_transcript(quants)
+    
     votes = Counter()
     gene_dict = defaultdict(list)
     with open(gtf) as inh:
@@ -72,8 +87,9 @@ def tx2gene(gtf, salmon, gene_id, extra, out):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""Get tx to gene names for tximport""")
+    parser.add_argument("--quant_type", type=str, help="Quantification type", default = 'salmon')
     parser.add_argument("--gtf", type=str, help="GTF file")
-    parser.add_argument("--salmon", type=str, help="output of salmon")
+    parser.add_argument("--quants", type=str, help="output of quantification")
     parser.add_argument("--id", type=str, help="gene id in the gtf file")
     parser.add_argument("--extra", type=str, help="extra id in the gtf file")
     parser.add_argument(
@@ -86,4 +102,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    tx2gene(args.gtf, args.salmon, args.id, args.extra, args.output)
+    tx2gene(args.quant_type, args.gtf, args.quants, args.id, args.extra, args.output)

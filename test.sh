@@ -3,4 +3,4 @@
 nextflow run . \
     --outdir output \
     --pseudo_aligner kallisto \
-    -resume -profile docker,test
+    -resume -profile conda,test

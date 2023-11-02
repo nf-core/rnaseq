@@ -64,7 +64,11 @@ def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene
             if line.startswith('#'):
                 continue
             columns = line.split('\t')
-            attributes = {item.split()[0]: item.split()[1].strip('"') for item in columns[8].split(';') if item}
+            attributes = {
+                item.split()[0]: item.split()[1].strip('"') 
+                for item in (part.strip() for part in columns[8].split(';') if part.strip())
+                    if len(item.split()) > 1
+            }
 
             if gene_id in attributes and attributes[gene_id] in transcripts:
                 votes[attributes[gene_id]] += 1

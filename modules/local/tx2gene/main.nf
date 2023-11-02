@@ -1,4 +1,4 @@
-process SALMON_TX2GENE {
+process TX2GENE {
     tag "$gtf"
     label "process_low"
 
@@ -8,7 +8,8 @@ process SALMON_TX2GENE {
         'biocontainers/python:3.9--1' }"
 
     input:
-    path ("salmon/*")
+    path ("quants/*")
+    val quant_type
     path gtf
 
     output:
@@ -20,9 +21,10 @@ process SALMON_TX2GENE {
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
-    salmon_tx2gene.py \\
+    tx2gene.py \\
+        --quant_type $quant_type \\
         --gtf $gtf \\
-        --salmon salmon \\
+        --quants quants \\
         --id $params.gtf_group_features \\
         --extra $params.gtf_extra_attributes \\
         -o salmon_tx2gene.tsv

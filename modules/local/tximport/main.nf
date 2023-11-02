@@ -1,4 +1,4 @@
-process SALMON_TXIMPORT {
+process TXIMPORT {
     label "process_medium"
 
     conda "bioconda::bioconductor-tximeta=1.12.0"
@@ -7,8 +7,9 @@ process SALMON_TXIMPORT {
         'biocontainers/bioconductor-tximeta:1.12.0--r41hdfd78af_0' }"
 
     input:
-    path ("salmon/*")
+    path ("quants/*")
     path  tx2gene
+    val quant_type
 
     output:
     path "*gene_tpm.tsv"                 , emit: tpm_gene
@@ -26,8 +27,10 @@ process SALMON_TXIMPORT {
     """
     tximport.r \\
         NULL \\
-        salmon \\
-        salmon.merged
+        quants \\
+        merged \\
+        $quant_type \\
+        $tx2gene
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

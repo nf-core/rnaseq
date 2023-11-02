@@ -31,7 +31,7 @@ build_table <- function(se, slot) {
 
 # Function to get list of files based on quant_type
 list_of_files <- function(path, quant_type) {
-  pattern <- if (quant_type == "salmon") "quant.sf" else "abundance.h5"
+  pattern <- if (quant_type == "salmon") "quant.sf" else "abundance.tsv" # Ideally we'd use .h5 files, but need additional dependency in env (`rhdf5')
   files <- list.files(path, pattern = pattern, recursive = TRUE, full.names = TRUE)
   setNames(files, basename(dirname(files)))
 }
@@ -52,13 +52,17 @@ tx2gene_path <- args[5]
 
 # Prepare tx2gene if it exists and is not empty
 tx2gene <- NULL
+print(paste0("tx2gene file is", tx2gene_path))
 if (file.size(tx2gene_path) > 0) {
+  print("reading tx2gene")
   tx2gene_df <- read_csv_safe(tx2gene_path)
   if (!is.null(tx2gene_df)) {
     tx2gene <- tx2gene_df[, 1:2]
     colnames(tx2gene) <- c("tx", "gene_id")
   }
 }
+print(head(tx2gene))
+stop()
 
 # Process filenames based on quant_type
 quant_files <- list_of_files(quant_out_path, quant_type)
@@ -70,19 +74,22 @@ if (!is.null(coldata)) {
 }
 
 # Import transcript quantifications
+print(paste('reading', paste(quant_files, collapse = ', ')))
 txi <- tximport(quant_files, type = quant_type, txOut = TRUE)
 
 # Prepare rowData and colData for SummarizedExperiment
 colData <- DataFrame(coldata)
 rowData <- if (!is.null(tx2gene)) {
+  print("row data from tx2gene")
   tx2gene[match(rownames(txi$counts), tx2gene$tx), , drop = FALSE]
 } else {
+  print("Row data without tx2gene")
   data.frame(tx = rownames(txi$counts))
 }
 rownames(rowData) <- rowData$tx
 
 # Create SummarizedExperiment object
-se <- SummarizedExperiment(assays = txi, colData = colData, rowData = rowData)
+se <- SummarizedExperiment(assays = Filter(is.matrix, txi), colData = colData, rowData = rowData)
 
 # Write output files function
 output_files <- function(se, prefix, suffix) {
@@ -101,7 +108,9 @@ if (!is.null(tx2gene)) {
 }
 
 # Write transcript level data
+saveRDS(se, file = 'se.rds')
 output_files(se, sample_name, "transcript")
+stop(0)
 
 # Print session information to standard out
 citation("tximeta")

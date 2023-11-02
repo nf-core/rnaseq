@@ -1,105 +1,106 @@
 #!/usr/bin/env python
-from __future__ import print_function
-from collections import OrderedDict, defaultdict, Counter
 import logging
 import argparse
 import glob
 import os
+from typing import Set, Optional, Counter, Dict, List
+from collections import defaultdict
 
-# Create a logger
-logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
-logger = logging.getLogger(__file__)
+# Configure logging
+logging.basicConfig(format='%(name)s - %(asctime)s %(levelname)s: %(message)s')
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def read_salmon_top_transcript(salmon):
-    txs = set()
-    fn = glob.glob(os.path.join(salmon, "*", "quant.sf"))[0]
-    with open(fn) as inh:
-        for line in inh:
-            if line.startswith("Name"):
+def read_top_transcripts(quant_dir: str, file_pattern: str) -> Set[str]:
+    """
+    Read top transcripts from quantification file.
+
+    :param quant_dir: Directory containing quantification files.
+    :param file_pattern: File pattern to match the quantification file.
+    :return: A set of transcript names.
+    """
+    transcripts = set()
+    try:
+        # Find the first file that matches the pattern
+        file_name = glob.glob(os.path.join(quant_dir, '*', file_pattern))[0]
+    except IndexError:
+        logger.error('No quantification files found.')
+        raise FileNotFoundError('Quantification file not found.')
+
+    with open(file_name, 'r') as file_handle:
+        for line in file_handle:
+            if line.startswith('Name'):
                 continue
-            txs.add(line.split()[0])
-            if len(txs) > 100:
+            transcript = line.split()[0]
+            transcripts.add(transcript)
+            if len(transcripts) > 100:
                 break
-    logger.info("Transcripts found in FASTA: %s" % txs)
-    return txs
 
-def read_kallisto_top_transcript(kallisto):
-    txs = set()
-    fn = glob.glob(os.path.join(kallisto, "*", "abundance.tsv"))[0]
-    with open(fn) as inh:
-        next(inh)  # Skip header line
-        for line in inh:
-            txs.add(line.split('\t')[0])
-            if len(txs) > 100:
-                break
-    logger.info("Transcripts found in FASTA: %s" % txs)
-    return txs
+    logger.info(f'Transcripts found: {transcripts}')
+    return transcripts
 
-def tx2gene(quant_type, gtf, quants, gene_id, extra, out):
-    if quant_type == 'kallisto':
-        txs = read_kallisto_top_transcript(quants)
-    else:
-        txs = read_salmon_top_transcript(quants)
-    
-    votes = Counter()
-    gene_dict = defaultdict(list)
-    with open(gtf) as inh:
-        for line in inh:
-            if line.startswith("#"):
+
+def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene_id: str, extra_id_field: str, output_file: str) -> Optional[bool]:
+    """
+    Map transcripts to gene names and write the output to a file.
+
+    :param quant_type: Type of quantification (e.g., 'kallisto' or 'salmon').
+    :param gtf_file: Path to the GTF file.
+    :param quant_dir: Directory containing quantification files.
+    :param gene_id: Gene identifier in the GTF file.
+    :param extra_id_field: Additional identifier in the GTF file.
+    :param output_file: Path to the output file.
+    :return: True if mapping is successful, None otherwise.
+    """
+    file_pattern = 'quant.sf' if quant_type == 'salmon' else 'abundance.tsv'
+    transcripts = read_top_transcripts(quant_dir, file_pattern)
+
+    votes: Counter = Counter()
+    gene_dict: Dict[str, List[Dict[str, str]]] = defaultdict(list)
+
+    with open(gtf_file, 'r') as file_handle:
+        for line in file_handle:
+            if line.startswith('#'):
                 continue
-            cols = line.split("\t")
-            attr_dict = OrderedDict()
-            for gff_item in cols[8].split(";"):
-                item_pair = gff_item.strip().split(" ")
-                if len(item_pair) > 1:
-                    value = item_pair[1].strip().replace('"', "")
-                    if value in txs:
-                        votes[item_pair[0].strip()] += 1
+            columns = line.split('\t')
+            attributes = {item.split()[0]: item.split()[1].strip('"') for item in columns[8].split(';') if item}
 
-                    attr_dict[item_pair[0].strip()] = value
-            try:
-                gene_dict[attr_dict[gene_id]].append(attr_dict)
-            except KeyError:
-                continue
+            if gene_id in attributes and attributes[gene_id] in transcripts:
+                votes[attributes[gene_id]] += 1
+                gene_dict[attributes[gene_id]].append(attributes)
 
     if not votes:
-        logger.warning("No attribute in GTF matching transcripts")
+        logger.warning('No matching attributes found in GTF.')
         return None
 
-    txid = votes.most_common(1)[0][0]
-    logger.info("Attributed found to be transcript: %s" % txid)
+    # Get the most common transcript ID
+    top_transcript_id = votes.most_common(1)[0][0]
+    logger.info(f'Transcript attributed to be gene: {top_transcript_id}')
+
     seen = set()
-    with open(out, "w") as outh:
-        for gene in gene_dict:
-            for row in gene_dict[gene]:
-                if txid not in row:
+    with open(output_file, 'w') as output_handle:
+        for gene, attrs in gene_dict.items():
+            for attr in attrs:
+                if top_transcript_id not in attr:
                     continue
-                if (gene, row[txid]) not in seen:
-                    seen.add((gene, row[txid]))
-                    if not extra in row:
-                        extra_id = gene
-                    else:
-                        extra_id = row[extra]
-                    print("%s\t%s\t%s" % (row[txid], gene, extra_id), file=outh)
+                if (gene, attr[top_transcript_id]) not in seen:
+                    seen.add((gene, attr[top_transcript_id]))
+                    extra_id = attr.get(extra_id_field, gene)
+                    output_handle.write(f'{attr[top_transcript_id]}\t{gene}\t{extra_id}\n')
+
+    return True
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="""Get tx to gene names for tximport""")
-    parser.add_argument("--quant_type", type=str, help="Quantification type", default = 'salmon')
-    parser.add_argument("--gtf", type=str, help="GTF file")
-    parser.add_argument("--quants", type=str, help="output of quantification")
-    parser.add_argument("--id", type=str, help="gene id in the gtf file")
-    parser.add_argument("--extra", type=str, help="extra id in the gtf file")
-    parser.add_argument(
-        "-o",
-        "--output",
-        dest="output",
-        default="tx2gene.tsv",
-        type=str,
-        help="file with output",
-    )
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Map transcripts to gene names for tximport.')
+    parser.add_argument('--quant_type', type=str, help='Quantification type', default='salmon')
+    parser.add_argument('--gtf', type=str, help='GTF file', required=True)
+    parser.add_argument('--quants', type=str, help='Output of quantification', required=True)
+    parser.add_argument('--id', type=str, help='Gene ID in the GTF file', required=True)
+    parser.add_argument('--extra', type=str, help='Extra ID in the GTF file')
+    parser.add_argument('-o', '--output', dest='output', default='tx2gene.tsv', type=str, help='File with output')
 
     args = parser.parse_args()
-    tx2gene(args.quant_type, args.gtf, args.quants, args.id, args.extra, args.output)
+    map_transcripts_to_gene(args.quant_type, args.gtf, args.quants, args.id, args.extra, args.output)
+

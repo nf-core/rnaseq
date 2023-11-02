@@ -3,6 +3,7 @@ description: Computes equivalence classes for reads and quantifies abundances
 keywords:
   - quant
   - kallisto
+  - pseudoalignment
 tools:
   - "kallisto":
       description: "Quantifying abundances of transcripts from RNA-Seq data, or more generally of target sequences using high-throughput sequencing reads."
@@ -24,7 +25,7 @@ input:
         respectively.
       pattern: "*.{fastq,fastq.gz}"
   - index:
-      type: index
+      type: file
       description: Kallisto genome index.
       pattern: "*.idx"
   - gtf:

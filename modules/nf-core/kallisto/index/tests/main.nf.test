@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process KALLISTO_INDEX"
+    script "../main.nf"
+    process "KALLISTO_INDEX"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "kallisto"
+    tag "kallisto/index"
+
+    test("homo_sapiens genome_fasta") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_fasta' ], // meta map
+                    [ file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

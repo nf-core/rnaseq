@@ -67,12 +67,12 @@
                     },
                     "kallisto/index": {
                         "branch": "master",
-                        "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
+                        "git_sha": "bdbbd9a849f9dd2b6078b303d36bf26e6adb8a9e",
                         "installed_by": ["modules"]
                     },
                     "kallisto/quant": {
                         "branch": "master",
-                        "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
+                        "git_sha": "bdbbd9a849f9dd2b6078b303d36bf26e6adb8a9e",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {

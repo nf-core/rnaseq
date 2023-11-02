@@ -36,7 +36,7 @@ def read_top_transcripts(quant_dir: str, file_pattern: str) -> Set[str]:
 
 def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
     """
-    Discover the attribute in the GTF that corresponds to transcripts.
+    Discover the attribute in the GTF that corresponds to transcripts, prioritizing 'transcript_id'.
 
     Parameters:
     gtf_file (str): Path to the GTF file.
@@ -59,7 +59,12 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
         logger.warning("No attribute in GTF matching transcripts")
         return ""
 
-    # Determine the most common attribute that matches the transcripts
+    # Check if 'transcript_id' is among the attributes with the highest votes
+    if 'transcript_id' in votes and votes['transcript_id'] == max(votes.values()):
+        logger.info("Attribute 'transcript_id' corresponds to transcripts.")
+        return 'transcript_id'
+
+    # If 'transcript_id' isn't the highest, determine the most common attribute that matches the transcripts
     attribute, _ = votes.most_common(1)[0]
     logger.info(f"Attribute '{attribute}' corresponds to transcripts.")
     return attribute

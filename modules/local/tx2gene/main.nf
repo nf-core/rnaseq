@@ -27,7 +27,7 @@ process TX2GENE {
         --quants quants \\
         --id $params.gtf_group_features \\
         --extra $params.gtf_extra_attributes \\
-        -o salmon_tx2gene.tsv
+        -o tx2gene.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

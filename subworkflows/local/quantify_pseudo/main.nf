@@ -1,22 +1,24 @@
 //
-// Pseudo-alignment and quantification with Salmon
+// Pseudo-alignment and quantification with Salmon or Kallisto
 //
 
-include { SALMON_QUANT    } from '../../../modules/nf-core/salmon/quant'
-include { TX2GENE  } from '../../../modules/local/tx2gene'
-include { TXIMPORT } from '../../../modules/local/tximport'
+include { SALMON_QUANT      } from '../../../modules/nf-core/salmon/quant'
+include { KALLISTO_QUANT    } from '../../../modules/nf-core/kallisto/quant'
+include { TX2GENE           } from '../../../modules/local/tx2gene'
+include { TXIMPORT          } from '../../../modules/local/tximport'
 
 include { SUMMARIZEDEXPERIMENT as SE_GENE               } from '../../../modules/local/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT as SE_GENE_LENGTH_SCALED } from '../../../modules/local/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT as SE_GENE_SCALED        } from '../../../modules/local/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT         } from '../../../modules/local/summarizedexperiment'
 
-workflow QUANTIFY_SALMON {
+workflow QUANTIFY_PSEUDO {
     take:
     reads            // channel: [ val(meta), [ reads ] ]
-    index            // channel: /path/to/salmon/index/
+    index            // channel: /path/to//index/
     transcript_fasta // channel: /path/to/transcript.fasta
     gtf              // channel: /path/to/genome.gtf
+    pseudo_aligner   //     val: kallisto or salmon 
     alignment_mode   //    bool: Run Salmon in alignment mode
     lib_type         //     val: String to override salmon library type
 
@@ -27,13 +29,21 @@ workflow QUANTIFY_SALMON {
     //
     // Quantify and merge counts across samples
     //
-    SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
-    ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
-    TX2GENE ( SALMON_QUANT.out.results.collect{it[1]}, 'salmon', gtf )
+    if (pseudo_aligner == 'salmon') {
+        SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
+        ch_pseudo_results = SALMON_QUANT.out.results
+        ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
+    }else {
+        KALLISTO_QUANT ( reads, index, gtf, [])
+        ch_pseudo_results = KALLISTO_QUANT.out.results
+        ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
+    }
+
+    TX2GENE ( ch_pseudo_results.collect{it[1]}, pseudo_aligner, gtf )
     ch_versions = ch_versions.mix(TX2GENE.out.versions)
 
-    TXIMPORT ( SALMON_QUANT.out.results.collect{it[1]}, TX2GENE.out.tsv.collect(), 'salmon' )
+    TXIMPORT ( ch_pseudo_results.collect{it[1]}, TX2GENE.out.tsv.collect(), pseudo_aligner )
     ch_versions = ch_versions.mix(TXIMPORT.out.versions)
 
     SE_GENE (
@@ -62,7 +72,7 @@ workflow QUANTIFY_SALMON {
     )
 
     emit:
-    results                       = SALMON_QUANT.out.results               // channel: [ val(meta), results_dir ]
+    results                       = ch_pseudo_results                      // channel: [ val(meta), results_dir ]
 
     tpm_gene                      = TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
     counts_gene                   = TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]

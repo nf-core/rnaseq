@@ -100,9 +100,8 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 include { PREPARE_GENOME                          } from '../subworkflows/local/prepare_genome'
 include { ALIGN_STAR                              } from '../subworkflows/local/align_star'
 include { QUANTIFY_RSEM                           } from '../subworkflows/local/quantify_rsem'
-include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
-include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
-include { QUANTIFY_KALLISTO as QUANTIFY_KALLISTO  } from '../subworkflows/local/quantify_kallisto'
+include { QUANTIFY_PSEUDO as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_pseudo'
+include { QUANTIFY_PSEUDO                         } from '../subworkflows/local/quantify_pseudo'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -476,6 +475,7 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
+            'salmon',
             true,
             params.salmon_quant_libtype ?: ''
         )
@@ -792,40 +792,30 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
     //
-    ch_salmon_multiqc                   = Channel.empty()
-    ch_kallisto_multiqc                 = Channel.empty()
+    ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
     
     if (!params.skip_pseudo_alignment) {
 
-        if( params.pseudo_aligner == 'salmon') {
-            QUANTIFY_SALMON (
-                ch_filtered_reads,
-                PREPARE_GENOME.out.salmon_index,
-                ch_dummy_file,
-                PREPARE_GENOME.out.gtf,
-                false,
-                params.salmon_quant_libtype ?: ''
-            )
-            ch_salmon_multiqc = QUANTIFY_SALMON.out.results
-            ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
-            ch_counts_gene_length_scaled = QUANTIFY_SALMON.out.counts_gene_length_scaled
-	}
+       if (params.pseudo_aligner == 'salmon'){
+           ch_pseudo_index = PREPARE_GENOME.out.salmon_index
+       } else {
+           ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
+       }
 
-        if( params.pseudo_aligner == 'kallisto') {
-             QUANTIFY_KALLISTO (
-                ch_filtered_reads,
-                PREPARE_GENOME.out.kallisto_index,
-                ch_dummy_file,
-                PREPARE_GENOME.out.gtf,
-                false,
-                params.salmon_quant_libtype ?: ''
-            )
-            ch_kallisto_multiqc = QUANTIFY_KALLISTO.out.results
-            ch_versions = ch_versions.mix(QUANTIFY_KALLISTO.out.versions)
-            ch_counts_gene_length_scaled = QUANTIFY_KALLISTO.out.counts_gene_length_scaled
-        }
+        QUANTIFY_PSEUDO (
+            ch_filtered_reads,
+            ch_pseudo_index,
+            ch_dummy_file,
+            PREPARE_GENOME.out.gtf,
+            params.pseudo_aligner,
+            false,
+            params.salmon_quant_libtype ?: ''
+        )
+        ch_pseudo_multiqc = QUANTIFY_PSEUDO.out.results
+        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO.out.versions)
+        ch_counts_gene_length_scaled = QUANTIFY_PSEUDO.out.counts_gene_length_scaled
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (
@@ -873,7 +863,7 @@ workflow RNASEQ {
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
             ch_rsem_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_salmon_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_pseudo_multiqc.collect{it[1]}.ifEmpty([]),
             ch_samtools_stats.collect{it[1]}.ifEmpty([]),
             ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
             ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),

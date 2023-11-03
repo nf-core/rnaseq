@@ -5,15 +5,15 @@ library(SummarizedExperiment)
 ## Create SummarizedExperiment (se) object from Salmon counts
 
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) {
-    stop("Usage: salmon_se.r <coldata> <counts> <tpm>", call. = FALSE)
+if (length(args) < 3) {
+    stop("Usage: salmon_se.r <coldata> <counts> <tpm> <tx2gene.", call. = FALSE)
 }
 
 coldata <- args[1]
 counts_fn <- args[2]
 tpm_fn <- args[3]
+tx2gene <- args[4]
 
-tx2gene <- "salmon_tx2gene.tsv"
 info <- file.info(tx2gene)
 if (info$size == 0) {
     tx2gene <- NULL

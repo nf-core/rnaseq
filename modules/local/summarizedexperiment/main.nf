@@ -24,7 +24,8 @@ process SUMMARIZEDEXPERIMENT {
     summarizedexperiment.r \\
         NULL \\
         $counts \\
-        $tpm
+        $tpm \\
+        $tx2gene
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

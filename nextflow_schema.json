@@ -375,7 +375,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-fast-forward",
                     "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
-                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
+                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html).",
+                    "enum": ["A,U,SF,SR,IS,IU,ISF,ISR,OS,OU,OSF,OSR,MS,MU,MSF,MSR"]
                 },
                 "min_mapped_reads": {
                     "type": "number",
@@ -403,6 +404,13 @@
                     "type": "string",
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
+                },
+                "kallisto_quant_strandedness": {
+                    "type": "string",
+                    "fa_icon": "fas fa-ribbon",
+                    "description": "Override Kallisto library type inferred based on strandedness defined in meta object.",
+                    "enum": ["fr-stranded", "rf-stranded"],
+                    "help_text": "See [Kallisto docs](https://pachterlab.github.io/kallisto/manual)"
                 },
                 "extra_kallisto_quant_args": {
                     "type": "string",

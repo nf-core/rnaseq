@@ -8,9 +8,10 @@ from collections.abc import Set
 from typing import Dict
 
 # Configure logging
-logging.basicConfig(format='%(name)s - %(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
 
 def read_top_transcripts(quant_dir: str, file_pattern: str) -> Set[str]:
     """
@@ -25,14 +26,15 @@ def read_top_transcripts(quant_dir: str, file_pattern: str) -> Set[str]:
     """
     try:
         # Find the quantification file within the directory
-        quant_file_path = glob.glob(os.path.join(quant_dir, '*', file_pattern))[0]
-        with open(quant_file_path, 'r') as file_handle:
+        quant_file_path = glob.glob(os.path.join(quant_dir, "*", file_pattern))[0]
+        with open(quant_file_path, "r") as file_handle:
             # Read the file and extract the top 100 transcripts
             return {line.split()[0] for i, line in enumerate(file_handle) if i > 0 and i <= 100}
     except IndexError:
         # Log an error and raise a FileNotFoundError if the quant file does not exist
-        logger.error('No quantification files found.')
-        raise FileNotFoundError('Quantification file not found.')
+        logger.error("No quantification files found.")
+        raise FileNotFoundError("Quantification file not found.")
+
 
 def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
     """
@@ -51,7 +53,7 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\t")
             # Parse attribute column and update votes for each attribute found
-            attributes = dict(item.strip().split(' ', 1) for item in cols[8].split(';') if item.strip())
+            attributes = dict(item.strip().split(" ", 1) for item in cols[8].split(";") if item.strip())
             votes.update(key for key, value in attributes.items() if value.strip('"') in transcripts)
 
     if not votes:
@@ -60,14 +62,15 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
         return ""
 
     # Check if 'transcript_id' is among the attributes with the highest votes
-    if 'transcript_id' in votes and votes['transcript_id'] == max(votes.values()):
+    if "transcript_id" in votes and votes["transcript_id"] == max(votes.values()):
         logger.info("Attribute 'transcript_id' corresponds to transcripts.")
-        return 'transcript_id'
+        return "transcript_id"
 
     # If 'transcript_id' isn't the highest, determine the most common attribute that matches the transcripts
     attribute, _ = votes.most_common(1)[0]
     logger.info(f"Attribute '{attribute}' corresponds to transcripts.")
     return attribute
+
 
 def parse_attributes(attributes_text: str) -> Dict[str, str]:
     """
@@ -77,22 +80,25 @@ def parse_attributes(attributes_text: str) -> Dict[str, str]:
     :return: A dictionary of the attributes.
     """
     # Split the attributes string by semicolon and strip whitespace
-    attributes = attributes_text.strip().split(';')
+    attributes = attributes_text.strip().split(";")
     attr_dict = OrderedDict()
-    
+
     # Iterate over each attribute pair
     for attribute in attributes:
         # Split the attribute into key and value, ensuring there are two parts
-        parts = attribute.strip().split(' ', 1)
+        parts = attribute.strip().split(" ", 1)
         if len(parts) == 2:
             key, value = parts
             # Remove any double quotes from the value
-            value = value.replace('"', '')
+            value = value.replace('"', "")
             attr_dict[key] = value
 
     return attr_dict
 
-def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene_id: str, extra_id_field: str, output_file: str) -> bool:
+
+def map_transcripts_to_gene(
+    quant_type: str, gtf_file: str, quant_dir: str, gene_id: str, extra_id_field: str, output_file: str
+) -> bool:
     """
     Map transcripts to gene names and write the output to a file.
 
@@ -108,7 +114,7 @@ def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene
     bool: True if the operation was successful, False otherwise.
     """
     # Read the top transcripts based on quantification type
-    transcripts = read_top_transcripts(quant_dir, 'quant.sf' if quant_type == 'salmon' else 'abundance.tsv')
+    transcripts = read_top_transcripts(quant_dir, "quant.sf" if quant_type == "salmon" else "abundance.tsv")
     # Discover the attribute that corresponds to transcripts in the GTF
     transcript_attribute = discover_transcript_attribute(gtf_file, transcripts)
 
@@ -120,7 +126,7 @@ def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene
     # Initialize the set to track seen combinations
     seen = set()
 
-    with open(gtf_file) as inh, open(output_file, 'w') as output_handle:
+    with open(gtf_file) as inh, open(output_file, "w") as output_handle:
         # Parse each line of the GTF, mapping transcripts to genes
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\t")
@@ -128,7 +134,7 @@ def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene
             if gene_id in attr_dict and transcript_attribute in attr_dict:
                 # Create a unique identifier for the transcript-gene combination
                 transcript_gene_pair = (attr_dict[transcript_attribute], attr_dict[gene_id])
-            
+
                 # Check if the combination has already been seen
                 if transcript_gene_pair not in seen:
                     # If it's a new combination, write it to the output and add to the seen set
@@ -138,17 +144,17 @@ def map_transcripts_to_gene(quant_type: str, gtf_file: str, quant_dir: str, gene
 
     return True
 
+
 # Main function to parse arguments and call the mapping function
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Map transcripts to gene names for tximport.')
-    parser.add_argument('--quant_type', type=str, help='Quantification type', default='salmon')
-    parser.add_argument('--gtf', type=str, help='GTF file', required=True)
-    parser.add_argument('--quants', type=str, help='Output of quantification', required=True)
-    parser.add_argument('--id', type=str, help='Gene ID in the GTF file', required=True)
-    parser.add_argument('--extra', type=str, help='Extra ID in the GTF file')
-    parser.add_argument('-o', '--output', dest='output', default='tx2gene.tsv', type=str, help='File with output')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Map transcripts to gene names for tximport.")
+    parser.add_argument("--quant_type", type=str, help="Quantification type", default="salmon")
+    parser.add_argument("--gtf", type=str, help="GTF file", required=True)
+    parser.add_argument("--quants", type=str, help="Output of quantification", required=True)
+    parser.add_argument("--id", type=str, help="Gene ID in the GTF file", required=True)
+    parser.add_argument("--extra", type=str, help="Extra ID in the GTF file")
+    parser.add_argument("-o", "--output", dest="output", default="tx2gene.tsv", type=str, help="File with output")
 
     args = parser.parse_args()
     if not map_transcripts_to_gene(args.quant_type, args.gtf, args.quants, args.id, args.extra, args.output):
         logger.error("Failed to map transcripts to genes.")
-

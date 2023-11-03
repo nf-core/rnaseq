@@ -28,6 +28,7 @@ params.star_index       = WorkflowMain.getGenomeAttribute(params, 'star')
 params.hisat2_index     = WorkflowMain.getGenomeAttribute(params, 'hisat2')
 params.rsem_index       = WorkflowMain.getGenomeAttribute(params, 'rsem')
 params.salmon_index     = WorkflowMain.getGenomeAttribute(params, 'salmon')
+params.kallisto_index   = WorkflowMain.getGenomeAttribute(params, 'kallisto')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -27,7 +27,6 @@ workflow QUANTIFY_KALLISTO {
     //
     // Quantify and merge counts across samples
     //
-    reads.view()
     KALLISTO_QUANT ( reads, index, gtf, [])
     ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
 

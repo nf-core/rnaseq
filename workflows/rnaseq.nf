@@ -88,7 +88,7 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
-include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
+include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
@@ -793,49 +793,52 @@ workflow RNASEQ {
     // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
     //
     ch_salmon_multiqc                   = Channel.empty()
+    ch_kallisto_multiqc                 = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon') {
-        QUANTIFY_SALMON (
-            ch_filtered_reads,
-            PREPARE_GENOME.out.salmon_index,
-            ch_dummy_file,
-            PREPARE_GENOME.out.gtf,
-            false,
-            params.salmon_quant_libtype ?: ''
-        )
-        ch_salmon_multiqc = QUANTIFY_SALMON.out.results
-        ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+    
+    if (!params.skip_pseudo_alignment) {
+
+        if( params.pseudo_aligner == 'salmon') {
+            QUANTIFY_SALMON (
+                ch_filtered_reads,
+                PREPARE_GENOME.out.salmon_index,
+                ch_dummy_file,
+                PREPARE_GENOME.out.gtf,
+                false,
+                params.salmon_quant_libtype ?: ''
+            )
+            ch_salmon_multiqc = QUANTIFY_SALMON.out.results
+            ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+            ch_counts_gene_length_scaled = QUANTIFY_SALMON.out.counts_gene_length_scaled
+	}
+
+        if( params.pseudo_aligner == 'kallisto') {
+             QUANTIFY_KALLISTO (
+                ch_filtered_reads,
+                PREPARE_GENOME.out.kallisto_index,
+                ch_dummy_file,
+                PREPARE_GENOME.out.gtf,
+                false,
+                params.salmon_quant_libtype ?: ''
+            )
+            ch_kallisto_multiqc = QUANTIFY_KALLISTO.out.results
+            ch_versions = ch_versions.mix(QUANTIFY_KALLISTO.out.versions)
+            ch_counts_gene_length_scaled = QUANTIFY_KALLISTO.out.counts_gene_length_scaled
+        }
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_SALMON (
-                QUANTIFY_SALMON.out.counts_gene_length_scaled,
+            DESEQ2_QC_PSEUDO (
+                ch_counts_gene_length_scaled,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
-            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_SALMON.out.versions)
+            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_PSEUDO.out.pca_multiqc
+            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_PSEUDO.out.dists_multiqc
+            ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
         }
     }
     
-     //
-    // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
-    //
-    ch_kallisto_multiqc                 = Channel.empty()
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'kallisto') {
-        QUANTIFY_KALLISTO (
-            ch_filtered_reads,
-            PREPARE_GENOME.out.kallisto_index,
-            ch_dummy_file,
-            PREPARE_GENOME.out.gtf,
-            false,
-            params.salmon_quant_libtype ?: ''
-        )
-        ch_kallisto_multiqc = QUANTIFY_KALLISTO.out.results
-        ch_versions = ch_versions.mix(QUANTIFY_KALLISTO.out.versions)
-    }
-
     //
     // MODULE: Pipeline reporting
     //

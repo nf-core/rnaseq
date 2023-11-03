@@ -1,4 +1,4 @@
-process SALMON_SUMMARIZEDEXPERIMENT {
+process SUMMARIZEDEXPERIMENT {
     tag "$tx2gene"
     label "process_medium"
 
@@ -21,7 +21,7 @@ process SALMON_SUMMARIZEDEXPERIMENT {
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
-    salmon_summarizedexperiment.r \\
+    summarizedexperiment.r \\
         NULL \\
         $counts \\
         $tpm

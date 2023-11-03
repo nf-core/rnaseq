@@ -6,7 +6,7 @@ library(SummarizedExperiment)
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {
-    stop("Usage: salmon_se.r <coldata> <counts> <tpm> <tx2gene.", call. = FALSE)
+    stop("Usage: salmon_se.r <coldata> <counts> <tpm> <tx2gene>", call. = FALSE)
 }
 
 coldata <- args[1]

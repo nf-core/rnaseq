@@ -28,7 +28,7 @@ process TXIMPORT {
     tximport.r \\
         NULL \\
         quants \\
-        merged \\
+        ${quant_type}.merged \\
         $quant_type \\
         $tx2gene
 

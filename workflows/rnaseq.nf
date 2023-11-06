@@ -813,7 +813,7 @@ workflow RNASEQ {
             false,
             params.salmon_quant_libtype ?: ''
         )
-        ch_pseudo_multiqc = QUANTIFY_PSEUDO.out.results
+        ch_pseudo_multiqc = QUANTIFY_PSEUDO.out.multiqc
         ch_versions = ch_versions.mix(QUANTIFY_PSEUDO.out.versions)
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO.out.counts_gene_length_scaled
 

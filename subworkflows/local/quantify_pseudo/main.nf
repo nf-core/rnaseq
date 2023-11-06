@@ -30,13 +30,16 @@ workflow QUANTIFY_PSEUDO {
     // Quantify and merge counts across samples
     //
 
+    // Note: MultiQC needs Salmon outputs, but Kallisto logs
     if (pseudo_aligner == 'salmon') {
         SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
         ch_pseudo_results = SALMON_QUANT.out.results
+        ch_pseudo_multiqc = ch_pseudo_results
         ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
     }else {
         KALLISTO_QUANT ( reads, index, gtf, [])
         ch_pseudo_results = KALLISTO_QUANT.out.results
+        ch_pseudo_multiqc = KALLISTO_QUANT.out.log
         ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
     }
 
@@ -73,6 +76,7 @@ workflow QUANTIFY_PSEUDO {
 
     emit:
     results                       = ch_pseudo_results                      // channel: [ val(meta), results_dir ]
+    multiqc                       = ch_pseudo_multiqc                      // channel: [ val(meta), files_for_multiqc ]
 
     tpm_gene                      = TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
     counts_gene                   = TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]

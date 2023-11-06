@@ -750,6 +750,7 @@ According to the `txtimport` documentation you can do one of the following:
   - `hisat2/`: Directory containing HISAT2 indices.
   - `rsem/`: Directory containing STAR and RSEM indices.
   - `salmon/`: Directory containing Salmon indices.
+  - `salmon/`: Directory containing Kallisto indices.
 
 </details>
 

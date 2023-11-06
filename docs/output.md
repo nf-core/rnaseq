@@ -44,7 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Pseudo-alignment and quantification](#pseudo-alignment-and-quantification)
   - [Salmon](#salmon) - Wicked fast gene and isoform quantification relative to the transcriptome
   - [Kallisto](#kallisto) - Near-optimal probabilistic RNA-seq quantification
-Wicked fast gene and isoform quantification relative to the transcriptome
+    Wicked fast gene and isoform quantification relative to the transcriptome
 - [Workflow reporting and genomes](#workflow-reporting-and-genomes)
   - [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
   - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -691,7 +691,7 @@ The principal output files are the same between Salmon and Kallsto:
   - `<pseudoaligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
   - `<pseudoaligner>.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
   - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
-</details>
+  </details>
 
 An additional subset of files are distinct to each tool, for Salmon:
 
@@ -706,7 +706,7 @@ An additional subset of files are distinct to each tool, for Salmon:
   - `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
   - `quant.genes.sf`: Salmon _gene_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
   - `quant.sf`: Salmon _transcript_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
-</details>
+  </details>
 
 ... and Kallisto:
 

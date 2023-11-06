@@ -23,7 +23,7 @@ process MULTIQC {
     path ('star/*')
     path ('hisat2/*')
     path ('rsem/*')
-    path ('salmon/*')
+    path ('pseudoalignment/*')
     path ('samtools/stats/*')
     path ('samtools/flagstat/*')
     path ('samtools/idxstats/*')

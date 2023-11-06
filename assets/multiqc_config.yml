@@ -23,6 +23,7 @@ run_modules:
   - hisat2
   - rsem
   - salmon
+  - kallisto
   - samtools
   - picard
   - preseq

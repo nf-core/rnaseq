@@ -648,7 +648,7 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
-            PREPARE_GENOME.out.gtf
+            PREPARE_GENOME.out.gtf_for_stringtie 
         )
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }

@@ -30,6 +30,7 @@ include { GTF2BED                              } from '../../../modules/local/gt
 include { CAT_ADDITIONAL_FASTA                 } from '../../../modules/local/cat_additional_fasta'
 include { GTF_GENE_FILTER                      } from '../../../modules/local/gtf_gene_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
+include { GTF_FOR_STRINGTIE                    } from '../../../modules/local/gtf_for_stringtie'
 
 workflow PREPARE_GENOME {
     take:
@@ -115,6 +116,17 @@ workflow PREPARE_GENOME {
     } else {
         ch_gene_bed = GTF2BED ( ch_gtf ).bed
         ch_versions = ch_versions.mix(GTF2BED.out.versions)
+    }
+
+    //
+    // Prepare a GTF for StringTie
+    //
+    
+    ch_gtf_for_stringtie = Channel.empty()
+    if (!params.skip_alignment && !params.skip_stringtie) {
+        GTF_FOR_STRINGTIE( ch_gtf )        
+        ch_gtf_for_stringtie = GTF_FOR_STRINGTIE.out.gtf
+        ch_versions = ch_versions.mix(GTF_FOR_STRINGTIE.out.versions)
     }
 
     //
@@ -263,6 +275,7 @@ workflow PREPARE_GENOME {
     gtf              = ch_gtf                    // channel: path(genome.gtf)
     fai              = ch_fai                    // channel: path(genome.fai)
     gene_bed         = ch_gene_bed               // channel: path(gene.bed)
+    gtf_for_stringtie= ch_gtf_for_stringtie      // channel: path(gtf)
     transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
     chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
     splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)

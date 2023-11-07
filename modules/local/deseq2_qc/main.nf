@@ -32,11 +32,13 @@ process DESEQ2_QC {
     def args2 = task.ext.args2 ?: ''
     def label_lower = args2.toLowerCase()
     def label_upper = args2.toUpperCase()
+    prefix = task.ext.prefix ?: "deseq2"
     """
     deseq2_qc.r \\
         --count_file $counts \\
         --outdir ./ \\
         --cores $task.cpus \\
+        --outprefix $prefix \\
         $args
 
     if [ -f "R_sessionInfo.log" ]; then

@@ -24,11 +24,12 @@ process TXIMPORT {
     task.ext.when == null || task.ext.when
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
+    prefix = task.ext.prefix ?: "${quant_type}.merged"
     """
     tximport.r \\
         NULL \\
         quants \\
-        ${quant_type}.merged \\
+        $prefix \\
         $quant_type \\
         $tx2gene
 

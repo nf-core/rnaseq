@@ -16,7 +16,7 @@ process GTF_FOR_STRINGTIE {
 
     when:
     task.ext.when == null || task.ext.when
-    
+
     """
     # Remove gene entries from a GTF, if they don't contain a transcript_id
     # attribute, which is common in Ensembl GTFs

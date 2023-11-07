@@ -12,7 +12,7 @@ include { SUMMARIZEDEXPERIMENT as SE_GENE_LENGTH_SCALED } from '../../../modules
 include { SUMMARIZEDEXPERIMENT as SE_GENE_SCALED        } from '../../../modules/local/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT         } from '../../../modules/local/summarizedexperiment'
 
-workflow QUANTIFY_PSEUDO {
+workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
     reads            // channel: [ val(meta), [ reads ] ]
     index            // channel: /path/to//index/

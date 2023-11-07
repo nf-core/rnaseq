@@ -29,6 +29,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1088](https://github.com/nf-core/rnaseq/pull/1088) - Updates contributing and code of conduct documents with nf-core template 2.10
 - [PR #1091](https://github.com/nf-core/rnaseq/pull/1091) - Reorganise parameters in schema for better usability
 - [PR #1106](https://github.com/nf-core/rnaseq/pull/1106) - Kallisto quantification
+- [PR #1106](https://github.com/nf-core/rnaseq/pull/1106) - MultiQC [version bump](https://github.com/nf-core/rnaseq/pull/1106/commits/aebad067a10a45510a2b421da852cb436ae65fd8)
+- [#1050](https://github.com/nf-core/rnaseq/issues/1050) - Provide custom prefix/suffix for summary files to avoid overwriting
 
 ### Software dependencies
 

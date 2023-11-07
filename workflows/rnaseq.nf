@@ -97,11 +97,11 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME                          } from '../subworkflows/local/prepare_genome'
-include { ALIGN_STAR                              } from '../subworkflows/local/align_star'
-include { QUANTIFY_RSEM                           } from '../subworkflows/local/quantify_rsem'
-include { QUANTIFY_PSEUDO as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_pseudo'
-include { QUANTIFY_PSEUDO                         } from '../subworkflows/local/quantify_pseudo'
+include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome'
+include { ALIGN_STAR                                        } from '../subworkflows/local/align_star'
+include { QUANTIFY_RSEM                                     } from '../subworkflows/local/quantify_rsem'
+include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_pseudo'
+include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../subworkflows/local/quantify_pseudo'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -804,7 +804,7 @@ workflow RNASEQ {
            ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
        }
 
-        QUANTIFY_PSEUDO (
+        QUANTIFY_PSEUDO_ALIGNMENT (
             ch_filtered_reads,
             ch_pseudo_index,
             ch_dummy_file,
@@ -813,9 +813,9 @@ workflow RNASEQ {
             false,
             params.salmon_quant_libtype ?: ''
         )
-        ch_pseudo_multiqc = QUANTIFY_PSEUDO.out.multiqc
-        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO.out.versions)
-        ch_counts_gene_length_scaled = QUANTIFY_PSEUDO.out.counts_gene_length_scaled
+        ch_pseudo_multiqc = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
+        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
+        ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (

@@ -679,17 +679,17 @@ The principal output files are the same between Salmon and Kallsto:
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<pseudoaligner>/`
-  - `<pseudoaligner>.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
-  - `<pseudoaligner>.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `<pseudoaligner>.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  - `<pseudoaligner>.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled counts across all samples.
-  - `<pseudoaligner>.merged.gene_counts_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated library size-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  - `<pseudoaligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts across all samples.
-  - `<pseudoaligner>.merged.gene_counts_length_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated length-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  - `<pseudoaligner>.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  - `<pseudoaligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `<pseudoaligner>.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+- `<pseudo_aligner>/`
+  - `<pseudo_aligner>.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+  - `<pseudo_aligner>.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  - `<pseudo_aligner>.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  - `<pseudo_aligner>.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled counts across all samples.
+  - `<pseudo_aligner>.merged.gene_counts_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated library size-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  - `<pseudo_aligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts across all samples.
+  - `<pseudo_aligner>.merged.gene_counts_length_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated length-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  - `<pseudo_aligner>.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  - `<pseudo_aligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  - `<pseudo_aligner>.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
   - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
   </details>
 
@@ -714,7 +714,7 @@ An additional subset of files are distinct to each tool, for Salmon:
 <summary>Output files</summary>
 
 - `kallisto/<SAMPLE>/`
-  - `abundance.h5`: a HDF5 binary file containing run info, abundance esimates, bootstrap estimates, and transcript length information length. This file can be read in by sleuth.
+  - `abundance.h5`: a HDF5 binary file containing run info, abundance esimates, bootstrap estimates, and transcript length information length. This file can be read in by [sleuth](https://pachterlab.github.io/sleuth/about).
   - `abundance.tsv`: a plaintext file of the abundance estimates. It does not contains bootstrap estimates.
   - `run_info.json`: a json file containing information about the run.
 - `<SAMPLE>.log.txt`: standard output from the Kallisto process per sample.
@@ -750,7 +750,7 @@ According to the `txtimport` documentation you can do one of the following:
   - `hisat2/`: Directory containing HISAT2 indices.
   - `rsem/`: Directory containing STAR and RSEM indices.
   - `salmon/`: Directory containing Salmon indices.
-  - `salmon/`: Directory containing Kallisto indices.
+  - `kallisto/`: Directory containing Kallisto indices.
 
 </details>
 

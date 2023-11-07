@@ -71,13 +71,13 @@ The library preparation protocol (library type) used by Salmon quantification is
 
 When running Salmon in mapping-based mode via `--pseudo_aligner salmon` the entire genome of the organism is used by default for the decoy-aware transcriptome when creating the indices (see second bulleted option in [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)).
 
-Two additional parameters `--extra_star_align_args` and `--extra_salmon_quant_args` were added in v3.10 of the pipeline that allow you to append any custom parameters to the STAR align and Salmon quant commands, respectively. Note, the `--seqBias` and `--gcBias` are not provided to Salmon quant by default so you can provide these via `--extra_salmon_quant_args '--seqBias --gcBias'` if required. You can now also supply additional arguments to Kallisto via `extra_kallisto_quant_args`.
+Two additional parameters `--extra_star_align_args` and `--extra_salmon_quant_args` were added in v3.10 of the pipeline that allow you to append any custom parameters to the STAR align and Salmon quant commands, respectively. Note, the `--seqBias` and `--gcBias` are not provided to Salmon quant by default so you can provide these via `--extra_salmon_quant_args '--seqBias --gcBias'` if required. You can now also supply additional arguments to Kallisto via `--extra_kallisto_quant_args`.
 
 > **NB:** You can use `--skip_alignment --skip_pseudo_alignment` if you only want to run the pre-processing QC steps in the pipeline like FastQ, trimming etc. This will skip alignment, pseudo-alignment and any post-alignment processing steps.
 
 ## Quantification options
 
-The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudo-align and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` parameter.
+The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudo-align and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.
 
 Since v3.0 of the pipeline, featureCounts is no longer used to perform gene/transcript quantification, however it is still used to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. This decision was made primarily because of the limitations of featureCounts to appropriately quantify gene expression data. Please see [Zhao et al., 2015](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141910#pone-0141910-t001) and [Soneson et al., 2015](https://f1000research.com/articles/4-1521/v1).
 

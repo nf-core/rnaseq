@@ -5,7 +5,7 @@ library(tximport)
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) < 4) {
-    stop("Usage: salmon_tximport.r <coldata> <salmon_out> <sample_name> <quant_type> <tx2gene_path>", call.=FALSE)
+    stop("Usage: tximport.r <coldata> <path> <sample_name> <quant_type> <tx2gene_path>", call.=FALSE)
 }
 
 coldata = args[1]

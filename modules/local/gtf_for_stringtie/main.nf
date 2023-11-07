@@ -20,7 +20,7 @@ process GTF_FOR_STRINGTIE {
     """
     # Remove gene entries from a GTF, if they don't contain a transcript_id
     # attribute, which is common in Ensembl GTFs
-    awk '$3 == "\gene" { print; next } /transcript_id/ && \$0 ~ /transcript_id "[^"]+"/' $gtf > ${gtf}_for_stringtie.gtf
+    awk '\$3 == "gene" { print; next } /transcript_id/ && \$0 ~ /transcript_id "[^"]+"/' $gtf > ${gtf}_for_stringtie.gtf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

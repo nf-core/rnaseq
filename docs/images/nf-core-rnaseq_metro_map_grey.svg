@@ -655,16 +655,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.40305088"
-     inkscape:cx="1669.7644"
-     inkscape:cy="552.03949"
+     inkscape:zoom="0.80610176"
+     inkscape:cx="2141.1689"
+     inkscape:cy="630.81366"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1448"
      inkscape:window-height="794"
      inkscape:window-x="40"
-     inkscape:window-y="76"
+     inkscape:window-y="48"
      inkscape:window-maximized="0"
      inkscape:snap-others="true"
      inkscape:snap-nodes="true"
@@ -1470,7 +1470,7 @@
              d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
              id="path10553-46-0-7" /></g><flowRoot
            transform="matrix(0.61667374,0,0,0.61667374,406.68712,-1610.8815)"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="flowRoot10545-2-9-4"
            xml:space="preserve"><flowRegion
              id="flowRegion10547-89-3-3"><rect
@@ -1482,7 +1482,7 @@
                width="112"
                id="rect10549-6-6-1" /></flowRegion><flowPara
              id="flowPara10551-07-0-46"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">GTF</flowPara></flowRoot></g><g
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">GTF</flowPara></flowRoot></g><g
          id="g9404-0-1-6-9"
          transform="matrix(0.28950169,0,0,0.28950169,87.750192,54.614404)"><g
            id="g10541-6-2-2-4"
@@ -1497,7 +1497,7 @@
              d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
              id="path10553-46-0-1-2" /></g><flowRoot
            transform="matrix(0.61667374,0,0,0.61667374,399.34108,-1610.65)"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="flowRoot10545-2-9-8-6"
            xml:space="preserve"><flowRegion
              id="flowRegion10547-89-3-7-4"><rect
@@ -1509,7 +1509,7 @@
                width="112"
                id="rect10549-6-6-9-1" /></flowRegion><flowPara
              id="flowPara10551-07-0-2-2"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">FASTA</flowPara></flowRoot></g></g><path
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">FASTA</flowPara></flowRoot></g></g><path
        inkscape:connector-curvature="0"
        style="fill:none;stroke:#e40481;stroke-width:2.60831;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 70.082002,-17.95098 283.71218,-18.07851"
@@ -1549,7 +1549,7 @@
            d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
            id="path2501" /></g><flowRoot
          transform="matrix(0.61667374,0,0,0.61667374,397.51323,-1610.65)"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot2511"
          xml:space="preserve"><flowRegion
            id="flowRegion2507"><rect
@@ -1561,7 +1561,7 @@
              width="112"
              id="rect2505" /></flowRegion><flowPara
            id="flowPara2509"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">FASTQ</flowPara></flowRoot></g><text
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">FASTQ</flowPara></flowRoot></g><text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7556px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
        x="-34.626167"
@@ -1651,7 +1651,7 @@
            d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
            id="path10553-46-0-5-6" /></g><flowRoot
          transform="matrix(0.61667374,0,0,0.61667374,406.68712,-1610.8815)"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot10545-2-9-2-4"
          xml:space="preserve"><flowRegion
            id="flowRegion10547-89-3-5-4"><rect
@@ -1663,7 +1663,7 @@
              width="112"
              id="rect10549-6-6-47-8" /></flowRegion><flowPara
            id="flowPara10551-07-0-4-6"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">TSV</flowPara></flowRoot></g><text
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">TSV</flowPara></flowRoot></g><text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.7556px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
        x="549.93256"
@@ -2184,7 +2184,7 @@
            d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
            id="path10553-46-0-3" /></g><flowRoot
          transform="matrix(0.61667374,0,0,0.61667374,406.68712,-1610.8815)"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot10545-2-9-6"
          xml:space="preserve"><flowRegion
            id="flowRegion10547-89-3-1"><rect
@@ -2196,7 +2196,7 @@
              width="112"
              id="rect10549-6-6-2" /></flowRegion><flowPara
            id="flowPara10551-07-0-9"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">TSV</flowPara></flowRoot></g><g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">TSV</flowPara></flowRoot></g><g
        id="g9404-0-1-3"
        transform="matrix(0.28950169,0,0,0.28950169,276.47785,50.162102)"><g
          id="g106694"
@@ -2213,7 +2213,7 @@
              d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
              id="path10553-46-0-4" /></g><flowRoot
            transform="matrix(0.61667374,0,0,0.61667374,404.85927,-1610.8815)"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="flowRoot10545-2-9-7"
            xml:space="preserve"><flowRegion
              id="flowRegion10547-89-3-8"><rect
@@ -2225,7 +2225,7 @@
                width="112"
                id="rect10549-6-6-4" /></flowRegion><flowPara
              id="flowPara10551-07-0-5"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">BAM</flowPara></flowRoot><g
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">BAM</flowPara></flowRoot><g
            id="g9404-0-1-0"
            transform="translate(73.114153)"><g
              id="g10541-6-2-3"
@@ -2240,7 +2240,7 @@
                d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
                id="path10553-46-0-0" /></g><flowRoot
              transform="matrix(0.61667374,0,0,0.61667374,408.51497,-1610.8815)"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="flowRoot10545-2-9-63"
              xml:space="preserve"><flowRegion
                id="flowRegion10547-89-3-2"><rect
@@ -2252,7 +2252,7 @@
                  width="112"
                  id="rect10549-6-6-0" /></flowRegion><flowPara
                id="flowPara10551-07-0-6"
-               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">BAI</flowPara></flowRoot></g></g></g><g
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">BAI</flowPara></flowRoot></g></g></g><g
        id="g9404-0-1-6-1"
        transform="matrix(0.28950169,0,0,0.28950169,350.67294,182.59678)"><g
          id="g10541-6-2-2-5"
@@ -2267,7 +2267,7 @@
            d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
            id="path10553-46-0-1-4" /></g><flowRoot
          transform="matrix(0.61667374,0,0,0.61667374,395.68538,-1610.65)"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot10545-2-9-8-7"
          xml:space="preserve"><flowRegion
            id="flowRegion10547-89-3-7-6"><rect
@@ -2279,7 +2279,7 @@
              width="112"
              id="rect10549-6-6-9-5" /></flowRegion><flowPara
            id="flowPara10551-07-0-2-6"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">BIGWIG</flowPara></flowRoot></g><g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">BIGWIG</flowPara></flowRoot></g><g
        id="g9404-0-1-4-9"
        transform="matrix(0.28950169,0,0,0.28950169,206.68566,141.47803)"><g
          id="g10541-6-2-30-3"
@@ -2294,7 +2294,7 @@
            d="m 524.39681,1938.4637 h 47.5386 v -20.9983 c 0,-1.1338 0.91983,-2.0521 2.05208,-2.0521 h 18.12807 v -10.2809 h -67.71875 z m 67.71894,-95.336 h -67.71894 v 19.7705 h 67.71875 v -19.7705 z"
            id="path10553-46-0-6-5" /></g><flowRoot
          transform="matrix(0.61667374,0,0,0.61667374,401.20357,-1610.8815)"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot10545-2-9-88-2"
          xml:space="preserve"><flowRegion
            id="flowRegion10547-89-3-4-3"><rect
@@ -2306,7 +2306,7 @@
              width="112"
              id="rect10549-6-6-3-8" /></flowRegion><flowPara
            id="flowPara10551-07-0-1-7"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.7364px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">HTML</flowPara></flowRoot></g><g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.7843px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">HTML</flowPara></flowRoot></g><g
        id="g9404-0-1-4-4"
        transform="matrix(0.28950169,0,0,0.28950169,124.79186,251.08676)"><g
          id="g10541-6-2-30-9"

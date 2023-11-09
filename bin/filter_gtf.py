@@ -95,6 +95,7 @@ def remove_features_without_transcript_id(gtf_in, prefix):
             if transcript_id_match:
                 f_out.write(line)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""Filter GTF for various reasons""")
     parser.add_argument("--gtf", type=str, help="GTF file")

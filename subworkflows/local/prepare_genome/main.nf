@@ -268,7 +268,7 @@ workflow PREPARE_GENOME {
 
     emit:
     fasta                   = ch_fasta                   // channel: path(genome.fasta)
-    gtf                     = ch_gtf                     // channel: path(genome.gtf)
+    gtf                     = ch_gtf_genome              // channel: path(genome.gtf)
     fai                     = ch_fai                     // channel: path(genome.fai)
     gene_bed                = ch_gene_bed                // channel: path(gene.bed)
     gtf_with_transcript_ids = ch_gtf_with_transcript_ids // channel: path(gtf)

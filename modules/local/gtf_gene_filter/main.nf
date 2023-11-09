@@ -1,4 +1,4 @@
-process GTF_GENE_FILTER {
+process GTF_FILTER {
     tag "$fasta"
 
     conda "conda-forge::python=3.9.5"
@@ -20,10 +20,10 @@ process GTF_GENE_FILTER {
 
     script: // filter_gtf_for_genes_in_genome.py is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
-    filter_gtf_for_genes_in_genome.py \\
+    filter_gtf.py \\
         --gtf $gtf \\
         --fasta $fasta \\
-        -o ${fasta.baseName}_genes.gtf
+        --prefix ${fasta.baseName}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

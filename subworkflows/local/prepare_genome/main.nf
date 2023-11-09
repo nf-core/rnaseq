@@ -28,7 +28,7 @@ include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../..
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { CAT_ADDITIONAL_FASTA                 } from '../../../modules/local/cat_additional_fasta'
-include { GTF_GENE_FILTER                      } from '../../../modules/local/gtf_gene_filter'
+include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
 
 workflow PREPARE_GENOME {
@@ -89,9 +89,9 @@ workflow PREPARE_GENOME {
     //
     // Apply filtering we may need for GTFs
     //
-    GTF_GENE_FILTER ( ch_fasta, ch_gtf )
-    ch_gtf_with_transcript_ids = GTF_GENE_FILTER.out.transcript_id_gtf
-    ch_gtf_genome = GTF_GENE_FILTER.out.genome_gtf
+    GTF_FILTER ( ch_fasta, ch_gtf )
+    ch_gtf_with_transcript_ids = GTF_FILTER.out.transcript_id_gtf
+    ch_gtf_genome = GTF_FILTER.out.genome_gtf
 
     //
     // Uncompress additional fasta file and concatenate with reference fasta and gtf files
@@ -141,7 +141,7 @@ workflow PREPARE_GENOME {
         }
     } else {
         ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf_genome ).transcript_fasta
-        ch_versions         = ch_versions.mix(GTF_GENE_FILTER.out.versions)
+        ch_versions         = ch_versions.mix(GTF_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
 

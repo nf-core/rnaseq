@@ -36,6 +36,13 @@ input:
       type: file
       description: Optional tab separated file with chromosome names and lengths.
       pattern: "*.tsv"
+  - fragment_length:
+      type: integer
+      description: For single-end mode only, the estimated average fragment length.
+  - fragment_length_sd:
+      type: integer
+      description: For single-end mode only, the estimated standard deviation of the fragment length.
+
 output:
   - meta:
       type: map

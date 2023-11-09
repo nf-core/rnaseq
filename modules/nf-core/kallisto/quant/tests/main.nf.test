@@ -39,6 +39,8 @@ nextflow_process {
                 input[1] = KALLISTO_INDEX.out.index
                 input[2] = []
                 input[3] = []
+                input[4] = 150
+                input[5] = 75
                 """
             }
         }
@@ -73,6 +75,8 @@ nextflow_process {
                 input[1] = KALLISTO_INDEX.out.index
                 input[2] = []
                 input[3] = []
+                input[4] = []
+                input[5] = []
                 """
             }
         }

@@ -13,6 +13,7 @@ Special thanks to the following for their contributions to the release:
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
 
 Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 

@@ -3,6 +3,7 @@ from __future__ import print_function
 import logging
 from itertools import groupby
 import argparse
+import re
 
 # Create a logger
 logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
@@ -90,10 +91,9 @@ def remove_features_without_transcript_id(gtf_in, prefix):
 
     with open(gtf_in, "r") as f_in, open(gtf_out, "w") as f_out:
         for line in f_in:
-            transcript_id = line.split("\t")[8].split(" transcript_id ")[1].split(";")[0].replace('"', "")
-            if transcript_id and transcript_id.isalnum():
+            transcript_id_match = re.search(r'transcript_id "([^"]+)"', line)
+            if transcript_id_match:
                 f_out.write(line)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""Filter GTF for various reasons""")

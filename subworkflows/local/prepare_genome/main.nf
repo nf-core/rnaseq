@@ -30,7 +30,6 @@ include { GTF2BED                              } from '../../../modules/local/gt
 include { CAT_ADDITIONAL_FASTA                 } from '../../../modules/local/cat_additional_fasta'
 include { GTF_GENE_FILTER                      } from '../../../modules/local/gtf_gene_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
-include { GTF_FOR_STRINGTIE                    } from '../../../modules/local/gtf_for_stringtie'
 
 workflow PREPARE_GENOME {
     take:
@@ -88,6 +87,13 @@ workflow PREPARE_GENOME {
     }
 
     //
+    // Apply filtering we may need for GTFs
+    //
+    GTF_GENE_FILTER ( ch_fasta, ch_gtf )
+    ch_gtf_with_transcript_ids = GTF_GENE_FILTER.out.transcript_id_gtf
+    ch_gtf_genome = GTF_GENE_FILTER.out.genome_gtf
+
+    //
     // Uncompress additional fasta file and concatenate with reference fasta and gtf files
     //
     if (additional_fasta) {
@@ -119,17 +125,6 @@ workflow PREPARE_GENOME {
     }
 
     //
-    // Prepare a GTF for StringTie
-    //
-    
-    ch_gtf_for_stringtie = Channel.empty()
-    if (!params.skip_alignment && !params.skip_stringtie) {
-        GTF_FOR_STRINGTIE( ch_gtf )        
-        ch_gtf_for_stringtie = GTF_FOR_STRINGTIE.out.gtf
-        ch_versions = ch_versions.mix(GTF_FOR_STRINGTIE.out.versions)
-    }
-
-    //
     // Uncompress transcript fasta file / create if required
     //
     if (transcript_fasta) {
@@ -145,8 +140,7 @@ workflow PREPARE_GENOME {
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
-        ch_filter_gtf = GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf
-        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filter_gtf ).transcript_fasta
+        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf_genome ).transcript_fasta
         ch_versions         = ch_versions.mix(GTF_GENE_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
@@ -271,19 +265,19 @@ workflow PREPARE_GENOME {
     }
 
     emit:
-    fasta            = ch_fasta                  // channel: path(genome.fasta)
-    gtf              = ch_gtf                    // channel: path(genome.gtf)
-    fai              = ch_fai                    // channel: path(genome.fai)
-    gene_bed         = ch_gene_bed               // channel: path(gene.bed)
-    gtf_for_stringtie= ch_gtf_for_stringtie      // channel: path(gtf)
-    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
-    chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
-    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
-    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
-    star_index       = ch_star_index             // channel: path(star/index/)
-    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
-    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
-    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
+    fasta                   = ch_fasta                   // channel: path(genome.fasta)
+    gtf                     = ch_gtf                     // channel: path(genome.gtf)
+    fai                     = ch_fai                     // channel: path(genome.fai)
+    gene_bed                = ch_gene_bed                // channel: path(gene.bed)
+    gtf_with_transcript_ids = ch_gtf_with_transcript_ids // channel: path(gtf)
+    transcript_fasta        = ch_transcript_fasta        // channel: path(transcript.fasta)
+    chrom_sizes             = ch_chrom_sizes             // channel: path(genome.sizes)
+    splicesites             = ch_splicesites             // channel: path(genome.splicesites.txt)
+    bbsplit_index           = ch_bbsplit_index           // channel: path(bbsplit/index/)
+    star_index              = ch_star_index              // channel: path(star/index/)
+    rsem_index              = ch_rsem_index              // channel: path(rsem/index/)
+    hisat2_index            = ch_hisat2_index            // channel: path(hisat2/index/)
+    salmon_index            = ch_salmon_index            // channel: path(salmon/index/)
 
-    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+    versions                = ch_versions.ifEmpty(null)  // channel: [ versions.yml ]
 }

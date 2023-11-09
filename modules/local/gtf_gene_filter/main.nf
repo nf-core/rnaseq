@@ -11,8 +11,9 @@ process GTF_GENE_FILTER {
     path gtf
 
     output:
-    path "*.gtf"       , emit: gtf
-    path "versions.yml", emit: versions
+    path "*_in_genome.gtf"           , emit: genome_gtf
+    path "*_with_transcript_ids.gtf" , emit: transcript_id_gtf
+    path "versions.yml"              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

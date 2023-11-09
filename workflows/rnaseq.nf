@@ -648,7 +648,7 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
-            PREPARE_GENOME.out.gtf_for_stringtie 
+            PREPARE_GENOME.out.gtf_with_transcript_ids 
         )
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
@@ -798,7 +798,7 @@ workflow RNASEQ {
             ch_filtered_reads,
             PREPARE_GENOME.out.salmon_index,
             ch_dummy_file,
-            PREPARE_GENOME.out.gtf,
+            PREPARE_GENOME.out.gtf_with_transcript_ids,
             false,
             params.salmon_quant_libtype ?: ''
         )

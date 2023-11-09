@@ -68,30 +68,32 @@ workflow PREPARE_GENOME {
     //
     // Uncompress GTF annotation file or create from GFF3 if required
     //
-    if (gtf) {
-        if (gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
-            ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
-        } else {
-            ch_gtf = Channel.value(file(gtf))
+    if (gtf || gff) {
+        if (gtf) {
+            if (gtf.endsWith('.gz')) {
+                ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
+                ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
+            } else {
+                ch_gtf = Channel.value(file(gtf))
+            }
+        } else if (gff) {
+            if (gff.endsWith('.gz')) {
+                ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
+                ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
+            } else {
+                ch_gff = Channel.value(file(gff))
+            }
+            ch_gtf      = GFFREAD ( ch_gff ).gtf
+            ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
-    } else if (gff) {
-        if (gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
-            ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
-        } else {
-            ch_gff = Channel.value(file(gff))
-        }
-        ch_gtf      = GFFREAD ( ch_gff ).gtf
-        ch_versions = ch_versions.mix(GFFREAD.out.versions)
-    }
 
-    //
-    // Apply filtering we may need for GTFs
-    //
-    GTF_FILTER ( ch_fasta, ch_gtf )
-    ch_gtf_with_transcript_ids = GTF_FILTER.out.transcript_id_gtf
-    ch_gtf_genome = GTF_FILTER.out.genome_gtf
+        //
+        // Apply filtering we may need for GTFs
+        //
+        GTF_FILTER ( ch_fasta, ch_gtf )
+        ch_gtf_with_transcript_ids = GTF_FILTER.out.transcript_id_gtf
+        ch_gtf_genome = GTF_FILTER.out.genome_gtf
+    }
 
     //
     // Uncompress additional fasta file and concatenate with reference fasta and gtf files

@@ -37,7 +37,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         ch_pseudo_multiqc = ch_pseudo_results
         ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
     }else {
-        KALLISTO_QUANT ( reads, index, gtf, [])
+        KALLISTO_QUANT ( reads, index, gtf, [], params.kallisto_quant_fraglen, params.kallisto_quant_fraglen_sd)
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log
         ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())

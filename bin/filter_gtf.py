@@ -45,6 +45,7 @@ def extract_fasta_seq_names(fasta_name: str) -> set:
             headerStr = line[1:].strip().split()[0]
         yield headerStr
 
+
 def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
     """Extracts the genes in the genome from a GTF file.
 
@@ -56,9 +57,10 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
     Raises:
       ValueError: If no overlap is found or if the GTF file is not tab delimited.
     """
+
     def is_tab_delimited(file):
-        with open(file, 'r') as f:
-            return '\t' in f.readline()
+        with open(file, "r") as f:
+            return "\t" in f.readline()
 
     if not is_tab_delimited(gtf_in):
         raise ValueError("The GTF file is not tab delimited.")
@@ -66,7 +68,7 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
     seq_names_in_genome = set(extract_fasta_seq_names(fasta))
     logger.info(f"Extracted chromosome sequence names from {fasta}")
     logger.info("All chromosome names: " + ", ".join(sorted(seq_names_in_genome)))
-    
+
     with open(gtf_in) as gtf, open(gtf_out, "w") as out:
         seq_names_in_gtf = {line.split("\t")[0] for line in gtf if line.strip()}
         overlap = seq_names_in_genome & seq_names_in_gtf
@@ -81,6 +83,7 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
     logger.info(f"Extracted {len(overlap)} matching sequences from {gtf_in} into {gtf_out}")
     logger.info("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
     logger.info(f"Wrote matching lines to {gtf_out}")
+
 
 def remove_features_without_transcript_id(gtf_in: str, gtf_out: str) -> None:
     """
@@ -112,5 +115,5 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    extract_genes_in_genome(args.fasta, args.gtf, args.prefix +  "_in_genome.gtf" )
-    remove_features_without_transcript_id(args.prefix +  "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf")
+    extract_genes_in_genome(args.fasta, args.gtf, args.prefix + "_in_genome.gtf")
+    remove_features_without_transcript_id(args.prefix + "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf")

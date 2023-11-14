@@ -14,7 +14,7 @@ process SORTMERNA {
     output:
     tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path  "versions.yml"               , emit: versions
+    path  "versions.yml"               , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

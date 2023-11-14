@@ -16,7 +16,7 @@ process HISAT2_BUILD {
 
     output:
     tuple val(meta), path("hisat2") , emit: index
-    path "versions.yml"             , emit: versions
+    path "versions.yml"             , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

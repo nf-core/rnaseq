@@ -16,7 +16,7 @@ process PICARD_MARKDUPLICATES {
     tuple val(meta), path("*.bam")        , emit: bam
     tuple val(meta), path("*.bai")        , optional:true, emit: bai
     tuple val(meta), path("*.metrics.txt"), emit: metrics
-    path  "versions.yml"                  , emit: versions
+    path  "versions.yml"                  , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

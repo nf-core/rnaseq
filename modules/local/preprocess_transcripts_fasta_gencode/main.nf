@@ -11,7 +11,7 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
 
     output:
     path "*.fa"        , emit: fasta
-    path "versions.yml", emit: versions
+    path "versions.yml", topic: versions
 
     when:
     task.ext.when == null || task.ext.when

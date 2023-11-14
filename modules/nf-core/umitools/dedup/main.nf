@@ -17,7 +17,7 @@ process UMITOOLS_DEDUP {
     tuple val(meta), path("*edit_distance.tsv"), optional:true, emit: tsv_edit_distance
     tuple val(meta), path("*per_umi.tsv")      , optional:true, emit: tsv_per_umi
     tuple val(meta), path("*per_position.tsv") , optional:true, emit: tsv_umi_per_position
-    path  "versions.yml"                       , emit: versions
+    path  "versions.yml"                       , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -14,7 +14,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
 
     output:
     tuple val(meta), path("*.bigWig"), emit: bigwig
-    path "versions.yml"              , emit: versions
+    path "versions.yml"              , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

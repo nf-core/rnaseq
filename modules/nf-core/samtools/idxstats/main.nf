@@ -12,7 +12,7 @@ process SAMTOOLS_IDXSTATS {
 
     output:
     tuple val(meta), path("*.idxstats"), emit: idxstats
-    path  "versions.yml"               , emit: versions
+    path  "versions.yml"               , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

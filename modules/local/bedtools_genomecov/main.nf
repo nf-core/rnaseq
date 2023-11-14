@@ -13,7 +13,7 @@ process BEDTOOLS_GENOMECOV {
     output:
     tuple val(meta), path("*.forward.bedGraph"), emit: bedgraph_forward
     tuple val(meta), path("*.reverse.bedGraph"), emit: bedgraph_reverse
-    path "versions.yml"                        , emit: versions
+    path "versions.yml"                        , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

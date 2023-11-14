@@ -151,8 +151,6 @@ def pass_strand_check  = [:]
 
 workflow RNASEQ {
 
-    ch_versions = Channel.empty()
-
     //
     // SUBWORKFLOW: Uncompress and prepare reference genome files
     //
@@ -176,7 +174,6 @@ workflow RNASEQ {
         biotype,
         prepareToolIndices
     )
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
@@ -221,7 +218,6 @@ workflow RNASEQ {
     .reads
     .mix(ch_fastq.single)
     .set { ch_cat_fastq }
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
     // Branch FastQ channels if 'auto' specified to infer strandedness
     ch_cat_fastq
@@ -252,7 +248,6 @@ workflow RNASEQ {
         PREPARE_GENOME.out.salmon_index,
         !params.salmon_index && !('salmon' in prepareToolIndices)
     )
-    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 
     FASTQ_SUBSAMPLE_FQ_SALMON
         .out
@@ -287,7 +282,6 @@ workflow RNASEQ {
         ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
         ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
         ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
-        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
     }
 
     //
@@ -311,7 +305,6 @@ workflow RNASEQ {
         ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip
         ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json
         ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
-        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
     }
 
     //
@@ -347,7 +340,6 @@ workflow RNASEQ {
         )
         .primary_fastq
         .set { ch_filtered_reads }
-        ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions.first())
     }
 
     //
@@ -365,7 +357,6 @@ workflow RNASEQ {
         .set { ch_filtered_reads }
 
         ch_sortmerna_multiqc = SORTMERNA.out.log
-        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
 
     //
@@ -400,7 +391,6 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = ALIGN_STAR.out.csi
         }
-        ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
@@ -419,7 +409,6 @@ workflow RNASEQ {
             if (params.bam_csi_index) {
                 ch_genome_bam_index  = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_STATS_SAMTOOLS (
@@ -458,7 +447,6 @@ workflow RNASEQ {
             UMITOOLS_PREPAREFORSALMON (
                 ch_umitools_dedup_bam.paired_end
             )
-            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
 
             ch_umitools_dedup_bam
                 .single_end
@@ -477,7 +465,6 @@ workflow RNASEQ {
             true,
             params.salmon_quant_libtype ?: ''
         )
-        ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (
@@ -487,7 +474,6 @@ workflow RNASEQ {
             )
             ch_aligner_pca_multiqc        = DESEQ2_QC_STAR_SALMON.out.pca_multiqc
             ch_aligner_clustering_multiqc = DESEQ2_QC_STAR_SALMON.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions)
         }
     }
 
@@ -511,7 +497,6 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = QUANTIFY_RSEM.out.csi
         }
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_RSEM (
@@ -521,7 +506,6 @@ workflow RNASEQ {
             )
             ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
             ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
         }
     }
 
@@ -545,7 +529,6 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.csi
         }
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
@@ -563,7 +546,6 @@ workflow RNASEQ {
             if (params.bam_csi_index) {
                 ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.versions)
         }
     }
 
@@ -617,7 +599,6 @@ workflow RNASEQ {
             ch_genome_bam
         )
         ch_preseq_multiqc = PRESEQ_LCEXTRAP.out.lc_extrap
-        ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 
     //
@@ -639,7 +620,6 @@ workflow RNASEQ {
         if (params.bam_csi_index) {
             ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.csi
         }
-        ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //
@@ -650,7 +630,6 @@ workflow RNASEQ {
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
         )
-        ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
 
     //
@@ -676,14 +655,12 @@ workflow RNASEQ {
         SUBREAD_FEATURECOUNTS (
             ch_featurecounts
         )
-        ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
 
         MULTIQC_CUSTOM_BIOTYPE (
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
         )
         ch_featurecounts_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
-        ch_versions = ch_versions.mix(MULTIQC_CUSTOM_BIOTYPE.out.versions.first())
     }
 
     //
@@ -694,7 +671,6 @@ workflow RNASEQ {
         BEDTOOLS_GENOMECOV (
             ch_genome_bam
         )
-        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV.out.versions.first())
 
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
@@ -703,7 +679,6 @@ workflow RNASEQ {
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
             PREPARE_GENOME.out.chrom_sizes
         )
-        ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
@@ -732,7 +707,6 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gtf.map { [ [:], it ] }
             )
             ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
-            ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
 
         if (!params.skip_dupradar) {
@@ -741,7 +715,6 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gtf
             )
             ch_dupradar_multiqc = DUPRADAR.out.multiqc
-            ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
 
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
@@ -758,7 +731,6 @@ workflow RNASEQ {
             ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
             ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
             ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
-            ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
                 .map {
@@ -803,7 +775,6 @@ workflow RNASEQ {
             params.salmon_quant_libtype ?: ''
         )
         ch_salmon_multiqc = QUANTIFY_SALMON.out.results
-        ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_SALMON (
@@ -813,7 +784,6 @@ workflow RNASEQ {
             )
             ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
             ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_SALMON.out.versions)
         }
     }
 
@@ -821,7 +791,7 @@ workflow RNASEQ {
     // MODULE: Pipeline reporting
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+        Channel.topic('versions').unique().collectFile(name: 'collated_versions.yml')
     )
 
     //

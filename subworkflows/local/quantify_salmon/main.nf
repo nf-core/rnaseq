@@ -21,27 +21,20 @@ workflow QUANTIFY_SALMON {
     lib_type         //     val: String to override salmon library type
 
     main:
-
-    ch_versions = Channel.empty()
-
     //
     // Quantify and merge counts across samples
     //
     SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
-    ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
     SALMON_TX2GENE ( SALMON_QUANT.out.results.collect{it[1]}, gtf )
-    ch_versions = ch_versions.mix(SALMON_TX2GENE.out.versions)
 
     SALMON_TXIMPORT ( SALMON_QUANT.out.results.collect{it[1]}, SALMON_TX2GENE.out.tsv.collect() )
-    ch_versions = ch_versions.mix(SALMON_TXIMPORT.out.versions)
 
     SALMON_SE_GENE (
         SALMON_TXIMPORT.out.counts_gene,
         SALMON_TXIMPORT.out.tpm_gene,
         SALMON_TX2GENE.out.tsv.collect()
     )
-    ch_versions = ch_versions.mix(SALMON_SE_GENE.out.versions)
 
     SALMON_SE_GENE_LENGTH_SCALED (
         SALMON_TXIMPORT.out.counts_gene_length_scaled,
@@ -78,6 +71,4 @@ workflow QUANTIFY_SALMON {
     merged_counts_transcript      = SALMON_TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
     merged_tpm_transcript         = SALMON_TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
     merged_transcript_rds         = SALMON_SE_TRANSCRIPT.out.rds                  //    path: *.rds
-
-    versions                      = ch_versions                                   // channel: [ versions.yml ]
 }

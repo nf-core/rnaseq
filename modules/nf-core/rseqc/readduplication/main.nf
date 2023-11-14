@@ -15,7 +15,7 @@ process RSEQC_READDUPLICATION {
     tuple val(meta), path("*pos.DupRate.xls"), emit: pos_xls
     tuple val(meta), path("*.pdf")           , emit: pdf
     tuple val(meta), path("*.r")             , emit: rscript
-    path  "versions.yml"                     , emit: versions
+    path  "versions.yml"                     , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

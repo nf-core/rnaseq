@@ -31,7 +31,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     min_trimmed_reads // integer: > 0
 
     main:
-    ch_versions = Channel.empty()
     fastqc_raw_html = Channel.empty()
     fastqc_raw_zip  = Channel.empty()
     if (!skip_fastqc) {
@@ -40,7 +39,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         )
         fastqc_raw_html = FASTQC_RAW.out.html
         fastqc_raw_zip  = FASTQC_RAW.out.zip
-        ch_versions     = ch_versions.mix(FASTQC_RAW.out.versions.first())
     }
 
     umi_reads = reads
@@ -51,7 +49,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         )
         umi_reads   = UMITOOLS_EXTRACT.out.reads
         umi_log     = UMITOOLS_EXTRACT.out.log
-        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
         // Discard R1 / R2 if required
         if (umi_discard_read in [1,2]) {
@@ -87,7 +84,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         trim_log          = FASTP.out.log
         trim_reads_fail   = FASTP.out.reads_fail
         trim_reads_merged = FASTP.out.reads_merged
-        ch_versions       = ch_versions.mix(FASTP.out.versions.first())
 
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
@@ -114,7 +110,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             )
             fastqc_trim_html = FASTQC_TRIM.out.html
             fastqc_trim_zip  = FASTQC_TRIM.out.zip
-            ch_versions      = ch_versions.mix(FASTQC_TRIM.out.versions.first())
         }
     }
 
@@ -135,6 +130,4 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
 
     fastqc_trim_html   // channel: [ val(meta), [ html ] ]
     fastqc_trim_zip    // channel: [ val(meta), [ zip ] ]
-
-    versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

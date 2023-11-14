@@ -12,7 +12,7 @@ process CAT_FASTQ {
 
     output:
     tuple val(meta), path("*.merged.fastq.gz"), emit: reads
-    path "versions.yml"                       , emit: versions
+    path "versions.yml"                       , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

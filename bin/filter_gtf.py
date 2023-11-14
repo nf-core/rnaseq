@@ -46,6 +46,9 @@ def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_o
                         line_count_transcript += 1
             if line_count_all == 0:
                 raise ValueError("No overlapping scaffolds found.")
+            if line_count_transcript == 0:
+                raise ValueError("No transcript_id values found in the GTF file.")
+
     except IOError as e:
         logger.error(f"File operation failed: {e}")
         return

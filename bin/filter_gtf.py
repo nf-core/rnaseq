@@ -29,11 +29,15 @@ def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_o
     seq_names_in_genome = extract_fasta_seq_names(fasta)
     logger.info(f"Extracted chromosome sequence names from {fasta}")
 
+    seq_names_in_gtf = set()
     try:
         with open(gtf_in) as gtf, open(gtf_in_genome_out, "w") as out, open(gtf_transcript_out, "w") as out2:
             line_count_all, line_count_transcript = 0, 0
             for line in gtf:
-                if line.split("\t")[0] in seq_names_in_genome:
+                seq_name = line.split("\t")[0]
+                seq_names_in_gtf.add(seq_name)  # Add sequence name to the set
+
+                if seq_name in seq_names_in_genome:
                     out.write(line)
                     line_count_all += 1
                     if re.search(r'transcript_id "([^"]+)"', line):
@@ -43,6 +47,11 @@ def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_o
                 raise ValueError("No overlapping scaffolds found.")
     except IOError as e:
         logger.error(f"File operation failed: {e}")
+        return
+
+    logger.debug("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
+    logger.info(f"Extracted {line_count_all} matching sequences from {gtf_in} into {gtf_in_genome_out}")
+    logger.info(f"Wrote {line_count_transcript} lines with transcript IDs to {gtf_transcript_out}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Filters a GTF file based on sequence names in a FASTA file.")

@@ -718,7 +718,7 @@ An additional subset of files are distinct to each tool, for Salmon:
   - `abundance.tsv`: a plaintext file of the abundance estimates. It does not contains bootstrap estimates.
   - `run_info.json`: a json file containing information about the run.
   - `kallisto_quant.log`: standard output from the Kallisto process per sample.
-</details>
+  </details>
 
 As described in the [STAR and Salmon](#star-and-salmon) section, you can choose to pseudoalign and quantify your data with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) or [Kallisto](https://pachterlab.github.io/kallisto/) by providing the `--pseudo_aligner` parameter. By default, Salmon is run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon or Kallisto in isolation. If Salmon or Kallisto are run in isolation, the outputs mentioned above will be found in a folder named `salmon` or `kallisto`. If Salmon is run alongside STAR, the folder will be named `star_salmon`.
 

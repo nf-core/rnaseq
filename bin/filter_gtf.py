@@ -29,20 +29,12 @@ def extract_fasta_seq_names(fasta_name: str) -> set:
     Returns:
       A set of the sequence names in the FASTA file.
     """
-
-    # first open the file outside
-    fh = open(fasta_name)
-
-    # ditch the boolean (x[0]) and just keep the header or sequence since
-    # we know they alternate.
-    faiter = (x[1] for x in groupby(fh, is_header))
-
-    for i, header in enumerate(faiter):
-        line = next(header)
-        if is_header(line):
-            # drop the ">"
-            headerStr = line[1:].strip().split()[0]
-        yield headerStr
+    seqnames = set()
+    with open(fasta_name) as fasta:
+        for line in fasta:
+            if line[0] == ">":
+                seqnames.add(line[1:].split(None, 1)[0])
+    return seqnames
 
 
 def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
@@ -57,14 +49,21 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
       ValueError: If no overlap is found or if the GTF file is not tab delimited.
     """
 
-    def is_tab_delimited(file):
+    def tab_delimited(file) -> float:
+    
+        import statistics. # put to the top
+
         with open(file, "r") as f:
-            return "\t" in f.readline()
+            data = f.read(1024)
+            lines = data.split("\n")
+            # most lines should have 9 tab-separated columns
+            return statistics.median([line.count("\t") for line in lines])
 
-    if not is_tab_delimited(gtf_in):
-        raise ValueError("The GTF file is not tab delimited.")
+    num_sep = tab_delimited(gtf_in)
+    if num_sep != 8:
+        raise ValueError("No valid tab-delimited GTF file.")
 
-    seq_names_in_genome = set(extract_fasta_seq_names(fasta))
+    seq_names_in_genome = extract_fasta_seq_names(fasta)
     logger.info(f"Extracted chromosome sequence names from {fasta}")
     logger.debug("All chromosome names: " + ", ".join(sorted(seq_names_in_genome)))
 

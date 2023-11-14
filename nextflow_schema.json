@@ -378,21 +378,21 @@
                     "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html).",
                     "enum": [
                         "A",
-                        "U",
-                        "SF",
-                        "SR",
                         "IS",
-                        "IU",
                         "ISF",
                         "ISR",
+                        "IU",
+                        "MS",
+                        "MSF",
+                        "MSR",
+                        "MU",
                         "OS",
-                        "OU",
                         "OSF",
                         "OSR",
-                        "MS",
-                        "MU",
-                        "MSF",
-                        "MSR"
+                        "OU",
+                        "SF",
+                        "SR",
+                        "U"
                     ]
                 },
                 "min_mapped_reads": {

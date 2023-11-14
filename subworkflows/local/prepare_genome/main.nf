@@ -90,9 +90,33 @@ workflow PREPARE_GENOME {
         //
         // Apply filtering we may need for GTFs
         //
-        GTF_FILTER ( ch_fasta, ch_gtf )
-        ch_gtf_with_transcript_ids = GTF_FILTER.out.transcript_id_gtf
-        ch_gtf_genome = GTF_FILTER.out.genome_gtf
+
+        filtering_useful = 
+            (
+                // Condition 1: Alignment is required and aligner is set to 'star_salmon'
+                !params.skip_alignment && params.aligner == 'star_salmon'
+            ) || 
+            (
+                // Condition 2: Pseudo-alignment is required and pseudo-aligner is set to 'salmon'
+                !params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon'
+            ) || 
+            (
+                // Condition 3: Neither alignment nor stringtie are to be skipped
+                !params.skip_alignment && !params.skip_stringtie
+            ) || 
+            (
+                // Condition 4: Transcript FASTA file is not provided
+                !transcript_fasta
+            )
+
+        if (params.skip_gtf_filter || ! filtering_useful){
+            ch_gtf_with_transcript_ids = ch_gtf
+            ch_gtf_genome = ch_gtf
+        } else {
+            GTF_FILTER ( ch_fasta, ch_gtf )
+            ch_gtf_with_transcript_ids = GTF_FILTER.out.transcript_id_gtf
+            ch_gtf_genome = GTF_FILTER.out.genome_gtf
+        }
     }
 
     //

@@ -21,7 +21,7 @@ def tab_delimited(file: str) -> float:
         data = f.read(1024)
         return statistics.median(line.count("\t") for line in data.split("\n"))
 
-def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_out: str) -> None:
+def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_out: str,  skip_transcript_id_check: bool) -> None:
     """Filter GTF file based on FASTA sequence names."""
     if tab_delimited(gtf_in) != 8:
         raise ValueError("Invalid GTF file: Expected 8 tab-separated columns.")
@@ -41,12 +41,16 @@ def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_o
                 if seq_name in seq_names_in_genome:
                     out.write(line)
                     line_count_all += 1
-                    if re.search(r'transcript_id "([^"]+)"', line):
-                        out2.write(line)
+
+                    if not skip_transcript_id_check and re.search(r'transcript_id "([^"]+)"', line):
+                        with open(gtf_transcript_out, "a") as out2:
+                            out2.write(line)
                         line_count_transcript += 1
+
             if line_count_all == 0:
                 raise ValueError("No overlapping scaffolds found.")
-            if line_count_transcript == 0:
+
+            if not skip_transcript_id_check and line_count_transcript == 0:
                 raise ValueError("No transcript_id values found in the GTF file.")
 
     except IOError as e:
@@ -62,7 +66,8 @@ if __name__ == "__main__":
     parser.add_argument("--gtf", type=str, required=True, help="GTF file")
     parser.add_argument("--fasta", type=str, required=True, help="Genome fasta file")
     parser.add_argument("--prefix", dest="prefix", default="genes", type=str, help="Prefix for output GTF files")
+    parser.add_argument("--skip_transcript_id_check", action='store_true', help="Skip checking for transcript IDs in the GTF file")
 
     args = parser.parse_args()
-    filter_gtf(args.fasta, args.gtf, args.prefix + "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf")
+    filter_gtf(args.fasta, args.gtf, args.prefix + "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf", args.skip_transcript_id_check)
 

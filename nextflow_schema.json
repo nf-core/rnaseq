@@ -85,6 +85,17 @@
                     "description": "Path to GFF3 annotation file.",
                     "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified."
                 },
+                "skip_gtf_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip filtering of GTF for valid scaffolds and/ or transcript IDs.",
+                    "help_text": "If you're confident on the validity of the GTF with respect to the genome file, or wish to disregard failures thriggered by the filtering module, activate this option."
+                },
+                "skip_gtf_transcript_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip just the transcript_id check of GTF filtering."
+                },
                 "gene_bed": {
                     "type": "string",
                     "format": "file-path",

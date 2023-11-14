@@ -2,7 +2,7 @@
 
 library(SummarizedExperiment)
 
-## Create SummarizedExperiment (se) object from Salmon counts
+## Create SummarizedExperiment (se) object from counts
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {

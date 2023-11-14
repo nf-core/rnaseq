@@ -236,7 +236,7 @@ workflow RNASEQ {
         .set { ch_strand_fastq }
 
     //
-    // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
+    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
     //
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
     PREPARE_GENOME.out.fasta
@@ -477,7 +477,9 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf,
             'salmon',
             true,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
         )
         ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
@@ -790,7 +792,7 @@ workflow RNASEQ {
     }
 
     //
-    // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
+    // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
     //
     ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
@@ -798,7 +800,7 @@ workflow RNASEQ {
     
     if (!params.skip_pseudo_alignment) {
 
-       if (params.pseudo_aligner == 'salmon'){
+       if (params.pseudo_aligner == 'salmon') {
            ch_pseudo_index = PREPARE_GENOME.out.salmon_index
        } else {
            ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
@@ -811,11 +813,13 @@ workflow RNASEQ {
             PREPARE_GENOME.out.gtf,
             params.pseudo_aligner,
             false,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
         )
-        ch_pseudo_multiqc = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
-        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
+        ch_pseudo_multiqc            = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
+        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (

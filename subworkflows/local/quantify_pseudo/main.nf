@@ -1,11 +1,11 @@
 //
-// Pseudo-alignment and quantification with Salmon or Kallisto
+// Pseudoalignment and quantification with Salmon or Kallisto
 //
 
-include { SALMON_QUANT      } from '../../../modules/nf-core/salmon/quant'
-include { KALLISTO_QUANT    } from '../../../modules/nf-core/kallisto/quant'
-include { TX2GENE           } from '../../../modules/local/tx2gene'
-include { TXIMPORT          } from '../../../modules/local/tximport'
+include { SALMON_QUANT   } from '../../../modules/nf-core/salmon/quant'
+include { KALLISTO_QUANT } from '../../../modules/nf-core/kallisto/quant'
+include { TX2GENE        } from '../../../modules/local/tx2gene'
+include { TXIMPORT       } from '../../../modules/local/tximport'
 
 include { SUMMARIZEDEXPERIMENT as SE_GENE               } from '../../../modules/local/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT as SE_GENE_LENGTH_SCALED } from '../../../modules/local/summarizedexperiment'
@@ -14,13 +14,15 @@ include { SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT         } from '../../../modules
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
-    reads            // channel: [ val(meta), [ reads ] ]
-    index            // channel: /path/to//index/
-    transcript_fasta // channel: /path/to/transcript.fasta
-    gtf              // channel: /path/to/genome.gtf
-    pseudo_aligner   //     val: kallisto or salmon 
-    alignment_mode   //    bool: Run Salmon in alignment mode
-    lib_type         //     val: String to override salmon library type
+    reads                     // channel: [ val(meta), [ reads ] ]
+    index                     // channel: /path/to//index/
+    transcript_fasta          // channel: /path/to/transcript.fasta
+    gtf                       // channel: /path/to/genome.gtf
+    pseudo_aligner            //     val: kallisto or salmon 
+    alignment_mode            //    bool: Run Salmon in alignment mode
+    lib_type                  //     val: String to override Salmon library type
+    kallisto_quant_fraglen    //     val: Estimated fragment length required by Kallisto in single-end mode
+    kallisto_quant_fraglen_sd //     val: Estimated standard error for fragment length required by Kallisto in single-end mode 
 
     main:
 
@@ -29,15 +31,14 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     //
     // Quantify and merge counts across samples
     //
-
-    // Note: MultiQC needs Salmon outputs, but Kallisto logs
+    // NOTE: MultiQC needs Salmon outputs, but Kallisto logs
     if (pseudo_aligner == 'salmon') {
         SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
         ch_pseudo_results = SALMON_QUANT.out.results
         ch_pseudo_multiqc = ch_pseudo_results
         ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
-    }else {
-        KALLISTO_QUANT ( reads, index, gtf, [], params.kallisto_quant_fraglen, params.kallisto_quant_fraglen_sd)
+    } else {
+        KALLISTO_QUANT ( reads, index, gtf, [], kallisto_quant_fraglen, kallisto_quant_fraglen_sd)
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log
         ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())

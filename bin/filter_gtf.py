@@ -10,7 +10,6 @@ logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
-
 def is_header(line: str) -> bool:
     """Returns True if the given line is a header line in a FASTA file."""
     return line[0] == ">"
@@ -67,7 +66,7 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
 
     seq_names_in_genome = set(extract_fasta_seq_names(fasta))
     logger.info(f"Extracted chromosome sequence names from {fasta}")
-    logger.info("All chromosome names: " + ", ".join(sorted(seq_names_in_genome)))
+    logger.debug("All chromosome names: " + ", ".join(sorted(seq_names_in_genome)))
 
     with open(gtf_in) as gtf, open(gtf_out, "w") as out:
         seq_names_in_gtf = {line.split("\t")[0] for line in gtf if line.strip()}
@@ -81,7 +80,7 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
                 out.write(line)
 
     logger.info(f"Extracted {len(overlap)} matching sequences from {gtf_in} into {gtf_out}")
-    logger.info("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
+    logger.debug("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
     logger.info(f"Wrote matching lines to {gtf_out}")
 
 

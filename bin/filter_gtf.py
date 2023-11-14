@@ -37,13 +37,15 @@ def extract_fasta_seq_names(fasta_name: str) -> set:
     return seqnames
 
 
-def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
+def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_out: str) -> None:
     """Extracts the genes in the genome from a GTF file.
 
     Args:
       fasta: The path to the FASTA file.
       gtf_in: The path to the input GTF file.
-      gtf_out: The path to the output GTF file.
+      gtf_in_genome_out: The path to the output GTF file with scaffolds filtered.
+      gtf_transcript_out: The path to the output GTF file with scaffolds
+          filtered and rows without transcript ID removed.
 
     Raises:
       ValueError: If no overlap is found or if the GTF file is not tab delimited.
@@ -67,36 +69,24 @@ def extract_genes_in_genome(fasta: str, gtf_in: str, gtf_out: str) -> None:
     logger.info(f"Extracted chromosome sequence names from {fasta}")
     logger.debug("All chromosome names: " + ", ".join(sorted(seq_names_in_genome)))
 
-    with open(gtf_in) as gtf, open(gtf_out, "w") as out:
-        seq_names_in_gtf = {line.split("\t")[0] for line in gtf if line.strip()}
-        overlap = seq_names_in_genome & seq_names_in_gtf
-        if not overlap:
+    with open(gtf_in) as gtf, open(gtf_in_genome_out, "w") as out, open(
+        gtf_transcript_out, "w"
+    ) as out2:
+        line_count_all = 0
+        line_count_transcript = 0
+        for line in gtf:
+            if (
+                line.split("\t")[0] in seq_names_in_genome
+                and line.count("\t") == num_sep
+            ):
+                out.write(line)
+                line_count_all += 1
+                if re.search(r'transcript_id "([^"]+)"', line):
+                    out2.write(line)
+                    line_count_transcript += 1
+        if line_count_all == 0:
             raise ValueError("No overlapping scaffolds found.")
 
-        gtf.seek(0)  # Reset file pointer to the start of the file
-        for line in gtf:
-            if line.split("\t")[0] in overlap:
-                out.write(line)
-
-    logger.info(f"Extracted {len(overlap)} matching sequences from {gtf_in} into {gtf_out}")
-    logger.debug("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
-    logger.info(f"Wrote matching lines to {gtf_out}")
-
-
-def remove_features_without_transcript_id(gtf_in: str, gtf_out: str) -> None:
-    """
-    Removes gene rows with absent or empty transcript_id attributes from a GTF file.
-
-    Args:
-      gtf_in: Path to the input GTF file.
-      gtf_out: The path to the output GTF file.
-    """
-
-    with open(gtf_in, "r") as f_in, open(gtf_out, "w") as f_out:
-        for line in f_in:
-            transcript_id_match = re.search(r'transcript_id "([^"]+)"', line)
-            if transcript_id_match:
-                f_out.write(line)
 
 
 if __name__ == "__main__":
@@ -113,5 +103,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    extract_genes_in_genome(args.fasta, args.gtf, args.prefix + "_in_genome.gtf")
-    remove_features_without_transcript_id(args.prefix + "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf")
+    filter_gtf(args.fasta, args.gtf, args.prefix + "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf")

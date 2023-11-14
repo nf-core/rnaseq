@@ -10,10 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Special thanks to the following for their contributions to the release:
 
 - [Adam Talbot](https://github.com/adamrtalbot)
+- [Jonathan Manning](https://github.com/pinin4fjords)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
-- [Jonathan Manning](https://github.com/pinin4fjords)
 
 Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 
@@ -38,7 +38,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 | Dependency              | Old version | New version |
 | ----------------------- | ----------- | ----------- |
 | `fastqc`                | 0.11.9      | 0.12.1      |
-| `multiqc`               | 1.14        | 1.15        |
+| `multiqc`               | 1.14        | 1.17        |
 | `ucsc-bedgraphtobigwig` | 377         | 445         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
@@ -65,7 +65,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 ### Enhancements & fixes
 
 - [[#1011](https://github.com/nf-core/rnaseq/issues/1011)] - FastQ files from UMI-tools not being passed to fastp
-- [[#1018](https://github.com/nf-core/rnaseq/issues/1018)] - Ability to skip both alignment and pseudo-alignment to only run pre-processing QC steps.
+- [[#1018](https://github.com/nf-core/rnaseq/issues/1018)] - Ability to skip both alignment and pseudoalignment to only run pre-processing QC steps.
 - [PR #1016](https://github.com/nf-core/rnaseq/pull/1016) - Updated pipeline template to [nf-core/tools 2.8](https://github.com/nf-core/tools/releases/tag/2.8)
 - [PR #1025](https://github.com/nf-core/fetchngs/pull/1025) - Add `public_aws_ecr.config` to source mulled containers when using `public.ecr.aws` Docker Biocontainer registry
 - [PR #1038](https://github.com/nf-core/rnaseq/pull/1038) - Updated error log for count values when supplying `--additional_fasta`
@@ -813,7 +813,7 @@ Major novel changes include:
 - Added options to skip several steps
   - Skip trimming using `--skipTrimming`
   - Skip BiotypeQC using `--skipBiotypeQC`
-  - Skip Alignment using `--skipAlignment` to only use pseudo-alignment using Salmon
+  - Skip Alignment using `--skipAlignment` to only use pseudoalignment using Salmon
 
 ### Documentation updates
 

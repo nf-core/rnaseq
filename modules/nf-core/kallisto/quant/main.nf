@@ -56,7 +56,11 @@ process KALLISTO_QUANT {
             ${reads} 2> >(tee -a ${prefix}.log.txt >&2)
 
     if [ -f $prefix/run_info.json ]; then
-        cp $prefix/run_info.json "${prefix}_run_info.json"
+        cp $prefix/run_info.json "${prefix}.run_info.json"
+    fi
+
+    if [ -f ${prefix}.log.txt ]; then
+        cp ${prefix}.log.txt ${prefix}/kallisto_quant.log
     fi
 
     cat <<-END_VERSIONS > versions.yml

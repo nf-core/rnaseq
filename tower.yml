@@ -30,6 +30,7 @@ reports:
   "**/kallisto/kallisto.merged.transcript_counts.tsv":
     display: "All samples Kallisto merged transcript raw counts"
   "**/kallisto/kallisto.merged.transcript_tpm.tsv":
+    display: "All samples Kallisto merged transcript TPM counts"
   "**/star_rsem/**/deseq2.plots.pdf":
     display: "All samples STAR RSEM DESeq2 QC PDF plots"
   "**/star_rsem/rsem.merged.gene_counts.tsv":

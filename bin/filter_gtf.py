@@ -28,6 +28,7 @@ def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_o
 
     seq_names_in_genome = extract_fasta_seq_names(fasta)
     logger.info(f"Extracted chromosome sequence names from {fasta}")
+    logger.debug("All sequence IDs from FASTA: " + ", ".join(sorted(seq_names_in_genome)))
 
     seq_names_in_gtf = set()
     try:

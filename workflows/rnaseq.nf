@@ -473,7 +473,7 @@ workflow RNASEQ {
             ch_transcriptome_bam,
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
-            PREPARE_GENOME.out.gtf,
+            PREPARE_GENOME.out.gtf_with_transcript_ids,
             true,
             params.salmon_quant_libtype ?: ''
         )

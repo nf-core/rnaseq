@@ -44,7 +44,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Pseudoalignment and quantification](#pseudoalignment-and-quantification)
   - [Salmon](#pseudoalignment) - Wicked fast gene and isoform quantification relative to the transcriptome
   - [Kallisto](#pseudoalignment) - Near-optimal probabilistic RNA-seq quantification
-    Wicked fast gene and isoform quantification relative to the transcriptome
 - [Workflow reporting and genomes](#workflow-reporting-and-genomes)
   - [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
   - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution

@@ -7,7 +7,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.log.txt:md5,8a5987f8e779cd12ca708e2212f771f5"
+                    "test.log:md5,8a5987f8e779cd12ca708e2212f771f5"
                 ]
             ]
         ],
@@ -35,7 +35,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.log.txt:md5,9c166f0c50cd4fdbdbf1bff9d5d8aba2"
+                    "test.log:md5,9c166f0c50cd4fdbdbf1bff9d5d8aba2"
                 ]
             ]
         ],

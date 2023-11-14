@@ -11,7 +11,7 @@ tools:
       documentation: https://pachterlab.github.io/kallisto/manual
       tool_dev_url: https://github.com/pachterlab/kallisto
       doi: "10.1038/nbt.3519"
-      licence: "['BSD_2_clause']"
+      licence: ["BSD_2_clause"]
 input:
   - meta:
       type: map

@@ -16,10 +16,10 @@ process KALLISTO_QUANT {
     val fragment_length_sd
 
     output:
-    tuple val(meta), path("${prefix}") , emit: results
-    tuple val(meta), path("*info.json"), emit: json_info
-    tuple val(meta), path("*.log.txt") , emit: log
-    path "versions.yml"                , emit: versions
+    tuple val(meta), path("${prefix}")        , emit: results
+    tuple val(meta), path("*.run_info.json")  , emit: json_info
+    tuple val(meta), path("*.log")            , emit: log
+    path "versions.yml"                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,10 +41,14 @@ process KALLISTO_QUANT {
         single_end_params = "--single --fragment-length=${fragment_length} --sd=${fragment_length_sd}"
     }
 
-    def strandedness =  (meta.strandedness == 'forward') ? '--fr-stranded' :
+    def strandedness = ''
+    if (!args.contains('--fr-stranded') && !args.contains('--rf-stranded')) {
+        strandedness =  (meta.strandedness == 'forward') ? '--fr-stranded' :
                         (meta.strandedness == 'reverse') ? '--rf-stranded' : ''
+    }
+
     """
-    kallisto quant \\
+    mkdir -p $prefix && kallisto quant \\
             --threads ${task.cpus} \\
             --index ${index} \\
             ${gtf_input} \\
@@ -53,11 +57,10 @@ process KALLISTO_QUANT {
             ${strandedness} \\
             ${args} \\
             -o $prefix \\
-            ${reads} 2> >(tee -a ${prefix}.log.txt >&2)
+            ${reads} 2> >(tee -a ${prefix}/kallisto_quant.log >&2)
 
-    if [ -f $prefix/run_info.json ]; then
-        cp $prefix/run_info.json "${prefix}_run_info.json"
-    fi
+    cp ${prefix}/kallisto_quant.log ${prefix}.log 
+    cp ${prefix}/run_info.json ${prefix}.run_info.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -71,8 +71,8 @@
                         "installed_by": ["modules"]
                     },
                     "kallisto/quant": {
-                        "branch": "master",
-                        "git_sha": "2680fb696b197fceb2113790b19364a8da35eab0",
+                        "branch": "kallisto_updates",
+                        "git_sha": "bc4719dcd079fcdb650ddeac05739c2f7dd58c84",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {

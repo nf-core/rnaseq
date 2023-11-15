@@ -30,7 +30,7 @@ include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../..
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { CAT_ADDITIONAL_FASTA                 } from '../../../modules/local/cat_additional_fasta'
-include { GTF_GENE_FILTER                      } from '../../../modules/local/gtf_gene_filter'
+include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
 
 workflow PREPARE_GENOME {
@@ -53,6 +53,7 @@ workflow PREPARE_GENOME {
     is_aws_igenome       //   boolean: whether the genome files are from AWS iGenomes
     biotype              //    string: if additional fasta file is provided biotype value to use when appending entries to GTF file
     prepare_tool_indices //      list: tools to prepare indices for
+    filter_gtf           //   boolean: whether to filter GTF file
 
     main:
 
@@ -71,22 +72,30 @@ workflow PREPARE_GENOME {
     //
     // Uncompress GTF annotation file or create from GFF3 if required
     //
-    if (gtf) {
-        if (gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
-            ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
-        } else {
-            ch_gtf = Channel.value(file(gtf))
+    if (gtf || gff) {
+        if (gtf) {
+            if (gtf.endsWith('.gz')) {
+                ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
+                ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
+            } else {
+                ch_gtf = Channel.value(file(gtf))
+            }
+        } else if (gff) {
+            if (gff.endsWith('.gz')) {
+                ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
+                ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
+            } else {
+                ch_gff = Channel.value(file(gff))
+            }
+            ch_gtf      = GFFREAD ( ch_gff ).gtf
+            ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
-    } else if (gff) {
-        if (gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
-            ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
-        } else {
-            ch_gff = Channel.value(file(gff))
+
+    	if (filter_gtf) {
+            GTF_FILTER ( ch_fasta, ch_gtf )
+            ch_gtf = GTF_FILTER.out.genome_gtf
+            ch_versions = ch_versions.mix(GTF_FILTER.out.versions)
         }
-        ch_gtf      = GFFREAD ( ch_gff ).gtf
-        ch_versions = ch_versions.mix(GFFREAD.out.versions)
     }
 
     //
@@ -136,9 +145,8 @@ workflow PREPARE_GENOME {
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
-        ch_filter_gtf = GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf
-        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filter_gtf ).transcript_fasta
-        ch_versions         = ch_versions.mix(GTF_GENE_FILTER.out.versions)
+        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
+        ch_versions         = ch_versions.mix(GTF_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions1, MAKE_TRANSCRIPTS_FASTA.out.versions2)
     }
 
@@ -293,6 +301,5 @@ workflow PREPARE_GENOME {
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
-
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

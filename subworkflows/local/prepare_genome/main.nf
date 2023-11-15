@@ -93,9 +93,7 @@ workflow PREPARE_GENOME {
         //
         // Apply filtering we may need for GTFs
         //
-	
-	ch_filtered_gtf = ch_gtf
-
+	    ch_filtered_gtf = ch_gtf
         filtering_useful = 
             (
                 // Condition 1: Alignment is required and aligner is set to 'star_salmon'
@@ -114,9 +112,10 @@ workflow PREPARE_GENOME {
                 !transcript_fasta
             )
 
-	if (filtering_useful){
+    	if (filtering_useful) {
             GTF_FILTER ( ch_fasta, ch_gtf )
             ch_filtered_gtf = GTF_FILTER.out.genome_gtf
+            ch_versions = ch_versions.mix(GTF_FILTER.out.versions)
         }
     }
 

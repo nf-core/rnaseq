@@ -4,26 +4,29 @@ library(SummarizedExperiment)
 library(tximport)
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 2) {
-    stop("Usage: salmon_tximport.r <coldata> <salmon_out>", call.=FALSE)
+if (length(args) < 4) {
+    stop("Usage: tximport.r <coldata> <path> <sample_name> <quant_type> <tx2gene_path>", call.=FALSE)
 }
 
 coldata = args[1]
 path = args[2]
 sample_name = args[3]
+quant_type = args[4]
+tx2gene_path = args[5]
 
 prefix = sample_name
-tx2gene = "salmon_tx2gene.tsv"
-info = file.info(tx2gene)
+
+info = file.info(tx2gene_path)
 if (info$size == 0) {
     tx2gene = NULL
 } else {
-    rowdata = read.csv(tx2gene, sep="\t", header = FALSE)
+    rowdata = read.csv(tx2gene_path, sep="\t", header = FALSE)
     colnames(rowdata) = c("tx", "gene_id", "gene_name")
     tx2gene = rowdata[,1:2]
 }
 
-fns = list.files(path, pattern = "quant.sf", recursive = T, full.names = T)
+pattern <- ifelse(quant_type == "kallisto", "abundance.tsv", "quant.sf")
+fns = list.files(path, pattern = pattern, recursive = T, full.names = T)
 names = basename(dirname(fns))
 names(fns) = names
 
@@ -32,11 +35,13 @@ if (file.exists(coldata)) {
     coldata = coldata[match(names, coldata[,1]),]
     coldata = cbind(files = fns, coldata)
 } else {
-    message("ColData not avaliable ", coldata)
+    message("ColData not available: ", coldata)
     coldata = data.frame(files = fns, names = names)
 }
 
-txi = tximport(fns, type = "salmon", txOut = TRUE)
+dropInfReps = quant_type == "kallisto"
+
+txi = tximport(fns, type = quant_type, txOut = TRUE, dropInfReps = dropInfReps)
 rownames(coldata) = coldata[["names"]]
 extra = setdiff(rownames(txi[[1]]),  as.character(rowdata[["tx"]]))
 if (length(extra) > 0) {
@@ -49,8 +54,8 @@ se = SummarizedExperiment(assays = list(counts = txi[["counts"]], abundance = tx
                         rowData = rowdata)
 if (!is.null(tx2gene)) {
     gi = summarizeToGene(txi, tx2gene = tx2gene)
-    gi.ls = summarizeToGene(txi, tx2gene = tx2gene,countsFromAbundance="lengthScaledTPM")
-    gi.s = summarizeToGene(txi, tx2gene = tx2gene,countsFromAbundance="scaledTPM")
+    gi.ls = summarizeToGene(txi, tx2gene = tx2gene, countsFromAbundance = "lengthScaledTPM")
+    gi.s = summarizeToGene(txi, tx2gene = tx2gene, countsFromAbundance = "scaledTPM")
     growdata = unique(rowdata[,2:3])
     growdata = growdata[match(rownames(gi[[1]]), growdata[["gene_id"]]),]
     rownames(growdata) = growdata[["tx"]]
@@ -78,9 +83,10 @@ if(exists("gse")){
     write.table(build_table(gse.s, "counts"), paste(c(prefix, "gene_counts_scaled.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
 }
 
-write.table(build_table(se,"abundance"), paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
+write.table(build_table(se, "abundance"), paste(c(prefix, "transcript_tpm.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
 write.table(build_table(se, "counts"), paste(c(prefix, "transcript_counts.tsv"), collapse="."), sep="\t", quote=FALSE, row.names = FALSE)
 
 # Print sessioninfo to standard out
 citation("tximeta")
 sessionInfo()
+

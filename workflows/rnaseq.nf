@@ -88,7 +88,7 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
-include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
+include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
@@ -97,11 +97,11 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME                          } from '../subworkflows/local/prepare_genome'
-include { ALIGN_STAR                              } from '../subworkflows/local/align_star'
-include { QUANTIFY_RSEM                           } from '../subworkflows/local/quantify_rsem'
-include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
-include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
+include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome'
+include { ALIGN_STAR                                        } from '../subworkflows/local/align_star'
+include { QUANTIFY_RSEM                                     } from '../subworkflows/local/quantify_rsem'
+include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_pseudo'
+include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../subworkflows/local/quantify_pseudo'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,6 +169,7 @@ workflow RNASEQ {
         params.star_index,
         params.rsem_index,
         params.salmon_index,
+        params.kallisto_index,
         params.hisat2_index,
         params.bbsplit_index,
         params.gencode,
@@ -235,7 +236,7 @@ workflow RNASEQ {
         .set { ch_strand_fastq }
 
     //
-    // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
+    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
     //
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
     PREPARE_GENOME.out.fasta
@@ -474,8 +475,11 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
+            'salmon',
             true,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
         )
         ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
@@ -788,35 +792,47 @@ workflow RNASEQ {
     }
 
     //
-    // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
+    // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
     //
-    ch_salmon_multiqc                   = Channel.empty()
+    ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon') {
-        QUANTIFY_SALMON (
+    
+    if (!params.skip_pseudo_alignment) {
+
+       if (params.pseudo_aligner == 'salmon') {
+           ch_pseudo_index = PREPARE_GENOME.out.salmon_index
+       } else {
+           ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
+       }
+
+        QUANTIFY_PSEUDO_ALIGNMENT (
             ch_filtered_reads,
-            PREPARE_GENOME.out.salmon_index,
+            ch_pseudo_index,
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,
+            params.pseudo_aligner,
             false,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
         )
-        ch_salmon_multiqc = QUANTIFY_SALMON.out.results
-        ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+        ch_pseudo_multiqc            = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
+        ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
+        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_SALMON (
-                QUANTIFY_SALMON.out.counts_gene_length_scaled,
+            DESEQ2_QC_PSEUDO (
+                ch_counts_gene_length_scaled,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
-            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_SALMON.out.versions)
+            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_PSEUDO.out.pca_multiqc
+            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_PSEUDO.out.dists_multiqc
+            ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
         }
     }
-
+    
     //
     // MODULE: Pipeline reporting
     //
@@ -851,7 +867,7 @@ workflow RNASEQ {
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
             ch_rsem_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_salmon_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_pseudo_multiqc.collect{it[1]}.ifEmpty([]),
             ch_samtools_stats.collect{it[1]}.ifEmpty([]),
             ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
             ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),

@@ -1,4 +1,4 @@
-process SALMON_TXIMPORT {
+process TXIMPORT {
     label "process_medium"
 
     conda "bioconda::bioconductor-tximeta=1.12.0"
@@ -7,8 +7,9 @@ process SALMON_TXIMPORT {
         'biocontainers/bioconductor-tximeta:1.12.0--r41hdfd78af_0' }"
 
     input:
-    path ("salmon/*")
+    path ("quants/*")
     path  tx2gene
+    val quant_type
 
     output:
     path "*gene_tpm.tsv"                 , emit: tpm_gene
@@ -23,11 +24,14 @@ process SALMON_TXIMPORT {
     task.ext.when == null || task.ext.when
 
     script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
+    prefix = task.ext.prefix ?: "${quant_type}.merged"
     """
-    salmon_tximport.r \\
+    tximport.r \\
         NULL \\
-        salmon \\
-        salmon.merged
+        quants \\
+        $prefix \\
+        $quant_type \\
+        $tx2gene
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

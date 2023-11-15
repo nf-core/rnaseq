@@ -23,6 +23,7 @@ run_modules:
   - hisat2
   - rsem
   - salmon
+  - kallisto
   - samtools
   - picard
   - preseq
@@ -66,6 +67,7 @@ extra_fn_clean_exts:
   - ".umi_dedup"
   - "_val"
   - ".markdup"
+  - "_primary"
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

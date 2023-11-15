@@ -39,6 +39,25 @@ if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 if (!params.skip_alignment) { prepareToolIndices << params.aligner }
 if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
+// Determine whether to filter the GTF or not
+def filterGtf = 
+    ((
+        // Condition 1: Alignment is required and aligner is set
+        !params.skip_alignment && params.aligner
+    ) || 
+    (
+        // Condition 2: Pseudoalignment is required and pseudoaligner is set
+        !params.skip_pseudo_alignment && params.pseudo_aligner
+    ) || 
+    (
+        // Condition 3: Transcript FASTA file is not provided
+        !params.transcript_fasta
+    )) &&
+    (
+        // Condition 4: --skip_gtf_filter is not provided
+        !params.skip_gtf_filter
+    )
+
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 if (params.bam_csi_index) {
@@ -175,7 +194,8 @@ workflow RNASEQ {
         params.gencode,
         is_aws_igenome,
         biotype,
-        prepareToolIndices
+        prepareToolIndices,
+        filterGtf
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 

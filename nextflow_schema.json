@@ -520,6 +520,17 @@
             "fa_icon": "fas fa-fast-forward",
             "description": "Options to skip various steps within the workflow.",
             "properties": {
+                "skip_gtf_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip filtering of GTF for valid scaffolds and/ or transcript IDs.",
+                    "help_text": "If you're confident on the validity of the GTF with respect to the genome fasta file, or wish to disregard failures thriggered by the filtering module, activate this option."
+                },
+                "skip_gtf_transcript_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline."
+                },
                 "skip_bbsplit": {
                     "type": "boolean",
                     "default": true,

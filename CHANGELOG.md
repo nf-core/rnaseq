@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Special thanks to the following for their contributions to the release:
 
 - [Adam Talbot](https://github.com/adamrtalbot)
+- [hmehlan](https://github.com/hmehlan)
 - [Jonathan Manning](https://github.com/pinin4fjords)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
-- [Steffen Möller](https://github.com/maxulysse)
-- [hmehlan](https://github.com/hmehlan)
+- [Steffen Möller](https://github.com/smoe)
 
 Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 

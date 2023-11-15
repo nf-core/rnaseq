@@ -32,10 +32,10 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1106](https://github.com/nf-core/rnaseq/pull/1106) - Kallisto quantification
 - [PR #1107](https://github.com/nf-core/rnaseq/pull/1107) - Expand GTF filtering to remove rows with empty transcript ID when required, fix STAR GTF usage
 - [#1050](https://github.com/nf-core/rnaseq/issues/1050) - Provide custom prefix/suffix for summary files to avoid overwriting
-- [#1074](https://github.com/nf-core/rnaseq/issues/1074) - Enable quantification using StringTie AND a custom 
+- [#1074](https://github.com/nf-core/rnaseq/issues/1074) - Enable quantification using StringTie AND a custom
 - [#1082](https://github.com/nf-core/rnaseq/issues/1082) - More informative error message for `filter_gtf_for_genes_in_genome.py`
 - [#1102](https://github.com/nf-core/rnaseq/issues/1102) - gene entries with empty transcript_id fields
-Ensembl genome
+  Ensembl genome
 
 ### Software dependencies
 

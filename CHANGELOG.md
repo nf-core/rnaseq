@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.13.0dev - [date]
+## [[3.13.0](https://github.com/nf-core/rnaseq/releases/tag/3.13.0)] - 2023-11-17
 
 ### Credits
 
@@ -14,7 +14,6 @@ Special thanks to the following for their contributions to the release:
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
-- [Jonathan Manning](https://github.com/pinin4fjords)
 
 Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 
@@ -30,13 +29,13 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1083](https://github.com/nf-core/rnaseq/pull/1083) - Move local modules and subworkflows to subfolders
 - [PR #1088](https://github.com/nf-core/rnaseq/pull/1088) - Updates contributing and code of conduct documents with nf-core template 2.10
 - [PR #1091](https://github.com/nf-core/rnaseq/pull/1091) - Reorganise parameters in schema for better usability
-- [PR #1107](https://github.com/nf-core/rnaseq/pull/1107) - Expand GTF filtering to remove rows with empty transcript ID when required, fix STAR GTF usage
-- [#1082](https://github.com/nf-core/rnaseq/issues/1082) - More informative error message for filter_gtf_for_genes_in_genome.py
-- [#1102](https://github.com/nf-core/rnaseq/issues/1102) - gene entries with empty transcript_id fields
-- [#1074](https://github.com/nf-core/rnaseq/issues/1074) - Enable quantification using StringTie AND a custom Ensembl genome
 - [PR #1106](https://github.com/nf-core/rnaseq/pull/1106) - Kallisto quantification
-- [PR #1106](https://github.com/nf-core/rnaseq/pull/1106) - MultiQC [version bump](https://github.com/nf-core/rnaseq/pull/1106/commits/aebad067a10a45510a2b421da852cb436ae65fd8)
+- [PR #1107](https://github.com/nf-core/rnaseq/pull/1107) - Expand GTF filtering to remove rows with empty transcript ID when required, fix STAR GTF usage
 - [#1050](https://github.com/nf-core/rnaseq/issues/1050) - Provide custom prefix/suffix for summary files to avoid overwriting
+- [#1074](https://github.com/nf-core/rnaseq/issues/1074) - Enable quantification using StringTie AND a custom 
+- [#1082](https://github.com/nf-core/rnaseq/issues/1082) - More informative error message for `filter_gtf_for_genes_in_genome.py`
+- [#1102](https://github.com/nf-core/rnaseq/issues/1102) - gene entries with empty transcript_id fields
+Ensembl genome
 
 ### Software dependencies
 

@@ -53,6 +53,7 @@ workflow PREPARE_GENOME {
     is_aws_igenome       //   boolean: whether the genome files are from AWS iGenomes
     biotype              //    string: if additional fasta file is provided biotype value to use when appending entries to GTF file
     prepare_tool_indices //      list: tools to prepare indices for
+    filter_gtf           //   boolean: whether to filter GTF file
 
     main:
 
@@ -90,31 +91,9 @@ workflow PREPARE_GENOME {
             ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
 
-        //
-        // Apply filtering we may need for GTFs
-        //
-	    ch_filtered_gtf = ch_gtf
-        filtering_useful = 
-            (
-                // Condition 1: Alignment is required and aligner is set to 'star_salmon'
-                !params.skip_alignment && params.aligner == 'star_salmon'
-            ) || 
-            (
-                // Condition 2: Pseudo-alignment is required and pseudo-aligner is set to 'salmon'
-                !params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon'
-            ) || 
-            (
-                // Condition 3: Neither alignment nor stringtie are to be skipped
-                !params.skip_alignment && !params.skip_stringtie
-            ) || 
-            (
-                // Condition 4: Transcript FASTA file is not provided
-                !transcript_fasta
-            )
-
-    	if (filtering_useful) {
+    	if (filter_gtf) {
             GTF_FILTER ( ch_fasta, ch_gtf )
-            ch_filtered_gtf = GTF_FILTER.out.genome_gtf
+            ch_gtf = GTF_FILTER.out.genome_gtf
             ch_versions = ch_versions.mix(GTF_FILTER.out.versions)
         }
     }
@@ -166,7 +145,7 @@ workflow PREPARE_GENOME {
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
-        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filtered_gtf ).transcript_fasta
+        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
         ch_versions         = ch_versions.mix(GTF_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
@@ -311,7 +290,6 @@ workflow PREPARE_GENOME {
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
-    filtered_gtf     = ch_filtered_gtf           // channel: path(genome.gtf)
     fai              = ch_fai                    // channel: path(genome.fai)
     gene_bed         = ch_gene_bed               // channel: path(gene.bed)
     transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
@@ -323,6 +301,5 @@ workflow PREPARE_GENOME {
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
-
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

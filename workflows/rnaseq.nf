@@ -39,6 +39,25 @@ if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 if (!params.skip_alignment) { prepareToolIndices << params.aligner }
 if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
+// Determine whether to filter the GTF or not
+def filterGtf = 
+    ((
+        // Condition 1: Alignment is required and aligner is set
+        !params.skip_alignment && params.aligner
+    ) || 
+    (
+        // Condition 2: Pseudoalignment is required and pseudoaligner is set
+        !params.skip_pseudo_alignment && params.pseudo_aligner
+    ) || 
+    (
+        // Condition 3: Transcript FASTA file is not provided
+        !params.transcript_fasta
+    )) &&
+    (
+        // Condition 4: --skip_gtf_filter is not provided
+        !params.skip_gtf_filter
+    )
+
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 if (params.bam_csi_index) {
@@ -175,7 +194,8 @@ workflow RNASEQ {
         params.gencode,
         is_aws_igenome,
         biotype,
-        prepareToolIndices
+        prepareToolIndices,
+        filterGtf
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
@@ -384,7 +404,7 @@ workflow RNASEQ {
         ALIGN_STAR (
             ch_filtered_reads,
             PREPARE_GENOME.out.star_index.map { [ [:], it ] },
-            PREPARE_GENOME.out.filtered_gtf.map { [ [:], it ] },
+            PREPARE_GENOME.out.gtf.map { [ [:], it ] },
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
@@ -474,7 +494,7 @@ workflow RNASEQ {
             ch_transcriptome_bam,
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
-            PREPARE_GENOME.out.filtered_gtf,
+            PREPARE_GENOME.out.gtf,
             'salmon',
             true,
             params.salmon_quant_libtype ?: '',
@@ -652,7 +672,7 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
-            PREPARE_GENOME.out.filtered_gtf 
+            PREPARE_GENOME.out.gtf
         )
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
@@ -810,7 +830,7 @@ workflow RNASEQ {
             ch_filtered_reads,
             ch_pseudo_index,
             ch_dummy_file,
-            PREPARE_GENOME.out.filtered_gtf,
+            PREPARE_GENOME.out.gtf,
             params.pseudo_aligner,
             false,
             params.salmon_quant_libtype ?: '',

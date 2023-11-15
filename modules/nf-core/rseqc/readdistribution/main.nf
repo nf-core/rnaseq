@@ -13,7 +13,7 @@ process RSEQC_READDISTRIBUTION {
 
     output:
     tuple val(meta), path("*.read_distribution.txt"), emit: txt
-    path  "versions.yml"                            , emit: versions
+    tuple val("${task.process}"), val('rseqc'), cmd("read_distribution.py --version | sed -e 's/read_distribution.py //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -26,10 +26,5 @@ process RSEQC_READDISTRIBUTION {
         -i $bam \\
         -r $bed \\
         > ${prefix}.read_distribution.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
-    END_VERSIONS
     """
 }

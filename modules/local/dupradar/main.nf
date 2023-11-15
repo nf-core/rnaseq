@@ -15,7 +15,8 @@ process DUPRADAR {
     tuple val(meta), path("*.pdf")    , emit: pdf
     tuple val(meta), path("*.txt")    , emit: txt
     tuple val(meta), path("*_mqc.txt"), emit: multiqc
-    path "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('r-base'), cmd("echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//'"), emit: versions1
+    tuple val("${task.process}"), val('bioconductor-dupradar'), cmd("Rscript -e 'library(dupRadar); cat(as.character(packageVersion(\'dupRadar\')))'"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,11 +39,5 @@ process DUPRADAR {
         $strandedness \\
         $paired_end \\
         $task.cpus
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
-    END_VERSIONS
     """
 }

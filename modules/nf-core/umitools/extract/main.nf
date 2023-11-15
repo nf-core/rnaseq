@@ -14,7 +14,7 @@ process UMITOOLS_EXTRACT {
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path  "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('umitools'), cmd("umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,11 +30,6 @@ process UMITOOLS_EXTRACT {
             -S ${prefix}.umi_extract.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
-        END_VERSIONS
         """
     }  else {
         """
@@ -46,11 +41,6 @@ process UMITOOLS_EXTRACT {
             --read2-out=${prefix}.umi_extract_2.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
-        END_VERSIONS
         """
     }
 }

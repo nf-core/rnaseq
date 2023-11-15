@@ -17,7 +17,7 @@ process RSEQC_INNERDISTANCE {
     tuple val(meta), path("*mean.txt")    , optional:true, emit: mean
     tuple val(meta), path("*.pdf")        , optional:true, emit: pdf
     tuple val(meta), path("*.r")          , optional:true, emit: rscript
-    path  "versions.yml"                  , emit: versions
+    tuple val("${task.process}"), val('rseqc'), cmd("inner_distance.py --version | sed -e 's/inner_distance.py //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,18 +34,6 @@ process RSEQC_INNERDISTANCE {
             $args \\
             > stdout.txt
         head -n 2 stdout.txt > ${prefix}.inner_distance_mean.txt
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
-        END_VERSIONS
-        """
-    } else {
-        """
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
-        END_VERSIONS
         """
     }
 }

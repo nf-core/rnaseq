@@ -14,7 +14,7 @@ process TX2GENE {
 
     output:
     path "*.tsv"       , emit: tsv
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('python'), cmd("python --version | sed 's/Python //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,10 +28,5 @@ process TX2GENE {
         --id $params.gtf_group_features \\
         --extra $params.gtf_extra_attributes \\
         -o tx2gene.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 }

@@ -13,7 +13,7 @@ process SALMON_INDEX {
 
     output:
     path "salmon"      , emit: index
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('salmon'), cmd("echo \$(salmon --version) | sed -e 's/salmon //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,10 +38,5 @@ process SALMON_INDEX {
         -d decoys.txt \\
         $args \\
         -i salmon
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
-    END_VERSIONS
     """
 }

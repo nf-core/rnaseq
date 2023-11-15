@@ -19,7 +19,7 @@ process KALLISTO_QUANT {
     tuple val(meta), path("${prefix}")        , emit: results
     tuple val(meta), path("*.run_info.json")  , emit: json_info
     tuple val(meta), path("*.log")            , emit: log
-    path "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('kallisto'), cmd("echo \$(kallisto version) | sed 's/kallisto, version //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -61,18 +61,9 @@ process KALLISTO_QUANT {
 
     cp ${prefix}/kallisto_quant.log ${prefix}.log 
     cp ${prefix}/run_info.json ${prefix}.run_info.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )
-    END_VERSIONS
     """
 
     stub:
     """
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )
-    END_VERSIONS
     """
 }

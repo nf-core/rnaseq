@@ -16,7 +16,8 @@ process TRIMGALORE {
     tuple val(meta), path("*unpaired*.fq.gz")                   , emit: unpaired, optional: true
     tuple val(meta), path("*.html")                             , emit: html    , optional: true
     tuple val(meta), path("*.zip")                              , emit: zip     , optional: true
-    path "versions.yml"                                         , emit: versions
+    tuple val("${task.process}"), val('trimgalore'), cmd("echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//'"), emit: versions1
+    tuple val("${task.process}"), val('cutadapt'), cmd("cutadapt --version"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,12 +47,6 @@ process TRIMGALORE {
             --cores $cores \\
             --gzip \\
             ${prefix}.fastq.gz
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
-            cutadapt: \$(cutadapt --version)
-        END_VERSIONS
         """
     } else {
         """
@@ -64,12 +59,6 @@ process TRIMGALORE {
             --gzip \\
             ${prefix}_1.fastq.gz \\
             ${prefix}_2.fastq.gz
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
-            cutadapt: \$(cutadapt --version)
-        END_VERSIONS
         """
     }
 }

@@ -14,7 +14,7 @@ process UCSC_BEDCLIP {
 
     output:
     tuple val(meta), path("*.bedGraph"), emit: bedgraph
-    path "versions.yml"                , emit: versions
+    tuple val("${task.process}"), val('ucsc'), val('377'), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,16 +22,10 @@ process UCSC_BEDCLIP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '377' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     bedClip \\
         $bedgraph \\
         $sizes \\
         ${prefix}.bedGraph
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        ucsc: $VERSION
-    END_VERSIONS
     """
 }

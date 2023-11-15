@@ -491,7 +491,7 @@ workflow RNASEQ {
             )
             ch_aligner_pca_multiqc        = DESEQ2_QC_STAR_SALMON.out.pca_multiqc
             ch_aligner_clustering_multiqc = DESEQ2_QC_STAR_SALMON.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions)
+            ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions1, DESEQ2_QC_STAR_SALMON.out.versions2)
         }
     }
 
@@ -525,7 +525,7 @@ workflow RNASEQ {
             )
             ch_aligner_pca_multiqc        = DESEQ2_QC_RSEM.out.pca_multiqc
             ch_aligner_clustering_multiqc = DESEQ2_QC_RSEM.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
+            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions1, DESEQ2_QC_RSEM.out.versions2)
         }
     }
 
@@ -745,7 +745,7 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gtf
             )
             ch_dupradar_multiqc = DUPRADAR.out.multiqc
-            ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
+            ch_versions = ch_versions.mix(DUPRADAR.out.versions1, DUPRADAR.out.versions2)
         }
 
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
@@ -829,15 +829,24 @@ workflow RNASEQ {
             )
             ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_PSEUDO.out.pca_multiqc
             ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_PSEUDO.out.dists_multiqc
-            ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
+            ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions1, DESEQ2_QC_PSEUDO.out.versions2)
         }
     }
     
     //
     // MODULE: Pipeline reporting
     //
+    ch_versions = ch_versions
+        .unique()
+        .map { process, name, version ->
+            """
+            ${process}:
+              ${name}: ${version}
+            """.stripIndent()
+        }
+
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+        ch_versions.collectFile(name: 'collated_versions.yml')
     )
 
     //

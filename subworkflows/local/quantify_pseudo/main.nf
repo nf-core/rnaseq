@@ -48,14 +48,14 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     ch_versions = ch_versions.mix(TX2GENE.out.versions)
 
     TXIMPORT ( ch_pseudo_results.collect{it[1]}, TX2GENE.out.tsv.collect(), pseudo_aligner )
-    ch_versions = ch_versions.mix(TXIMPORT.out.versions)
+    ch_versions = ch_versions.mix(TXIMPORT.out.versions1, TXIMPORT.out.versions2)
 
     SE_GENE (
         TXIMPORT.out.counts_gene,
         TXIMPORT.out.tpm_gene,
         TX2GENE.out.tsv.collect()
     )
-    ch_versions = ch_versions.mix(SE_GENE.out.versions)
+    ch_versions = ch_versions.mix(SE_GENE.out.versions1, SE_GENE.out.versions2)
 
     SE_GENE_LENGTH_SCALED (
         TXIMPORT.out.counts_gene_length_scaled,

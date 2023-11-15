@@ -13,7 +13,7 @@ process SUBREAD_FEATURECOUNTS {
     output:
     tuple val(meta), path("*featureCounts.txt")        , emit: counts
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
-    path "versions.yml"                                , emit: versions
+    tuple val("${task.process}"), val('subread'), cmd("echo \$(featureCounts -v 2>&1) | sed -e 's/featureCounts v//g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,10 +38,5 @@ process SUBREAD_FEATURECOUNTS {
         -s $strandedness \\
         -o ${prefix}.featureCounts.txt \\
         ${bams.join(' ')}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
-    END_VERSIONS
     """
 }

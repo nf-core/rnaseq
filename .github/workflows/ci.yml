@@ -232,16 +232,19 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
 
-  salmon:
-    name: Test Salmon with workflow parameters
+  pseudo:
+    name: Test Pseudoaligners with workflow parameters
     if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         parameters:
-          - "--skip_qc"
-          - "--skip_alignment --skip_pseudo_alignment"
-          - "--salmon_index false --transcript_fasta false"
+          - "--pseudo_aligner salmon --skip_qc"
+          - "--pseudo_aligner salmon --skip_alignment --skip_pseudo_alignment"
+          - "--pseudo_aligner salmon --salmon_index false --transcript_fasta false"
+          - "--pseudo_aligner kallisto --skip_qc"
+          - "--pseudo_aligner kallisto --skip_alignment --skip_pseudo_alignment"
+          - "--pseudo_aligner kallisto --kallisto_index false --transcript_fasta false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -280,6 +283,6 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      - name: Run pipeline with Salmon and various parameters
+      - name: Run pipeline with Salmon or Kallisto and various parameters
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker --pseudo_aligner salmon ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/
+          nextflow run ${GITHUB_WORKSPACE} -profile test_cache,docker ${{ matrix.parameters }} --outdir ./results --test_data_base ${{ github.workspace }}/test-datasets/

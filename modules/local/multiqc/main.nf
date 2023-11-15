@@ -23,7 +23,7 @@ process MULTIQC {
     path ('star/*')
     path ('hisat2/*')
     path ('rsem/*')
-    path ('salmon/*')
+    path ('pseudoalignment/*')
     path ('samtools/stats/*')
     path ('samtools/flagstat/*')
     path ('samtools/idxstats/*')
@@ -57,8 +57,10 @@ process MULTIQC {
     script:
     def args = task.ext.args ?: ''
     def custom_config = params.multiqc_config ? "--config $multiqc_custom_config" : ''
+    prefix = task.ext.prefix ?: "multiqc_report"
     """
     multiqc \\
+        -n ${prefix}.html \\
         -f \\
         $args \\
         $custom_config \\

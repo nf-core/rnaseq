@@ -1,0 +1,31 @@
+{
+    "homo_sapiens genome_fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        "kallisto:md5,2dab84e1456201beca5a43f4c514d67c"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,178f9b57d4228edc356911d571b958a4"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        "kallisto:md5,2dab84e1456201beca5a43f4c514d67c"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,178f9b57d4228edc356911d571b958a4"
+                ]
+            }
+        ],
+        "timestamp": "2023-11-02T09:58:48.83625986"
+    }
+}

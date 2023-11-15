@@ -35,5 +35,8 @@ process RSEQC_INNERDISTANCE {
             > stdout.txt
         head -n 2 stdout.txt > ${prefix}.inner_distance_mean.txt
         """
+    } else {
+        """
+        """
     }
 }

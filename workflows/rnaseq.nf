@@ -383,7 +383,7 @@ workflow RNASEQ {
         ALIGN_STAR (
             ch_filtered_reads,
             PREPARE_GENOME.out.star_index.map { [ [:], it ] },
-            PREPARE_GENOME.out.gtf.map { [ [:], it ] },
+            PREPARE_GENOME.out.filtered_gtf.map { [ [:], it ] },
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
@@ -473,7 +473,7 @@ workflow RNASEQ {
             ch_transcriptome_bam,
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
-            PREPARE_GENOME.out.gtf_with_transcript_ids,
+            PREPARE_GENOME.out.filtered_gtf,
             true,
             params.salmon_quant_libtype ?: ''
         )
@@ -648,7 +648,7 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
-            PREPARE_GENOME.out.gtf_with_transcript_ids 
+            PREPARE_GENOME.out.filtered_gtf 
         )
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
@@ -798,7 +798,7 @@ workflow RNASEQ {
             ch_filtered_reads,
             PREPARE_GENOME.out.salmon_index,
             ch_dummy_file,
-            PREPARE_GENOME.out.gtf_with_transcript_ids,
+            PREPARE_GENOME.out.filtered_gtf,
             false,
             params.salmon_quant_libtype ?: ''
         )

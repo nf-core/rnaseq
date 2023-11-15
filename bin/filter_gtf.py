@@ -21,7 +21,7 @@ def tab_delimited(file: str) -> float:
         data = f.read(1024)
         return statistics.median(line.count("\t") for line in data.split("\n"))
 
-def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_out: str,  skip_transcript_id_check: bool) -> None:
+def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str,  skip_transcript_id_check: bool) -> None:
     """Filter GTF file based on FASTA sequence names."""
     if tab_delimited(gtf_in) != 8:
         raise ValueError("Invalid GTF file: Expected 8 tab-separated columns.")
@@ -32,34 +32,26 @@ def filter_gtf(fasta: str, gtf_in: str, gtf_in_genome_out: str, gtf_transcript_o
 
     seq_names_in_gtf = set()
     try:
-        with open(gtf_in) as gtf, open(gtf_in_genome_out, "w") as out, open(gtf_transcript_out, "w") as out2:
-            line_count_all, line_count_transcript = 0, 0
+        with open(gtf_in) as gtf, open(filtered_gtf_out, "w") as out:
+            line_count = 0
             for line in gtf:
                 seq_name = line.split("\t")[0]
                 seq_names_in_gtf.add(seq_name)  # Add sequence name to the set
 
                 if seq_name in seq_names_in_genome:
-                    out.write(line)
-                    line_count_all += 1
+                    if skip_transcript_id_check or re.search(r'transcript_id "([^"]+)"', line):
+                        out.write(line)
+                        line_count += 1
 
-                    if not skip_transcript_id_check and re.search(r'transcript_id "([^"]+)"', line):
-                        with open(gtf_transcript_out, "a") as out2:
-                            out2.write(line)
-                        line_count_transcript += 1
-
-            if line_count_all == 0:
-                raise ValueError("No overlapping scaffolds found.")
-
-            if not skip_transcript_id_check and line_count_transcript == 0:
-                raise ValueError("No transcript_id values found in the GTF file.")
+            if line_count == 0:
+                raise ValueError("All GTF lines removed by filters")
 
     except IOError as e:
         logger.error(f"File operation failed: {e}")
         return
 
     logger.debug("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
-    logger.info(f"Extracted {line_count_all} matching sequences from {gtf_in} into {gtf_in_genome_out}")
-    logger.info(f"Wrote {line_count_transcript} lines with transcript IDs to {gtf_transcript_out}")
+    logger.info(f"Extracted {line_count} matching sequences from {gtf_in} into {filtered_gtf_out}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Filters a GTF file based on sequence names in a FASTA file.")
@@ -69,5 +61,5 @@ if __name__ == "__main__":
     parser.add_argument("--skip_transcript_id_check", action='store_true', help="Skip checking for transcript IDs in the GTF file")
 
     args = parser.parse_args()
-    filter_gtf(args.fasta, args.gtf, args.prefix + "_in_genome.gtf", args.prefix + "_with_transcript_ids.gtf", args.skip_transcript_id_check)
+    filter_gtf(args.fasta, args.gtf, args.prefix + ".filtered.gtf", args.skip_transcript_id_check)
 

@@ -11,8 +11,7 @@ process GTF_FILTER {
     path gtf
 
     output:
-    path "*_in_genome.gtf"           , emit: genome_gtf
-    path "*_with_transcript_ids.gtf" , emit: transcript_id_gtf
+    path "*.filtered.gtf"           , emit: genome_gtf
     path "versions.yml"              , emit: versions
 
     when:

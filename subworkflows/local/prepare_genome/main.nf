@@ -90,6 +90,8 @@ workflow PREPARE_GENOME {
         //
         // Apply filtering we may need for GTFs
         //
+	
+	ch_filtered_gtf = ch_gtf
 
         filtering_useful = 
             (
@@ -109,13 +111,9 @@ workflow PREPARE_GENOME {
                 !transcript_fasta
             )
 
-        if (params.skip_gtf_filter || ! filtering_useful){
-            ch_gtf_with_transcript_ids = ch_gtf
-            ch_gtf_genome = ch_gtf
-        } else {
+	if (filtering_useful){
             GTF_FILTER ( ch_fasta, ch_gtf )
-            ch_gtf_with_transcript_ids = GTF_FILTER.out.transcript_id_gtf
-            ch_gtf_genome = GTF_FILTER.out.genome_gtf
+            ch_filtered_gtf = GTF_FILTER.out.genome_gtf
         }
     }
 
@@ -166,7 +164,7 @@ workflow PREPARE_GENOME {
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
-        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf_genome ).transcript_fasta
+        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filtered_gtf ).transcript_fasta
         ch_versions         = ch_versions.mix(GTF_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
@@ -292,10 +290,10 @@ workflow PREPARE_GENOME {
 
     emit:
     fasta                   = ch_fasta                   // channel: path(genome.fasta)
-    gtf                     = ch_gtf_genome              // channel: path(genome.gtf)
+    gtf                     = ch_gtf                     // channel: path(genome.gtf)
+    filtered_gtf            = ch_filtered_gtf            // channel: path(genome.gtf)
     fai                     = ch_fai                     // channel: path(genome.fai)
     gene_bed                = ch_gene_bed                // channel: path(gene.bed)
-    gtf_with_transcript_ids = ch_gtf_with_transcript_ids // channel: path(gtf)
     transcript_fasta        = ch_transcript_fasta        // channel: path(transcript.fasta)
     chrom_sizes             = ch_chrom_sizes             // channel: path(genome.sizes)
     splicesites             = ch_splicesites             // channel: path(genome.splicesites.txt)

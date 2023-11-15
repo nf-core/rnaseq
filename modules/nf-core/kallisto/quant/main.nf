@@ -59,7 +59,7 @@ process KALLISTO_QUANT {
             -o $prefix \\
             ${reads} 2> >(tee -a ${prefix}/kallisto_quant.log >&2)
 
-    cp ${prefix}/kallisto_quant.log ${prefix}.log 
+    cp ${prefix}/kallisto_quant.log ${prefix}.log
     cp ${prefix}/run_info.json ${prefix}.run_info.json
 
     cat <<-END_VERSIONS > versions.yml

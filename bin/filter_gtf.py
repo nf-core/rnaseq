@@ -10,10 +10,12 @@ logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger("fasta_gtf_filter")
 logger.setLevel(logging.INFO)
 
+
 def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
     """Extracts the sequence names from a FASTA file."""
     with open(fasta_name) as fasta:
         return {line[1:].split(None, 1)[0] for line in fasta if line.startswith(">")}
+
 
 def tab_delimited(file: str) -> float:
     """Check if file is tab-delimited and return median number of tabs."""
@@ -21,7 +23,8 @@ def tab_delimited(file: str) -> float:
         data = f.read(1024)
         return statistics.median(line.count("\t") for line in data.split("\n"))
 
-def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str,  skip_transcript_id_check: bool) -> None:
+
+def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str, skip_transcript_id_check: bool) -> None:
     """Filter GTF file based on FASTA sequence names."""
     if tab_delimited(gtf_in) != 8:
         raise ValueError("Invalid GTF file: Expected 8 tab-separated columns.")
@@ -53,13 +56,15 @@ def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str,  skip_transcript_
     logger.debug("All sequence IDs from GTF: " + ", ".join(sorted(seq_names_in_gtf)))
     logger.info(f"Extracted {line_count} matching sequences from {gtf_in} into {filtered_gtf_out}")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Filters a GTF file based on sequence names in a FASTA file.")
     parser.add_argument("--gtf", type=str, required=True, help="GTF file")
     parser.add_argument("--fasta", type=str, required=True, help="Genome fasta file")
     parser.add_argument("--prefix", dest="prefix", default="genes", type=str, help="Prefix for output GTF files")
-    parser.add_argument("--skip_transcript_id_check", action='store_true', help="Skip checking for transcript IDs in the GTF file")
+    parser.add_argument(
+        "--skip_transcript_id_check", action="store_true", help="Skip checking for transcript IDs in the GTF file"
+    )
 
     args = parser.parse_args()
     filter_gtf(args.fasta, args.gtf, args.prefix + ".filtered.gtf", args.skip_transcript_id_check)
-

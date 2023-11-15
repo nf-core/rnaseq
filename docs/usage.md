@@ -200,7 +200,7 @@ Notes:
 
 ### GTF filtering
 
-By default, the input GTF file will be filtered to ensure that sequence names correspond to those in the genome, and to remove rows with empty transcript identifiers. Filtering can be bypassed completely where you are confident it is not necessary, using the `--skip_gtf_filter` flag. The transcript identifer filter can be disabled specifically using `skip_gtf_transcript_filter`.
+By default, the input GTF file will be filtered to ensure that sequence names correspond to those in the genome fasta file, and to remove rows with empty transcript identifiers. Filtering can be bypassed completely where you are confident it is not necessary, using the `--skip_gtf_filter` parameter. If you just want to skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline this can be disabled specifically using the `--skip_gtf_transcript_filter` parameter.
 
 ## Running the pipeline
 

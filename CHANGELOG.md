@@ -37,7 +37,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [#1074](https://github.com/nf-core/rnaseq/issues/1074) - Enable quantification using StringTie AND a custom
 - [#1082](https://github.com/nf-core/rnaseq/issues/1082) - More informative error message for `filter_gtf_for_genes_in_genome.py`
 - [#1102](https://github.com/nf-core/rnaseq/issues/1102) - gene entries with empty transcript_id fields
-  Ensembl genome
+- [#976](https://github.com/nf-core/rnaseq/issues/976) - Add author and licenses for all custom scripts
 
 ### Software dependencies
 

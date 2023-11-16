@@ -1,3 +1,4 @@
+name: kallisto_index
 channels:
   - conda-forge
   - bioconda

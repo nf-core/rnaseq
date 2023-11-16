@@ -53,6 +53,15 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 >
 > **NB:** Dependency has been **removed** if new version information isn't present.
 
+### Modules / Subworkflows
+
+| Script                        | Old name                      | New name                      |
+| ----------------------------- | ----------------------------- | ----------------------------- |
+| `local/gtf_filter`            | `GTF_GENE_FILTER`             | `GTF_FILTER`                  |
+| `local/tx2gene`               | `SALMON_TX2GENE`              | `TX2GENE`                     |
+| `local/tximport`              | `SALMON_TXIMPORT`             | `TXIMPORT`                    |
+| `local/quantify_salmon`       | `QUANTIFY_SALMON`             | `QUANTIFY_PSEUDO_ALIGNMENT`   |
+
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 
 ### Credits

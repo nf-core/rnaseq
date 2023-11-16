@@ -1,7 +1,7 @@
-name: kallisto_index
+name: custom_dumpsoftwareversions
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::kallisto=0.48.0
+  - bioconda::multiqc=1.17

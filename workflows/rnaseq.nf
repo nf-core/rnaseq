@@ -447,44 +447,33 @@ workflow RNASEQ {
                 ch_transcriptome_bam,
                 PREPARE_GENOME.out.fasta.map { [ [:], it ] }
             )
-            ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
-            ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
 
             // Deduplicate transcriptome BAM file before read counting with Salmon
-            BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
-                ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
-                params.umitools_dedup_stats
-            )
+            .then { out -> out.bam.join(out.bai, by: [0]) }
+            .then { out -> BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME ( out, params.umitools_dedup_stats ) }
 
             // Name sort BAM before passing to Salmon
-            SAMTOOLS_SORT (
-                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
-            )
+            .then { out -> SAMTOOLS_SORT ( out.bam ) }
 
             // Only run prepare_for_rsem.py on paired-end BAM files
-            SAMTOOLS_SORT
-                .out
-                .bam
-                .branch {
-                    meta, bam ->
-                        single_end: meta.single_end
-                            return [ meta, bam ]
-                        paired_end: !meta.single_end
-                            return [ meta, bam ]
-                }
-                .set { ch_umitools_dedup_bam }
+            .then { out -> out.bam }
+            .branch { meta, bam ->
+                single_end: meta.single_end
+                    return [ meta, bam ]
+                paired_end: !meta.single_end
+                    return [ meta, bam ]
+            }
+            .set { ch_umitools_dedup_bam }
 
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
-            UMITOOLS_PREPAREFORSALMON (
-                ch_umitools_dedup_bam.paired_end
-            )
+            ch_umitools_dedup_bam.paired_end
+                | UMITOOLS_PREPAREFORSALMON
             ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
 
-            ch_umitools_dedup_bam
-                .single_end
-                .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
-                .set { ch_transcriptome_bam }
+            ch_umitools_dedup_bam.single_end
+                | mix(UMITOOLS_PREPAREFORSALMON.out.bam)
+                | set { ch_transcriptome_bam }
         }
 
         //
@@ -683,30 +672,21 @@ workflow RNASEQ {
     ch_featurecounts_multiqc = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
 
-        PREPARE_GENOME
-            .out
-            .gtf
-            .map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
-            .set { biotype_in_gtf }
+        PREPARE_GENOME.out.gtf
+        | map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
+        | { biotype_in_gtf ->
+            // Prevent any samples from running if GTF file doesn't have a valid biotype
+            ch_genome_bam
+                .combine(PREPARE_GENOME.out.gtf)
+                .combine(biotype_in_gtf)
+        }
+        | filter { it[-1] }
+        | map { it[0..<it.size()-1] }
+        | SUBREAD_FEATURECOUNTS
+        | { out -> MULTIQC_CUSTOM_BIOTYPE ( out.counts, ch_biotypes_header_multiqc ) }
 
-        // Prevent any samples from running if GTF file doesn't have a valid biotype
-        ch_genome_bam
-            .combine(PREPARE_GENOME.out.gtf)
-            .combine(biotype_in_gtf)
-            .filter { it[-1] }
-            .map { it[0..<it.size()-1] }
-            .set { ch_featurecounts }
-
-        SUBREAD_FEATURECOUNTS (
-            ch_featurecounts
-        )
-        ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
-
-        MULTIQC_CUSTOM_BIOTYPE (
-            SUBREAD_FEATURECOUNTS.out.counts,
-            ch_biotypes_header_multiqc
-        )
         ch_featurecounts_multiqc = MULTIQC_CUSTOM_BIOTYPE.out.tsv
+        ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
         ch_versions = ch_versions.mix(MULTIQC_CUSTOM_BIOTYPE.out.versions.first())
     }
 
@@ -774,6 +754,30 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
+            | { out -> out.inferexperiment_txt }
+            | map { meta, strand_log ->
+                def inferred_strand = WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30)
+                pass_strand_check[meta.id] = true
+                if (meta.strandedness != inferred_strand[0]) {
+                    pass_strand_check[meta.id] = false
+                    return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                }
+            }
+            | collect()
+            | map {
+                tsv_data ->
+                    def header = [
+                        "Sample",
+                        "Provided strandedness",
+                        "Inferred strandedness",
+                        "Sense (%)",
+                        "Antisense (%)",
+                        "Undetermined (%)"
+                    ]
+                    WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+            }
+            | set { ch_fail_strand_multiqc }
+
             ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
             ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
             ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
@@ -783,31 +787,6 @@ workflow RNASEQ {
             ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
             ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
-
-            ch_inferexperiment_multiqc
-                .map {
-                    meta, strand_log ->
-                        def inferred_strand = WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30)
-                        pass_strand_check[meta.id] = true
-                        if (meta.strandedness != inferred_strand[0]) {
-                            pass_strand_check[meta.id] = false
-                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
-                        }
-                }
-                .collect()
-                .map {
-                    tsv_data ->
-                        def header = [
-                            "Sample",
-                            "Provided strandedness",
-                            "Inferred strandedness",
-                            "Sense (%)",
-                            "Antisense (%)",
-                            "Undetermined (%)"
-                        ]
-                        WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
-                }
-                .set { ch_fail_strand_multiqc }
         }
     }
 

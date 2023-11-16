@@ -13,28 +13,25 @@ workflow BAM_SORT_STATS_SAMTOOLS {
 
     main:
 
-    ch_versions = Channel.empty()
-
-    SAMTOOLS_SORT ( ch_bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
-
-    SAMTOOLS_INDEX ( SAMTOOLS_SORT.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    ch_bam
+        | SAMTOOLS_SORT
+        | { out -> SAMTOOLS_INDEX ( out.bam ) }
 
     SAMTOOLS_SORT.out.bam
-        .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
-        .join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
-        .map {
-            meta, bam, bai, csi ->
-                if (bai) {
-                    [ meta, bam, bai ]
-                } else {
-                    [ meta, bam, csi ]
-                }
+        | join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
+        | join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
+        | map { meta, bam, bai, csi ->
+            if (bai) {
+                [ meta, bam, bai ]
+            } else {
+                [ meta, bam, csi ]
+            }
         }
-        .set { ch_bam_bai }
+        | { ch_bam_bai -> BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta ) }
 
-    BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta )
+    ch_versions = Channel.empty()
+    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:

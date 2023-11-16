@@ -11,19 +11,12 @@ workflow FASTQ_ALIGN_HISAT2 {
 
     main:
 
+    ( reads & index & splicesites )
+        | HISAT2_ALIGN 
+        | { out -> BAM_SORT_STATS_SAMTOOLS ( out.bam, ch_fasta ) }
+
     ch_versions = Channel.empty()
-
-
-    //
-    // Map reads with HISAT2
-    //
-    HISAT2_ALIGN ( reads, index, splicesites )
     ch_versions = ch_versions.mix(HISAT2_ALIGN.out.versions.first())
-
-    //
-    // Sort, index BAM file and run samtools stats, flagstat and idxstats
-    //
-    BAM_SORT_STATS_SAMTOOLS ( HISAT2_ALIGN.out.bam, ch_fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
 

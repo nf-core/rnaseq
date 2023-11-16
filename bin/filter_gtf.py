@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Written by Olga Botvinnik with subsequent reworking by Jonathan Manning. Released under the MIT license.
+
 import logging
 import argparse
 import re

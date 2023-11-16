@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Written by Senthilkumar Panneerselvam and released under the MIT license.
+
 import argparse
 import logging
 import os

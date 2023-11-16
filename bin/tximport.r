@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+# Written by Lorena Pantano and released under the MIT license.
+
 library(SummarizedExperiment)
 library(tximport)
 

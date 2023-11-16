@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+# Written by Harshil Patel and released under the MIT license.
+
 ################################################
 ################################################
 ## REQUIREMENTS                               ##

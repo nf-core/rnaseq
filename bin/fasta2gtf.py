@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Written by Pranathi Vemuri and released under the MIT license.
+
 """
 Read a custom fasta file and create a custom GTF containing each entry
 """

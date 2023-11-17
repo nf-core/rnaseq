@@ -8,12 +8,13 @@ keywords:
   - bam
   - sam
   - cram
-modules:
+components:
   - umitools/dedup
   - samtools/index
   - samtools/stats
   - samtools/idxstats
   - samtools/flagstat
+  - bam_stats_samtools
 input:
   - ch_bam_bai:
       description: |

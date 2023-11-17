@@ -22,8 +22,9 @@ input:
   - reads:
       type: file
       description: |
-        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-        respectively.
+        List of input FastQ files for single-end or paired-end data.
+        Multiple single-end fastqs or pairs of paired-end fastqs are
+        handled.
   - index:
       type: directory
       description: Folder containing the star index files

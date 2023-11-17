@@ -1,0 +1,92 @@
+nextflow_process {
+
+    name "Test Process KALLISTO_QUANT"
+    script "../main.nf"
+    process "KALLISTO_QUANT"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "kallisto"
+    tag "kallisto/quant"
+
+    setup {
+            run("KALLISTO_INDEX") {
+                script "../../index/main.nf"
+                process {
+                """
+                input[0] = [
+                    [ id:'test_fasta' ], // meta map
+                    [ file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true) ]
+                ]
+                """
+            }
+            }
+        }
+
+    test("sarscov2 single-end") {
+        config "./single_end.config"
+
+        when {
+            params{
+                outdir = "$outputDir"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
+                ]
+                input[1] = KALLISTO_INDEX.out.index
+                input[2] = []
+                input[3] = []
+                input[4] = 150
+                input[5] = 75
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(path("$outputDir/kallisto/test/abundance.tsv")).match("abundance_tsv_single") },
+                { assert snapshot(process.out.log).match("se_log") },
+                { assert snapshot(process.out.versions).match("se_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end") {
+        config "./paired_end.config"
+
+        when {
+            params{
+                outdir = "$outputDir"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
+                    ]
+                ]
+                input[1] = KALLISTO_INDEX.out.index
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(path("$outputDir/kallisto/test/abundance.tsv")).match("abundance_tsv_paired") },
+                { assert snapshot(process.out.log).match("pe_log") },
+                { assert snapshot(process.out.versions).match("pe_versions") }
+            )
+        }
+    }
+}

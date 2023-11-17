@@ -9,7 +9,7 @@ keywords:
   - UMI
   - trimming
   - fastp
-modules:
+components:
   - fastqc
   - umitools/extract
   - fastp

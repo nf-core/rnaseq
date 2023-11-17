@@ -3,6 +3,7 @@ description: Deduplicate reads based on the mapping co-ordinate and the UMI atta
 keywords:
   - umitools
   - deduplication
+  - dedup
 tools:
   - umi_tools:
       description: >
@@ -40,6 +41,10 @@ output:
       type: file
       description: BAM file with deduplicated UMIs.
       pattern: "*.{bam}"
+  - log:
+      type: file
+      description: File with logging information
+      pattern: "*.{log}"
   - tsv_edit_distance:
       type: file
       description: Reports the (binned) average edit distance between the UMIs at each position.

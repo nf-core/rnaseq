@@ -6,7 +6,7 @@ keywords:
   - bigwig
   - clip
   - conversion
-modules:
+components:
   - ucsc/bedclip
   - ucsc/bedgraphtobigwig
 input:

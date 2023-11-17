@@ -3,6 +3,7 @@
 //
 
 import org.yaml.snakeyaml.Yaml
+import groovy.json.JsonOutput
 
 class NfcoreTemplate {
 
@@ -151,7 +152,7 @@ class NfcoreTemplate {
         def email_html    = html_template.toString()
 
         // Render the sendmail template
-        def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit
+        def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as nextflow.util.MemoryUnit
         def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes() ]
         def sf                     = new File("$projectDir/assets/sendmail_template.txt")
         def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
@@ -243,6 +244,21 @@ class NfcoreTemplate {
         if (! postRC.equals(200)) {
             log.warn(post.getErrorStream().getText());
         }
+    }
+
+    //
+    // Dump pipeline parameters in a json file
+    //
+    public static void dump_parameters(workflow, params) {
+        def output_d = new File("${params.outdir}/pipeline_info/")
+        if (!output_d.exists()) {
+            output_d.mkdirs()
+        }
+
+        def timestamp  = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
+        def output_pf  = new File(output_d, "params_${timestamp}.json")
+        def jsonStr    = JsonOutput.toJson(params)
+        output_pf.text = JsonOutput.prettyPrint(jsonStr)
     }
 
     //

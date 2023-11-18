@@ -40,15 +40,15 @@ if (!params.skip_alignment) { prepareToolIndices << params.aligner }
 if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
 // Determine whether to filter the GTF or not
-def filterGtf = 
+def filterGtf =
     ((
         // Condition 1: Alignment is required and aligner is set
         !params.skip_alignment && params.aligner
-    ) || 
+    ) ||
     (
         // Condition 2: Pseudoalignment is required and pseudoaligner is set
         !params.skip_pseudo_alignment && params.pseudo_aligner
-    ) || 
+    ) ||
     (
         // Condition 3: Transcript FASTA file is not provided
         !params.transcript_fasta
@@ -775,8 +775,8 @@ workflow RNASEQ {
         if (params.ngscheckmate_bed) {
             BAM_NGSCHECKMATE (
                 ch_genome_bam,
-                ch_ngscheckmate_bed,
-                PREPARE_GENOME.out.fasta
+                ch_ngscheckmate_bed.map{it -> [[id: "NGSCheckMate_bed"], it]},
+                PREPARE_GENOME.out.fasta.map{it -> [[id: "genome_fasta"], it]}
             )
             ch_versions = ch_versions.mix(BAM_NGSCHECKMATE.out.versions.first())
         }
@@ -830,7 +830,7 @@ workflow RNASEQ {
     ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    
+
     if (!params.skip_pseudo_alignment) {
 
        if (params.pseudo_aligner == 'salmon') {
@@ -865,7 +865,7 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
         }
     }
-    
+
     //
     // MODULE: Pipeline reporting
     //
@@ -936,7 +936,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
-    
+
     NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 

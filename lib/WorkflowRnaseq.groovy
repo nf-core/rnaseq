@@ -11,13 +11,8 @@ class WorkflowRnaseq {
     //
     // Check and validate parameters
     //
-    public static void initialise(params, log, valid_params) {
+    public static void initialise(params, log) {
         genomeExistsError(params, log)
-
-
-        if (!params.fasta) {
-            Nextflow.error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
-        }
 
         if (!params.gtf && !params.gff) {
             Nextflow.error("No GTF or GFF3 annotation specified! The pipeline requires at least one of these files.")
@@ -54,27 +49,13 @@ class WorkflowRnaseq {
             }
         }
 
-        if (!params.skip_trimming) {
-            if (!valid_params['trimmers'].contains(params.trimmer)) {
-                Nextflow.error("Invalid option: '${params.trimmer}'. Valid options for '--trimmer': ${valid_params['trimmers'].join(', ')}.")
-            }
-        }
-
-        if (!params.skip_alignment) {
-            if (!valid_params['aligners'].contains(params.aligner)) {
-                Nextflow.error("Invalid option: '${params.aligner}'. Valid options for '--aligner': ${valid_params['aligners'].join(', ')}.")
-            }
-        } else {
+        if (params.skip_alignment) {
             skipAlignmentWarn(log)
         }
 
         if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
-            if (!valid_params['pseudoaligners'].contains(params.pseudo_aligner)) {
-                Nextflow.error("Invalid option: '${params.pseudo_aligner}'. Valid options for '--pseudo_aligner': ${valid_params['pseudoaligners'].join(', ')}.")
-            } else {
-                if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
-                    Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
-                }
+            if (!(params.salmon_index || params.transcript_fasta || (params.fasta && (params.gtf || params.gff)))) {
+                Nextflow.error("To use `--pseudo_aligner 'salmon'`, you must provide either --salmon_index or --transcript_fasta or both --fasta and --gtf / --gff.")
             }
         }
 
@@ -85,6 +66,9 @@ class WorkflowRnaseq {
             }
             if (params.rsem_index && params.star_index) {
                 rsemStarIndexWarn(log)
+            }
+            if (params.aligner  == 'star_rsem' && params.extra_star_align_args) {
+                rsemStarExtraArgumentsWarn(log)
             }
         }
 
@@ -106,10 +90,32 @@ class WorkflowRnaseq {
         }
 
         // Check which RSeQC modules we are running
+        def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
         def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
-        if ((valid_params['rseqc_modules'] + rseqc_modules).unique().size() != valid_params['rseqc_modules'].size()) {
-            Nextflow.error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_params['rseqc_modules'].join(', ')}")
+        if ((valid_rseqc_modules + rseqc_modules).unique().size() != valid_rseqc_modules.size()) {
+            Nextflow.error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_rseqc_modules.join(', ')}")
         }
+    }
+
+    //
+    // Function to validate channels from input samplesheet
+    //
+    public static ArrayList validateInput(input) {
+        def (metas, fastqs) = input[1..2]
+
+        // Check that multiple runs of the same sample are of the same strandedness
+        def strandedness_ok = metas.collect{ it.strandedness }.unique().size == 1
+        if (!strandedness_ok) {
+            Nextflow.error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
+        }
+
+        // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
+        def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
+        if (!endedness_ok) {
+            Nextflow.error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+        }
+
+        return [ metas[0], fastqs ]
     }
 
     //
@@ -267,6 +273,61 @@ class WorkflowRnaseq {
     }
 
     //
+    // Generate methods description for MultiQC
+    //
+    public static String toolCitationText(params) {
+        // TODO nf-core: Optionally add in-text citation tools to this list.
+        // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
+        // Uncomment function in methodsDescriptionText to render in MultiQC report
+        def citation_text = [
+                "Tools used in the workflow included:",
+                "FastQC (Andrews 2010),",
+                "MultiQC (Ewels et al. 2016)",
+                "."
+            ].join(' ').trim()
+
+        return citation_text
+    }
+
+    public static String toolBibliographyText(params) {
+        // TODO Optionally add bibliographic entries to this list.
+        // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
+        // Uncomment function in methodsDescriptionText to render in MultiQC report
+        def reference_text = [
+                "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
+                "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+            ].join(' ').trim()
+
+        return reference_text
+    }
+
+    public static String methodsDescriptionText(run_workflow, mqc_methods_yaml, params) {
+        // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+        def meta = [:]
+        meta.workflow = run_workflow.toMap()
+        meta["manifest_map"] = run_workflow.manifest.toMap()
+
+        // Pipeline DOI
+        meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
+        meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
+
+        // Tool references
+        meta["tool_citations"] = ""
+        meta["tool_bibliography"] = ""
+
+        // TODO Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
+        //meta["tool_citations"] = toolCitationText(params).replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+        //meta["tool_bibliography"] = toolBibliographyText(params)
+
+        def methods_text = mqc_methods_yaml.text
+
+        def engine =  new SimpleTemplateEngine()
+        def description_html = engine.createTemplate(methods_text).make(meta)
+
+        return description_html
+    }
+
+    //
     // Create MultiQC tsv custom content from a list of values
     //
     public static String multiqcTsvFromList(tsv_data, header) {
@@ -276,23 +337,6 @@ class WorkflowRnaseq {
             tsv_string += tsv_data.join('\n')
         }
         return tsv_string
-    }
-
-    public static String methodsDescriptionText(run_workflow, mqc_methods_yaml) {
-        // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
-        def meta = [:]
-        meta.workflow = run_workflow.toMap()
-        meta["manifest_map"] = run_workflow.manifest.toMap()
-
-        meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
-        meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
-
-        def methods_text = mqc_methods_yaml.text
-
-        def engine =  new SimpleTemplateEngine()
-        def description_html = engine.createTemplate(methods_text).make(meta)
-
-        return description_html
     }
 
     //
@@ -391,6 +435,19 @@ class WorkflowRnaseq {
             "  '--rsem_index' and '--star_index'. The pipeline will ignore the latter.\n\n" +
             "  Please see:\n" +
             "  https://github.com/nf-core/rnaseq/issues/568\n" +
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    }
+
+    //
+    // Print a warning if using '--aligner star_rsem' and providing '--star_extra_alignment_args'
+    //
+    private static void rsemStarExtraArgumentsWarn(log) {
+        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            "  No additional arguments can be passed to STAR when using RSEM.\n" +
+            "  Because RSEM enforces its own parameters for STAR, any extra arguments\n" +
+            "  to STAR will be ignored. Alternatively, choose the STAR+Salmon route.\n\n" +
+            "  This warning has been generated because you have provided both\n" +
+            "  '--aligner star_rsem' and '--extra_star_align_args'.\n\n" +
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     }
 

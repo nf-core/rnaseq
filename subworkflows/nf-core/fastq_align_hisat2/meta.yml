@@ -10,11 +10,12 @@ keywords:
   - bam
   - sam
   - cram
-modules:
+components:
   - hisat2/align
   - samtools/stats
   - samtools/idxstats
   - samtools/flagstat
+  - bam_sort_stats_samtools
 input:
   - meta:
       type: map

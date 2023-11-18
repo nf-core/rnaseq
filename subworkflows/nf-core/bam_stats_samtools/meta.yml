@@ -7,7 +7,7 @@ keywords:
   - bam
   - sam
   - cram
-modules:
+components:
   - samtools/stats
   - samtools/idxstats
   - samtools/flagstat

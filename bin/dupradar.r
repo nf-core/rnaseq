@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+# Written by Phil Ewels and released under the MIT license.
+
 # Command line argument processing
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) < 5) {

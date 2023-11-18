@@ -8,7 +8,7 @@ keywords:
   - UMI
   - trimming
   - trimgalore
-modules:
+components:
   - fastqc
   - umitools/extract
   - trimgalore

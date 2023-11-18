@@ -7,12 +7,13 @@ keywords:
   - sam
   - cram
 
-modules:
+components:
   - picard/markduplicates
   - samtools/index
   - samtools/stats
   - samtools/idxstats
   - samtools/flagstat
+  - bam_stats_samtools
 
 input:
   - ch_bam:

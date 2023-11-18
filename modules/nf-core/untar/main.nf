@@ -2,7 +2,7 @@ process UNTAR {
     tag "$archive"
     label 'process_single'
 
-    conda "conda-forge::sed=4.7 bioconda::grep=3.4 conda-forge::tar=1.34"
+    conda "conda-forge::sed=4.7 conda-forge::grep=3.11 conda-forge::tar=1.34"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
         'nf-core/ubuntu:20.04' }"

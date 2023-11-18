@@ -1,7 +1,9 @@
 name: ucsc_bedclip
-description: See http://hgdownload.cse.ucsc.edu/admin/exe/
+description: Remove lines from bed file that refer to off-chromosome locations.
 keywords:
-  - sort
+  - bed
+  - genomics
+  - ucsc
 tools:
   - ucsc:
       description: Remove lines from bed file that refer to off-chromosome locations.

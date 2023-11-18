@@ -3,6 +3,9 @@ description: Convert a bedGraph file to bigWig format.
 keywords:
   - bedgraph
   - bigwig
+  - ucsc
+  - bedgraphtobigwig
+  - converter
 tools:
   - ucsc:
       description: Convert a bedGraph file to bigWig format.

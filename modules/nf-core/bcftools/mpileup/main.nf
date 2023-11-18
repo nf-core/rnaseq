@@ -2,14 +2,14 @@ process BCFTOOLS_MPILEUP {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::bcftools=1.17"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bcftools:1.17--haef29d1_0':
         'biocontainers/bcftools:1.17--haef29d1_0' }"
 
     input:
     tuple val(meta), path(bam), path(intervals)
-    path fasta
+    tuple val(meta2), path(fasta)
     val save_mpileup
 
     output:

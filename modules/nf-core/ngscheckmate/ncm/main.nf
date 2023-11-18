@@ -1,22 +1,22 @@
 process NGSCHECKMATE_NCM {
     label 'process_low'
 
-    conda "bioconda::ngscheckmate=1.0.0"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ngscheckmate:1.0.0--py27r41hdfd78af_3':
-        'biocontainers/ngscheckmate:1.0.0--py27r41hdfd78af_3' }"
+        'https://depot.galaxyproject.org/singularity/ngscheckmate:1.0.1--py27pl5321r40hdfd78af_1':
+        'biocontainers/ngscheckmate:1.0.1--py27pl5321r40hdfd78af_1' }"
 
     input:
-    path files
-    path snp_bed
-    path fasta
+    tuple val(meta) , path(files)
+    tuple val(meta2), path(snp_bed)
+    tuple val(meta3), path(fasta)
 
     output:
-    path "*.pdf"            , emit: pdf, optional: true
-    path "*_corr_matrix.txt", emit: corr_matrix
-    path "*_matched.txt"    , emit: matched
-    path "*_all.txt"        , emit: all
-    path "*.vcf"            , emit: vcf, optional: true
+    tuple val(meta), path("*_corr_matrix.txt"), emit: corr_matrix
+    tuple val(meta), path("*_matched.txt")    , emit: matched
+    tuple val(meta), path("*_all.txt")        , emit: all
+    tuple val(meta), path("*.pdf")            , emit: pdf, optional: true
+    tuple val(meta), path("*.vcf")            , emit: vcf, optional: true
     path "versions.yml"     , emit: versions
 
     when:
@@ -24,7 +24,7 @@ process NGSCHECKMATE_NCM {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "output"
+    def prefix = task.ext.prefix ?: "$meta.id"
     def unzip = files.any { it.toString().endsWith(".vcf.gz") }
     """
     if $unzip
@@ -46,4 +46,19 @@ process NGSCHECKMATE_NCM {
         ngscheckmate: \$(ncm.py --help | sed "7!d;s/ *Ensuring Sample Identity v//g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "$meta.id"
+    """
+    touch ${prefix}_output_corr_matrix.txt
+    touch ${prefix}_matched.txt
+    touch ${prefix}_all.txt
+    touch ${prefix}.pdf
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        ngscheckmate: \$(ncm.py --help | sed "7!d;s/ *Ensuring Sample Identity v//g")
+    END_VERSIONS
+    """
+
 }

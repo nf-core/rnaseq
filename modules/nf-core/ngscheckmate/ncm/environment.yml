@@ -1,0 +1,7 @@
+name: ngscheckmate_ncm
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::ngscheckmate=1.0.1

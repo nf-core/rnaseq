@@ -34,7 +34,7 @@ process NGSCHECKMATE_NCM {
         done
     fi
 
-    NCM_REF="./"${fasta} ncm_edited.py -d . -bed ${snp_bed} -O . -N ${prefix} $args
+    NCM_REF="./"${fasta} ncm.py -d . -bed ${snp_bed} -O . -N ${prefix} $args
 
     if $unzip
     then

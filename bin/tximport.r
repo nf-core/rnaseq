@@ -10,8 +10,8 @@ library(tximport)
 # Parsing command line arguments
 args <- commandArgs(trailingOnly=TRUE)
 if (length(args) < 4) {
-    stop("Usage: tximport.r <coldata_path> <path> <prefix> <quant_type> <tx2gene_path>", 
-         call.=FALSE)
+    stop("Usage: tximport.r <coldata_path> <path> <prefix> <quant_type> <tx2gene_path>",
+        call.=FALSE)
 }
 
 # Assigning command line arguments to variables
@@ -21,7 +21,7 @@ prefix <- args[3]
 quant_type <- args[4]
 tx2gene_path <- args[5]
 
-## Functions 
+## Functions
 
 # Build a table from a SummarizedExperiment object
 build_table <- function(se.obj, slot) {
@@ -31,7 +31,7 @@ build_table <- function(se.obj, slot) {
 # Write a table to a file with given parameters
 write_se_table <- function(params) {
     file_name <- paste0(prefix, ".", params$suffix)
-    write.table(build_table(params$obj, params$slot), file_name, 
+    write.table(build_table(params$obj, params$slot), file_name,
                 sep="\t", quote=FALSE, row.names = FALSE)
 }
 
@@ -40,9 +40,9 @@ read_transcript_info <- function(tinfo_path){
     info <- file.info(tinfo_path)
     if (info$size == 0) {
         stop("tx2gene file is empty")
-    } 
+    }
 
-    transcript_info <- read.csv(tinfo_path, sep="\t", header = FALSE, 
+    transcript_info <- read.csv(tinfo_path, sep="\t", header = FALSE,
                                 col.names = c("tx", "gene_id", "gene_name"))
 
     extra <- setdiff(rownames(txi[[1]]), as.character(transcript_info[["tx"]]))
@@ -51,8 +51,8 @@ read_transcript_info <- function(tinfo_path){
     rownames(transcript_info) <- transcript_info[["tx"]]
 
     list(transcript = transcript_info,
-	     gene = unique(transcript_info[,2:3]),
-	     tx2gene = transcript_info[,1:2])
+	    gene = unique(transcript_info[,2:3]),
+	    tx2gene = transcript_info[,1:2])
 }
 
 # Read and process sample/column data from a given path
@@ -71,8 +71,8 @@ read_coldata <- function(coldata_path){
 # Create a SummarizedExperiment object with given data
 create_summarized_experiment <- function(counts, abundance, length, col_data, row_data) {
     SummarizedExperiment(assays = list(counts = counts, abundance = abundance, length = length),
-                         colData = col_data,
-                         rowData = row_data)
+        colData = col_data,
+        rowData = row_data)
 }
 
 # Main script starts here
@@ -93,7 +93,7 @@ coldata <- read_coldata(coldata_path)
 
 # Create initial SummarizedExperiment object
 se <- create_summarized_experiment(txi[["counts"]], txi[["abundance"]], txi[["length"]],
-                                   DataFrame(coldata), transcript_info$transcript)
+    DataFrame(coldata), transcript_info$transcript)
 
 # Setting parameters for writing tables
 params <- list(
@@ -116,11 +116,12 @@ if ("tx2gene" %in% names(transcript_info) && !is.null(transcript_info$tx2gene)) 
 
     # Create gene-level SummarizedExperiment objects
     gse <- create_summarized_experiment(gi[["counts"]], gi[["abundance"]], gi[["length"]],
-                                        col_data_frame, gene_info)
+        col_data_frame, gene_info)
     gse.ls <- create_summarized_experiment(gi.ls[["counts"]], gi.ls[["abundance"]], gi.ls[["length"]],
-                                           col_data_frame, gene_info)
+        col_data_frame, gene_info)
     gse.s <- create_summarized_experiment(gi.s[["counts"]], gi.s[["abundance"]], gi.s[["length"]],
-                                          col_data_frame, gene_info)
+        col_data_frame, gene_info)
+
     params <- c(params, list(
         list(obj = gse, slot = "length", suffix = "gene_lengths.tsv"),
         list(obj = gse, slot = "abundance", suffix = "gene_tpm.tsv"),

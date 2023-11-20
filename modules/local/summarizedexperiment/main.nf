@@ -14,7 +14,8 @@ process SUMMARIZEDEXPERIMENT {
 
     output:
     path "*.rds"       , emit: rds
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('r-base'), cmd("echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//'"), emit: versions1
+    tuple val("${task.process}"), val('bioconductor-summarizedexperiment'), cmd("Rscript -e 'library(SummarizedExperiment); cat(as.character(packageVersion(\'SummarizedExperiment\')))'"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -26,11 +27,5 @@ process SUMMARIZEDEXPERIMENT {
         $counts \\
         $tpm \\
         $tx2gene
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
-    END_VERSIONS
     """
 }

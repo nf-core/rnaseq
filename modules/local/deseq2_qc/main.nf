@@ -22,7 +22,8 @@ process DESEQ2_QC {
     path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
     path "*.log"                , optional:true, emit: log
     path "size_factors"         , optional:true, emit: size_factors
-    path "versions.yml"         , emit: versions
+    tuple val("${task.process}"), val('r-base'), cmd("echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//'"), emit: versions1
+    tuple val("${task.process}"), val('bioconductor-deseq2'), cmd("Rscript -e 'library(DESeq2); cat(as.character(packageVersion(\'DESeq2\')))'"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -50,11 +51,5 @@ process DESEQ2_QC {
         sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" tmp.txt
         cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
-    END_VERSIONS
     """
 }

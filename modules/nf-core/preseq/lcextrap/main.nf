@@ -14,7 +14,7 @@ process PRESEQ_LCEXTRAP {
     output:
     tuple val(meta), path("*.lc_extrap.txt"), emit: lc_extrap
     tuple val(meta), path("*.log")          , emit: log
-    path  "versions.yml"                    , emit: versions
+    tuple val("${task.process}"), val('preseq'), cmd("echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -31,10 +31,5 @@ process PRESEQ_LCEXTRAP {
         -output ${prefix}.lc_extrap.txt \\
         $bam
     cp .command.err ${prefix}.command.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
-    END_VERSIONS
     """
 }

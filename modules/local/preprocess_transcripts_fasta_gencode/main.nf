@@ -11,7 +11,7 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
 
     output:
     path "*.fa"        , emit: fasta
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('sed'), cmd("echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,10 +22,5 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
     def command = gzipped ? 'zcat' : 'cat'
     """
     $command $fasta | cut -d "|" -f1 > ${outfile}.fixed.fa
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
-    END_VERSIONS
     """
 }

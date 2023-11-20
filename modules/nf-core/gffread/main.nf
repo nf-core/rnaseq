@@ -12,7 +12,7 @@ process GFFREAD {
 
     output:
     path "*.gtf"        , emit: gtf
-    path "versions.yml" , emit: versions
+    tuple val("${task.process}"), val('gffread'), cmd("gffread --version 2>&1"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,9 +25,5 @@ process GFFREAD {
         $gff \\
         $args \\
         -o ${prefix}.gtf
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gffread: \$(gffread --version 2>&1)
-    END_VERSIONS
     """
 }

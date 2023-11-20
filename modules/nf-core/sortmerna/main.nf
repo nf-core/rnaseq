@@ -14,7 +14,7 @@ process SORTMERNA {
     output:
     tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path  "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('sortmerna'), cmd("echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -36,11 +36,6 @@ process SORTMERNA {
 
         mv non_rRNA_reads.f*q.gz ${prefix}.non_rRNA.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
-        END_VERSIONS
         """
     } else {
         """
@@ -60,11 +55,6 @@ process SORTMERNA {
         mv non_rRNA_reads_fwd.f*q.gz ${prefix}_1.non_rRNA.fastq.gz
         mv non_rRNA_reads_rev.f*q.gz ${prefix}_2.non_rRNA.fastq.gz
         mv rRNA_reads.log ${prefix}.sortmerna.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
-        END_VERSIONS
         """
     }
 }

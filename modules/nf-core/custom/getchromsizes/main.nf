@@ -14,7 +14,7 @@ process CUSTOM_GETCHROMSIZES {
     tuple val(meta), path ("*.sizes"), emit: sizes
     tuple val(meta), path ("*.fai")  , emit: fai
     tuple val(meta), path ("*.gzi")  , emit: gzi, optional: true
-    path  "versions.yml"             , emit: versions
+    tuple val("${task.process}"), val('getchromsizes'), cmd("echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,21 +24,11 @@ process CUSTOM_GETCHROMSIZES {
     """
     samtools faidx $fasta
     cut -f 1,2 ${fasta}.fai > ${fasta}.sizes
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        getchromsizes: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
     """
     touch ${fasta}.fai
     touch ${fasta}.sizes
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        getchromsizes: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

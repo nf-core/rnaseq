@@ -42,7 +42,7 @@ workflow ALIGN_STAR {
         ch_bam_transcript = STAR_ALIGN_IGENOMES.out.bam_transcript
         ch_fastq          = STAR_ALIGN_IGENOMES.out.fastq
         ch_tab            = STAR_ALIGN_IGENOMES.out.tab
-        ch_versions       = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
+        ch_versions       = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions1, STAR_ALIGN_IGENOMES.out.versions2, STAR_ALIGN_IGENOMES.out.versions3)
     } else {
         STAR_ALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
         ch_orig_bam       = STAR_ALIGN.out.bam
@@ -53,7 +53,7 @@ workflow ALIGN_STAR {
         ch_bam_transcript = STAR_ALIGN.out.bam_transcript
         ch_fastq          = STAR_ALIGN.out.fastq
         ch_tab            = STAR_ALIGN.out.tab
-        ch_versions       = ch_versions.mix(STAR_ALIGN.out.versions.first())
+        ch_versions       = ch_versions.mix(STAR_ALIGN.out.versions1, STAR_ALIGN.out.versions2, STAR_ALIGN.out.versions3)
     }
 
     //

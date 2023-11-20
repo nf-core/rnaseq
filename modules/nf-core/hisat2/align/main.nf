@@ -17,7 +17,8 @@ process HISAT2_ALIGN {
     tuple val(meta), path("*.bam")                   , emit: bam
     tuple val(meta), path("*.log")                   , emit: summary
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
-    path  "versions.yml"                             , emit: versions
+    tuple val("${task.process}"), val('hisat2'), val('2.2.1'), emit: versions1
+    tuple val("${task.process}"), val('samtools'), cmd("echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//'"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,7 +26,6 @@ process HISAT2_ALIGN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '2.2.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -50,12 +50,6 @@ process HISAT2_ALIGN {
             $unaligned \\
             $args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hisat2: $VERSION
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        END_VERSIONS
         """
     } else {
         def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -82,12 +76,6 @@ process HISAT2_ALIGN {
         if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
             mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
         fi
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hisat2: $VERSION
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        END_VERSIONS
         """
     }
 }

@@ -14,7 +14,7 @@ process RSEQC_JUNCTIONSATURATION {
     output:
     tuple val(meta), path("*.pdf"), emit: pdf
     tuple val(meta), path("*.r")  , emit: rscript
-    path  "versions.yml"          , emit: versions
+    tuple val("${task.process}"), val('rseqc'), cmd("junction_saturation.py --version | sed -e 's/junction_saturation.py //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,10 +28,5 @@ process RSEQC_JUNCTIONSATURATION {
         -r $bed \\
         -o $prefix \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
-    END_VERSIONS
     """
 }

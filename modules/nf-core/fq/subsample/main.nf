@@ -12,7 +12,7 @@ process FQ_SUBSAMPLE {
 
     output:
     tuple val(meta), path("*.fastq.gz"), emit: fastq
-    path "versions.yml"                , emit: versions
+    tuple val("${task.process}"), val('fq'), cmd("echo \$(fq subsample --version | sed 's/fq-subsample //g')"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,10 +46,5 @@ process FQ_SUBSAMPLE {
         $fastq \\
         $fastq1_output \\
         $fastq2_output
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fq: \$(echo \$(fq subsample --version | sed 's/fq-subsample //g'))
-    END_VERSIONS
     """
 }

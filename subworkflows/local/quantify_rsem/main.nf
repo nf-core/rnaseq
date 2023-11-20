@@ -20,7 +20,7 @@ workflow QUANTIFY_RSEM {
     // Quantify reads with RSEM
     //
     RSEM_CALCULATEEXPRESSION ( reads, index )
-    ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
+    ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions1, RSEM_CALCULATEEXPRESSION.out.versions2)
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats

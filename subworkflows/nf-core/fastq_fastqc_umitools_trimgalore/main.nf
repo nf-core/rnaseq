@@ -75,7 +75,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         trim_html     = TRIMGALORE.out.html
         trim_zip      = TRIMGALORE.out.zip
         trim_log      = TRIMGALORE.out.log
-        ch_versions   = ch_versions.mix(TRIMGALORE.out.versions.first())
+        ch_versions   = ch_versions.mix(TRIMGALORE.out.versions1, TRIMGALORE.out.versions2)
 
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming

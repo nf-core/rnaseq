@@ -12,7 +12,7 @@ process RSEQC_BAMSTAT {
 
     output:
     tuple val(meta), path("*.bam_stat.txt"), emit: txt
-    path  "versions.yml"                   , emit: versions
+    tuple val("${task.process}"), val('rseqc'), cmd("bam_stat.py --version | sed -e 's/bam_stat.py //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,10 +25,5 @@ process RSEQC_BAMSTAT {
         -i $bam \\
         $args \\
         > ${prefix}.bam_stat.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(bam_stat.py --version | sed -e "s/bam_stat.py //g")
-    END_VERSIONS
     """
 }

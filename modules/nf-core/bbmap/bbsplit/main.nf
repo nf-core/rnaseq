@@ -20,7 +20,7 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*primary*fastq.gz'), optional:true, emit: primary_fastq
     tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
     tuple val(meta), path('*txt')             , optional:true, emit: stats
-    path "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('bbmap'), cmd("bbversion.sh | grep -v 'Duplicate cpuset'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -50,11 +50,6 @@ process BBMAP_BBSPLIT {
                 path=bbsplit \\
                 threads=$task.cpus \\
                 $args
-
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
-            END_VERSIONS
             """
         } else {
             log.error 'ERROR: Please specify as input a primary fasta file along with names and paths to non-primary fasta files.'
@@ -79,11 +74,6 @@ process BBMAP_BBSPLIT {
             $fastq_out \\
             refstats=${prefix}.stats.txt \\
             $args
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
-        END_VERSIONS
         """
     }
 }

@@ -19,7 +19,7 @@ process RSEQC_JUNCTIONANNOTATION {
     tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
     tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
     tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
-    path  "versions.yml"                   , emit: versions
+    tuple val("${task.process}"), val('rseqc'), cmd("junction_annotation.py --version | sed -e 's/junction_annotation.py //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,10 +34,5 @@ process RSEQC_JUNCTIONANNOTATION {
         -o $prefix \\
         $args \\
         2> ${prefix}.junction_annotation.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
-    END_VERSIONS
     """
 }

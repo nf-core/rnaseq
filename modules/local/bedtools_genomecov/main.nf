@@ -13,7 +13,7 @@ process BEDTOOLS_GENOMECOV {
     output:
     tuple val(meta), path("*.forward.bedGraph"), emit: bedgraph_forward
     tuple val(meta), path("*.reverse.bedGraph"), emit: bedgraph_reverse
-    path "versions.yml"                        , emit: versions
+    tuple val("${task.process}"), val('bedtools'), cmd("bedtools --version | sed -e 's/bedtools v//g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,10 +44,5 @@ process BEDTOOLS_GENOMECOV {
         -strand - \\
         $args \\
         | bedtools sort > ${prefix_reverse}.bedGraph
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
-    END_VERSIONS
     """
 }

@@ -19,7 +19,9 @@ process STAR_ALIGN {
     tuple val(meta), path('*Log.final.out')   , emit: log_final
     tuple val(meta), path('*Log.out')         , emit: log_out
     tuple val(meta), path('*Log.progress.out'), emit: log_progress
-    path  "versions.yml"                      , emit: versions
+    tuple val("${task.process}"), val('star'), cmd("STAR --version | sed -e 's/STAR_//g'"), emit: versions1
+    tuple val("${task.process}"), val('samtools'), cmd("echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//'"), emit: versions2
+    tuple val("${task.process}"), val('gawk'), cmd("echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//'"), emit: versions3
 
     tuple val(meta), path('*d.out.bam')              , optional:true, emit: bam
     tuple val(meta), path('*sortedByCoord.out.bam')  , optional:true, emit: bam_sorted
@@ -69,13 +71,6 @@ process STAR_ALIGN {
         mv ${prefix}.Unmapped.out.mate2 ${prefix}.unmapped_2.fastq
         gzip ${prefix}.unmapped_2.fastq
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -98,12 +93,5 @@ process STAR_ALIGN {
     touch ${prefix}.out.sam
     touch ${prefix}.Signal.UniqueMultiple.str1.out.wig
     touch ${prefix}.Signal.UniqueMultiple.str1.out.bg
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-    END_VERSIONS
     """
 }

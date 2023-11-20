@@ -12,7 +12,7 @@ process GTF2BED {
 
     output:
     path '*.bed'       , emit: bed
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('perl'), cmd("echo \$(perl --version 2>&1) | sed 's/.*v\\(.*\\)) built.*/\\1/'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,10 +22,5 @@ process GTF2BED {
     gtf2bed \\
         $gtf \\
         > ${gtf.baseName}.bed
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        perl: \$(echo \$(perl --version 2>&1) | sed 's/.*v\\(.*\\)) built.*/\\1/')
-    END_VERSIONS
     """
 }

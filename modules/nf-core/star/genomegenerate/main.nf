@@ -13,7 +13,9 @@ process STAR_GENOMEGENERATE {
 
     output:
     tuple val(meta), path("star")  , emit: index
-    path "versions.yml"            , emit: versions
+    tuple val("${task.process}"), val('star'), cmd("STAR --version | sed -e 's/STAR_//g'"), emit: versions1
+    tuple val("${task.process}"), val('samtools'), cmd("echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//'"), emit: versions2
+    tuple val("${task.process}"), val('gawk'), cmd("echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//'"), emit: versions3
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,13 +35,6 @@ process STAR_GENOMEGENERATE {
             --runThreadN $task.cpus \\
             $memory \\
             $args
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            star: \$(STAR --version | sed -e "s/STAR_//g")
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-            gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-        END_VERSIONS
         """
     } else {
         """
@@ -56,13 +51,6 @@ process STAR_GENOMEGENERATE {
             --genomeSAindexNbases \$NUM_BASES \\
             $memory \\
             $args
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            star: \$(STAR --version | sed -e "s/STAR_//g")
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-            gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-        END_VERSIONS
         """
     }
 
@@ -85,12 +73,5 @@ process STAR_GENOMEGENERATE {
     touch star/sjdbList.fromGTF.out.tab
     touch star/sjdbList.out.tab
     touch star/transcriptInfo.tab
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-    END_VERSIONS
     """
 }

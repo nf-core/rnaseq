@@ -14,7 +14,7 @@ process RSEQC_TIN {
     output:
     tuple val(meta), path("*.txt"), emit: txt
     tuple val(meta), path("*.xls"), emit: xls
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('rseqc'), cmd("tin.py --version | sed -e 's/tin.py //g'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,10 +27,5 @@ process RSEQC_TIN {
         -i $bam \\
         -r $bed \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(tin.py --version | sed -e "s/tin.py //g")
-    END_VERSIONS
     """
 }

@@ -16,7 +16,7 @@ process HISAT2_BUILD {
 
     output:
     tuple val(meta), path("hisat2") , emit: index
-    path "versions.yml"             , emit: versions
+    tuple val("${task.process}"), val('hisat2'), val('2.2.1'), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,7 +44,6 @@ process HISAT2_BUILD {
         log.info "[HISAT2 index build] Less than ${hisat2_build_memory} GB available, so NOT using splice sites and exons to build HISAT2 index."
         log.info "[HISAT2 index build] Use --hisat2_build_memory [small number] to skip this check."
     }
-    def VERSION = '2.2.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     mkdir hisat2
     $extract_exons
@@ -55,10 +54,5 @@ process HISAT2_BUILD {
         $args \\
         $fasta \\
         hisat2/${fasta.baseName}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hisat2: $VERSION
-    END_VERSIONS
     """
 }

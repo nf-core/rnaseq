@@ -12,7 +12,7 @@ process GUNZIP {
 
     output:
     tuple val(meta), path("$gunzip"), emit: gunzip
-    path "versions.yml"             , emit: versions
+    tuple val("${task.process}"), val('gunzip'), cmd("echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,20 +29,11 @@ process GUNZIP {
         $args \\
         $archive \\
         > $gunzip
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
-    END_VERSIONS
     """
 
     stub:
     gunzip = archive.toString() - '.gz'
     """
     touch $gunzip
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
-    END_VERSIONS
     """
 }

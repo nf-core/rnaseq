@@ -12,7 +12,7 @@ process CAT_FASTQ {
 
     output:
     tuple val(meta), path("*.merged.fastq.gz"), emit: reads
-    path "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('cat'), cmd("echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//'"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,11 +25,6 @@ process CAT_FASTQ {
         if (readList.size >= 1) {
             """
             cat ${readList.join(' ')} > ${prefix}.merged.fastq.gz
-
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
-            END_VERSIONS
             """
         }
     } else {
@@ -40,11 +35,6 @@ process CAT_FASTQ {
             """
             cat ${read1.join(' ')} > ${prefix}_1.merged.fastq.gz
             cat ${read2.join(' ')} > ${prefix}_2.merged.fastq.gz
-
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
-            END_VERSIONS
             """
         }
     }
@@ -56,11 +46,6 @@ process CAT_FASTQ {
         if (readList.size > 1) {
             """
             touch ${prefix}.merged.fastq.gz
-
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
-            END_VERSIONS
             """
         }
     } else {
@@ -68,11 +53,6 @@ process CAT_FASTQ {
             """
             touch ${prefix}_1.merged.fastq.gz
             touch ${prefix}_2.merged.fastq.gz
-
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                cat: \$(echo \$(cat --version 2>&1) | sed 's/^.*coreutils) //; s/ .*\$//')
-            END_VERSIONS
             """
         }
     }

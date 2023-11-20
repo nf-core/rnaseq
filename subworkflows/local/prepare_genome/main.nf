@@ -147,7 +147,7 @@ workflow PREPARE_GENOME {
     } else {
         ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
         ch_versions         = ch_versions.mix(GTF_FILTER.out.versions)
-        ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
+        ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions1, MAKE_TRANSCRIPTS_FASTA.out.versions2)
     }
 
     //
@@ -200,10 +200,10 @@ workflow PREPARE_GENOME {
         } else {
             if (is_aws_igenome) {
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES ( ch_fasta, ch_gtf ).index
-                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)
+                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions1, STAR_GENOMEGENERATE_IGENOMES.out.versions2, STAR_GENOMEGENERATE_IGENOMES.out.versions3)
             } else {
                 ch_star_index = STAR_GENOMEGENERATE ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] } ).index.map { it[1] }
-                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
+                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions1, STAR_GENOMEGENERATE.out.versions2, STAR_GENOMEGENERATE.out.versions3)
             }
         }
     }
@@ -222,7 +222,7 @@ workflow PREPARE_GENOME {
             }
         } else {
             ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
-            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
+            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions1, RSEM_PREPAREREFERENCE_GENOME.out.versions2)
         }
     }
 

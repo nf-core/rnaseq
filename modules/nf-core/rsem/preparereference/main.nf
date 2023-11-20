@@ -14,7 +14,8 @@ process RSEM_PREPAREREFERENCE {
     output:
     path "rsem"           , emit: index
     path "*transcripts.fa", emit: transcript_fasta
-    path "versions.yml"   , emit: versions
+    tuple val("${task.process}"), val('rsem'), cmd("rsem-calculate-expression --version | sed -e 's/Current version: RSEM v//g'"), emit: versions1
+    tuple val("${task.process}"), val('star'), cmd("STAR --version | sed -e 's/STAR_//g'"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,12 +45,6 @@ process RSEM_PREPAREREFERENCE {
             rsem/genome
 
         cp rsem/genome.transcripts.fa .
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-            star: \$(STAR --version | sed -e "s/STAR_//g")
-        END_VERSIONS
         """
     } else {
         """
@@ -61,12 +56,6 @@ process RSEM_PREPAREREFERENCE {
             rsem/genome
 
         cp rsem/genome.transcripts.fa .
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-            star: \$(STAR --version | sed -e "s/STAR_//g")
-        END_VERSIONS
         """
     }
 }

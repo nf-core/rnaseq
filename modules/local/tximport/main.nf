@@ -18,7 +18,8 @@ process TXIMPORT {
     path "*gene_counts_scaled.tsv"       , emit: counts_gene_scaled
     path "*transcript_tpm.tsv"           , emit: tpm_transcript
     path "*transcript_counts.tsv"        , emit: counts_transcript
-    path "versions.yml"                  , emit: versions
+    tuple val("${task.process}"), val('r-base'), cmd("echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//'"), emit: versions1
+    tuple val("${task.process}"), val('bioconductor-tximeta'), cmd("Rscript -e 'library(tximeta); cat(as.character(packageVersion(\'tximeta\')))'"), emit: versions2
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,11 +33,5 @@ process TXIMPORT {
         $prefix \\
         $quant_type \\
         $tx2gene
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
-    END_VERSIONS
     """
 }

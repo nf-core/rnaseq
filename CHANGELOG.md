@@ -3,11 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-20
+
+### Enhancements & fixes
+
+- [PR #1124](https://github.com/nf-core/rnaseq/pull/1124) - Ensure pseudoaligner is set if pseudoalignment is not skipped
+
 ## [[3.13.1](https://github.com/nf-core/rnaseq/releases/tag/3.13.1)] - 2023-11-17
 
 ### Enhancements and fixes
 
-- [[PR #1121](https://github.com/nf-core/rnaseq/pull/1121) - Changes for 3.13.1 patch release incl. igenomes star fix
+- [PR #1121](https://github.com/nf-core/rnaseq/pull/1121) - Changes for 3.13.1 patch release incl. igenomes star fix
 
 ## [[3.13.0](https://github.com/nf-core/rnaseq/releases/tag/3.13.0)] - 2023-11-17
 

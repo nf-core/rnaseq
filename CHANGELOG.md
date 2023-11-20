@@ -3,12 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 
 ### Enhancements & fixes
 
 - [PR #1123](https://github.com/nf-core/rnaseq/pull/1123) - Overhaul tximport.r, output length tables
 - [PR #1124](https://github.com/nf-core/rnaseq/pull/1124) - Ensure pseudoaligner is set if pseudoalignment is not skipped
+- [PR #1126](https://github.com/nf-core/rnaseq/pull/1126) - Fixes error when transcript_fasta not provided and skip_gtf_filter set to true
+- [#1125](https://github.com/nf-core/rnaseq/issues/1125) - Pipeline fails if transcript_fasta not provided and skip_gtf_filter = true
 
 ## [[3.13.1](https://github.com/nf-core/rnaseq/releases/tag/3.13.1)] - 2023-11-17
 

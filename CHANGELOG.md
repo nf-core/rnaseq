@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Regina Hertfelder Reynolds](https://github.com/RHReynolds)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+
 ### Enhancements & fixes
 
 - [PR #1123](https://github.com/nf-core/rnaseq/pull/1123) - Overhaul tximport.r, output length tables

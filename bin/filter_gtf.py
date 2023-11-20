@@ -23,14 +23,14 @@ def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
 def tab_delimited(file: str) -> float:
     """Check if file is tab-delimited and return median number of tabs."""
     with open(file, "r") as f:
-        data = f.read(1024)
+        data = f.read(102400)
         return statistics.median(line.count("\t") for line in data.split("\n"))
 
 
 def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str, skip_transcript_id_check: bool) -> None:
     """Filter GTF file based on FASTA sequence names."""
     if tab_delimited(gtf_in) != 8:
-        raise ValueError("Invalid GTF file: Expected 8 tab-separated columns.")
+        raise ValueError("Invalid GTF file: Expected nine tab-separated columns.")
 
     seq_names_in_genome = extract_fasta_seq_names(fasta)
     logger.info(f"Extracted chromosome sequence names from {fasta}")

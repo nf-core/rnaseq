@@ -37,7 +37,13 @@ if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) 
 def prepareToolIndices  = []
 if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 if (!params.skip_alignment) { prepareToolIndices << params.aligner }
-if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
+if (!params.skip_pseudo_alignment) {
+    if(params.pseudo_aligner) { 
+        prepareToolIndices << params.pseudo_aligner 
+    } else {
+        exit 1, "--skip_pseudo_alignment not set, but --pseudo_aligner not set"
+    }
+}
 
 // Determine whether to filter the GTF or not
 def filterGtf = 

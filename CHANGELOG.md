@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## dev
 
 ### Enhancements and fixes
+
 - [PR #1126](https://github.com/nf-core/rnaseq/pull/1126) - Fixes error when transcript_fasta not provided and skip_gtf_filter set to true
 - [#1125](https://github.com/nf-core/rnaseq/issues/1125) - Pipeline fails if transcript_fasta not provided and skip_gtf_filter = true
 

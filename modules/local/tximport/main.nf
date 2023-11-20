@@ -16,8 +16,10 @@ process TXIMPORT {
     path "*gene_counts.tsv"              , emit: counts_gene
     path "*gene_counts_length_scaled.tsv", emit: counts_gene_length_scaled
     path "*gene_counts_scaled.tsv"       , emit: counts_gene_scaled
+    path "*gene_lengths.tsv"             , emit: lengths_gene
     path "*transcript_tpm.tsv"           , emit: tpm_transcript
     path "*transcript_counts.tsv"        , emit: counts_transcript
+    path "*transcript_lengths.tsv"       , emit: lengths_transcript
     path "versions.yml"                  , emit: versions
 
     when:

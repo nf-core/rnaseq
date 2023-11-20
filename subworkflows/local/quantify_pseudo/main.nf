@@ -79,12 +79,14 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     results                       = ch_pseudo_results                      // channel: [ val(meta), results_dir ]
     multiqc                       = ch_pseudo_multiqc                      // channel: [ val(meta), files_for_multiqc ]
 
-    tpm_gene                      = TXIMPORT.out.tpm_gene                  // channel: [ val(meta), counts ]
-    counts_gene                   = TXIMPORT.out.counts_gene               // channel: [ val(meta), counts ]
-    counts_gene_length_scaled     = TXIMPORT.out.counts_gene_length_scaled // channel: [ val(meta), counts ]
-    counts_gene_scaled            = TXIMPORT.out.counts_gene_scaled        // channel: [ val(meta), counts ]
-    tpm_transcript                = TXIMPORT.out.tpm_transcript            // channel: [ val(meta), counts ]
-    counts_transcript             = TXIMPORT.out.counts_transcript         // channel: [ val(meta), counts ]
+    tpm_gene                      = TXIMPORT.out.tpm_gene                  //    path *gene_tpm.tsv
+    counts_gene                   = TXIMPORT.out.counts_gene               //    path *gene_counts.tsv
+    lengths_gene                  = TXIMPORT.out.lengths_gene              //    path *gene_lengths.tsv
+    counts_gene_length_scaled     = TXIMPORT.out.counts_gene_length_scaled //    path *gene_counts_length_scaled.tsv
+    counts_gene_scaled            = TXIMPORT.out.counts_gene_scaled        //    path *gene_counts_scaled.tsv
+    tpm_transcript                = TXIMPORT.out.tpm_transcript            //    path *gene_tpm.tsv
+    counts_transcript             = TXIMPORT.out.counts_transcript         //    path *transcript_counts.tsv
+    lengths_transcript            = TXIMPORT.out.lengths_transript         //    path *transcript_lengths.tsv
 
     merged_gene_rds               = SE_GENE.out.rds                        //    path: *.rds
     merged_gene_rds_length_scaled = SE_GENE_LENGTH_SCALED.out.rds          //    path: *.rds

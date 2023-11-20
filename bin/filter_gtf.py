@@ -23,7 +23,7 @@ def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
 def tab_delimited(file: str) -> float:
     """Check if file is tab-delimited and return median number of tabs."""
     with open(file, "r") as f:
-        data = f.read(1024)
+        data = f.read(102400)
         return statistics.median(line.count("\t") for line in data.split("\n"))
 
 

@@ -86,7 +86,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     counts_gene_scaled            = TXIMPORT.out.counts_gene_scaled        //    path *gene_counts_scaled.tsv
     tpm_transcript                = TXIMPORT.out.tpm_transcript            //    path *gene_tpm.tsv
     counts_transcript             = TXIMPORT.out.counts_transcript         //    path *transcript_counts.tsv
-    lengths_transcript            = TXIMPORT.out.lengths_transript         //    path *transcript_lengths.tsv
+    lengths_transcript            = TXIMPORT.out.lengths_transcript        //    path *transcript_lengths.tsv
 
     merged_gene_rds               = SE_GENE.out.rds                        //    path: *.rds
     merged_gene_rds_length_scaled = SE_GENE_LENGTH_SCALED.out.rds          //    path: *.rds

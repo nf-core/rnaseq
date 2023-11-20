@@ -51,8 +51,8 @@ read_transcript_info <- function(tinfo_path){
     rownames(transcript_info) <- transcript_info[["tx"]]
 
     list(transcript = transcript_info,
-	    gene = unique(transcript_info[,2:3]),
-	    tx2gene = transcript_info[,1:2])
+        gene = unique(transcript_info[,2:3]),
+        tx2gene = transcript_info[,1:2])
 }
 
 # Read and process sample/column data from a given path

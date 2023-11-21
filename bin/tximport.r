@@ -1,7 +1,8 @@
 #!/usr/bin/env Rscript
 
 # Script for importing and processing transcript-level quantifications.
-# Written by Lorena Pantano, later modified by Jonathan Manning, and released under the MIT license.
+# Written by Lorena Pantano, later modified by Jonathan Manning, and released
+# under the MIT license.
 
 # Loading required libraries
 library(SummarizedExperiment)

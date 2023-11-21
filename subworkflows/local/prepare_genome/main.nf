@@ -47,7 +47,7 @@ workflow PREPARE_GENOME {
     rsem_index           // directory: /path/to/rsem/index/
     salmon_index         // directory: /path/to/salmon/index/
     kallisto_index       // directory: /path/to/kallisto/index/
-    hisat2_index         // directory: /path/to/hisat2/index/ 
+    hisat2_index         // directory: /path/to/hisat2/index/
     bbsplit_index        // directory: /path/to/rsem/index/
     gencode              //   boolean: whether the genome is from GENCODE
     is_aws_igenome       //   boolean: whether the genome files are from AWS iGenomes
@@ -139,14 +139,13 @@ workflow PREPARE_GENOME {
         } else {
             ch_transcript_fasta = Channel.value(file(transcript_fasta))
         }
-        if (gencode) { 
+        if (gencode) {
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
             ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
         ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
-        ch_versions         = ch_versions.mix(GTF_FILTER.out.versions)
         ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
 
@@ -268,7 +267,7 @@ workflow PREPARE_GENOME {
             ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
         }
     }
-    
+
     //
     // Uncompress Kallisto index or generate from scratch if required
     //

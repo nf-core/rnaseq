@@ -37,13 +37,7 @@ if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) 
 def prepareToolIndices  = []
 if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 if (!params.skip_alignment) { prepareToolIndices << params.aligner }
-if (!params.skip_pseudo_alignment) {
-    if(params.pseudo_aligner) { 
-        prepareToolIndices << params.pseudo_aligner 
-    } else {
-        exit 1, "--skip_pseudo_alignment not set, but --pseudo_aligner not set"
-    }
-}
+if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
 // Determine whether to filter the GTF or not
 def filterGtf = 
@@ -822,9 +816,8 @@ workflow RNASEQ {
     //
     ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
-    ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    
-    if (!params.skip_pseudo_alignment) {
+    ch_pseudoaligner_clustering_multiqc = Channel.empty()    
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
        if (params.pseudo_aligner == 'salmon') {
            ch_pseudo_index = PREPARE_GENOME.out.salmon_index

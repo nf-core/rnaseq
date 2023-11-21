@@ -17,8 +17,8 @@ Special thanks to the following for their contributions to the release:
 
 - [PR #1123](https://github.com/nf-core/rnaseq/pull/1123) - Overhaul tximport.r, output length tables
 - [PR #1124](https://github.com/nf-core/rnaseq/pull/1124) - Ensure pseudoaligner is set if pseudoalignment is not skipped
-- [[PR #1126](https://github.com/nf-core/rnaseq/pull/1126)] [[#1125](https://github.com/nf-core/rnaseq/issues/1125)] - Pipeline fails if transcript_fasta not provided and `skip_gtf_filter = true`.
-- [[PR #1127](https://github.com/nf-core/rnaseq/pull/1127)] - Enlarge sampling to determine the number of columns in `filter_gtf.py` script.
+- [PR #1126](https://github.com/nf-core/rnaseq/pull/1126) - Pipeline fails if transcript_fasta not provided and `skip_gtf_filter = true`.
+- [PR #1127](https://github.com/nf-core/rnaseq/pull/1127) - Enlarge sampling to determine the number of columns in `filter_gtf.py` script.
 
 ## [[3.13.1](https://github.com/nf-core/rnaseq/releases/tag/3.13.1)] - 2023-11-17
 

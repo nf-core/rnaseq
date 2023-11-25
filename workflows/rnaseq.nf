@@ -829,9 +829,8 @@ workflow RNASEQ {
     //
     ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
-    ch_pseudoaligner_clustering_multiqc = Channel.empty()
-
-    if (!params.skip_pseudo_alignment) {
+    ch_pseudoaligner_clustering_multiqc = Channel.empty()    
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
        if (params.pseudo_aligner == 'salmon') {
            ch_pseudo_index = PREPARE_GENOME.out.salmon_index

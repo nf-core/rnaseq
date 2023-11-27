@@ -23,7 +23,7 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

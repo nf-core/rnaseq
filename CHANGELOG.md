@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+- Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling.
+
 ### Software dependencies
 
 ### Modules / Subworkflows

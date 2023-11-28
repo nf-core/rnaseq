@@ -25,6 +25,7 @@ jobs:
     steps:
       - uses: seqeralabs/action-tower-launch@v2
         with:
+          revision: ${{ github.sha }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
@@ -41,6 +42,7 @@ jobs:
         with:
           name: Tower debug log file
           path: tower_action_*.log
+
   run-full-tests-on-gcp:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' || !github.event.inputs }}
     runs-on: ubuntu-latest
@@ -50,6 +52,7 @@ jobs:
     steps:
       - uses: seqeralabs/action-tower-launch@v2
         with:
+          revision: ${{ github.sha }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
@@ -66,6 +69,7 @@ jobs:
         with:
           name: Tower debug log file
           path: tower_action_*.log
+
   run-full-tests-on-azure:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' || !github.event.inputs }}
     runs-on: ubuntu-latest
@@ -75,6 +79,7 @@ jobs:
     steps:
       - uses: seqeralabs/action-tower-launch@v2
         with:
+          revision: ${{ github.sha }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}

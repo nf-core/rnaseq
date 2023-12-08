@@ -250,7 +250,7 @@
                     },
                     "bam_rseqc": {
                         "branch": "master",
-                        "git_sha": "045c3b47040a8284766b78500801ec21e7678277",
+                        "git_sha": "92793c143c93acd9129f15f35f25d3aab2b23c0e",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_sort_stats_samtools": {

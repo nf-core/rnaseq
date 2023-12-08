@@ -1,0 +1,151 @@
+{
+    "inner_distance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance.txt:md5,a1acc9def0f64a5500d4c4cb47cbe32b"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_freq.txt:md5,3fc037501f5899b5da009c8ce02fc25e"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_mean.txt:md5,58398b7d5a29a5e564f9e3c50b55996c"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_plot.r:md5,5859fbd5b42046d47e8b9aa85077f4ea"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.884125559"
+    },
+    "junction_saturation": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.junctionSaturation_plot.r:md5,caa6e63dcb477aabb169882b2f30dadd"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.919027887"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,07b3ad789260bd746d872e7ff18153b2",
+                "versions.yml:md5,59d1ee2d13b29d10549187562d8fe1e0",
+                "versions.yml:md5,5eb5515f8009effdbb601170bb90ba29",
+                "versions.yml:md5,71818a5705b87b9d5c2532403a436bd8",
+                "versions.yml:md5,a09f406b0da71ca4291fd935e49d377d",
+                "versions.yml:md5,c9124387d6090cb4c94aaa9bf0e1c321",
+                "versions.yml:md5,e1e69eaa546288ace5e97285313e1420",
+                "versions.yml:md5,fe3bf0ac57c99687880ee62b28a4d4df"
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.951402764"
+    },
+    "tin": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.943409965"
+    },
+    "bamstat": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.862772491"
+    },
+    "inferexperiment": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.899686868"
+    },
+    "read_duplication": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.DupRate_plot.r:md5,3c0325095cee4835b921e57d61c23dca"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.pos.DupRate.xls:md5,a859bc2031d46bf1cc4336205847caa3"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.seq.DupRate.xls:md5,ee8783399eec5a18522a6f08bece338b"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.934467786"
+    },
+    "junction_annotation": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.junction_annotation.log:md5,d75e0f5d62fada8aa9449991b209554c"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:49:45.387109599"
+    },
+    "readdistribution": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-25T18:02:43.926520106"
+    }
+}

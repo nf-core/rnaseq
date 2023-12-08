@@ -12,8 +12,16 @@ keywords:
   - readdistribution
   - readduplication
   - tin
-modules:
+components:
   - rseqc
+  - rseqc/tin
+  - rseqc/readduplication
+  - rseqc/readdistribution
+  - rseqc/junctionsaturation
+  - rseqc/junctionannotation
+  - rseqc/innerdistance
+  - rseqc/inferexperiment
+  - rseqc/bamstat
 input:
   - meta:
       type: map
@@ -131,5 +139,8 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@drpatelh"
+  - "@kevinmenden"
+maintainers:
   - "@drpatelh"
   - "@kevinmenden"

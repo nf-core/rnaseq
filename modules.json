@@ -27,8 +27,8 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
+                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
+                        "installed_by": ["modules", "fastq_fastqc_umitools_fastp"]
                     },
                     "fastqc": {
                         "branch": "master",
@@ -102,42 +102,42 @@
                     },
                     "rseqc/bamstat": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "65acf692457e8c466e104c6a3e5ac392e98fe688",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/inferexperiment": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "f2a3328fde9a2b4185285057f8d3727f39dd2aef",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/innerdistance": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "3e839096a1be5da4f68d1de1066e4d0bc13f5d6d",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/junctionannotation": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/junctionsaturation": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "9dfed3180f80f599c91daf5112d73a5e59367c24",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/readdistribution": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "7bb1b295a359bcbf0a0ea03d19d40a00916805ee",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/readduplication": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "db02573fdd89210d09ce9e2ac06857902a7fffec",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/tin": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "4acfdd20843d5b6d63f9181721a6856447cb7bec",
                         "installed_by": ["bam_rseqc"]
                     },
                     "salmon/index": {
@@ -250,7 +250,7 @@
                     },
                     "bam_rseqc": {
                         "branch": "master",
-                        "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
+                        "git_sha": "045c3b47040a8284766b78500801ec21e7678277",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_sort_stats_samtools": {

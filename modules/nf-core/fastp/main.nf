@@ -45,7 +45,7 @@ process FASTP {
             $adapter_list \\
             $fail_fastq \\
             $args \\
-            2> ${prefix}.fastp.log \\
+            2> >(tee ${prefix}.fastp.log >&2) \\
         | gzip -c > ${prefix}.fastp.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
@@ -66,7 +66,7 @@ process FASTP {
             $adapter_list \\
             $fail_fastq \\
             $args \\
-            2> ${prefix}.fastp.log
+            2> >(tee ${prefix}.fastp.log >&2)
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -91,7 +91,7 @@ process FASTP {
             --thread $task.cpus \\
             --detect_adapter_for_pe \\
             $args \\
-            2> ${prefix}.fastp.log
+            2> >(tee ${prefix}.fastp.log >&2)
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

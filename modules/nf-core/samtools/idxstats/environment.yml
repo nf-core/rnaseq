@@ -1,0 +1,7 @@
+name: samtools_idxstats
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::samtools=1.18

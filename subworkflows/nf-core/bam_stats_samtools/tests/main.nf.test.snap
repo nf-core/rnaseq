@@ -1,0 +1,128 @@
+{
+    "test_bam_stats_samtools_paired_end_cram_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,a53f3d26e2e9851f7d528442bbfe9781"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-06T09:31:26.194017574"
+    },
+    "test_bam_stats_samtools_paired_end_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.stats:md5,49e2b43344ff92bc4c02463a58f7ba4a"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T11:07:13.965061942"
+    },
+    "test_bam_stats_samtools_paired_end_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-06T09:31:11.668517251"
+    },
+    "test_bam_stats_samtools_single_end_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.flagstat:md5,2191911d72575a2358b08b1df64ccb53"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-06T09:26:10.340046381"
+    },
+    "test_bam_stats_samtools_paired_end_cram_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-06T09:31:26.207052003"
+    },
+    "test_bam_stats_samtools_single_end_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.stats:md5,5a6667d97806e5002731e9cf23674fad"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T11:07:06.676820877"
+    },
+    "test_bam_stats_samtools_paired_end_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-06T09:31:11.68246157"
+    },
+    "test_bam_stats_samtools_single_end_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.idxstats:md5,613e048487662c694aa4a2f73ca96a20"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-06T09:26:10.349439801"
+    },
+    "test_bam_stats_samtools_paired_end_cram_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,2cf2fe93596ee3d74f946097b204a629"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T11:07:22.30295557"
+    }
+}

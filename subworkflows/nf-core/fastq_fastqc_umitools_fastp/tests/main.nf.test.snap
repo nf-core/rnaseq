@@ -1,0 +1,81 @@
+{
+    "trim_reads_merged": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-26T02:28:26.26920982"
+    },
+    "trim_reads_fail": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-26T02:28:26.25861515"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,85bd0117e5778fff18e3920972a296ad",
+                "versions.yml:md5,c50aa59475ab901bc6f9a2cf7b1a14e0",
+                "versions.yml:md5,f3dcaae948e8eed92b4a5557b4c6668e"
+            ]
+        ],
+        "timestamp": "2023-11-26T02:28:26.30891403"
+    },
+    "trim_json": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.fastp.json:md5,1e0f8e27e71728e2b63fc64086be95cd"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-26T02:28:26.24768259"
+    },
+    "reads": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1.fastp.fastq.gz:md5,67b2bbae47f073e05a97a9c2edce23c7",
+                        "test_2.fastp.fastq.gz:md5,25cbdca08e2083dbd4f0502de6b62f39"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T11:30:32.061644815"
+    },
+    "umi_log": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-26T02:28:26.238536"
+    },
+    "trim_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    198
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-26T02:28:26.27984169"
+    }
+}

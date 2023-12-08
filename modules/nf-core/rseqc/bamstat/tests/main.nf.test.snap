@@ -1,0 +1,31 @@
+{
+    "sarscov2 - [meta] - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,300e8a9b6f8213d3621e53af09a9c728"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,300e8a9b6f8213d3621e53af09a9c728"
+                ]
+            }
+        ],
+        "timestamp": "2023-11-23T11:26:51.281041171"
+    }
+}

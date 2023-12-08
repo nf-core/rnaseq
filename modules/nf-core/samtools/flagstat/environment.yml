@@ -1,0 +1,7 @@
+name: samtools_flagstat
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::samtools=1.18

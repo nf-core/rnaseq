@@ -1,0 +1,73 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_SORT"
+    script "../main.nf"
+    process "SAMTOOLS_SORT"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/sort"
+
+    test("test_samtools_sort") {
+
+        config "./nextflow.config"
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("test_samtools_sort_stub") {
+
+        config "./nextflow.config"
+        options "-stub-run"
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.bam[0][1]).name,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+}

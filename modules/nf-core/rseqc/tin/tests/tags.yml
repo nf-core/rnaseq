@@ -1,0 +1,2 @@
+rseqc/tin:
+  - modules/nf-core/rseqc/tin/**

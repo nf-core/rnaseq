@@ -1,0 +1,16 @@
+{
+    "BAM": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-14T15:49:22.577133"
+    }
+}

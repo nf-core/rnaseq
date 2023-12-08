@@ -1,0 +1,64 @@
+{
+    "SAMTOOLS STATS Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,045a48208b1c6f5b8af4347fe31f4def"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,650a365c6635001436008350ae83337c"
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,045a48208b1c6f5b8af4347fe31f4def"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,650a365c6635001436008350ae83337c"
+                ]
+            }
+        ],
+        "timestamp": "2023-12-04T11:07:28.26821485"
+    },
+    "SAMTOOLS CRAM Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,dfbfa130d4a6925ddd1931dcd8354a43"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,650a365c6635001436008350ae83337c"
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,dfbfa130d4a6925ddd1931dcd8354a43"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,650a365c6635001436008350ae83337c"
+                ]
+            }
+        ],
+        "timestamp": "2023-12-04T11:07:50.356233402"
+    }
+}

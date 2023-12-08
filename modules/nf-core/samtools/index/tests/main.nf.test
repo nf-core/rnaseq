@@ -1,0 +1,87 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_INDEX"
+    script "../main.nf"
+    process "SAMTOOLS_INDEX"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/index"
+
+    test("sarscov2 [BAI]") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out.bai).match("bai") },
+                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+            )
+        }
+    }
+
+    test("homo_sapiens [CRAI]") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_cram'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out.crai).match("crai") },
+                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+            )
+        }
+    }
+
+    test("homo_sapiens [CSI]") {
+
+        config "./csi.nextflow.config"
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.csi.get(0).get(1)).exists() },
+                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+            )
+        }
+    }
+}

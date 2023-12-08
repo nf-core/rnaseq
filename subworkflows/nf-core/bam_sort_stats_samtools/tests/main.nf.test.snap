@@ -1,0 +1,86 @@
+{
+    "test_bam_sort_stats_samtools_paired_end_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-22T20:25:03.687121177"
+    },
+    "test_bam_sort_stats_samtools_paired_end_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-22T20:25:03.709648916"
+    },
+    "test_bam_sort_stats_samtools_single_end_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,f281507081517414eb1a04b2d9c855b2"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T11:06:50.951881479"
+    },
+    "test_bam_sort_stats_samtools_paired_end_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,e32e7e49dce1fbe327a89e0fb7bc01b1"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T11:06:59.253905951"
+    },
+    "test_bam_sort_stats_samtools_single_end_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,613e048487662c694aa4a2f73ca96a20"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-22T20:25:58.451364604"
+    },
+    "test_bam_sort_stats_samtools_single_end_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,2191911d72575a2358b08b1df64ccb53"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-22T20:25:58.416859285"
+    }
+}

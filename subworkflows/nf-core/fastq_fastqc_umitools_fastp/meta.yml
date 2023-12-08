@@ -69,8 +69,10 @@ output:
   - reads:
       type: file
       description: >
-        Extracted FASTQ files. |
-        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+        Extracted FASTQ files. | For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+
+
+
           For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
       pattern: "*.{fastq.gz}"
   - fastqc_html:
@@ -121,4 +123,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@robsyme"
+maintainers:
   - "@robsyme"

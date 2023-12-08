@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Samtools module version updated 1.17 -> 1.18.
 - Update Rseqc and Fastp modules to print STDERR to screen and file.
 
-
 ### Software dependencies
 
 ### Modules / Subworkflows

@@ -301,5 +301,5 @@ workflow PREPARE_GENOME {
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
-    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+    versions         = ch_versions.ifEmpty(null) // channel: [ process, tool, version ]
 }

@@ -94,5 +94,5 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     merged_tpm_transcript         = TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
     merged_transcript_rds         = SE_TRANSCRIPT.out.rds                  //    path: *.rds
 
-    versions                      = ch_versions                            // channel: [ versions.yml ]
+    versions                      = ch_versions                            // channel: [ process, tool, version ]
 }

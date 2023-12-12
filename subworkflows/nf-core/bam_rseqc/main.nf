@@ -164,5 +164,5 @@ workflow BAM_RSEQC {
 
     tin_txt                         // channel: [ val(meta), txt ]
 
-    versions = ch_versions          // channel: [ versions.yml ]
+    versions = ch_versions          // channel: [ process, tool, version ]
 }

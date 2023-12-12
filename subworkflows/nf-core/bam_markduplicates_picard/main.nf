@@ -48,5 +48,5 @@ workflow BAM_MARKDUPLICATES_PICARD {
     flagstat = BAM_STATS_SAMTOOLS.out.flagstat   // channel: [ val(meta), path(flagstat) ]
     idxstats = BAM_STATS_SAMTOOLS.out.idxstats   // channel: [ val(meta), path(idxstats) ]
 
-    versions = ch_versions                       // channel: [ versions.yml ]
+    versions = ch_versions                       // channel: [ process, tool, version ]
 }

@@ -58,5 +58,5 @@ workflow QUANTIFY_RSEM {
     merged_counts_transcript = RSEM_MERGE_COUNTS.out.counts_transcript        //    path: *.transcript_counts.tsv
     merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.tsv
 
-    versions                 = ch_versions                                    // channel: [ versions.yml ]
+    versions                 = ch_versions                                    // channel: [ process, tool, version ]
 }

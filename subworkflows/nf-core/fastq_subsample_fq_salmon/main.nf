@@ -50,5 +50,5 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     results   = SALMON_QUANT.out.results   // channel: [ val(meta), results_dir ]
     json_info = SALMON_QUANT.out.json_info // channel: [ val(meta), json_info
 
-    versions  = ch_versions                // channel: [ versions.yml ]
+    versions  = ch_versions                // channel: [ process, tool, version ]
 }

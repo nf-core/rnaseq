@@ -30,5 +30,5 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     bigwig   = UCSC_BEDGRAPHTOBIGWIG.out.bigwig // channel: [ val(meta), [ bigwig ] ]
     bedgraph = UCSC_BEDCLIP.out.bedgraph        // channel: [ val(meta), [ bedgraph ] ]
 
-    versions = ch_versions                      // channel: [ versions.yml ]
+    versions = ch_versions                      // channel: [ process, tool, version ]
 }

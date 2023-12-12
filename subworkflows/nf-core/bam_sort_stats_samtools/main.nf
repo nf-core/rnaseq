@@ -46,5 +46,5 @@ workflow BAM_SORT_STATS_SAMTOOLS {
     flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
 
-    versions = ch_versions                     // channel: [ versions.yml ]
+    versions = ch_versions                     // channel: [ process, tool, version ]
 }

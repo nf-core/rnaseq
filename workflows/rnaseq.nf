@@ -39,6 +39,25 @@ if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 if (!params.skip_alignment) { prepareToolIndices << params.aligner }
 if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
+// Determine whether to filter the GTF or not
+def filterGtf =
+    ((
+        // Condition 1: Alignment is required and aligner is set
+        !params.skip_alignment && params.aligner
+    ) ||
+    (
+        // Condition 2: Pseudoalignment is required and pseudoaligner is set
+        !params.skip_pseudo_alignment && params.pseudo_aligner
+    ) ||
+    (
+        // Condition 3: Transcript FASTA file is not provided
+        !params.transcript_fasta
+    )) &&
+    (
+        // Condition 4: --skip_gtf_filter is not provided
+        !params.skip_gtf_filter
+    )
+
 // Get RSeqC modules to run
 def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
 if (params.bam_csi_index) {
@@ -88,7 +107,7 @@ ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.
 include { BEDTOOLS_GENOMECOV                 } from '../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../modules/local/deseq2_qc'
-include { DESEQ2_QC as DESEQ2_QC_SALMON      } from '../modules/local/deseq2_qc'
+include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
@@ -97,11 +116,11 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../module
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME                          } from '../subworkflows/local/prepare_genome'
-include { ALIGN_STAR                              } from '../subworkflows/local/align_star'
-include { QUANTIFY_RSEM                           } from '../subworkflows/local/quantify_rsem'
-include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'
-include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'
+include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome'
+include { ALIGN_STAR                                        } from '../subworkflows/local/align_star'
+include { QUANTIFY_RSEM                                     } from '../subworkflows/local/quantify_rsem'
+include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_pseudo'
+include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../subworkflows/local/quantify_pseudo'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -167,12 +186,14 @@ workflow RNASEQ {
         params.star_index,
         params.rsem_index,
         params.salmon_index,
+        params.kallisto_index,
         params.hisat2_index,
         params.bbsplit_index,
         params.gencode,
         is_aws_igenome,
         biotype,
-        prepareToolIndices
+        prepareToolIndices,
+        filterGtf
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -231,7 +252,7 @@ workflow RNASEQ {
         .set { ch_strand_fastq }
 
     //
-    // SUBWORKFLOW: Sub-sample FastQ files and pseudo-align with Salmon to auto-infer strandedness
+    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
     //
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
     PREPARE_GENOME.out.fasta
@@ -462,8 +483,11 @@ workflow RNASEQ {
             ch_dummy_file,
             PREPARE_GENOME.out.transcript_fasta,
             PREPARE_GENOME.out.gtf,
+            'salmon',
             true,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
         )
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
@@ -723,14 +747,14 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
-            ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
-            ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
-            ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
-            ch_junctionannotation_multiqc = BAM_RSEQC.out.junctionannotation_log
-            ch_junctionsaturation_multiqc = BAM_RSEQC.out.junctionsaturation_rscript
-            ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
-            ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
-            ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
+            ch_bamstat_multiqc            = BAM_RSEQC.out.ch_bamstat
+            ch_inferexperiment_multiqc    = BAM_RSEQC.out.ch_inferexperiment
+            ch_innerdistance_multiqc      = BAM_RSEQC.out.ch_innerdistance_freq
+            ch_junctionannotation_multiqc = BAM_RSEQC.out.ch_junctionannotation_log
+            ch_junctionsaturation_multiqc = BAM_RSEQC.out.ch_junctionsaturation_rscript
+            ch_readdistribution_multiqc   = BAM_RSEQC.out.ch_readdistribution
+            ch_readduplication_multiqc    = BAM_RSEQC.out.ch_readduplication_pos_xls
+            ch_tin_multiqc                = BAM_RSEQC.out.ch_tin
 
             ch_inferexperiment_multiqc
                 .map {
@@ -760,30 +784,40 @@ workflow RNASEQ {
     }
 
     //
-    // SUBWORKFLOW: Pseudo-alignment and quantification with Salmon
+    // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
     //
-    ch_salmon_multiqc                   = Channel.empty()
+    ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon') {
-        QUANTIFY_SALMON (
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+
+       if (params.pseudo_aligner == 'salmon') {
+           ch_pseudo_index = PREPARE_GENOME.out.salmon_index
+       } else {
+           ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
+       }
+
+        QUANTIFY_PSEUDO_ALIGNMENT (
             ch_filtered_reads,
-            PREPARE_GENOME.out.salmon_index,
+            ch_pseudo_index,
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,
+            params.pseudo_aligner,
             false,
-            params.salmon_quant_libtype ?: ''
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
         )
-        ch_salmon_multiqc = QUANTIFY_SALMON.out.results
+        ch_pseudo_multiqc            = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
+        ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_SALMON (
-                QUANTIFY_SALMON.out.counts_gene_length_scaled,
+            DESEQ2_QC_PSEUDO (
+                ch_counts_gene_length_scaled,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_SALMON.out.pca_multiqc
-            ch_pseudoaligner_clustering_multiqc = DESEQ2_QC_SALMON.out.dists_multiqc
+            ch_pseudoaligner_pca_multiqc        = DESEQ2_QC_PSEUDO.out.pca_multiqc
         }
     }
 
@@ -821,7 +855,7 @@ workflow RNASEQ {
             ch_star_multiqc.collect{it[1]}.ifEmpty([]),
             ch_hisat2_multiqc.collect{it[1]}.ifEmpty([]),
             ch_rsem_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_salmon_multiqc.collect{it[1]}.ifEmpty([]),
+            ch_pseudo_multiqc.collect{it[1]}.ifEmpty([]),
             ch_samtools_stats.collect{it[1]}.ifEmpty([]),
             ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
             ch_samtools_idxstats.collect{it[1]}.ifEmpty([]),
@@ -857,7 +891,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
-    
+
     NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 

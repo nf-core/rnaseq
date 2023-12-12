@@ -1,10 +1,10 @@
 process MULTIQC {
     label 'process_medium'
 
-    conda "bioconda::multiqc=1.15"
+    conda "bioconda::multiqc=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.15--pyhdfd78af_0' :
-        'biocontainers/multiqc:1.15--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/multiqc:1.17--pyhdfd78af_1' :
+        'biocontainers/multiqc:1.17--pyhdfd78af_1' }"
 
     input:
     path multiqc_config
@@ -23,7 +23,7 @@ process MULTIQC {
     path ('star/*')
     path ('hisat2/*')
     path ('rsem/*')
-    path ('salmon/*')
+    path ('pseudoalignment/*')
     path ('samtools/stats/*')
     path ('samtools/flagstat/*')
     path ('samtools/idxstats/*')
@@ -57,8 +57,10 @@ process MULTIQC {
     script:
     def args = task.ext.args ?: ''
     def custom_config = params.multiqc_config ? "--config $multiqc_custom_config" : ''
+    prefix = task.ext.prefix ?: "multiqc_report"
     """
     multiqc \\
+        -n ${prefix}.html \\
         -f \\
         $args \\
         $custom_config \\

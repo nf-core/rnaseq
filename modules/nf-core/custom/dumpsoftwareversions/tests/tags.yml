@@ -1,0 +1,2 @@
+custom/dumpsoftwareversions:
+  - modules/nf-core/custom/dumpsoftwareversions/**

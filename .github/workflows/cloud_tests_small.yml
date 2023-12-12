@@ -18,7 +18,7 @@ jobs:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'gcp' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: seqeralabs/action-tower-launch@v1
+      - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

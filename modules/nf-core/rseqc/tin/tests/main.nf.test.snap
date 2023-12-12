@@ -1,0 +1,47 @@
+{
+    "sarscov2 paired-end [bam]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paired_end.sorted.tin.xls:md5,6b1b1b0dc1dc265342ba8c3f27fa60e6"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,77a0664abb6e486d1a0dd2078d4916d2"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,77a0664abb6e486d1a0dd2078d4916d2"
+                ],
+                "xls": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paired_end.sorted.tin.xls:md5,6b1b1b0dc1dc265342ba8c3f27fa60e6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-11-24T02:30:03.446989864"
+    }
+}

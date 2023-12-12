@@ -2,6 +2,7 @@ name: rseqc_inferexperiment
 description: Infer strandedness from sequencing reads
 keywords:
   - rnaseq
+  - strandedness
   - experiment
 tools:
   - rseqc:
@@ -36,5 +37,8 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@drpatelh"
+  - "@kevinmenden"
+maintainers:
   - "@drpatelh"
   - "@kevinmenden"

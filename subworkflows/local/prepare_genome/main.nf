@@ -14,6 +14,7 @@ include { UNTAR as UNTAR_STAR_INDEX         } from '../../../modules/nf-core/unt
 include { UNTAR as UNTAR_RSEM_INDEX         } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_SALMON_INDEX       } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_KALLISTO_INDEX     } from '../../../modules/nf-core/untar'
 
 include { CUSTOM_GETCHROMSIZES              } from '../../../modules/nf-core/custom/getchromsizes'
 include { GFFREAD                           } from '../../../modules/nf-core/gffread'
@@ -22,13 +23,14 @@ include { STAR_GENOMEGENERATE               } from '../../../modules/nf-core/sta
 include { HISAT2_EXTRACTSPLICESITES         } from '../../../modules/nf-core/hisat2/extractsplicesites'
 include { HISAT2_BUILD                      } from '../../../modules/nf-core/hisat2/build'
 include { SALMON_INDEX                      } from '../../../modules/nf-core/salmon/index'
+include { KALLISTO_INDEX                    } from '../../../modules/nf-core/kallisto/index'
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../../modules/nf-core/rsem/preparereference'
 include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../../modules/nf-core/rsem/preparereference'
 
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { CAT_ADDITIONAL_FASTA                 } from '../../../modules/local/cat_additional_fasta'
-include { GTF_GENE_FILTER                      } from '../../../modules/local/gtf_gene_filter'
+include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
 
 workflow PREPARE_GENOME {
@@ -44,12 +46,14 @@ workflow PREPARE_GENOME {
     star_index           // directory: /path/to/star/index/
     rsem_index           // directory: /path/to/rsem/index/
     salmon_index         // directory: /path/to/salmon/index/
-    hisat2_index         // directory: /path/to/hisat2/index/ 
+    kallisto_index       // directory: /path/to/kallisto/index/
+    hisat2_index         // directory: /path/to/hisat2/index/
     bbsplit_index        // directory: /path/to/rsem/index/
     gencode              //   boolean: whether the genome is from GENCODE
     is_aws_igenome       //   boolean: whether the genome files are from AWS iGenomes
     biotype              //    string: if additional fasta file is provided biotype value to use when appending entries to GTF file
     prepare_tool_indices //      list: tools to prepare indices for
+    filter_gtf           //   boolean: whether to filter GTF file
 
     main:
     //
@@ -64,19 +68,26 @@ workflow PREPARE_GENOME {
     //
     // Uncompress GTF annotation file or create from GFF3 if required
     //
-    if (gtf) {
-        if (gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
-        } else {
-            ch_gtf = Channel.value(file(gtf))
+    if (gtf || gff) {
+        if (gtf) {
+            if (gtf.endsWith('.gz')) {
+                ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
+            } else {
+                ch_gtf = Channel.value(file(gtf))
+            }
+        } else if (gff) {
+            if (gff.endsWith('.gz')) {
+                ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
+            } else {
+                ch_gff = Channel.value(file(gff))
+            }
+            ch_gtf      = GFFREAD ( ch_gff ).gtf
         }
-    } else if (gff) {
-        if (gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
-        } else {
-            ch_gff = Channel.value(file(gff))
+
+    	if (filter_gtf) {
+            GTF_FILTER ( ch_fasta, ch_gtf )
+            ch_gtf = GTF_FILTER.out.genome_gtf
         }
-        ch_gtf      = GFFREAD ( ch_gff ).gtf
     }
 
     //
@@ -115,13 +126,12 @@ workflow PREPARE_GENOME {
         } else {
             ch_transcript_fasta = Channel.value(file(transcript_fasta))
         }
-        if (gencode) { 
+        if (gencode) {
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
             ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
         }
     } else {
-        ch_filter_gtf = GTF_GENE_FILTER ( ch_fasta, ch_gtf ).gtf
-        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_filter_gtf ).transcript_fasta
+        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
     }
 
     //
@@ -230,6 +240,22 @@ workflow PREPARE_GENOME {
         }
     }
 
+    //
+    // Uncompress Kallisto index or generate from scratch if required
+    //
+    ch_kallisto_index = Channel.empty()
+    if (kallisto_index) {
+        if (kallisto_index.endsWith('.tar.gz')) {
+            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar
+        } else {
+            ch_kallisto_index = Channel.value([[:], file(kallisto_index)])
+        }
+    } else {
+        if ('kallisto' in prepare_tool_indices) {
+            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map{[ [:], it]} ).index
+        }
+    }
+
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -243,4 +269,5 @@ workflow PREPARE_GENOME {
     rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
+    kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
 }

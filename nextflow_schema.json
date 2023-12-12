@@ -149,6 +149,13 @@
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Salmon index."
                 },
+                "kallisto_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to directory or tar.gz archive for pre-built Kallisto index."
+                },
                 "hisat2_build_memory": {
                     "type": "string",
                     "default": "200.GB",
@@ -352,7 +359,7 @@
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": ["salmon"]
+                    "enum": ["salmon", "kallisto"]
                 },
                 "bam_csi_index": {
                     "type": "boolean",
@@ -368,11 +375,29 @@
                     "type": "string",
                     "fa_icon": "fas fa-fast-forward",
                     "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
-                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
+                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html).",
+                    "enum": [
+                        "A",
+                        "IS",
+                        "ISF",
+                        "ISR",
+                        "IU",
+                        "MS",
+                        "MSF",
+                        "MSR",
+                        "MU",
+                        "OS",
+                        "OSF",
+                        "OSR",
+                        "OU",
+                        "SF",
+                        "SR",
+                        "U"
+                    ]
                 },
                 "min_mapped_reads": {
                     "type": "number",
-                    "default": 5,
+                    "default": 5.0,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
                     "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
@@ -396,6 +421,23 @@
                     "type": "string",
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
+                },
+                "extra_kallisto_quant_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Kallisto quant command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "kallisto_quant_fraglen": {
+                    "type": "integer",
+                    "description": "In single-end mode Kallisto requires an estimated fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
+                    "default": 200,
+                    "fa_icon": "fas fa-ruler-horizontal"
+                },
+                "kallisto_quant_fraglen_sd": {
+                    "type": "integer",
+                    "description": "In single-end mode, Kallisto requires an estimated standard error for fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
+                    "default": 200,
+                    "fa_icon": "fas fa-sort-amount-up-alt"
                 }
             }
         },
@@ -478,6 +520,17 @@
             "fa_icon": "fas fa-fast-forward",
             "description": "Options to skip various steps within the workflow.",
             "properties": {
+                "skip_gtf_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip filtering of GTF for valid scaffolds and/ or transcript IDs.",
+                    "help_text": "If you're confident on the validity of the GTF with respect to the genome fasta file, or wish to disregard failures thriggered by the filtering module, activate this option."
+                },
+                "skip_gtf_transcript_filter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline."
+                },
                 "skip_bbsplit": {
                     "type": "boolean",
                     "default": true,
@@ -503,7 +556,7 @@
                 "skip_pseudo_alignment": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip all of the pseudo-alignment-based processes within the pipeline."
+                    "description": "Skip all of the pseudoalignment-based processes within the pipeline."
                 },
                 "skip_markduplicates": {
                     "type": "boolean",

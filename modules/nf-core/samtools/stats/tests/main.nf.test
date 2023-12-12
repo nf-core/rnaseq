@@ -1,0 +1,78 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_STATS"
+    script "../main.nf"
+    process "SAMTOOLS_STATS"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/stats"
+
+    test("SAMTOOLS STATS Should run without failures") {
+
+        when {
+            params {
+                
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                // define inputs of the process here.
+                input[0] = [ 
+                                [ id:'test', single_end:false ], // meta map
+                                file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                                file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)
+                                
+                            ]
+                input[1] = [[],[]]
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+            {assert process.success},
+            {assert snapshot(process.out).match()}
+            )
+        }
+
+    }
+
+    test("SAMTOOLS CRAM Should run without failures") {
+
+        when {
+            params {
+                
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                // define inputs of the process here
+                input[0] = [ 
+                                [ id:'test', single_end:false ], // meta map
+                                file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_cram'], checkIfExists: true),
+                                file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_cram_crai'], checkIfExists: true)
+                                
+                            ]
+                input[1] =  [ 
+                                [ id:'genome' ],
+                                file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                             ]
+                """
+            }
+
+            
+        }
+
+        then {
+            assertAll(
+            {assert process.success},
+            {assert snapshot(process.out).match()}
+            )
+        }
+
+    }
+
+
+}

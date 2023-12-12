@@ -3,16 +3,69 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.13.0dev - [date]
+## v3.14.0dev - [date]
+
+### Credits
+
+### Enhancements & fixes
+
+- [PR #1135](https://github.com/nf-core/rnaseq/pull/1135) - Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling.
+- [PR #1138](https://github.com/nf-core/rnaseq/pull/1138) - Updates FASTQC and UMITOOLS modules and their dependencies which have had their version string extraction commands updated ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
+- Update Rseqc and Fastp modules to print STDERR to screen and file.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `picard`   | 3.0.0       | 3.1.1       |
+| `samtools` | 1.17        | 1.18        |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+### Modules / Subworkflows
+
+- BAM_RSEQC subworkflow updated with new channel names.
+
+## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Regina Hertfelder Reynolds](https://github.com/RHReynolds)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+
+### Enhancements & fixes
+
+- [PR #1123](https://github.com/nf-core/rnaseq/pull/1123) - Overhaul tximport.r, output length tables
+- [PR #1124](https://github.com/nf-core/rnaseq/pull/1124) - Ensure pseudoaligner is set if pseudoalignment is not skipped
+- [PR #1126](https://github.com/nf-core/rnaseq/pull/1126) - Pipeline fails if transcript_fasta not provided and `skip_gtf_filter = true`.
+- [PR #1127](https://github.com/nf-core/rnaseq/pull/1127) - Enlarge sampling to determine the number of columns in `filter_gtf.py` script.
+
+## [[3.13.1](https://github.com/nf-core/rnaseq/releases/tag/3.13.1)] - 2023-11-17
+
+### Enhancements and fixes
+
+- [PR #1121](https://github.com/nf-core/rnaseq/pull/1121) - Changes for 3.13.1 patch release incl. igenomes star fix
+
+## [[3.13.0](https://github.com/nf-core/rnaseq/releases/tag/3.13.0)] - 2023-11-17
 
 ### Credits
 
 Special thanks to the following for their contributions to the release:
 
 - [Adam Talbot](https://github.com/adamrtalbot)
+- [hmehlan](https://github.com/hmehlan)
+- [Jonathan Manning](https://github.com/pinin4fjords)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
+- [Steffen Möller](https://github.com/smoe)
 
 Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 
@@ -28,13 +81,20 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1083](https://github.com/nf-core/rnaseq/pull/1083) - Move local modules and subworkflows to subfolders
 - [PR #1088](https://github.com/nf-core/rnaseq/pull/1088) - Updates contributing and code of conduct documents with nf-core template 2.10
 - [PR #1091](https://github.com/nf-core/rnaseq/pull/1091) - Reorganise parameters in schema for better usability
+- [PR #1106](https://github.com/nf-core/rnaseq/pull/1106) - Kallisto quantification
+- [PR #1107](https://github.com/nf-core/rnaseq/pull/1107) - Expand GTF filtering to remove rows with empty transcript ID when required, fix STAR GTF usage
+- [#976](https://github.com/nf-core/rnaseq/issues/976) - Add author and licenses for all custom scripts
+- [#1050](https://github.com/nf-core/rnaseq/issues/1050) - Provide custom prefix/suffix for summary files to avoid overwriting
+- [#1074](https://github.com/nf-core/rnaseq/issues/1074) - Enable quantification using StringTie AND a custom
+- [#1082](https://github.com/nf-core/rnaseq/issues/1082) - More informative error message for `filter_gtf_for_genes_in_genome.py`
+- [#1102](https://github.com/nf-core/rnaseq/issues/1102) - gene entries with empty transcript_id fields
 
 ### Software dependencies
 
 | Dependency              | Old version | New version |
 | ----------------------- | ----------- | ----------- |
 | `fastqc`                | 0.11.9      | 0.12.1      |
-| `multiqc`               | 1.14        | 1.15        |
+| `multiqc`               | 1.14        | 1.17        |
 | `ucsc-bedgraphtobigwig` | 377         | 445         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
@@ -42,6 +102,17 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 > **NB:** Dependency has been **added** if just the new version information is present.
 >
 > **NB:** Dependency has been **removed** if new version information isn't present.
+
+### Modules / Subworkflows
+
+| Script                   | Old name          | New name                    |
+| ------------------------ | ----------------- | --------------------------- |
+| `local/gtf_filter`       | `GTF_GENE_FILTER` | `GTF_FILTER`                |
+| `local/tx2gene`          | `SALMON_TX2GENE`  | `TX2GENE`                   |
+| `local/tximport`         | `SALMON_TXIMPORT` | `TXIMPORT`                  |
+| `local/quantify_salmon`  | `QUANTIFY_SALMON` | `QUANTIFY_PSEUDO_ALIGNMENT` |
+| `nf-core/kallisto_index` |                   | `KALLISTO_INDEX`            |
+| `nf-core/kallisto_quant` |                   | `KALLISTO_QUANT`            |
 
 ## [[3.12.0](https://github.com/nf-core/rnaseq/releases/tag/3.12.0)] - 2023-06-02
 
@@ -61,7 +132,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 ### Enhancements & fixes
 
 - [[#1011](https://github.com/nf-core/rnaseq/issues/1011)] - FastQ files from UMI-tools not being passed to fastp
-- [[#1018](https://github.com/nf-core/rnaseq/issues/1018)] - Ability to skip both alignment and pseudo-alignment to only run pre-processing QC steps.
+- [[#1018](https://github.com/nf-core/rnaseq/issues/1018)] - Ability to skip both alignment and pseudoalignment to only run pre-processing QC steps.
 - [PR #1016](https://github.com/nf-core/rnaseq/pull/1016) - Updated pipeline template to [nf-core/tools 2.8](https://github.com/nf-core/tools/releases/tag/2.8)
 - [PR #1025](https://github.com/nf-core/fetchngs/pull/1025) - Add `public_aws_ecr.config` to source mulled containers when using `public.ecr.aws` Docker Biocontainer registry
 - [PR #1038](https://github.com/nf-core/rnaseq/pull/1038) - Updated error log for count values when supplying `--additional_fasta`
@@ -809,7 +880,7 @@ Major novel changes include:
 - Added options to skip several steps
   - Skip trimming using `--skipTrimming`
   - Skip BiotypeQC using `--skipBiotypeQC`
-  - Skip Alignment using `--skipAlignment` to only use pseudo-alignment using Salmon
+  - Skip Alignment using `--skipAlignment` to only use pseudoalignment using Salmon
 
 ### Documentation updates
 

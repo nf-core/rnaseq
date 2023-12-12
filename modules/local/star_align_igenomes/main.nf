@@ -9,8 +9,8 @@ process STAR_ALIGN_IGENOMES {
 
     input:
     tuple val(meta), path(reads)
-    path index
-    path gtf
+    tuple val(meta2), path(index)
+    tuple val(meta3), path(gtf)
     val star_ignore_sjdbgtf
     val seq_platform
     val seq_center

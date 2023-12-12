@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: custom_dumpsoftwareversions
 description: Custom module used to dump software versions within the nf-core pipeline template
 keywords:
@@ -16,7 +16,6 @@ input:
       type: file
       description: YML file containing software versions
       pattern: "*.yml"
-
 output:
   - yml:
       type: file
@@ -30,7 +29,9 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@drpatelh"
+  - "@grst"
+maintainers:
   - "@drpatelh"
   - "@grst"

@@ -29,4 +29,10 @@ process GTF_FILTER {
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """
+
+    stub:
+    """
+    touch 1.filtered.gtf
+    touch versions.yml
+    """
 }

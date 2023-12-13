@@ -72,4 +72,10 @@ process TRIMGALORE {
         END_VERSIONS
         """
     }
+
+    stub:
+    """
+    touch 1_trimmed.fq.gz
+    touch versions.yml
+    """
 }

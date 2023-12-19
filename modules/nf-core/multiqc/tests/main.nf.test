@@ -1,0 +1,63 @@
+nextflow_process {
+
+    name "Test Process MULTIQC"
+    script "../main.nf"
+    process "MULTIQC"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "multiqc"
+
+    test("MULTIQC: FASTQC") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz_fastqc_zip'], checkIfExists: true)])
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.report.get(0)).exists() },
+                { assert path(process.out.data.get(0)).exists() },
+                { assert path(process.out.versions.get(0)).getText().contains("multiqc") }
+            )
+        }
+
+    }
+
+    test("MULTIQC: FASTQC and a config file") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz_fastqc_zip'], checkIfExists: true)])
+                input[1] = Channel.of(file("https://github.com/nf-core/tools/raw/dev/nf_core/pipeline-template/assets/multiqc_config.yml", checkIfExists: true))
+                input[2] = []
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.report.get(0)).exists() },
+                { assert path(process.out.data.get(0)).exists() },
+                { assert path(process.out.versions.get(0)).getText().contains("multiqc") }
+            )
+        }
+
+    }
+}

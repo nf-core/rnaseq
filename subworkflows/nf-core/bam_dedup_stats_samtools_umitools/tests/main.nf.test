@@ -1,0 +1,51 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
+    script "../main.nf"
+    workflow "BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/bam_dedup_stats_samtools_umitools"
+    tag "subworkflows/bam_stats_samtools"
+    tag "bam_dedup_stats_samtools_umitools"
+    tag "bam_stats_samtools"
+    tag "samtools"
+    tag "samtools/index"
+    tag "samtools/stats"
+    tag "samtools/idxstats"
+    tag "samtools/flagstat"
+    tag "umitools"
+    tag "umitools/dedup"
+
+    test("sarscov2_bam_bai") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = [
+                    [ id:'test'], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)
+                ]
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
+                { assert workflow.out.bai.get(0).get(1) ==~ ".*.bai"},
+                { assert snapshot(workflow.out.stats).match("test_bam_dedup_stats_samtools_umitools_stats") },
+                { assert snapshot(workflow.out.flagstat).match("test_bam_dedup_stats_samtools_umitools_flagstats") },
+                { assert snapshot(workflow.out.idxstats).match("test_bam_dedup_stats_samtools_umitools_idxstats") }
+            )
+        }
+
+    }
+
+}

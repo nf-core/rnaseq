@@ -1,0 +1,60 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_FASTQC_UMITOOLS_FASTP"
+    script "../main.nf"
+    workflow "FASTQ_FASTQC_UMITOOLS_FASTP"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/fastq_fastqc_umitools_fastp"
+    tag "fastq_fastqc_umitools_fastp"
+    tag "fastqc"
+    tag "umitools/extract"
+    tag "fastp"
+
+
+    test("sarscov2 paired-end [fastq]") {
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                            [ id:'test', single_end:false ], // meta map
+                            [
+                             file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                             file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
+                            ]
+                ]
+                input[1] = false // skip_fastqc
+                input[2] = false // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = 1     // umi_discard_read
+                input[5] = false // skip_trimming
+                input[6] = []    // adapter_fasta
+                input[7] = false // save_trimmed_fail
+                input[8] = false // save_merged
+                input[9] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.reads).match("reads") },
+                { assert snapshot(workflow.out.umi_log).match("umi_log") },
+                { assert snapshot(workflow.out.trim_json).match("trim_json") },
+                { assert snapshot(workflow.out.trim_reads_fail).match("trim_reads_fail") },
+                { assert snapshot(workflow.out.trim_reads_merged).match("trim_reads_merged") },
+                { assert snapshot(workflow.out.trim_read_count).match("trim_read_count") },
+                { assert snapshot(workflow.out.versions).match("versions") },
+
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip }
+            )
+        }
+    }
+}

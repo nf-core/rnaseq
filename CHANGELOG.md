@@ -3,6 +3,33 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v3.14.0dev - [date]
+
+### Credits
+
+### Enhancements & fixes
+
+- [PR #1135](https://github.com/nf-core/rnaseq/pull/1135) - Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling.
+- [PR #1138](https://github.com/nf-core/rnaseq/pull/1138) - Updates FASTQC and UMITOOLS modules and their dependencies which have had their version string extraction commands updated ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
+- Update Rseqc and Fastp modules to print STDERR to screen and file.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `picard`   | 3.0.0       | 3.1.1       |
+| `samtools` | 1.17        | 1.18        |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+### Modules / Subworkflows
+
+- BAM_RSEQC subworkflow updated with new channel names.
+
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 
 ### Credits

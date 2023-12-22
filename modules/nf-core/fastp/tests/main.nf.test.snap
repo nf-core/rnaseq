@@ -1,0 +1,52 @@
+{
+    "fastp test_fastp_interleaved_json": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.fastp.json:md5,168f516f7bd4b7b6c32da7cba87299a4"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T11:04:45.794175881"
+    },
+    "test_fastp_single_end_json": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.fastp.json:md5,c852d7a6dba5819e4ac8d9673bedcacc"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T11:04:10.566343705"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,48ffc994212fb1fc9f83a74fa69c9f02"
+            ]
+        ],
+        "timestamp": "2023-10-17T11:04:10.582076024"
+    },
+    "test_fastp_single_end_trim_fail_json": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.fastp.json:md5,9a7ee180f000e8d00c7fb67f06293eb5"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T11:05:00.379878948"
+    }
+}

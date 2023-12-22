@@ -1,0 +1,7 @@
+name: kallisto_quant
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::kallisto=0.48.0

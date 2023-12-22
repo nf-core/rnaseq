@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bedgraph_bedclip_bedgraphtobigwig"
+description: Convert bedgraph to bigwig with clip
+keywords:
+  - bedgraph
+  - bigwig
+  - clip
+  - conversion
+components:
+  - ucsc/bedclip
+  - ucsc/bedgraphtobigwig
+input:
+  - bedgraph:
+      type: file
+      description: bedGraph file which should be converted
+      pattern: "*.bedGraph"
+  - sizes:
+      type: file
+      description: File with chromosome sizes
+      pattern: "*.sizes"
+output:
+  - bigwig:
+      type: file
+      description: bigWig coverage file relative to genes on the input file
+      pattern: ".bigWig"
+  - bedgraph:
+      type: file
+      description: bedGraph file after clipping
+      pattern: "*.bedGraph"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"

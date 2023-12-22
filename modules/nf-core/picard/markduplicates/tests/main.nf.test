@@ -1,0 +1,111 @@
+nextflow_process {
+
+    name "Test Process PICARD_MARKDUPLICATES"
+    script "../main.nf"
+    process "PICARD_MARKDUPLICATES"
+    config "./nextflow.config"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "picard"
+    tag "picard/markduplicates"
+
+    test("sarscov2 - bam, fasta, fai - sorted bam") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+                input[1] = [ 
+                    [ id:'genome' ],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = [ 
+                    [ id:'genome' ],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.bam[0][1]).name,
+                    path(process.out.metrics.get(0).get(1)).readLines()[0..2],
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam, fasta, fai - unsorted bam") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true)
+                ]
+                input[1] = [ 
+                    [ id:'genome' ],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = [ 
+                    [ id:'genome' ],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.bam[0][1]).name,
+                    path(process.out.metrics.get(0).get(1)).readLines()[0..2],
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+   test("homo_sapiens - cram, fasta, fai") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true)
+                ]
+                input[1] = [ 
+                    [ id:'genome' ],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = [ 
+                    [ id:'genome' ],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.bam[0][1]).name,
+                    path(process.out.metrics.get(0).get(1)).readLines()[0..2],
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+}

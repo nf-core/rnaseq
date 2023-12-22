@@ -1,0 +1,8 @@
+name: rseqc_junctionannotation
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::rseqc=3.0.1
+  - conda-forge::r-base>=3.5

@@ -1,0 +1,485 @@
+nextflow_process {
+
+    name "Test Process FASTP"
+    script "../main.nf"
+    process "FASTP"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "fastp"
+
+    test("test_fastp_single_end") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
+                ]
+
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text  = [ "Q20 bases:</td><td class='col2'>12.922000 K (92.984097%)",
+                                "single end (151 cycles)" ]
+            def log_text   = [ "Q20 bases: 12922(92.9841%)",
+								"reads passed filter: 99" ]
+            def read_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+								"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+								"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+								"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1",
+								"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+								"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            assertAll(
+                { assert process.success },
+                { read_lines.each { read_line ->
+                    { assert path(process.out.reads.get(0).get(1)).linesGzip.contains(read_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { assert snapshot(process.out.json).match("test_fastp_single_end_json") },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
+                ]
+
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text   = [ "Q20 bases:</td><td class='col2'>25.719000 K (93.033098%)",
+									"The input has little adapter percentage (~0.000000%), probably it's trimmed before."]
+            def log_text    = [ "No adapter detected for read1",
+									"Q30 bases: 12281(88.3716%)"]
+            def json_text   = ['"passed_filter_reads": 198']
+            def read1_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1",
+									"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+									"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            def read2_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/2",
+									"ATGTGTACATTGGCGACCCTGCTCAATTACCTGCACCACGCACATTGCTAACTAAGGGCACACTAGAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGTCCTG",
+									"AAAAAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEEEEAEEEEEAAEEEEEEEEEAAEAAA<<EAAEEEEEEEAAA<<<AE",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/2",
+									"GCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT",
+									"AAAAA6EEAEEEEEAEEAEEAEEEEEEA6EEEEAEEAEEEEE6EEEEEEAEEEEA///A<<EEEEEEEEEAEEEEEE"]
+            assertAll(
+                { assert process.success },
+                { read1_lines.each { read1_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(0)).linesGzip.contains(read1_line) }
+                    }
+                },
+                { read2_lines.each { read2_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(1)).linesGzip.contains(read2_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { json_text.each { json_part ->
+                    { assert path(process.out.json.get(0).get(1)).getText().contains(json_part) }
+                    }
+                },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("fastp test_fastp_interleaved") {
+        config './nextflow.config'
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = [ [ id:'test', single_end:true ], // meta map
+                            [ file(params.test_data['sarscov2']['illumina']['test_interleaved_fastq_gz'], checkIfExists: true) ]
+                        ]
+
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text  = [ "Q20 bases:</td><td class='col2'>25.719000 K (93.033098%)",
+									"paired end (151 cycles + 151 cycles)"]
+            def log_text   = [ "Q20 bases: 12922(92.9841%)",
+									"reads passed filter: 198"]
+            def read_lines = [ "@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+									"@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/2",
+									"ATGTGTACATTGGCGACCCTGCTCAATTACCTGCACCACGCACATTGCTAACTAAGGGCACACTAGAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGTCCTG",
+									"AAAAAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEEEEAEEEEEAAEEEEEEEEEAAEAAA<<EAAEEEEEEEAAA<<<AE"]
+            assertAll(
+                { assert process.success },
+                { read_lines.each { read_line ->
+                    { assert path(process.out.reads.get(0).get(1)).linesGzip.contains(read_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { assert snapshot(process.out.json).match("fastp test_fastp_interleaved_json") },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("test_fastp_single_end_trim_fail") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = true
+                save_merged       = false
+
+                input[0] = [ [ id:'test', single_end:true ], // meta map
+                            [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
+                        ]
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text         = [ "Q20 bases:</td><td class='col2'>12.922000 K (92.984097%)",
+									"single end (151 cycles)"]
+            def log_text          = [ "Q20 bases: 12922(92.9841%)",
+									"reads passed filter: 99" ]
+            def read_lines        = [ "@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1",
+									"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+									"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            def failed_read_lines = [ "@ERR5069949.885966 NS500628:121:HK3MMAFX2:4:11610:19682:20132/1 failed_quality_filter",
+									"GTCTAATCATAATTTCTTGGTACAGGCTGGTATTGTTCATCTCAGGGTTATTGGACATTCTATGCAAAATTGTGTACTT",
+									"AAA//E/EAA/E//E//E//E/E//AE/A/E//EAEA///AE//E///E/EEE6EEEAEEA///E/AEE/EAEE/E//E"]
+            assertAll(
+                { assert process.success },
+                { read_lines.each { read_line ->
+                    { assert path(process.out.reads.get(0).get(1)).linesGzip.contains(read_line) }
+                    }
+                },
+                { failed_read_lines.each { failed_read_line ->
+                    { assert path(process.out.reads_fail.get(0).get(1)).linesGzip.contains(failed_read_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { assert snapshot(process.out.json).match("test_fastp_single_end_trim_fail_json") },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_trim_fail") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = true
+                save_merged       = false
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
+                    ]
+                ]
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text           = [ "Q20 bases:</td><td class='col2'>25.719000 K (93.033098%)",
+									"The input has little adapter percentage (~0.000000%), probably it's trimmed before."]
+            def log_text            = [ "No adapter detected for read1",
+									"Q30 bases: 12281(88.3716%)"]
+            def json_text           = ['"passed_filter_reads": 198']
+            def read1_lines         = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1",
+									"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+									"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            def read2_lines         = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/2",
+									"ATGTGTACATTGGCGACCCTGCTCAATTACCTGCACCACGCACATTGCTAACTAAGGGCACACTAGAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGTCCTG",
+									"AAAAAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEEEEAEEEEEAAEEEEEEEEEAAEAAA<<EAAEEEEEEEAAA<<<AE",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/2",
+									"GCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT",
+									"AAAAA6EEAEEEEEAEEAEEAEEEEEEA6EEEEAEEAEEEEE6EEEEEEAEEEEA///A<<EEEEEEEEEAEEEEEE"]
+            def failed_read2_lines  = ["@ERR5069949.885966 NS500628:121:HK3MMAFX2:4:11610:19682:20132/2",
+									"CTTAGGTCTTAGGATTGGCTGTATCAACCTTAAGCTTAAGTACACAATTTTGCATAGAATGTCCAATAA",
+									"A//AA6EEAEEEEE6EEE/EEA/EA///AAE/EAEEEAE6AE/E/E/EEAAE/EAA/E/E/<EA//E/6"]
+            // def failed_read1_lines = path(process.out.reads_fail.get(0).get(1).get(0)).linesGzip is empty file
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.reads_fail.get(0).get(1).get(0)).exists() },
+                { read1_lines.each { read1_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(0)).linesGzip.contains(read1_line) }
+                    }
+                },
+                { read2_lines.each { read2_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(1)).linesGzip.contains(read2_line) }
+                    }
+                },
+                { failed_read2_lines.each { failed_read2_line ->
+                    { assert path(process.out.reads_fail.get(0).get(1).get(1)).linesGzip.contains(failed_read2_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { json_text.each { json_part ->
+                    { assert path(process.out.json.get(0).get(1)).getText().contains(json_part) }
+                    }
+                },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = true
+
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                             [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                               file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
+                           ]
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text         = [ "<div id='After_filtering__merged__quality'>"]
+            def log_text          = [ "Merged and filtered:",
+									"total reads: 75",
+									"total bases: 13683"]
+            def json_text         = ['"merged_and_filtered": {', '"total_reads": 75', '"total_bases": 13683']
+            def read1_lines       = [ "@ERR5069949.1066259 NS500628:121:HK3MMAFX2:1:11312:18369:8333/1",
+									"CCTTATGACAGCAAGAACTGTGTATGATGATGGTGCTAGGAGAGTGTGGACACTTATGAATGTCTTGACACTCGTTTATAAAGTTTATTATGGTAATGCTTTAGATCAAGCCATTTCCATGTGGGCTCTTATAATCTCTGTTACTTC",
+									"AAAAAEAEEAEEEEEEEEEEEEEEEEAEEEEAEEEEEEEEAEEEEEEEEEEEEEEEEE/EAEEEEEE/6EEEEEEEEEEAEEAEEE/EE/AEEAEEEEEAEEEA/EEAAEAE<AEEAEEEAEAEEEAEAEEAE/AEEEEAEEEEAEA",
+									"@ERR5069949.324865 NS500628:121:HK3MMAFX2:1:11102:17526:14721/1",
+									"CACAAACTCTAAAAGAATGTATAGGGTCAGCACCAAAAATACCAGCAGATAATAATGTTGCAAGTAGAACTTCGTGCAGATTAAAATTTTCATAAGCACTCTAAAGAAGTTGAATGTCTTCAAATTTCTTAACATTAGGGCCCACAACAAG",
+									"AAAAAEA/A<EAA/AE/EE/EE//////EA/EEE/E/EEEE//E/6//EA//<AA/A/EEEAA/EEEE/EEEA/E/</AEE////AEEEE//<E//EAE/A///<EEE//<E<<EEE<///A//E/E/EEEAA/<A////<A/AEAAA//E"]
+            def read2_lines       = ["@ERR5069949.1066259 NS500628:121:HK3MMAFX2:1:11312:18369:8333/2",
+									"GTACAAAAATAGCCTAAGAAACAATAAACTAGCATTATACACTGAAGTGTATTACCAGTTATGAAGAAAATAGGGCAATACTCAACACACATAAAAACAATACCTCTGGCCAAAAACATGACAGTTGTAACTACACCTGAGTAGTTAGAAG",
+									"AAAAAEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEAEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEA/EAA</EEEEEEEEEE/AE//A/E<AE<AA<AEEE/AAEAAAEEAEEA<A6AEEA<EEAEEEEEEEAA//EE",
+									"@ERR5069949.324865 NS500628:121:HK3MMAFX2:1:11102:17526:14721/2",
+									"ATGAATCTGATGAATACATAGCTACTAATGGACCTCTTAAAGTGCGTGGTAGTTGTGATTAAAGCGGACACATACTTGCTAAACACTCTCTTCATGATGTC",
+									"A/AAAEEEEA6AA6EE//EEA/EEEAE/EA/A////E</EEAA//EEA////EAE<///E/AEA</AAE/EA//E<EAAAE/AA//AEE//A/AE//</EE"]
+            def read_merged_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1 merged_150_37",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGTGGTGCAGGTAATTGAGCAGGGTCGCCAATGTACACAT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAAEEEEEEEEEEEEEEEEEEEEE/EEEEEEEEEEAAAAA",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1 merged_77_0",
+									"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+									"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            assertAll(
+                { assert process.success },
+                { read1_lines.each { read1_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(0)).linesGzip.contains(read1_line) }
+                    }
+                },
+                { read2_lines.each { read2_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(1)).linesGzip.contains(read2_line) }
+                    }
+                },
+                { read_merged_lines.each { read_merged_line ->
+                    { assert path(process.out.reads_merged.get(0).get(1)).linesGzip.contains(read_merged_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { json_text.each { json_part ->
+                    { assert path(process.out.json.get(0).get(1)).getText().contains(json_part) }
+                    }
+                },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged_adapterlist") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = file("https://github.com/nf-core/test-datasets/raw/modules/data/delete_me/fastp/adapters.fasta", checkIfExists: true)
+                save_trimmed_fail = false
+                save_merged       = true
+
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                             [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                               file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
+                           ]
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            def html_text         = [ "<div id='After_filtering__merged__quality'>"]
+            def log_text          = [ "Merged and filtered:",
+									"total reads: 75",
+									"total bases: 13683"]
+            def json_text         = ['"merged_and_filtered": {', '"total_reads": 75', '"total_bases": 13683',"--adapter_fasta"]
+            def read1_lines       = ["@ERR5069949.1066259 NS500628:121:HK3MMAFX2:1:11312:18369:8333/1",
+									"CCTTATGACAGCAAGAACTGTGTATGATGATGGTGCTAGGAGAGTGTGGACACTTATGAATGTCTTGACACTCGTTTATAAAGTTTATTATGGTAATGCTTTAGATCAAGCCATTTCCATGTGGGCTCTTATAATCTCTGTTACTTC",
+									"AAAAAEAEEAEEEEEEEEEEEEEEEEAEEEEAEEEEEEEEAEEEEEEEEEEEEEEEEE/EAEEEEEE/6EEEEEEEEEEAEEAEEE/EE/AEEAEEEEEAEEEA/EEAAEAE<AEEAEEEAEAEEEAEAEEAE/AEEEEAEEEEAEA",
+									"@ERR5069949.324865 NS500628:121:HK3MMAFX2:1:11102:17526:14721/1",
+									"CACAAACTCTAAAAGAATGTATAGGGTCAGCACCAAAAATACCAGCAGATAATAATGTTGCAAGTAGAACTTCGTGCAGATTAAAATTTTCATAAGCACTCTAAAGAAGTTGAATGTCTTCAAATTTCTTAACATTAGGGCCCACAACAAG",
+									"AAAAAEA/A<EAA/AE/EE/EE//////EA/EEE/E/EEEE//E/6//EA//<AA/A/EEEAA/EEEE/EEEA/E/</AEE////AEEEE//<E//EAE/A///<EEE//<E<<EEE<///A//E/E/EEEAA/<A////<A/AEAAA//E"]
+            def read2_lines       = ["@ERR5069949.1066259 NS500628:121:HK3MMAFX2:1:11312:18369:8333/2",
+									"GTACAAAAATAGCCTAAGAAACAATAAACTAGCATTATACACTGAAGTGTATTACCAGTTATGAAGAAAATAGGGCAATACTCAACACACATAAAAACAATACCTCTGGCCAAAAACATGACAGTTGTAACTACACCTGAGTAGTTAGAAG",
+									"AAAAAEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEAEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEA/EAA</EEEEEEEEEE/AE//A/E<AE<AA<AEEE/AAEAAAEEAEEA<A6AEEA<EEAEEEEEEEAA//EE",
+									"@ERR5069949.324865 NS500628:121:HK3MMAFX2:1:11102:17526:14721/2",
+									"ATGAATCTGATGAATACATAGCTACTAATGGACCTCTTAAAGTGCGTGGTAGTTGTGATTAAAGCGGACACATACTTGCTAAACACTCTCTTCATGATGTC",
+									"A/AAAEEEEA6AA6EE//EEA/EEEAE/EA/A////E</EEAA//EEA////EAE<///E/AEA</AAE/EA//E<EAAAE/AA//AEE//A/AE//</EE"]
+            def read_merged_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1 merged_150_37",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGTGGTGCAGGTAATTGAGCAGGGTCGCCAATGTACACAT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAAEEEEEEEEEEEEEEEEEEEEE/EEEEEEEEEEAAAAA",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1 merged_77_0",
+									"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+									"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+
+            assertAll(
+                { assert process.success },
+                { read1_lines.each { read1_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(0)).linesGzip.contains(read1_line) }
+                    }
+                },
+                { read2_lines.each { read2_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(1)).linesGzip.contains(read2_line) }
+                    }
+                },
+                { read_merged_lines.each { read_merged_line ->
+                    { assert path(process.out.reads_merged.get(0).get(1)).linesGzip.contains(read_merged_line) }
+                    }
+                },
+                { html_text.each { html_part ->
+                    { assert path(process.out.html.get(0).get(1)).getText().contains(html_part) }
+                    }
+                },
+                { json_text.each { json_part ->
+                    { assert path(process.out.json.get(0).get(1)).getText().contains(json_part) }
+                    }
+                },
+                { log_text.each { log_part ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
+                    }
+                },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+}

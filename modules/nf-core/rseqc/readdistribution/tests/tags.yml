@@ -1,0 +1,2 @@
+rseqc/readdistribution:
+  - modules/nf-core/rseqc/readdistribution/**

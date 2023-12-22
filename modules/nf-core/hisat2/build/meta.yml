@@ -1,0 +1,62 @@
+name: hisat2_build
+description: Builds HISAT2 index for reference genome
+keywords:
+  - build
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - hisat2:
+      description: HISAT2 is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes as well as to a single reference genome.
+      homepage: https://daehwankimlab.github.io/hisat2/
+      documentation: https://daehwankimlab.github.io/hisat2/manual/
+      doi: "10.1038/s41587-019-0201-4"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - fasta:
+      type: file
+      description: Reference fasta file
+      pattern: "*.{fa,fasta,fna}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - gtf:
+      type: file
+      description: Reference gtf annotation file
+      pattern: "*.{gtf}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - splicesites:
+      type: file
+      description: Splices sites in gtf file
+      pattern: "*.{txt}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - index:
+      type: file
+      description: HISAT2 genome index file
+      pattern: "*.ht2"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@ntoda03"

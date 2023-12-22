@@ -19,6 +19,7 @@ Learn more about contributing: [CONTRIBUTING.md](https://github.com/nf-core/rnas
 - [ ] If necessary, also make a PR on the nf-core/rnaseq _branch_ on the [nf-core/test-datasets](https://github.com/nf-core/test-datasets) repository.
 - [ ] Make sure your code lints (`nf-core lint`).
 - [ ] Ensure the test suite passes (`nextflow run . -profile test,docker --outdir <OUTDIR>`).
+- [ ] Check for unexpected warnings in debug mode (`nextflow run . -profile debug,test,docker --outdir <OUTDIR>`).
 - [ ] Usage Documentation in `docs/usage.md` is updated.
 - [ ] Output Documentation in `docs/output.md` is updated.
 - [ ] `CHANGELOG.md` is updated.

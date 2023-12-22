@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1135](https://github.com/nf-core/rnaseq/pull/1135) - Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling.
 - [PR #1138](https://github.com/nf-core/rnaseq/pull/1138) - Updates FASTQC and UMITOOLS modules and their dependencies which have had their version string extraction commands updated ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
 - Update Rseqc and Fastp modules to print STDERR to screen and file.
+- [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners
 
 ### Software dependencies
 

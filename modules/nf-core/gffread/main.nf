@@ -12,7 +12,7 @@ process GFFREAD {
 
     output:
     path "*.gtf"        , emit: gtf
-    path "versions.yml" , emit: versions
+    path "versions.yml" , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

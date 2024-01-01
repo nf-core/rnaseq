@@ -14,7 +14,7 @@ process UCSC_BEDCLIP {
 
     output:
     tuple val(meta), path("*.bedGraph"), emit: bedgraph
-    path "versions.yml"                , emit: versions
+    path "versions.yml"                , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

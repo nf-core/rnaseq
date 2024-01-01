@@ -15,7 +15,7 @@ process DUPRADAR {
     tuple val(meta), path("*.pdf")    , emit: pdf
     tuple val(meta), path("*.txt")    , emit: txt
     tuple val(meta), path("*_mqc.txt"), emit: multiqc
-    path "versions.yml"               , emit: versions
+    path "versions.yml"               , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

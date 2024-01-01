@@ -11,20 +11,15 @@ workflow FASTQ_ALIGN_HISAT2 {
 
     main:
 
-    ch_versions = Channel.empty()
-
-
     //
     // Map reads with HISAT2
     //
     HISAT2_ALIGN ( reads, index, splicesites )
-    ch_versions = ch_versions.mix(HISAT2_ALIGN.out.versions.first())
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
     BAM_SORT_STATS_SAMTOOLS ( HISAT2_ALIGN.out.bam, ch_fasta )
-    ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
 
     emit:
@@ -38,7 +33,5 @@ workflow FASTQ_ALIGN_HISAT2 {
     stats    = BAM_SORT_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-
-    versions = ch_versions                          // channel: [ versions.yml ]
 }
 

@@ -13,7 +13,7 @@ process RSEQC_INFEREXPERIMENT {
 
     output:
     tuple val(meta), path("*.infer_experiment.txt"), emit: txt
-    path  "versions.yml"                           , emit: versions
+    path  "versions.yml"                           , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

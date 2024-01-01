@@ -26,8 +26,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
 
     main:
 
-    ch_versions = Channel.empty()
-
     //
     // Quantify and merge counts across samples
     //
@@ -36,26 +34,21 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
         ch_pseudo_results = SALMON_QUANT.out.results
         ch_pseudo_multiqc = ch_pseudo_results
-        ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
     } else {
         KALLISTO_QUANT ( reads, index, gtf, [], kallisto_quant_fraglen, kallisto_quant_fraglen_sd)
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log
-        ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
     }
 
     TX2GENE ( ch_pseudo_results.collect{it[1]}, pseudo_aligner, gtf )
-    ch_versions = ch_versions.mix(TX2GENE.out.versions)
 
     TXIMPORT ( ch_pseudo_results.collect{it[1]}, TX2GENE.out.tsv.collect(), pseudo_aligner )
-    ch_versions = ch_versions.mix(TXIMPORT.out.versions)
 
     SE_GENE (
         TXIMPORT.out.counts_gene,
         TXIMPORT.out.tpm_gene,
         TX2GENE.out.tsv.collect()
     )
-    ch_versions = ch_versions.mix(SE_GENE.out.versions)
 
     SE_GENE_LENGTH_SCALED (
         TXIMPORT.out.counts_gene_length_scaled,
@@ -95,6 +88,4 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     merged_counts_transcript      = TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
     merged_tpm_transcript         = TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
     merged_transcript_rds         = SE_TRANSCRIPT.out.rds                  //    path: *.rds
-
-    versions                      = ch_versions                            // channel: [ versions.yml ]
 }

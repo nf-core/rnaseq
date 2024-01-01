@@ -18,7 +18,7 @@ process SALMON_QUANT {
     output:
     tuple val(meta), path("${prefix}") , emit: results
     tuple val(meta), path("*info.json"), emit: json_info, optional: true
-    path  "versions.yml"               , emit: versions
+    path  "versions.yml"               , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -56,15 +56,11 @@ workflow PREPARE_GENOME {
     filter_gtf           //   boolean: whether to filter GTF file
 
     main:
-
-    ch_versions = Channel.empty()
-
     //
     // Uncompress genome fasta file if required
     //
     if (fasta.endsWith('.gz')) {
         ch_fasta    = GUNZIP_FASTA ( [ [:], fasta ] ).gunzip.map { it[1] }
-        ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
     } else {
         ch_fasta = Channel.value(file(fasta))
     }
@@ -76,25 +72,21 @@ workflow PREPARE_GENOME {
         if (gtf) {
             if (gtf.endsWith('.gz')) {
                 ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
-                ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
             } else {
                 ch_gtf = Channel.value(file(gtf))
             }
         } else if (gff) {
             if (gff.endsWith('.gz')) {
                 ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
-                ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
             } else {
                 ch_gff = Channel.value(file(gff))
             }
             ch_gtf      = GFFREAD ( ch_gff ).gtf
-            ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
 
     	if (filter_gtf) {
             GTF_FILTER ( ch_fasta, ch_gtf )
             ch_gtf = GTF_FILTER.out.genome_gtf
-            ch_versions = ch_versions.mix(GTF_FILTER.out.versions)
         }
     }
 
@@ -104,14 +96,12 @@ workflow PREPARE_GENOME {
     if (additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], additional_fasta ] ).gunzip.map { it[1] }
-            ch_versions  = ch_versions.mix(GUNZIP_ADDITIONAL_FASTA.out.versions)
         } else {
             ch_add_fasta = Channel.value(file(additional_fasta))
         }
         CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta, biotype )
         ch_fasta    = CAT_ADDITIONAL_FASTA.out.fasta
         ch_gtf      = CAT_ADDITIONAL_FASTA.out.gtf
-        ch_versions = ch_versions.mix(CAT_ADDITIONAL_FASTA.out.versions)
     }
 
     //
@@ -120,13 +110,11 @@ workflow PREPARE_GENOME {
     if (gene_bed) {
         if (gene_bed.endsWith('.gz')) {
             ch_gene_bed = GUNZIP_GENE_BED ( [ [:], gene_bed ] ).gunzip.map { it[1] }
-            ch_versions = ch_versions.mix(GUNZIP_GENE_BED.out.versions)
         } else {
             ch_gene_bed = Channel.value(file(gene_bed))
         }
     } else {
         ch_gene_bed = GTF2BED ( ch_gtf ).bed
-        ch_versions = ch_versions.mix(GTF2BED.out.versions)
     }
 
     //
@@ -135,18 +123,15 @@ workflow PREPARE_GENOME {
     if (transcript_fasta) {
         if (transcript_fasta.endsWith('.gz')) {
             ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], transcript_fasta ] ).gunzip.map { it[1] }
-            ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
             ch_transcript_fasta = Channel.value(file(transcript_fasta))
         }
         if (gencode) {
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
             ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
-            ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else {
         ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
-        ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
     }
 
     //
@@ -155,7 +140,6 @@ workflow PREPARE_GENOME {
     CUSTOM_GETCHROMSIZES ( ch_fasta.map { [ [:], it ] } )
     ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
     ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
-    ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //
     // Uncompress BBSplit index or generate from scratch if required
@@ -165,7 +149,6 @@ workflow PREPARE_GENOME {
         if (bbsplit_index) {
             if (bbsplit_index.endsWith('.tar.gz')) {
                 ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( [ [:], bbsplit_index ] ).untar.map { it[1] }
-                ch_versions      = ch_versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
             } else {
                 ch_bbsplit_index = Channel.value(file(bbsplit_index))
             }
@@ -180,7 +163,6 @@ workflow PREPARE_GENOME {
                 .set { ch_bbsplit_fasta_list }
 
             ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
-            ch_versions      = ch_versions.mix(BBMAP_BBSPLIT.out.versions)
         }
     }
 
@@ -192,17 +174,14 @@ workflow PREPARE_GENOME {
         if (star_index) {
             if (star_index.endsWith('.tar.gz')) {
                 ch_star_index = UNTAR_STAR_INDEX ( [ [:], star_index ] ).untar.map { it[1] }
-                ch_versions   = ch_versions.mix(UNTAR_STAR_INDEX.out.versions)
             } else {
                 ch_star_index = Channel.value(file(star_index))
             }
         } else {
             if (is_aws_igenome) {
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES ( ch_fasta, ch_gtf ).index
-                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)
             } else {
                 ch_star_index = STAR_GENOMEGENERATE ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] } ).index.map { it[1] }
-                ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
             }
         }
     }
@@ -215,13 +194,11 @@ workflow PREPARE_GENOME {
         if (rsem_index) {
             if (rsem_index.endsWith('.tar.gz')) {
                 ch_rsem_index = UNTAR_RSEM_INDEX ( [ [:], rsem_index ] ).untar.map { it[1] }
-                ch_versions   = ch_versions.mix(UNTAR_RSEM_INDEX.out.versions)
             } else {
                 ch_rsem_index = Channel.value(file(rsem_index))
             }
         } else {
             ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME ( ch_fasta, ch_gtf ).index
-            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
         }
     }
 
@@ -233,20 +210,17 @@ workflow PREPARE_GENOME {
     if ('hisat2' in prepare_tool_indices) {
         if (!splicesites) {
             ch_splicesites = HISAT2_EXTRACTSPLICESITES ( ch_gtf.map { [ [:], it ] } ).txt.map { it[1] }
-            ch_versions    = ch_versions.mix(HISAT2_EXTRACTSPLICESITES.out.versions)
         } else {
             ch_splicesites = Channel.value(file(splicesites))
         }
         if (hisat2_index) {
             if (hisat2_index.endsWith('.tar.gz')) {
                 ch_hisat2_index = UNTAR_HISAT2_INDEX ( [ [:], hisat2_index ] ).untar.map { it[1] }
-                ch_versions     = ch_versions.mix(UNTAR_HISAT2_INDEX.out.versions)
             } else {
                 ch_hisat2_index = Channel.value(file(hisat2_index))
             }
         } else {
             ch_hisat2_index = HISAT2_BUILD ( ch_fasta.map { [ [:], it ] }, ch_gtf.map { [ [:], it ] }, ch_splicesites.map { [ [:], it ] } ).index.map { it[1] }
-            ch_versions     = ch_versions.mix(HISAT2_BUILD.out.versions)
         }
     }
 
@@ -257,14 +231,12 @@ workflow PREPARE_GENOME {
     if (salmon_index) {
         if (salmon_index.endsWith('.tar.gz')) {
             ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.map { it[1] }
-            ch_versions     = ch_versions.mix(UNTAR_SALMON_INDEX.out.versions)
         } else {
             ch_salmon_index = Channel.value(file(salmon_index))
         }
     } else {
         if ('salmon' in prepare_tool_indices) {
             ch_salmon_index = SALMON_INDEX ( ch_fasta, ch_transcript_fasta ).index
-            ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
         }
     }
 
@@ -275,14 +247,12 @@ workflow PREPARE_GENOME {
     if (kallisto_index) {
         if (kallisto_index.endsWith('.tar.gz')) {
             ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar
-            ch_versions     = ch_versions.mix(UNTAR_KALLISTO_INDEX.out.versions)
         } else {
             ch_kallisto_index = Channel.value([[:], file(kallisto_index)])
         }
     } else {
         if ('kallisto' in prepare_tool_indices) {
             ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map{[ [:], it]} ).index
-            ch_versions     = ch_versions.mix(KALLISTO_INDEX.out.versions)
         }
     }
 
@@ -300,5 +270,4 @@ workflow PREPARE_GENOME {
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
-    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

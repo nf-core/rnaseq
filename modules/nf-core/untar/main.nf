@@ -12,7 +12,7 @@ process UNTAR {
 
     output:
     tuple val(meta), path("$prefix"), emit: untar
-    path "versions.yml"             , emit: versions
+    path "versions.yml"             , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

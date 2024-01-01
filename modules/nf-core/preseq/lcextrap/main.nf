@@ -14,7 +14,7 @@ process PRESEQ_LCEXTRAP {
     output:
     tuple val(meta), path("*.lc_extrap.txt"), emit: lc_extrap
     tuple val(meta), path("*.log")          , emit: log
-    path  "versions.yml"                    , emit: versions
+    path  "versions.yml"                    , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

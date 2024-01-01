@@ -12,7 +12,7 @@ process GTF_FILTER {
 
     output:
     path "*.filtered.gtf", emit: genome_gtf
-    path "versions.yml"  , emit: versions
+    path "versions.yml"  , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

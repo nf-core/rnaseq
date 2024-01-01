@@ -14,7 +14,7 @@ process RSEQC_TIN {
     output:
     tuple val(meta), path("*.txt"), emit: txt
     tuple val(meta), path("*.xls"), emit: xls
-    path "versions.yml"           , emit: versions
+    path "versions.yml"           , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

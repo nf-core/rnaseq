@@ -18,9 +18,6 @@ workflow ALIGN_STAR {
     fasta               // channel: /path/to/fasta
 
     main:
-
-    ch_versions = Channel.empty()
-
     //
     // Map reads with STAR
     //
@@ -42,7 +39,6 @@ workflow ALIGN_STAR {
         ch_bam_transcript = STAR_ALIGN_IGENOMES.out.bam_transcript
         ch_fastq          = STAR_ALIGN_IGENOMES.out.fastq
         ch_tab            = STAR_ALIGN_IGENOMES.out.tab
-        ch_versions       = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
     } else {
         STAR_ALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
         ch_orig_bam       = STAR_ALIGN.out.bam
@@ -53,14 +49,12 @@ workflow ALIGN_STAR {
         ch_bam_transcript = STAR_ALIGN.out.bam_transcript
         ch_fastq          = STAR_ALIGN.out.fastq
         ch_tab            = STAR_ALIGN.out.tab
-        ch_versions       = ch_versions.mix(STAR_ALIGN.out.versions.first())
     }
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
     BAM_SORT_STATS_SAMTOOLS ( ch_orig_bam, fasta )
-    ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     emit:
     orig_bam       = ch_orig_bam                    // channel: [ val(meta), bam            ]
@@ -78,6 +72,4 @@ workflow ALIGN_STAR {
     stats          = BAM_SORT_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat       = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-
-    versions       = ch_versions                    // channel: [ versions.yml ]
 }

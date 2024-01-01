@@ -20,7 +20,7 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*primary*fastq.gz'), optional:true, emit: primary_fastq
     tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
     tuple val(meta), path('*txt')             , optional:true, emit: stats
-    path "versions.yml"                       , emit: versions
+    path "versions.yml"                       , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

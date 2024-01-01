@@ -16,7 +16,7 @@ process STRINGTIE_STRINGTIE {
     tuple val(meta), path("*.abundance.txt")  , emit: abundance
     tuple val(meta), path("*.coverage.gtf")   , optional: true, emit: coverage_gtf
     tuple val(meta), path("*.ballgown")       , optional: true, emit: ballgown
-    path  "versions.yml"                      , emit: versions
+    path  "versions.yml"                      , topic: versions
 
     when:
     task.ext.when == null || task.ext.when

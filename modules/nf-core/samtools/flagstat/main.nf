@@ -2,10 +2,10 @@ process SAMTOOLS_FLAGSTAT {
     tag "$meta.id"
     label 'process_single'
 
-    conda "${moduleDir}/environment.yml"
+    conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.18--h50ea8bc_1' :
-        'biocontainers/samtools:1.18--h50ea8bc_1' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
+        'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
     tuple val(meta), path(bam), path(bai)

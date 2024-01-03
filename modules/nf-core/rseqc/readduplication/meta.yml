@@ -3,8 +3,6 @@ description: Calculate read duplication rate
 keywords:
   - rnaseq
   - duplication
-  - sequence-based
-  - mapping-based
 tools:
   - rseqc:
       description: |
@@ -50,8 +48,5 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@drpatelh"
-  - "@kevinmenden"
-maintainers:
   - "@drpatelh"
   - "@kevinmenden"

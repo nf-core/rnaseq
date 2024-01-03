@@ -1,2 +1,0 @@
-samtools/flagstat:
-  - modules/nf-core/samtools/flagstat/**

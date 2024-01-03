@@ -1,2 +1,0 @@
-fastqc:
-  - modules/nf-core/fastqc/**

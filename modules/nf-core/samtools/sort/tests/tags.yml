@@ -1,3 +1,0 @@
-samtools/sort:
-  - modules/nf-core/samtools/sort/**
-  - tests/modules/nf-core/samtools/sort/**

@@ -2,7 +2,7 @@ process FASTP {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "${moduleDir}/environment.yml"
+    conda "bioconda::fastp=0.23.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fastp:0.23.4--h5f740d0_0' :
         'biocontainers/fastp:0.23.4--h5f740d0_0' }"
@@ -45,7 +45,7 @@ process FASTP {
             $adapter_list \\
             $fail_fastq \\
             $args \\
-            2> >(tee ${prefix}.fastp.log >&2) \\
+            2> ${prefix}.fastp.log \\
         | gzip -c > ${prefix}.fastp.fastq.gz
 
         cat <<-END_VERSIONS > versions.yml
@@ -66,7 +66,7 @@ process FASTP {
             $adapter_list \\
             $fail_fastq \\
             $args \\
-            2> >(tee ${prefix}.fastp.log >&2)
+            2> ${prefix}.fastp.log
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -91,7 +91,7 @@ process FASTP {
             --thread $task.cpus \\
             --detect_adapter_for_pe \\
             $args \\
-            2> >(tee ${prefix}.fastp.log >&2)
+            2> ${prefix}.fastp.log
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

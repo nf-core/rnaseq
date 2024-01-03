@@ -39,5 +39,3 @@ output:
         Structure: [ path(versions.yml) ]
 authors:
   - "@drpatelh"
-maintainers:
-  - "@drpatelh"

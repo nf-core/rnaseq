@@ -54,7 +54,7 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
 
     votes = Counter()
     with open(gtf_file) as inh:
-         # Read GTF file, skipping header lines
+        # Read GTF file, skipping header lines
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\t")
 

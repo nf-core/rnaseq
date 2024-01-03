@@ -6,6 +6,7 @@ import logging
 import argparse
 import glob
 import os
+import re
 from collections import Counter, defaultdict, OrderedDict
 from collections.abc import Set
 from typing import Dict
@@ -50,14 +51,18 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
     Returns:
     str: The attribute name that corresponds to transcripts in the GTF file.
     """
+
     votes = Counter()
     with open(gtf_file) as inh:
         # Read GTF file, skipping header lines
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\t")
-            # Parse attribute column and update votes for each attribute found
-            attributes = dict(item.strip().split(" ", 1) for item in cols[8].split(";") if item.strip())
-            votes.update(key for key, value in attributes.items() if value.strip('"') in transcripts)
+
+            # Use regular expression to correctly split the attributes string
+            attributes_str = cols[8]
+            attributes = dict(re.findall(r'(\S+) "(.*?)(?<!\\)";', attributes_str))
+
+            votes.update(key for key, value in attributes.items())
 
     if not votes:
         # Log a warning if no matching attribute is found

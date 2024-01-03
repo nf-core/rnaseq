@@ -17,6 +17,15 @@ Special thanks to the following for their contributions to the release:
 - [Phil Ewels](https://github.com/ewels)
 - [Vlad Savelyev](https://github.com/vladsavelyev)
 
+### Enhancements & fixes
+
+- [PR #1135](https://github.com/nf-core/rnaseq/pull/1135) - Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling
+- [PR #1141](https://github.com/nf-core/rnaseq/pull/1141) - Important! Template update for nf-core/tools v2.11
+- [PR #1143](https://github.com/nf-core/rnaseq/pull/1143) - Move fasta check back to Groovy ([#1142](https://github.com/nf-core/rnaseq/issues/1142))
+- [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners
+- [PR #1149](https://github.com/nf-core/rnaseq/pull/1149) - Fix and patch version commands for Fastp, FastQC and UMI-tools modules ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
+- [PR #1150](https://github.com/nf-core/rnaseq/pull/1150) - Be more flexible on attribute values in GTFs ([#1132](https://github.com/nf-core/rnaseq/issues/1132))
+
 ### Parameters
 
 | Old parameter | New parameter                |
@@ -26,14 +35,6 @@ Special thanks to the following for their contributions to the release:
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 > **NB:** Parameter has been **removed** if new parameter information isn't present.
-
-### Enhancements & fixes
-
-- [PR #1135](https://github.com/nf-core/rnaseq/pull/1135) - Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling
-- [PR #1141](https://github.com/nf-core/rnaseq/pull/1141) - Important! Template update for nf-core/tools v2.11
-- [PR #1149](https://github.com/nf-core/rnaseq/pull/1149) - Fix and patch version commands for Fastp, FastQC and UMI-tools modules ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
-- [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners
-- [PR #1143](https://github.com/nf-core/rnaseq/pull/1143) - Move fasta check back to Groovy ([#1142](https://github.com/nf-core/rnaseq/issues/1142))
 
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 

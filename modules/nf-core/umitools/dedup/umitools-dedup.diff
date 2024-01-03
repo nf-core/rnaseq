@@ -1,0 +1,23 @@
+Changes in module 'nf-core/umitools/dedup'
+--- modules/nf-core/umitools/dedup/main.nf
++++ modules/nf-core/umitools/dedup/main.nf
+@@ -42,7 +42,7 @@
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+-        umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
++        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
+     END_VERSIONS
+     """
+ 
+@@ -56,7 +56,7 @@
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+-        umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
++        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
+     END_VERSIONS
+     """
+ }
+
+************************************************************

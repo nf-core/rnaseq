@@ -1,2 +1,0 @@
-subworkflows/fastq_fastqc_umitools_fastp:
-  - subworkflows/nf-core/fastq_fastqc_umitools_fastp/**

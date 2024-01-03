@@ -33,6 +33,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1141](https://github.com/nf-core/rnaseq/pull/1141) - Important! Template update for nf-core/tools v2.11
 - [PR #1149](https://github.com/nf-core/rnaseq/pull/1149) - Fix and patch version commands for Fastp, FastQC and UMI-tools modules ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
 - [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners
+- [PR #1143](https://github.com/nf-core/rnaseq/pull/1143) - Move fasta check back to Groovy ([#1142](https://github.com/nf-core/rnaseq/issues/1142))
 
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 

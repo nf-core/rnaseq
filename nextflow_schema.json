@@ -211,8 +211,7 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 }
-            },
-            "required": ["fasta"]
+            }
         },
         "read_trimming_options": {
             "title": "Read trimming options",

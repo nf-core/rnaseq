@@ -360,6 +360,13 @@
                     "fa_icon": "fas fa-hamburger",
                     "enum": ["salmon", "kallisto"]
                 },
+                "pseudo_aligner_kmer_size": {
+                    "type": "integer",
+                    "default": 31,
+                    "description": "Kmer length passed to indexing step of pseudoaligners",
+                    "help_text": "Failure to set a good kmer size could cause issues with quantification with Kallisto or Salmon. This is mostly an issue for short reads (<50bp), where the default kmer size of 31 is an problem.",
+                    "fa_icon": "fas fa-ruler-horizontal"
+                },
                 "bam_csi_index": {
                     "type": "boolean",
                     "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes.",
@@ -396,7 +403,7 @@
                 },
                 "min_mapped_reads": {
                     "type": "number",
-                    "default": 5.0,
+                    "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
                     "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."

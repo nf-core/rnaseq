@@ -1,0 +1,23 @@
+Changes in module 'nf-core/fastqc'
+--- modules/nf-core/fastqc/main.nf
++++ modules/nf-core/fastqc/main.nf
+@@ -37,7 +37,7 @@
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+-        fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
++        fastqc: \$( fastqc --version | sed '/FastQC v/!d; s/.*v//' )
+     END_VERSIONS
+     """
+ 
+@@ -49,7 +49,7 @@
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+-        fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
++        fastqc: \$( fastqc --version | sed '/FastQC v/!d; s/.*v//' )
+     END_VERSIONS
+     """
+ }
+
+************************************************************

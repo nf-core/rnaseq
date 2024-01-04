@@ -25,6 +25,8 @@ Special thanks to the following for their contributions to the release:
 - [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners ([#1111](https://github.com/nf-core/rnaseq/issues/1111))
 - [PR #1149](https://github.com/nf-core/rnaseq/pull/1149) - Fix and patch version commands for Fastp, FastQC and UMI-tools modules ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
 - [PR #1150](https://github.com/nf-core/rnaseq/pull/1150) - Be more flexible on attribute values in GTFs ([#1132](https://github.com/nf-core/rnaseq/issues/1132))
+- [PR #1151](https://github.com/nf-core/rnaseq/pull/1151) - fix to #1150: reinstate conditional
+- [PR #1152](https://github.com/nf-core/rnaseq/pull/1152) - Bump container versions for tools using Docker V1 manifest ([#1140](https://github.com/nf-core/rnaseq/issues/1140))
 - [PR #1154](https://github.com/nf-core/rnaseq/pull/1154) - Prerelease 3.14.0 fixes ([#1111](https://github.com/nf-core/rnaseq/issues/1111), [#1153](https://github.com/nf-core/rnaseq/issues/1153))
 
 ### Parameters
@@ -36,6 +38,19 @@ Special thanks to the following for their contributions to the release:
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 > **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `qualimap` | 2.2.2d      | 2.3         |
+| `rseqc`    | 3.0.1       | 5.0.3       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
 
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 

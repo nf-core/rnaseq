@@ -25,6 +25,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners
 - [PR #1149](https://github.com/nf-core/rnaseq/pull/1149) - Fix and patch version commands for Fastp, FastQC and UMI-tools modules ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
 - [PR #1150](https://github.com/nf-core/rnaseq/pull/1150) - Be more flexible on attribute values in GTFs ([#1132](https://github.com/nf-core/rnaseq/issues/1132))
+- [PR #1151](https://github.com/nf-core/rnaseq/pull/1151) - fix to #1150: reinstate conditional
 
 ### Parameters
 

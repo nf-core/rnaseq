@@ -90,7 +90,8 @@
                     "qualimap/rnaseq": {
                         "branch": "master",
                         "git_sha": "4657d98bc9f565e067c4d924126ce107056f5e2f",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/qualimap/rnaseq/qualimap-rnaseq.diff"
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
@@ -105,42 +106,50 @@
                     "rseqc/bamstat": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/bamstat/rseqc-bamstat.diff"
                     },
                     "rseqc/inferexperiment": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/inferexperiment/rseqc-inferexperiment.diff"
                     },
                     "rseqc/innerdistance": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/innerdistance/rseqc-innerdistance.diff"
                     },
                     "rseqc/junctionannotation": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/junctionannotation/rseqc-junctionannotation.diff"
                     },
                     "rseqc/junctionsaturation": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/junctionsaturation/rseqc-junctionsaturation.diff"
                     },
                     "rseqc/readdistribution": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/readdistribution/rseqc-readdistribution.diff"
                     },
                     "rseqc/readduplication": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/readduplication/rseqc-readduplication.diff"
                     },
                     "rseqc/tin": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/tin/rseqc-tin.diff"
                     },
                     "salmon/index": {
                         "branch": "master",

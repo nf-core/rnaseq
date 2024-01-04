@@ -62,7 +62,7 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
             attributes_str = cols[8]
             attributes = dict(re.findall(r'(\S+) "(.*?)(?<!\\)";', attributes_str))
 
-            votes.update(key for key, value in attributes.items())
+            votes.update(key for key, value in attributes.items() if value in transcripts)
 
     if not votes:
         # Log a warning if no matching attribute is found

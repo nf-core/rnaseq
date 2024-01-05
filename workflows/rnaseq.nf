@@ -364,7 +364,9 @@ workflow RNASEQ {
         .set { ch_strand_fastq }
 
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-    PREPARE_GENOME.out.fasta
+    PREPARE_GENOME
+        .out
+        .fasta
         .combine(ch_strand_fastq.auto_strand)
         .map { it.first() }
         .first()

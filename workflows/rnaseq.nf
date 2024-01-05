@@ -244,47 +244,6 @@ workflow RNASEQ {
     .set { ch_cat_fastq }
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
-    // Branch FastQ channels if 'auto' specified to infer strandedness
-    ch_cat_fastq
-        .branch {
-            meta, fastq ->
-                auto_strand : meta.strandedness == 'auto'
-                    return [ meta, fastq ]
-                known_strand: meta.strandedness != 'auto'
-                    return [ meta, fastq ]
-        }
-        .set { ch_strand_fastq }
-
-    //
-    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
-    //
-    // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-    PREPARE_GENOME.out.fasta
-        .combine(ch_strand_fastq.auto_strand)
-        .map { it.first() }
-        .first()
-        .set { ch_genome_fasta }
-
-    FASTQ_SUBSAMPLE_FQ_SALMON (
-        ch_strand_fastq.auto_strand,
-        ch_genome_fasta,
-        PREPARE_GENOME.out.transcript_fasta,
-        PREPARE_GENOME.out.gtf,
-        PREPARE_GENOME.out.salmon_index,
-        !params.salmon_index && !('salmon' in prepareToolIndices)
-    )
-    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
-
-    FASTQ_SUBSAMPLE_FQ_SALMON
-        .out
-        .json_info
-        .join(ch_strand_fastq.auto_strand)
-        .map { meta, json, reads ->
-            return [ meta + [ strandedness: WorkflowRnaseq.getSalmonInferredStrandedness(json) ], reads ]
-        }
-        .mix(ch_strand_fastq.known_strand)
-        .set { ch_strand_inferred_fastq }
-
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
     //
@@ -295,7 +254,7 @@ workflow RNASEQ {
     ch_trim_read_count     = Channel.empty()
     if (params.trimmer == 'trimgalore') {
         FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
-            ch_strand_inferred_fastq,
+            ch_cat_fastq,
             params.skip_fastqc || params.skip_qc,
             params.with_umi,
             params.skip_umi_extract,
@@ -316,7 +275,7 @@ workflow RNASEQ {
     //
     if (params.trimmer == 'fastp') {
         FASTQ_FASTQC_UMITOOLS_FASTP (
-            ch_strand_inferred_fastq,
+            ch_cat_fastq,
             params.skip_fastqc || params.skip_qc,
             params.with_umi,
             params.skip_umi_extract,
@@ -388,6 +347,50 @@ workflow RNASEQ {
         ch_sortmerna_multiqc = SORTMERNA.out.log
         ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
+    
+    //
+    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
+    //
+    
+    // Branch FastQ channels if 'auto' specified to infer strandedness
+    ch_filtered_reads
+        .branch {
+            meta, fastq ->
+                auto_strand : meta.strandedness == 'auto'
+                    return [ meta, fastq ]
+                known_strand: meta.strandedness != 'auto'
+                    return [ meta, fastq ]
+        }
+        .set { ch_strand_fastq }
+
+    // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
+    PREPARE_GENOME
+        .out
+        .fasta
+        .combine(ch_strand_fastq.auto_strand)
+        .map { it.first() }
+        .first()
+        .set { ch_genome_fasta }
+
+    FASTQ_SUBSAMPLE_FQ_SALMON (
+        ch_strand_fastq.auto_strand,
+        ch_genome_fasta,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
+        PREPARE_GENOME.out.salmon_index,
+        !params.salmon_index && !('salmon' in prepareToolIndices)
+    )
+    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
+
+    FASTQ_SUBSAMPLE_FQ_SALMON
+        .out
+        .json_info
+        .join(ch_strand_fastq.auto_strand)
+        .map { meta, json, reads ->
+            return [ meta + [ strandedness: WorkflowRnaseq.getSalmonInferredStrandedness(json) ], reads ]
+        }
+        .mix(ch_strand_fastq.known_strand)
+        .set { ch_strand_inferred_filtered_fastq }
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
@@ -402,7 +405,7 @@ workflow RNASEQ {
     ch_aligner_clustering_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         ALIGN_STAR (
-            ch_filtered_reads,
+            ch_strand_inferred_filtered_fastq,
             PREPARE_GENOME.out.star_index.map { [ [:], it ] },
             PREPARE_GENOME.out.gtf.map { [ [:], it ] },
             params.star_ignore_sjdbgtf,
@@ -521,7 +524,7 @@ workflow RNASEQ {
     ch_rsem_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         QUANTIFY_RSEM (
-            ch_filtered_reads,
+            ch_strand_inferred_filtered_fastq,
             PREPARE_GENOME.out.rsem_index,
             PREPARE_GENOME.out.fasta.map { [ [:], it ] }
         )
@@ -555,7 +558,7 @@ workflow RNASEQ {
     ch_hisat2_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         FASTQ_ALIGN_HISAT2 (
-            ch_filtered_reads,
+            ch_strand_inferred_filtered_fastq,
             PREPARE_GENOME.out.hisat2_index.map { [ [:], it ] },
             PREPARE_GENOME.out.splicesites.map { [ [:], it ] },
             PREPARE_GENOME.out.fasta.map { [ [:], it ] }
@@ -826,7 +829,7 @@ workflow RNASEQ {
        }
 
         QUANTIFY_PSEUDO_ALIGNMENT (
-            ch_filtered_reads,
+            ch_strand_inferred_filtered_fastq,
             ch_pseudo_index,
             ch_dummy_file,
             PREPARE_GENOME.out.gtf,

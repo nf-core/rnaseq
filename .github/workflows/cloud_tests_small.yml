@@ -28,7 +28,7 @@ jobs:
           profiles: test
           parameters: |
             {
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}/"
             }
       - uses: actions/upload-artifact@v3
         with:
@@ -48,7 +48,7 @@ jobs:
           profiles: test
           parameters: |
             {
-                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-test-${{ github.sha }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-test-${{ github.sha }}/"
             }
       - uses: actions/upload-artifact@v3
         with:
@@ -68,7 +68,7 @@ jobs:
           profiles: test
           parameters: |
             {
-                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-test-${{ github.sha }}"
+                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-test-${{ github.sha }}/"
             }
       - uses: actions/upload-artifact@v3
         with:

@@ -29,6 +29,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1152](https://github.com/nf-core/rnaseq/pull/1152) - Bump container versions for tools using Docker V1 manifest ([#1140](https://github.com/nf-core/rnaseq/issues/1140))
 - [PR #1154](https://github.com/nf-core/rnaseq/pull/1154) - Prerelease 3.14.0 fixes ([#1111](https://github.com/nf-core/rnaseq/issues/1111), [#1153](https://github.com/nf-core/rnaseq/issues/1153))
 - [PR #1157](https://github.com/nf-core/rnaseq/pull/1157) - Add slash to `--outdir` for cloud tests to fix Azure validation issue
+- [PR #1159](https://github.com/nf-core/rnaseq/pull/1159) - Issues loading MultiQC report ([#1158](https://github.com/nf-core/rnaseq/issues/1158))
 
 ### Parameters
 

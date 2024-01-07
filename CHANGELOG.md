@@ -44,6 +44,7 @@ Special thanks to the following for their contributions to the release:
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| `multiqc`  | 1.17        | 1.19        |
 | `qualimap` | 2.2.2d      | 2.3         |
 | `rseqc`    | 3.0.1       | 5.0.3       |
 

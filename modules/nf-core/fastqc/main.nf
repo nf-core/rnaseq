@@ -37,7 +37,7 @@ process FASTQC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
+        fastqc: \$( fastqc --version | sed '/FastQC v/!d; s/.*v//' )
     END_VERSIONS
     """
 
@@ -49,7 +49,7 @@ process FASTQC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fastqc: \$( fastqc --version | sed -e "s/FastQC v//g" )
+        fastqc: \$( fastqc --version | sed '/FastQC v/!d; s/.*v//' )
     END_VERSIONS
     """
 }

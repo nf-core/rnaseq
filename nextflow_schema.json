@@ -211,8 +211,7 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 }
-            },
-            "required": ["fasta"]
+            }
         },
         "read_trimming_options": {
             "title": "Read trimming options",
@@ -360,6 +359,13 @@
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
                     "enum": ["salmon", "kallisto"]
+                },
+                "pseudo_aligner_kmer_size": {
+                    "type": "integer",
+                    "default": 31,
+                    "description": "Kmer length passed to indexing step of pseudoaligners",
+                    "help_text": "Failure to set a good kmer size could cause issues with quantification with Kallisto or Salmon. This is mostly an issue for short reads (<50bp), where the default kmer size of 31 is an problem.",
+                    "fa_icon": "fas fa-ruler-horizontal"
                 },
                 "bam_csi_index": {
                     "type": "boolean",

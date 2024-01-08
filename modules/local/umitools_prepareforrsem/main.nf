@@ -30,7 +30,7 @@ process UMITOOLS_PREPAREFORRSEM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        umitools: \$(umi_tools --version | sed 's/^.*UMI-tools version://; s/ *\$//')
     END_VERSIONS
     """
 }

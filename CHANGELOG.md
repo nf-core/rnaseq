@@ -3,6 +3,60 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.14.0](https://github.com/nf-core/rnaseq/releases/tag/3.14.0)] - 2024-01-08
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Mahesh Binzer-Panchal](https://github.com/mahesh-panchal)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Phil Ewels](https://github.com/ewels)
+- [Vlad Savelyev](https://github.com/vladsavelyev)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
+### Enhancements & fixes
+
+- [PR #1135](https://github.com/nf-core/rnaseq/pull/1135) - Update [action-tower-launch](https://github.com/marketplace/actions/action-tower-launch) to v2 which supports more variable handling
+- [PR #1141](https://github.com/nf-core/rnaseq/pull/1141) - Important! Template update for nf-core/tools v2.11
+- [PR #1143](https://github.com/nf-core/rnaseq/pull/1143) - Move fasta check back to Groovy ([#1142](https://github.com/nf-core/rnaseq/issues/1142))
+- [PR #1144](https://github.com/nf-core/rnaseq/pull/1144) - Interface to kmer size for pseudoaligners ([#1111](https://github.com/nf-core/rnaseq/issues/1111))
+- [PR #1149](https://github.com/nf-core/rnaseq/pull/1149) - Fix and patch version commands for Fastp, FastQC and UMI-tools modules ([#1103](https://github.com/nf-core/rnaseq/issues/1103))
+- [PR #1150](https://github.com/nf-core/rnaseq/pull/1150) - Be more flexible on attribute values in GTFs ([#1132](https://github.com/nf-core/rnaseq/issues/1132))
+- [PR #1151](https://github.com/nf-core/rnaseq/pull/1151) - fix to #1150: reinstate conditional
+- [PR #1152](https://github.com/nf-core/rnaseq/pull/1152) - Bump container versions for tools using Docker V1 manifest ([#1140](https://github.com/nf-core/rnaseq/issues/1140))
+- [PR #1154](https://github.com/nf-core/rnaseq/pull/1154) - Prerelease 3.14.0 fixes ([#1111](https://github.com/nf-core/rnaseq/issues/1111), [#1153](https://github.com/nf-core/rnaseq/issues/1153))
+- [PR #1157](https://github.com/nf-core/rnaseq/pull/1157) - Add slash to `--outdir` for cloud tests to fix Azure validation issue
+- [PR #1159](https://github.com/nf-core/rnaseq/pull/1159) - Issues loading MultiQC report ([#1158](https://github.com/nf-core/rnaseq/issues/1158))
+
+### Parameters
+
+| Old parameter | New parameter                |
+| ------------- | ---------------------------- |
+|               | `--pseudo_aligner_kmer_size` |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `multiqc`  | 1.17        | 1.19        |
+| `qualimap` | 2.2.2d      | 2.3         |
+| `rseqc`    | 3.0.1       | 5.0.3       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.13.2](https://github.com/nf-core/rnaseq/releases/tag/3.13.2)] - 2023-11-21
 
 ### Credits

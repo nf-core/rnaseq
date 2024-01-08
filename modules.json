@@ -18,7 +18,8 @@
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "bba7e362e4afead70653f84d8700588ea28d0f9e",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/custom/dumpsoftwareversions/custom-dumpsoftwareversions.diff"
                     },
                     "custom/getchromsizes": {
                         "branch": "master",
@@ -28,12 +29,14 @@
                     "fastp": {
                         "branch": "master",
                         "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
-                        "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
+                        "installed_by": ["fastq_fastqc_umitools_fastp", "modules"],
+                        "patch": "modules/nf-core/fastp/fastp.diff"
                     },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "102cc9b709a6da9f7cee2373563ab1464fca9c0a",
-                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"]
+                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "fastq_fastqc_umitools_fastp"],
+                        "patch": "modules/nf-core/fastqc/fastqc.diff"
                     },
                     "fq/subsample": {
                         "branch": "master",
@@ -42,7 +45,7 @@
                     },
                     "gffread": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "4ab13872435962dadc239979554d13709e20bf29",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
@@ -88,7 +91,8 @@
                     "qualimap/rnaseq": {
                         "branch": "master",
                         "git_sha": "4657d98bc9f565e067c4d924126ce107056f5e2f",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/qualimap/rnaseq/qualimap-rnaseq.diff"
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
@@ -103,42 +107,50 @@
                     "rseqc/bamstat": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/bamstat/rseqc-bamstat.diff"
                     },
                     "rseqc/inferexperiment": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/inferexperiment/rseqc-inferexperiment.diff"
                     },
                     "rseqc/innerdistance": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/innerdistance/rseqc-innerdistance.diff"
                     },
                     "rseqc/junctionannotation": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/junctionannotation/rseqc-junctionannotation.diff"
                     },
                     "rseqc/junctionsaturation": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/junctionsaturation/rseqc-junctionsaturation.diff"
                     },
                     "rseqc/readdistribution": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/readdistribution/rseqc-readdistribution.diff"
                     },
                     "rseqc/readduplication": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/readduplication/rseqc-readduplication.diff"
                     },
                     "rseqc/tin": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["bam_rseqc"]
+                        "installed_by": ["bam_rseqc"],
+                        "patch": "modules/nf-core/rseqc/tin/rseqc-tin.diff"
                     },
                     "salmon/index": {
                         "branch": "master",
@@ -222,12 +234,14 @@
                     "umitools/dedup": {
                         "branch": "master",
                         "git_sha": "7297204bf49273300a3dbfa4b7a4027c8683f1bd",
-                        "installed_by": ["bam_dedup_stats_samtools_umitools"]
+                        "installed_by": ["bam_dedup_stats_samtools_umitools"],
+                        "patch": "modules/nf-core/umitools/dedup/umitools-dedup.diff"
                     },
                     "umitools/extract": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
+                        "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"],
+                        "patch": "modules/nf-core/umitools/extract/umitools-extract.diff"
                     },
                     "untar": {
                         "branch": "master",

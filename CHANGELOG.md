@@ -3,6 +3,45 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Harshil Patel](https://github.com/drpatelh)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Maxime Garcia](https://github.com/maxulysse)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
+### Enhancements & fixes
+
+- [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
+
+### Parameters
+
+| Old parameter | New parameter |
+| ------------- | ------------- |
+|               |               |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+|            |             |             |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.14.0](https://github.com/nf-core/rnaseq/releases/tag/3.14.0)] - 2024-01-08
 
 ### Credits

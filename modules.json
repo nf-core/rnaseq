@@ -90,9 +90,8 @@
                     },
                     "qualimap/rnaseq": {
                         "branch": "master",
-                        "git_sha": "4657d98bc9f565e067c4d924126ce107056f5e2f",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/qualimap/rnaseq/qualimap-rnaseq.diff"
+                        "git_sha": "3902a0cfeb7a4bc12872371d1bea93aba692243b",
+                        "installed_by": ["modules"]
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",

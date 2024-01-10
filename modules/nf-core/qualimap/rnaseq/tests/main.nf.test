@@ -1,0 +1,41 @@
+nextflow_process {
+
+    name "Test Process QUALIMAP_RNASEQ"
+    script "../main.nf"
+    process "QUALIMAP_RNASEQ"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "qualimap"
+    tag "qualimap/rnaseq"
+
+    test("homo_sapiens [BAM]") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'test_fasta_gtf' ], // meta map
+                    [ file(params.test_data['homo_sapiens']['genome']['genome_gtf'], checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.results[0][1]).list().sort().find{ it.getFileName().toString() == "qualimapReport.html" }.exists() },
+                { assert path(process.out.results[0][1]).list().sort().find{ it.getFileName().toString() == "rnaseq_qc_results.txt" }.md5 == "b77878cac45beaa79a892af54aad2da3" },
+                // { assert snapshot(path(process.out.results[0][1]).list().sort().find{ it.getFileName().toString() == "rnaseq_qc_results.txt" }).match() },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+}

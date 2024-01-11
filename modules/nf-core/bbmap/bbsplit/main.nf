@@ -86,4 +86,9 @@ process BBMAP_BBSPLIT {
         END_VERSIONS
         """
     }
+
+    stub:
+    """
+    touch versions.yml
+    """
 }

@@ -52,4 +52,10 @@ process FQ_SUBSAMPLE {
         fq: \$(echo \$(fq subsample --version | sed 's/fq-subsample //g'))
     END_VERSIONS
     """
+
+    stub:
+    """
+    touch 1.fastq.gz
+    touch versions.yml
+    """
 }

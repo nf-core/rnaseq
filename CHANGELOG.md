@@ -81,10 +81,28 @@ Special thanks to the following for their contributions to the release:
 
 ### Enhancements & fixes
 
+- [PR #993](https://github.com/nf-core/rnaseq/pull/993) Added NGSCheckMate for checking that samples come from the same individual
 - [PR #1123](https://github.com/nf-core/rnaseq/pull/1123) - Overhaul tximport.r, output length tables
 - [PR #1124](https://github.com/nf-core/rnaseq/pull/1124) - Ensure pseudoaligner is set if pseudoalignment is not skipped
 - [PR #1126](https://github.com/nf-core/rnaseq/pull/1126) - Pipeline fails if transcript_fasta not provided and `skip_gtf_filter = true`.
 - [PR #1127](https://github.com/nf-core/rnaseq/pull/1127) - Enlarge sampling to determine the number of columns in `filter_gtf.py` script.
+
+### Parameters
+
+| Old parameter | New parameter        |
+| ------------- | -------------------- |
+|               | `--ngscheckmate_bed` |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency     | Old version | New version |
+| -------------- | ----------- | ----------- |
+| `bcftools`     |             | 1.17        |
+| `ngscheckmate` |             | 1.0.1       |
 
 ## [[3.13.1](https://github.com/nf-core/rnaseq/releases/tag/3.13.1)] - 2023-11-17
 

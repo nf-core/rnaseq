@@ -40,15 +40,15 @@ if (!params.skip_alignment) { prepareToolIndices << params.aligner }
 if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
 // Determine whether to filter the GTF or not
-def filterGtf = 
+def filterGtf =
     ((
         // Condition 1: Alignment is required and aligner is set
         !params.skip_alignment && params.aligner
-    ) || 
+    ) ||
     (
         // Condition 2: Pseudoalignment is required and pseudoaligner is set
         !params.skip_pseudo_alignment && params.pseudo_aligner
-    ) || 
+    ) ||
     (
         // Condition 3: Transcript FASTA file is not provided
         !params.transcript_fasta
@@ -67,6 +67,8 @@ if (params.bam_csi_index) {
         }
     }
 }
+
+ch_ngscheckmate_bed   = params.ngscheckmate_bed ? Channel.fromPath( params.ngscheckmate_bed, checkIfExists: true ) : Channel.empty()
 
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
@@ -144,6 +146,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
+
 include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../subworkflows/nf-core/fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore'
 include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
@@ -155,6 +158,7 @@ include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS
 include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME } from '../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
+include { BAM_NGSCHECKMATE                 } from '../subworkflows/nf-core/bam_ngscheckmate'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -771,6 +775,15 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
 
+        if (params.ngscheckmate_bed) {
+            BAM_NGSCHECKMATE (
+                ch_genome_bam,
+                ch_ngscheckmate_bed.map{it -> [[id: "NGSCheckMate_bed"], it]},
+                PREPARE_GENOME.out.fasta.map{it -> [[id: "genome_fasta"], it]}
+            )
+            ch_versions = ch_versions.mix(BAM_NGSCHECKMATE.out.versions.first())
+        }
+
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             BAM_RSEQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
@@ -854,7 +867,7 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
         }
     }
-    
+
     //
     // MODULE: Pipeline reporting
     //
@@ -925,7 +938,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
-    
+
     NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 

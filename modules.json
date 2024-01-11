@@ -10,6 +10,11 @@
                         "git_sha": "de3e6fc949dcffb8d3508c015f435ace5773ff08",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/mpileup": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["bam_ngscheckmate"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
@@ -77,6 +82,12 @@
                         "branch": "master",
                         "git_sha": "bdc2a97ced7adc423acfa390742db83cab98c1ad",
                         "installed_by": ["modules"]
+                    },
+                    "ngscheckmate/ncm": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["bam_ngscheckmate"],
+                        "patch": "modules/nf-core/ngscheckmate/ncm/ngscheckmate-ncm.diff"
                     },
                     "picard/markduplicates": {
                         "branch": "master",
@@ -259,6 +270,11 @@
                     "bam_markduplicates_picard": {
                         "branch": "master",
                         "git_sha": "dedc0e31087f3306101c38835d051bf49789445a",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "bam_ngscheckmate": {
+                        "branch": "master",
+                        "git_sha": "cfd937a668919d948f6fcbf4218e79de50c2f36f",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_rseqc": {

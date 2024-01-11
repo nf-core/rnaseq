@@ -1,0 +1,7 @@
+name: bcftools_mpileup
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::bcftools=1.17

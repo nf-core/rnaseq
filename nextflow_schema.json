@@ -103,6 +103,24 @@
                     "fa_icon": "far fa-file-code",
                     "description": "Path to FASTA transcriptome file."
                 },
+                "chromosome_sizes": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^\\S+\\.sizes$",
+                    "mimetype": "text/plain",
+                    "fa_icon": "far fa-file-code",
+                    "description": "Path to chromosome sizes."
+                },
+                "fasta_index": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fai$",
+                    "fa_icon": "far fa-file-code",
+                    "description": "Path to genome index."
+                },
                 "additional_fasta": {
                     "type": "string",
                     "format": "file-path",

@@ -185,6 +185,8 @@ workflow RNASEQ {
         params.gene_bed,
         params.splicesites,
         params.bbsplit_fasta_list,
+        params.fasta_index,
+        params.chromosome_sizes,
         params.star_index,
         params.rsem_index,
         params.salmon_index,

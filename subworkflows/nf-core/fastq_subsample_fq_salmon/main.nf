@@ -28,18 +28,15 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
         ch_versions = ch_versions.mix(SALMON_INDEX.out.versions)
     }
 
-    //
-    // Sub-sample FastQ files with fq
-    //
-    FQ_SUBSAMPLE ( ch_reads )
-    ch_versions = ch_versions.mix(FQ_SUBSAMPLE.out.versions.first())
+    ch_reads
+        | FQ_SUBSAMPLE
+        | { out ->
+            def lib_type = 'A'
+            def alignment_mode = false
+            SALMON_QUANT ( out.fastq, ch_index, ch_gtf, ch_transcript_fasta, alignment_mode, lib_type )
+        }
 
-    //
-    // Pseudo-alignment with Salmon
-    //
-    def lib_type = 'A'
-    def alignment_mode = false
-    SALMON_QUANT ( FQ_SUBSAMPLE.out.fastq, ch_index, ch_gtf, ch_transcript_fasta, alignment_mode, lib_type )
+    ch_versions = ch_versions.mix(FQ_SUBSAMPLE.out.versions.first())
     ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
     emit:

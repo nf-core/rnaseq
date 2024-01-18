@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
+- [PR #1191](https://github.com/nf-core/rnaseq/pull/1191) - change gff re to include gff3 extension
 
 ### Parameters
 

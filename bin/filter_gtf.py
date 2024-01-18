@@ -20,16 +20,24 @@ def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
         return {line[1:].split(None, 1)[0] for line in fasta if line.startswith(">")}
 
 
-def tab_delimited(file: str) -> float:
-    """Check if file is tab-delimited and return median number of tabs."""
+def tab_checks(file: str) -> (bool, bool):
+    """Check if file is tab-delimited and if there is a prefix in the ID attribute"""
     with open(file, "r") as f:
         data = f.read(102400)
-        return statistics.median(line.count("\t") for line in data.split("\n"))
+        transcript_prefix = False
+        tab_sum = 0
+        for line in data.split("\n")[-1024:]:
+            if not '#' in line:
+                tab_sum += line.count("\t")
+                if not transcript_prefix and 'transcript:' in line:
+                    transcript_prefix = True
+    return tab_sum % 8 == 0, transcript_prefix
 
 
 def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str, skip_transcript_id_check: bool) -> None:
     """Filter GTF file based on FASTA sequence names."""
-    if tab_delimited(gtf_in) != 8:
+    tab_delimited, extra_id = tab_checks(gtf_in)
+    if not tab_delimited:
         raise ValueError("Invalid GTF file: Expected 9 tab-separated columns.")
 
     seq_names_in_genome = extract_fasta_seq_names(fasta)
@@ -46,6 +54,8 @@ def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str, skip_transcript_i
 
                 if seq_name in seq_names_in_genome:
                     if skip_transcript_id_check or re.search(r'transcript_id "([^"]+)"', line):
+                        if extra_id:
+                            line = line.replace('transcript:','')
                         out.write(line)
                         line_count += 1
 

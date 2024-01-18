@@ -29,8 +29,6 @@ params.hisat2_index     = WorkflowMain.getGenomeAttribute(params, 'hisat2')
 params.rsem_index       = WorkflowMain.getGenomeAttribute(params, 'rsem')
 params.salmon_index     = WorkflowMain.getGenomeAttribute(params, 'salmon')
 params.kallisto_index   = WorkflowMain.getGenomeAttribute(params, 'kallisto')
-params.fasta_index      = WorkflowMain.getGenomeAttribute(params, 'fasta_index')
-params.chromosome_sizes = WorkflowMain.getGenomeAttribute(params, 'chromosome_sizes')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

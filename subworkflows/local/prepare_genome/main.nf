@@ -43,8 +43,6 @@ workflow PREPARE_GENOME {
     gene_bed             //      file: /path/to/gene.bed
     splicesites          //      file: /path/to/splicesites.txt
     bbsplit_fasta_list   //      file: /path/to/bbsplit_fasta_list.txt
-    fasta_index          //      file: /path/to/fasta_index.txt
-    chromosome_sizes     //      file: /path/to/chromosome_sizes.txt
     star_index           // directory: /path/to/star/index/
     rsem_index           // directory: /path/to/rsem/index/
     salmon_index         // directory: /path/to/salmon/index/
@@ -154,17 +152,11 @@ workflow PREPARE_GENOME {
     //
     // Create chromosome sizes file
     //
+    CUSTOM_GETCHROMSIZES ( ch_fasta.map { [ [:], it ] } )
+    ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
+    ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
+    ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
-    if (fasta_index && chromosome_sizes) {
-        ch_chrom_sizes = file(chromosome_sizes)
-        ch_fai = file(fasta_index)
-
-    } else {
-        CUSTOM_GETCHROMSIZES ( ch_fasta.map { [ [:], it ] } )
-        ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
-        ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
-        ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
-    }
     //
     // Uncompress BBSplit index or generate from scratch if required
     //

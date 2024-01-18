@@ -27,9 +27,9 @@ def tab_checks(file: str) -> (bool, bool):
         transcript_prefix = False
         tab_sum = 0
         for line in data.split("\n")[-1024:]:
-            if not '#' in line:
+            if not "#" in line:
                 tab_sum += line.count("\t")
-                if not transcript_prefix and 'transcript:' in line:
+                if not transcript_prefix and "transcript:" in line:
                     transcript_prefix = True
     return tab_sum % 8 == 0, transcript_prefix
 
@@ -55,7 +55,7 @@ def filter_gtf(fasta: str, gtf_in: str, filtered_gtf_out: str, skip_transcript_i
                 if seq_name in seq_names_in_genome:
                     if skip_transcript_id_check or re.search(r'transcript_id "([^"]+)"', line):
                         if extra_id:
-                            line = line.replace('transcript:','')
+                            line = line.replace("transcript:", "")
                         out.write(line)
                         line_count += 1
 

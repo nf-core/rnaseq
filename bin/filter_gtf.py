@@ -5,7 +5,6 @@
 import logging
 import argparse
 import re
-import statistics
 from typing import Set
 
 # Create a logger
@@ -21,12 +20,12 @@ def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
 
 
 def tab_checks(file: str) -> (bool, bool):
-    """Check if file is tab-delimited and if there is a prefix in the ID attribute"""
+    """Check if file is tab-delimited and if there is a prefix in the ID attribute."""
     with open(file, "r") as f:
         data = f.read(102400)
         transcript_prefix = False
         tab_sum = 0
-        for line in data.split("\n")[-1024:]:
+        for line in data.split("\n")[-1025:-1]:
             if not "#" in line:
                 tab_sum += line.count("\t")
                 if not transcript_prefix and "transcript:" in line:

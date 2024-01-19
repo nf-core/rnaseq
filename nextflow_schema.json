@@ -80,7 +80,7 @@
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.gff(\\.gz)?$",
+                    "pattern": "^\\S+\\.gff(3)?(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Path to GFF3 annotation file.",
                     "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified."

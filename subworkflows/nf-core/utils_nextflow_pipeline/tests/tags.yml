@@ -1,0 +1,2 @@
+subworkflows/utils_nextflow_pipeline:
+  - subworkflows/nf-core/utils_nextflow_pipeline/**

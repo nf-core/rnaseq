@@ -291,6 +291,21 @@
                         "branch": "master",
                         "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
                         "installed_by": ["subworkflows"]
+                    },
+                    "utils_nextflow_pipeline": {
+                        "branch": "master",
+                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "utils_nfcore_pipeline": {
+                        "branch": "master",
+                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "utils_nfvalidation_plugin": {
+                        "branch": "master",
+                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }

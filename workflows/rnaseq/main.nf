@@ -1,102 +1,5 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PRINT PARAMS SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
-
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-WorkflowRnaseq.initialise(params, log)
-
-// Check rRNA databases for sortmerna
-if (params.remove_ribo_rna) {
-    ch_ribo_db = file(params.ribo_database_manifest)
-    if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
-}
-
-// Check if file with list of fastas is provided when running BBSplit
-if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
-    ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
-    if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
-}
-
-// Check alignment parameters
-def prepareToolIndices  = []
-if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
-if (!params.skip_alignment) { prepareToolIndices << params.aligner }
-if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
-
-// Determine whether to filter the GTF or not
-def filterGtf =
-    ((
-        // Condition 1: Alignment is required and aligner is set
-        !params.skip_alignment && params.aligner
-    ) ||
-    (
-        // Condition 2: Pseudoalignment is required and pseudoaligner is set
-        !params.skip_pseudo_alignment && params.pseudo_aligner
-    ) ||
-    (
-        // Condition 3: Transcript FASTA file is not provided
-        !params.transcript_fasta
-    )) &&
-    (
-        // Condition 4: --skip_gtf_filter is not provided
-        !params.skip_gtf_filter
-    )
-
-// Get RSeqC modules to run
-def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
-if (params.bam_csi_index) {
-    for (rseqc_module in ['read_distribution', 'inner_distance', 'tin']) {
-        if (rseqc_modules.contains(rseqc_module)) {
-            rseqc_modules.remove(rseqc_module)
-        }
-    }
-}
-
-// Stage dummy file to be used as an optional input where required
-ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
-
-// Check if an AWS iGenome has been provided to use the appropriate version of STAR
-def is_aws_igenome = false
-if (params.fasta && params.gtf) {
-    if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
-        is_aws_igenome = true
-    }
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo)   : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-// Header files for MultiQC
-ch_pca_header_multiqc        = file("$projectDir/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
-ch_clustering_header_multiqc = file("$projectDir/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
-ch_biotypes_header_multiqc   = file("$projectDir/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -116,11 +19,16 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../mod
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_GENOME                                    } from '../../subworkflows/local/prepare_genome'
 include { ALIGN_STAR                                        } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM                                     } from '../../subworkflows/local/quantify_rsem'
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo'
+
+include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,11 +47,13 @@ include { QUALIMAP_RNASEQ             } from '../../modules/nf-core/qualimap/rna
 include { SORTMERNA                   } from '../../modules/nf-core/sortmerna'
 include { STRINGTIE_STRINGTIE         } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS       } from '../../modules/nf-core/subread/featurecounts'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../../modules/nf-core/custom/dumpsoftwareversions'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
+include { paramsSummaryMap                 } from 'plugin/nf-validation'
+include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../../subworkflows/nf-core/fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore'
 include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
@@ -162,68 +72,37 @@ include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Info required for completion email and summary
-def multiqc_report     = []
-def pass_mapped_reads  = [:]
-def pass_trimmed_reads = [:]
-def pass_strand_check  = [:]
+// Header files for MultiQC
+ch_pca_header_multiqc        = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
+ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
+ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_dummy_file                = ch_pca_header_multiqc
 
-workflow RNASEQ {
+workflow NFCORE_RNASEQ {
 
-    ch_versions = Channel.empty()
+    take:
+    ch_samplesheet      // channel: samplesheet read in from --input
+    ch_versions         // channel: [ path(versions.yml) ]
+    ch_fasta            // channel: path(genome.fasta)
+    ch_gtf              // channel: path(genome.gtf)
+    ch_fai              // channel: path(genome.fai)
+    ch_chrom_sizes      // channel: path(genome.sizes)
+    ch_gene_bed         // channel: path(gene.bed)
+    ch_transcript_fasta // channel: path(transcript.fasta)
+    ch_star_index       // channel: path(star/index/)
+    ch_rsem_index       // channel: path(rsem/index/)
+    ch_hisat2_index     // channel: path(hisat2/index/)
+    ch_salmon_index     // channel: path(salmon/index/)
+    ch_kallisto_index   // channel: [ meta, path(kallisto/index/) ]
+    ch_bbsplit_index    // channel: path(bbsplit/index/)
+    ch_splicesites      // channel: path(genome.splicesites.txt)
 
-    //
-    // SUBWORKFLOW: Uncompress and prepare reference genome files
-    //
-    def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
-    PREPARE_GENOME (
-        params.fasta,
-        params.gtf,
-        params.gff,
-        params.additional_fasta,
-        params.transcript_fasta,
-        params.gene_bed,
-        params.splicesites,
-        params.bbsplit_fasta_list,
-        params.star_index,
-        params.rsem_index,
-        params.salmon_index,
-        params.kallisto_index,
-        params.hisat2_index,
-        params.bbsplit_index,
-        params.gencode,
-        is_aws_igenome,
-        biotype,
-        prepareToolIndices,
-        filterGtf
-    )
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
-
-    // Check if contigs in genome fasta file > 512 Mbp
-    if (!params.skip_alignment && !params.bam_csi_index) {
-        PREPARE_GENOME
-            .out
-            .fai
-            .map { WorkflowRnaseq.checkMaxContigSize(it, log) }
-    }
+    main:
 
     //
-    // Create input channel from input file provided through params.input
+    // Create separate channels for samples that have single/multiple FastQ files to merge
     //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map {
-            WorkflowRnaseq.validateInput(it)
-        }
+    ch_samplesheet
         .branch {
             meta, fastqs ->
                 single  : fastqs.size() == 1
@@ -300,9 +179,7 @@ workflow RNASEQ {
     ch_trim_read_count
         .map {
             meta, num_reads ->
-                pass_trimmed_reads[meta.id] = true
                 if (num_reads <= params.min_trimmed_reads.toFloat()) {
-                    pass_trimmed_reads[meta.id] = false
                     return [ "$meta.id\t$num_reads" ]
                 }
         }
@@ -310,7 +187,7 @@ workflow RNASEQ {
         .map {
             tsv_data ->
                 def header = ["Sample", "Reads after trimming"]
-                WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+                multiqcTsvFromList(tsv_data, header)
         }
         .set { ch_fail_trimming_multiqc }
 
@@ -320,7 +197,7 @@ workflow RNASEQ {
     if (!params.skip_bbsplit) {
         BBMAP_BBSPLIT (
             ch_filtered_reads,
-            PREPARE_GENOME.out.bbsplit_index,
+            ch_bbsplit_index,
             [],
             [ [], [] ],
             false
@@ -335,6 +212,7 @@ workflow RNASEQ {
     //
     ch_sortmerna_multiqc = Channel.empty()
     if (params.remove_ribo_rna) {
+        ch_ribo_db = file(params.ribo_database_manifest)
         ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines()).map { row -> file(row, checkIfExists: true) }.collect()
 
         SORTMERNA (
@@ -364,9 +242,7 @@ workflow RNASEQ {
         .set { ch_strand_fastq }
 
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-    PREPARE_GENOME
-        .out
-        .fasta
+    ch_fasta
         .combine(ch_strand_fastq.auto_strand)
         .map { it.first() }
         .first()
@@ -375,9 +251,9 @@ workflow RNASEQ {
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
         ch_genome_fasta,
-        PREPARE_GENOME.out.transcript_fasta,
-        PREPARE_GENOME.out.gtf,
-        PREPARE_GENOME.out.salmon_index,
+        ch_transcript_fasta,
+        ch_gtf,
+        ch_salmon_index,
         !params.salmon_index && !('salmon' in prepareToolIndices)
     )
     ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
@@ -387,7 +263,7 @@ workflow RNASEQ {
         .json_info
         .join(ch_strand_fastq.auto_strand)
         .map { meta, json, reads ->
-            return [ meta + [ strandedness: WorkflowRnaseq.getSalmonInferredStrandedness(json) ], reads ]
+            return [ meta + [ strandedness: getSalmonInferredStrandedness(json) ], reads ]
         }
         .mix(ch_strand_fastq.known_strand)
         .set { ch_strand_inferred_filtered_fastq }
@@ -404,15 +280,23 @@ workflow RNASEQ {
     ch_aligner_pca_multiqc        = Channel.empty()
     ch_aligner_clustering_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
+        // Check if an AWS iGenome has been provided to use the appropriate version of STAR
+        def is_aws_igenome = false
+        if (params.fasta && params.gtf) {
+            if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
+                is_aws_igenome = true
+            }
+        }
+
         ALIGN_STAR (
             ch_strand_inferred_filtered_fastq,
-            PREPARE_GENOME.out.star_index.map { [ [:], it ] },
-            PREPARE_GENOME.out.gtf.map { [ [:], it ] },
+            ch_star_index.map { [ [:], it ] },
+            ch_gtf.map { [ [:], it ] },
             params.star_ignore_sjdbgtf,
             '',
             params.seq_center ?: '',
             is_aws_igenome,
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+            ch_fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = ALIGN_STAR.out.bam
         ch_genome_bam_index  = ALIGN_STAR.out.bai
@@ -448,7 +332,7 @@ workflow RNASEQ {
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_STATS_SAMTOOLS (
                 ch_transcriptome_bam,
-                PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+                ch_fasta.map { [ [:], it ] }
             )
             ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
             ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
@@ -496,8 +380,8 @@ workflow RNASEQ {
         QUANTIFY_STAR_SALMON (
             ch_transcriptome_bam,
             ch_dummy_file,
-            PREPARE_GENOME.out.transcript_fasta,
-            PREPARE_GENOME.out.gtf,
+            ch_transcript_fasta,
+            ch_gtf,
             'salmon',
             true,
             params.salmon_quant_libtype ?: '',
@@ -525,8 +409,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
         QUANTIFY_RSEM (
             ch_strand_inferred_filtered_fastq,
-            PREPARE_GENOME.out.rsem_index,
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+            ch_rsem_index,
+            ch_fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = QUANTIFY_RSEM.out.bam
         ch_genome_bam_index  = QUANTIFY_RSEM.out.bai
@@ -559,9 +443,9 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         FASTQ_ALIGN_HISAT2 (
             ch_strand_inferred_filtered_fastq,
-            PREPARE_GENOME.out.hisat2_index.map { [ [:], it ] },
-            PREPARE_GENOME.out.splicesites.map { [ [:], it ] },
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+            ch_hisat2_index.map { [ [:], it ] },
+            ch_splicesites.map { [ [:], it ] },
+            ch_fasta.map { [ [:], it ] }
         )
         ch_genome_bam        = FASTQ_ALIGN_HISAT2.out.bam
         ch_genome_bam_index  = FASTQ_ALIGN_HISAT2.out.bai
@@ -600,7 +484,7 @@ workflow RNASEQ {
     ch_fail_mapping_multiqc = Channel.empty()
     if (!params.skip_alignment && params.aligner.contains('star')) {
         ch_star_multiqc
-            .map { meta, align_log -> [ meta ] + WorkflowRnaseq.getStarPercentMapped(params, align_log) }
+            .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
         ch_genome_bam
@@ -616,10 +500,8 @@ workflow RNASEQ {
         ch_percent_mapped
             .branch { meta, mapped, pass ->
                 pass: pass
-                    pass_mapped_reads[meta.id] = true
                     return [ "$meta.id\t$mapped" ]
                 fail: !pass
-                    pass_mapped_reads[meta.id] = false
                     return [ "$meta.id\t$mapped" ]
             }
             .set { ch_pass_fail_mapped }
@@ -630,7 +512,7 @@ workflow RNASEQ {
             .map {
                 tsv_data ->
                     def header = ["Sample", "STAR uniquely mapped reads (%)"]
-                    WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+                    multiqcTsvFromList(tsv_data, header)
             }
             .set { ch_fail_mapping_multiqc }
     }
@@ -654,8 +536,8 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
-            PREPARE_GENOME.out.fasta.map { [ [:], it ] },
-            PREPARE_GENOME.out.fai.map { [ [:], it ] }
+            ch_fasta.map { [ [:], it ] },
+            ch_fai.map { [ [:], it ] }
         )
         ch_genome_bam             = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index       = BAM_MARKDUPLICATES_PICARD.out.bai
@@ -675,7 +557,7 @@ workflow RNASEQ {
     if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
-            PREPARE_GENOME.out.gtf
+            ch_gtf
         )
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
@@ -684,17 +566,16 @@ workflow RNASEQ {
     // MODULE: Feature biotype QC using featureCounts
     //
     ch_featurecounts_multiqc = Channel.empty()
+    def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
     if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
 
-        PREPARE_GENOME
-            .out
-            .gtf
-            .map { WorkflowRnaseq.biotypeInGtf(it, biotype, log) }
+        ch_gtf
+            .map { biotypeInGtf(it, biotype) }
             .set { biotype_in_gtf }
 
         // Prevent any samples from running if GTF file doesn't have a valid biotype
         ch_genome_bam
-            .combine(PREPARE_GENOME.out.gtf)
+            .combine(ch_gtf)
             .combine(biotype_in_gtf)
             .filter { it[-1] }
             .map { it[0..<it.size()-1] }
@@ -728,13 +609,13 @@ workflow RNASEQ {
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
             BEDTOOLS_GENOMECOV.out.bedgraph_forward,
-            PREPARE_GENOME.out.chrom_sizes
+            ch_chrom_sizes
         )
         ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
-            PREPARE_GENOME.out.chrom_sizes
+            ch_chrom_sizes
         )
     }
 
@@ -756,7 +637,7 @@ workflow RNASEQ {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ (
                 ch_genome_bam,
-                PREPARE_GENOME.out.gtf.map { [ [:], it ] }
+                ch_gtf.map { [ [:], it ] }
             )
             ch_qualimap_multiqc = QUALIMAP_RNASEQ.out.results
             ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
@@ -765,16 +646,25 @@ workflow RNASEQ {
         if (!params.skip_dupradar) {
             DUPRADAR (
                 ch_genome_bam,
-                PREPARE_GENOME.out.gtf
+                ch_gtf
             )
             ch_dupradar_multiqc = DUPRADAR.out.multiqc
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
 
+        // Get RSeqC modules to run
+        def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
+        if (params.bam_csi_index) {
+            for (rseqc_module in ['read_distribution', 'inner_distance', 'tin']) {
+                if (rseqc_modules.contains(rseqc_module)) {
+                    rseqc_modules.remove(rseqc_module)
+                }
+            }
+        }
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             BAM_RSEQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                PREPARE_GENOME.out.gene_bed,
+                ch_gene_bed,
                 rseqc_modules
             )
             ch_bamstat_multiqc            = BAM_RSEQC.out.ch_bamstat
@@ -790,10 +680,8 @@ workflow RNASEQ {
             ch_inferexperiment_multiqc
                 .map {
                     meta, strand_log ->
-                        def inferred_strand = WorkflowRnaseq.getInferexperimentStrandedness(strand_log, 30)
-                        pass_strand_check[meta.id] = true
+                        def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
                         if (meta.strandedness != inferred_strand[0]) {
-                            pass_strand_check[meta.id] = false
                             return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
                         }
                 }
@@ -808,7 +696,7 @@ workflow RNASEQ {
                             "Antisense (%)",
                             "Undetermined (%)"
                         ]
-                        WorkflowRnaseq.multiqcTsvFromList(tsv_data, header)
+                        multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
         }
@@ -822,17 +710,25 @@ workflow RNASEQ {
     ch_pseudoaligner_clustering_multiqc = Channel.empty()
     if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
+<<<<<<< HEAD
         if (params.pseudo_aligner == 'salmon') {
             ch_pseudo_index = PREPARE_GENOME.out.salmon_index
         } else {
             ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
         }
+=======
+       if (params.pseudo_aligner == 'salmon') {
+           ch_pseudo_index = ch_salmon_index
+       } else {
+           ch_pseudo_index = ch_kallisto_index
+       }
+>>>>>>> 15924c46 (Delete lib directory and replace with utils_* subworkflows)
 
         QUANTIFY_PSEUDO_ALIGNMENT (
             ch_strand_inferred_filtered_fastq,
             ch_pseudo_index,
             ch_dummy_file,
-            PREPARE_GENOME.out.gtf,
+            ch_gtf,
             params.pseudo_aligner,
             false,
             params.salmon_quant_libtype ?: '',
@@ -856,28 +752,26 @@ workflow RNASEQ {
     }
 
     //
-    // MODULE: Pipeline reporting
+    // Collate and save software versions
     //
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+        .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
     //
     if (!params.skip_multiqc) {
-        workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
-        ch_workflow_summary = Channel.value(workflow_summary)
-
-        methods_description    = WorkflowRnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-        ch_methods_description = Channel.value(methods_description)
-
+        ch_multiqc_config        = Channel.fromPath("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true)
+        ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+        ch_multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo)   : Channel.empty()
+        summary_params           = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+        ch_workflow_summary      = Channel.value(paramsSummaryMultiqc(summary_params))
         MULTIQC (
             ch_multiqc_config,
             ch_multiqc_custom_config.collect().ifEmpty([]),
-            CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
+            ch_collated_versions,
             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-            ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
             ch_multiqc_logo.collect().ifEmpty([]),
             ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv').ifEmpty([]),
             ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv').ifEmpty([]),
@@ -911,10 +805,9 @@ workflow RNASEQ {
             ch_readduplication_multiqc.collect{it[1]}.ifEmpty([]),
             ch_tin_multiqc.collect{it[1]}.ifEmpty([])
         )
-        multiqc_report = MULTIQC.out.report.toList()
     }
-}
 
+<<<<<<< HEAD
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
@@ -932,6 +825,10 @@ workflow.onComplete {
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
+=======
+    emit:
+    versions = ch_versions // channel: [ path(versions.yml) ]
+>>>>>>> 15924c46 (Delete lib directory and replace with utils_* subworkflows)
 }
 
 workflow.onError {

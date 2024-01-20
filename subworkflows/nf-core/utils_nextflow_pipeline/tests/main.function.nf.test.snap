@@ -1,0 +1,12 @@
+{
+    "Test Function getWorkflowVersion": {
+        "content": [
+            "v9.9.9"
+        ],
+        "timestamp": "2024-01-19T11:32:36.031083"
+    },
+    "Test Function checkCondaChannels": {
+        "content": null,
+        "timestamp": "2024-01-19T11:32:50.456"
+    }
+}

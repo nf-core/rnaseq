@@ -50,7 +50,7 @@ params.kallisto_index   = getGenomeAttribute('kallisto')
 */
 
 workflow {
-    
+
     main:
     ch_versions = Channel.empty()
 

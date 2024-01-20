@@ -101,6 +101,7 @@ def softwareVersionsToYAML(ch_versions) {
     return ch_versions
                 .unique()
                 .map { processVersionsFromYAML(it) }
+                .unique()
                 .mix(Channel.of(workflowVersionToYAML()))
 }
 

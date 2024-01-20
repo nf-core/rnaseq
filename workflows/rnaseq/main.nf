@@ -248,13 +248,17 @@ workflow NFCORE_RNASEQ {
         .first()
         .set { ch_genome_fasta }
 
+    def prepare_tool_indices = []
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner) { 
+        prepare_tool_indices << params.pseudo_aligner 
+    }
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
         ch_genome_fasta,
         ch_transcript_fasta,
         ch_gtf,
         ch_salmon_index,
-        !params.salmon_index && !('salmon' in prepareToolIndices)
+        !params.salmon_index && !('salmon' in prepare_tool_indices)
     )
     ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 

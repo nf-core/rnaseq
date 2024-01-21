@@ -1,0 +1,21 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,14e9a2661241abd828f4f06a7b5c222d"
+            ]
+        ],
+        "timestamp": "2024-01-09T23:02:49.911994"
+    },
+    "sarscov2 single-end [fastqc] - stub": {
+        "content": [
+            [
+                "multiqc_report.html",
+                "multiqc_data",
+                "multiqc_plots",
+                "versions.yml:md5,14e9a2661241abd828f4f06a7b5c222d"
+            ]
+        ],
+        "timestamp": "2024-01-09T23:03:14.524346"
+    }
+}

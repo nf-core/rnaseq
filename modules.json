@@ -72,6 +72,11 @@
                         "git_sha": "bdc2a97ced7adc423acfa390742db83cab98c1ad",
                         "installed_by": ["modules"]
                     },
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+                        "installed_by": ["modules"]
+                    },
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "2ee934606f1fdf7fc1cb05d6e8abc13bec8ab448",

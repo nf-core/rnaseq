@@ -99,6 +99,11 @@
                             "modules"
                         ]
                     },
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+                        "installed_by": ["modules"]
+                    },
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "ec833ac4c29db6005d18baccf3306f557c46b006",

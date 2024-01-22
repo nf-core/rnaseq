@@ -1,0 +1,2 @@
+subworkflows/utils_nfcore_pipeline:
+  - subworkflows/nf-core/utils_nfcore_pipeline/**

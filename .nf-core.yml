@@ -3,6 +3,8 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
+  files_exist:
+    - lib/nfcore_external_java_deps.jar
     - lib/NfcoreTemplate.groovy
-    - pyproject.toml
-  multiqc_config: false
+    - lib/Utils.groovy
+    - lib/WorkflowMain.groovy

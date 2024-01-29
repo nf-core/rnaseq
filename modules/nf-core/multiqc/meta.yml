@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: multiqc
 description: Aggregate results from bioinformatics analyses across many samples into a single report
 keywords:

@@ -3,24 +3,20 @@ nextflow_process {
     name "Test Process FASTQC"
     script "../main.nf"
     process "FASTQC"
+
     tag "modules"
     tag "modules_nfcore"
     tag "fastqc"
 
-    test("Single-Read") {
+    test("sarscov2 single-end [fastq]") {
 
         when {
-            params {
-                outdir   = "$outputDir"
-            }
             process {
                 """
-                input[0] = [
+                input[0] = Channel.of([
                     [ id: 'test', single_end:true ],
-                    [
-                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
-                    ]
-                ]
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
                 """
             }
         }
@@ -28,82 +24,189 @@ nextflow_process {
         then {
             assertAll (
             { assert process.success },
+
             // NOTE The report contains the date inside it, which means that the md5sum is stable per day, but not longer than that. So you can't md5sum it.
             // looks like this: <div id="header_filename">Mon 2 Oct 2023<br/>test.gz</div>
             // https://github.com/nf-core/modules/pull/3903#issuecomment-1743620039
-            { assert process.out.html.get(0).get(1) ==~ ".*/test_fastqc.html" },
-            { assert path(process.out.html.get(0).get(1)).getText().contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-            { assert snapshot(process.out.versions).match("versions") },
-            { assert process.out.zip.get(0).get(1) ==~ ".*/test_fastqc.zip" }
+
+            { assert process.out.html[0][1] ==~ ".*/test_fastqc.html" },
+            { assert process.out.zip[0][1] ==~ ".*/test_fastqc.zip" },
+            { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+
+            { assert snapshot(process.out.versions).match("versions") }
             )
         }
     }
-// TODO
-// //
-// // Test with paired-end data
-// //
-// workflow test_fastqc_paired_end {
-//     input = [
-//                 [id: 'test', single_end: false], // meta map
-//                 [
-//                     file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-//                     file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
-//                 ]
-//             ]
 
-//     FASTQC ( input )
-// }
+    test("sarscov2 paired-end [fastq]") {
 
-// //
-// // Test with interleaved data
-// //
-// workflow test_fastqc_interleaved {
-//     input = [
-//                 [id: 'test', single_end: false], // meta map
-//                 file(params.test_data['sarscov2']['illumina']['test_interleaved_fastq_gz'], checkIfExists: true)
-//             ]
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [id: 'test', single_end: false], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
 
-//     FASTQC ( input )
-// }
+        then {
+            assertAll (
+            { assert process.success },
 
-// //
-// // Test with bam data
-// //
-// workflow test_fastqc_bam {
-//     input = [
-//                 [id: 'test', single_end: false], // meta map
-//                 file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
-//             ]
+            { assert process.out.html[0][1][0] ==~ ".*/test_1_fastqc.html" },
+            { assert process.out.html[0][1][1] ==~ ".*/test_2_fastqc.html" },
+            { assert process.out.zip[0][1][0] ==~ ".*/test_1_fastqc.zip" },
+            { assert process.out.zip[0][1][1] ==~ ".*/test_2_fastqc.zip" },
+            { assert path(process.out.html[0][1][0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+            { assert path(process.out.html[0][1][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
 
-//     FASTQC ( input )
-// }
+            { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
 
-// //
-// // Test with multiple samples
-// //
-// workflow test_fastqc_multiple {
-//     input = [
-//                 [id: 'test', single_end: false], // meta map
-//                 [
-//                     file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-//                     file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true),
-//                     file(params.test_data['sarscov2']['illumina']['test2_1_fastq_gz'], checkIfExists: true),
-//                     file(params.test_data['sarscov2']['illumina']['test2_2_fastq_gz'], checkIfExists: true)
-//                 ]
-//             ]
+    test("sarscov2 interleaved [fastq]") {
 
-//     FASTQC ( input )
-// }
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [id: 'test', single_end: false], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true)
+                ])
+            """
+            }
+        }
 
-// //
-// // Test with custom prefix
-// //
-// workflow test_fastqc_custom_prefix {
-//     input = [
-//                 [ id:'mysample', single_end:true ], // meta map
-//                 file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
-//             ]
+        then {
+            assertAll (
+            { assert process.success },
 
-//     FASTQC ( input )
-// }
+            { assert process.out.html[0][1] ==~ ".*/test_fastqc.html" },
+            { assert process.out.zip[0][1] ==~ ".*/test_fastqc.zip" },
+            { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+
+            { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end [bam]") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [id: 'test', single_end: false], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+            { assert process.success },
+
+            { assert process.out.html[0][1] ==~ ".*/test_fastqc.html" },
+            { assert process.out.zip[0][1] ==~ ".*/test_fastqc.zip" },
+            { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+
+            { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("sarscov2 multiple [fastq]") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [id: 'test', single_end: false], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+            { assert process.success },
+
+            { assert process.out.html[0][1][0] ==~ ".*/test_1_fastqc.html" },
+            { assert process.out.html[0][1][1] ==~ ".*/test_2_fastqc.html" },
+            { assert process.out.html[0][1][2] ==~ ".*/test_3_fastqc.html" },
+            { assert process.out.html[0][1][3] ==~ ".*/test_4_fastqc.html" },
+            { assert process.out.zip[0][1][0] ==~ ".*/test_1_fastqc.zip" },
+            { assert process.out.zip[0][1][1] ==~ ".*/test_2_fastqc.zip" },
+            { assert process.out.zip[0][1][2] ==~ ".*/test_3_fastqc.zip" },
+            { assert process.out.zip[0][1][3] ==~ ".*/test_4_fastqc.zip" },
+            { assert path(process.out.html[0][1][0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+            { assert path(process.out.html[0][1][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+            { assert path(process.out.html[0][1][2]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+            { assert path(process.out.html[0][1][3]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+
+            { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("sarscov2 custom_prefix") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'mysample', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+            { assert process.success },
+
+            { assert process.out.html[0][1] ==~ ".*/mysample_fastqc.html" },
+            { assert process.out.zip[0][1] ==~ ".*/mysample_fastqc.zip" },
+            { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+
+            { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("sarscov2 single-end [fastq] - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+            { assert process.success },
+            { assert snapshot(process.out.html.collect { file(it[1]).getName() } +
+                                process.out.zip.collect { file(it[1]).getName() } +
+                                process.out.versions ).match() }
+            )
+        }
+    }
+
 }

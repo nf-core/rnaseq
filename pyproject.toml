@@ -1,10 +1,13 @@
-# Config file for Python. Mostly used to configure linting of bin/check_samplesheet.py with Black.
+# Config file for Python. Mostly used to configure linting of bin/*.py with Ruff.
 # Should be kept the same as nf-core/tools to avoid fighting with template synchronisation.
-[tool.black]
+[tool.ruff]
 line-length = 120
-target_version = ["py37", "py38", "py39", "py310"]
+target-version = "py38"
+select = ["I", "E1", "E4", "E7", "E9", "F", "UP", "N"]
+cache-dir = "~/.cache/ruff"
 
-[tool.isort]
-profile = "black"
-known_first_party = ["nf_core"]
-multi_line_output = 3
+[tool.ruff.isort]
+known-first-party = ["nf_core"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["E402", "F401"]

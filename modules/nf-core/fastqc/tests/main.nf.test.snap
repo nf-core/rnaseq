@@ -1,10 +1,20 @@
 {
+    "sarscov2 single-end [fastq] - stub": {
+        "content": [
+            [
+                "test.html",
+                "test.zip",
+                "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
+            ]
+        ],
+        "timestamp": "2024-01-17T18:40:57.254299"
+    },
     "versions": {
         "content": [
             [
                 "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
             ]
         ],
-        "timestamp": "2023-10-09T23:40:54+0000"
+        "timestamp": "2024-01-17T18:36:50.033627"
     }
 }

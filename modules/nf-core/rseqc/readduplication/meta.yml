@@ -1,0 +1,52 @@
+name: rseqc_readduplication
+description: Calculate read duplication rate
+keywords:
+  - rnaseq
+  - duplication
+tools:
+  - rseqc:
+      description: |
+        RSeQC package provides a number of useful modules that can comprehensively evaluate
+        high throughput sequence data especially RNA-seq data.
+      homepage: http://rseqc.sourceforge.net/
+      documentation: http://rseqc.sourceforge.net/
+      doi: 10.1093/bioinformatics/bts356
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: the alignment in bam format
+      pattern: "*.{bam}"
+  - bed:
+      type: file
+      description: a bed file for the reference gene model
+      pattern: "*.{bed}"
+output:
+  - seq_xls:
+      type: file
+      description: Read duplication rate determined from mapping position of read
+      pattern: "*seq.DupRate.xls"
+  - pos_xls:
+      type: file
+      description: Read duplication rate determined from sequence of read
+      pattern: "*pos.DupRate.xls"
+  - pdf:
+      type: file
+      description: plot of duplication rate
+      pattern: "*.pdf"
+  - rscript:
+      type: file
+      description: script to reproduce the plot
+      pattern: "*.R"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@kevinmenden"

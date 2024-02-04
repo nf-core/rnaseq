@@ -1,0 +1,11 @@
+#id: 'deseq2_pca'
+#section_name: 'DESeq2 PCA plot'
+#description: "PCA plot between samples in the experiment.
+#              These values are calculated using <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html'>DESeq2</a>
+#              in the <a href='https://github.com/nf-core/rnaseq/blob/master/bin/deseq2_qc.r'><code>deseq2_qc.r</code></a> script."
+#plot_type: 'scatter'
+#anchor: 'deseq2_pca'
+#pconfig:
+#    title: 'DESeq2: Principal component plot'
+#    xlab: PC1
+#    ylab: PC2

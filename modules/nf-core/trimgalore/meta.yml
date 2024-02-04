@@ -1,0 +1,64 @@
+name: trimgalore
+description: Trim FastQ files using Trim Galore!
+keywords:
+  - trimming
+  - adapters
+  - sequencing adapters
+  - fastq
+tools:
+  - trimgalore:
+      description: |
+        A wrapper tool around Cutadapt and FastQC to consistently apply quality
+        and adapter trimming to FastQ files, with some extra functionality for
+        MspI-digested RRBS-type (Reduced Representation Bisufite-Seq) libraries.
+      homepage: https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
+      documentation: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input adapter trimmed FastQ files of size 1 and 2 for
+        single-end and paired-end data, respectively.
+      pattern: "*{3prime,5prime,trimmed,val}*.fq.gz"
+  - unpaired:
+      type: file
+      description: |
+        FastQ files containing unpaired reads from read 1 or read 2
+      pattern: "*unpaired*.fq.gz"
+  - html:
+      type: file
+      description: FastQC report (optional)
+      pattern: "*_{fastqc.html}"
+  - zip:
+      type: file
+      description: FastQC report archive (optional)
+      pattern: "*_{fastqc.zip}"
+  - log:
+      type: file
+      description: Trim Galore! trimming report
+      pattern: "*_{report.txt}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@ewels"
+  - "@FelixKrueger"

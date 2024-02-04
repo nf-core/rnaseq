@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fastq_align_hisat2"
+description: Align reads to a reference genome using hisat2 then sort with samtools
+keywords:
+  - align
+  - sort
+  - rnaseq
+  - genome
+  - fastq
+  - bam
+  - sam
+  - cram
+components:
+  - hisat2/align
+  - samtools/stats
+  - samtools/idxstats
+  - samtools/flagstat
+  - bam_sort_stats_samtools
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - index:
+      type: file
+      description: HISAT2 genome index file
+      pattern: "*.ht2"
+  - splicesites:
+      type: file
+      description: Splices sites in gtf file
+      pattern: "*.{txt}"
+  - fasta:
+      type: file
+      description: Reference genome fasta file
+      pattern: "*.{fasta,fa}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - bam:
+      type: file
+      description: Output BAM file containing read alignments
+      pattern: "*.{bam}"
+  - summary:
+      type: file
+      description: Aligment log
+      pattern: "*.log"
+  - fastq:
+      type: file
+      description: Optional output FASTQ file containing unaligned reads
+      pattern: ".fastq.gz"
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - bai:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - crai:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - stats:
+      type: file
+      description: File containing samtools stats output
+      pattern: "*.{stats}"
+  - flagstat:
+      type: file
+      description: File containing samtools flagstat output
+      pattern: "*.{flagstat}"
+  - idxstats:
+      type: file
+      description: File containing samtools idxstats output
+      pattern: "*.{idxstats}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@priyanka-surana"

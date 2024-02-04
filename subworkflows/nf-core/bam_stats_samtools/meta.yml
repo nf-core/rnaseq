@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: bam_stats_samtools
+description: Produces comprehensive statistics from SAM/BAM/CRAM file
+keywords:
+  - statistics
+  - counts
+  - bam
+  - sam
+  - cram
+components:
+  - samtools/stats
+  - samtools/idxstats
+  - samtools/flagstat
+input:
+  - ch_bam_bai:
+      description: |
+        The input channel containing the BAM/CRAM and it's index
+        Structure: [ val(meta), path(bam), path(bai) ]
+  - ch_fasta:
+      description: |
+        Reference genome fasta file
+        Structure: [ path(fasta) ]
+output:
+  - stats:
+      description: |
+        File containing samtools stats output
+        Structure: [ val(meta), path(stats) ]
+  - flagstat:
+      description: |
+        File containing samtools flagstat output
+        Structure: [ val(meta), path(flagstat) ]
+  - idxstats:
+      description: |
+        File containing samtools idxstats output
+        Structure: [ val(meta), path(idxstats)]
+  - versions:
+      description: |
+        Files containing software versions
+        Structure: [ path(versions.yml) ]
+authors:
+  - "@drpatelh"

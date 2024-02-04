@@ -1,0 +1,68 @@
+name: umitools_dedup
+description: Deduplicate reads based on the mapping co-ordinate and the UMI attached to the read.
+keywords:
+  - umitools
+  - deduplication
+  - dedup
+tools:
+  - umi_tools:
+      description: >
+        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs)
+        and single cell RNA-Seq cell barcodes
+      documentation: https://umi-tools.readthedocs.io/en/latest/
+      license: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: |
+        BAM file containing reads to be deduplicated via UMIs.
+      pattern: "*.{bam}"
+  - bai:
+      type: file
+      description: |
+        BAM index files corresponding to the input BAM file.
+      pattern: "*.{bai}"
+  - get_output_stats:
+      type: boolean
+      description: |
+        Whether or not to generate output stats.
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM file with deduplicated UMIs.
+      pattern: "*.{bam}"
+  - log:
+      type: file
+      description: File with logging information
+      pattern: "*.{log}"
+  - tsv_edit_distance:
+      type: file
+      description: Reports the (binned) average edit distance between the UMIs at each position.
+      pattern: "*edit_distance.tsv"
+  - tsv_per_umi:
+      type: file
+      description: UMI-level summary statistics.
+      pattern: "*per_umi.tsv"
+  - tsv_umi_per_position:
+      type: file
+      description: Tabulates the counts for unique combinations of UMI and position.
+      pattern: "*per_position.tsv"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@drpatelh"
+  - "@grst"
+  - "@klkeys"

@@ -1,0 +1,52 @@
+name: subread_featurecounts
+description: Count reads that map to genomic features
+keywords:
+  - counts
+  - fasta
+  - genome
+  - reference
+
+tools:
+  - featurecounts:
+      description: featureCounts is a highly efficient general-purpose read summarization program that counts mapped reads for genomic features such as genes, exons, promoter, gene bodies, genomic bins and chromosomal locations. It can be used to count both RNA-seq and genomic DNA-seq reads.
+      homepage: http://bioinf.wehi.edu.au/featureCounts/
+      documentation: http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf
+      doi: "10.1093/bioinformatics/btt656"
+      licence: ["GPL v3"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM/SAM file containing read alignments
+      pattern: "*.{bam}"
+  - annotation:
+      type: file
+      description: Genomic features annotation in GTF or SAF
+      pattern: "*.{gtf,saf}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - counts:
+      type: file
+      description: Counts of reads mapping to features
+      pattern: "*featureCounts.txt"
+  - summary:
+      type: file
+      description: Summary log file
+      pattern: "*.featureCounts.txt.summary"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@ntoda03"

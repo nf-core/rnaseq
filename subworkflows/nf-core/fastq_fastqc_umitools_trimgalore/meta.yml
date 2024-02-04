@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fastq_fastqc_umitools_trimgalore"
+description: Read QC, UMI extraction and trimming
+keywords:
+  - fastq
+  - fastqc
+  - qc
+  - UMI
+  - trimming
+  - trimgalore
+components:
+  - fastqc
+  - umitools/extract
+  - trimgalore
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - skip_fastqc:
+      type: boolean
+      description: |
+        Skip fastqc process
+  - with_umi:
+      type: boolean
+      description: |
+        With or without umi detection
+  - skip_umi_extract:
+      type: boolean
+      description: |
+        With or without umi extrection
+  - skip_trimming:
+      type: boolean
+      description: |
+        Allows to skip trimgalore execution
+  - umi_discard_read:
+      type: integer
+      description: |
+        Discard R1 / R2 if required
+  - min_trimmed_reads:
+      type: integer
+      description: |
+        Inputs with fewer than this reads will be filtered out of the "reads" output channel
+
+output:
+  - reads:
+      type: file
+      description: >
+        Extracted FASTQ files. |
+        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+          For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+      pattern: "*.{fastq.gz}"
+  - fastqc_html:
+      type: file
+      description: FastQC report
+      pattern: "*_{fastqc.html}"
+  - fastqc_zip:
+      type: file
+      description: FastQC report archive
+      pattern: "*_{fastqc.zip}"
+  - log:
+      type: file
+      description: Logfile for umi_tools
+      pattern: "*.{log}"
+  - trim_unpaired:
+      type: file
+      description: |
+        FastQ files containing unpaired reads from read 1 or read 2
+      pattern: "*unpaired*.fq.gz"
+  - trim_html:
+      type: file
+      description: FastQC report (optional)
+      pattern: "*_{fastqc.html}"
+  - trim_zip:
+      type: file
+      description: FastQC report archive (optional)
+      pattern: "*_{fastqc.zip}"
+  - trim_log:
+      type: file
+      description: Trim Galore! trimming report
+      pattern: "*_{report.txt}"
+  - trim_read_count:
+      type: integer
+      description: Number of reads remaining after trimming for all input samples
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"

@@ -1,0 +1,31 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,93b027527145a243903a3c687c3453b8"
+                ],
+                "bigwig": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,93b027527145a243903a3c687c3453b8"
+                ]
+            }
+        ],
+        "timestamp": "2023-10-18T04:06:47.826602"
+    }
+}

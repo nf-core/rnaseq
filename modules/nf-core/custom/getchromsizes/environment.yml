@@ -1,0 +1,7 @@
+name: custom_getchromsizes
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::samtools=1.16.1

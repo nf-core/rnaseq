@@ -1,15 +1,16 @@
 name: umitools_extract
 description: Extracts UMI barcode from a read and add it to the read name, leaving any sample barcode in place
 keywords:
-  - umitools
+  - UMI
+  - barcode
   - extract
+  - umitools
 tools:
   - umi_tools:
       description: >
-        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs)
-        and single cell RNA-Seq cell barcodes
+        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs) and single cell RNA-Seq cell barcodes
       documentation: https://umi-tools.readthedocs.io/en/latest/
-      license: ["MIT"]
+      license: "MIT"
 input:
   - meta:
       type: map
@@ -29,9 +30,7 @@ output:
   - reads:
       type: file
       description: >
-        Extracted FASTQ files. |
-        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
-        For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+        Extracted FASTQ files. | For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. | For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
       pattern: "*.{fastq.gz}"
   - log:
       type: file
@@ -41,7 +40,9 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@drpatelh"
+  - "@grst"
+maintainers:
   - "@drpatelh"
   - "@grst"

@@ -1,0 +1,108 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_STATS_SAMTOOLS"
+    script "../main.nf"
+    workflow "BAM_STATS_SAMTOOLS"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "bam_stats_samtools"
+    tag "subworkflows/bam_stats_samtools"
+    tag "samtools"
+    tag "samtools/flagstat"
+    tag "samtools/idxstats"
+    tag "samtools/stats"
+
+    test("test_bam_stats_samtools_single_end") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out.stats).match("test_bam_stats_samtools_single_end_stats") },
+                { assert snapshot(workflow.out.flagstat).match("test_bam_stats_samtools_single_end_flagstats") },
+                { assert snapshot(workflow.out.idxstats).match("test_bam_stats_samtools_single_end_idxstats") }
+            )
+        }
+    }
+
+    test("test_bam_stats_samtools_paired_end") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.stats).match("test_bam_stats_samtools_paired_end_stats") },
+                { assert snapshot(workflow.out.flagstat).match("test_bam_stats_samtools_paired_end_flagstats") },
+                { assert snapshot(workflow.out.idxstats).match("test_bam_stats_samtools_paired_end_idxstats") }
+            )
+        }
+    }
+
+    test("test_bam_stats_samtools_paired_end_cram") {
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out.stats).match("test_bam_stats_samtools_paired_end_cram_stats") },
+                { assert snapshot(workflow.out.flagstat).match("test_bam_stats_samtools_paired_end_cram_flagstats") },
+                { assert snapshot(workflow.out.idxstats).match("test_bam_stats_samtools_paired_end_cram_idxstats") }
+            )
+        }
+    }
+
+}

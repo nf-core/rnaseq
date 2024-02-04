@@ -1,0 +1,36 @@
+nextflow_process {
+
+    name "Test Process RSEM_PREPAREREFERENCE"
+    script "../main.nf"
+    process "RSEM_PREPAREREFERENCE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rsem"
+    tag "rsem/preparereference"
+
+    test("homo_sapiens") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)])
+                input[1] = Channel.of([file(params.test_data['homo_sapiens']['genome']['genome_gtf'], checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.index).match("index")},
+                { assert snapshot(process.out.transcript_fasta).match("transcript_fasta")},
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+
+    }
+
+}

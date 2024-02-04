@@ -1,0 +1,33 @@
+{
+    "sarscov2 paired-end [bam]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,fc68a268ab32a0d72a66f270d6c7925e"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,fc68a268ab32a0d72a66f270d6c7925e"
+                ]
+            }
+        ],
+        "timestamp": "2023-12-14T17:17:31.66536021"
+    }
+}

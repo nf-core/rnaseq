@@ -7,24 +7,23 @@ nextflow_process {
     tag "modules_nfcore"
     tag "kallisto"
     tag "kallisto/quant"
+    tag "kallisto/index"
 
     setup {
             run("KALLISTO_INDEX") {
                 script "../../index/main.nf"
                 process {
-                """
-                input[0] = [
-                    [ id:'test_fasta' ], // meta map
-                    [ file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true) ]
-                ]
-                """
-            }
+                    """
+                    input[0] = Channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ])
+                    """
+                }
             }
         }
 
     test("sarscov2 single-end") {
-        config "./single_end.config"
-
         when {
             params{
                 outdir = "$outputDir"
@@ -32,15 +31,20 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
+                gtf                = []
+                chromosomes        = []
+                fragment_length    = 150
+                fragment_length_sd = 75
+
+                input[0] = Channel.of([
                     [ id:'test', single_end:true ],
-                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
-                ]
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = KALLISTO_INDEX.out.index
-                input[2] = []
-                input[3] = []
-                input[4] = 150
-                input[5] = 75
+                input[2] = gtf
+                input[3] = chromosomes
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
@@ -48,7 +52,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(path("$outputDir/kallisto/test/abundance.tsv")).match("abundance_tsv_single") },
+                { assert snapshot(path("${process.out.results[0][1]}/abundance.tsv")).match("se_abundance_tsv") },
                 { assert snapshot(process.out.log).match("se_log") },
                 { assert snapshot(process.out.versions).match("se_versions") }
             )
@@ -56,8 +60,6 @@ nextflow_process {
     }
 
     test("sarscov2 paired-end") {
-        config "./paired_end.config"
-
         when {
             params{
                 outdir = "$outputDir"
@@ -65,25 +67,28 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
+                gtf                = []
+                chromosomes        = []
+                fragment_length    = []
+                fragment_length_sd = []
+
+                input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
-                    [
-                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
-                    ]
-                ]
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = KALLISTO_INDEX.out.index
-                input[2] = []
-                input[3] = []
-                input[4] = []
-                input[5] = []
+                input[2] = gtf
+                input[3] = chromosomes
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(path("$outputDir/kallisto/test/abundance.tsv")).match("abundance_tsv_paired") },
+                { assert snapshot(path("${process.out.results[0][1]}/abundance.tsv")).match("pe_abundance_tsv") },
                 { assert snapshot(process.out.log).match("pe_log") },
                 { assert snapshot(process.out.versions).match("pe_versions") }
             )

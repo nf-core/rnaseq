@@ -1,5 +1,17 @@
 {
-    "sarscov2 single-end [fastq] - stub": {
+    "fastqc_versions_interleaved": {
+        "content": [
+            [
+                "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:40:07.293713"
+    },
+    "fastqc_stub": {
         "content": [
             [
                 "test.html",
@@ -7,14 +19,70 @@
                 "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
             ]
         ],
-        "timestamp": "2024-01-17T18:40:57.254299"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:31:01.425198"
     },
-    "versions": {
+    "fastqc_versions_multiple": {
         "content": [
             [
                 "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
             ]
         ],
-        "timestamp": "2024-01-17T18:36:50.033627"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:40:55.797907"
+    },
+    "fastqc_versions_bam": {
+        "content": [
+            [
+                "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:40:26.795862"
+    },
+    "fastqc_versions_single": {
+        "content": [
+            [
+                "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:39:27.043675"
+    },
+    "fastqc_versions_paired": {
+        "content": [
+            [
+                "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:39:47.584191"
+    },
+    "fastqc_versions_custom_prefix": {
+        "content": [
+            [
+                "versions.yml:md5,e1cc25ca8af856014824abd842e93978"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-31T17:41:14.576531"
     }
 }

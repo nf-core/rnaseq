@@ -47,13 +47,14 @@ input:
       type: integer
       description: |
         Inputs with fewer than this reads will be filtered out of the "reads" output channel
-
 output:
   - reads:
       type: file
       description: >
-        Extracted FASTQ files. |
-        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+        Extracted FASTQ files. | For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
+
+
+
           For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
       pattern: "*.{fastq.gz}"
   - fastqc_html:
@@ -93,5 +94,8 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"
+maintainers:
   - "@drpatelh"
   - "@KamilMaliszArdigen"

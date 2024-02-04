@@ -1,0 +1,35 @@
+nextflow_process {
+
+    name "Test Process HISAT2_EXTRACTSPLICESITES"
+    script "../main.nf"
+    process "HISAT2_EXTRACTSPLICESITES"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "hisat2"
+    tag "hisat2/extractsplicesites"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [id:'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.txt[0][1]}").exists() },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+}

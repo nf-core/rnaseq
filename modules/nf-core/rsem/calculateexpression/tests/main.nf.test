@@ -1,0 +1,56 @@
+nextflow_process {
+
+    name "Test Process RSEM_CALCULATEEXPRESSION"
+    script "../main.nf"
+    process "RSEM_CALCULATEEXPRESSION"
+    config "./nextflow.config"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rsem"
+    tag "rsem/calculateexpression"
+
+    test("homo_sapiens") {
+
+        setup {
+            run("RSEM_PREPAREREFERENCE") {
+                script "../../../rsem/preparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)])
+                    input[1] = Channel.of([file(params.test_data['homo_sapiens']['genome']['genome_gtf'], checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_rnaseq_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_rnaseq_2_fastq_gz'], checkIfExists: true)
+                    ]
+                ])
+                input[1] = RSEM_PREPAREREFERENCE.out.index
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts_gene).match("counts_gene") },
+                { assert snapshot(process.out.counts_transcript).match("counts_transcript") },
+                { assert snapshot(process.out.stat).match("stat") },
+                { assert path(process.out.logs.get(0).get(1)).exists() },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+
+    }
+
+}

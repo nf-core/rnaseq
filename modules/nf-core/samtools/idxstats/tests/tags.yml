@@ -1,0 +1,2 @@
+samtools/idxstats:
+  - modules/nf-core/samtools/idxstats/**

@@ -1,0 +1,108 @@
+nextflow_process {
+
+    name "Test Process STRINGTIE_STRINGTIE"
+    script "../main.nf"
+    process "STRINGTIE_STRINGTIE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "stringtie"
+    tag "stringtie/stringtie"
+
+    test("sarscov2 [bam] - forward strandedness") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true) ]
+                           ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(process.out.transcript_gtf).match("fs_transcript_gtf") },
+            { assert snapshot(process.out.abundance).match("fs_abundance") },
+            { assert snapshot(process.out.versions).match("fs_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness + reference annotation") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true) ]
+                           ]
+                input[1] = file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(process.out.transcript_gtf).match("fs_gtf_transcript_gtf") },
+            { assert snapshot(process.out.abundance).match("fs_gtf_abundance") },
+            { assert snapshot(process.out.ballgown).match("fs_gtf_ballgown") },
+            { assert snapshot(process.out.versions).match("fs_gtf_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true) ]
+                           ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(process.out.transcript_gtf).match("rs_transcript_gtf") },
+            { assert snapshot(process.out.abundance).match("rs_abundance") },
+            { assert snapshot(process.out.versions).match("rs_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness + reference annotation") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true) ]
+                           ]
+                input[1] = file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(process.out.transcript_gtf).match("rs_gtf_transcript_gtf") },
+            { assert snapshot(process.out.abundance).match("rs_gtf_abundance") },
+            { assert snapshot(process.out.ballgown).match("rs_gtf_ballgown") },
+            { assert snapshot(process.out.versions).match("rs_gtf_versions") }
+            )
+        }
+    }
+}

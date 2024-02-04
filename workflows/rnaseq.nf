@@ -777,14 +777,14 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
-            ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
-            ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
-            ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
-            ch_junctionannotation_multiqc = BAM_RSEQC.out.junctionannotation_log
-            ch_junctionsaturation_multiqc = BAM_RSEQC.out.junctionsaturation_rscript
-            ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
-            ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
-            ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
+            ch_bamstat_multiqc            = BAM_RSEQC.out.ch_bamstat
+            ch_inferexperiment_multiqc    = BAM_RSEQC.out.ch_inferexperiment
+            ch_innerdistance_multiqc      = BAM_RSEQC.out.ch_innerdistance_freq
+            ch_junctionannotation_multiqc = BAM_RSEQC.out.ch_junctionannotation_log
+            ch_junctionsaturation_multiqc = BAM_RSEQC.out.ch_junctionsaturation_rscript
+            ch_readdistribution_multiqc   = BAM_RSEQC.out.ch_readdistribution
+            ch_readduplication_multiqc    = BAM_RSEQC.out.ch_readduplication_pos_xls
+            ch_tin_multiqc                = BAM_RSEQC.out.ch_tin
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc

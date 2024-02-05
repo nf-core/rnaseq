@@ -91,7 +91,7 @@ workflow PREPARE_GENOME {
             ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
 
-    	if (filter_gtf) {
+        if (filter_gtf) {
             GTF_FILTER ( ch_fasta, ch_gtf )
             ch_gtf = GTF_FILTER.out.genome_gtf
             ch_versions = ch_versions.mix(GTF_FILTER.out.versions)

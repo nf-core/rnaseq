@@ -18,11 +18,11 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     index                     // channel: /path/to//index/
     transcript_fasta          // channel: /path/to/transcript.fasta
     gtf                       // channel: /path/to/genome.gtf
-    pseudo_aligner            //     val: kallisto or salmon 
+    pseudo_aligner            //     val: kallisto or salmon
     alignment_mode            //    bool: Run Salmon in alignment mode
     lib_type                  //     val: String to override Salmon library type
     kallisto_quant_fraglen    //     val: Estimated fragment length required by Kallisto in single-end mode
-    kallisto_quant_fraglen_sd //     val: Estimated standard error for fragment length required by Kallisto in single-end mode 
+    kallisto_quant_fraglen_sd //     val: Estimated standard error for fragment length required by Kallisto in single-end mode
 
     main:
 

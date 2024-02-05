@@ -3,11 +3,17 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
+    - lib/NfcoreTemplate.groovy
   files_exist:
+    - .github/workflows/awsfulltest.yml
+    - .github/workflows/awstest.yml
+    - assets/multiqc_config.yml
+    - conf/modules.config
     - lib/nfcore_external_java_deps.jar
     - lib/NfcoreTemplate.groovy
     - lib/Utils.groovy
     - lib/WorkflowMain.groovy
+    - lib/WorkflowRnaseq.groovy
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest

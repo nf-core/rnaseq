@@ -3,8 +3,6 @@ description: "Suggested text and references to use when describing pipeline usag
 section_name: "nf-core/rnaseq Methods Description"
 section_href: "https://github.com/nf-core/rnaseq"
 plot_type: "html"
-## TODO nf-core: Update the HTML below to your preferred methods description, e.g. add publication citation for this pipeline
-## You inject any metadata in the Nextflow '${workflow}' object
 data: |
   <h4>Methods</h4>
   <p>Data was processed using nf-core/rnaseq v${workflow.manifest.version} ${doi_text} of the nf-core collection of workflows (<a href="https://doi.org/10.1038/s41587-020-0439-x">Ewels <em>et al.</em>, 2020</a>), utilising reproducible software environments from the Bioconda (<a href="https://doi.org/10.1038/s41592-018-0046-7">Grüning <em>et al.</em>, 2018</a>) and Biocontainers (<a href="https://doi.org/10.1093/bioinformatics/btx192">da Veiga Leprevost <em>et al.</em>, 2017</a>) projects.</p>

@@ -11,20 +11,22 @@ process GFFREAD {
     path gff
 
     output:
-    path "*.gtf"        , emit: gtf
+    path "*.gtf"        , emit: gtf         , optional: true
+    path "*.gff3"       , emit: gffread_gff , optional: true
     path "versions.yml" , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args   = task.ext.args   ?: ''
-    def prefix = task.ext.prefix ?: "${gff.baseName}"
+    def args        = task.ext.args   ?: ''
+    def prefix      = task.ext.prefix ?: "${gff.baseName}"
+    def extension   = args.contains("-T") ? 'gtf' : 'gffread.gff3'
     """
     gffread \\
         $gff \\
         $args \\
-        -o ${prefix}.gtf
+        -o ${prefix}.${extension}
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gffread: \$(gffread --version 2>&1)

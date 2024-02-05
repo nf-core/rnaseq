@@ -3,7 +3,7 @@ process PRESEQ_LCEXTRAP {
     label 'process_single'
     label 'error_ignore'
 
-    conda "bioconda::preseq=3.1.2"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/preseq:3.1.2--h445547b_2':
         'biocontainers/preseq:3.1.2--h445547b_2' }"

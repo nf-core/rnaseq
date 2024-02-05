@@ -1,0 +1,24 @@
+{
+    "bedgraph": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T14:50:02.387801"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,b92248ce2a138ad4d146ac0d9e71fb34"
+            ]
+        ],
+        "timestamp": "2023-11-23T14:50:02.407878"
+    }
+}

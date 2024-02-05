@@ -1,0 +1,2 @@
+fq/subsample:
+  - modules/nf-core/fq/subsample/**

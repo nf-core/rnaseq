@@ -7,8 +7,8 @@ keywords:
 tools:
   - umi_tools:
       description: >
-        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs)
-        and single cell RNA-Seq cell barcodes
+        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs) and single cell RNA-Seq cell barcodes
+
       documentation: https://umi-tools.readthedocs.io/en/latest/
       license: ["MIT"]
 input:
@@ -61,8 +61,11 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@drpatelh"
+  - "@grst"
+  - "@klkeys"
+maintainers:
   - "@drpatelh"
   - "@grst"
   - "@klkeys"

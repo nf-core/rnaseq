@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process UCSC_BEDCLIP"
+    script "../main.nf"
+    process "UCSC_BEDCLIP"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "ucsc"
+    tag "ucsc/bedclip"
+
+    test("sarscov2") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_bedgraph'], checkIfExists: true)
+                ])
+                input[1] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_sizes'], checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

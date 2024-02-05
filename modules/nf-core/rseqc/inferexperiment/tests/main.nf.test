@@ -1,0 +1,34 @@
+nextflow_process {
+
+    name "Test Process RSEQC_INFEREXPERIMENT"
+    script "../main.nf"
+    process "RSEQC_INFEREXPERIMENT"
+    config "./nextflow.config"
+    
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rseqc"
+    tag "rseqc/inferexperiment"
+
+    test("sarscov2 - [[meta] - bam] - bed") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+    	        input[1] = file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - name: Install dependencies
@@ -56,7 +56,7 @@ jobs:
   bsky-post:
     runs-on: ubuntu-latest
     steps:
-      - uses: zentered/bluesky-post-action@v0.0.2
+      - uses: zentered/bluesky-post-action@v0.1.0
         with:
           post: |
             Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!

@@ -1,0 +1,2 @@
+bbmap/bbsplit:
+  - "modules/nf-core/bbmap/bbsplit/**"

@@ -47,3 +47,5 @@ output:
       pattern: "versions.yml"
 authors:
   - "@drpatelh"
+maintainers:
+  - "@drpatelh"

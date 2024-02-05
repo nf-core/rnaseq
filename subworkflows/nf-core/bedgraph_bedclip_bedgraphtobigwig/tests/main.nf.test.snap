@@ -1,0 +1,53 @@
+{
+    "sarscov2 [bedgraph] [genome_sizes]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,21c57fc724b374139b11f88017251733",
+                    "versions.yml:md5,72a7b07bc0e796ff6805c57f7340337f"
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                    ]
+                ],
+                "bigwig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,21c57fc724b374139b11f88017251733",
+                    "versions.yml:md5,72a7b07bc0e796ff6805c57f7340337f"
+                ]
+            }
+        ],
+        "timestamp": "2023-11-26T01:55:31.016058335"
+    }
+}

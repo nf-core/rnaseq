@@ -1,0 +1,2 @@
+subworkflows/fastq_subsample_fq_salmon:
+  - subworkflows/nf-core/fastq_subsample_fq_salmon/**

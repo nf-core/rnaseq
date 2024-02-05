@@ -1,0 +1,28 @@
+{
+    "crai": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.paired_end.recalibrated.sorted.cram.crai:md5,14bc3bd5c89cacc8f4541f9062429029"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-15T15:17:37.30801"
+    },
+    "bai": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.paired_end.sorted.bam.bai:md5,704c10dd1326482448ca3073fdebc2f4"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-15T15:17:30.869234"
+    }
+}

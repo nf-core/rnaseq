@@ -3,7 +3,7 @@ process BBMAP_BBSPLIT {
     label 'process_high'
     label 'error_retry'
 
-    conda "bioconda::bbmap=39.01"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bbmap:39.01--h5c4e2a8_0':
         'biocontainers/bbmap:39.01--h5c4e2a8_0' }"
@@ -12,7 +12,7 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path(reads)
     path  index
     path  primary_ref
-    tuple val(other_ref_names), path (other_ref_paths)
+    tuple val(other_ref_names), path(other_ref_paths)
     val   only_build_index
 
     output:
@@ -86,4 +86,5 @@ process BBMAP_BBSPLIT {
         END_VERSIONS
         """
     }
+
 }

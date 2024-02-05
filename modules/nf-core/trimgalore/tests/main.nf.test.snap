@@ -1,0 +1,148 @@
+{
+    "test_trimgalore_single_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_trimmed.fq.gz:md5,e0a7516b8ea8d6467d6306acb2cd13c4"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.fastq.gz_trimming_report.txt:md5,a1ab3958205f1ddf48af623242b5b429"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    "versions.yml:md5,47d966cbb31c80eb8f7fe860d55659b7"
+                ],
+                "html": [
+                    
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.fastq.gz_trimming_report.txt:md5,a1ab3958205f1ddf48af623242b5b429"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_trimmed.fq.gz:md5,e0a7516b8ea8d6467d6306acb2cd13c4"
+                    ]
+                ],
+                "unpaired": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,47d966cbb31c80eb8f7fe860d55659b7"
+                ],
+                "zip": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2023-10-17T15:24:57.782141441"
+    },
+    "test_trimgalore_paired_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1_val_1.fq.gz:md5,e0a7516b8ea8d6467d6306acb2cd13c4",
+                            "test_2_val_2.fq.gz:md5,f3d61189e6d10202da7b8686f1dbb71b"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.fastq.gz_trimming_report.txt:md5,315d40465412f9909bbaabf52269274d",
+                            "test_2.fastq.gz_trimming_report.txt:md5,34436303da1c78811103427a2fb57f7b"
+                        ]
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    "versions.yml:md5,47d966cbb31c80eb8f7fe860d55659b7"
+                ],
+                "html": [
+                    
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.fastq.gz_trimming_report.txt:md5,315d40465412f9909bbaabf52269274d",
+                            "test_2.fastq.gz_trimming_report.txt:md5,34436303da1c78811103427a2fb57f7b"
+                        ]
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1_val_1.fq.gz:md5,e0a7516b8ea8d6467d6306acb2cd13c4",
+                            "test_2_val_2.fq.gz:md5,f3d61189e6d10202da7b8686f1dbb71b"
+                        ]
+                    ]
+                ],
+                "unpaired": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,47d966cbb31c80eb8f7fe860d55659b7"
+                ],
+                "zip": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2023-10-17T15:25:08.513589909"
+    }
+}

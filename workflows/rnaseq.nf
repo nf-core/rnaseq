@@ -40,15 +40,15 @@ if (!params.skip_alignment) { prepareToolIndices << params.aligner }
 if (!params.skip_pseudo_alignment && params.pseudo_aligner) { prepareToolIndices << params.pseudo_aligner }
 
 // Determine whether to filter the GTF or not
-def filterGtf = 
+def filterGtf =
     ((
         // Condition 1: Alignment is required and aligner is set
         !params.skip_alignment && params.aligner
-    ) || 
+    ) ||
     (
         // Condition 2: Pseudoalignment is required and pseudoaligner is set
         !params.skip_pseudo_alignment && params.pseudo_aligner
-    ) || 
+    ) ||
     (
         // Condition 3: Transcript FASTA file is not provided
         !params.transcript_fasta
@@ -347,11 +347,11 @@ workflow RNASEQ {
         ch_sortmerna_multiqc = SORTMERNA.out.log
         ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
-    
+
     //
     // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
     //
-    
+
     // Branch FastQ channels if 'auto' specified to infer strandedness
     ch_filtered_reads
         .branch {
@@ -777,14 +777,14 @@ workflow RNASEQ {
                 PREPARE_GENOME.out.gene_bed,
                 rseqc_modules
             )
-            ch_bamstat_multiqc            = BAM_RSEQC.out.bamstat_txt
-            ch_inferexperiment_multiqc    = BAM_RSEQC.out.inferexperiment_txt
-            ch_innerdistance_multiqc      = BAM_RSEQC.out.innerdistance_freq
-            ch_junctionannotation_multiqc = BAM_RSEQC.out.junctionannotation_log
-            ch_junctionsaturation_multiqc = BAM_RSEQC.out.junctionsaturation_rscript
-            ch_readdistribution_multiqc   = BAM_RSEQC.out.readdistribution_txt
-            ch_readduplication_multiqc    = BAM_RSEQC.out.readduplication_pos_xls
-            ch_tin_multiqc                = BAM_RSEQC.out.tin_txt
+            ch_bamstat_multiqc            = BAM_RSEQC.out.ch_bamstat
+            ch_inferexperiment_multiqc    = BAM_RSEQC.out.ch_inferexperiment
+            ch_innerdistance_multiqc      = BAM_RSEQC.out.ch_innerdistance_freq
+            ch_junctionannotation_multiqc = BAM_RSEQC.out.ch_junctionannotation_log
+            ch_junctionsaturation_multiqc = BAM_RSEQC.out.ch_junctionsaturation_rscript
+            ch_readdistribution_multiqc   = BAM_RSEQC.out.ch_readdistribution
+            ch_readduplication_multiqc    = BAM_RSEQC.out.ch_readduplication_pos_xls
+            ch_tin_multiqc                = BAM_RSEQC.out.ch_tin
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             ch_inferexperiment_multiqc
@@ -819,14 +819,14 @@ workflow RNASEQ {
     //
     ch_pseudo_multiqc                   = Channel.empty()
     ch_pseudoaligner_pca_multiqc        = Channel.empty()
-    ch_pseudoaligner_clustering_multiqc = Channel.empty()    
+    ch_pseudoaligner_clustering_multiqc = Channel.empty()
     if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
-       if (params.pseudo_aligner == 'salmon') {
-           ch_pseudo_index = PREPARE_GENOME.out.salmon_index
-       } else {
-           ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
-       }
+        if (params.pseudo_aligner == 'salmon') {
+            ch_pseudo_index = PREPARE_GENOME.out.salmon_index
+        } else {
+            ch_pseudo_index = PREPARE_GENOME.out.kallisto_index
+        }
 
         QUANTIFY_PSEUDO_ALIGNMENT (
             ch_strand_inferred_filtered_fastq,
@@ -854,7 +854,7 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
         }
     }
-    
+
     //
     // MODULE: Pipeline reporting
     //
@@ -925,12 +925,19 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
-    
+
     NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
+}
+
+workflow.onError {
+    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
+        println("🛑 Default resources exceed availability 🛑 ")
+        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
     }
 }
 

@@ -26,13 +26,9 @@ workflow BAM_MARKDUPLICATES_PICARD {
     ch_bam_bai = PICARD_MARKDUPLICATES.out.bam
         .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
         .join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
-        .map {
-            meta, bam, bai, csi ->
-                if (bai) {
-                    [ meta, bam, bai ]
-                } else {
-                    [ meta, bam, csi ]
-                }
+        .map{meta, bam, bai, csi ->
+            if (bai) [ meta, bam, bai ]
+            else [ meta, bam, csi ]
         }
 
     BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta )

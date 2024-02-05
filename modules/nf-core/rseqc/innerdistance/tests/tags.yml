@@ -1,0 +1,2 @@
+rseqc/innerdistance:
+  - modules/nf-core/rseqc/innerdistance/**

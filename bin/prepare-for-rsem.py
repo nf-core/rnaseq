@@ -55,9 +55,9 @@ prepare_for_rsem - make output from dedup or group compatible with RSEM
 
 Usage: umi_tools prepare_for_rsem [OPTIONS] [--stdin=IN_BAM] [--stdout=OUT_BAM]
 
-       note: If --stdout is omited, standard out is output. To
-             generate a valid BAM file on standard out, please
-             redirect log with --log=LOGFILE or --log2stderr """
+        note: If --stdout is omited, standard out is output. To
+            generate a valid BAM file on standard out, please
+            redirect log with --log=LOGFILE or --log2stderr """
 
 
 def chunk_bam(bamfile):

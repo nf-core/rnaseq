@@ -1,0 +1,38 @@
+nextflow_process {
+
+    name "Test Process RSEQC_BAMSTAT"
+    script "../main.nf"
+    process "RSEQC_BAMSTAT"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rseqc"
+    tag "rseqc/bamstat"
+
+    config "./nextflow.config"
+
+    test("sarscov2 - [meta] - bam") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

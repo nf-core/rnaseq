@@ -140,4 +140,3 @@ done <- lapply(params, write_se_table)
 # Output session information and citations
 citation("tximeta")
 sessionInfo()
-

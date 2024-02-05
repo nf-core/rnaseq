@@ -10,10 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
+- [PR #1201](https://github.com/nf-core/rnaseq/pull/1201) - Template update for nf-core/tools v2.12
 
 ### Parameters
 
 ### Software dependencies
+
+| Dependency  | Old version | New version |
+| ----------- | ----------- | ----------- |
+| `picard`    | 3.0.0       | 3.1.1       |
+| `samtools`  | 1.17        | 1.18        |
+| `sortmerna` | 4.3.4       | 4.3.6       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
 
 ## [[3.14.0](https://github.com/nf-core/rnaseq/releases/tag/3.14.0)] - 2024-01-08
 

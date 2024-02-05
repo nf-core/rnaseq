@@ -1,0 +1,80 @@
+nextflow_process {
+
+    name "Test Process SUBREAD_FEATURECOUNTS"
+    script "../main.nf"
+    process "SUBREAD_FEATURECOUNTS"
+    config "./nextflow.config"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "subread"
+    tag "subread/featurecounts"
+
+    test("sarscov2 [bam] - forward") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:true, strandedness:'forward' ], // meta map
+                             file(params.test_data['sarscov2']['illumina']['test_single_end_bam'], checkIfExists: true),
+                             file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts).match("forward_counts") },
+                { assert snapshot(process.out.summary).match("forward_summary") },
+                { assert snapshot(process.out.versions).match("forward_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:true, strandedness:'reverse' ], // meta map
+                             file(params.test_data['sarscov2']['illumina']['test_single_end_bam'], checkIfExists: true),
+                             file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts).match("reverse_counts") },
+                { assert snapshot(process.out.summary).match("reverse_summary") },
+                { assert snapshot(process.out.versions).match("reverse_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - unstranded") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:true, strandedness:'unstranded' ], // meta map
+                             file(params.test_data['sarscov2']['illumina']['test_single_end_bam'], checkIfExists: true),
+                             file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts).match("unstranded_counts") },
+                { assert snapshot(process.out.summary).match("unstranded_summary") },
+                { assert snapshot(process.out.versions).match("unstranded_versions") }
+            )
+        }
+    }
+}

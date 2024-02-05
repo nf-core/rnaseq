@@ -1,0 +1,112 @@
+{
+    "sarscov2 single_end-for_stub_match": {
+        "content": [
+            [
+                "test.non_rRNA.fastq.gz",
+                "test.sortmerna.log",
+                "{id=test, single_end=true}"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-21T11:56:00.15356"
+    },
+    "sarscov2 paired_end_match": {
+        "content": [
+            [
+                [
+                    "test_1.non_rRNA.fastq.gz",
+                    "test_2.non_rRNA.fastq.gz"
+                ],
+                "test.sortmerna.log",
+                "{id=test, single_end=false}"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T12:16:08.266820184"
+    },
+    "versions_paired_end_stub": {
+        "content": [
+            [
+                "versions.yml:md5,7df9d50209f351e1f75e05a1fad6ba4b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T12:10:57.850054063"
+    },
+    "versions_paired_end": {
+        "content": [
+            [
+                "versions.yml:md5,7df9d50209f351e1f75e05a1fad6ba4b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T12:10:47.066657228"
+    },
+    "versions_single_end": {
+        "content": [
+            [
+                "versions.yml:md5,7df9d50209f351e1f75e05a1fad6ba4b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T12:10:22.534568982"
+    },
+    "versions_single_end_stub": {
+        "content": [
+            [
+                "versions.yml:md5,7df9d50209f351e1f75e05a1fad6ba4b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T12:10:35.228450189"
+    },
+    "sarscov2 single_end_match": {
+        "content": [
+            [
+                "test.non_rRNA.fastq.gz",
+                "test.sortmerna.log",
+                "{id=test, single_end=true}"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T12:15:30.47928718"
+    },
+    "sarscov2 paired_end-for_stub_match": {
+        "content": [
+            [
+                [
+                    "test_1.non_rRNA.fastq.gz",
+                    "test_2.non_rRNA.fastq.gz"
+                ],
+                "test.sortmerna.log",
+                "{id=test, single_end=false}"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-21T12:00:47.879193"
+    }
+}

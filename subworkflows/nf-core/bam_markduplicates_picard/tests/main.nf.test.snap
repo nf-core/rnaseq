@@ -1,0 +1,22 @@
+{
+    "homo_sapiens - cram": {
+        "content": [
+            "test.bam:md5,6641dc05efa8384a061f378d86d922cd",
+            "test.bam.bai:md5,c41c60d8a94adebe53b6df80b6e90d38",
+            "test.flagstat:md5,93b0ef463df947ede1f42ff60396c34d",
+            "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
+            "test.stats:md5,0035ac8900d85e9a790f4c1f48b76947"
+        ],
+        "timestamp": "2023-12-05T17:45:12.484869"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            "test.bam:md5,3091fe6ba1b7530f382fe40b9fd8f45b",
+            "test.bam.bai:md5,4d3ae8d013444b55e17aa0149a2ab404",
+            "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783",
+            "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2",
+            "test.stats:md5,e32e7e49dce1fbe327a89e0fb7bc01b1"
+        ],
+        "timestamp": "2023-12-05T17:43:58.582652"
+    }
+}

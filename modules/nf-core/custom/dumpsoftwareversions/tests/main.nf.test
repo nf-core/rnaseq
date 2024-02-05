@@ -31,7 +31,12 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.versions,
+                    file(process.out.mqc_yml[0]).readLines()[0..10],
+                    file(process.out.yml[0]).readLines()[0..7]
+                    ).match()
+                }
             )
         }
     }

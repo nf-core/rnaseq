@@ -1,0 +1,2 @@
+custom/getchromsizes:
+  - modules/nf-core/custom/getchromsizes/**

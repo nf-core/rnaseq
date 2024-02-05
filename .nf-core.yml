@@ -6,4 +6,4 @@ lint:
     - lib/NfcoreTemplate.groovy
   nextflow_config:
     - config_defaults:
-      - params.ribo_database_manifest
+        - params.ribo_database_manifest

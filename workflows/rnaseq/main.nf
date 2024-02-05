@@ -190,7 +190,7 @@ workflow NFCORE_RNASEQ {
         }
         .set { ch_fail_trimming_multiqc }
     ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
-    
+
     //
     // MODULE: Remove genome contaminant reads
     //
@@ -224,11 +224,11 @@ workflow NFCORE_RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(SORTMERNA.out.log.collect{it[1]})
         ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
-    
+
     //
     // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
     //
-    
+
     // Branch FastQ channels if 'auto' specified to infer strandedness
     ch_filtered_reads
         .branch {
@@ -248,8 +248,8 @@ workflow NFCORE_RNASEQ {
         .set { ch_genome_fasta }
 
     def prepare_tool_indices = []
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner) { 
-        prepare_tool_indices << params.pseudo_aligner 
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+        prepare_tool_indices << params.pseudo_aligner
     }
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
@@ -696,14 +696,14 @@ workflow NFCORE_RNASEQ {
 
     //
     // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
-    //   
+    //
     if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
-       if (params.pseudo_aligner == 'salmon') {
-           ch_pseudo_index = ch_salmon_index
-       } else {
-           ch_pseudo_index = ch_kallisto_index
-       }
+        if (params.pseudo_aligner == 'salmon') {
+            ch_pseudo_index = ch_salmon_index
+        } else {
+            ch_pseudo_index = ch_kallisto_index
+        }
 
         QUANTIFY_PSEUDO_ALIGNMENT (
             ch_strand_inferred_filtered_fastq,

@@ -94,15 +94,15 @@ workflow PREPARE_GENOME {
         }
 
         // Determine whether to filter the GTF or not
-        def filter_gtf = 
+        def filter_gtf =
             ((
                 // Condition 1: Alignment is required and aligner is set
                 !skip_alignment && aligner
-            ) || 
+            ) ||
             (
                 // Condition 2: Pseudoalignment is required and pseudoaligner is set
                 !skip_pseudo_alignment && pseudo_aligner
-            ) || 
+            ) ||
             (
                 // Condition 3: Transcript FASTA file is not provided
                 !transcript_fasta
@@ -111,7 +111,7 @@ workflow PREPARE_GENOME {
                 // Condition 4: --skip_gtf_filter is not provided
                 !skip_gtf_filter
             )
-    	if (filter_gtf) {
+        if (filter_gtf) {
             GTF_FILTER ( ch_fasta, ch_gtf )
             ch_gtf = GTF_FILTER.out.genome_gtf
             ch_versions = ch_versions.mix(GTF_FILTER.out.versions)
@@ -180,7 +180,7 @@ workflow PREPARE_GENOME {
 
     //
     // Get list of indices that need to be created
-    // 
+    //
     def prepare_tool_indices = []
     if (!skip_bbsplit) { prepare_tool_indices << 'bbsplit' }
     if (!skip_alignment) { prepare_tool_indices << aligner }

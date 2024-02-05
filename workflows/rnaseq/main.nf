@@ -668,7 +668,7 @@ workflow NFCORE_RNASEQ {
 
             BAM_RSEQC
                 .out
-                .inferexperiment_txt
+                .ch_inferexperiment
                 .map {
                     meta, strand_log ->
                         def inferred_strand = getInferexperimentStrandedness(strand_log, 30)

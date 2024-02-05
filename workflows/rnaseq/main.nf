@@ -20,8 +20,8 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../mod
 //
 include { ALIGN_STAR                                        } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM                                     } from '../../subworkflows/local/quantify_rsem'
-include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo_alignment'
-include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo_alignment'
+include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo'
+include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo'
 
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -190,7 +190,7 @@ workflow NFCORE_RNASEQ {
         }
         .set { ch_fail_trimming_multiqc }
     ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
-    
+
     //
     // MODULE: Remove genome contaminant reads
     //
@@ -248,8 +248,8 @@ workflow NFCORE_RNASEQ {
         .set { ch_genome_fasta }
 
     def prepare_tool_indices = []
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner) { 
-        prepare_tool_indices << params.pseudo_aligner 
+    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+        prepare_tool_indices << params.pseudo_aligner
     }
     FASTQ_SUBSAMPLE_FQ_SALMON (
         ch_strand_fastq.auto_strand,
@@ -696,7 +696,7 @@ workflow NFCORE_RNASEQ {
 
     //
     // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
-    //   
+    //
     if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
         if (params.pseudo_aligner == 'salmon') {

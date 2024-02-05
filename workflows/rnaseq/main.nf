@@ -20,8 +20,8 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../mod
 //
 include { ALIGN_STAR                                        } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM                                     } from '../../subworkflows/local/quantify_rsem'
-include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo'
-include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo'
+include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudoalignment'
+include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudoalignment'
 
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'

@@ -1,0 +1,54 @@
+
+nextflow_function {
+
+    name "Test Functions"
+    script "subworkflows/nf-core/utils_nextflow_pipeline/main.nf"
+    config "subworkflows/nf-core/utils_nextflow_pipeline/tests/nextflow.config"
+    tag 'subworkflows'
+    tag 'utils_nextflow_pipeline'
+    tag 'subworkflows/utils_nextflow_pipeline'
+
+    test("Test Function getWorkflowVersion") {
+
+        function "getWorkflowVersion"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function dumpParametersToJSON") {
+
+        function "dumpParametersToJSON"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                input[0] = "$outputDir"
+                """.stripIndent()
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success }
+            )
+        }
+    }
+
+    test("Test Function checkCondaChannels") {
+
+        function "checkCondaChannels"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+}

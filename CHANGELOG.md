@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
 - [PR #1201](https://github.com/nf-core/rnaseq/pull/1201) - Template update for nf-core/tools v2.12
+- [PR #1206](https://github.com/nf-core/rnaseq/pull/1206) - Remove `lib/` directory and `modules.config`
 
 ### Parameters
 

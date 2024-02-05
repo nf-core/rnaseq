@@ -278,7 +278,7 @@
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
-                    "default": "${projectDir}/assets/rrna-db-defaults.txt",
+                    "default": "${projectDir}/workflows/rnaseq/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database",
                     "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
                     "help_text": "By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline Github repository in `assets/rrna-default-dbs.txt`.\nPlease note that commercial/non-academic entities require [`licensing for SILVA`](https://www.arb-silva.de/silva-license-information) for these default databases."
@@ -672,13 +672,6 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
-                },
-                "test_data_base": {
-                    "type": "string",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq3",
-                    "description": "Base path / URL for data used in the test profiles",
-                    "help_text": "Warning: The `-profile test` samplesheet file itself contains remote paths. Setting this parameter does not alter the contents of that file.",
-                    "hidden": true
                 }
             }
         },

@@ -35,28 +35,30 @@ include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/st
 
 workflow PREPARE_GENOME {
     take:
-    fasta                //      file: /path/to/genome.fasta
-    gtf                  //      file: /path/to/genome.gtf
-    gff                  //      file: /path/to/genome.gff
-    additional_fasta     //      file: /path/to/additional.fasta
-    transcript_fasta     //      file: /path/to/transcript.fasta
-    gene_bed             //      file: /path/to/gene.bed
-    splicesites          //      file: /path/to/splicesites.txt
-    bbsplit_fasta_list   //      file: /path/to/bbsplit_fasta_list.txt
-    star_index           // directory: /path/to/star/index/
-    rsem_index           // directory: /path/to/rsem/index/
-    salmon_index         // directory: /path/to/salmon/index/
-    kallisto_index       // directory: /path/to/kallisto/index/
-    hisat2_index         // directory: /path/to/hisat2/index/
-    bbsplit_index        // directory: /path/to/rsem/index/
-    gencode              //   boolean: whether the genome is from GENCODE
-    is_aws_igenome       //   boolean: whether the genome files are from AWS iGenomes
-    biotype              //    string: if additional fasta file is provided biotype value to use when appending entries to GTF file
-    prepare_tool_indices //      list: tools to prepare indices for
-    filter_gtf           //   boolean: whether to filter GTF file
+    fasta                    //      file: /path/to/genome.fasta
+    gtf                      //      file: /path/to/genome.gtf
+    gff                      //      file: /path/to/genome.gff
+    additional_fasta         //      file: /path/to/additional.fasta
+    transcript_fasta         //      file: /path/to/transcript.fasta
+    gene_bed                 //      file: /path/to/gene.bed
+    splicesites              //      file: /path/to/splicesites.txt
+    bbsplit_fasta_list       //      file: /path/to/bbsplit_fasta_list.txt
+    star_index               // directory: /path/to/star/index/
+    rsem_index               // directory: /path/to/rsem/index/
+    salmon_index             // directory: /path/to/salmon/index/
+    kallisto_index           // directory: /path/to/kallisto/index/
+    hisat2_index             // directory: /path/to/hisat2/index/
+    bbsplit_index            // directory: /path/to/rsem/index/
+    gencode                  //   boolean: whether the genome is from GENCODE
+    featurecounts_group_type //    string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts
+    aligner                  //    string: Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'
+    pseudo_aligner           //    string: Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'
+    skip_gtf_filter          //   boolean: Skip filtering of GTF for valid scaffolds and/ or transcript IDs
+    skip_bbsplit             //   boolean: Skip BBSplit for removal of non-reference genome reads
+    skip_alignment           //   boolean: Skip all of the alignment-based processes within the pipeline
+    skip_pseudo_alignment    //   boolean: Skip all of the pseudoalignment-based processes within the pipeline
 
     main:
-
     ch_versions = Channel.empty()
 
     //
@@ -91,6 +93,24 @@ workflow PREPARE_GENOME {
             ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
 
+        // Determine whether to filter the GTF or not
+        def filter_gtf =
+            ((
+                // Condition 1: Alignment is required and aligner is set
+                !skip_alignment && aligner
+            ) ||
+            (
+                // Condition 2: Pseudoalignment is required and pseudoaligner is set
+                !skip_pseudo_alignment && pseudo_aligner
+            ) ||
+            (
+                // Condition 3: Transcript FASTA file is not provided
+                !transcript_fasta
+            )) &&
+            (
+                // Condition 4: --skip_gtf_filter is not provided
+                !skip_gtf_filter
+            )
         if (filter_gtf) {
             GTF_FILTER ( ch_fasta, ch_gtf )
             ch_gtf = GTF_FILTER.out.genome_gtf
@@ -101,6 +121,7 @@ workflow PREPARE_GENOME {
     //
     // Uncompress additional fasta file and concatenate with reference fasta and gtf files
     //
+    def biotype = gencode ? "gene_type" : featurecounts_group_type
     if (additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], additional_fasta ] ).gunzip.map { it[1] }
@@ -158,6 +179,14 @@ workflow PREPARE_GENOME {
     ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
 
     //
+    // Get list of indices that need to be created
+    //
+    def prepare_tool_indices = []
+    if (!skip_bbsplit) { prepare_tool_indices << 'bbsplit' }
+    if (!skip_alignment) { prepare_tool_indices << aligner }
+    if (!skip_pseudo_alignment && pseudo_aligner) { prepare_tool_indices << pseudo_aligner }
+
+    //
     // Uncompress BBSplit index or generate from scratch if required
     //
     ch_bbsplit_index = Channel.empty()
@@ -197,6 +226,13 @@ workflow PREPARE_GENOME {
                 ch_star_index = Channel.value(file(star_index))
             }
         } else {
+            // Check if an AWS iGenome has been provided to use the appropriate version of STAR
+            def is_aws_igenome = false
+            if (fasta && gtf) {
+                if ((file(fasta).getName() - '.gz' == 'genome.fa') && (file(gtf).getName() - '.gz' == 'genes.gtf')) {
+                    is_aws_igenome = true
+                }
+            }
             if (is_aws_igenome) {
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES ( ch_fasta, ch_gtf ).index
                 ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)

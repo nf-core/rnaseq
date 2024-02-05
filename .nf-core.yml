@@ -3,7 +3,11 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
+  files_exist:
+    - conf/modules.config
     - lib/NfcoreTemplate.groovy
+    - lib/Utils.groovy
+    - lib/WorkflowMain.groovy
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest

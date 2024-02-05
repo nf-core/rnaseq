@@ -1,0 +1,15 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    true
+                ],
+                "valid_config": [
+                    true
+                ]
+            }
+        ],
+        "timestamp": "2024-01-19T11:35:22.538940073"
+    }
+}

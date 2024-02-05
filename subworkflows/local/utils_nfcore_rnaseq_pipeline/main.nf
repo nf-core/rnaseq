@@ -248,7 +248,7 @@ def validateInputParameters() {
     // Check rRNA databases for sortmerna
     if (params.remove_ribo_rna) {
         ch_ribo_db = file(params.ribo_database_manifest)
-        if (ch_ribo_db.isEmpty()) { 
+        if (ch_ribo_db.isEmpty()) {
             error("File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!")
         }
     }

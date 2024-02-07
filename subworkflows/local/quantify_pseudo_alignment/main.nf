@@ -4,7 +4,7 @@
 
 include { SALMON_QUANT   } from '../../../modules/nf-core/salmon/quant'
 include { KALLISTO_QUANT } from '../../../modules/nf-core/kallisto/quant'
-include { TX2GENE        } from '../../../modules/local/tx2gene'
+include { CUSTOM_TX2GENE } from '../../../modules/nf-core/custom/tx2gene'
 include { TXIMPORT       } from '../../../modules/local/tximport'
 
 include { SUMMARIZEDEXPERIMENT as SE_GENE               } from '../../../modules/local/summarizedexperiment'
@@ -18,6 +18,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     index                     // channel: /path/to//index/
     transcript_fasta          // channel: /path/to/transcript.fasta
     gtf                       // channel: /path/to/genome.gtf
+    gtf_id_attribute          //     val: GTF gene ID attribute
+    gtf_extra_attribute       //     val: GTF alternative gene attribute (e.g. gene_name)
     pseudo_aligner            //     val: kallisto or salmon
     alignment_mode            //    bool: Run Salmon in alignment mode
     lib_type                  //     val: String to override Salmon library type
@@ -44,35 +46,45 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
     }
 
-    TX2GENE ( ch_pseudo_results.collect{it[1]}, pseudo_aligner, gtf )
-    ch_versions = ch_versions.mix(TX2GENE.out.versions)
+    CUSTOM_TX2GENE (
+        gtf.map { [ [:], it ] },
+        ch_pseudo_results.collect{it[1]}.map { [ [:], it ] },
+        pseudo_aligner,
+        gtf_id_attribute,
+        gtf_extra_attribute
+    )
+    ch_versions = ch_versions.mix(CUSTOM_TX2GENE.out.versions)
 
-    TXIMPORT ( ch_pseudo_results.collect{it[1]}, TX2GENE.out.tsv.collect(), pseudo_aligner )
+    TXIMPORT (
+        ch_pseudo_results.collect{it[1]},
+        CUSTOM_TX2GENE.out.tx2gene.collect{it[1]},
+        pseudo_aligner
+    )
     ch_versions = ch_versions.mix(TXIMPORT.out.versions)
 
     SE_GENE (
         TXIMPORT.out.counts_gene,
         TXIMPORT.out.tpm_gene,
-        TX2GENE.out.tsv.collect()
+        CUSTOM_TX2GENE.out.tx2gene.collect{it[1]}
     )
     ch_versions = ch_versions.mix(SE_GENE.out.versions)
 
     SE_GENE_LENGTH_SCALED (
         TXIMPORT.out.counts_gene_length_scaled,
         TXIMPORT.out.tpm_gene,
-        TX2GENE.out.tsv.collect()
+        CUSTOM_TX2GENE.out.tx2gene.collect{it[1]}
     )
 
     SE_GENE_SCALED (
         TXIMPORT.out.counts_gene_scaled,
         TXIMPORT.out.tpm_gene,
-        TX2GENE.out.tsv.collect()
+        CUSTOM_TX2GENE.out.tx2gene.collect{it[1]}
     )
 
     SE_TRANSCRIPT (
         TXIMPORT.out.counts_transcript,
         TXIMPORT.out.tpm_transcript,
-        TX2GENE.out.tsv.collect()
+        CUSTOM_TX2GENE.out.tx2gene.collect{it[1]}
     )
 
     emit:

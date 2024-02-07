@@ -20,6 +20,11 @@
                         "git_sha": "1b0ffa4e5aed5b7e3cd4311af31bd3b2c8345051",
                         "installed_by": ["modules"]
                     },
+                    "custom/tx2gene": {
+                        "branch": "fix_tx2gene",
+                        "git_sha": "158e921868eb35119b49395d5057901fb3ab303a",
+                        "installed_by": ["modules"]
+                    },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",

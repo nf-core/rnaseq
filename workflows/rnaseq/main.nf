@@ -658,19 +658,19 @@ workflow NFCORE_RNASEQ {
                 ch_gene_bed,
                 rseqc_modules
             )
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_bamstat.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_inferexperiment.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_innerdistance_freq.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_junctionannotation_log.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_junctionsaturation_rscript.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_readdistribution.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_readduplication_pos_xls.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.ch_tin.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             BAM_RSEQC
                 .out
-                .ch_inferexperiment
+                .inferexperiment_txt
                 .map {
                     meta, strand_log ->
                         def inferred_strand = getInferexperimentStrandedness(strand_log, 30)

@@ -38,26 +38,26 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(workflow.out.bamstat_txt).match("bamstat_txt")},
+                { assert snapshot(workflow.out.ch_bamstat).match("bamstat")},
 
-                { assert snapshot(workflow.out.innerdistance_all.findAll { it[1].endsWith('.pdf') == false }).match("innerdistance_all")},
-                { assert workflow.out.innerdistance_all.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
+                { assert snapshot(workflow.out.ch_innerdistance.findAll { it[1].endsWith('.pdf') == false }).match("inner_distance")},
+                { assert workflow.out.ch_innerdistance.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
 
-                { assert snapshot(workflow.out.inferexperiment_txt).match("inferexperiment_txt")},
+                { assert snapshot(workflow.out.ch_inferexperiment).match("inferexperiment")},
 
-                { assert snapshot(workflow.out.junctionannotation_all.findAll {
+                { assert snapshot(workflow.out.ch_junctionannotation.findAll {
                     it[1].endsWith('.xls') == false &&
-                    it[1].endsWith('.r') == false }).match("junctionannotation_all")},
+                    it[1].endsWith('.r') == false }).match("junction_annotation")},
 
-                { assert snapshot(workflow.out.junctionsaturation_all.findAll { it[1].endsWith('.pdf') == false }).match("junctionsaturation_all")},
-                { assert workflow.out.junctionsaturation_all.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
+                { assert snapshot(workflow.out.ch_junctionsaturation.findAll { it[1].endsWith('.pdf') == false }).match("junction_saturation")},
+                { assert workflow.out.ch_junctionsaturation.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
 
-                { assert snapshot(workflow.out.readdistribution_txt).match("readdistribution_txt")},
+                { assert snapshot(workflow.out.ch_readdistribution).match("readdistribution")},
 
-                { assert snapshot(workflow.out.readduplication_all.findAll { it[1].endsWith('.pdf') == false }).match("readduplication_all")},
-                { assert workflow.out.readduplication_all.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
+                { assert snapshot(workflow.out.ch_readduplication.findAll { it[1].endsWith('.pdf') == false }).match("read_duplication")},
+                { assert workflow.out.ch_readduplication.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
 
-                { assert snapshot(workflow.out.tin_txt).match("tin_txt")},
+                { assert snapshot(workflow.out.ch_tin).match("tin")},
                 { assert snapshot(workflow.out.versions).match("versions")},
             )
         }
@@ -84,14 +84,14 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.bamstat_txt.size() == 0 },
-                { assert workflow.out.innerdistance_all.size() == 0 },
-                { assert workflow.out.inferexperiment_txt.size() == 0 },
-                { assert workflow.out.junctionannotation_all.size() == 0 },
-                { assert workflow.out.junctionsaturation_all.size() == 0 },
-                { assert workflow.out.readdistribution_txt.size() == 0 },
-                { assert workflow.out.readduplication_all.size() == 0 },
-                { assert workflow.out.tin_txt.size() == 0 },
+                { assert workflow.out.ch_bamstat.size() == 0 },
+                { assert workflow.out.ch_innerdistance.size() == 0 },
+                { assert workflow.out.ch_inferexperiment.size() == 0 },
+                { assert workflow.out.ch_junctionannotation.size() == 0 },
+                { assert workflow.out.ch_junctionsaturation.size() == 0 },
+                { assert workflow.out.ch_readdistribution.size() == 0 },
+                { assert workflow.out.ch_readduplication.size() == 0 },
+                { assert workflow.out.ch_tin.size() == 0 },
                 { assert workflow.out.versions.size() == 0 },
             )
         }

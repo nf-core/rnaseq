@@ -107,7 +107,7 @@
                     },
                     "rseqc/bamstat": {
                         "branch": "master",
-                        "git_sha": "9eb22e4d3f28c274b7c498a1564581377349a242",
+                        "git_sha": "41f4baa439663b9027727d83a3293db93bad3f8c",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/inferexperiment": {
@@ -255,7 +255,7 @@
                     },
                     "bam_rseqc": {
                         "branch": "master",
-                        "git_sha": "9eb22e4d3f28c274b7c498a1564581377349a242",
+                        "git_sha": "0c38be7e652a0b2f3a37681ee4c0dbdf85677647",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_sort_stats_samtools": {

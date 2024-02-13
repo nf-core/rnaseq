@@ -10,19 +10,19 @@ nextflow_process {
     tag "salmon/quant"
     tag "salmon/index"
 
-    test("sarscov2 - single_end") {
-
-        setup {
-            run("SALMON_INDEX") {
-                script "../../../salmon/index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)])
-                    input[1] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
-                    """
-                }
+    setup {
+        run("SALMON_INDEX") {
+            script "../../../salmon/index/main.nf"
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                """
             }
         }
+    }
+
+    test("sarscov2 - single_end") {
 
         when {
             params {
@@ -31,12 +31,12 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
+                    [ id:'test', single_end: true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)])
-                input[3] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
                 input[4] = false
                 input[5] = ''
                 """
@@ -56,18 +56,6 @@ nextflow_process {
 
     test("sarscov2 - single_end lib type A") {
 
-        setup {
-            run("SALMON_INDEX") {
-                script "../../../salmon/index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)])
-                    input[1] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
-                    """
-                }
-            }
-        }
-
         when {
             params {
                 outdir = "$outputDir"
@@ -75,12 +63,12 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
+                    [ id:'test', single_end: true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)])
-                input[3] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
                 input[4] = false
                 input[5] = 'A'
                 """
@@ -100,18 +88,6 @@ nextflow_process {
 
     test("sarscov2 - pair_end") {
 
-        setup {
-            run("SALMON_INDEX") {
-                script "../../../salmon/index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)])
-                    input[1] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
-                    """
-                }
-            }
-        }
-
         when {
             params {
                 outdir = "$outputDir"
@@ -119,13 +95,15 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
+                    [ id:'test', single_end: true ], // meta map
+                    [ 
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)])
-                input[3] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
                 input[4] = false
                 input[5] = ''
                 """
@@ -142,19 +120,8 @@ nextflow_process {
         }
 
     }
-    test("sarscov2 - pair_end multiple") {
 
-        setup {
-            run("SALMON_INDEX") {
-                script "../../../salmon/index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)])
-                    input[1] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
-                    """
-                }
-            }
-        }
+    test("sarscov2 - pair_end multiple") {
 
         when {
             params {
@@ -172,8 +139,8 @@ nextflow_process {
                     ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)])
-                input[3] = Channel.of([file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)])
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
                 input[4] = false
                 input[5] = ''
                 """

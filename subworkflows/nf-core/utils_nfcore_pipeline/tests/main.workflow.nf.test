@@ -11,6 +11,14 @@ nextflow_workflow {
 
     test("Should run without failures") {
 
+        when {
+            workflow {
+                """
+                input[0] = []
+                """
+            }
+        }
+
         then {
             assertAll(
                 { assert workflow.success },

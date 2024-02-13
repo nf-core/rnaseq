@@ -5,7 +5,8 @@
                 "0": [
                     [
                         {
-                            "id": "test"
+                            "id": "test",
+                            "single_end": false
                         },
                         "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                     ]
@@ -13,9 +14,10 @@
                 "1": [
                     [
                         {
-                            "id": "test"
+                            "id": "test",
+                            "single_end": false
                         },
-                        "test.paired_end.sorted.tin.xls:md5,6b1b1b0dc1dc265342ba8c3f27fa60e6"
+                        "test.paired_end.sorted.tin.xls:md5,abdbb6d51a5cd7038cd862ce241ecef1"
                     ]
                 ],
                 "2": [
@@ -24,7 +26,8 @@
                 "txt": [
                     [
                         {
-                            "id": "test"
+                            "id": "test",
+                            "single_end": false
                         },
                         "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                     ]
@@ -35,13 +38,18 @@
                 "xls": [
                     [
                         {
-                            "id": "test"
+                            "id": "test",
+                            "single_end": false
                         },
-                        "test.paired_end.sorted.tin.xls:md5,6b1b1b0dc1dc265342ba8c3f27fa60e6"
+                        "test.paired_end.sorted.tin.xls:md5,abdbb6d51a5cd7038cd862ce241ecef1"
                     ]
                 ]
             }
         ],
-        "timestamp": "2023-12-14T17:28:15.014993539"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-07T14:23:09.039471"
     }
 }

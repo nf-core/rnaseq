@@ -1,5 +1,27 @@
 {
-    "test_samtools_sort": {
+    "bam_stub_bam": {
+        "content": [
+            "test.sorted.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:21:04.364044"
+    },
+    "bam_stub_versions": {
+        "content": [
+            [
+                "versions.yml:md5,33b6a403dc19a0d28e4219ccab0a1d80"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:21:04.36924"
+    },
+    "bam": {
         "content": [
             {
                 "0": [
@@ -34,15 +56,10 @@
                 ]
             }
         ],
-        "timestamp": "2023-12-04T11:11:22.005628301"
-    },
-    "test_samtools_sort_stub": {
-        "content": [
-            "test.sorted.bam",
-            [
-                "versions.yml:md5,33b6a403dc19a0d28e4219ccab0a1d80"
-            ]
-        ],
-        "timestamp": "2023-12-04T17:47:22.314445935"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:20:33.717285"
     }
 }

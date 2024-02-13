@@ -7,7 +7,11 @@ keywords:
   - initialise
   - version
 components: []
-input: []
+input:
+  - nextflow_cli_args:
+      type: list
+      description: |
+        Nextflow CLI positional arguments
 output:
   - success:
       type: boolean

@@ -21,6 +21,26 @@ nextflow_function {
         }
     }
 
+    test("Test Function checkProfileProvided") {
+
+        function "checkProfileProvided"
+
+        when {
+            function {
+                """
+                input[0] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
     test("Test Function workflowCitation") {
 
         function "workflowCitation"

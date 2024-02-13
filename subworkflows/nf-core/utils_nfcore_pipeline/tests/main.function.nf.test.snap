@@ -1,4 +1,8 @@
 {
+    "Test Function checkProfileProvided": {
+        "content": null,
+        "timestamp": "2024-02-09T15:43:55.145717"
+    },
     "Test Function checkConfigProvided": {
         "content": [
             true

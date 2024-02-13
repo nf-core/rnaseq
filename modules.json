@@ -152,17 +152,17 @@
                     },
                     "samtools/flagstat": {
                         "branch": "master",
-                        "git_sha": "ce0b1aed7d504883061e748f492a31bf44c5777c",
+                        "git_sha": "8d8f0ae52d6c9342bd41c33dda0b74b07e32153d",
                         "installed_by": ["bam_stats_samtools"]
                     },
                     "samtools/idxstats": {
                         "branch": "master",
-                        "git_sha": "ce0b1aed7d504883061e748f492a31bf44c5777c",
+                        "git_sha": "8d8f0ae52d6c9342bd41c33dda0b74b07e32153d",
                         "installed_by": ["bam_stats_samtools"]
                     },
                     "samtools/index": {
                         "branch": "master",
-                        "git_sha": "ce0b1aed7d504883061e748f492a31bf44c5777c",
+                        "git_sha": "8d8f0ae52d6c9342bd41c33dda0b74b07e32153d",
                         "installed_by": [
                             "bam_dedup_stats_samtools_umitools",
                             "bam_markduplicates_picard",
@@ -171,12 +171,12 @@
                     },
                     "samtools/sort": {
                         "branch": "master",
-                        "git_sha": "ce0b1aed7d504883061e748f492a31bf44c5777c",
+                        "git_sha": "8d8f0ae52d6c9342bd41c33dda0b74b07e32153d",
                         "installed_by": ["bam_sort_stats_samtools"]
                     },
                     "samtools/stats": {
                         "branch": "master",
-                        "git_sha": "ec833ac4c29db6005d18baccf3306f557c46b006",
+                        "git_sha": "8d8f0ae52d6c9342bd41c33dda0b74b07e32153d",
                         "installed_by": ["bam_stats_samtools"]
                     },
                     "sortmerna": {

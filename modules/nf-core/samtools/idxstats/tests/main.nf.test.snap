@@ -1,5 +1,17 @@
 {
-    "BAM": {
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,12c42ca48b15e8a3d2a05e99958f1cb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T18:36:41.565552"
+    },
+    "idxstats": {
         "content": [
             [
                 [
@@ -11,6 +23,10 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-14T15:52:19.875194"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T18:36:41.561026"
     }
 }

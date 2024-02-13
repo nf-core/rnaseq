@@ -8,7 +8,7 @@ nextflow_process {
     tag "samtools"
     tag "samtools/index"
 
-    test("sarscov2 [BAI]") {
+    test("bai") {
 
         when {
             params {
@@ -16,10 +16,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
-                ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
                 """
             }
         }
@@ -28,12 +28,12 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(process.out.bai).match("bai") },
-                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+                { assert snapshot(process.out.versions).match("bai_versions") }
             )
         }
     }
 
-    test("homo_sapiens [CRAI]") {
+    test("crai") {
 
         when {
             params {
@@ -41,10 +41,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_cram'], checkIfExists: true)
-                ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.recalibrated.sorted.cram', checkIfExists: true)
+                ])
                 """
             }
         }
@@ -53,12 +53,12 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(process.out.crai).match("crai") },
-                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+                { assert snapshot(process.out.versions).match("crai_versions") }
             )
         }
     }
 
-    test("homo_sapiens [CSI]") {
+    test("csi") {
 
         config "./csi.nextflow.config"
 
@@ -68,10 +68,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
-                ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
                 """
             }
         }
@@ -80,7 +80,7 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert path(process.out.csi.get(0).get(1)).exists() },
-                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+                { assert snapshot(process.out.versions).match("csi_versions") }
             )
         }
     }

@@ -209,6 +209,11 @@
                         "git_sha": "d062b356938ea98d29b298691adf0620d3c3bdf0",
                         "installed_by": ["modules"]
                     },
+                    "summarizedexperiment/summarizedexperiment": {
+                        "branch": "master",
+                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
+                        "installed_by": ["modules"]
+                    },
                     "trimgalore": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
@@ -216,7 +221,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "0c75b48a381125683a458063f15a05634d81ae40",
+                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
                         "installed_by": ["modules"]
                     },
                     "ucsc/bedclip": {

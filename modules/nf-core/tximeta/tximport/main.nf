@@ -9,7 +9,6 @@ process TXIMETA_TXIMPORT {
     input:
     tuple val(meta), path("quants/*")
     tuple val(meta2), path(tx2gene)
-    tuple val(meta3), path(coldata)
     val quant_type
 
     output:

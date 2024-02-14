@@ -397,7 +397,7 @@ workflow NFCORE_RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (
-                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled,
+                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled.map{it[1]},
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -729,7 +729,7 @@ workflow NFCORE_RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (
-                ch_counts_gene_length_scaled,
+                ch_counts_gene_length_scaled.map{it[1]},
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

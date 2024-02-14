@@ -48,7 +48,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     }
 
     CUSTOM_TX2GENE (
-        gtf.map { [ [:], it ] },
+        gtf.map { [ ['id': it.name], it ] },
         ch_pseudo_results.collect{it[1]}.map { [ [:], it ] },
         pseudo_aligner,
         gtf_id_attribute,
@@ -57,9 +57,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     ch_versions = ch_versions.mix(CUSTOM_TX2GENE.out.versions)
 
     TXIMETA_TXIMPORT (
-        ch_pseudo_results.collect{it[1]}.map { [ ['id':it.name], it ] },
+        ch_pseudo_results.collect{it[1]}.map { [ ['id': 'all_samples'], it ] },
         CUSTOM_TX2GENE.out.tx2gene,
-        samplesheet,
         pseudo_aligner
     )
     ch_versions = ch_versions.mix(TXIMETA_TXIMPORT.out.versions)

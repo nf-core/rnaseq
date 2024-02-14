@@ -22,7 +22,7 @@
                     },
                     "custom/tx2gene": {
                         "branch": "master",
-                        "git_sha": "9d2338f5bb329d56e728575d8ebc9e7ed2aa4059",
+                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
@@ -221,7 +221,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
+                        "git_sha": "376bc3de6c2b763f21d55a7f5d8712d0efbf1b3a",
                         "installed_by": ["modules"]
                     },
                     "ucsc/bedclip": {

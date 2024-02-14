@@ -6,7 +6,7 @@
                     {
                         "id": "test"
                     },
-                    "test.tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
+                    "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
                 ]
             ]
         ],
@@ -14,7 +14,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-05T22:09:56.931541991"
+        "timestamp": "2024-02-09T13:36:52.865995354"
     },
     "tx2gene": {
         "content": [
@@ -23,7 +23,7 @@
                     {
                         "id": "test"
                     },
-                    "test.tx2gene.tsv:md5,b367acfc4b7df7fb68fb1b1d2956e27e"
+                    "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
                 ]
             ]
         ],
@@ -31,7 +31,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-05T22:09:56.920656242"
+        "timestamp": "2024-02-09T13:36:52.853651325"
     },
     "tx2gene - stub": {
         "content": [
@@ -48,7 +48,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-05T22:10:14.817718782"
+        "timestamp": "2024-02-09T13:37:06.627803799"
     },
     "versions - stub": {
         "content": [
@@ -65,6 +65,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-05T22:10:14.823019212"
+        "timestamp": "2024-02-09T13:37:06.632996139"
     }
 }

@@ -10,23 +10,23 @@ nextflow_process {
     tag "custom/tx2gene"
     tag "untar"
 
-    test("saccharomyces_cerevisiae - gtf") {
-        
-       setup {
+    setup {
 
-            run("UNTAR") {
-                script "../../../untar/main.nf"
-                process {
-                    """
-                    input[0] = [
-                    [ id:'test'], // meta map
-                    file(params.test_data['saccharomyces_cerevisiae']['genome']['kallisto_results'], checkIfExists: true)
-                    ]
-                    """
-                }
+        run("UNTAR") {
+            script "../../../untar/main.nf"
+            process {
+                """
+                input[0] = [
+                [ id:'test'], // meta map
+                file(params.test_data['saccharomyces_cerevisiae']['genome']['kallisto_results'], checkIfExists: true)
+                ]
+                """
             }
         }
+    }
 
+    test("saccharomyces_cerevisiae - gtf") {
+        
         when {
             process {
                 """
@@ -57,21 +57,6 @@ nextflow_process {
 
        options "-stub"
        
-       setup {
-
-            run("UNTAR") {
-                script "../../../untar/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [ id:'test'], // meta map
-                        file(params.test_data['saccharomyces_cerevisiae']['genome']['kallisto_results'], checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
-        
         when {
             process {
                 """

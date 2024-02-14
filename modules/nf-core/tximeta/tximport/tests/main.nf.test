@@ -48,8 +48,7 @@ nextflow_process {
                 """
                 input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[1] = CUSTOM_TX2GENE.out.tx2gene
-		input[2] = Channel.of([ [], [] ])
-                input[3] = 'kallisto'
+                input[2] = 'kallisto'
                 """
             }
         }
@@ -81,8 +80,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([ [], [] ])
                 input[1] = Channel.of([ [], [] ])
-		input[2] = Channel.of([ [], [] ])
-                input[3] = 'kallisto'
+                input[2] = 'kallisto'
                 """
             }
         }
@@ -140,8 +138,7 @@ nextflow_process {
                 """
                 input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[1] = CUSTOM_TX2GENE.out.tx2gene
-		input[2] = Channel.of([ [], [] ])
-                input[3] = 'salmon'
+                input[2] = 'salmon'
                 """
             }
         }
@@ -173,8 +170,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([ [], [] ])
                 input[1] = Channel.of([ [], [] ])
-		input[2] = Channel.of([ [], [] ])
-                input[3] = 'salmon'
+                input[2] = 'salmon'
                 """
             }
         }

@@ -149,6 +149,7 @@ def map_transcripts_to_gene(
     seen = set()
 
     with open(gtf_file) as inh, open(output_file, "w") as output_handle:
+        output_handle.write(f"{transcript_attribute}\\t{gene_id}\\t{extra_id_field}\\n")
         # Parse each line of the GTF, mapping transcripts to genes
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\\t")

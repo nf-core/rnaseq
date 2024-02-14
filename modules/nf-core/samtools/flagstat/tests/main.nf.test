@@ -16,11 +16,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
+                input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)
-                ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ])
                 """
             }
         }
@@ -28,8 +28,8 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out.flagstat).match() },
-                { assert path(process.out.versions.get(0)).getText().contains("samtools") }
+                { assert snapshot(process.out.flagstat).match("flagstat") },
+                { assert snapshot(process.out.versions).match("versions") }
             )
         }
     }

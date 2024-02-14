@@ -8,6 +8,7 @@ nextflow_process {
     tag "modules_nfcore"
     tag "rsem"
     tag "rsem/calculateexpression"
+    tag "rsem/preparereference"
 
     test("homo_sapiens") {
 
@@ -16,8 +17,8 @@ nextflow_process {
                 script "../../../rsem/preparereference/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)])
-                    input[1] = Channel.of([file(params.test_data['homo_sapiens']['genome']['genome_gtf'], checkIfExists: true)])
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                     """
                 }
             }
@@ -32,8 +33,8 @@ nextflow_process {
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map
                     [
-                        file(params.test_data['homo_sapiens']['illumina']['test_rnaseq_1_fastq_gz'], checkIfExists: true),
-                        file(params.test_data['homo_sapiens']['illumina']['test_rnaseq_2_fastq_gz'], checkIfExists: true)
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
                 input[1] = RSEM_PREPAREREFERENCE.out.index

@@ -14,10 +14,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test', single_end:true, strandedness:'forward' ], // meta map
-                             file(params.test_data['sarscov2']['illumina']['test_single_end_bam'], checkIfExists: true),
-                             file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
-                           ]
+                input[0] = [ 
+                    [ id:'test', single_end:true, strandedness:'forward' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ]
                 """
             }
         }
@@ -37,10 +38,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test', single_end:true, strandedness:'reverse' ], // meta map
-                             file(params.test_data['sarscov2']['illumina']['test_single_end_bam'], checkIfExists: true),
-                             file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
-                           ]
+                input[0] = [ 
+                    [ id:'test', single_end:true, strandedness:'reverse' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ]
                 """
             }
         }

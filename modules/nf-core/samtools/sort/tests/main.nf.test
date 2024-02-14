@@ -8,7 +8,7 @@ nextflow_process {
     tag "samtools"
     tag "samtools/sort"
 
-    test("test_samtools_sort") {
+    test("bam") {
 
         config "./nextflow.config"
 
@@ -18,12 +18,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ],
-                    [
-                        file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true)
-                    ]
-                ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
                 """
             }
         }
@@ -34,10 +32,9 @@ nextflow_process {
                 { assert snapshot(process.out).match() }
             )
         }
-
     }
 
-    test("test_samtools_sort_stub") {
+    test("bam_stub") {
 
         config "./nextflow.config"
         options "-stub-run"
@@ -48,12 +45,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ],
-                    [
-                        file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true)
-                    ]
-                ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
                 """
             }
         }
@@ -61,13 +56,9 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    process.out.versions
-                ).match() }
+                { assert snapshot(file(process.out.bam[0][1]).name).match("bam_stub_bam") },
+                { assert snapshot(process.out.versions).match("bam_stub_versions") }
             )
         }
-
     }
-
 }

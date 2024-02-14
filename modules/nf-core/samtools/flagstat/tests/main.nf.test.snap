@@ -1,5 +1,5 @@
 {
-    "BAM": {
+    "flagstat": {
         "content": [
             [
                 [
@@ -11,6 +11,22 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-14T15:49:22.577133"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T18:31:37.783927"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,27815e477dcca61cd6b5ca2a94993965"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T18:31:37.788139"
     }
 }

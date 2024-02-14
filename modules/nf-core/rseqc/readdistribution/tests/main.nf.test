@@ -13,10 +13,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test', single_end: false ], // meta map
-                             file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
-                           ]
-                input[1] = file(params.test_data['sarscov2']['genome']['test_bed12'], checkIfExists: true)
+                input[0] = [ 
+                    [ id:'test', single_end: false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true)
                 """
             }
         }

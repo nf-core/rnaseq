@@ -48,7 +48,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     }
 
     CUSTOM_TX2GENE (
-        gtf.map { [ ['id': it.name], it ] },
+        gtf.map { [ [:], it ] },
         ch_pseudo_results.collect{it[1]}.map { [ [:], it ] },
         pseudo_aligner,
         gtf_id_attribute,

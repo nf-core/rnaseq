@@ -20,6 +20,11 @@
                         "git_sha": "1b0ffa4e5aed5b7e3cd4311af31bd3b2c8345051",
                         "installed_by": ["modules"]
                     },
+                    "custom/tx2gene": {
+                        "branch": "master",
+                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
+                        "installed_by": ["modules"]
+                    },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
@@ -204,10 +209,20 @@
                         "git_sha": "f6bba1a67cdbb605f24d7a4e8dd383b0eec45b52",
                         "installed_by": ["modules"]
                     },
+                    "summarizedexperiment/summarizedexperiment": {
+                        "branch": "master",
+                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
+                        "installed_by": ["modules"]
+                    },
                     "trimgalore": {
                         "branch": "master",
                         "git_sha": "2e6c468e0ad43b23df71d7a7f130d5c0e0aa89e3",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore"]
+                    },
+                    "tximeta/tximport": {
+                        "branch": "master",
+                        "git_sha": "376bc3de6c2b763f21d55a7f5d8712d0efbf1b3a",
+                        "installed_by": ["modules"]
                     },
                     "ucsc/bedclip": {
                         "branch": "master",

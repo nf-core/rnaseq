@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1201](https://github.com/nf-core/rnaseq/pull/1201) - Template update for nf-core/tools v2.12
 - [PR #1206](https://github.com/nf-core/rnaseq/pull/1206) - Remove `lib/` directory and `modules.config`
 - [PR #1212](https://github.com/nf-core/rnaseq/pull/1212) - Update all modules and subworkflows to latest versions
+- [PR #1210](https://github.com/nf-core/rnaseq/pull/1210) - Use pseudoalignment subworkflow components from nf-core/modules
 
 ### Parameters
 

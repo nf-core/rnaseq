@@ -81,7 +81,8 @@ ch_dummy_file                = ch_pca_header_multiqc
 workflow NFCORE_RNASEQ {
 
     take:
-    ch_samplesheet      // channel: samplesheet read in from --input
+    ch_input            // channel: samplesheet file as specified to --input
+    ch_samplesheet      // channel: sample fastqs parsed from --input
     ch_versions         // channel: [ path(versions.yml) ]
     ch_fasta            // channel: path(genome.fasta)
     ch_gtf              // channel: path(genome.gtf)
@@ -379,10 +380,13 @@ workflow NFCORE_RNASEQ {
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
         //
         QUANTIFY_STAR_SALMON (
+            ch_input.map{[[:], it]},
             ch_transcriptome_bam,
             ch_dummy_file,
             ch_transcript_fasta,
             ch_gtf,
+            params.gtf_group_features,
+            params.gtf_extra_attributes,
             'salmon',
             true,
             params.salmon_quant_libtype ?: '',
@@ -393,7 +397,7 @@ workflow NFCORE_RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (
-                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled,
+                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled.map{it[1]},
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -706,10 +710,13 @@ workflow NFCORE_RNASEQ {
         }
 
         QUANTIFY_PSEUDO_ALIGNMENT (
+            ch_input.map{[[:], it]},
             ch_strand_inferred_filtered_fastq,
             ch_pseudo_index,
             ch_dummy_file,
             ch_gtf,
+            params.gtf_group_features,
+            params.gtf_extra_attributes,
             params.pseudo_aligner,
             false,
             params.salmon_quant_libtype ?: '',
@@ -722,7 +729,7 @@ workflow NFCORE_RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (
-                ch_counts_gene_length_scaled,
+                ch_counts_gene_length_scaled.map{it[1]},
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

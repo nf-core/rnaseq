@@ -99,7 +99,9 @@ workflow {
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
+
     NFCORE_RNASEQ (
+        Channel.of(file(params.input, checkIfExists: true)),
         PIPELINE_INITIALISATION.out.samplesheet,
         ch_versions,
         PREPARE_GENOME.out.fasta,

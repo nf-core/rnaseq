@@ -16,6 +16,7 @@ include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/unt
 include { UNTAR as UNTAR_SALMON_INDEX       } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_KALLISTO_INDEX     } from '../../../modules/nf-core/untar'
 
+include { CUSTOM_CATADDITIONALFASTA         } from '../../../modules/nf-core/custom/catadditionalfasta'
 include { CUSTOM_GETCHROMSIZES              } from '../../../modules/nf-core/custom/getchromsizes'
 include { GFFREAD                           } from '../../../modules/nf-core/gffread'
 include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
@@ -29,7 +30,6 @@ include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../..
 
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
-include { CAT_ADDITIONAL_FASTA                 } from '../../../modules/local/cat_additional_fasta'
 include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
 
@@ -129,10 +129,15 @@ workflow PREPARE_GENOME {
         } else {
             ch_add_fasta = Channel.value(file(additional_fasta))
         }
-        CAT_ADDITIONAL_FASTA ( ch_fasta, ch_gtf, ch_add_fasta, biotype )
-        ch_fasta    = CAT_ADDITIONAL_FASTA.out.fasta
-        ch_gtf      = CAT_ADDITIONAL_FASTA.out.gtf
-        ch_versions = ch_versions.mix(CAT_ADDITIONAL_FASTA.out.versions)
+
+        CUSTOM_CATADDITIONALFASTA(
+            ch_fasta.combine(ch_gtf).map{fasta, gtf -> [[:], fasta, gtf]},
+            ch_add_fasta.map{[[:], it]},
+            biotype
+        )
+        ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map{it[1]}.first()
+        ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map{it[1]}.first()
+        ch_versions = ch_versions.mix(CUSTOM_CATADDITIONALFASTA.out.versions)
     }
 
     //

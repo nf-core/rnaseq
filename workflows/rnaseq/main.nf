@@ -46,7 +46,7 @@ include { SORTMERNA                                            } from '../../mod
 include { STRINGTIE_STRINGTIE                                  } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS                                } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                                              } from '../../modules/nf-core/multiqc'
-include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools_prepareforrsem'
+include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules

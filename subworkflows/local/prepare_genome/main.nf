@@ -131,9 +131,9 @@ workflow PREPARE_GENOME {
         }
 
         CUSTOM_CATADDITIONALFASTA(
-           ch_fasta.combine(ch_gtf).map{gtf, fasta -> [[:], fasta, gtf]},
-           ch_add_fasta.map{[[:], it},
-           biotype
+            ch_fasta.combine(ch_gtf).map{gtf, fasta -> [[:], fasta, gtf]},
+            ch_add_fasta.map{[[:], it},
+            biotype
         )
         ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map{it[1]}
         ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map{it[1]}

@@ -366,13 +366,13 @@ workflow NFCORE_RNASEQ {
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
             UMITOOLS_PREPAREFORSALMON (
-                ch_umitools_dedup_bam.paired_end
+                ch_umitools_dedup_bam.paired_end.map{meta, bam -> [meta, bam, []]}
             )
             ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
 
             ch_umitools_dedup_bam
                 .single_end
-                .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
+                .mix(UMITOOLS_PREPAREFORSALMON.out.bam.map{it[1]})
                 .set { ch_transcriptome_bam }
         }
 

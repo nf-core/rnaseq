@@ -15,6 +15,11 @@
                         "git_sha": "02fd5bd7275abad27aad32d5c852e0a9b1b98882",
                         "installed_by": ["modules"]
                     },
+                    "custom/catadditionalfasta": {
+                        "branch": "master",
+                        "git_sha": "3ee883a0cd247a1d40bff9f2495041d779bf1079",
+                        "installed_by": ["modules"]
+                    },
                     "custom/getchromsizes": {
                         "branch": "master",
                         "git_sha": "1b0ffa4e5aed5b7e3cd4311af31bd3b2c8345051",

@@ -1,4 +1,4 @@
-name: umitools_extract
+name: umitools_prepareforrsem
 channels:
   - conda-forge
   - bioconda

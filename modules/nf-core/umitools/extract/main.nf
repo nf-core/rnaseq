@@ -5,8 +5,8 @@ process UMITOOLS_EXTRACT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.4--py38hbff2b2d_1' :
-        'biocontainers/umi_tools:1.1.4--py38hbff2b2d_1' }"
+        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.5--py39hf95cd2a_0' :
+        'biocontainers/umi_tools:1.1.5--py39hf95cd2a_0' }"
 
     input:
     tuple val(meta), path(reads)

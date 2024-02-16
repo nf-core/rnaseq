@@ -1,0 +1,62 @@
+nextflow_process {
+
+    name "Test Process UMITOOLS_PREPAREFORRSEM"
+    script "../main.nf"
+    process "UMITOOLS_PREPAREFORRSEM"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "umitools"
+    tag "umitools/prepareforrsem"
+
+    test("sarscov2 - bam") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match('bam_sarscov2_bam') },
+                { assert snapshot(process.out.versions).match('versions_sarscov2_bam') }
+            )
+        }
+
+    }
+
+    test("sarscov2 - bam - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match('bam_sarscov2_bam - stub') },
+                { assert snapshot(process.out.versions).match('versions_sarscov2_bam - stub') }
+            )
+        }
+
+    }
+
+}

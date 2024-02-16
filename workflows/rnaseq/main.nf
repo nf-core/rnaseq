@@ -372,7 +372,7 @@ workflow NFCORE_RNASEQ {
 
             ch_umitools_dedup_bam
                 .single_end
-                .mix(UMITOOLS_PREPAREFORSALMON.out.bam.map{it[1]})
+                .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
                 .set { ch_transcriptome_bam }
         }
 

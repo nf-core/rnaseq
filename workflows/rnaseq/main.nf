@@ -334,7 +334,7 @@ workflow NFCORE_RNASEQ {
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_STATS_SAMTOOLS (
                 ch_transcriptome_bam,
-                ch_fasta.map { [ [:], it ] }
+                ch_transcript_fasta.map { [ [:], it ] }
             )
             ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
             ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai

@@ -13,7 +13,6 @@ include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
 include { DUPRADAR                           } from '../../modules/local/dupradar'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc_custom_biotype'
-include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/local/umitools_prepareforrsem'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -38,15 +37,16 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ             } from '../../modules/nf-core/cat/fastq'
-include { BBMAP_BBSPLIT         } from '../../modules/nf-core/bbmap/bbsplit'
-include { SAMTOOLS_SORT         } from '../../modules/nf-core/samtools/sort'
-include { PRESEQ_LCEXTRAP       } from '../../modules/nf-core/preseq/lcextrap'
-include { QUALIMAP_RNASEQ       } from '../../modules/nf-core/qualimap/rnaseq'
-include { SORTMERNA             } from '../../modules/nf-core/sortmerna'
-include { STRINGTIE_STRINGTIE   } from '../../modules/nf-core/stringtie/stringtie'
-include { SUBREAD_FEATURECOUNTS } from '../../modules/nf-core/subread/featurecounts'
-include { MULTIQC               } from '../../modules/nf-core/multiqc'
+include { CAT_FASTQ                                            } from '../../modules/nf-core/cat/fastq'
+include { BBMAP_BBSPLIT                                        } from '../../modules/nf-core/bbmap/bbsplit'
+include { SAMTOOLS_SORT                                        } from '../../modules/nf-core/samtools/sort'
+include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
+include { QUALIMAP_RNASEQ                                      } from '../../modules/nf-core/qualimap/rnaseq'
+include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
+include { STRINGTIE_STRINGTIE                                  } from '../../modules/nf-core/stringtie/stringtie'
+include { SUBREAD_FEATURECOUNTS                                } from '../../modules/nf-core/subread/featurecounts'
+include { MULTIQC                                              } from '../../modules/nf-core/multiqc'
+include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools_prepareforrsem'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules

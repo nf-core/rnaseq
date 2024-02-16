@@ -16,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1210](https://github.com/nf-core/rnaseq/pull/1210) - Use pseudoalignment subworkflow components from nf-core/modules
 - [PR #1216](https://github.com/nf-core/rnaseq/pull/1216) - Delocalise catadditionalfasta
 
-
 ### Parameters
 
 ### Software dependencies

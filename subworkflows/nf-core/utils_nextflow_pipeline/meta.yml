@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "UTILS_NEXTFLOW_PIPELINE"
+description: Subworkflow with functionality that may be useful for any Nextflow pipeline
+keywords:
+  - utility
+  - pipeline
+  - initialise
+  - version
+components: []
+input:
+  - print_version:
+      type: boolean
+      description: |
+        Print the version of the pipeline and exit
+  - dump_parameters:
+      type: boolean
+      description: |
+        Dump the parameters of the pipeline to a JSON file
+  - output_directory:
+      type: directory
+      description: Path to output dir to write JSON file to.
+      pattern: "results/"
+  - check_conda_channel:
+      type: boolean
+      description: |
+        Check if the conda channel priority is correct.
+output:
+  - dummy_emit:
+      type: boolean
+      description: |
+        Dummy emit to make nf-core subworkflows lint happy
+authors:
+  - "@adamrtalbot"
+  - "@drpatelh"
+maintainers:
+  - "@adamrtalbot"
+  - "@drpatelh"
+  - "@maxulysse"

@@ -28,12 +28,15 @@ jobs:
           - "latest-everything"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@b9f764e8ba5c76b712ace14ecbfcef0e40ae2dd8 # v1
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run pipeline with test data
         # TODO nf-core: You can customise CI pipeline run tests as required

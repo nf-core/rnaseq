@@ -1,0 +1,200 @@
+nextflow_workflow {
+
+    name "Test Workflow UTILS_NFVALIDATION_PLUGIN"
+    script "../main.nf"
+    workflow "UTILS_NFVALIDATION_PLUGIN"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "plugin/nf-validation"
+    tag "'plugin/nf-validation'"
+    tag "utils_nfvalidation_plugin"
+    tag "subworkflows/utils_nfvalidation_plugin"
+
+    test("Should run nothing") {
+
+        when {
+
+            params {
+                monochrome_logs = true
+                test_data       = ''
+            }
+
+            workflow {
+                """
+                help             = false
+                workflow_command = null
+                pre_help_text    = null
+                post_help_text   = null
+                validate_params  = false
+                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+
+                input[0] = help
+                input[1] = workflow_command
+                input[2] = pre_help_text
+                input[3] = post_help_text
+                input[4] = validate_params
+                input[5] = schema_filename
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success }
+            )
+        }
+    }
+
+    test("Should run help") {
+
+
+        when {
+
+            params {
+                monochrome_logs = true
+                test_data       = ''
+            }
+            workflow {
+                """
+                help             = true
+                workflow_command = null
+                pre_help_text    = null
+                post_help_text   = null
+                validate_params  = false
+                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+
+                input[0] = help
+                input[1] = workflow_command
+                input[2] = pre_help_text
+                input[3] = post_help_text
+                input[4] = validate_params
+                input[5] = schema_filename
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.exitStatus == 0 },
+                { assert workflow.stdout.any { it.contains('Input/output options') } },
+                { assert workflow.stdout.any { it.contains('--outdir') } }
+            )
+        }
+    }
+
+    test("Should run help with command") {
+
+        when {
+
+            params {
+                monochrome_logs = true
+                test_data       = ''
+            }
+            workflow {
+                """
+                help             = true
+                workflow_command = "nextflow run noorg/doesntexist"
+                pre_help_text    = null
+                post_help_text   = null
+                validate_params  = false
+                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+
+                input[0] = help
+                input[1] = workflow_command
+                input[2] = pre_help_text
+                input[3] = post_help_text
+                input[4] = validate_params
+                input[5] = schema_filename
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.exitStatus == 0 },
+                { assert workflow.stdout.any { it.contains('nextflow run noorg/doesntexist') } },
+                { assert workflow.stdout.any { it.contains('Input/output options') } },
+                { assert workflow.stdout.any { it.contains('--outdir') } }
+            )
+        }
+    }
+
+    test("Should run help with extra text") {
+
+
+        when {
+
+            params {
+                monochrome_logs = true
+                test_data       = ''
+            }
+            workflow {
+                """
+                help             = true
+                workflow_command = "nextflow run noorg/doesntexist"
+                pre_help_text    = "pre-help-text"
+                post_help_text   = "post-help-text"
+                validate_params  = false
+                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+
+                input[0] = help
+                input[1] = workflow_command
+                input[2] = pre_help_text
+                input[3] = post_help_text
+                input[4] = validate_params
+                input[5] = schema_filename
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.exitStatus == 0 },
+                { assert workflow.stdout.any { it.contains('pre-help-text') } },
+                { assert workflow.stdout.any { it.contains('nextflow run noorg/doesntexist') } },
+                { assert workflow.stdout.any { it.contains('Input/output options') } },
+                { assert workflow.stdout.any { it.contains('--outdir') } },
+                { assert workflow.stdout.any { it.contains('post-help-text') } }
+            )
+        }
+    }
+
+    test("Should validate params") {
+
+        when {
+
+            params {
+                monochrome_logs = true
+                test_data       = ''
+                outdir          = 1
+            }
+            workflow {
+                """
+                help             = false
+                workflow_command = null
+                pre_help_text    = null
+                post_help_text   = null
+                validate_params  = true
+                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+
+                input[0] = help
+                input[1] = workflow_command
+                input[2] = pre_help_text
+                input[3] = post_help_text
+                input[4] = validate_params
+                input[5] = schema_filename
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains('ERROR ~ ERROR: Validation of pipeline parameters failed!') } }
+            )
+        }
+    }
+}

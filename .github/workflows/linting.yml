@@ -14,10 +14,10 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
         with:
           python-version: 3.11
           cache: "pip"
@@ -32,12 +32,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@b9f764e8ba5c76b712ace14ecbfcef0e40ae2dd8 # v1
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
         with:
           python-version: "3.11"
           architecture: "x64"
@@ -60,7 +60,7 @@ jobs:
 
       - name: Upload linting log file artifact
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: linting-logs
           path: |

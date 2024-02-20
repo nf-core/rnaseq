@@ -5,20 +5,34 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
-                        "installed_by": ["modules"]
-                    },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "c9488585ce7bd35ccd2a30faa2371454c8112fb9",
+                        "git_sha": "f4ae1d942bd50c5c0b9bd2de1393ce38315ba57c",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+                        "git_sha": "ccacf6f5de6df3bc6d73b665c1fd2933d8bbc290",
                         "installed_by": ["modules"]
+                    }
+                }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "utils_nextflow_pipeline": {
+                        "branch": "master",
+                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "utils_nfcore_pipeline": {
+                        "branch": "master",
+                        "git_sha": "262b17ed2aad591039f914951659177e6c39a8d8",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "utils_nfvalidation_plugin": {
+                        "branch": "master",
+                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }

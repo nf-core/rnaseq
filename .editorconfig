@@ -18,7 +18,12 @@ end_of_line = unset
 insert_final_newline = unset
 trim_trailing_whitespace = unset
 indent_style = unset
-indent_size = unset
+[/subworkflows/nf-core/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
 
 [/assets/email*]
 indent_size = unset
@@ -28,5 +33,5 @@ indent_size = unset
 indent_style = unset
 
 # ignore python
-[*.{py}]
+[*.{py,md}]
 indent_style = unset

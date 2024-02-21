@@ -5,13 +5,12 @@
 import groovy.json.JsonSlurper
 
 /*
-========================================================================================
-    IMPORT MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
-include { fromSamplesheet           } from 'plugin/nf-validation'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
@@ -30,64 +29,53 @@ include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
 
 workflow PIPELINE_INITIALISATION {
 
+    take:
+    version           // boolean: Display version and exit
+    help              // boolean: Display help text
+    validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
+    monochrome_logs   // boolean: Do not use coloured log outputs
+    nextflow_cli_args //   array: List of positional nextflow CLI args
+    outdir            //  string: The output directory where the results will be saved
+
     main:
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
     UTILS_NEXTFLOW_PIPELINE (
-        params.version,
+        version,
         true,
-        params.outdir,
+        outdir,
         workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
     )
 
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    def pre_help_text = nfCoreLogo(params.monochrome_logs)
-    def post_help_text = '\n' + workflowCitation() + '\n' + dashedLine(params.monochrome_logs)
+    pre_help_text = nfCoreLogo(monochrome_logs)
+    post_help_text = '\n' + workflowCitation() + '\n' + dashedLine(monochrome_logs)
     def String workflow_command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --genome GRCh37 --outdir <OUTDIR>"
     UTILS_NFVALIDATION_PLUGIN (
-        params.help,
+        help,
         workflow_command,
         pre_help_text,
         post_help_text,
-        params.validate_params,
+        validate_params,
         "nextflow_schema.json"
     )
 
     //
     // Check config provided to the pipeline
     //
-    UTILS_NFCORE_PIPELINE (args)
+    UTILS_NFCORE_PIPELINE (
+        nextflow_cli_args
+    )
 
     //
     // Custom validation for pipeline parameters
     //
     validateInputParameters()
 
-    //
-    // Create channel from input file provided through params.input
-    //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .set { ch_samplesheet }
-
-    emit:
-    samplesheet = ch_samplesheet
 }
 
 /*
@@ -105,6 +93,7 @@ workflow PIPELINE_COMPLETION {
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     hook_url        //  string: hook URL for notifications
+    multiqc_report  //  string: Path to MultiQC report
 
     main:
 
@@ -115,7 +104,7 @@ workflow PIPELINE_COMPLETION {
     //
     workflow.onComplete {
         if (email || email_on_fail) {
-            completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs)
+            completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
         }
 
         completionSummary(monochrome_logs)
@@ -286,6 +275,60 @@ def genomeExistsError() {
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
+}
+
+//
+// Generate methods description for MultiQC
+//
+def toolCitationText() {
+    // TODO nf-core: Optionally add in-text citation tools to this list.
+    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
+    // Uncomment function in methodsDescriptionText to render in MultiQC report
+    def citation_text = [
+            "Tools used in the workflow included:",
+            "FastQC (Andrews 2010),",
+            "MultiQC (Ewels et al. 2016)",
+            "."
+        ].join(' ').trim()
+
+    return citation_text
+}
+
+def toolBibliographyText() {
+    // TODO nf-core: Optionally add bibliographic entries to this list.
+    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
+    // Uncomment function in methodsDescriptionText to render in MultiQC report
+    def reference_text = [
+            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
+            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+        ].join(' ').trim()
+
+    return reference_text
+}
+
+def methodsDescriptionText(mqc_methods_yaml) {
+    // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+    def meta = [:]
+    meta.workflow = workflow.toMap()
+    meta["manifest_map"] = workflow.manifest.toMap()
+
+    // Pipeline DOI
+    meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
+    meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
+
+    // Tool references
+    meta["tool_citations"] = ""
+    meta["tool_bibliography"] = ""
+
+    // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
+    // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+    // meta["tool_bibliography"] = toolBibliographyText()
+    def methods_text = mqc_methods_yaml.text
+
+    def engine =  new groovy.text.SimpleTemplateEngine()
+    def description_html = engine.createTemplate(methods_text).make(meta)
+
+    return description_html.toString()
 }
 
 //

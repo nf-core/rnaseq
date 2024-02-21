@@ -12,7 +12,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "02fd5bd7275abad27aad32d5c852e0a9b1b98882",
+                        "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",
                         "installed_by": ["modules"]
                     },
                     "custom/catadditionalfasta": {
@@ -82,7 +82,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "9e71d8519dfbfc328c078bba14d4bd4c99e39a94",
+                        "git_sha": "ccacf6f5de6df3bc6d73b665c1fd2933d8bbc290",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {
@@ -216,7 +216,7 @@
                     },
                     "summarizedexperiment/summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
+                        "git_sha": "376bc3de6c2b763f21d55a7f5d8712d0efbf1b3a",
                         "installed_by": ["modules"]
                     },
                     "trimgalore": {
@@ -251,7 +251,7 @@
                     },
                     "umitools/prepareforrsem": {
                         "branch": "master",
-                        "git_sha": "ff7e93715a2acecf3f143ec78c9858deba2984d0",
+                        "git_sha": "f7304017cdf25dde84b3eb357d5b0c9ea91cfcb2",
                         "installed_by": ["modules"]
                     },
                     "untar": {

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1214](https://github.com/nf-core/rnaseq/pull/1214) - Bump umitools + delocalise prepareforrsem ([#831](https://github.com/nf-core/rnaseq/issues/831))
 - [PR #1213](https://github.com/nf-core/rnaseq/pull/1213) - Pass transcriptome fasta through to samtools stats
 - [PR #1216](https://github.com/nf-core/rnaseq/pull/1216) - Delocalise catadditionalfasta ([#1162](https://github.com/nf-core/rnaseq/issues/1162))
+- [PR #1218](https://github.com/nf-core/rnaseq/pull/1218) - Template update for nf-core/tools v2.13
 
 ### Parameters
 

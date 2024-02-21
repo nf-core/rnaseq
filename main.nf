@@ -17,8 +17,8 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { RNASEQ                  } from './workflows/rnaseq'
 include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
-include { NFCORE_RNASEQ           } from './workflows/rnaseq'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -45,19 +45,18 @@ params.kallisto_index   = getGenomeAttribute('kallisto')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
+    NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-workflow {
+//
+// WORKFLOW: Run main analysis pipeline
+//
+workflow NFCORE_RNASEQ {
 
     main:
-    ch_versions = Channel.empty()
 
-    //
-    // SUBWORKFLOW: Run initialisation tasks
-    //
-    PIPELINE_INITIALISATION ()
+    ch_versions = Channel.empty()
 
     //
     // SUBWORKFLOW: Prepare reference genome files
@@ -99,10 +98,9 @@ workflow {
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-
-    NFCORE_RNASEQ (
-        Channel.of(file(params.input, checkIfExists: true)),
-        PIPELINE_INITIALISATION.out.samplesheet,
+    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
+    RNASEQ (
+        ch_samplesheet,
         ch_versions,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.gtf,
@@ -118,7 +116,39 @@ workflow {
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.splicesites
     )
-    ch_versions = ch_versions.mix(NFCORE_RNASEQ.out.versions)
+    ch_versions = ch_versions.mix(RNASEQ.out.versions)
+
+    emit:
+    multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
+    versions       = ch_versions               // channel: [version1, version2, ...]
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN MAIN WORKFLOW
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+workflow {
+
+    main:
+
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.help,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir
+    )
+
+    //
+    // WORKFLOW: Run main workflow
+    //
+    NFCORE_RNASEQ ()
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -129,7 +159,8 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url
+        params.hook_url,
+        NFCORE_RNASEQ.out.multiqc_report
     )
 }
 

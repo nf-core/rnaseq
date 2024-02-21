@@ -22,6 +22,7 @@ include { QUANTIFY_RSEM                                     } from '../../subwor
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo_alignment'
 
+include { validateInputSamplesheet       } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -52,6 +53,7 @@ include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../mod
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
 include { paramsSummaryMap                 } from 'plugin/nf-validation'
+include { fromSamplesheet                  } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../../subworkflows/nf-core/fastq_subsample_fq_salmon'
@@ -78,11 +80,10 @@ ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc
 ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
 ch_dummy_file                = ch_pca_header_multiqc
 
-workflow NFCORE_RNASEQ {
+workflow RNASEQ {
 
     take:
-    ch_input            // channel: samplesheet file as specified to --input
-    ch_samplesheet      // channel: sample fastqs parsed from --input
+    ch_samplesheet      // channel: path(sample_sheet.csv)
     ch_versions         // channel: [ path(versions.yml) ]
     ch_fasta            // channel: path(genome.fasta)
     ch_gtf              // channel: path(genome.gtf)
@@ -103,9 +104,22 @@ workflow NFCORE_RNASEQ {
     ch_multiqc_files = Channel.empty()
 
     //
-    // Create separate channels for samples that have single/multiple FastQ files to merge
+    // Create channel from input file provided through params.input
     //
-    ch_samplesheet
+    Channel
+        .fromSamplesheet("input")
+        .map {
+            meta, fastq_1, fastq_2 ->
+                if (!fastq_2) {
+                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+                } else {
+                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+                }
+        }
+        .groupTuple()
+        .map {
+            validateInputSamplesheet(it)
+        }
         .branch {
             meta, fastqs ->
                 single  : fastqs.size() == 1
@@ -366,7 +380,7 @@ workflow NFCORE_RNASEQ {
             // Fix paired-end reads in name sorted BAM file
             // See: https://github.com/nf-core/rnaseq/issues/828
             UMITOOLS_PREPAREFORSALMON (
-                ch_umitools_dedup_bam.paired_end.map{meta, bam -> [meta, bam, []]}
+                ch_umitools_dedup_bam.paired_end.map { meta, bam -> [ meta, bam, [] ] }
             )
             ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
 
@@ -380,7 +394,7 @@ workflow NFCORE_RNASEQ {
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
         //
         QUANTIFY_STAR_SALMON (
-            ch_input.map{[[:], it]},
+            ch_samplesheet.map { [ [:], it ] },
             ch_transcriptome_bam,
             ch_dummy_file,
             ch_transcript_fasta,
@@ -397,7 +411,7 @@ workflow NFCORE_RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_STAR_SALMON (
-                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled.map{it[1]},
+                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled.map { it[1] },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -710,7 +724,7 @@ workflow NFCORE_RNASEQ {
         }
 
         QUANTIFY_PSEUDO_ALIGNMENT (
-            ch_input.map{[[:], it]},
+            ch_samplesheet.map { [ [:], it ] },
             ch_strand_inferred_filtered_fastq,
             ch_pseudo_index,
             ch_dummy_file,
@@ -729,7 +743,7 @@ workflow NFCORE_RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (
-                ch_counts_gene_length_scaled.map{it[1]},
+                ch_counts_gene_length_scaled.map { it[1] },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

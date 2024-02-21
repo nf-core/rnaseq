@@ -54,9 +54,6 @@ params.kallisto_index   = getGenomeAttribute('kallisto')
 //
 workflow NFCORE_RNASEQ {
 
-    take:
-    samplesheet // channel: samplesheet read in from --input
-
     main:
 
     ch_versions = Channel.empty()
@@ -101,9 +98,9 @@ workflow NFCORE_RNASEQ {
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
+    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
     RNASEQ (
-        Channel.of(file(params.input, checkIfExists: true)),
-        PIPELINE_INITIALISATION.out.samplesheet,
+        ch_samplesheet,
         ch_versions,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.gtf,
@@ -145,16 +142,13 @@ workflow {
         params.validate_params,
         params.monochrome_logs,
         args,
-        params.outdir,
-        params.input
+        params.outdir
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_RNASEQ (
-        PIPELINE_INITIALISATION.out.samplesheet
-    )
+    NFCORE_RNASEQ ()
 
     //
     // SUBWORKFLOW: Run completion tasks

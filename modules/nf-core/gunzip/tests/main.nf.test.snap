@@ -1,0 +1,31 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        [
+                            
+                        ],
+                        "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,54376d32aca20e937a4ec26dac228e84"
+                ],
+                "gunzip": [
+                    [
+                        [
+                            
+                        ],
+                        "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,54376d32aca20e937a4ec26dac228e84"
+                ]
+            }
+        ],
+        "timestamp": "2023-10-17T15:35:37.690477896"
+    }
+}

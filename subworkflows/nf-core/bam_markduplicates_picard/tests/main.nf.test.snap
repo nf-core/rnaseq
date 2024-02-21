@@ -1,0 +1,30 @@
+{
+    "homo_sapiens - cram": {
+        "content": [
+            "test.bam:md5,6641dc05efa8384a061f378d86d922cd",
+            "test.bam.bai:md5,c41c60d8a94adebe53b6df80b6e90d38",
+            "test.flagstat:md5,93b0ef463df947ede1f42ff60396c34d",
+            "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
+            "test.stats:md5,9ac28e327a7797d7bb6a5922fde59ed1"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:46:16.302755774"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            "test.bam:md5,3091fe6ba1b7530f382fe40b9fd8f45b",
+            "test.bam.bai:md5,4d3ae8d013444b55e17aa0149a2ab404",
+            "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783",
+            "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2",
+            "test.stats:md5,d7796222a087b9bb97f631f1c21b9c95"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:46:02.942115679"
+    }
+}

@@ -1,0 +1,7 @@
+name: salmon_quant
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::salmon=1.10.1

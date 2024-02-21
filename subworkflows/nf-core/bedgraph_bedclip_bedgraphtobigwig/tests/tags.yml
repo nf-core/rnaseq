@@ -1,0 +1,2 @@
+subworkflows/bedgraph_bedclip_bedgraphtobigwig:
+  - subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/**

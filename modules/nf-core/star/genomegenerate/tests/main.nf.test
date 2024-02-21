@@ -1,0 +1,115 @@
+nextflow_process {
+
+    name "Test Process STAR_GENOMEGENERATE"
+    script "../main.nf"
+    process "STAR_GENOMEGENERATE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "star"
+    tag "star/genomegenerate"
+
+    test("fasta_gtf") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString()).match("fasta_gtf_index") },
+                { assert snapshot(process.out.versions).match("fasta_gtf_versions") }
+            )
+        }
+    }
+
+    test("fasta_gtf_stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString()).match("fasta_gtf_stub_index") },
+                { assert snapshot(process.out.versions).match("fasta_gtf_stub_versions") }
+            )
+        }
+    }
+
+    test("fasta") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([ [], [] ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString()).match("fasta_index") },
+                { assert snapshot(process.out.versions).match("fasta_versions") }
+            )
+        }
+
+    }
+
+    test("fasta_stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([ [], [] ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString()).match("fasta_stub_index") },
+                { assert snapshot(process.out.versions).match("fasta_stub_versions") }
+            )
+        }
+
+    }
+
+}

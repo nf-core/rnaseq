@@ -1,0 +1,68 @@
+{
+    "pe_distance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance.txt:md5,a1acc9def0f64a5500d4c4cb47cbe32b"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T16:59:21.812491711"
+    },
+    "rscript": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_freq.txt:md5,3fc037501f5899b5da009c8ce02fc25e"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T16:59:21.847527889"
+    },
+    "pdf": {
+        "content": [
+            "test.inner_distance_plot.pdf"
+        ],
+        "timestamp": "2023-11-23T17:23:20.046679629"
+    },
+    "mean": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_mean.txt:md5,58398b7d5a29a5e564f9e3c50b55996c"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T16:59:21.839422659"
+    },
+    "freq": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_freq.txt:md5,3fc037501f5899b5da009c8ce02fc25e"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T16:59:21.83183025"
+    },
+    "pe_versions": {
+        "content": [
+            [
+                "versions.yml:md5,3ca19644c7f02a53db3ffe50c7706797"
+            ]
+        ],
+        "timestamp": "2023-12-14T17:22:27.076470855"
+    }
+}

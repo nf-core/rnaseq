@@ -1,0 +1,7 @@
+name: kallisto_index
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::kallisto=0.48.0

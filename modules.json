@@ -12,7 +12,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "02fd5bd7275abad27aad32d5c852e0a9b1b98882",
+                        "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",
                         "installed_by": ["modules"]
                     },
                     "custom/catadditionalfasta": {
@@ -251,7 +251,7 @@
                     },
                     "umitools/prepareforrsem": {
                         "branch": "master",
-                        "git_sha": "ff7e93715a2acecf3f143ec78c9858deba2984d0",
+                        "git_sha": "f7304017cdf25dde84b3eb357d5b0c9ea91cfcb2",
                         "installed_by": ["modules"]
                     },
                     "untar": {

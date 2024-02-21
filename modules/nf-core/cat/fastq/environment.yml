@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - conda-forge::sed=4.7
+  - conda-forge::coreutils=8.30

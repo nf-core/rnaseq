@@ -17,7 +17,7 @@ nextflow_pipeline {
         then {
             assert workflow.success
 
-           assertAll(
+            assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("single_end_software_versions") },
                 { assert snapshot(path("$outputDir/bbsplit/").list(),

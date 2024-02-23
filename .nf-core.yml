@@ -3,6 +3,7 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
+    - .gitignore
   files_exist:
     - conf/modules.config
   nextflow_config:

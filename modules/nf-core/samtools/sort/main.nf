@@ -7,6 +7,8 @@ process SAMTOOLS_SORT {
         'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
         'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
+    errorStrategy { task.exitStatus == 140 && task.dumpStderr().matches("\\[bam_sort_core\\] merging from \\d+\\ files and \\d+\\ in-memory blocks...") ? 'ignore' : 'terminate' }
+
     input:
     tuple val(meta), path(bam)
 
@@ -28,7 +30,7 @@ process SAMTOOLS_SORT {
         -@ $task.cpus \\
         -o ${prefix}.bam \\
         -T $prefix \\
-        $bam
+        $bam 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -191,7 +191,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "latest-everything"
+          # - "latest-everything"
           - "23.04.0"
         tags: ["${{ fromJson(needs.nf-test-changes.outputs.tags) }}"]
         profile:

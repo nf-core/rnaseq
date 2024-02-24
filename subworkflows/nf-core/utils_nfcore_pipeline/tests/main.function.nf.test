@@ -1,0 +1,134 @@
+
+nextflow_function {
+
+    name "Test Functions"
+    script "../main.nf"
+    config "subworkflows/nf-core/utils_nfcore_pipeline/tests/nextflow.config"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "utils_nfcore_pipeline"
+    tag "subworkflows/utils_nfcore_pipeline"
+
+    test("Test Function checkConfigProvided") {
+
+        function "checkConfigProvided"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function checkProfileProvided") {
+
+        function "checkProfileProvided"
+
+        when {
+            function {
+                """
+                input[0] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function workflowCitation") {
+
+        function "workflowCitation"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function nfCoreLogo") {
+
+        function "nfCoreLogo"
+
+        when {
+            function {
+                """
+                input[0] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function dashedLine") {
+
+        function "dashedLine"
+
+        when {
+            function {
+                """
+                input[0] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function without logColours") {
+
+        function "logColours"
+
+        when {
+            function {
+                """
+                input[0] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function with logColours") {
+        function "logColours"
+
+        when {
+            function {
+                """
+                input[0] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+}

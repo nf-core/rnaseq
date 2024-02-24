@@ -1,0 +1,7 @@
+name: qualimap_rnaseq
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::qualimap=2.3

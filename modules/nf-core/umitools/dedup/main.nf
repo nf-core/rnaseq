@@ -2,10 +2,10 @@ process UMITOOLS_DEDUP {
     tag "$meta.id"
     label "process_medium"
 
-    conda "bioconda::umi_tools=1.1.4"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.4--py38hbff2b2d_1' :
-        'biocontainers/umi_tools:1.1.4--py38hbff2b2d_1' }"
+        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.5--py39hf95cd2a_0' :
+        'biocontainers/umi_tools:1.1.5--py39hf95cd2a_0' }"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -42,7 +42,7 @@ process UMITOOLS_DEDUP {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
     END_VERSIONS
     """
 
@@ -56,7 +56,7 @@ process UMITOOLS_DEDUP {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        umitools: \$(umi_tools --version 2>&1 | sed 's/^.*UMI-tools version://; s/ *\$//')
+        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
     END_VERSIONS
     """
 }

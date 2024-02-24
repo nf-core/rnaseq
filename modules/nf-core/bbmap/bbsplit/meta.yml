@@ -11,9 +11,7 @@ tools:
       description: BBMap is a short read aligner, as well as various other bioinformatic tools.
       homepage: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
       documentation: https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/
-
       licence: ["UC-LBL license (see package)"]
-
 input:
   - meta:
       type: map
@@ -42,7 +40,6 @@ input:
   - only_build_index:
       type: string
       description: true = only build index; false = mapping
-
 output:
   - meta:
       type: map
@@ -69,7 +66,9 @@ output:
       type: file
       description: Tab-delimited text file containing mapping statistics
       pattern: "*.txt"
-
 authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+maintainers:
   - "@joseespinosa"
   - "@drpatelh"

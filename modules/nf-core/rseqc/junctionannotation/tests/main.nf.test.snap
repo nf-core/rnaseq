@@ -1,0 +1,24 @@
+{
+    "log": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.junction_annotation.log:md5,ef37d06d169a1adbeec23fddf82aee2b"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-14T18:56:11.636775765"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
+            ]
+        ],
+        "timestamp": "2023-12-14T17:08:02.340160345"
+    }
+}

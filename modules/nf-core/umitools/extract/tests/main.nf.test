@@ -1,0 +1,35 @@
+nextflow_process {
+
+    name "Test Process UMITOOLS_EXTRACT"
+    script "../main.nf"
+    process "UMITOOLS_EXTRACT"
+    config "./nextflow.config"
+    tag "modules_nfcore"
+    tag "modules"
+    tag "umitools"
+    tag "umitools/extract"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+            { assert process.success },
+            { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+
+    }
+}

@@ -1,0 +1,187 @@
+{
+    "bamstat_txt": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-08T14:37:45.671792186"
+    },
+    "readduplication_all": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.DupRate_plot.r:md5,3c0325095cee4835b921e57d61c23dca"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.pos.DupRate.xls:md5,a859bc2031d46bf1cc4336205847caa3"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.seq.DupRate.xls:md5,ee8783399eec5a18522a6f08bece338b"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-08T14:37:45.927253593"
+    },
+    "tin_txt": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-06T15:29:37.545261"
+    },
+    "junctionsaturation_all": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.junctionSaturation_plot.r:md5,caa6e63dcb477aabb169882b2f30dadd"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-08T14:37:45.825157699"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
+                "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
+                "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
+                "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
+                "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
+                "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
+                "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
+                "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-14T14:58:10.874440924"
+    },
+    "readdistribution_txt": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-08T14:37:45.841855468"
+    },
+    "innerdistance_all": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance.txt:md5,a1acc9def0f64a5500d4c4cb47cbe32b"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_freq.txt:md5,3fc037501f5899b5da009c8ce02fc25e"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_mean.txt:md5,58398b7d5a29a5e564f9e3c50b55996c"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_plot.r:md5,5859fbd5b42046d47e8b9aa85077f4ea"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-08T14:37:45.734509133"
+    },
+    "inferexperiment_txt": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-06T15:29:37.537104"
+    },
+    "junctionannotation_all": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.junction_annotation.log:md5,d75e0f5d62fada8aa9449991b209554c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-14T17:42:43.31783911"
+    }
+}

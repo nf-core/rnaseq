@@ -1,0 +1,4 @@
+hisat2/align:
+  - modules/nf-core/hisat2/align/**
+  - modules/nf-core/hisat2/build/**
+  - modules/nf-core/hisat2/extractsplicesites/**

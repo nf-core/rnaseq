@@ -2,10 +2,10 @@ process RSEQC_JUNCTIONANNOTATION {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::rseqc=3.0.1 'conda-forge::r-base>=3.5'"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/rseqc:3.0.1--py37h516909a_1' :
-        'biocontainers/rseqc:3.0.1--py37h516909a_1' }"
+        'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
+        'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
     tuple val(meta), path(bam)
@@ -33,7 +33,7 @@ process RSEQC_JUNCTIONANNOTATION {
         -r $bed \\
         -o $prefix \\
         $args \\
-        2> ${prefix}.junction_annotation.log
+        2> >(grep -v 'E::idx_find_and_load' | tee ${prefix}.junction_annotation.log >&2)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

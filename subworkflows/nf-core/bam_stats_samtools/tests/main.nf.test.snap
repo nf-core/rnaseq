@@ -1,0 +1,164 @@
+{
+    "test_bam_stats_samtools_paired_end_cram_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,a53f3d26e2e9851f7d528442bbfe9781"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2023-11-06T09:31:26.194017574"
+    },
+    "test_bam_stats_samtools_paired_end_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.stats:md5,ddaf8f33fe9c1ebe9b06933213aec8ed"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:45:06.230091746"
+    },
+    "test_bam_stats_samtools_paired_end_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-01-18T17:17:27.717482"
+    },
+    "test_bam_stats_samtools_single_end_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.flagstat:md5,2191911d72575a2358b08b1df64ccb53"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2023-11-06T09:26:10.340046381"
+    },
+    "test_bam_stats_samtools_paired_end_cram_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2023-11-06T09:31:26.207052003"
+    },
+    "test_bam_stats_samtools_single_end_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.stats:md5,dc178e1a4956043aba8abc83e203521b"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:44:57.442208382"
+    },
+    "test_bam_stats_samtools_paired_end_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-01-18T17:17:27.726719"
+    },
+    "test_bam_stats_samtools_single_end_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.idxstats:md5,613e048487662c694aa4a2f73ca96a20"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2023-11-06T09:26:10.349439801"
+    },
+    "test_bam_stats_samtools_paired_end_cram_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,d3345c4887f4a9ea4f7f56405b495db0"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:45:14.997164209"
+    }
+}

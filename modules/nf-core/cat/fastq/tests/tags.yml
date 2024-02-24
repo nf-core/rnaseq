@@ -1,0 +1,2 @@
+cat/fastq:
+  - modules/nf-core/cat/fastq/**

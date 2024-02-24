@@ -1,0 +1,138 @@
+{
+    "Test Function checkProfileProvided": {
+        "content": null,
+        "timestamp": "2024-02-09T15:43:55.145717"
+    },
+    "Test Function checkConfigProvided": {
+        "content": [
+            true
+        ],
+        "timestamp": "2024-01-19T11:34:13.548431224"
+    },
+    "Test Function nfCoreLogo": {
+        "content": [
+            "\n\n-\u001b[2m----------------------------------------------------\u001b[0m-\n                                        \u001b[0;32m,--.\u001b[0;30m/\u001b[0;32m,-.\u001b[0m\n\u001b[0;34m        ___     __   __   __   ___     \u001b[0;32m/,-._.--~'\u001b[0m\n\u001b[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \u001b[0;33m}  {\u001b[0m\n\u001b[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \u001b[0;32m\\`-._,-`-,\u001b[0m\n                                        \u001b[0;32m`._,._,'\u001b[0m\n\u001b[0;35m  nextflow_workflow v9.9.9\u001b[0m\n-\u001b[2m----------------------------------------------------\u001b[0m-\n"
+        ],
+        "timestamp": "2024-01-19T11:34:38.840454873"
+    },
+    "Test Function workflowCitation": {
+        "content": [
+            "If you use nextflow_workflow for your analysis please cite:\n\n* The pipeline\n  https://doi.org/10.5281/zenodo.5070524\n\n* The nf-core framework\n  https://doi.org/10.1038/s41587-020-0439-x\n\n* Software dependencies\n  https://github.com/nextflow_workflow/blob/master/CITATIONS.md"
+        ],
+        "timestamp": "2024-01-19T11:34:22.24352016"
+    },
+    "Test Function without logColours": {
+        "content": [
+            {
+                "reset": "",
+                "bold": "",
+                "dim": "",
+                "underlined": "",
+                "blink": "",
+                "reverse": "",
+                "hidden": "",
+                "black": "",
+                "red": "",
+                "green": "",
+                "yellow": "",
+                "blue": "",
+                "purple": "",
+                "cyan": "",
+                "white": "",
+                "bblack": "",
+                "bred": "",
+                "bgreen": "",
+                "byellow": "",
+                "bblue": "",
+                "bpurple": "",
+                "bcyan": "",
+                "bwhite": "",
+                "ublack": "",
+                "ured": "",
+                "ugreen": "",
+                "uyellow": "",
+                "ublue": "",
+                "upurple": "",
+                "ucyan": "",
+                "uwhite": "",
+                "iblack": "",
+                "ired": "",
+                "igreen": "",
+                "iyellow": "",
+                "iblue": "",
+                "ipurple": "",
+                "icyan": "",
+                "iwhite": "",
+                "biblack": "",
+                "bired": "",
+                "bigreen": "",
+                "biyellow": "",
+                "biblue": "",
+                "bipurple": "",
+                "bicyan": "",
+                "biwhite": ""
+            }
+        ],
+        "timestamp": "2024-01-19T11:35:04.418416984"
+    },
+    "Test Function dashedLine": {
+        "content": [
+            "-\u001b[2m----------------------------------------------------\u001b[0m-"
+        ],
+        "timestamp": "2024-01-19T11:34:55.420000755"
+    },
+    "Test Function with logColours": {
+        "content": [
+            {
+                "reset": "\u001b[0m",
+                "bold": "\u001b[1m",
+                "dim": "\u001b[2m",
+                "underlined": "\u001b[4m",
+                "blink": "\u001b[5m",
+                "reverse": "\u001b[7m",
+                "hidden": "\u001b[8m",
+                "black": "\u001b[0;30m",
+                "red": "\u001b[0;31m",
+                "green": "\u001b[0;32m",
+                "yellow": "\u001b[0;33m",
+                "blue": "\u001b[0;34m",
+                "purple": "\u001b[0;35m",
+                "cyan": "\u001b[0;36m",
+                "white": "\u001b[0;37m",
+                "bblack": "\u001b[1;30m",
+                "bred": "\u001b[1;31m",
+                "bgreen": "\u001b[1;32m",
+                "byellow": "\u001b[1;33m",
+                "bblue": "\u001b[1;34m",
+                "bpurple": "\u001b[1;35m",
+                "bcyan": "\u001b[1;36m",
+                "bwhite": "\u001b[1;37m",
+                "ublack": "\u001b[4;30m",
+                "ured": "\u001b[4;31m",
+                "ugreen": "\u001b[4;32m",
+                "uyellow": "\u001b[4;33m",
+                "ublue": "\u001b[4;34m",
+                "upurple": "\u001b[4;35m",
+                "ucyan": "\u001b[4;36m",
+                "uwhite": "\u001b[4;37m",
+                "iblack": "\u001b[0;90m",
+                "ired": "\u001b[0;91m",
+                "igreen": "\u001b[0;92m",
+                "iyellow": "\u001b[0;93m",
+                "iblue": "\u001b[0;94m",
+                "ipurple": "\u001b[0;95m",
+                "icyan": "\u001b[0;96m",
+                "iwhite": "\u001b[0;97m",
+                "biblack": "\u001b[1;90m",
+                "bired": "\u001b[1;91m",
+                "bigreen": "\u001b[1;92m",
+                "biyellow": "\u001b[1;93m",
+                "biblue": "\u001b[1;94m",
+                "bipurple": "\u001b[1;95m",
+                "bicyan": "\u001b[1;96m",
+                "biwhite": "\u001b[1;97m"
+            }
+        ],
+        "timestamp": "2024-01-19T11:35:13.436366565"
+    }
+}

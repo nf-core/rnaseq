@@ -1,0 +1,2 @@
+custom/catadditionalfasta:
+  - "modules/nf-core/custom/catadditionalfasta/**"

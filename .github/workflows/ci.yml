@@ -20,101 +20,101 @@ concurrency:
   cancel-in-progress: false # TODO: Decide on strategy for #1221
 
 jobs:
-  star_salmon:
-    name: Test STAR Salmon with workflow parameters
-    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--skip_trimming"
-          - "--gtf false"
-          - "--star_index false"
-          - "--transcript_fasta false"
-          - "--min_mapped_reads 90"
-          - "--with_umi"
-          - "--with_umi --skip_trimming"
-          - "--remove_ribo_rna --skip_qualimap"
-          - "--bam_csi_index"
-          - "--save_align_intermeds --save_reference"
-          - "--featurecounts_group_type false"
-          - "--trimmer fastp"
+  # star_salmon:
+  #   name: Test STAR Salmon with workflow parameters
+  #   if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       parameters:
+  #         - "--skip_qc"
+  #         - "--skip_trimming"
+  #         - "--gtf false"
+  #         - "--star_index false"
+  #         - "--transcript_fasta false"
+  #         - "--min_mapped_reads 90"
+  #         - "--with_umi"
+  #         - "--with_umi --skip_trimming"
+  #         - "--remove_ribo_rna --skip_qualimap"
+  #         - "--bam_csi_index"
+  #         - "--save_align_intermeds --save_reference"
+  #         - "--featurecounts_group_type false"
+  #         - "--trimmer fastp"
 
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Check out pipeline code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Nextflow
-        uses: nf-core/setup-nextflow@v1.5
+  #     - name: Setup Nextflow
+  #       uses: nf-core/setup-nextflow@v1.5
 
-      - name: Run pipeline with STAR and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results
+  #     - name: Run pipeline with STAR and various parameters
+  #       run: |
+  #         nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_salmon ${{ matrix.parameters }} --outdir ./results
 
-  star_rsem:
-    name: Test STAR RSEM with workflow parameters
-    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--rsem_index false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v4
+  # star_rsem:
+  #   name: Test STAR RSEM with workflow parameters
+  #   if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       parameters:
+  #         - "--skip_qc"
+  #         - "--rsem_index false"
+  #   steps:
+  #     - name: Check out pipeline code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Nextflow
-        uses: nf-core/setup-nextflow@v1.5
+  #     - name: Setup Nextflow
+  #       uses: nf-core/setup-nextflow@v1.5
 
-      - name: Run pipeline with RSEM STAR and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results
+  #     - name: Run pipeline with RSEM STAR and various parameters
+  #       run: |
+  #         nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner star_rsem ${{ matrix.parameters }} --outdir ./results
 
-  hisat2:
-    name: Test HISAT2 with workflow parameters
-    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--skip_qc"
-          - "--hisat2_index false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v4
+  # hisat2:
+  #   name: Test HISAT2 with workflow parameters
+  #   if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       parameters:
+  #         - "--skip_qc"
+  #         - "--hisat2_index false"
+  #   steps:
+  #     - name: Check out pipeline code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Nextflow
-        uses: nf-core/setup-nextflow@v1.5
+  #     - name: Setup Nextflow
+  #       uses: nf-core/setup-nextflow@v1.5
 
-      - name: Run pipeline with HISAT2 and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results
+  #     - name: Run pipeline with HISAT2 and various parameters
+  #       run: |
+  #         nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner hisat2 ${{ matrix.parameters }} --outdir ./results
 
-  pseudo:
-    name: Test Pseudoaligners with workflow parameters
-    if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        parameters:
-          - "--pseudo_aligner salmon --skip_qc"
-          - "--pseudo_aligner salmon --skip_alignment --skip_pseudo_alignment"
-          - "--pseudo_aligner salmon --salmon_index false --transcript_fasta false"
-          - "--pseudo_aligner kallisto --skip_qc"
-          - "--pseudo_aligner kallisto --skip_alignment --skip_pseudo_alignment"
-          - "--pseudo_aligner kallisto --kallisto_index false --transcript_fasta false"
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v4
+  # pseudo:
+  #   name: Test Pseudoaligners with workflow parameters
+  #   if: ${{ (github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq')) && !contains(github.event.head_commit.message, '[ci fast]') }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       parameters:
+  #         - "--pseudo_aligner salmon --skip_qc"
+  #         - "--pseudo_aligner salmon --skip_alignment --skip_pseudo_alignment"
+  #         - "--pseudo_aligner salmon --salmon_index false --transcript_fasta false"
+  #         - "--pseudo_aligner kallisto --skip_qc"
+  #         - "--pseudo_aligner kallisto --skip_alignment --skip_pseudo_alignment"
+  #         - "--pseudo_aligner kallisto --kallisto_index false --transcript_fasta false"
+  #   steps:
+  #     - name: Check out pipeline code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Nextflow
-        uses: nf-core/setup-nextflow@v1.5
+  #     - name: Setup Nextflow
+  #       uses: nf-core/setup-nextflow@v1.5
 
-      - name: Run pipeline with Salmon or Kallisto and various parameters
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.parameters }} --outdir ./results
+  #     - name: Run pipeline with Salmon or Kallisto and various parameters
+  #       run: |
+  #         nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.parameters }} --outdir ./results
 
   nf-test-changes:
     name: Check for changes

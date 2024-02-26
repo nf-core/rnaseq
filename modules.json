@@ -27,7 +27,7 @@
                     },
                     "custom/tx2gene": {
                         "branch": "master",
-                        "git_sha": "105968d1c48c727834abcabc94ad6bd128e5ef27",
+                        "git_sha": "ec155021a9104441bf6a9bae3b55d1b5b0bfdb3a",
                         "installed_by": ["modules"]
                     },
                     "fastp": {

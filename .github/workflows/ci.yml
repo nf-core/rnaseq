@@ -197,7 +197,6 @@ jobs:
         profile:
           - "docker"
         exclude:
-          - tags: "CUSTOM_TX2GENE"
           - tags: "FASTQ_SUBSAMPLE_FQ_SALMON"
           - tags: "GFFREAD"
           - tags: "HISAT2_BUILD"

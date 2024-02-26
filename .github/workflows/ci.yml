@@ -214,7 +214,6 @@ jobs:
           - tags: "STAR_ALIGN"
           - tags: "STAR_GENOMEGENERATE"
           - tags: "STRINGTIE_STRINGTIE"
-          - tags: "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
           - tags: "TXIMETA_TXIMPORT"
           - tags: "UMITOOLS_PREPAREFORRSEM"
           - tags: "UNTAR"

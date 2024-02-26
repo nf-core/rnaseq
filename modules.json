@@ -216,7 +216,7 @@
                     },
                     "summarizedexperiment/summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "376bc3de6c2b763f21d55a7f5d8712d0efbf1b3a",
+                        "git_sha": "874dace043f1400fddca70dc9786fa4e82e6f5ac",
                         "installed_by": ["modules"]
                     },
                     "trimgalore": {

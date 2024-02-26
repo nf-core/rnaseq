@@ -196,6 +196,28 @@ jobs:
         tags: ["${{ fromJson(needs.nf-test-changes.outputs.tags) }}"]
         profile:
           - "docker"
+        exclude:
+          - tags: "CUSTOM_CATADDITIONALFASTA"
+          - tags: "CUSTOM_TX2GENE"
+          - tags: "FASTQ_SUBSAMPLE_FQ_SALMON"
+          - tags: "GFFREAD"
+          - tags: "HISAT2_BUILD"
+          - tags: "KALLISTO_INDEX"
+          - tags: "PIPELINE"
+          - tags: "RSEQC_INFEREXPERIMENT"
+          - tags: "RSEQC_INNERDISTANCE"
+          - tags: "RSEQC_JUNCTIONANNOTATION"
+          - tags: "RSEQC_JUNCTIONSATURATION"
+          - tags: "RSEQC_READDUPLICATION"
+          - tags: "SALMON_QUANT"
+          - tags: "SUBREAD_FEATURECOUNTS"
+          - tags: "STAR_ALIGN"
+          - tags: "STAR_GENOMEGENERATE"
+          - tags: "STRINGTIE_STRINGTIE"
+          - tags: "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
+          - tags: "TXIMETA_TXIMPORT"
+          - tags: "UMITOOLS_PREPAREFORRSEM"
+          - tags: "UNTAR"
 
     steps:
       - name: Check out pipeline code

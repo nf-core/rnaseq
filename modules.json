@@ -17,7 +17,7 @@
                     },
                     "custom/catadditionalfasta": {
                         "branch": "master",
-                        "git_sha": "3ee883a0cd247a1d40bff9f2495041d779bf1079",
+                        "git_sha": "ba6ec49354837595649acd84e7a867d59bf11ad0",
                         "installed_by": ["modules"]
                     },
                     "custom/getchromsizes": {
@@ -211,7 +211,7 @@
                     },
                     "subread/featurecounts": {
                         "branch": "master",
-                        "git_sha": "f6bba1a67cdbb605f24d7a4e8dd383b0eec45b52",
+                        "git_sha": "e5265c217dcfbff7731c40623aaf07538fdd3e1c",
                         "installed_by": ["modules"]
                     },
                     "summarizedexperiment/summarizedexperiment": {

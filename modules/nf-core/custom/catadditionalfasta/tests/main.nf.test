@@ -14,15 +14,15 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ], 
-                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
-                    file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id:'test', single_end:false ], 
-                    file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)
-                ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ])
                 input[2] = 'test_biotype'
                 """
             }

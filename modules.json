@@ -6,8 +6,8 @@
             "modules": {
                 "nf-core": {
                     "bbmap/bbsplit": {
-                        "branch": "master",
-                        "git_sha": "e2b2b102d1d2e3b553177ca00ad74dc8a0a42c46",
+                        "branch": "fix_bbsplit",
+                        "git_sha": "007d8204956159d1d48b81c6403c8e9f5fdbd459",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {

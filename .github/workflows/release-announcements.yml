@@ -12,7 +12,7 @@ jobs:
       - name: get topics and convert to hashtags
         id: get_topics
         run: |
-          curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.name == "${{ github.repository }}") | .topics[]' | awk '{print "#"$0}' | tr '\n' ' ' > $GITHUB_OUTPUT
+          curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .topics[]' | awk '{print "#"$0}' | tr '\n' ' ' >> $GITHUB_OUTPUT
 
       - uses: rzr/fediverse-action@master
         with:

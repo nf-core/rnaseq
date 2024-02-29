@@ -3,10 +3,18 @@
         "content": [
             "v9.9.9"
         ],
-        "timestamp": "2024-01-19T11:32:36.031083"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:02:05.308243"
     },
     "Test Function checkCondaChannels": {
         "content": null,
-        "timestamp": "2024-01-19T11:32:50.456"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:02:12.425833"
     }
 }

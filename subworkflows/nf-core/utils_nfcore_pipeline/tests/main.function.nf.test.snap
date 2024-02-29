@@ -1,25 +1,41 @@
 {
     "Test Function checkProfileProvided": {
         "content": null,
-        "timestamp": "2024-02-09T15:43:55.145717"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:03.360873"
     },
     "Test Function checkConfigProvided": {
         "content": [
             true
         ],
-        "timestamp": "2024-01-19T11:34:13.548431224"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:02:59.729647"
     },
     "Test Function nfCoreLogo": {
         "content": [
             "\n\n-\u001b[2m----------------------------------------------------\u001b[0m-\n                                        \u001b[0;32m,--.\u001b[0;30m/\u001b[0;32m,-.\u001b[0m\n\u001b[0;34m        ___     __   __   __   ___     \u001b[0;32m/,-._.--~'\u001b[0m\n\u001b[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \u001b[0;33m}  {\u001b[0m\n\u001b[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \u001b[0;32m\\`-._,-`-,\u001b[0m\n                                        \u001b[0;32m`._,._,'\u001b[0m\n\u001b[0;35m  nextflow_workflow v9.9.9\u001b[0m\n-\u001b[2m----------------------------------------------------\u001b[0m-\n"
         ],
-        "timestamp": "2024-01-19T11:34:38.840454873"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:10.562934"
     },
     "Test Function workflowCitation": {
         "content": [
             "If you use nextflow_workflow for your analysis please cite:\n\n* The pipeline\n  https://doi.org/10.5281/zenodo.5070524\n\n* The nf-core framework\n  https://doi.org/10.1038/s41587-020-0439-x\n\n* Software dependencies\n  https://github.com/nextflow_workflow/blob/master/CITATIONS.md"
         ],
-        "timestamp": "2024-01-19T11:34:22.24352016"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:07.019761"
     },
     "Test Function without logColours": {
         "content": [
@@ -73,13 +89,21 @@
                 "biwhite": ""
             }
         ],
-        "timestamp": "2024-01-19T11:35:04.418416984"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:17.969323"
     },
     "Test Function dashedLine": {
         "content": [
             "-\u001b[2m----------------------------------------------------\u001b[0m-"
         ],
-        "timestamp": "2024-01-19T11:34:55.420000755"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:14.366181"
     },
     "Test Function with logColours": {
         "content": [
@@ -133,6 +157,10 @@
                 "biwhite": "\u001b[1;97m"
             }
         ],
-        "timestamp": "2024-01-19T11:35:13.436366565"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:21.714424"
     }
 }

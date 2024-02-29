@@ -202,11 +202,6 @@ jobs:
           - tags: "HISAT2_BUILD"
           - tags: "KALLISTO_INDEX"
           - tags: "PIPELINE"
-          - tags: "RSEQC_INFEREXPERIMENT"
-          - tags: "RSEQC_INNERDISTANCE"
-          - tags: "RSEQC_JUNCTIONANNOTATION"
-          - tags: "RSEQC_JUNCTIONSATURATION"
-          - tags: "RSEQC_READDUPLICATION"
           - tags: "SALMON_QUANT"
           - tags: "SUBREAD_FEATURECOUNTS"
           - tags: "STAR_ALIGN"
@@ -214,7 +209,6 @@ jobs:
           - tags: "STRINGTIE_STRINGTIE"
           - tags: "TXIMETA_TXIMPORT"
           - tags: "UMITOOLS_PREPAREFORRSEM"
-          - tags: "UNTAR"
 
     steps:
       - name: Check out pipeline code

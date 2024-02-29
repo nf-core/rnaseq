@@ -1,0 +1,2 @@
+subworkflows/fastq_align_hisat2:
+  - subworkflows/nf-core/fastq_align_hisat2/**

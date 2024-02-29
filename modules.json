@@ -157,7 +157,7 @@
                     },
                     "salmon/quant": {
                         "branch": "master",
-                        "git_sha": "ffc101e1b84ef3df2e4e4a966e84b3c513ae5693",
+                        "git_sha": "03a8562231d575c313266c193a980594b941e3ea",
                         "installed_by": ["fastq_subsample_fq_salmon", "modules"]
                     },
                     "samtools/flagstat": {
@@ -226,7 +226,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "376bc3de6c2b763f21d55a7f5d8712d0efbf1b3a",
+                        "git_sha": "03a8562231d575c313266c193a980594b941e3ea",
                         "installed_by": ["modules"]
                     },
                     "ucsc/bedclip": {
@@ -299,7 +299,7 @@
                     },
                     "fastq_align_hisat2": {
                         "branch": "master",
-                        "git_sha": "cfd937a668919d948f6fcbf4218e79de50c2f36f",
+                        "git_sha": "701ae347c4508fba1b7d65262596f278b6a11cb6",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_fastqc_umitools_fastp": {
@@ -319,17 +319,17 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "262b17ed2aad591039f914951659177e6c39a8d8",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfvalidation_plugin": {
                         "branch": "master",
-                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["subworkflows"]
                     }
                 }

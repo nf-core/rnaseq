@@ -199,15 +199,12 @@ jobs:
         exclude:
           - tags: "FASTQ_SUBSAMPLE_FQ_SALMON"
           - tags: "GFFREAD"
-          - tags: "HISAT2_BUILD"
           - tags: "KALLISTO_INDEX"
           - tags: "PIPELINE"
-          - tags: "SALMON_QUANT"
           - tags: "SUBREAD_FEATURECOUNTS"
           - tags: "STAR_ALIGN"
           - tags: "STAR_GENOMEGENERATE"
           - tags: "STRINGTIE_STRINGTIE"
-          - tags: "TXIMETA_TXIMPORT"
           - tags: "UMITOOLS_PREPAREFORRSEM"
 
     steps:

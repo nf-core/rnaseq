@@ -343,3 +343,33 @@ workflow PREPARE_GENOME {
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }
+
+output {
+    if( !params.save_reference )
+        return
+
+    path(params.outdir, mode: params.publish_dir_mode) {
+        path('genome') {
+            select 'GUNZIP_.*'
+            select 'MAKE_TRANSCRIPTS_FASTA'
+            select 'GFFREAD'
+            select 'GTF2BED'
+            select 'CAT_ADDITIONAL_FASTA'
+            select 'PREPROCESS_TRANSCRIPTS_FASTA_GENCODE'
+            select 'GTF_FILTER'
+            select 'CUSTOM_GETCHROMSIZES'
+        }
+
+        path('genome/index') {
+            select 'UNTAR_.*'
+            select 'STAR_GENOMEGENERATE'
+            select 'STAR_GENOMEGENERATE_IGENOMES'
+            select 'HISAT2_BUILD'
+            select 'HISAT2_EXTRACTSPLICESITES'
+            select 'SALMON_INDEX'
+            select 'KALLISTO_INDEX'
+            select 'RSEM_PREPAREREFERENCE_GENOME'
+            select 'PREPARE_GENOME:BBMAP_BBSPLIT'
+        }
+    }
+}

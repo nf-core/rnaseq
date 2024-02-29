@@ -787,6 +787,346 @@ workflow RNASEQ {
     versions       = ch_versions       // channel: [ path(versions.yml) ]
 }
 
+output {
+    path(params.outdir, mode: params.publish_dir_mode) {
+        //
+        // STAR Salmon alignment options
+        //
+        path(params.aligner) {
+            select '.*:QUANTIFY_STAR_SALMON:SALMON_QUANT'
+            select '.*:QUANTIFY_STAR_SALMON:CUSTOM_TX2GENE'
+            select '.*:QUANTIFY_STAR_SALMON:TXIMETA_TXIMPORT'
+            select '.*:QUANTIFY_STAR_SALMON:SE_.*'
+
+            if( params.save_align_intermeds || params.save_umi_intermeds ) {
+                select 'NFCORE_RNASEQ:RNASEQ:SAMTOOLS_SORT', pattern: '*.bam'
+                path('umitools/log') {
+                    select 'NFCORE_RNASEQ:RNASEQ:UMITOOLS_PREPAREFORSALMON', pattern: '*.log'
+                }
+                select 'NFCORE_RNASEQ:RNASEQ:UMITOOLS_PREPAREFORSALMON', pattern: '*.bam'
+
+                select 'NFCORE_RNASEQ:RNASEQ:BAM_SORT_STATS_SAMTOOLS:SAMTOOLS_SORT', pattern: '*.bam'
+                select 'NFCORE_RNASEQ:RNASEQ:BAM_SORT_STATS_SAMTOOLS:SAMTOOLS_INDEX', pattern: '*.bai'
+                path('samtools_stats') {
+                    select 'NFCORE_RNASEQ:RNASEQ:BAM_SORT_STATS_SAMTOOLS:BAM_STATS_SAMTOOLS:.*', pattern: '*.{stats,flagstat,idxstats}'
+                }
+            }
+
+            path('umitools') {
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME:UMITOOLS_DEDUP', pattern: '*.tsv'
+            }
+            if( params.save_align_intermeds || params.save_umi_intermeds )
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME:UMITOOLS_DEDUP', pattern: '*.bam'
+
+            if( params.save_align_intermeds || params.save_umi_intermeds )
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME:SAMTOOLS_INDEX', pattern: '*.bai'
+
+            path('samtools_stats') {
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME:BAM_STATS_SAMTOOLS:.*', pattern: '*.{stats,flagstat,idxstats}'
+            }
+        }
+
+        //
+        // General alignment options
+        //
+        path(params.aligner) {
+            path('samtools_stats') {
+                select 'NFCORE_RNASEQ:RNASEQ:.*:BAM_SORT_STATS_SAMTOOLS:BAM_STATS_SAMTOOLS:.*', pattern: '*.{stats,flagstat,idxstats}'
+            }
+
+            def wut = ( ['star_salmon','hisat2'].contains(params.aligner) &&
+                ( params.save_align_intermeds || ( !params.with_umi && params.skip_markduplicates ) )
+            ) || params.save_align_intermeds || params.skip_markduplicates
+            if( wut ) {
+                select 'NFCORE_RNASEQ:RNASEQ:.*:BAM_SORT_STATS_SAMTOOLS:SAMTOOLS_SORT', pattern: "*.bam"
+                select 'NFCORE_RNASEQ:RNASEQ:.*:BAM_SORT_STATS_SAMTOOLS:SAMTOOLS_INDEX', pattern: "*.{bai,csi}"
+            }
+
+            path('umitools') {
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME:UMITOOLS_DEDUP', pattern: '*.tsv'
+            }
+            if( params.save_align_intermeds || params.with_umi || params.save_umi_intermeds )
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME:UMITOOLS_DEDUP', pattern: '*.bam'
+
+            if( params.save_align_intermeds || params.with_umi || params.save_umi_intermeds )
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME:SAMTOOLS_INDEX', pattern: '*.{bai,csi}'
+
+            path('samtools_stats') {
+                select '.*:BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME:BAM_STATS_SAMTOOLS:.*', pattern: '*.{stats,flagstat,idxstats}'
+            }
+        }
+
+        //
+        // bigWig coverage options
+        //
+        path(params.aligner) {
+            path('bigwig') {
+                select '.*:BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD:UCSC_BEDGRAPHTOBIGWIG'
+                select '.*:BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE:UCSC_BEDGRAPHTOBIGWIG'
+            }
+        }
+
+        //
+        // DESeq2 QC options
+        //
+        path(params.aligner) {
+            path('deseq2_qc') {
+                select 'DESEQ2_QC_STAR_SALMON', pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
+                select 'DESEQ2_QC_RSEM', pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
+            }
+        }
+
+        //
+        // Pseudo-alignment options
+        //
+        path(params.pseudo_aligner) {
+            select '.*:QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
+            select '.*:QUANTIFY_PSEUDO_ALIGNMENT:TXIMETA_TXIMPORT'
+            select '.*:QUANTIFY_PSEUDO_ALIGNMENT:SE_.*'
+
+            path('deseq2_qc') {
+                select 'DESEQ2_QC_PSEUDO', pattern: "*{RData,pca.vals.txt,plots.pdf,sample.dists.txt,size_factors,log}"
+            }
+        }
+
+        // modules/local/dupradar
+        path(params.aligner) {
+            path('dupradar') {
+                path('scatter_plot') {
+                    select 'DUPRADAR', pattern: "*Dens.pdf"
+                }
+                path('box_plot') {
+                    select 'DUPRADAR', pattern: "*Boxplot.pdf"
+                }
+                path('histogram') {
+                    select 'DUPRADAR', pattern: "*Hist.pdf"
+                }
+                path('gene_data') {
+                    select 'DUPRADAR', pattern: "*Matrix.txt"
+                }
+                path('intercepts_slope') {
+                    select 'DUPRADAR', pattern: "*slope.txt"
+                }
+            }
+        }
+
+        // modules/nf-core/bbmap/bbsplit
+        path('bbsplit') {
+            select 'BBMAP_BBSPLIT', pattern: '*.txt'
+        }
+
+        if( params.save_bbsplit_reads ) {
+            path('bbsplit') {
+                select 'BBMAP_BBSPLIT', pattern: '*.fastq.gz'
+            }
+        }
+
+        // modules/nf-core/cat/fastq
+        if( params.save_merged_fastq ) {
+            path('fastq') {
+                select 'CAT_FASTQ', pattern: '*.fastq.gz'
+            }
+        }
+
+        // modules/nf-core/multiqc
+        def multiqc_path = params.skip_alignment
+            ? 'multiqc'
+            : "multiqc/${params.aligner}"
+
+        path(multiqc_path) {
+            select 'MULTIQC'
+        }
+
+        // modules/nf-core/preseq/lcextrap
+        path(params.aligner) {
+            path('preseq') {
+                select 'PRESEQ_LCEXTRAP', pattern: "*.txt"
+            }
+            path('preseq/log') {
+                select 'PRESEQ_LCEXTRAP', pattern: "*.log"
+            }
+        }
+
+        // modules/nf-core/qualimap/rnaseq
+        path(params.aligner) {
+            path('qualimap') {
+                select 'QUALIMAP_RNASEQ'
+            }
+        }
+
+        // modules/nf-core/sortmerna
+        path('sortmerna') {
+            select 'SORTMERNA', pattern: "*.log"
+            if( params.save_non_ribo_reads )
+                select 'SORTMERNA', pattern: "*.fastq.gz"
+        }
+
+        // modules/nf-core/stringtie/stringtie
+        path(params.aligner) {
+            path('stringtie') {
+                select 'STRINGTIE_STRINGTIE'
+            }
+        }
+
+        // modules/nf-core/subread/featurecounts
+        path(params.aligner) {
+            path('featurecounts') {
+                select 'SUBREAD_FEATURECOUNTS'
+                select 'MULTIQC_CUSTOM_BIOTYPE'
+            }
+        }
+
+        // subworkflows/local/align_star
+        path(params.aligner) {
+            path('log') {
+                select '.*:ALIGN_STAR:STAR_ALIGN|.*:ALIGN_STAR:STAR_ALIGN_IGENOMES', pattern: '*.{out,tab}'
+            }
+            if( params.save_align_intermeds )
+                select '.*:ALIGN_STAR:STAR_ALIGN|.*:ALIGN_STAR:STAR_ALIGN_IGENOMES', pattern: '*.bam'
+            if( params.save_unaligned ) {
+                path('unmapped') {
+                    select '.*:ALIGN_STAR:STAR_ALIGN|.*:ALIGN_STAR:STAR_ALIGN_IGENOMES', pattern: '*.fastq.gz'
+                }
+            }
+        }
+
+        // subworkflows/local/quantify_rsem
+        path(params.aligner) {
+            select '.*:QUANTIFY_RSEM:RSEM_CALCULATEEXPRESSION', pattern: "*.{stat,results}"
+            if( params.save_align_intermeds )
+                select '.*:QUANTIFY_RSEM:RSEM_CALCULATEEXPRESSION', pattern: "*.bam"
+            path('log') {
+                select '.*:QUANTIFY_RSEM:RSEM_CALCULATEEXPRESSION', pattern: "*.log"
+            }
+            select '.*:QUANTIFY_RSEM:RSEM_MERGE_COUNTS'
+        }
+
+        // subworkflows/nf-core/bam_markduplicates_picard
+        path(params.aligner) {
+            path('picard_metrics') {
+                select '.*:BAM_MARKDUPLICATES_PICARD:PICARD_MARKDUPLICATES', pattern: '*metrics.txt'
+            }
+            select '.*:BAM_MARKDUPLICATES_PICARD:PICARD_MARKDUPLICATES', pattern: '*.bam'
+            select '.*:BAM_MARKDUPLICATES_PICARD:SAMTOOLS_INDEX', pattern: '*.{bai,csi}'
+            path('samtools_stats') {
+                select '.*:BAM_MARKDUPLICATES_PICARD:BAM_STATS_SAMTOOLS:.*', pattern: '*.{stats,flagstat,idxstats}'
+            }
+        }
+
+        // subworkflows/nf-core/bam_rseqc
+        path(params.aligner) {
+            path('rseqc/bam_stat') {
+                select '.*:BAM_RSEQC:RSEQC_BAMSTAT'
+            }
+            path('rseqc/infer_experiment') {
+                select '.*:BAM_RSEQC:RSEQC_INFEREXPERIMENT'
+            }
+            path('rseqc/junction_annotation') {
+                path('pdf') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONANNOTATION', pattern: '*.pdf'
+                }
+                path('bed') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONANNOTATION', pattern: '*.bed'
+                }
+                path('xls') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONANNOTATION', pattern: '*.xls'
+                }
+                path('log') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONANNOTATION', pattern: '*.log'
+                }
+                path('rscript') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONANNOTATION', pattern: '*.r'
+                }
+            }
+            path('rseqc/junction_saturation') {
+                path('pdf') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONSATURATION', pattern: '*.pdf'
+                }
+                path('rscript') {
+                    select '.*:BAM_RSEQC:RSEQC_JUNCTIONSATURATION', pattern: '*.r'
+                }
+            }
+            path('rseqc/read_duplication') {
+                path('pdf') {
+                    select '.*:BAM_RSEQC:RSEQC_READDUPLICATION', pattern: '*.pdf'
+                }
+                path('xls') {
+                    select '.*:BAM_RSEQC:RSEQC_READDUPLICATION', pattern: '*.xls'
+                }
+                path('rscript') {
+                    select '.*:BAM_RSEQC:RSEQC_READDUPLICATION', pattern: '*.r'
+                }
+            }
+            path('rseqc/read_distribution') {
+                select '.*:BAM_RSEQC:RSEQC_READDISTRIBUTION'
+            }
+            path('rseqc/inner_distance') {
+                path('txt') {
+                    select '.*:BAM_RSEQC:RSEQC_INNERDISTANCE', pattern: '*.txt'
+                }
+                path('pdf') {
+                    select '.*:BAM_RSEQC:RSEQC_INNERDISTANCE', pattern: '*.pdf'
+                }
+                path('rscript') {
+                    select '.*:BAM_RSEQC:RSEQC_INNERDISTANCE', pattern: '*.r'
+                }
+            }
+            path('rseqc/tin') {
+                select '.*:BAM_RSEQC:RSEQC_TIN'
+            }
+        }
+
+        // subworkflows/nf-core/fastq_align_hisat2
+        path(params.aligner) {
+            path('log') {
+                select '.*:FASTQ_ALIGN_HISAT2:HISAT2_ALIGN', pattern: '*.log'
+            }
+            if( params.save_align_intermeds )
+                select '.*:FASTQ_ALIGN_HISAT2:HISAT2_ALIGN', pattern: '*.bam'
+            if( params.save_unaligned ) {
+                path('unmapped') {
+                    select '.*:FASTQ_ALIGN_HISAT2:HISAT2_ALIGN', pattern: '*.fastq.gz'
+                }
+            }
+        }
+
+        // subworkflows/nf-core/fastq_fastqc_umitools_fastp
+        path(params.trimmer) {
+            path('fastqc') {
+                select '.*:FASTQ_FASTQC_UMITOOLS_FASTP:FASTQC_TRIM'
+            }
+            select '.*:FASTQ_FASTQC_UMITOOLS_FASTP:FASTP', pattern: "*.{json,html}"
+            path('log') {
+                select '.*:FASTQ_FASTQC_UMITOOLS_FASTP:FASTP', pattern: "*.log"
+            }
+            if( params.save_trimmed )
+                select '.*:FASTQ_FASTQC_UMITOOLS_FASTP:FASTP', pattern: "*.fastq.gz"
+        }
+
+        path('umitools') {
+            select '.*:FASTQ_FASTQC_UMITOOLS_FASTP:UMITOOLS_EXTRACT', pattern: "*.log"
+            if( params.save_umi_intermeds )
+                select '.*:FASTQ_FASTQC_UMITOOLS_FASTP:UMITOOLS_EXTRACT', pattern: "*.fastq.gz"
+        }
+
+        // subworkflows/nf-core/fastq_fastqc_umitools_trimgalore
+        path(params.trimmer) {
+            path('fastqc') {
+                select '.*:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:TRIMGALORE', pattern: "*.{html,zip}"
+            }
+            if( params.save_trimmed )
+                select '.*:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:TRIMGALORE', pattern: "*.fq.gz"
+            select '.*:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:TRIMGALORE', pattern: "*.txt"
+        }
+
+        path('umitools') {
+            select '.*:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:UMITOOLS_EXTRACT', pattern: "*.log"
+            if( params.save_umi_intermeds )
+                select '.*:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:UMITOOLS_EXTRACT', pattern: "*.fastq.gz"
+        }
+    }
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END

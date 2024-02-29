@@ -197,13 +197,9 @@ jobs:
         profile:
           - "docker"
         exclude:
-          - tags: "FASTQ_SUBSAMPLE_FQ_SALMON"
           - tags: "GFFREAD"
-          - tags: "KALLISTO_INDEX"
           - tags: "PIPELINE"
           - tags: "SUBREAD_FEATURECOUNTS"
-          - tags: "STAR_ALIGN"
-          - tags: "STAR_GENOMEGENERATE"
           - tags: "STRINGTIE_STRINGTIE"
           - tags: "UMITOOLS_PREPAREFORRSEM"
 

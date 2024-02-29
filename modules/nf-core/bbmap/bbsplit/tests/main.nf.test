@@ -45,7 +45,7 @@ nextflow_process {
                         [ 'human' ], // meta map
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
                     ])
-                    input[4] = true
+                    input[4] = false
                     """
                 }
         }
@@ -81,6 +81,7 @@ nextflow_process {
 
             assertAll(
                 { assert process.success },
+                { assert path(process.out.log[0][1]).text.contains("If you wish to regenerate the index") },
                 { assert snapshot(filteredFiles).match("bbsplit_index_filtered_files")},
                 { assert filesExist : "One or more files to exclude do not exist" },
                 { assert snapshot(process.out.versions).match("versions")}

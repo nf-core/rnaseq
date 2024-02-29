@@ -11,7 +11,11 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-24T00:52:45.27809706"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T15:43:14.989834"
     },
     "rscript": {
         "content": [
@@ -25,13 +29,21 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-24T00:52:45.285457599"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T15:43:15.045525"
     },
     "pdf": {
         "content": [
             "test.DupRate_plot.pdf"
         ],
-        "timestamp": "2023-11-24T00:52:45.304152477"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:06.857254"
     },
     "seq_xls": {
         "content": [
@@ -45,7 +57,11 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-24T00:52:45.262656562"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T15:43:15.101953"
     },
     "versions": {
         "content": [
@@ -53,6 +69,10 @@
                 "versions.yml:md5,8a0721f3247f97135eadb8eecbe142a1"
             ]
         ],
-        "timestamp": "2023-12-14T17:23:41.82098803"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:06.877127"
     }
 }

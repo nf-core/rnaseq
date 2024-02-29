@@ -1,17 +1,4 @@
 {
-    "pe_distance": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.inner_distance.txt:md5,a1acc9def0f64a5500d4c4cb47cbe32b"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T16:59:21.812491711"
-    },
     "rscript": {
         "content": [
             [
@@ -23,13 +10,50 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-23T16:59:21.847527889"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:42.467401"
     },
     "pdf": {
         "content": [
             "test.inner_distance_plot.pdf"
         ],
-        "timestamp": "2023-11-23T17:23:20.046679629"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:42.461959"
+    },
+    "distance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance.txt:md5,a1acc9def0f64a5500d4c4cb47cbe32b"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:42.463083"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,3ca19644c7f02a53db3ffe50c7706797"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:42.474576"
     },
     "mean": {
         "content": [
@@ -42,7 +66,11 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-23T16:59:21.839422659"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:42.470638"
     },
     "freq": {
         "content": [
@@ -55,14 +83,10 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-23T16:59:21.83183025"
-    },
-    "pe_versions": {
-        "content": [
-            [
-                "versions.yml:md5,3ca19644c7f02a53db3ffe50c7706797"
-            ]
-        ],
-        "timestamp": "2023-12-14T17:22:27.076470855"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:42.464983"
     }
 }

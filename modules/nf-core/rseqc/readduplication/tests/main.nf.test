@@ -13,9 +13,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test', single_end: false ], // meta map
-                             file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
-                           ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                ])
                 """
             }
         }
@@ -23,14 +24,12 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.seq_xls).match("seq_xls") },
+                { assert snapshot(file(process.out.pdf[0][1]).name).match("pdf") },
                 { assert snapshot(process.out.pos_xls).match("pos_xls") },
                 { assert snapshot(process.out.rscript).match("rscript") },
-                { assert snapshot(process.out.versions).match("versions") },
-                { assert snapshot(file(process.out.pdf[0][1]).name).match("pdf") }
+                { assert snapshot(process.out.seq_xls).match("seq_xls") },
+                { assert snapshot(process.out.versions).match("versions") }
             )
         }
-
     }
-
 }

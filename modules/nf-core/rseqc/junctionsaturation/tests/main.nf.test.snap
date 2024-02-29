@@ -11,13 +11,21 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-24T00:15:43.655261555"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:24.018924"
     },
     "pdf": {
         "content": [
             "test.junctionSaturation_plot.pdf"
         ],
-        "timestamp": "2023-11-24T00:15:43.682673802"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:24.011942"
     },
     "versions": {
         "content": [
@@ -25,6 +33,10 @@
                 "versions.yml:md5,cd4638541a825dbd44e3cb65d2980aa1"
             ]
         ],
-        "timestamp": "2023-12-14T14:59:00.979242265"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:24.021984"
     }
 }

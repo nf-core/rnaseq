@@ -3,17 +3,12 @@ nextflow_process {
     name "Test Process UNTAR"
     script "../main.nf"
     process "UNTAR"
-
     tag "modules"
     tag "modules_nfcore"
     tag "untar"
-
     test("test_untar") {
 
         when {
-            params {
-                outdir   = "$outputDir"
-            }
             process {
                 """
                 input[0] = [ [], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/db/kraken2.tar.gz', checkIfExists: true) ]
@@ -33,9 +28,6 @@ nextflow_process {
     test("test_untar_onlyfiles") {
 
         when {
-            params {
-                outdir   = "$outputDir"
-            }
             process {
                 """
                 input[0] = [ [], file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true) ]

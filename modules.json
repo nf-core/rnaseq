@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "e2b2b102d1d2e3b553177ca00ad74dc8a0a42c46",
+                        "git_sha": "dcfa9a18a74300f7fb994cdbf518c981f22de73d",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -82,7 +82,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "ccacf6f5de6df3bc6d73b665c1fd2933d8bbc290",
+                        "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {
@@ -117,37 +117,37 @@
                     },
                     "rseqc/inferexperiment": {
                         "branch": "master",
-                        "git_sha": "41f4baa439663b9027727d83a3293db93bad3f8c",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/innerdistance": {
                         "branch": "master",
-                        "git_sha": "41f4baa439663b9027727d83a3293db93bad3f8c",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/junctionannotation": {
                         "branch": "master",
-                        "git_sha": "41f4baa439663b9027727d83a3293db93bad3f8c",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/junctionsaturation": {
                         "branch": "master",
-                        "git_sha": "41f4baa439663b9027727d83a3293db93bad3f8c",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/readdistribution": {
                         "branch": "master",
-                        "git_sha": "d5f5ce9474983fe0973b26c39728b5c57b13c8d4",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/readduplication": {
                         "branch": "master",
-                        "git_sha": "41f4baa439663b9027727d83a3293db93bad3f8c",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/tin": {
                         "branch": "master",
-                        "git_sha": "37aa78c23d809a01d6a1f2e6c0c034f00c2a0984",
+                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
                         "installed_by": ["bam_rseqc"]
                     },
                     "salmon/index": {
@@ -191,7 +191,7 @@
                     },
                     "sortmerna": {
                         "branch": "master",
-                        "git_sha": "ad22467dff16284093e7335d5e77964e9bbc510b",
+                        "git_sha": "df05c8db5195867c0bc7b92c1788115b66f0d17d",
                         "installed_by": ["modules"]
                     },
                     "star/align": {
@@ -256,7 +256,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "e719354ba77df0a1bd310836aa2039b45c29d620",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["modules"]
                     }
                 }

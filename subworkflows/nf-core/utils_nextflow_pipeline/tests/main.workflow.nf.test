@@ -11,9 +11,6 @@ nextflow_workflow {
     test("Should run no inputs") {
 
         when {
-            params {
-                outdir = "tests/results"
-            }
             workflow {
                 """
                 print_version        = false
@@ -39,9 +36,6 @@ nextflow_workflow {
     test("Should print version") {
 
         when {
-            params {
-                outdir = "tests/results"
-            }
             workflow {
                 """
                 print_version        = true
@@ -68,19 +62,16 @@ nextflow_workflow {
     test("Should dump params") {
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             workflow {
                 """
                 print_version        = false
                 dump_parameters      = true
-                outdir               = params.outdir
+                outdir               = 'results'
                 check_conda_channels = false
 
                 input[0] = false
                 input[1] = true
-                input[2] = params.outdir
+                input[2] = outdir
                 input[3] = false
                 """
             }
@@ -96,19 +87,16 @@ nextflow_workflow {
     test("Should not create params JSON if no output directory") {
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             workflow {
                 """
                 print_version        = false
                 dump_parameters      = true
-                outdir               = params.outdir
+                outdir               = null
                 check_conda_channels = false
 
                 input[0] = false
                 input[1] = true
-                input[2] = null
+                input[2] = outdir
                 input[3] = false
                 """
             }

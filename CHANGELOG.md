@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1218](https://github.com/nf-core/rnaseq/pull/1218) - Template update for nf-core/tools v2.13
 - [PR #1220](https://github.com/nf-core/rnaseq/pull/1220) - Initialise nf-test and add pipeline level test
 - [PR #1226](https://github.com/nf-core/rnaseq/pull/1226) - Reuse bbsplit index and don't keep overwriting ([#1225](https://github.com/nf-core/rnaseq/issues/1225))
+- [PR #1229](https://github.com/nf-core/rnaseq/pull/1229) - Template update for nf-core/tools v2.13.1
 
 ### Parameters
 
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency  | Old version | New version |
 | ----------- | ----------- | ----------- |
+| `multiqc`   | 1.20        | 1.21        |
 | `picard`    | 3.0.0       | 3.1.1       |
 | `samtools`  | 1.17        | 1.18        |
 | `sortmerna` | 4.3.4       | 4.3.6       |

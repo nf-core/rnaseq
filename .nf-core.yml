@@ -4,6 +4,7 @@ lint:
     - assets/email_template.html
     - assets/email_template.txt
     - .gitignore
+    - .github/PULL_REQUEST_TEMPLATE.md
   files_exist:
     - conf/modules.config
   nextflow_config:

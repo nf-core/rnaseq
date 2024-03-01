@@ -1,0 +1,247 @@
+{
+    "pe no umi - reads": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_val_1.fq.gz:md5,566d44cca0d22c522d6cf0e50c7165dc",
+                        "test_2_val_2.fq.gz:md5,3c023e8e890b897821df3dc98f48c2b3"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:48.470766"
+    },
+    "pe skip all - trim_unpaired": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:59.820606"
+    },
+    "pe skip all - versions": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:59.831239"
+    },
+    "pe - trim_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    100.0
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:28.817321"
+    },
+    "se - trim_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    100.0
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:05.520435"
+    },
+    "se - trim_unpaired": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:05.535593"
+    },
+    "pe no umi - trim_unpaired": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:48.49149"
+    },
+    "pe - reads": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_trimmed.fq.gz:md5,9c58b78ac2c7b5ce9ca6b090eee1d39c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:28.810693"
+    },
+    "se - reads": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_trimmed.fq.gz:md5,faae784affdd7d84e2fa9da9e9425229"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:05.481086"
+    },
+    "se - versions": {
+        "content": [
+            [
+                "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
+                "versions.yml:md5,3e4b7f058c0aa96ba41c3e4d6df6e839",
+                "versions.yml:md5,7e740129a23c5ac21c27476e30f8a6d2"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:05.551084"
+    },
+    "pe skip all - reads": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
+                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:59.799159"
+    },
+    "pe no umi - versions": {
+        "content": [
+            [
+                "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
+                "versions.yml:md5,7e740129a23c5ac21c27476e30f8a6d2"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:48.50189"
+    },
+    "pe no umi - trim_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    100.0
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:48.482197"
+    },
+    "pe - versions": {
+        "content": [
+            [
+                "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
+                "versions.yml:md5,3e4b7f058c0aa96ba41c3e4d6df6e839",
+                "versions.yml:md5,7e740129a23c5ac21c27476e30f8a6d2"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:28.837523"
+    },
+    "pe skip all - trim_read_count": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:59.808588"
+    },
+    "pe - trim_unpaired": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T14:41:28.824011"
+    }
+}

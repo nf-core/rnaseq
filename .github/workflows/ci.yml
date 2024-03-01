@@ -199,7 +199,6 @@ jobs:
         exclude:
           - tags: "GFFREAD"
           - tags: "PIPELINE"
-          - tags: "SUBREAD_FEATURECOUNTS"
           - tags: "STRINGTIE_STRINGTIE"
           - tags: "UMITOOLS_PREPAREFORRSEM"
 

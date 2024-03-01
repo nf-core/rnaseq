@@ -1,0 +1,2 @@
+subworkflows/fastq_fastqc_umitools_trimgalore:
+  - subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/**

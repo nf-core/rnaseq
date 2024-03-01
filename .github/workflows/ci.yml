@@ -199,7 +199,6 @@ jobs:
           - tags: "GFFREAD"
           - tags: "PIPELINE"
           - tags: "STRINGTIE_STRINGTIE"
-          - tags: "UMITOOLS_PREPAREFORRSEM"
 
     steps:
       - name: Check out pipeline code

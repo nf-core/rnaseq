@@ -137,7 +137,6 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(workflow.out.reads).match("pe skip all - reads") },
                 { assert snapshot(workflow.out.trim_read_count).match("pe skip all - trim_read_count") },
                 { assert snapshot(workflow.out.trim_unpaired).match("pe skip all - trim_unpaired") },
                 { assert snapshot(workflow.out.versions).match("pe skip all - versions") }

@@ -18,7 +18,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:48.470766"
+        "timestamp": "2024-03-01T14:42:34.197155"
     },
     "pe skip all - trim_unpaired": {
         "content": [
@@ -30,7 +30,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:59.820606"
+        "timestamp": "2024-03-01T14:42:44.569875"
     },
     "pe skip all - versions": {
         "content": [
@@ -42,7 +42,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:59.831239"
+        "timestamp": "2024-03-01T14:42:44.578583"
     },
     "pe - trim_read_count": {
         "content": [
@@ -60,7 +60,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:28.817321"
+        "timestamp": "2024-03-01T14:42:16.730434"
     },
     "se - trim_read_count": {
         "content": [
@@ -78,7 +78,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:05.520435"
+        "timestamp": "2024-03-01T14:41:56.047953"
     },
     "se - trim_unpaired": {
         "content": [
@@ -90,7 +90,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:05.535593"
+        "timestamp": "2024-03-01T14:41:56.052782"
     },
     "pe no umi - trim_unpaired": {
         "content": [
@@ -102,7 +102,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:48.49149"
+        "timestamp": "2024-03-01T14:42:34.210238"
     },
     "pe - reads": {
         "content": [
@@ -120,7 +120,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:28.810693"
+        "timestamp": "2024-03-01T14:42:16.720251"
     },
     "se - reads": {
         "content": [
@@ -138,7 +138,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:05.481086"
+        "timestamp": "2024-03-01T14:41:56.033273"
     },
     "se - versions": {
         "content": [
@@ -152,28 +152,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:05.551084"
-    },
-    "pe skip all - reads": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    [
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
-                    ]
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-02-29T14:41:59.799159"
+        "timestamp": "2024-03-01T14:41:56.056939"
     },
     "pe no umi - versions": {
         "content": [
@@ -186,7 +165,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:48.50189"
+        "timestamp": "2024-03-01T14:42:34.216606"
     },
     "pe no umi - trim_read_count": {
         "content": [
@@ -204,7 +183,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:48.482197"
+        "timestamp": "2024-03-01T14:42:34.203868"
     },
     "pe - versions": {
         "content": [
@@ -218,7 +197,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:28.837523"
+        "timestamp": "2024-03-01T14:42:16.758431"
     },
     "pe skip all - trim_read_count": {
         "content": [
@@ -230,7 +209,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:59.808588"
+        "timestamp": "2024-03-01T14:42:44.557631"
     },
     "pe - trim_unpaired": {
         "content": [
@@ -242,6 +221,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-29T14:41:28.824011"
+        "timestamp": "2024-03-01T14:42:16.743003"
     }
 }

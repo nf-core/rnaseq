@@ -251,7 +251,7 @@
                     },
                     "umitools/prepareforrsem": {
                         "branch": "master",
-                        "git_sha": "f7304017cdf25dde84b3eb357d5b0c9ea91cfcb2",
+                        "git_sha": "fac6cc9b2bc4042225bd9247ec03b413f764b47f",
                         "installed_by": ["modules"]
                     },
                     "untar": {
@@ -309,7 +309,7 @@
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
-                        "git_sha": "d2c5e76f291379f3dd403e48e46ed7e6ba5da744",
+                        "git_sha": "cb6defa0834eda9d6d3f967e981c819fc3e257bf",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

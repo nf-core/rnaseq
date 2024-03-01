@@ -1,0 +1,2 @@
+samtools/stats:
+  - modules/nf-core/samtools/stats/**

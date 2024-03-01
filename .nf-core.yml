@@ -1,1 +1,11 @@
 repository_type: pipeline
+lint:
+  files_unchanged:
+    - assets/email_template.html
+    - assets/email_template.txt
+    - .gitignore
+  files_exist:
+    - conf/modules.config
+  nextflow_config:
+    - config_defaults:
+        - params.ribo_database_manifest

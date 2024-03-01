@@ -1,0 +1,149 @@
+nextflow_process {
+
+    name "Test Process SORTMERNA"
+    script "../main.nf"
+    process "SORTMERNA"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "sortmerna"
+
+    test("sarscov2 single_end") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.reads },
+                { assert file(process.out.log[0][1]).text.contains("Total reads passing E-value threshold = 100 (100.00)") },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 single_end_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_single_end") }
+            )
+        }
+
+    }
+
+    test("sarscov2 single_end stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 single_end-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_single_end_stub") }
+            )
+        }
+
+    }
+
+    test("sarscov2 paired_end") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test' ], // meta map
+                    [ 
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.reads },
+                { assert file(process.out.log[0][1]).text.contains("Total reads passing E-value threshold = 200 (100.00)") },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 paired_end_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_paired_end") }
+            )
+        }
+
+    }
+
+    test("sarscov2 paired_end stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ 
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 paired_end-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_paired_end_stub") }
+            )
+        }
+
+    }
+
+}

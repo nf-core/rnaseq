@@ -1,0 +1,2 @@
+subworkflows/bam_rseqc:
+  - subworkflows/nf-core/bam_rseqc/**

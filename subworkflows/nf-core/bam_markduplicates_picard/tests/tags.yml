@@ -1,0 +1,2 @@
+subworkflows/bam_markduplicates_picard:
+  - subworkflows/nf-core/bam_markduplicates_picard/**

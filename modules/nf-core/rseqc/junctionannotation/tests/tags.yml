@@ -1,0 +1,2 @@
+rseqc/junctionannotation:
+  - modules/nf-core/rseqc/junctionannotation/**

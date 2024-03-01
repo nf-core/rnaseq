@@ -1,0 +1,42 @@
+nextflow_process {
+
+    name "Test Process CUSTOM_CATADDITIONALFASTA"
+    script "../main.nf"
+    process "CUSTOM_CATADDITIONALFASTA"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "custom"
+    tag "custom/catadditionalfasta"
+
+    test("sarscov2 - fastq - gtf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], 
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['genome_gtf'], checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'test', single_end:false ], 
+                    file(params.test_data['sarscov2']['genome']['transcriptome_fasta'], checkIfExists: true)
+                ]
+                input[2] = 'test_biotype'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fasta).match("fasta") },
+                { assert snapshot(process.out.gtf).match("gtf") },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+
+    }
+
+}

@@ -1,0 +1,31 @@
+nextflow_process {
+
+    name "Test Process KALLISTO_INDEX"
+    script "../main.nf"
+    process "KALLISTO_INDEX"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "kallisto"
+    tag "kallisto/index"
+
+    test("sarscov2 transcriptome.fasta") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'transcriptome' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

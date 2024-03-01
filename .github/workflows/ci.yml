@@ -195,11 +195,6 @@ jobs:
         tags: ["${{ fromJson(needs.nf-test-changes.outputs.tags) }}"]
         profile:
           - "docker"
-        exclude:
-          - tags: "GFFREAD"
-          - tags: "PIPELINE"
-          - tags: "STRINGTIE_STRINGTIE"
-
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4

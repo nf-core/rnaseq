@@ -1,0 +1,176 @@
+{
+    "pe no stats - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,f05f85af8c18c1bf0a9d8e982302a179"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:17:51.102291"
+    },
+    "pe - tsv_per_umi": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup_per_umi.tsv:md5,9b59b25634740ae3dd02a38b3aee1397"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:18:18.259276"
+    },
+    "pe - tsv_edit_distance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup_edit_distance.tsv:md5,2877cf9620128098210351d463e2079b"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:18:18.251105"
+    },
+    "no umi - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:16:55.996597"
+    },
+    "pe - tsv_umi_per_position": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup_per_umi_per_position.tsv:md5,2e1a12e6f720510880068deddeefe063"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:18:18.268872"
+    },
+    "no umi - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,350e942a0d45e8356fa24bc8c47dc1ed"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:16:55.988116"
+    },
+    "se no stats - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,cb1e038bc4d990683fa485d632550b54"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:17:23.458528"
+    },
+    "se no stats - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:17:23.469933"
+    },
+    "pe - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:18:18.278616"
+    },
+    "pe - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,f05f85af8c18c1bf0a9d8e982302a179"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:18:18.242891"
+    },
+    "pe no stats - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T15:17:51.120082"
+    }
+}

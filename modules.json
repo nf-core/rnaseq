@@ -47,7 +47,7 @@
                     },
                     "gffread": {
                         "branch": "master",
-                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "git_sha": "b1b959609bda44341120aed1766329909f54b8d0",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
@@ -206,7 +206,7 @@
                     },
                     "stringtie/stringtie": {
                         "branch": "master",
-                        "git_sha": "5756b12b1fab0c07f05b9ad2d5d5c262b1a2c1ef",
+                        "git_sha": "b1b959609bda44341120aed1766329909f54b8d0",
                         "installed_by": ["modules"]
                     },
                     "subread/featurecounts": {

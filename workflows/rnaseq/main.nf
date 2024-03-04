@@ -231,7 +231,7 @@ workflow RNASEQ {
 
         SORTMERNA (
             ch_filtered_reads,
-            ch_sortmerna_fastas,
+            ch_sortmerna_fastas.map{ it -> [[id:'fasta'], it]},
             []
         )
         .reads

@@ -231,7 +231,8 @@ workflow RNASEQ {
 
         SORTMERNA (
             ch_filtered_reads,
-            ch_sortmerna_fastas
+            ch_sortmerna_fastas,
+            []
         )
         .reads
         .set { ch_filtered_reads }

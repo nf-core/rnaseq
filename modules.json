@@ -241,7 +241,7 @@
                     },
                     "umitools/dedup": {
                         "branch": "master",
-                        "git_sha": "fa64bfaac20061e3cb34ffe9a5d4b31728cf4dc5",
+                        "git_sha": "3bd4f34e3093c2a16e6a8eefc22242b9b94641db",
                         "installed_by": ["bam_dedup_stats_samtools_umitools"]
                     },
                     "umitools/extract": {

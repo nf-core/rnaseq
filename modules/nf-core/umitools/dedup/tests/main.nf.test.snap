@@ -5,9 +5,9 @@
                 [
                     {
                         "id": "test",
-                        "single_end": true
+                        "single_end": false
                     },
-                    "test.dedup.bam:md5,f05f85af8c18c1bf0a9d8e982302a179"
+                    "test.dedup.bam:md5,350e942a0d45e8356fa24bc8c47dc1ed"
                 ]
             ]
         ],
@@ -15,7 +15,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:17:51.102291"
+        "timestamp": "2024-03-04T17:41:38.139428"
     },
     "pe - tsv_per_umi": {
         "content": [
@@ -23,9 +23,9 @@
                 [
                     {
                         "id": "test",
-                        "single_end": true
+                        "single_end": false
                     },
-                    "test.dedup_per_umi.tsv:md5,9b59b25634740ae3dd02a38b3aee1397"
+                    "test.dedup_per_umi.tsv:md5,8e6783a4a79437b095f095f2aefe7c01"
                 ]
             ]
         ],
@@ -33,7 +33,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:18:18.259276"
+        "timestamp": "2024-03-04T17:41:56.21078"
     },
     "pe - tsv_edit_distance": {
         "content": [
@@ -41,9 +41,9 @@
                 [
                     {
                         "id": "test",
-                        "single_end": true
+                        "single_end": false
                     },
-                    "test.dedup_edit_distance.tsv:md5,2877cf9620128098210351d463e2079b"
+                    "test.dedup_edit_distance.tsv:md5,65186b0964e2f8d970cc04d736d8b119"
                 ]
             ]
         ],
@@ -51,9 +51,45 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:18:18.251105"
+        "timestamp": "2024-03-04T17:41:56.203654"
     },
-    "no umi - versions": {
+    "pe - tsv_umi_per_position": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_per_umi_per_position.tsv:md5,9386db4a104b8e4e32f3ca4a84efa4ac"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:56.217525"
+    },
+    "se no stats - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,c9da2ee4f07f5c6922251bd01d6bcb01"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:16.383148"
+    },
+    "se no stats - versions": {
         "content": [
             [
                 "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
@@ -63,27 +99,21 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:16:55.996597"
+        "timestamp": "2024-03-04T17:41:16.391241"
     },
-    "pe - tsv_umi_per_position": {
+    "pe - versions": {
         "content": [
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.dedup_per_umi_per_position.tsv:md5,2e1a12e6f720510880068deddeefe063"
-                ]
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:18:18.268872"
+        "timestamp": "2024-03-04T17:41:56.226748"
     },
-    "no umi - bam": {
+    "pe - bam": {
         "content": [
             [
                 [
@@ -99,67 +129,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:16:55.988116"
-    },
-    "se no stats - bam": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.dedup.bam:md5,cb1e038bc4d990683fa485d632550b54"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-03-04T15:17:23.458528"
-    },
-    "se no stats - versions": {
-        "content": [
-            [
-                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-03-04T15:17:23.469933"
-    },
-    "pe - versions": {
-        "content": [
-            [
-                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-03-04T15:18:18.278616"
-    },
-    "pe - bam": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.dedup.bam:md5,f05f85af8c18c1bf0a9d8e982302a179"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-03-04T15:18:18.242891"
+        "timestamp": "2024-03-04T17:41:56.19652"
     },
     "pe no stats - versions": {
         "content": [
@@ -171,6 +141,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-04T15:17:51.120082"
+        "timestamp": "2024-03-04T17:41:38.157629"
     }
 }

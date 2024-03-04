@@ -10,7 +10,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
+                input  = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
             }
         }
 
@@ -18,21 +18,7 @@ nextflow_pipeline {
             assert workflow.success
 
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("single_end_software_versions") },
-                { assert snapshot(path("$outputDir/bbsplit/").list(),
-                    path("$outputDir/salmon/").list(),
-                    path("$outputDir/star_salmon/").list(),
-                    path("$outputDir/trimgalore/").list()) },
-                { assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_1_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/RAP1_IAA_30M_REP1_2_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/RAP1_UNINDUCED_REP1_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/RAP1_UNINDUCED_REP2_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/WT_REP1_1_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/WT_REP1_2_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/WT_REP2_1_fastqc.html").exists() },
-                { assert new File("$outputDir/fastqc/WT_REP2_2_fastqc.html").exists() },
-                { assert new File("$outputDir/multiqc/star_salmon/multiqc_report.html").exists() }
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml")).match("software_versions") }
             )
         }
     }

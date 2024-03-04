@@ -12,9 +12,6 @@ nextflow_process {
     test("Should run without failures") {
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:true ], // meta map
@@ -26,10 +23,9 @@ nextflow_process {
 
         then {
             assertAll (
-            { assert process.success },
-            { assert snapshot(process.out.versions).match("versions") }
+                { assert process.success },
+                { assert snapshot(process.out.versions).match("versions") }
             )
         }
-
     }
 }

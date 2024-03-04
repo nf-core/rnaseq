@@ -10,6 +10,7 @@ include { GUNZIP as GUNZIP_TRANSCRIPT_FASTA } from '../../../modules/nf-core/gun
 include { GUNZIP as GUNZIP_ADDITIONAL_FASTA } from '../../../modules/nf-core/gunzip'
 
 include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_SORTMERNA_INDEX    } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_STAR_INDEX         } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_RSEM_INDEX         } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/untar'
@@ -20,6 +21,7 @@ include { CUSTOM_CATADDITIONALFASTA         } from '../../../modules/nf-core/cus
 include { CUSTOM_GETCHROMSIZES              } from '../../../modules/nf-core/custom/getchromsizes'
 include { GFFREAD                           } from '../../../modules/nf-core/gffread'
 include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
+include { SORTMERNA as SORTMERNA_INDEX      } from '../../../modules/nf-core/sortmerna'
 include { STAR_GENOMEGENERATE               } from '../../../modules/nf-core/star/genomegenerate'
 include { HISAT2_EXTRACTSPLICESITES         } from '../../../modules/nf-core/hisat2/extractsplicesites'
 include { HISAT2_BUILD                      } from '../../../modules/nf-core/hisat2/build'
@@ -43,18 +45,21 @@ workflow PREPARE_GENOME {
     gene_bed                 //      file: /path/to/gene.bed
     splicesites              //      file: /path/to/splicesites.txt
     bbsplit_fasta_list       //      file: /path/to/bbsplit_fasta_list.txt
+    sortmerna_fasta_list     //      file: /path/to/sortmerna_fasta_list.txt
     star_index               // directory: /path/to/star/index/
     rsem_index               // directory: /path/to/rsem/index/
     salmon_index             // directory: /path/to/salmon/index/
     kallisto_index           // directory: /path/to/kallisto/index/
     hisat2_index             // directory: /path/to/hisat2/index/
     bbsplit_index            // directory: /path/to/rsem/index/
+    sortmerna_index          // directory: /path/to/sortmerna/index/
     gencode                  //   boolean: whether the genome is from GENCODE
     featurecounts_group_type //    string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts
     aligner                  //    string: Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'
     pseudo_aligner           //    string: Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'
     skip_gtf_filter          //   boolean: Skip filtering of GTF for valid scaffolds and/ or transcript IDs
     skip_bbsplit             //   boolean: Skip BBSplit for removal of non-reference genome reads
+    skip_sortmerna           //   boolean: Skip sortmerna for removal of non-reference genome reads
     skip_alignment           //   boolean: Skip all of the alignment-based processes within the pipeline
     skip_pseudo_alignment    //   boolean: Skip all of the pseudoalignment-based processes within the pipeline
 
@@ -188,6 +193,7 @@ workflow PREPARE_GENOME {
     //
     def prepare_tool_indices = []
     if (!skip_bbsplit) { prepare_tool_indices << 'bbsplit' }
+    if (!skip_sortmerna) { prepare_tool_indices << 'sortmerna' }
     if (!skip_alignment) { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner) { prepare_tool_indices << pseudo_aligner }
 
@@ -215,6 +221,34 @@ workflow PREPARE_GENOME {
 
             ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
             ch_versions      = ch_versions.mix(BBMAP_BBSPLIT.out.versions)
+        }
+    }
+
+    //
+    // Uncompress sortmerna index or generate from scratch if required
+    //
+    ch_sortmerna_index = Channel.empty()
+    if ('sortmerna' in prepare_tool_indices) {
+        if (sortmerna_index) {
+            if (sortmerna_index.endsWith('.tar.gz')) {
+                ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ( [ [:], sortmerna_index ] ).untar.map { it[1] }
+                ch_versions      = ch_versions.mix(UNTAR_SORTMERNA_INDEX.out.versions)
+            } else {
+                ch_sortmerna_index = Channel.value(file(sortmerna_index))
+            }
+        } else {
+            ch_sortmerna_fastas = Channel.from(file(sortmerna_fasta_list).readLines())
+                .map { row -> file(row, checkIfExists: true) }
+                .collect()
+                .map{ ['rrna_refs', it] }
+
+            SORTMERNA_INDEX (
+                Channel.of([[],[]]),
+                ch_sortmerna_fastas,
+                Channel.of([[],[]])
+            )
+            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
+            ch_versions = ch_versions.mix(SORTMERNA_INDEX.out.versions)
         }
     }
 
@@ -336,6 +370,7 @@ workflow PREPARE_GENOME {
     chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
     splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
     bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    sortmerna_index  = ch_sortmerna_index        // channel: path(sortmerna/index/)
     star_index       = ch_star_index             // channel: path(star/index/)
     rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
     hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)

@@ -44,6 +44,7 @@ include { SAMTOOLS_SORT                                        } from '../../mod
 include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ                                      } from '../../modules/nf-core/qualimap/rnaseq'
 include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
+include { SORTMERNA as SORTMERNA_INDEX                         } from '../../../modules/nf-core/sortmerna/main'
 include { STRINGTIE_STRINGTIE                                  } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS                                } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                                              } from '../../modules/nf-core/multiqc'
@@ -97,7 +98,9 @@ workflow RNASEQ {
     ch_salmon_index     // channel: path(salmon/index/)
     ch_kallisto_index   // channel: [ meta, path(kallisto/index/) ]
     ch_bbsplit_index    // channel: path(bbsplit/index/)
+    ch_sortmerna_index  // channel: path(sortmerna/index/)
     ch_splicesites      // channel: path(genome.splicesites.txt)
+    make_sortmerna_index // boolean: Whether to create a sortmerna index before running sortmerna
 
     main:
 
@@ -225,13 +228,29 @@ workflow RNASEQ {
     //
     // MODULE: Remove ribosomal RNA reads
     //
+    // Check rRNA databases for sortmerna
     if (params.remove_ribo_rna) {
         ch_ribo_db = file(params.ribo_database_manifest)
-        ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines()).map { row -> file(row, checkIfExists: true) }.collect()
+        if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
+
+        ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines())
+            .map { row -> file(row, checkIfExists: true) }
+            .collect()
+            .map{ ['rrna_refs', it] }
+
+        if (make_sortmerna_index) {
+            SORTMERNA_INDEX (
+                [[],[]],
+                ch_sortmerna_fastas,
+                [[],[]]
+            )
+            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
+        }
 
         SORTMERNA (
             ch_filtered_reads,
-            ch_sortmerna_fastas
+            ch_sortmerna_fastas,
+            ch_sortmerna_index
         )
         .reads
         .set { ch_filtered_reads }

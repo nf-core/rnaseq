@@ -7,12 +7,12 @@
                 "nf-core": {
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "dcfa9a18a74300f7fb994cdbf518c981f22de73d",
+                        "git_sha": "ecc2139bc014be1d0117d6c69458d82fbfa3328f",
                         "installed_by": ["modules"]
                     },
                     "bedtools/genomecov": {
-                        "branch": "genomecov_test_path",
-                        "git_sha": "4b142025d6634adbdd89d9c835d3628f334ea6ae",
+                        "branch": "master",
+                        "git_sha": "7d6a3a41229ddbfc37d88f5f8590f77e8dfe8470",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {

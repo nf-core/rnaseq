@@ -11,6 +11,7 @@ process BEDTOOLS_GENOMECOV {
     tuple val(meta), path(intervals), val(scale)
     path  sizes
     val   extension
+    val   sort
 
     output:
     tuple val(meta), path("*.${extension}"), emit: genomecov
@@ -26,6 +27,7 @@ process BEDTOOLS_GENOMECOV {
     if (!args_list.contains('-bg') && (scale > 0 && scale != 1)) {
         args += " -bg"
     }
+    def sort_cmd = sort ? '| bedtools sort' : ''
 
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (intervals.name =~ /\.bam/) {
@@ -34,6 +36,7 @@ process BEDTOOLS_GENOMECOV {
             genomecov \\
             -ibam $intervals \\
             $args \\
+            $sort_cmd \\
             > ${prefix}.${extension}
 
         cat <<-END_VERSIONS > versions.yml
@@ -48,6 +51,7 @@ process BEDTOOLS_GENOMECOV {
             -i $intervals \\
             -g $sizes \\
             $args \\
+            $sort_cmd \\
             > ${prefix}.${extension}
 
         cat <<-END_VERSIONS > versions.yml

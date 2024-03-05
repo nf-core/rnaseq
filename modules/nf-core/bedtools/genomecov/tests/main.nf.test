@@ -22,6 +22,7 @@ nextflow_process {
                 input[1] = []
                 // extension
                 input[2] = "txt"
+                input[3] = true
                 """
             }
         }
@@ -48,6 +49,7 @@ nextflow_process {
                 input[1] = file('dummy_chromosome_sizes')
                 // extension
                 input[2] = 'txt'
+                input[3] = false
                 """
             }
         }
@@ -74,6 +76,7 @@ nextflow_process {
                 input[1] = file(params.test_data['sarscov2']['genome']['genome_sizes'], checkIfExists: true)
                 // extension
                 input[2] = 'txt'
+                input[3] = false
                 """
             }
         }
@@ -102,6 +105,7 @@ nextflow_process {
                 input[1] = []
                 // extension
                 input[2] = 'txt'
+                input[3] = false
                 """
             }
         }

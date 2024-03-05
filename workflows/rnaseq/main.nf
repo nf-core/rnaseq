@@ -40,8 +40,6 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 include { CAT_FASTQ                                            } from '../../modules/nf-core/cat/fastq'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
-include { BEDTOOLS_SORT as BEDTOOLS_SORT_FW                    } from '../../modules/nf-core/bedtools/sort'
-include { BEDTOOLS_SORT as BEDTOOLS_SORT_REV                   } from '../../modules/nf-core/bedtools/sort'
 include { BBMAP_BBSPLIT                                        } from '../../modules/nf-core/bbmap/bbsplit'
 include { SAMTOOLS_SORT                                        } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
@@ -644,21 +642,14 @@ workflow RNASEQ {
         BEDTOOLS_GENOMECOV_FW (
             ch_genomecov_input,
             [],
-            'bedGraph'
+            'bedGraph',
+            true
         )
-        BEDTOOLS_SORT_FW (
-            BEDTOOLS_GENOMECOV_FW.out.genomecov,
-            []
-        )
-
         BEDTOOLS_GENOMECOV_REV (
             ch_genomecov_input,
             [],
-            'bedGraph'
-        )
-        BEDTOOLS_SORT_REV (
-            BEDTOOLS_GENOMECOV_REV.out.genomecov,
-            []
+            'bedGraph',
+            true
         )
 
         ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV_FW.out.versions.first())
@@ -667,13 +658,13 @@ workflow RNASEQ {
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_SORT_FW.out.sorted,
+            BEDTOOLS_GENOMECOV_FW.out.genomecov,
             ch_chrom_sizes
         )
         ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_SORT_REV.out.sorted,
+            BEDTOOLS_GENOMECOV_REV.out.genomecov,
             ch_chrom_sizes
         )
     }

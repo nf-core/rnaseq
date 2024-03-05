@@ -647,7 +647,8 @@ workflow RNASEQ {
             'bedGraph'
         )
         BEDTOOLS_SORT_FW (
-            BEDTOOLS_GENOMECOV_FW.out.genomecov
+            BEDTOOLS_GENOMECOV_FW.out.genomecov,
+            []
         )
         
         BEDTOOLS_GENOMECOV_REV (
@@ -656,7 +657,8 @@ workflow RNASEQ {
             'bedGraph'
         )
         BEDTOOLS_SORT_REV (
-            BEDTOOLS_GENOMECOV_REV.out.genomecov
+            BEDTOOLS_GENOMECOV_REV.out.genomecov,
+            []
         )
 
         ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV_FW.out.versions.first())

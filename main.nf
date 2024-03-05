@@ -37,6 +37,7 @@ params.gtf              = getGenomeAttribute('gtf')
 params.gff              = getGenomeAttribute('gff')
 params.gene_bed         = getGenomeAttribute('bed12')
 params.bbsplit_index    = getGenomeAttribute('bbsplit')
+params.sortmerna_index  = getGenomeAttribute('sortmerna')
 params.star_index       = getGenomeAttribute('star')
 params.hisat2_index     = getGenomeAttribute('hisat2')
 params.rsem_index       = getGenomeAttribute('rsem')
@@ -70,18 +71,21 @@ workflow NFCORE_RNASEQ {
         params.gene_bed,
         params.splicesites,
         params.bbsplit_fasta_list,
+        params.ribo_database_manifest,
         params.star_index,
         params.rsem_index,
         params.salmon_index,
         params.kallisto_index,
         params.hisat2_index,
         params.bbsplit_index,
+        params.sortmerna_index,
         params.gencode,
         params.featurecounts_group_type,
         params.aligner,
         params.pseudo_aligner,
         params.skip_gtf_filter,
         params.skip_bbsplit,
+        !params.remove_ribo_rna,
         params.skip_alignment,
         params.skip_pseudo_alignment
     )
@@ -114,7 +118,9 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME.out.salmon_index,
         PREPARE_GENOME.out.kallisto_index,
         PREPARE_GENOME.out.bbsplit_index,
-        PREPARE_GENOME.out.splicesites
+        PREPARE_GENOME.out.sortmerna_index,
+        PREPARE_GENOME.out.splicesites,
+        !params.remove_ribo_rna && params.remove_ribo_rna
     )
     ch_versions = ch_versions.mix(RNASEQ.out.versions)
 

@@ -10,6 +10,16 @@
                         "git_sha": "dcfa9a18a74300f7fb994cdbf518c981f22de73d",
                         "installed_by": ["modules"]
                     },
+                    "bedtools/genomecov": {
+                        "branch": "master",
+                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "installed_by": ["modules"]
+                    },
+                    "bedtools/sort": {
+                        "branch": "master",
+                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",

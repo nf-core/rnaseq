@@ -1,0 +1,7 @@
+name: bedtools_sort
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::bedtools=2.31.1

@@ -650,7 +650,7 @@ workflow RNASEQ {
             BEDTOOLS_GENOMECOV_FW.out.genomecov,
             []
         )
-        
+
         BEDTOOLS_GENOMECOV_REV (
             ch_genomecov_input,
             [],

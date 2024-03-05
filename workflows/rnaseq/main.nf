@@ -44,7 +44,7 @@ include { SAMTOOLS_SORT                                        } from '../../mod
 include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ                                      } from '../../modules/nf-core/qualimap/rnaseq'
 include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
-include { SORTMERNA as SORTMERNA_INDEX                         } from '../../../modules/nf-core/sortmerna/main'
+include { SORTMERNA as SORTMERNA_INDEX                         } from '../../modules/nf-core/sortmerna'
 include { STRINGTIE_STRINGTIE                                  } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS                                } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                                              } from '../../modules/nf-core/multiqc'

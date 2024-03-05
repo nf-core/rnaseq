@@ -73,7 +73,7 @@ nextflow_process {
                     0.5
                 ]
                 // sizes
-                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true),
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true)
                 // extension
                 input[2] = 'txt'
                 input[3] = false

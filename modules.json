@@ -11,8 +11,8 @@
                         "installed_by": ["modules"]
                     },
                     "bedtools/genomecov": {
-                        "branch": "genomecov_test_path",
-                        "git_sha": "d481ff3fb7f70c50425c2f6ed1e8fba60a2ae680",
+                        "branch": "master",
+                        "git_sha": "81b90194ce9911dbd55bba2c65c6919f6677abc4",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {

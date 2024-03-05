@@ -59,7 +59,7 @@ workflow PREPARE_GENOME {
     pseudo_aligner           //    string: Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'
     skip_gtf_filter          //   boolean: Skip filtering of GTF for valid scaffolds and/ or transcript IDs
     skip_bbsplit             //   boolean: Skip BBSplit for removal of non-reference genome reads
-    skip_sortmerna           //   boolean: Skip sortmerna for removal of non-reference genome reads
+    skip_sortmerna           //   boolean: Skip sortmerna for removal of reads mapping to sequences in sortmerna_fasta_list
     skip_alignment           //   boolean: Skip all of the alignment-based processes within the pipeline
     skip_pseudo_alignment    //   boolean: Skip all of the pseudoalignment-based processes within the pipeline
 

@@ -6,7 +6,7 @@ nextflow_process {
 
     tag "STAR_GENOMEGENERATE_IGENOMES"
 
-    test("fasta_gtf") {
+    test("fasta with gtf") {
 
         when {
             process {
@@ -26,7 +26,7 @@ nextflow_process {
         }
     }
 
-    test("fasta_gtf_stub") {
+    test("fasta with gtf - stub") {
 
         options '-stub'
 
@@ -48,7 +48,7 @@ nextflow_process {
         }
     }
 
-    test("fasta") {
+    test("fasta no gtf") {
 
         when {
             process {
@@ -69,7 +69,7 @@ nextflow_process {
 
     }
 
-    test("fasta_stub") {
+    test("fasta no gtf - stub") {
 
         options '-stub'
 

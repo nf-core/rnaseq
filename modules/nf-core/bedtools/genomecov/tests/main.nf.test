@@ -15,7 +15,7 @@ nextflow_process {
                 """                
                 input[0] = [
                     [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
                     1
                 ]
                 // sizes
@@ -42,7 +42,7 @@ nextflow_process {
                 """                
                 input[0] = [
                     [ id:'test'],
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
                     0.5
                 ]
                 // sizes
@@ -69,7 +69,7 @@ nextflow_process {
                 """                
                 input[0] = [
                     [ id:'test'],
-                    file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/baits.bed", checkIfExists: true),
                     0.5
                 ]
                 // sizes
@@ -98,7 +98,7 @@ nextflow_process {
                 """                
                 input[0] = [
                     [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_bam'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
                     1
                 ]
                 // sizes

@@ -146,7 +146,6 @@ nextflow_function {
             }
             function {
                 """
-                // define inputs of the function here. Example:
                 input[0] = "myAttribute"
                 """
             }
@@ -176,7 +175,6 @@ nextflow_function {
             }
             function {
                 """
-                // define inputs of the function here. Example:
                 input[0] = "missingAttribute"
                 """
             }
@@ -270,15 +268,6 @@ nextflow_function {
 
         function "gtfGffWarn"
 
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
-
         then {
             assertAll(
                 { assert function.success },
@@ -293,15 +282,6 @@ nextflow_function {
     test("Test Function ncbiGenomeWarn") {
 
         function "ncbiGenomeWarn"
-
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
 
         then {
             assertAll(
@@ -318,15 +298,6 @@ nextflow_function {
 
         function "ucscGenomeWarn"
 
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
-
         then {
             assertAll(
                 { assert function.success },
@@ -341,15 +312,6 @@ nextflow_function {
     test("Test Function transcriptsFastaWarn") {
 
         function "transcriptsFastaWarn"
-
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
 
         then {
             assertAll(
@@ -366,15 +328,6 @@ nextflow_function {
 
         function "skipAlignmentWarn"
 
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
-
         then {
             assertAll(
                 { assert function.success },
@@ -389,15 +342,6 @@ nextflow_function {
     test("Test Function rsemUmiError") {
 
         function "rsemUmiError"
-
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
 
         then {
             assertAll(
@@ -414,15 +358,6 @@ nextflow_function {
 
         function "rsemStarIndexWarn"
 
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
-
         then {
             assertAll(
                 { assert function.success },
@@ -436,15 +371,6 @@ nextflow_function {
     test("Test Function rsemStarExtraArgumentsWarn") {
 
         function "rsemStarExtraArgumentsWarn"
-
-        when {
-            function {
-                """
-                // define inputs of the function here. Example:
-                // input[0] = 1
-                """
-            }
-        }
 
         then {
             assertAll(
@@ -463,7 +389,6 @@ nextflow_function {
         when {
             function {
                 """
-                // define inputs of the function here. Example:
                 input[0] = "mockIndex"
                 """
             }
@@ -485,7 +410,6 @@ nextflow_function {
         when {
             function {
                 """
-                // define inputs of the function here. Example:
                 input[0] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
                 """
             }

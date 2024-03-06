@@ -145,6 +145,7 @@ workflow {
     PIPELINE_INITIALISATION (
         params.version,
         params.help,
+        "nextflow_schema.json",
         params.validate_params,
         params.monochrome_logs,
         args,
@@ -160,6 +161,7 @@ workflow {
     // SUBWORKFLOW: Run completion tasks
     //
     PIPELINE_COMPLETION (
+        "nextflow_schema.json",
         params.email,
         params.email_on_fail,
         params.plaintext_email,

@@ -32,9 +32,10 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     help              // boolean: Display help text
+    schema            //  string: Path to the JSON schema file
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
     monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args //   array: List of positional nextflow CLI args
+    nextflow_cli_args  //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
 
     main:
@@ -61,7 +62,7 @@ workflow PIPELINE_INITIALISATION {
         pre_help_text,
         post_help_text,
         validate_params,
-        "nextflow_schema.json"
+        schema
     )
 
     //
@@ -87,6 +88,7 @@ workflow PIPELINE_INITIALISATION {
 workflow PIPELINE_COMPLETION {
 
     take:
+    schema          //  string: Path to the JSON schema file
     email           //  string: email address
     email_on_fail   //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML

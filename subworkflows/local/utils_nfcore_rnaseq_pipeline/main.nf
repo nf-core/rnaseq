@@ -122,9 +122,9 @@ workflow PIPELINE_COMPLETION {
 */
 
 //
-// Function to validate channels from input samplesheet
+// Function to check samples are internally consistent after being grouped
 //
-def validateInputSamplesheet(input) {
+def checkSamplesAreConsistent(input) {
     def (metas, fastqs) = input[1..2]
 
     // Check that multiple runs of the same sample are of the same strandedness
@@ -507,6 +507,7 @@ def getStarPercentMapped(params, align_log) {
     align_log.eachLine { line ->
         def matcher = line =~ pattern
         if (matcher) {
+            println matcher[0][1].toFloat()
             percent_aligned = matcher[0][1].toFloat()
         }
     }

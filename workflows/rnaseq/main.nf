@@ -22,7 +22,7 @@ include { QUANTIFY_RSEM                                     } from '../../subwor
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo_alignment'
 
-include { validateInputSamplesheet       } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { checkSamplesAreConsistent       } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -121,7 +121,7 @@ workflow RNASEQ {
         }
         .groupTuple()
         .map {
-            validateInputSamplesheet(it)
+            checkSamplesAreConsistent(it)
         }
         .branch {
             meta, fastqs ->

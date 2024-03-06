@@ -509,7 +509,6 @@ def getStarPercentMapped(params, align_log) {
     align_log.eachLine { line ->
         def matcher = line =~ pattern
         if (matcher) {
-            println matcher[0][1].toFloat()
             percent_aligned = matcher[0][1].toFloat()
         }
     }

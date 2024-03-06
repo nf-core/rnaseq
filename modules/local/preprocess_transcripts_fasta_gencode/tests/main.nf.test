@@ -1,0 +1,26 @@
+nextflow_process {
+
+    name "Test Process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
+    script "../main.nf"
+    process "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
+
+    test("sarscov2 fasta") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

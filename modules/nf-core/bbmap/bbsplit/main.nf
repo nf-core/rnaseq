@@ -48,7 +48,6 @@ process BBMAP_BBSPLIT {
     def refstats_cmd=''
 
     if (only_build_index) {
-        println("only building index")
         if (primary_ref && other_ref_names && other_ref_paths) {
             index_files = 'ref_primary=' +primary_ref + ' ' + other_refs.join(' ') + ' path=bbsplit'
         } else {

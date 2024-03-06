@@ -7,7 +7,6 @@
 //
 // MODULE: Loaded from modules/local/
 //
-include { BEDTOOLS_GENOMECOV                 } from '../../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
@@ -39,6 +38,8 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 // MODULE: Installed directly from nf-core/modules
 //
 include { CAT_FASTQ                                            } from '../../modules/nf-core/cat/fastq'
+include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
+include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 include { BBMAP_BBSPLIT                                        } from '../../modules/nf-core/bbmap/bbsplit'
 include { SAMTOOLS_SORT                                        } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
@@ -636,22 +637,34 @@ workflow RNASEQ {
     //
     if (!params.skip_alignment && !params.skip_bigwig) {
 
-        BEDTOOLS_GENOMECOV (
-            ch_genome_bam
+        ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
+
+        BEDTOOLS_GENOMECOV_FW (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
         )
-        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV.out.versions.first())
+        BEDTOOLS_GENOMECOV_REV (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
+        )
+
+        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV_FW.out.versions.first())
 
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_GENOMECOV.out.bedgraph_forward,
+            BEDTOOLS_GENOMECOV_FW.out.genomecov,
             ch_chrom_sizes
         )
         ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
+            BEDTOOLS_GENOMECOV_REV.out.genomecov,
             ch_chrom_sizes
         )
     }

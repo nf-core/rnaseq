@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1226](https://github.com/nf-core/rnaseq/pull/1226) - Reuse bbsplit index and don't keep overwriting ([#1225](https://github.com/nf-core/rnaseq/issues/1225))
 - [PR #1229](https://github.com/nf-core/rnaseq/pull/1229) - Template update for nf-core/tools v2.13.1
 - [PR #1231](https://github.com/nf-core/rnaseq/pull/1231) - Add sortmerna index possibilities
+- [PR #1234](https://github.com/nf-core/rnaseq/pull/1234) - Switch to genomecov from nf-core
 
 ### Parameters
 

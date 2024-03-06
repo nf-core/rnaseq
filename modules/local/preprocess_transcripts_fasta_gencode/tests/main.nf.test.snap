@@ -1,15 +1,15 @@
 {
-    "sarscov2 fasta": {
+    "gencode fasta": {
         "content": [
             {
                 "0": [
-                    "genome.fixed.fa:md5,6e9fe4042a72f2345f644f239272b7e6"
+                    "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
                 ],
                 "1": [
                     "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
                 ],
                 "fasta": [
-                    "genome.fixed.fa:md5,6e9fe4042a72f2345f644f239272b7e6"
+                    "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
                 ],
                 "versions": [
                     "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
@@ -20,6 +20,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-06T16:11:04.533974"
+        "timestamp": "2024-03-06T16:16:36.494744"
     }
 }

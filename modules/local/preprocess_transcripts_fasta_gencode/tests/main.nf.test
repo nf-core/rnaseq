@@ -4,12 +4,20 @@ nextflow_process {
     script "../main.nf"
     process "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
 
-    test("sarscov2 fasta") {
+    test("gencode fasta") {
 
         when {
             process {
                 """
-                input[0] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def fileContents = [
+                    '>chr22|removeme',
+                    'ACTCAAGATAATGATGAGTAAAGAATATATTTCTAACAACAAAAAGGAAATTTGATAGTA'
+                ]
+                def gencodeFasta = file("${workDir}/gencodeFasta.fasta")
+                gencodeFasta.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+                input[0] = gencodeFasta
                 """
             }
         }

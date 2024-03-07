@@ -61,7 +61,7 @@ nextflow_workflow {
                     workflow.out.merged_counts_transcript,
                     workflow.out.merged_tpm_transcript,
                     workflow.out.versions
-                 ).match()
+                ).match()
                 },
                 { assert snapshot(file(workflow.out.logs[0][1]).name).match('logs') }
             )

@@ -1,0 +1,87 @@
+nextflow_process {
+
+    name "Test Process DESEQ2_QC"
+    script "../main.nf"
+    process "DESEQ2_QC"
+
+    test("parse count data correctly") {
+
+        when {
+            process {
+                """
+                // Taken from example salmon merged data from -profile test
+                def fileContents = [
+                    'gene_id	gene_name	RAP1_IAA_30M_REP1	RAP1_UNINDUCED_REP1	RAP1_UNINDUCED_REP2	WT_REP1	WT_REP2',
+                    'Gfp_transgene_gene	Gfp_transgene_gene	0	0	0	0	0',
+                    'HRA1	HRA1	3.01943228500291	9.80701185810843	9.53274413980081	5.72894534769954	5.9648842559222',
+                    'snR18	snR18	2.15518528497702	20.2706605484032	10.1398196728994	5.78313737408605	5.79976683844901',
+                    'YAL001C	TFC3	56.5487189493641	70.7846010387686	113.108816589334	60.5178622417112	30.2958040068545',
+                    'YAL002W	VPS8	36.3862437592078	32.3965311942571	80.536128672497	63.6031126291227	25.2702744059695',
+                    'YAL003W	EFB1	598.396699649099	887.339579289614	1856.66699260635	1049.93553354283	665.403243069765',
+                    'YAL004W	YAL004W	388.410667489585	383.296795393227	203.744142706403	202.691892385957	251.440658667147',
+                    'YAL005C	SSA1	5647.27979655766	5715.94369645599	12575.108029018	7775.42737695585	3903.66710060582',
+                    'YAL007C	ERP2	44.6930487868818	60.9301400694571	143.68466075721	56.9486461946981	41.7805866183878',
+                    'YAL008W	FUN14	13.1986081960994	18.7996646072737	26.552459043029	9.4087625308538	2.82245410144267',
+                    'YAL009W	SPO7	13.5217762310537	15.8719804576371	20.113413795	8.67724034815225	4.82436501953514',
+                    'YAL010C	MDM10	10.9410758413598	12.0839661783069	36.2679562039924	29.7986383847897	9.94377960724503',
+                    'YAL011W	SWC3	12.0055027348268	24.9403272396788	35.9299792122994	19.9834911886444	18.0057148106317',
+                    'YAL012W	CYS3	242.877787996136	236.466395413312	547.58060621785	378.571834233094	226.984289418222',
+                    'YAL013W	DEP1	7.90662508175251	18.3153373366285	35.6289306191157	20.7248252538103	10.8672258295774',
+                    'YAL014C	SYN8	15.4361922388434	21.2042068878003	44.5485583043788	26.9652946879967	16.3840947562552',
+                    'YAL015C	NTG1	12.841137836752	12.2213888342821	28.5292052419374	7.89073247427083	5.92421903162791',
+                ]
+                def countFile = file("${workDir}/countFile.tsv")
+                countFile.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+
+                def pcaHeaderFile = file("${workDir}/deseq2_pca_header.txt")
+                def pcaHeaderContents = '''
+                #id: 'deseq2_pca'
+                #section_name: 'DESeq2 PCA plot'
+                #description: "PCA plot between samples in the experiment.
+                #              These values are calculated using <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html'>DESeq2</a>
+                #              in the <a href='https://github.com/nf-core/rnaseq/blob/master/bin/deseq2_qc.r'><code>deseq2_qc.r</code></a> script."
+                #plot_type: 'scatter'
+                #anchor: 'deseq2_pca'
+                #pconfig:
+                #    title: 'DESeq2: Principal component plot'
+                #    xlab: PC1
+                #    ylab: PC2
+                '''.stripIndent().trim()
+                pcaHeaderFile.write(pcaHeaderContents)
+
+                def clusteringHeaderFile = file("${workDir}/deseq2_clustering_header.txt")
+                def clusteringHeaderContents = '''
+                #id: 'deseq2_clustering'
+                #section_name: 'DESeq2 sample similarity'
+                #description: "is generated from clustering by Euclidean distances between
+                #	       <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html' target='_blank'>DESeq2</a>
+                #              rlog values for each sample
+                #              in the <a href='https://github.com/nf-core/rnaseq/blob/master/bin/deseq2_qc.r'><code>deseq2_qc.r</code></a> script."
+                #plot_type: 'heatmap'
+                #anchor: 'deseq2_clustering'
+                #pconfig:
+                #    title: 'DESeq2: Heatmap of the sample-to-sample distances'
+                #    xlab: True
+                #    reverseColors: True
+                '''.stripIndent().trim()
+                clusteringHeaderFile.write(clusteringHeaderContents)
+
+                input[0] = countFile
+                input[1] = pcaHeaderFile
+                input[2] = clusteringHeaderFile
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

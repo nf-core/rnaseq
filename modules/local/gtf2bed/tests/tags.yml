@@ -1,2 +1,2 @@
-custom/gtf2bed:
-  - "modules/nf-core/custom/gtf2bed/**"
+gtf2bed:
+  - "modules/local/gtf2bed/**"

@@ -10,7 +10,6 @@
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
-include { DUPRADAR                           } from '../../modules/local/dupradar'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc_custom_biotype'
 
 //
@@ -41,6 +40,7 @@ include { CAT_FASTQ                                            } from '../../mod
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 include { BBMAP_BBSPLIT                                        } from '../../modules/nf-core/bbmap/bbsplit'
+include { DUPRADAR                                             } from '../../modules/nf-core/dupradar'
 include { SAMTOOLS_SORT                                        } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ                                      } from '../../modules/nf-core/qualimap/rnaseq'
@@ -685,7 +685,7 @@ workflow RNASEQ {
         if (!params.skip_dupradar) {
             DUPRADAR (
                 ch_genome_bam,
-                ch_gtf
+                ch_gtf.map { [ [:], it ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{it[1]})
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())

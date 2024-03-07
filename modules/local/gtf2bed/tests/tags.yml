@@ -1,0 +1,2 @@
+custom/gtf2bed:
+  - "modules/nf-core/custom/gtf2bed/**"

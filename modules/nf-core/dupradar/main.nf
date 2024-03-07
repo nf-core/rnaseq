@@ -39,7 +39,7 @@ process DUPRADAR {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        r: \$( R --version | sed '1!d; s/.*version //; s/ .*//' )
+        bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
     END_VERSIONS
     """
 }

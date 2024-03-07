@@ -1,0 +1,121 @@
+{
+    "sarscov2": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bai": [
+                    
+                ],
+                "bam": [
+                    
+                ],
+                "bam_genome": [
+                    
+                ],
+                "bam_star": [
+                    
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "counts_gene": [
+                    
+                ],
+                "counts_transcript": [
+                    
+                ],
+                "csi": [
+                    
+                ],
+                "flagstat": [
+                    
+                ],
+                "idxstats": [
+                    
+                ],
+                "logs": [
+                    
+                ],
+                "merged_counts_gene": [
+                    
+                ],
+                "merged_counts_transcript": [
+                    
+                ],
+                "merged_tpm_gene": [
+                    
+                ],
+                "merged_tpm_transcript": [
+                    
+                ],
+                "stat": [
+                    
+                ],
+                "stats": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T14:32:58.87423"
+    }
+}

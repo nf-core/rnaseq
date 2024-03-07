@@ -1,0 +1,32 @@
+nextflow_process {
+
+    name "Test Process MULTIQC_CUSTOM_BIOTYPE"
+    script "../main.nf"
+    process "MULTIQC_CUSTOM_BIOTYPE"
+
+    test("test") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id: 'test' ],
+                        file("${moduleTestDir}/data/test.featureCounts.txt")
+                    ]
+                )
+                input[1] = file("${moduleTestDir}/data/biotypes_header.txt", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success},
+                { assert snapshot(process.out).match()}
+            )
+        }
+
+    }
+
+}

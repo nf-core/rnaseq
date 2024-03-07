@@ -17,8 +17,7 @@ env:
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
-  cancel-in-progress: false # TODO: Decide on strategy for #1221
-
+  cancel-in-progress: true
 jobs:
   star_salmon:
     name: Test STAR Salmon with workflow parameters

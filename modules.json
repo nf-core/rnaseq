@@ -35,6 +35,11 @@
                         "git_sha": "ec155021a9104441bf6a9bae3b55d1b5b0bfdb3a",
                         "installed_by": ["modules"]
                     },
+                    "dupradar": {
+                        "branch": "master",
+                        "git_sha": "f632a6e25b05497477920183cff33ba72ab7b6fc",
+                        "installed_by": ["modules"]
+                    },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",

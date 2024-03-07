@@ -1,0 +1,360 @@
+{
+    "boxplot_single_end": {
+        "content": [
+            "test_duprateExpBoxplot.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.922039"
+    },
+    "multiqc_single_end_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.357222"
+    },
+    "versions_paired_end_stub": {
+        "content": [
+            [
+                "versions.yml:md5,f952f507e96ca240a0001d474b78482c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.574571"
+    },
+    "multiqc_paired_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test_dup_intercept_mqc.txt:md5,d69369924aeb9695b0e97e755e0d9ea3",
+                        "test_duprateExpDensCurve_mqc.txt:md5,f4a50dc09de81219ed4449c11153ba6e"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.461093"
+    },
+    "boxplot_paired_end_stub": {
+        "content": [
+            "test_duprateExpBoxplot.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.559905"
+    },
+    "scatter_single_end": {
+        "content": [
+            "test_duprateExpDens.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.918598"
+    },
+    "hist_single_end_stub": {
+        "content": [
+            "test_expressionHist.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.348502"
+    },
+    "scatter_paired_end_stub": {
+        "content": [
+            "test_duprateExpDens.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.556467"
+    },
+    "dupmatrix_single_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_dupMatrix.txt:md5,2beda4c140548a2b8c91bf6bde01ddc6"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.924059"
+    },
+    "dupmatrix_single_end_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.351859"
+    },
+    "multiqc_single_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test_dup_intercept_mqc.txt:md5,7b6fb70cbede0d20ffa576a0cc0b249d",
+                        "test_duprateExpDensCurve_mqc.txt:md5,49b44937123c14b622f346cb6156dd4f"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.928419"
+    },
+    "versions_single_end": {
+        "content": [
+            [
+                "versions.yml:md5,cd524e9e74304c2930cf28e2d741d351"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.932714"
+    },
+    "multiqc_paired_end_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.571145"
+    },
+    "dupmatrix_paired_end_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.565731"
+    },
+    "boxplot_paired_end": {
+        "content": [
+            "test_duprateExpBoxplot.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.443805"
+    },
+    "hist_paired_end": {
+        "content": [
+            "test_expressionHist.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.447054"
+    },
+    "versions_paired_end": {
+        "content": [
+            [
+                "versions.yml:md5,cd524e9e74304c2930cf28e2d741d351"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.464002"
+    },
+    "versions_single_end_stub": {
+        "content": [
+            [
+                "versions.yml:md5,f952f507e96ca240a0001d474b78482c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.360295"
+    },
+    "hist_single_end": {
+        "content": [
+            "test_expressionHist.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.923108"
+    },
+    "boxplot_single_end_stub": {
+        "content": [
+            "test_duprateExpBoxplot.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.345725"
+    },
+    "intercept_slope_paired_end": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.45859"
+    },
+    "intercept_slope_single_end_stub": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.35476"
+    },
+    "intercept_slope_paired_end_stub": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.568373"
+    },
+    "hist_paired_end_stub": {
+        "content": [
+            "test_expressionHist.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:51.562908"
+    },
+    "scatter_paired_end": {
+        "content": [
+            "test_duprateExpDens.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.44031"
+    },
+    "dupmatrix_paired_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_dupMatrix.txt:md5,5a327feaba56e5ea96a2cb7e8577e196"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:42.456012"
+    },
+    "intercept_slope_single_end": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:21.926193"
+    },
+    "scatter_single_end_stub": {
+        "content": [
+            "test_duprateExpDens.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T12:49:31.342456"
+    }
+}

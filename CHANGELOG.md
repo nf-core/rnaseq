@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1229](https://github.com/nf-core/rnaseq/pull/1229) - Template update for nf-core/tools v2.13.1
 - [PR #1231](https://github.com/nf-core/rnaseq/pull/1231) - Add sortmerna index possibilities
 - [PR #1234](https://github.com/nf-core/rnaseq/pull/1234) - Switch to genomecov from nf-core
+- [PR #1242](https://github.com/nf-core/rnaseq/pull/1234) - Switch to dupradar from nf-core
 
 ### Parameters
 

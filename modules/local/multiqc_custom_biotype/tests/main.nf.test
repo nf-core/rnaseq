@@ -4,7 +4,7 @@ nextflow_process {
     script "../main.nf"
     process "MULTIQC_CUSTOM_BIOTYPE"
 
-    test("test") {
+    test("test sarscov2 count data succesfully completes") {
 
         when {
             process {

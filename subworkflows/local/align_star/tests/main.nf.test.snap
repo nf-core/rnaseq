@@ -1,0 +1,488 @@
+{
+    "star - with igenomes": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out:md5,031062ec8398f51538afa790cd564f58"
+                    ]
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,99fb9569a1b39fe38d7bd7d71daa8364"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
+                    ]
+                ],
+                "14": [
+                    "versions.yml:md5,c156b12646d8a51a4d59c42f8d833305",
+                    "versions.yml:md5,d18a2907f84607859a6723fa33485378",
+                    "versions.yml:md5,e3b043ba840d5bddde92f0bf1c91a5fc",
+                    "versions.yml:md5,e902002dd55f6cca09ea62c9aa42ef0d",
+                    "versions.yml:md5,f6b7635a2693b70fe6836c8e45ebba98",
+                    "versions.yml:md5,f985768ea0cc88e2b533cc08538f3771"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out:md5,39a5b9da108e3fffa73b9ff80c377845"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                    ]
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,994a3ee28ad0faf247e5b931e017f9ed"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,8bd17c254a618d5ef0cc2642abc00e40"
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,8bd17c254a618d5ef0cc2642abc00e40"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,994a3ee28ad0faf247e5b931e017f9ed"
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "csi": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out:md5,031062ec8398f51538afa790cd564f58"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out:md5,39a5b9da108e3fffa73b9ff80c377845"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                    ]
+                ],
+                "orig_bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,99fb9569a1b39fe38d7bd7d71daa8364"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,c156b12646d8a51a4d59c42f8d833305",
+                    "versions.yml:md5,d18a2907f84607859a6723fa33485378",
+                    "versions.yml:md5,e3b043ba840d5bddde92f0bf1c91a5fc",
+                    "versions.yml:md5,e902002dd55f6cca09ea62c9aa42ef0d",
+                    "versions.yml:md5,f6b7635a2693b70fe6836c8e45ebba98",
+                    "versions.yml:md5,f985768ea0cc88e2b533cc08538f3771"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-07T11:43:53.204834"
+    },
+    "star - no igenomes": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out:md5,95912b3deb440b85de070cd278adc0d4"
+                    ]
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,99fb9569a1b39fe38d7bd7d71daa8364"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
+                    ]
+                ],
+                "14": [
+                    "versions.yml:md5,35c1cc21d26d9d8f00e6ec87e97fb634",
+                    "versions.yml:md5,c156b12646d8a51a4d59c42f8d833305",
+                    "versions.yml:md5,d18a2907f84607859a6723fa33485378",
+                    "versions.yml:md5,e902002dd55f6cca09ea62c9aa42ef0d",
+                    "versions.yml:md5,f6b7635a2693b70fe6836c8e45ebba98",
+                    "versions.yml:md5,f985768ea0cc88e2b533cc08538f3771"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out:md5,f22b5b596fb89916a20f2d1b0009ac38"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                    ]
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d3f9bc6f3f5c44bde7dd97dfa43f1803"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,8bd17c254a618d5ef0cc2642abc00e40"
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,8bd17c254a618d5ef0cc2642abc00e40"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d3f9bc6f3f5c44bde7dd97dfa43f1803"
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "csi": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out:md5,95912b3deb440b85de070cd278adc0d4"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out:md5,f22b5b596fb89916a20f2d1b0009ac38"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                    ]
+                ],
+                "orig_bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,99fb9569a1b39fe38d7bd7d71daa8364"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,35c1cc21d26d9d8f00e6ec87e97fb634",
+                    "versions.yml:md5,c156b12646d8a51a4d59c42f8d833305",
+                    "versions.yml:md5,d18a2907f84607859a6723fa33485378",
+                    "versions.yml:md5,e902002dd55f6cca09ea62c9aa42ef0d",
+                    "versions.yml:md5,f6b7635a2693b70fe6836c8e45ebba98",
+                    "versions.yml:md5,f985768ea0cc88e2b533cc08538f3771"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-07T11:42:52.236378"
+    }
+}

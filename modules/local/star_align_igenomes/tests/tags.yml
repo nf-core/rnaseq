@@ -1,0 +1,2 @@
+STAR_ALIGN_IGENOMES:
+  - modules/local/star_align_igenomes/**

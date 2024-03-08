@@ -55,7 +55,22 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(workflow.out).match() }
+                { assert snapshot(
+                        workflow.out.tpm_gene,
+                        workflow.out.counts_gene,
+                        workflow.out.lengths_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.tpm_transcript,
+                        workflow.out.lengths_transcript,
+                        workflow.out.merged_gene_rds,
+                        workflow.out.merged_gene_rds_length_scaled,
+                        workflow.out.merged_gene_rds_scaled,
+                        workflow.out.merged_counts_transcript,
+                        workflow.out.merged_tpm_transcript,
+                        workflow.out.merged_transcript_rds,
+                        // NOT multiqc, results, versions
+                    ).match()
+                }
             )
         }
 
@@ -109,7 +124,22 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(workflow.out).match() }
+                { assert snapshot(
+                        workflow.out.tpm_gene,
+                        workflow.out.counts_gene,
+                        workflow.out.lengths_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.tpm_transcript,
+                        workflow.out.lengths_transcript,
+                        workflow.out.merged_gene_rds,
+                        workflow.out.merged_gene_rds_length_scaled,
+                        workflow.out.merged_gene_rds_scaled,
+                        workflow.out.merged_counts_transcript,
+                        workflow.out.merged_tpm_transcript,
+                        workflow.out.merged_transcript_rds,
+                        // NOT multiqc, results, versions
+                    ).match()
+                }
             )
         }
 

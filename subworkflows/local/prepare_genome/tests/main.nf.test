@@ -1,0 +1,94 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PREPARE_GENOME"
+    script "../main.nf"
+    workflow "PREPARE_GENOME"
+    config "./nextflow.config"
+
+    tag "PREPARE_GENOME"
+
+    tag "BBMAP_BBSPLIT"
+    tag "CUSTOM_CATADDITIONALFASTA"
+    tag "CUSTOM_GETCHROMSIZES"
+    tag "GFFREAD"
+    tag "GTF2BED"
+    tag "GTF_FILTER"
+    tag "GUNZIP"
+    tag "HISAT2_BUILD"
+    tag "HISAT2_EXTRACTSPLICESITES"
+    tag "KALLISTO_INDEX"
+    tag "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
+    tag "RSEM_PREPAREREFERENCE"
+    tag "RSEM_PREPAREREFERENCE"
+    tag "SALMON_INDEX"
+    tag "SORTMERNA"
+    tag "STAR_GENOMEGENERATE"
+    tag "STAR_GENOMEGENERATE_IGENOMES"
+    tag "UNTAR"
+
+    test("star - with igenomes") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon,star_rsem,hisat2'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = true
+                skip_bbsplit             = true
+                skip_sortmerna           = true
+                skip_alignment           = true
+                skip_pseudo_alignment    = true
+
+                input[0] = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2] = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3] = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4] = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5] = null
+                input[6] = null
+                input[7] = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
+                input[8] = null
+                input[9] = null
+                input[10] = file(params.pipelines_testdata_base_path + 'reference/rsem.tar.gz', checkIfExists: true)
+                input[11] = file(params.pipelines_testdata_base_path + 'reference/salmon.tar.gz', checkIfExists: true)
+                input[12] = null
+                input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
+                input[14] = null
+                input[15] = null
+                input[16] = gencode
+                input[17] = featurecounts_group_type
+                input[18] = aligner
+                input[19] = pseudo_aligner
+                input[20] = skip_gtf_filter
+                input[21] = skip_bbsplit
+                input[22] = skip_sortmerna
+                input[23] = skip_alignment
+                input[24] = skip_pseudo_alignment
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(file(workflow.out.transcript_fasta[0][1]).name).match("transcript_fasta") },
+                { assert snapshot(file(workflow.out.salmon_index[0][1]).name).match("salmon_index") },
+                { assert snapshot(workflow.out.fasta).match("fasta") },
+                { assert snapshot(workflow.out.gtf).match("gtf") },
+                { assert snapshot(workflow.out.fai).match("fai") },
+                { assert snapshot(workflow.out.gene_bed).match("gene_bed") },
+                { assert snapshot(workflow.out.chrom_sizes).match("chrom_sizes") },
+                { assert snapshot(workflow.out.splicesites).match("splicesites") },
+                { assert snapshot(workflow.out.bbsplit_index).match("bbsplit_index") },
+                { assert snapshot(workflow.out.sortmerna_index).match("sortmerna_index") },
+                { assert snapshot(workflow.out.star_index).match("star_index") },
+                { assert snapshot(workflow.out.rsem_index).match("rsem_index") },
+                { assert snapshot(workflow.out.hisat2_index).match("hisat2_index") },
+                { assert snapshot(workflow.out.kallisto_index).match("kallisto_index") },
+                { assert snapshot(workflow.out.versions).match("versions") }
+            )
+        }
+    }
+}

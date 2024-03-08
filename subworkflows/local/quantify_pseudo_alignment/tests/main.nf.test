@@ -1,0 +1,128 @@
+nextflow_workflow {
+
+    name "Test Workflow QUANTIFY_PSEUDO_ALIGNMENT"
+    script "../main.nf"
+    workflow "QUANTIFY_PSEUDO_ALIGNMENT"
+    config './nextflow.config'
+
+    tag 'SALMON_QUANT'
+    tag 'KALLISTO_QUANT'
+    tag 'CUSTOM_TX2GENE'
+    tag 'TXIMETA_TXIMPORT'
+    tag 'SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT'
+
+    test("salmon") {
+
+        setup {
+            run("SALMON_INDEX") {
+                script "../../../../modules/nf-core/salmon/index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                    input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                def fileContents = [
+                    'sample,fastq_1,fastq_2,strandedness',
+                    'test,s3://ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/genomics/sarscov2/illumina/fastq/test_1.fastq.gz,s3://ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/genomics/sarscov2/illumina/fastq/test_2.fastq.gz,auto'
+                ]
+                def samplesheetFile = file("${workDir}/samplesheetFile.txt")
+                samplesheetFile.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+                input[0]  = samplesheetFile
+                input[1]  = [
+                    [ id: 'meta' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[2]  = SALMON_INDEX.out.index
+                input[3]  = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[5]  = 'gene_id'
+                input[6]  = 'gene_name'
+                input[7]  = 'salmon'
+                input[8]  = true
+                input[9]  = ''
+                input[10] = null
+                input[11] = null
+                """.stripIndent()
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+
+    }
+
+    test("kallisto") {
+
+        setup {
+            run("KALLISTO_INDEX") {
+                script "../../../../modules/nf-core/kallisto/index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                def fileContents = [
+                    'sample,fastq_1,fastq_2,strandedness',
+                    'test,SRR6357070_1.fastq.gz,SRR6357070_2.fastq.gz,auto'
+                ]
+                def samplesheetFile = file("${workDir}/samplesheetFile.txt")
+                samplesheetFile.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+                input[0]  = samplesheetFile
+                input[1]  = [
+                    [ id: 'meta' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[2]  = KALLISTO_INDEX.out.index
+                input[3]  = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[5]  = 'gene_id'
+                input[6]  = 'gene_name'
+                input[7]  = 'kallisto'
+                input[8]  = null
+                input[9]  = null
+                input[10] = null
+                input[11] = null
+                """.stripIndent()
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+
+    }
+
+}

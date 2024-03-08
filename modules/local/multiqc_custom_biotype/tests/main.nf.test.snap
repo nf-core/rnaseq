@@ -1,5 +1,5 @@
 {
-    "test": {
+    "test sarscov2 count data succesfully completes": {
         "content": [
             {
                 "0": [
@@ -34,8 +34,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-07T14:18:53.570111"
+        "timestamp": "2024-03-08T09:38:04.260609"
     }
 }

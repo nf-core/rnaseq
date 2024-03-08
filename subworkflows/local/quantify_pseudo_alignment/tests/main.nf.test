@@ -29,7 +29,7 @@ nextflow_workflow {
                 """
                 input[0]  = [
                     [ id: 'samplesheet' ],
-                    file(params.pipelines_testdata_base_path + '/csv/samplesheet_micro.csv', checkIfExists: true)
+                    file("$moduleTestDir/samplesheet.csv", checkIfExists: true)
                 ]
                 input[1]  = [
                     [ id: 'test' ],
@@ -83,7 +83,7 @@ nextflow_workflow {
                 """
                 input[0]  = [
                     [ id: 'samplesheet' ],
-                    file(params.pipelines_testdata_base_path + '/csv/samplesheet_micro.csv', checkIfExists: true)
+                    file("$moduleTestDir/samplesheet.csv", checkIfExists: true)
                 ]
                 input[1]  = [
                     [ id: 'test' ],

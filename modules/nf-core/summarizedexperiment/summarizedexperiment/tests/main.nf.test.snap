@@ -36,14 +36,14 @@
     "versions_single_matrix": {
         "content": [
             [
-                "versions.yml:md5,1fdcee094bb7ec091b4e445b933d0db3"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T14:03:08.335086603"
+        "timestamp": "2024-03-08T14:45:26.13363"
     },
     "gene_log_multi_matrix_rowdata_stub": {
         "content": [
@@ -73,38 +73,38 @@
     "versions_multi_matrix_rowdata_stub": {
         "content": [
             [
-                "versions.yml:md5,290f4dc3e123c9468040095de6ffe2e2"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:57:52.239867923"
+        "timestamp": "2024-03-08T14:46:04.546156"
     },
     "versions_multi_matrix_stub": {
         "content": [
             [
-                "versions.yml:md5,290f4dc3e123c9468040095de6ffe2e2"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:58:07.911717413"
+        "timestamp": "2024-03-08T14:46:21.128541"
     },
     "versions_multi_matrix_rowdata_coldata_stub": {
         "content": [
             [
-                "versions.yml:md5,290f4dc3e123c9468040095de6ffe2e2"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:57:39.554437332"
+        "timestamp": "2024-03-08T14:45:43.440258"
     },
     "gene_log_multi_matrix": {
         "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
@@ -142,26 +142,26 @@
     "versions_single_matrix_stub": {
         "content": [
             [
-                "versions.yml:md5,290f4dc3e123c9468040095de6ffe2e2"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:58:23.263373495"
+        "timestamp": "2024-03-08T14:46:37.670798"
     },
     "versions_multi_matrix_rowdata": {
         "content": [
             [
-                "versions.yml:md5,1fdcee094bb7ec091b4e445b933d0db3"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T14:02:24.434806727"
+        "timestamp": "2024-03-08T14:44:42.420728"
     },
     "gene_log_multi_matrix_rowdata_coldata": {
         "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
@@ -174,25 +174,25 @@
     "versions_multi_matrix": {
         "content": [
             [
-                "versions.yml:md5,1fdcee094bb7ec091b4e445b933d0db3"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T14:02:46.374127565"
+        "timestamp": "2024-03-08T14:45:04.188507"
     },
     "versions_multi_matrix_rowdata_coldata": {
         "content": [
             [
-                "versions.yml:md5,1fdcee094bb7ec091b4e445b933d0db3"
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T14:02:01.257461683"
+        "timestamp": "2024-03-08T14:44:20.698714"
     }
 }

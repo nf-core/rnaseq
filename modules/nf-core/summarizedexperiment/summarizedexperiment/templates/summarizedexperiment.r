@@ -154,7 +154,7 @@ if ('assay_names' %in% names(args_opt)){
 
 assay_list <- lapply(matrix_files, function(m){
     mat <- read_delim_flexible(m, row.names = 1, stringsAsFactors = FALSE)
-    mat[,sapply(mat, is.numeric)]
+    mat[,sapply(mat, is.numeric), drop = FALSE]
 })
 
 checkRowColNames(assay_list)
@@ -174,7 +174,7 @@ if ('$coldata' != ''){
     )
 
     assay_list <- lapply(assay_list, function(m){
-        m[,rownames(coldata)]
+        m[,rownames(coldata), drop = FALSE]
     })
 
     colData(se) <- DataFrame(coldata)
@@ -190,7 +190,7 @@ if ('$rowdata' != ''){
     )
 
     assay_list <- lapply(assay_list, function(m){
-        m[rownames(rowdata), ]
+        m[rownames(rowdata), , drop = FALSE]
     })
 
     rowData(se) <- DataFrame(rowdata)
@@ -232,7 +232,6 @@ summarizedexperiment.version <- as.character(packageVersion('SummarizedExperimen
 writeLines(
     c(
         '"${task.process}":',
-        paste('    r-base:', r.version),
         paste('    bioconductor-summarizedexperiment:', summarizedexperiment.version)
     ),
 'versions.yml')

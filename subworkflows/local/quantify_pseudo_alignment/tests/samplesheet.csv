@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,strandedness
+test,genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz,genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz,auto

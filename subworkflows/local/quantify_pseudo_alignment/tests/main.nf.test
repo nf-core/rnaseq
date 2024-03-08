@@ -17,8 +17,8 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/salmon/index/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
-                    input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)])
+                    input[0] = file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genome.fasta", checkIfExists: true)
+                    input[1] = file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/transcriptome.fasta", checkIfExists: true)
                     """
                 }
             }
@@ -29,23 +29,23 @@ nextflow_workflow {
                 """
                 input[0]  = [
                     [ id: 'samplesheet' ],
-                    file(params.pipelines_testdata_base_path + '/csv/samplesheet_micro.csv', checkIfExists: true)
+                    file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv", checkIfExists: true)
                 ]
                 input[1]  = [
-                    [ id: 'meta' ],
+                    [ id: 'test' ],
                     [
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz", checkIfExists: true)
                     ]
                 ]
                 input[2]  = SALMON_INDEX.out.index
-                input[3]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true))
+                input[3]  = Channel.of(file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genome.fasta", checkIfExists: true))
                 input[5]  = 'gene_id'
                 input[6]  = 'gene_name'
                 input[7]  = 'salmon'
-                input[8]  = true
-                input[9]  = ''
+                input[8]  = false
+                input[9]  = 'A'
                 input[10] = null
                 input[11] = null
                 """
@@ -70,7 +70,7 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of([
                         [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/transcriptome.fasta", checkIfExists: true)
                     ])
                     """
                 }
@@ -83,18 +83,18 @@ nextflow_workflow {
                 """
                 input[0]  = [
                     [ id: 'samplesheet' ],
-                    file(params.pipelines_testdata_base_path + '/csv/samplesheet_micro.csv', checkIfExists: true)
+                    file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv", checkIfExists: true)
                 ]
                 input[1]  = [
                     [ id: 'test' ],
                     [
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz", checkIfExists: true)
                     ]
                 ]
                 input[2]  = KALLISTO_INDEX.out.index
-                input[3]  = Channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[3]  = Channel.of(file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file("https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genome.fasta", checkIfExists: true))
                 input[5]  = 'gene_id'
                 input[6]  = 'gene_name'
                 input[7]  = 'kallisto'

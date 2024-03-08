@@ -12,10 +12,10 @@ nextflow_process {
                 input[0] = Channel.of(
                     [
                         [ id: 'test' ],
-                        file("${moduleTestDir}/data/test.featureCounts.txt")
+                        file("${params.pipelines_testdata_base_path}/multiqc_custom_biotype/test.featureCounts.txt")
                     ]
                 )
-                input[1] = file("${moduleTestDir}/data/biotypes_header.txt", checkIfExists: true)
+                input[1] = file("${params.pipelines_testdata_base_path}/multiqc_custom_biotype/biotypes_header.txt", checkIfExists: true)
                 """
             }
         }

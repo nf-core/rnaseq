@@ -1,0 +1,2 @@
+gtf2bed:
+  - "modules/local/gtf2bed/**"

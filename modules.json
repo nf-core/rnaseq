@@ -191,7 +191,7 @@
                     },
                     "samtools/sort": {
                         "branch": "master",
-                        "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
+                        "git_sha": "4352dbdb09ec40db71e9b172b97a01dcf5622c26",
                         "installed_by": ["bam_sort_stats_samtools"]
                     },
                     "samtools/stats": {
@@ -290,7 +290,7 @@
                     },
                     "bam_sort_stats_samtools": {
                         "branch": "master",
-                        "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
+                        "git_sha": "4352dbdb09ec40db71e9b172b97a01dcf5622c26",
                         "installed_by": ["fastq_align_hisat2"]
                     },
                     "bam_stats_samtools": {

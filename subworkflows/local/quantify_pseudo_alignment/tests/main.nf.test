@@ -10,7 +10,7 @@ nextflow_workflow {
     tag 'TXIMETA_TXIMPORT'
     tag 'SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT'
 
-    // test("salmon") {
+    test("salmon") {
 
         setup {
             run("SALMON_INDEX") {

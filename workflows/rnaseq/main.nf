@@ -381,7 +381,8 @@ workflow RNASEQ {
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
+                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam,
+                ch_fasta.map { [ [:], it ] }
             )
 
             // Only run prepare_for_rsem.py on paired-end BAM files

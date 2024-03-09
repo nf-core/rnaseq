@@ -1,0 +1,2 @@
+RSEM_MERGE_COUNTS:
+  - "modules/local/rsem_merge_counts/**"

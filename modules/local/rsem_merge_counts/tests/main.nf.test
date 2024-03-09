@@ -1,0 +1,28 @@
+nextflow_process {
+
+    name "Test Process RSEM_MERGE_COUNTS"
+    script "../main.nf"
+    process "RSEM_MERGE_COUNTS"
+    tag "modules'"
+    tag "modules_local"
+    tag "rsem_merge_counts"
+
+    test("Should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${moduleTestDir}/data/genes/*")
+                input[1] = file("${moduleTestDir}/data/isoforms/*")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

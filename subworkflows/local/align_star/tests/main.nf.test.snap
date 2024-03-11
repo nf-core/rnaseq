@@ -295,7 +295,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bam.bai:md5,8bd17c254a618d5ef0cc2642abc00e40"
+                    "test.bam.bai:md5,25b78d2e41dc31350004b7ab9e5c3618"
                 ]
             ]
         ],
@@ -303,7 +303,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-07T11:59:42.432603"
+        "timestamp": "2024-03-08T17:02:42.995047"
     },
     "without igenomes - orig_bam": {
         "content": [
@@ -341,7 +341,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bam:md5,d3f9bc6f3f5c44bde7dd97dfa43f1803"
+                    "test.bam:md5,f75b29383d9c16a466ae22dc676b3022"
                 ]
             ]
         ],
@@ -349,7 +349,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-07T11:59:42.436304"
+        "timestamp": "2024-03-08T17:02:43.076908"
     },
     "with igenomes - orig_bam": {
         "content": [
@@ -413,7 +413,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bam:md5,994a3ee28ad0faf247e5b931e017f9ed"
+                    "test.bam:md5,37c080a0d854fffee57360f2176670a8"
                 ]
             ]
         ],
@@ -421,7 +421,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-07T12:00:34.95178"
+        "timestamp": "2024-03-08T17:03:38.323083"
     },
     "without igenomes - bam_sorted": {
         "content": [
@@ -449,7 +449,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bam.bai:md5,8bd17c254a618d5ef0cc2642abc00e40"
+                    "test.bam.bai:md5,25b78d2e41dc31350004b7ab9e5c3618"
                 ]
             ]
         ],
@@ -457,7 +457,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.01.0"
         },
-        "timestamp": "2024-03-07T12:00:34.937314"
+        "timestamp": "2024-03-08T17:03:38.264526"
     },
     "with igenomes - log_final": {
         "content": [

@@ -12,8 +12,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${moduleTestDir}/data/genes/*")
-                input[1] = file("${moduleTestDir}/data/isoforms/*")
+                input[0] = file(params.pipelines_testdata_base_path + "rsem_merge_counts/genes/*", checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + "rsem_merge_counts/isoforms/*", checkIfExists: true)
                 """
             }
         }

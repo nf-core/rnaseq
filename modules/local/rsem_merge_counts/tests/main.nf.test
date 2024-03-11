@@ -3,7 +3,7 @@ nextflow_process {
     name "Test Process RSEM_MERGE_COUNTS"
     script "../main.nf"
     process "RSEM_MERGE_COUNTS"
-    tag "modules'"
+    tag "modules"
     tag "modules_local"
     tag "rsem_merge_counts"
 

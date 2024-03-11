@@ -38,6 +38,8 @@ nextflow_process {
 
     test("sarscov2-gff3-gff3") {
 
+        config "./nextflow-gff3.config"
+
         when {
             params {
                 outdir = "$outputDir"

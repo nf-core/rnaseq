@@ -10,9 +10,6 @@ nextflow_process {
     test("test_trimgalore_single_end") {
 
         when {
-            params {
-                outdir   = "$outputDir"
-            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:true ], // meta map
@@ -41,7 +38,8 @@ nextflow_process {
                 { report1_lines.each { report1_line ->
                     { assert path(process.out.log.get(0).get(1)).getText().contains(report1_line) }
                     }
-                }
+                },
+                { assert snapshot(process.out.versions).match() }
             )
         }
     }
@@ -49,13 +47,10 @@ nextflow_process {
     test("test_trimgalore_paired_end") {
 
         when {
-            params {
-                outdir   = "$outputDir"
-            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:false ], // meta map
-                    [ 
+                    [
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
@@ -100,7 +95,8 @@ nextflow_process {
                 { report2_lines.each { report2_line ->
                     { assert path(process.out.log.get(0).get(1).get(1)).getText().contains(report2_line) }
                     }
-                }
+                },
+                { assert snapshot(process.out.versions).match() }
             )
         }
     }

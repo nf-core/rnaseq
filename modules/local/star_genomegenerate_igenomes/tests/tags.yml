@@ -1,0 +1,2 @@
+STAR_GENOMEGENERATE_IGENOMES:
+  - modules/local/star_genomegenerate_igenomes/**

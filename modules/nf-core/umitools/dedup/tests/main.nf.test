@@ -1,0 +1,98 @@
+nextflow_process {
+
+    name "Test Process UMITOOLS_DEDUP"
+    script "../main.nf"
+    process "UMITOOLS_DEDUP"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "umitools"
+    tag "umitools/dedup"
+
+    test("se - no stats") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = false
+
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.log[0][1]}").exists() },
+                { assert snapshot(process.out.bam).match("se no stats - bam") },
+                { assert snapshot(process.out.versions).match("se no stats - versions") }
+            )
+        }
+    }
+
+    test("pe - no stats") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = false
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.log[0][1]}").exists() },
+                { assert snapshot(process.out.bam).match("pe no stats - bam") },
+                { assert snapshot(process.out.versions).match("pe no stats - versions") }
+            )
+        }
+    }
+
+    test("pe - with stats") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = true
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.log[0][1]}").exists() },
+                { assert snapshot(process.out.bam).match("pe - bam") },
+                { assert snapshot(process.out.tsv_edit_distance).match("pe - tsv_edit_distance") },
+                { assert snapshot(process.out.tsv_per_umi).match("pe - tsv_per_umi") },
+                { assert snapshot(process.out.tsv_umi_per_position).match("pe - tsv_umi_per_position") },
+                { assert snapshot(process.out.versions).match("pe - versions") }
+            )
+        }
+    }
+}

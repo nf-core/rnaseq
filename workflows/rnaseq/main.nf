@@ -7,11 +7,9 @@
 //
 // MODULE: Loaded from modules/local/
 //
-include { BEDTOOLS_GENOMECOV                 } from '../../modules/local/bedtools_genomecov'
 include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
-include { DUPRADAR                           } from '../../modules/local/dupradar'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc_custom_biotype'
 
 //
@@ -22,7 +20,7 @@ include { QUANTIFY_RSEM                                     } from '../../subwor
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo_alignment'
 
-include { validateInputSamplesheet       } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { checkSamplesAreConsistent       } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -39,11 +37,15 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 // MODULE: Installed directly from nf-core/modules
 //
 include { CAT_FASTQ                                            } from '../../modules/nf-core/cat/fastq'
+include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
+include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 include { BBMAP_BBSPLIT                                        } from '../../modules/nf-core/bbmap/bbsplit'
+include { DUPRADAR                                             } from '../../modules/nf-core/dupradar'
 include { SAMTOOLS_SORT                                        } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ                                      } from '../../modules/nf-core/qualimap/rnaseq'
 include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
+include { SORTMERNA as SORTMERNA_INDEX                         } from '../../modules/nf-core/sortmerna'
 include { STRINGTIE_STRINGTIE                                  } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS                                } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                                              } from '../../modules/nf-core/multiqc'
@@ -97,7 +99,9 @@ workflow RNASEQ {
     ch_salmon_index     // channel: path(salmon/index/)
     ch_kallisto_index   // channel: [ meta, path(kallisto/index/) ]
     ch_bbsplit_index    // channel: path(bbsplit/index/)
+    ch_sortmerna_index  // channel: path(sortmerna/index/)
     ch_splicesites      // channel: path(genome.splicesites.txt)
+    make_sortmerna_index // boolean: Whether to create a sortmerna index before running sortmerna
 
     main:
 
@@ -118,7 +122,7 @@ workflow RNASEQ {
         }
         .groupTuple()
         .map {
-            validateInputSamplesheet(it)
+            checkSamplesAreConsistent(it)
         }
         .branch {
             meta, fastqs ->
@@ -225,13 +229,29 @@ workflow RNASEQ {
     //
     // MODULE: Remove ribosomal RNA reads
     //
+    // Check rRNA databases for sortmerna
     if (params.remove_ribo_rna) {
         ch_ribo_db = file(params.ribo_database_manifest)
-        ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines()).map { row -> file(row, checkIfExists: true) }.collect()
+        if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
+
+        ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines())
+            .map { row -> file(row, checkIfExists: true) }
+            .collect()
+            .map{ ['rrna_refs', it] }
+
+        if (make_sortmerna_index) {
+            SORTMERNA_INDEX (
+                [[],[]],
+                ch_sortmerna_fastas,
+                [[],[]]
+            )
+            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
+        }
 
         SORTMERNA (
             ch_filtered_reads,
-            ch_sortmerna_fastas
+            ch_sortmerna_fastas,
+            ch_sortmerna_index
         )
         .reads
         .set { ch_filtered_reads }
@@ -361,7 +381,8 @@ workflow RNASEQ {
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam
+                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam,
+                ch_fasta.map { [ [:], it ] }
             )
 
             // Only run prepare_for_rsem.py on paired-end BAM files
@@ -617,22 +638,34 @@ workflow RNASEQ {
     //
     if (!params.skip_alignment && !params.skip_bigwig) {
 
-        BEDTOOLS_GENOMECOV (
-            ch_genome_bam
+        ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
+
+        BEDTOOLS_GENOMECOV_FW (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
         )
-        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV.out.versions.first())
+        BEDTOOLS_GENOMECOV_REV (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
+        )
+
+        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV_FW.out.versions.first())
 
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_GENOMECOV.out.bedgraph_forward,
+            BEDTOOLS_GENOMECOV_FW.out.genomecov,
             ch_chrom_sizes
         )
         ch_versions = ch_versions.mix(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.versions)
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_GENOMECOV.out.bedgraph_reverse,
+            BEDTOOLS_GENOMECOV_REV.out.genomecov,
             ch_chrom_sizes
         )
     }
@@ -653,7 +686,7 @@ workflow RNASEQ {
         if (!params.skip_dupradar) {
             DUPRADAR (
                 ch_genome_bam,
-                ch_gtf
+                ch_gtf.map { [ [:], it ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{it[1]})
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())

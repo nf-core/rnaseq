@@ -19,14 +19,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1216](https://github.com/nf-core/rnaseq/pull/1216) - Delocalise catadditionalfasta ([#1162](https://github.com/nf-core/rnaseq/issues/1162))
 - [PR #1218](https://github.com/nf-core/rnaseq/pull/1218) - Template update for nf-core/tools v2.13
 - [PR #1220](https://github.com/nf-core/rnaseq/pull/1220) - Initialise nf-test and add pipeline level test
+- [PR #1221](https://github.com/nf-core/rnaseq/pull/1221) - Use nf-test test for all nf-core components
 - [PR #1226](https://github.com/nf-core/rnaseq/pull/1226) - Reuse bbsplit index and don't keep overwriting ([#1225](https://github.com/nf-core/rnaseq/issues/1225))
+- [PR #1229](https://github.com/nf-core/rnaseq/pull/1229) - Template update for nf-core/tools v2.13.1
+- [PR #1231](https://github.com/nf-core/rnaseq/pull/1231) - Add sortmerna index possibilities
+- [PR #1232](https://github.com/nf-core/rnaseq/pull/1232) - Add nf-test tests to star_genomegenerate_igenomes
+- [PR #1233](https://github.com/nf-core/rnaseq/pull/1233) - Add nf-test tests to star_align_igenomes
+- [PR #1234](https://github.com/nf-core/rnaseq/pull/1234) - Use genomecov from nf-core/modules
+- [PR #1235](https://github.com/nf-core/rnaseq/pull/1235) - Add nf-test tests to gtf_filter
+- [PR #1236](https://github.com/nf-core/rnaseq/pull/1236) - Add nf-test tests to utils_nfcore_rnaseq_pipeline
+- [PR #1237](https://github.com/nf-core/rnaseq/pull/1237) - Fix concurrency error in Github CI workflow
+- [PR #1238](https://github.com/nf-core/rnaseq/pull/1238) - Add nf-test tests to preprocess_transcripts_fasta_gencode
+- [PR #1239](https://github.com/nf-core/rnaseq/pull/1239) - Add nf-test tests to align_star
+- [PR #1240](https://github.com/nf-core/rnaseq/pull/1240) - Fix reference files params usage
+- [PR #1241](https://github.com/nf-core/rnaseq/pull/1241) - Add nf-test tests to deseq2_qc
+- [PR #1242](https://github.com/nf-core/rnaseq/pull/1242) - Use dupradar from nf-core/modules
+- [PR #1244](https://github.com/nf-core/rnaseq/pull/1244) - Add gtf2bed tests
 
 ### Parameters
+
+| Old parameter | New parameter       |
+| ------------- | ------------------- |
+|               | `--sortmerna_index` |
 
 ### Software dependencies
 
 | Dependency  | Old version | New version |
 | ----------- | ----------- | ----------- |
+| `multiqc`   | 1.20        | 1.21        |
 | `picard`    | 3.0.0       | 3.1.1       |
 | `samtools`  | 1.17        | 1.18        |
 | `sortmerna` | 4.3.4       | 4.3.6       |

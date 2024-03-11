@@ -1,2 +1,0 @@
-stringtie/stringtie:
-  - modules/nf-core/stringtie/stringtie/**

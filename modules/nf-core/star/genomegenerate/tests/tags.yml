@@ -1,2 +1,0 @@
-star/genomegenerate:
-  - modules/nf-core/star/genomegenerate/**

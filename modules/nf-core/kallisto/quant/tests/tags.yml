@@ -1,3 +1,0 @@
-kallisto/quant:
-  - modules/nf-core/kallisto/index/**
-  - modules/nf-core/kallisto/quant/**

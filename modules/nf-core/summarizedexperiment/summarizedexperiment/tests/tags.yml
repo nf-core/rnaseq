@@ -1,2 +1,0 @@
-summarizedexperiment/summarizedexperiment:
-  - "modules/nf-core/summarizedexperiment/summarizedexperiment/**"

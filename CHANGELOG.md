@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1241](https://github.com/nf-core/rnaseq/pull/1241) - Add nf-test tests to deseq2_qc
 - [PR #1242](https://github.com/nf-core/rnaseq/pull/1242) - Use dupradar from nf-core/modules
 - [PR #1244](https://github.com/nf-core/rnaseq/pull/1244) - Add gtf2bed tests
+- [PR #1250](https://github.com/nf-core/rnaseq/pull/1244) - Remove all tags.yml files because the testing system has changed
 
 ### Parameters
 

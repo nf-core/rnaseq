@@ -13,26 +13,6 @@ nextflow.enable.dsl = 2
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-params.fasta            = getGenomeAttribute('fasta')
-params.transcript_fasta = getGenomeAttribute('transcript_fasta')
-params.additional_fasta = getGenomeAttribute('additional_fasta')
-params.gtf              = getGenomeAttribute('gtf')
-params.gff              = getGenomeAttribute('gff')
-params.gene_bed         = getGenomeAttribute('bed12')
-params.bbsplit_index    = getGenomeAttribute('bbsplit')
-params.sortmerna_index  = getGenomeAttribute('sortmerna')
-params.star_index       = getGenomeAttribute('star')
-params.hisat2_index     = getGenomeAttribute('hisat2')
-params.rsem_index       = getGenomeAttribute('rsem')
-params.salmon_index     = getGenomeAttribute('salmon')
-params.kallisto_index   = getGenomeAttribute('kallisto')
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -42,6 +22,27 @@ include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { checkMaxContigSize      } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    GENOME PARAMETER VALUES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+getGenomeAttribute('additional_fasta', 'additional_fasta')
+getGenomeAttribute('bbsplit', 'bbsplit_index')
+getGenomeAttribute('bed12', 'gene_bed')
+getGenomeAttribute('fasta', 'fasta')
+getGenomeAttribute('gff', 'gff')
+getGenomeAttribute('gtf', 'gtf')
+getGenomeAttribute('hisat2', 'hisat2')
+getGenomeAttribute('kallisto', 'kallisto_index')
+getGenomeAttribute('rsem', 'rsem')
+getGenomeAttribute('salmon', 'salmon')
+getGenomeAttribute('sortmerna', 'sortmerna_index')
+getGenomeAttribute('star', 'star_index')
+getGenomeAttribute('transcript_fasta', 'transcript_fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,25 +170,6 @@ workflow {
         params.hook_url,
         NFCORE_RNASEQ.out.multiqc_report
     )
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    LOCAL FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// Get attribute from genome config file e.g. fasta
-//
-
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
-        }
-    }
-    return null
 }
 
 /*

@@ -9,10 +9,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${moduleTestDir}/data/countFile.tsv")
-                input[1] = file("${moduleTestDir}/data/deseq2_pca_header.txt")
-                input[2] = file("${moduleTestDir}/data/deseq2_clustering_header.txt")
-                """.stripIndent().trim()
+                input[0] = file("${params.pipelines_testdata_base_path}/deseq2qc/countFile.tsv")
+                input[1] = file("${params.pipelines_testdata_base_path}/deseq2qc/deseq2_pca_header.txt")
+                input[2] = file("${params.pipelines_testdata_base_path}/deseq2qc/deseq2_clustering_header.txt")
+                """
             }
         }
 

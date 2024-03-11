@@ -84,8 +84,6 @@ nextflow run nf-core/rnaseq \
     --outdir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
-    --igenomes_ignore \
-    --genome null \
     -profile <docker/singularity/.../institute>
 ```
 

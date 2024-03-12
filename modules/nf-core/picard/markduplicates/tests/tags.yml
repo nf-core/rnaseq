@@ -1,2 +1,0 @@
-picard/markduplicates:
-  - modules/nf-core/picard/markduplicates/**

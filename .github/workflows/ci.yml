@@ -225,7 +225,7 @@ jobs:
     if: always()
     steps:
       - name: All tests ok
-        if: ${{ !contains(needs.*.result, 'failure') }}
+        if: ${{ success() }}
         run: exit 0
       - name: One or more tests failed
         if: ${{ contains(needs.*.result, 'failure') }}

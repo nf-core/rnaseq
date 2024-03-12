@@ -17,7 +17,7 @@ nextflow_process {
                     file(params.pipelines_testdata_base_path + "rsem_merge_counts/genes/RAP1_UNINDUCED_REP1.genes.results", checkIfExists: true),
                     file(params.pipelines_testdata_base_path + "rsem_merge_counts/genes/RAP1_UNINDUCED_REP2.genes.results", checkIfExists: true)
                 ]).collect()
-                input[1] =Channel.of([
+                input[1] = Channel.of([
                     file(params.pipelines_testdata_base_path + "rsem_merge_counts/isoforms/RAP1_IAA_30M_REP1.isoforms.results", checkIfExists: true),
                     file(params.pipelines_testdata_base_path + "rsem_merge_counts/isoforms/RAP1_UNINDUCED_REP1.isoforms.results", checkIfExists: true),
                     file(params.pipelines_testdata_base_path + "rsem_merge_counts/isoforms/RAP1_UNINDUCED_REP2.isoforms.results", checkIfExists: true)

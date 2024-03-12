@@ -1,2 +1,0 @@
-bedtools/genomecov:
-  - "modules/nf-core/bedtools/genomecov/**"

@@ -1,3 +1,0 @@
-hisat2/build:
-  - modules/nf-core/hisat2/build/**
-  - modules/nf-core/hisat2/extractsplicesites/**

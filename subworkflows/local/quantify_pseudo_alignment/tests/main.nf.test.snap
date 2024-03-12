@@ -94,15 +94,21 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.SummarizedExperiment.rds:md5,8f9dd4aea52190447454089f735159a4"
+                    "all_samples.SummarizedExperiment.rds:md5,a681c620612c2496ea8294af38c7443e"
                 ]
+            ],
+            [
+                "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
+                "versions.yml:md5,dbf98ec672f75a683c28dcf4121364d2",
+                "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
+                "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "24.02.0"
         },
-        "timestamp": "2024-03-08T18:27:59.64478"
+        "timestamp": "2024-03-12T10:33:14.836979"
     },
     "salmon": {
         "content": [
@@ -127,7 +133,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.gene_lengths.tsv:md5,cddf0fb583ca26f943d0d26d605d1d34"
+                    "all_samples.gene_lengths.tsv:md5,158e17a7bda7827b3d528f379e81d2bd"
                 ]
             ],
             [
@@ -143,7 +149,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.transcript_tpm.tsv:md5,cced012fcee17801187eaf5c11f2d34a"
+                    "all_samples.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
                 ]
             ],
             [
@@ -151,7 +157,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.transcript_lengths.tsv:md5,e204181187d0b39735d0a92d1db2d2f7"
+                    "all_samples.transcript_lengths.tsv:md5,f39a15fea56a5a8e5776dcdda0c8f102"
                 ]
             ],
             [
@@ -183,7 +189,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.transcript_counts.tsv:md5,2c3b86b4ea29be46db526e7a68360d14"
+                    "all_samples.transcript_counts.tsv:md5,f68224a34261b93f432ef4f97dfabe15"
                 ]
             ],
             [
@@ -191,7 +197,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.transcript_tpm.tsv:md5,cced012fcee17801187eaf5c11f2d34a"
+                    "all_samples.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
                 ]
             ],
             [
@@ -199,14 +205,20 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.SummarizedExperiment.rds:md5,89eb7f54d7bb9690d1eab0c041d1aba1"
+                    "all_samples.SummarizedExperiment.rds:md5,8d52eafb09e5c901ed384c7e5403a0bc"
                 ]
+            ],
+            [
+                "versions.yml:md5,4c3564e1ba17d8ce2b0ee784251ddd87",
+                "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
+                "versions.yml:md5,dbf98ec672f75a683c28dcf4121364d2",
+                "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "24.02.0"
         },
-        "timestamp": "2024-03-08T18:25:28.293298"
+        "timestamp": "2024-03-12T10:31:15.969548"
     }
 }

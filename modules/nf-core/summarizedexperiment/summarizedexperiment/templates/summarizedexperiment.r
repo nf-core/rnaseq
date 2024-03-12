@@ -130,7 +130,7 @@ parse_metadata <- function(metadata_path, ids, metadata_id_col = NULL){
 
     rownames(metadata) <- metadata[[metadata_id_col]]
 
-    metadata
+    metadata[ids,, drop=FALSE]
 }
 
 ################################################
@@ -173,10 +173,6 @@ if ('$coldata' != ''){
         metadata_id_col = args_opt\$coldata_id_col
     )
 
-    assay_list <- lapply(assay_list, function(m){
-        m[,rownames(coldata), drop = FALSE]
-    })
-
     colData(se) <- DataFrame(coldata)
 }
 
@@ -188,10 +184,6 @@ if ('$rowdata' != ''){
         ids = rownames(assay_list[[1]]),
         metadata_id_col = args_opt\$rowdata_id_col
     )
-
-    assay_list <- lapply(assay_list, function(m){
-        m[rownames(rowdata), , drop = FALSE]
-    })
 
     rowData(se) <- DataFrame(rowdata)
 }

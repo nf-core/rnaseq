@@ -68,7 +68,7 @@ nextflow_workflow {
                         workflow.out.merged_counts_transcript,
                         workflow.out.merged_tpm_transcript,
                         workflow.out.merged_transcript_rds,
-                        // NOT multiqc, results, versions
+                        workflow.out.versions
                     ).match()
                 }
             )
@@ -137,7 +137,7 @@ nextflow_workflow {
                         workflow.out.merged_counts_transcript,
                         workflow.out.merged_tpm_transcript,
                         workflow.out.merged_transcript_rds,
-                        // NOT multiqc, results, versions
+                        workflow.out.versions
                     ).match()
                 }
             )

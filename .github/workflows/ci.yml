@@ -182,7 +182,7 @@ jobs:
   test:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }}
     needs: [nf-test-changes]
-    if: needs.nf-test-changes.outputs.changes
+    if: needs.nf-test-changes.outputs.tags != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -251,11 +251,11 @@ jobs:
   confirm-pass:
     runs-on: ubuntu-latest
     # needs: test, star_salmon, star_rsem, hisat2, pseudo
-    needs: [nf-test-changes, test]
+    needs: [test]
     if: always()
     steps:
       - name: All tests ok
-        if: ${{ success() || needs.nf-test-changes.outputs.changes != '[]' }}
+        if: ${{ !contains(needs.*.result, 'failure') }}
         run: exit 0
       - name: One or more tests failed
         if: ${{ contains(needs.*.result, 'failure') }}

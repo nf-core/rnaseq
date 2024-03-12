@@ -1,2 +1,0 @@
-custom/tx2gene:
-  - "modules/nf-core/custom/tx2gene/**"

@@ -1,2 +1,0 @@
-qualimap/rnaseq:
-  - modules/nf-core/qualimap/rnaseq/**

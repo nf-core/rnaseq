@@ -1,2 +1,0 @@
-subworkflows/utils_nfvalidation_plugin:
-  - subworkflows/nf-core/utils_nfvalidation_plugin/**

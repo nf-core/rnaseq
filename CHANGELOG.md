@@ -7,9 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Edmund Miller](https://github.com/edmundmiller)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Laramie Lindsey](https://github.com/laramiellindsey)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Rob Syme](https://github.com/robsyme)
+- [Thomas Danhorn](https://github.com/tdanhorn)
+
+Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
+
 ### Enhancements & fixes
 
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
+- [PR #1197](https://github.com/nf-core/rnaseq/pull/1197) - Delete lib directory and replace with utils\_\* subworkflows
+- [PR #1199](https://github.com/nf-core/rnaseq/pull/1199) - Replace modules.config with more modular config files per module/subworkflow/workflow
 - [PR #1201](https://github.com/nf-core/rnaseq/pull/1201) - Template update for nf-core/tools v2.12
 - [PR #1206](https://github.com/nf-core/rnaseq/pull/1206) - Remove `lib/` directory and `modules.config`
 - [PR #1210](https://github.com/nf-core/rnaseq/pull/1210) - Use pseudoalignment subworkflow components from nf-core/modules
@@ -17,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1213](https://github.com/nf-core/rnaseq/pull/1213) - Pass transcriptome fasta through to samtools stats
 - [PR #1214](https://github.com/nf-core/rnaseq/pull/1214) - Bump umitools + delocalise prepareforrsem ([#831](https://github.com/nf-core/rnaseq/issues/831))
 - [PR #1216](https://github.com/nf-core/rnaseq/pull/1216) - Delocalise catadditionalfasta ([#1162](https://github.com/nf-core/rnaseq/issues/1162))
+- [PR #1217](https://github.com/nf-core/rnaseq/pull/1217) - Update Emiller88 => edmundmiller in README
 - [PR #1218](https://github.com/nf-core/rnaseq/pull/1218) - Template update for nf-core/tools v2.13
 - [PR #1220](https://github.com/nf-core/rnaseq/pull/1220) - Initialise nf-test and add pipeline level test
 - [PR #1221](https://github.com/nf-core/rnaseq/pull/1221) - Use nf-test test for all nf-core components
@@ -35,8 +51,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1240](https://github.com/nf-core/rnaseq/pull/1240) - Fix reference files params usage
 - [PR #1241](https://github.com/nf-core/rnaseq/pull/1241) - Add nf-test tests to deseq2_qc
 - [PR #1242](https://github.com/nf-core/rnaseq/pull/1242) - Use dupradar from nf-core/modules
+- [PR #1243](https://github.com/nf-core/rnaseq/pull/1243) - Add nf-test for module MULTIQC_CUSTOM_BIOTYPE
 - [PR #1244](https://github.com/nf-core/rnaseq/pull/1244) - Add gtf2bed tests
+- [PR #1245](https://github.com/nf-core/rnaseq/pull/1245) - nf test quantify rsem
+- [PR #1246](https://github.com/nf-core/rnaseq/pull/1246) - nf-test quantify pseudoalignment
+- [PR #1247](https://github.com/nf-core/rnaseq/pull/1247) - nf-test prepare_genome
+- [PR #1249](https://github.com/nf-core/rnaseq/pull/1249) - Include nf-tests for rsem_merge_counts module
 - [PR #1250](https://github.com/nf-core/rnaseq/pull/1250) - Remove all tags.yml files because the testing system has changed
+- [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2qc paths
 
 ### Parameters
 
@@ -48,10 +70,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency  | Old version | New version |
 | ----------- | ----------- | ----------- |
+| `bedtools`  | 2.30.0      | 2.31.1      |
 | `multiqc`   | 1.20        | 1.21        |
 | `picard`    | 3.0.0       | 3.1.1       |
-| `samtools`  | 1.17        | 1.18        |
+| `samtools`  | 1.17        | 1.19.2      |
 | `sortmerna` | 4.3.4       | 4.3.6       |
+| `umi_tools` | 1.14        | 1.15        |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

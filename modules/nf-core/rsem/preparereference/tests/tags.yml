@@ -1,2 +1,0 @@
-rsem/preparereference:
-  - modules/nf-core/rsem/preparereference/**

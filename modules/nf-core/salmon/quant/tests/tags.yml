@@ -1,2 +1,0 @@
-salmon/quant:
-  - modules/nf-core/salmon/quant/**

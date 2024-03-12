@@ -1,2 +1,0 @@
-rsem/calculateexpression:
-  - modules/nf-core/rsem/calculateexpression/**

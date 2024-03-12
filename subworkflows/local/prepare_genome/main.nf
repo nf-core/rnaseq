@@ -51,7 +51,7 @@ workflow PREPARE_GENOME {
     salmon_index             // directory: /path/to/salmon/index/
     kallisto_index           // directory: /path/to/kallisto/index/
     hisat2_index             // directory: /path/to/hisat2/index/
-    bbsplit_index            // directory: /path/to/rsem/index/
+    bbsplit_index            // directory: /path/to/bbsplit/index/
     sortmerna_index          // directory: /path/to/sortmerna/index/
     gencode                  //   boolean: whether the genome is from GENCODE
     featurecounts_group_type //    string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts

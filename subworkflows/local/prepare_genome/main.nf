@@ -135,13 +135,13 @@ workflow PREPARE_GENOME {
             ch_add_fasta = Channel.value(file(additional_fasta))
         }
 
-        CUSTOM_CATADDITIONALFASTA(
-            ch_fasta.combine(ch_gtf).map{fasta, gtf -> [[:], fasta, gtf]},
-            ch_add_fasta.map{[[:], it]},
+        CUSTOM_CATADDITIONALFASTA (
+            ch_fasta.combine(ch_gtf).map { fasta, gtf -> [ [:], fasta, gtf ] },
+            ch_add_fasta.map { [ [:], it ] },
             biotype
         )
-        ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map{it[1]}.first()
-        ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map{it[1]}.first()
+        ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map { it[1] }.first()
+        ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map { it[1] }.first()
         ch_versions = ch_versions.mix(CUSTOM_CATADDITIONALFASTA.out.versions)
     }
 
@@ -232,7 +232,7 @@ workflow PREPARE_GENOME {
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {
                 ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ( [ [:], sortmerna_index ] ).untar.map { it[1] }
-                ch_versions      = ch_versions.mix(UNTAR_SORTMERNA_INDEX.out.versions)
+                ch_versions = ch_versions.mix(UNTAR_SORTMERNA_INDEX.out.versions)
             } else {
                 ch_sortmerna_index = Channel.value(file(sortmerna_index))
             }
@@ -240,12 +240,12 @@ workflow PREPARE_GENOME {
             ch_sortmerna_fastas = Channel.from(file(sortmerna_fasta_list).readLines())
                 .map { row -> file(row, checkIfExists: true) }
                 .collect()
-                .map{ ['rrna_refs', it] }
+                .map { [ 'rrna_refs', it ] }
 
             SORTMERNA_INDEX (
-                Channel.of([[],[]]),
+                Channel.of([ [],[] ]),
                 ch_sortmerna_fastas,
-                Channel.of([[],[]])
+                Channel.of([ [],[] ])
             )
             ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
             ch_versions = ch_versions.mix(SORTMERNA_INDEX.out.versions)
@@ -356,7 +356,7 @@ workflow PREPARE_GENOME {
         }
     } else {
         if ('kallisto' in prepare_tool_indices) {
-            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map{[ [:], it]} ).index
+            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map { [ [:], it] } ).index
             ch_versions     = ch_versions.mix(KALLISTO_INDEX.out.versions)
         }
     }

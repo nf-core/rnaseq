@@ -3,9 +3,9 @@ nextflow_function {
     name "Test Functions"
     script "../main.nf"
 
-    test("Test Function checkSamplesAreConsistent success") {
+    test("Test Function checkSamplesAfterGrouping success") {
 
-        function "checkSamplesAreConsistent"
+        function "checkSamplesAfterGrouping"
 
         when {
             function {
@@ -34,9 +34,9 @@ nextflow_function {
 
     }
 
-    test("Test Function checkSamplesAreConsistent invalid strandedness") {
+    test("Test Function checkSamplesAfterGrouping invalid strandedness") {
 
-        function "checkSamplesAreConsistent"
+        function "checkSamplesAfterGrouping"
 
         when {
             function {
@@ -65,9 +65,9 @@ nextflow_function {
 
     }
 
-    test("Test Function checkSamplesAreConsistent invalid endedness") {
+    test("Test Function checkSamplesAfterGrouping invalid endedness") {
 
-        function "checkSamplesAreConsistent"
+        function "checkSamplesAfterGrouping"
 
         when {
             function {

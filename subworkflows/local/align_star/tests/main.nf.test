@@ -5,14 +5,10 @@ nextflow_workflow {
     workflow "ALIGN_STAR"
     config "./nextflow.config"
 
-    tag "ALIGN_STAR"
-
-    tag "star/align"
-    tag "star/genomegenerate"
-
-    tag "STAR_ALIGN_IGENOMES"
+    tag "STAR_GENOMEGENERATE"
     tag "STAR_GENOMEGENERATE_IGENOMES"
-
+    tag "STAR_ALIGN"
+    tag "STAR_ALIGN_IGENOMES"
     tag "BAM_SORT_STATS_SAMTOOLS"
 
     test("star - no igenomes") {

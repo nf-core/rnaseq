@@ -2,6 +2,7 @@ nextflow_function {
 
     name "Test Functions"
     script "../main.nf"
+    tag "UTILS_NFCORE_RNASEQ_PIPELINE"
 
     test("Test Function checkSamplesAfterGrouping success") {
 

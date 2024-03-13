@@ -4,8 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "STAR_GENOMEGENERATE_IGENOMES"
 
-    tag "STAR_GENOMEGENERATE_IGENOMES"
-
     test("fasta with gtf") {
 
         when {

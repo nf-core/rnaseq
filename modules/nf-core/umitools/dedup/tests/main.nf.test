@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "UMITOOLS_DEDUP"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "umitools"
-    tag "umitools/dedup"
-
     test("se - no stats") {
         config "./nextflow.config"
 

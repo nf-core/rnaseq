@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process STRINGTIE_STRINGTIE"
     script "../main.nf"
     process "STRINGTIE_STRINGTIE"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "stringtie"
-    tag "stringtie/stringtie"
 
     test("sarscov2 [bam] - forward strandedness") {
 

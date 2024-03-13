@@ -3,9 +3,6 @@ nextflow_process {
     name "Test Process SORTMERNA"
     script "../main.nf"
     process "SORTMERNA"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "sortmerna"
 
     test("sarscov2 indexing only") {
  

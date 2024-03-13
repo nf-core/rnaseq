@@ -3,13 +3,9 @@ nextflow_process {
     name "Test Process RSEM_CALCULATEEXPRESSION"
     script "../main.nf"
     process "RSEM_CALCULATEEXPRESSION"
+    tag "RSEM_PREPAREREFERENCE"
     config "./nextflow.config"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rsem"
-    tag "rsem/calculateexpression"
-    tag "rsem/preparereference"
-
+    
     test("homo_sapiens") {
 
         setup {

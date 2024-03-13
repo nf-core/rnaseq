@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process BBMAP_BBSPLIT"
     script "../main.nf"
     process "BBMAP_BBSPLIT"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "bbmap"
-    tag "bbmap/bbsplit"
 
     test("sarscov2_se_fastq_fasta_chr22_fasta") {
 

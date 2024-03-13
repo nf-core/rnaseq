@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "RSEQC_JUNCTIONANNOTATION"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/junctionannotation"
-
     test("sarscov2 - paired end [bam]") {
 
         when {

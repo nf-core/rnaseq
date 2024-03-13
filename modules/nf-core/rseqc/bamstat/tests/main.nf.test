@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "RSEQC_BAMSTAT"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/bamstat"
-
     config "./nextflow.config"
 
     test("sarscov2 - [meta] - bam") {

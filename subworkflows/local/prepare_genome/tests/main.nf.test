@@ -5,8 +5,6 @@ nextflow_workflow {
     workflow "PREPARE_GENOME"
     config "./nextflow.config"
 
-    tag "PREPARE_GENOME"
-
     tag "BBMAP_BBSPLIT"
     tag "CUSTOM_CATADDITIONALFASTA"
     tag "CUSTOM_GETCHROMSIZES"
@@ -18,7 +16,6 @@ nextflow_workflow {
     tag "HISAT2_EXTRACTSPLICESITES"
     tag "KALLISTO_INDEX"
     tag "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
-    tag "RSEM_PREPAREREFERENCE"
     tag "RSEM_PREPAREREFERENCE"
     tag "SALMON_INDEX"
     tag "SORTMERNA"

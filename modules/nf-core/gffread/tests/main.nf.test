@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "GFFREAD"
 
-    tag "gffread"
-    tag "modules_nfcore"
-    tag "modules"
-
     test("sarscov2-gff3-gtf") {
 
         config "./nextflow.config"

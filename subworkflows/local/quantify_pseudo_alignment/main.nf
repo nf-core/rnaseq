@@ -41,19 +41,19 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
             gtf,
             transcript_fasta,
             alignment_mode,
-            lib_type 
+            lib_type
         )
         ch_pseudo_results = SALMON_QUANT.out.results
         ch_pseudo_multiqc = ch_pseudo_results
         ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
     } else {
-        KALLISTO_QUANT ( 
-            reads, 
-            index, 
-            gtf, 
-            [], 
-            kallisto_quant_fraglen, 
-            kallisto_quant_fraglen_sd 
+        KALLISTO_QUANT (
+            reads,
+            index,
+            gtf,
+            [],
+            kallisto_quant_fraglen,
+            kallisto_quant_fraglen_sd
         )
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log

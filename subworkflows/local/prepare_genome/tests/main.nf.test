@@ -550,8 +550,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.transcript_fasta[0][1],
-                    workflow.out.salmon_index[0][1],
+                    workflow.out.transcript_fasta,
+                    workflow.out.salmon_index,
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -618,8 +618,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.transcript_fasta[0][1],
-                    workflow.out.salmon_index[0][1],
+                    workflow.out.transcript_fasta,
+                    workflow.out.salmon_index,
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -686,8 +686,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.transcript_fasta[0][1],
-                    workflow.out.salmon_index[0][1],
+                    workflow.out.transcript_fasta,
+                    workflow.out.salmon_index,
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,

@@ -63,7 +63,7 @@
         },
         "timestamp": "2024-03-06T14:33:46.772392"
     },
-    "Test Function checkSamplesAreConsistent invalid strandedness": {
+    "Test Function checkSamplesAfterGrouping invalid strandedness": {
         "content": null,
         "meta": {
             "nf-test": "0.8.4",
@@ -143,7 +143,7 @@
         },
         "timestamp": "2024-03-06T14:33:43.671826"
     },
-    "Test Function checkSamplesAreConsistent success": {
+    "Test Function checkSamplesAfterGrouping success": {
         "content": [
             [
                 {
@@ -167,7 +167,7 @@
         },
         "timestamp": "2024-03-06T14:32:37.450298"
     },
-    "Test Function checkSamplesAreConsistent invalid endedness": {
+    "Test Function checkSamplesAfterGrouping invalid endedness": {
         "content": null,
         "meta": {
             "nf-test": "0.8.4",

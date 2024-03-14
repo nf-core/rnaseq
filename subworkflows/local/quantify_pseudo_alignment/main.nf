@@ -35,12 +35,26 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     //
     // NOTE: MultiQC needs Salmon outputs, but Kallisto logs
     if (pseudo_aligner == 'salmon') {
-        SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
+        SALMON_QUANT (
+            reads,
+            index,
+            gtf,
+            transcript_fasta,
+            alignment_mode,
+            lib_type
+        )
         ch_pseudo_results = SALMON_QUANT.out.results
         ch_pseudo_multiqc = ch_pseudo_results
         ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
     } else {
-        KALLISTO_QUANT ( reads, index, gtf, [], kallisto_quant_fraglen, kallisto_quant_fraglen_sd)
+        KALLISTO_QUANT (
+            reads,
+            index,
+            gtf,
+            [],
+            kallisto_quant_fraglen,
+            kallisto_quant_fraglen_sd
+        )
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log
         ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
@@ -48,7 +62,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
 
     CUSTOM_TX2GENE (
         gtf.map { [ [:], it ] },
-        ch_pseudo_results.collect{it[1]}.map { [ [:], it ] },
+        ch_pseudo_results.collect{ it[1] }.map { [ [:], it ] },
         pseudo_aligner,
         gtf_id_attribute,
         gtf_extra_attribute
@@ -56,7 +70,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     ch_versions = ch_versions.mix(CUSTOM_TX2GENE.out.versions)
 
     TXIMETA_TXIMPORT (
-        ch_pseudo_results.collect{it[1]}.map { [ ['id': 'all_samples'], it ] },
+        ch_pseudo_results.collect{ it[1] }.map { [ ['id': 'all_samples'], it ] },
         CUSTOM_TX2GENE.out.tx2gene,
         pseudo_aligner
     )
@@ -88,25 +102,25 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     )
 
     emit:
-    results                       = ch_pseudo_results                      // channel: [ val(meta), results_dir ]
-    multiqc                       = ch_pseudo_multiqc                      // channel: [ val(meta), files_for_multiqc ]
+    results                       = ch_pseudo_results                              // channel: [ val(meta), results_dir ]
+    multiqc                       = ch_pseudo_multiqc                              // channel: [ val(meta), files_for_multiqc ]
 
-    tpm_gene                      = TXIMETA_TXIMPORT.out.tpm_gene                  //    path *gene_tpm.tsv
-    counts_gene                   = TXIMETA_TXIMPORT.out.counts_gene               //    path *gene_counts.tsv
-    lengths_gene                  = TXIMETA_TXIMPORT.out.lengths_gene              //    path *gene_lengths.tsv
-    counts_gene_length_scaled     = TXIMETA_TXIMPORT.out.counts_gene_length_scaled //    path *gene_counts_length_scaled.tsv
-    counts_gene_scaled            = TXIMETA_TXIMPORT.out.counts_gene_scaled        //    path *gene_counts_scaled.tsv
-    tpm_transcript                = TXIMETA_TXIMPORT.out.tpm_transcript            //    path *gene_tpm.tsv
-    counts_transcript             = TXIMETA_TXIMPORT.out.counts_transcript         //    path *transcript_counts.tsv
-    lengths_transcript            = TXIMETA_TXIMPORT.out.lengths_transcript        //    path *transcript_lengths.tsv
+    tpm_gene                      = TXIMETA_TXIMPORT.out.tpm_gene                  //    path: *gene_tpm.tsv
+    counts_gene                   = TXIMETA_TXIMPORT.out.counts_gene               //    path: *gene_counts.tsv
+    lengths_gene                  = TXIMETA_TXIMPORT.out.lengths_gene              //    path: *gene_lengths.tsv
+    counts_gene_length_scaled     = TXIMETA_TXIMPORT.out.counts_gene_length_scaled //    path: *gene_counts_length_scaled.tsv
+    counts_gene_scaled            = TXIMETA_TXIMPORT.out.counts_gene_scaled        //    path: *gene_counts_scaled.tsv
+    tpm_transcript                = TXIMETA_TXIMPORT.out.tpm_transcript            //    path: *gene_tpm.tsv
+    counts_transcript             = TXIMETA_TXIMPORT.out.counts_transcript         //    path: *transcript_counts.tsv
+    lengths_transcript            = TXIMETA_TXIMPORT.out.lengths_transcript        //    path: *transcript_lengths.tsv
 
-    merged_gene_rds               = SE_GENE.out.rds                        //    path: *.rds
-    merged_gene_rds_length_scaled = SE_GENE_LENGTH_SCALED.out.rds          //    path: *.rds
-    merged_gene_rds_scaled        = SE_GENE_SCALED.out.rds                 //    path: *.rds
+    merged_gene_rds               = SE_GENE.out.rds                                //    path: *.rds
+    merged_gene_rds_length_scaled = SE_GENE_LENGTH_SCALED.out.rds                  //    path: *.rds
+    merged_gene_rds_scaled        = SE_GENE_SCALED.out.rds                         //    path: *.rds
 
     merged_counts_transcript      = TXIMETA_TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
     merged_tpm_transcript         = TXIMETA_TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
-    merged_transcript_rds         = SE_TRANSCRIPT.out.rds                  //    path: *.rds
+    merged_transcript_rds         = SE_TRANSCRIPT.out.rds                          //    path: *.rds
 
-    versions                      = ch_versions                            // channel: [ versions.yml ]
+    versions                      = ch_versions                                    // channel: [ versions.yml ]
 }

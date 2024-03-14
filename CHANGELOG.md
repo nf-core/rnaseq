@@ -43,8 +43,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1232](https://github.com/nf-core/rnaseq/pull/1232) - Add nf-test tests to star_genomegenerate_igenomes
 - [PR #1233](https://github.com/nf-core/rnaseq/pull/1233) - Add nf-test tests to star_align_igenomes
 - [PR #1234](https://github.com/nf-core/rnaseq/pull/1234) - Use genomecov from nf-core/modules
-- [PR #1235](https://github.com/nf-core/rnaseq/pull/1235) - Add nf-test tests to gtf_filter
-- [PR #1236](https://github.com/nf-core/rnaseq/pull/1236) - Add nf-test tests to utils_nfcore_rnaseq_pipeline
+- [PR #1235](https://github.com/nf-core/rnaseq/pull/1235) - Add nf-test tests to utils_nfcore_rnaseq_pipeline tests
+- [PR #1236](https://github.com/nf-core/rnaseq/pull/1236) - Add nf-test tests to gtf_filter
 - [PR #1237](https://github.com/nf-core/rnaseq/pull/1237) - Fix concurrency error in Github CI workflow
 - [PR #1238](https://github.com/nf-core/rnaseq/pull/1238) - Add nf-test tests to preprocess_transcripts_fasta_gencode
 - [PR #1239](https://github.com/nf-core/rnaseq/pull/1239) - Add nf-test tests to align_star
@@ -60,6 +60,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1250](https://github.com/nf-core/rnaseq/pull/1250) - Remove all tags.yml files because the testing system has changed
 - [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2qc paths
 - [PR #1261](https://github.com/nf-core/rnaseq/pull/1261) - Add more tests for PREPARE_GENOME
+- [PR #1265](https://github.com/nf-core/rnaseq/pull/1265) - Small updates noticed during code review
+- [PR #1266](https://github.com/nf-core/rnaseq/pull/1266) - Delete unecessary tags from nf.test files for modules and subworkflows
 
 ### Parameters
 
@@ -69,14 +71,17 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Software dependencies
 
-| Dependency  | Old version | New version |
-| ----------- | ----------- | ----------- |
-| `bedtools`  | 2.30.0      | 2.31.1      |
-| `multiqc`   | 1.20        | 1.21        |
-| `picard`    | 3.0.0       | 3.1.1       |
-| `samtools`  | 1.17        | 1.19.2      |
-| `sortmerna` | 4.3.4       | 4.3.6       |
-| `umi_tools` | 1.14        | 1.15        |
+| Dependency                          | Old version | New version |
+| ----------------------------------- | ----------- | ----------- |
+| `bedtools`                          | 2.30.0      | 2.31.1      |
+| `bioconductor-dupradar`             | 1.28.0      | 1.32.0      |
+| `bioconductor-summarizedexperiment` | 1.24.0      | 1.32.0      |
+| `bioconductor-tximeta`              | 1.12.0      | 1.20.1      |
+| `multiqc`                           | 1.20        | 1.21        |
+| `picard`                            | 3.0.0       | 3.1.1       |
+| `samtools`                          | 1.17        | 1.19.2      |
+| `sortmerna`                         | 4.3.4       | 4.3.6       |
+| `umi_tools`                         | 1.14        | 1.15        |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

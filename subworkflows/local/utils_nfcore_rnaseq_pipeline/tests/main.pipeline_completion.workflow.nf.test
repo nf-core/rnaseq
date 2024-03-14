@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Workflow PIPELINE_COMPLETION"
     script "../main.nf"
     workflow "PIPELINE_COMPLETION"
+    tag "UTILS_NFCORE_RNASEQ_PIPELINE"
 
     test("test PIPELINE_COMPLETION successfully completes") {
 

@@ -4,11 +4,13 @@ nextflow_workflow {
     script "../main.nf"
     workflow "QUANTIFY_PSEUDO_ALIGNMENT"
 
-    tag 'SALMON_QUANT'
-    tag 'KALLISTO_QUANT'
-    tag 'CUSTOM_TX2GENE'
-    tag 'TXIMETA_TXIMPORT'
-    tag 'SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT'
+    tag "SALMON_INDEX"
+    tag "SALMON_QUANT"
+    tag "KALLISTO_INDEX"
+    tag "KALLISTO_QUANT"
+    tag "CUSTOM_TX2GENE"
+    tag "TXIMETA_TXIMPORT"
+    tag "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
 
     test("salmon") {
 

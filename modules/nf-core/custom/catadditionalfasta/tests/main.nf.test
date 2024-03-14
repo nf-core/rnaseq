@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "CUSTOM_CATADDITIONALFASTA"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "custom"
-    tag "custom/catadditionalfasta"
-
     test("sarscov2 - fastq - gtf") {
 
         when {

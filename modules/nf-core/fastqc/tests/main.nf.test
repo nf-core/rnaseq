@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "FASTQC"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "fastqc"
-
     test("sarscov2 single-end [fastq]") {
 
         when {

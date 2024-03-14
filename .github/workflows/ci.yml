@@ -28,9 +28,6 @@ jobs:
         parameters:
           - "--skip_qc"
           - "--skip_trimming"
-          - "--gtf false"
-          - "--star_index false"
-          - "--transcript_fasta false"
           - "--min_mapped_reads 90"
           - "--with_umi"
           - "--with_umi --skip_trimming"
@@ -59,7 +56,6 @@ jobs:
       matrix:
         parameters:
           - "--skip_qc"
-          - "--rsem_index false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4
@@ -79,7 +75,6 @@ jobs:
       matrix:
         parameters:
           - "--skip_qc"
-          - "--hisat2_index false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4
@@ -100,10 +95,8 @@ jobs:
         parameters:
           - "--pseudo_aligner salmon --skip_qc"
           - "--pseudo_aligner salmon --skip_alignment --skip_pseudo_alignment"
-          - "--pseudo_aligner salmon --salmon_index false --transcript_fasta false"
           - "--pseudo_aligner kallisto --skip_qc"
           - "--pseudo_aligner kallisto --skip_alignment --skip_pseudo_alignment"
-          - "--pseudo_aligner kallisto --kallisto_index false --transcript_fasta false"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4

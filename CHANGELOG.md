@@ -58,7 +58,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1247](https://github.com/nf-core/rnaseq/pull/1247) - nf-test prepare_genome
 - [PR #1249](https://github.com/nf-core/rnaseq/pull/1249) - Include nf-tests for rsem_merge_counts module
 - [PR #1250](https://github.com/nf-core/rnaseq/pull/1250) - Remove all tags.yml files because the testing system has changed
-- [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2_qc paths
+- [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2qc paths
+- [PR #1261](https://github.com/nf-core/rnaseq/pull/1261) - Add more tests for PREPARE_GENOME
 - [PR #1265](https://github.com/nf-core/rnaseq/pull/1265) - Small updates noticed during code review
 - [PR #1266](https://github.com/nf-core/rnaseq/pull/1266) - Delete unecessary tags from nf.test files for modules and subworkflows
 

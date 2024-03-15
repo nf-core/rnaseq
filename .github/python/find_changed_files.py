@@ -265,14 +265,16 @@ def find_changed_dependencies(paths: list[Path], tags: list[str]) -> list[Path]:
             # Get all tags from nf-test file
             # Make case insensitive with .casefold()
             tags_in_nf_test_file = [
-                tag.casefold()
+                tag.casefold().replace("/", "_")
                 for tag in convert_nf_test_files_to_test_types(lines, types=["tag"])[
                     "tag"
                 ]
             ]
             # Check if tag in nf-test file appears in a tag.
             # Use .casefold() to be case insensitive
-            if any(tag.casefold() in tags_in_nf_test_file for tag in tags):
+            if any(
+                tag.casefold().replace("/", "_") in tags_in_nf_test_file for tag in tags
+            ):
                 result.append(nf_test_file)
 
     return result

@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "UMITOOLS_PREPAREFORRSEM"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "umitools"
-    tag "umitools/prepareforrsem"
-
     test("sarscov2 - bam") {
 
         when {

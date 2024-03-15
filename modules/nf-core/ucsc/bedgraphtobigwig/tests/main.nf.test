@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process UCSC_BEDGRAPHTOBIGWIG"
     script "../main.nf"
     process "UCSC_BEDGRAPHTOBIGWIG"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "ucsc"
-    tag "ucsc/bedgraphtobigwig"
 
     test("Should run without failures") {
 

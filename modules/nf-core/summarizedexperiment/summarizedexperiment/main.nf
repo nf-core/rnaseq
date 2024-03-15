@@ -30,7 +30,7 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        r: \$( R --version | sed '1!d; s/.*version //; s/ .*//' )
+        bioconductor-summarizedexperiment: \$(Rscript -e "library(SummarizedExperiment); cat(as.character(packageVersion('SummarizedExperiment')))")
     END_VERSIONS
     """
 }

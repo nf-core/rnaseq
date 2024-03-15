@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "DUPRADAR"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "dupradar"
-
     test("sarscov2 - bam - single_end") {
 
         config './nextflow.config'

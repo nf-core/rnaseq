@@ -4,11 +4,6 @@ nextflow_process {
     process "BEDTOOLS_GENOMECOV"
     config "./nextflow.config"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "bedtools"
-    tag "bedtools/genomecov"
-
    test("sarscov2 - no scale") {
         when {
             process {

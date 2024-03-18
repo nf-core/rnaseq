@@ -788,6 +788,8 @@ workflow RNASEQ {
 }
 
 output {
+    include 'PREPARE_GENOME'
+
     path(params.outdir, mode: params.publish_dir_mode) {
         //
         // STAR Salmon alignment options

@@ -3,6 +3,9 @@ nextflow_process {
     name "Test Process FASTP"
     script "../main.nf"
     process "FASTP"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "fastp"
 
     test("test_fastp_single_end") {
 
@@ -248,7 +251,8 @@ nextflow_process {
     }
 
     test("fastp test_fastp_interleaved") {
-        config './nextflow.config'
+
+        config './nextflow.interleaved.config'
         when {
             params {
                 outdir   = "$outputDir"
@@ -274,7 +278,7 @@ nextflow_process {
             def html_text  = [ "Q20 bases:</td><td class='col2'>25.719000 K (93.033098%)",
 									"paired end (151 cycles + 151 cycles)"]
             def log_text   = [ "Q20 bases: 12922(92.9841%)",
-									"reads passed filter: 198"]
+									"reads passed filter: 162"]
             def read_lines = [ "@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
 									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
 									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
@@ -318,7 +322,7 @@ nextflow_process {
 
         options '-stub'
 
-        config './nextflow.config'
+        config './nextflow.interleaved.config'
         when {
             params {
                 outdir   = "$outputDir"
@@ -424,6 +428,7 @@ nextflow_process {
 
     test("test_fastp_paired_end_trim_fail") {
 
+        config './nextflow.save_failed.config'
         when {
             params {
                 outdir   = "$outputDir"
@@ -451,7 +456,7 @@ nextflow_process {
 									"The input has little adapter percentage (~0.000000%), probably it's trimmed before."]
             def log_text            = [ "No adapter detected for read1",
 									"Q30 bases: 12281(88.3716%)"]
-            def json_text           = ['"passed_filter_reads": 198']
+            def json_text           = ['"passed_filter_reads": 162']
             def read1_lines         = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
 									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
 									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
@@ -464,9 +469,9 @@ nextflow_process {
 									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/2",
 									"GCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT",
 									"AAAAA6EEAEEEEEAEEAEEAEEEEEEA6EEEEAEEAEEEEE6EEEEEEAEEEEA///A<<EEEEEEEEEAEEEEEE"]
-            def failed_read2_lines  = ["@ERR5069949.885966 NS500628:121:HK3MMAFX2:4:11610:19682:20132/2",
-									"CTTAGGTCTTAGGATTGGCTGTATCAACCTTAAGCTTAAGTACACAATTTTGCATAGAATGTCCAATAA",
-									"A//AA6EEAEEEEE6EEE/EEA/EA///AAE/EAEEEAE6AE/E/E/EEAAE/EAA/E/E/<EA//E/6"]
+            def failed_read2_lines  = ["@ERR5069949.973930 NS500628:121:HK3MMAFX2:2:21105:5548:5659/2",
+									"CCTTTTGATGTTGTTAGACAATGCTCAGGTGTTACTTTCCAAAGTGCAGTGAAAAGAACAATCAAGGGTACACACCACTGGTTGTTACTCACAATTTTGACTTCACTTTTAG",
+									"AAAAAEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEAE<EAEEEEEEAEEAEE"]
             // def failed_read1_lines = path(process.out.reads_fail.get(0).get(1).get(0)).linesGzip is empty file
             assertAll(
                 { assert process.success },
@@ -480,7 +485,7 @@ nextflow_process {
                     }
                 },
                 { failed_read2_lines.each { failed_read2_line ->
-                    { assert path(process.out.reads_fail.get(0).get(1).get(1)).linesGzip.contains(failed_read2_line) }
+                    { assert path(process.out.reads_fail.get(0).get(1).get(2)).linesGzip.contains(failed_read2_line) }
                     }
                 },
                 { html_text.each { html_part ->

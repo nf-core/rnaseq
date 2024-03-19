@@ -325,18 +325,12 @@
     },
     "skip_trimming": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    [
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
-                    ]
-                ]
-            ],
+            {
+                "id": "test",
+                "single_end": false
+            },
+            "test_1.fastq.gz",
+            "test_2.fastq.gz",
             [
                 
             ],
@@ -363,7 +357,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-18T12:08:51.217937"
+        "timestamp": "2024-03-19T15:49:26.574759"
     },
     "sarscov2 paired-end [fastq]": {
         "content": [

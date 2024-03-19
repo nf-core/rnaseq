@@ -64,8 +64,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },
@@ -124,8 +124,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert !workflow.out.fastqc_raw_html},
-                { assert !workflow.out.fastqc_raw_zip},
+                { assert !workflow.out.fastqc_raw_html },
+                { assert !workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert !workflow.out.fastqc_trim_html },
@@ -183,8 +183,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },
@@ -244,8 +244,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },
@@ -304,8 +304,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },
@@ -353,7 +353,10 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                        workflow.out.reads,
+                        workflow.out.reads.get(0).get(0), // Reads meta map
+                        // Because the input file is passed to the output file, we have to do check the filename only
+                        file(workflow.out.reads.get(0).get(1).get(0)).name,
+                        file(workflow.out.reads.get(0).get(1).get(1)).name,
                         workflow.out.umi_log,
                         workflow.out.trim_json,
                         workflow.out.trim_reads_fail,
@@ -364,8 +367,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert !workflow.out.trim_html },
                 { assert !workflow.out.trim_log },
                 { assert !workflow.out.fastqc_trim_html },
@@ -426,8 +429,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },
@@ -486,8 +489,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },
@@ -547,8 +550,8 @@ nextflow_workflow {
                     ).match() 
                 },
 
-                { assert workflow.out.fastqc_raw_html},
-                { assert workflow.out.fastqc_raw_zip},
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert workflow.out.fastqc_trim_html },

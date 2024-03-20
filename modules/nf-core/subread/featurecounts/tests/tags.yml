@@ -1,2 +1,0 @@
-subread/featurecounts:
-  - modules/nf-core/subread/featurecounts/**

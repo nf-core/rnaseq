@@ -115,6 +115,10 @@ workflow PIPELINE_COMPLETION {
             imNotification(summary_params, hook_url)
         }
     }
+
+    workflow.onError {
+        log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
+    }
 }
 
 /*
@@ -126,7 +130,7 @@ workflow PIPELINE_COMPLETION {
 //
 // Function to check samples are internally consistent after being grouped
 //
-def checkSamplesAreConsistent(input) {
+def checkSamplesAfterGrouping(input) {
     def (metas, fastqs) = input[1..2]
 
     // Check that multiple runs of the same sample are of the same strandedness

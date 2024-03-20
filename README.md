@@ -80,9 +80,10 @@ Now, you can run the pipeline using:
 
 ```bash
 nextflow run nf-core/rnaseq \
-    --input samplesheet.csv \
+    --input <SAMPLESHEET> \
     --outdir <OUTDIR> \
-    --genome GRCh37 \
+    --gtf <GTF> \
+    --fasta <GENOME FASTA> \
     -profile <docker/singularity/.../institute>
 ```
 

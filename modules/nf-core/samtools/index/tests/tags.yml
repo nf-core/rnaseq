@@ -1,2 +1,0 @@
-samtools/index:
-  - modules/nf-core/samtools/index/**

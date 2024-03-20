@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "UMITOOLS_EXTRACT"
     config "./nextflow.config"
-    tag "modules_nfcore"
-    tag "modules"
-    tag "umitools"
-    tag "umitools/extract"
 
     test("Should run without failures") {
 

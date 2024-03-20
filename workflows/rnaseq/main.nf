@@ -20,7 +20,7 @@ include { QUANTIFY_RSEM                                     } from '../../subwor
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/local/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/local/quantify_pseudo_alignment'
 
-include { checkSamplesAreConsistent       } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -36,20 +36,20 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ                                            } from '../../modules/nf-core/cat/fastq'
-include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
-include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
-include { BBMAP_BBSPLIT                                        } from '../../modules/nf-core/bbmap/bbsplit'
-include { DUPRADAR                                             } from '../../modules/nf-core/dupradar'
-include { SAMTOOLS_SORT                                        } from '../../modules/nf-core/samtools/sort'
-include { PRESEQ_LCEXTRAP                                      } from '../../modules/nf-core/preseq/lcextrap'
-include { QUALIMAP_RNASEQ                                      } from '../../modules/nf-core/qualimap/rnaseq'
+include { CAT_FASTQ               } from '../../modules/nf-core/cat/fastq'
+include { BBMAP_BBSPLIT           } from '../../modules/nf-core/bbmap/bbsplit'
+include { DUPRADAR                } from '../../modules/nf-core/dupradar'
+include { SAMTOOLS_SORT           } from '../../modules/nf-core/samtools/sort'
+include { PRESEQ_LCEXTRAP         } from '../../modules/nf-core/preseq/lcextrap'
+include { QUALIMAP_RNASEQ         } from '../../modules/nf-core/qualimap/rnaseq'
+include { STRINGTIE_STRINGTIE     } from '../../modules/nf-core/stringtie/stringtie'
+include { SUBREAD_FEATURECOUNTS   } from '../../modules/nf-core/subread/featurecounts'
+include { MULTIQC                 } from '../../modules/nf-core/multiqc'
+include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
 include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX                         } from '../../modules/nf-core/sortmerna'
-include { STRINGTIE_STRINGTIE                                  } from '../../modules/nf-core/stringtie/stringtie'
-include { SUBREAD_FEATURECOUNTS                                } from '../../modules/nf-core/subread/featurecounts'
-include { MULTIQC                                              } from '../../modules/nf-core/multiqc'
-include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
+include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
+include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -85,23 +85,23 @@ ch_dummy_file                = ch_pca_header_multiqc
 workflow RNASEQ {
 
     take:
-    ch_samplesheet      // channel: path(sample_sheet.csv)
-    ch_versions         // channel: [ path(versions.yml) ]
-    ch_fasta            // channel: path(genome.fasta)
-    ch_gtf              // channel: path(genome.gtf)
-    ch_fai              // channel: path(genome.fai)
-    ch_chrom_sizes      // channel: path(genome.sizes)
-    ch_gene_bed         // channel: path(gene.bed)
-    ch_transcript_fasta // channel: path(transcript.fasta)
-    ch_star_index       // channel: path(star/index/)
-    ch_rsem_index       // channel: path(rsem/index/)
-    ch_hisat2_index     // channel: path(hisat2/index/)
-    ch_salmon_index     // channel: path(salmon/index/)
-    ch_kallisto_index   // channel: [ meta, path(kallisto/index/) ]
-    ch_bbsplit_index    // channel: path(bbsplit/index/)
-    ch_sortmerna_index  // channel: path(sortmerna/index/)
-    ch_splicesites      // channel: path(genome.splicesites.txt)
-    make_sortmerna_index // boolean: Whether to create a sortmerna index before running sortmerna
+    ch_samplesheet       // channel: path(sample_sheet.csv)
+    ch_versions          // channel: [ path(versions.yml) ]
+    ch_fasta             // channel: path(genome.fasta)
+    ch_gtf               // channel: path(genome.gtf)
+    ch_fai               // channel: path(genome.fai)
+    ch_chrom_sizes       // channel: path(genome.sizes)
+    ch_gene_bed          // channel: path(gene.bed)
+    ch_transcript_fasta  // channel: path(transcript.fasta)
+    ch_star_index        // channel: path(star/index/)
+    ch_rsem_index        // channel: path(rsem/index/)
+    ch_hisat2_index      // channel: path(hisat2/index/)
+    ch_salmon_index      // channel: path(salmon/index/)
+    ch_kallisto_index    // channel: [ meta, path(kallisto/index/) ]
+    ch_bbsplit_index     // channel: path(bbsplit/index/)
+    ch_sortmerna_index   // channel: path(sortmerna/index/)
+    ch_splicesites       // channel: path(genome.splicesites.txt)
+    make_sortmerna_index // boolean: Whether to create an index before running sortmerna
 
     main:
 
@@ -122,7 +122,7 @@ workflow RNASEQ {
         }
         .groupTuple()
         .map {
-            checkSamplesAreConsistent(it)
+            checkSamplesAfterGrouping(it)
         }
         .branch {
             meta, fastqs ->
@@ -234,16 +234,17 @@ workflow RNASEQ {
         ch_ribo_db = file(params.ribo_database_manifest)
         if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
 
-        ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines())
+        Channel.from(ch_ribo_db.readLines())
             .map { row -> file(row, checkIfExists: true) }
             .collect()
-            .map{ ['rrna_refs', it] }
+            .map { [ 'rrna_refs', it ] }
+            .set { ch_sortmerna_fastas }
 
         if (make_sortmerna_index) {
             SORTMERNA_INDEX (
-                [[],[]],
+                [ [],[] ],
                 ch_sortmerna_fastas,
-                [[],[]]
+                [ [],[] ]
             )
             ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
         }

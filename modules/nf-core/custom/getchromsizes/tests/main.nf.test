@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "CUSTOM_GETCHROMSIZES"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "custom"
-    tag "custom/getchromsizes"
-
     test("test_custom_getchromsizes") {
 
         when {

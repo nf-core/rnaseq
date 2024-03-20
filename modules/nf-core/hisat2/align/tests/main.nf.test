@@ -3,12 +3,8 @@ nextflow_process {
     name "Test Process HISAT2_ALIGN"
     script "../main.nf"
     process "HISAT2_ALIGN"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "hisat2"
-    tag "hisat2/align"
-    tag "hisat2/build"
-    tag "hisat2/extractsplicesites"
+    tag "HISAT2_BUILD"
+    tag "HISAT2_EXTRACTSPLICESITES"
 
     test("Single-End") {
 

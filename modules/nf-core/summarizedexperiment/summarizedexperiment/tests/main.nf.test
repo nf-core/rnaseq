@@ -3,15 +3,9 @@ nextflow_process {
     name "Test Process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
     script "../main.nf"
     process "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
-
-    tag "modules"
-    tag "modules_nfcore"
-    tag "custom/tx2gene"
-    tag "tximeta"
-    tag "tximeta/tximport"
-    tag "summarizedexperiment"
-    tag "summarizedexperiment/summarizedexperiment"
-    tag "untar"
+    tag "UNTAR"
+    tag "CUSTOM_TX2GENE"
+    tag "TXIMETA_TXIMPORT"
 
     setup {
 

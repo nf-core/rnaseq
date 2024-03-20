@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "GTF2BED"
 
-    tag "modules"
-    tag "modules_local"
-    tag "gtf2bed"
-
     test("sarscov2 - bam") {
 
         when {

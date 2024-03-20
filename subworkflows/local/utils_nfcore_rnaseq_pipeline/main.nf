@@ -254,15 +254,6 @@ def validateInputParameters() {
 }
 
 //
-// Get key from genome config file e.g. fasta, and initialize a params with the given attribute
-//
-def getGenomeAttribute(key, attribute) {
-    if ((params.genomes && params.genome && params.genomes.containsKey(params.genome) && params.genomes[ params.genome ].containsKey(key) )) {
-        params."$attribute" = params.genomes[ params.genome ][ key ]
-    } else params."$attribute" = null
-}
-
-//
 // Exit pipeline if incorrect --genome key provided
 //
 def genomeExistsError() {

@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "rnaseq"
     tag "PIPELINE"
 
-    test("Run with profile test") {
+    test("Default profile test") {
 
         when {
             params {

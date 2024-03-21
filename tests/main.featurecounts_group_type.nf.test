@@ -1,0 +1,22 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("--featurecounts_group_type false") {
+
+        when {
+            params {
+                outdir        = "$outputDir"
+                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
+                featurecounts_group_type = false
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

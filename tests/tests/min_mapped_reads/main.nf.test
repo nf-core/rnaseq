@@ -1,0 +1,22 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../../../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("--min_mapped_reads 90") {
+
+        when {
+            params {
+                outdir           = "$outputDir"
+                input            = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
+                min_mapped_reads = 90
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

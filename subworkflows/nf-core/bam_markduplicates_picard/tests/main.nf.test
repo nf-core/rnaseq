@@ -4,9 +4,19 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BAM_MARKDUPLICATES_PICARD"
 
-    tag "PICARD_MARKDUPLICATES"
-    tag "SAMTOOLS_INDEX"
-    tag "BAM_STATS_SAMTOOLS"
+    tag "picard"
+    tag "picard/markduplicates"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "bam_markduplicates_picard"
+    tag "subworkflows/bam_markduplicates_picard"
+    tag "subworkflows/bam_stats_samtools"
+    tag "bam_stats_samtools"
+    tag "samtools"
+    tag "samtools/flagstat"
+    tag "samtools/idxstats"
+    tag "samtools/index"
+    tag "samtools/stats"
 
     test("sarscov2 - bam") {
 
@@ -69,8 +79,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    path(workflow.out.bam[0][1]),
-                    path(workflow.out.bai[0][1]),
+                    file(workflow.out.cram[0][1]).name,
+                    path(workflow.out.crai[0][1]),
                     path(workflow.out.flagstat[0][1]),
                     path(workflow.out.idxstats[0][1]),
                     path(workflow.out.stats[0][1]),

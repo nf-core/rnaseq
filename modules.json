@@ -42,7 +42,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
+                        "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
                     },
                     "fastqc": {
@@ -97,7 +97,7 @@
                     },
                     "picard/markduplicates": {
                         "branch": "master",
-                        "git_sha": "ec833ac4c29db6005d18baccf3306f557c46b006",
+                        "git_sha": "1943aa60f7490c3d6740e8872e6e69122ccc8087",
                         "installed_by": ["bam_markduplicates_picard"]
                     },
                     "preseq/lcextrap": {
@@ -280,7 +280,7 @@
                     },
                     "bam_markduplicates_picard": {
                         "branch": "master",
-                        "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
+                        "git_sha": "1943aa60f7490c3d6740e8872e6e69122ccc8087",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_rseqc": {
@@ -314,7 +314,7 @@
                     },
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
+                        "git_sha": "cabcc0dadf8366aa7a9930066a7b3dd90d9825d5",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {

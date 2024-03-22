@@ -1,0 +1,146 @@
+{
+    "pe no stats - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,350e942a0d45e8356fa24bc8c47dc1ed"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:38.139428"
+    },
+    "pe - tsv_per_umi": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_per_umi.tsv:md5,8e6783a4a79437b095f095f2aefe7c01"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:56.21078"
+    },
+    "pe - tsv_edit_distance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_edit_distance.tsv:md5,65186b0964e2f8d970cc04d736d8b119"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:56.203654"
+    },
+    "pe - tsv_umi_per_position": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_per_umi_per_position.tsv:md5,9386db4a104b8e4e32f3ca4a84efa4ac"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:56.217525"
+    },
+    "se no stats - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,c9da2ee4f07f5c6922251bd01d6bcb01"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:16.383148"
+    },
+    "se no stats - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:16.391241"
+    },
+    "pe - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:56.226748"
+    },
+    "pe - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,350e942a0d45e8356fa24bc8c47dc1ed"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:56.19652"
+    },
+    "pe no stats - versions": {
+        "content": [
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-04T17:41:38.157629"
+    }
+}

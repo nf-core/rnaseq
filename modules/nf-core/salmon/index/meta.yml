@@ -20,7 +20,6 @@ input:
   - transcriptome_fasta:
       type: file
       description: Fasta file of the reference transcriptome
-
 output:
   - index:
       type: directory
@@ -30,7 +29,9 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@kevinmenden"
+  - "@drpatelh"
+maintainers:
   - "@kevinmenden"
   - "@drpatelh"

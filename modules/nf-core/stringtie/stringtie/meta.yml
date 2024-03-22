@@ -5,7 +5,6 @@ keywords:
   - assembly
   - quantification
   - gtf
-
 tools:
   - stringtie2:
       description: |
@@ -54,4 +53,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@drpatelh"
+maintainers:
   - "@drpatelh"

@@ -1,0 +1,155 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ALIGN_STAR"
+    script "../main.nf"
+    workflow "ALIGN_STAR"
+    config "./nextflow.config"
+
+    tag "STAR_GENOMEGENERATE"
+    tag "STAR_GENOMEGENERATE_IGENOMES"
+    tag "STAR_ALIGN"
+    tag "STAR_ALIGN_IGENOMES"
+    tag "BAM_SORT_STATS_SAMTOOLS"
+
+    test("star - no igenomes") {
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(file(workflow.out.log_final[0][1]).name).match("without igenomes - log_final") },
+                { assert snapshot(file(workflow.out.log_out[0][1]).name).match("without igenomes - log_out") },
+                { assert snapshot(workflow.out.bai).match("without igenomes - bai")},
+                { assert snapshot(workflow.out.bam).match("without igenomes - bam")},
+                { assert snapshot(workflow.out.bam_sorted).match("without igenomes - bam_sorted")},
+                { assert snapshot(workflow.out.bam_transcript).match("without igenomes - bam_transcript")},
+                { assert snapshot(workflow.out.csi).match("without igenomes - csi")},
+                { assert snapshot(workflow.out.log_progress).match("without igenomes - log_progress")},
+                { assert snapshot(workflow.out.fastq).match("without igenomes - fastq")},
+                { assert snapshot(workflow.out.flagstat).match("without igenomes - flagstat")},
+                { assert snapshot(workflow.out.idxstats).match("without igenomes - idxstats")},
+                { assert snapshot(workflow.out.orig_bam).match("without igenomes - orig_bam")},
+                { assert snapshot(workflow.out.stats).match("without igenomes - stats")},
+                { assert snapshot(workflow.out.tab).match("without igenomes - tab")},
+                { assert snapshot(workflow.out.versions).match("without igenomes - versions")}
+            )
+        }
+    }
+    test("star - with igenomes") {
+
+        setup {
+            run("STAR_GENOMEGENERATE_IGENOMES") {
+                script "../../../../modules/local/star_genomegenerate_igenomes/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                    input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE_IGENOMES.out.index.map{ [ [id:'star'], it ] }
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(file(workflow.out.log_final[0][1]).name).match("with igenomes - log_final") },
+                { assert snapshot(file(workflow.out.log_out[0][1]).name).match("with igenomes - log_out") },
+                { assert snapshot(workflow.out.bai).match("with igenomes - bai")},
+                { assert snapshot(workflow.out.bam).match("with igenomes - bam")},
+                { assert snapshot(workflow.out.bam_sorted).match("with igenomes - bam_sorted")},
+                { assert snapshot(workflow.out.bam_transcript).match("with igenomes - bam_transcript")},
+                { assert snapshot(workflow.out.csi).match("with igenomes - csi")},
+                { assert snapshot(workflow.out.log_progress).match("with igenomes - log_progress")},
+                { assert snapshot(workflow.out.fastq).match("with igenomes - fastq")},
+                { assert snapshot(workflow.out.flagstat).match("with igenomes - flagstat")},
+                { assert snapshot(workflow.out.idxstats).match("with igenomes - idxstats")},
+                { assert snapshot(workflow.out.orig_bam).match("with igenomes - orig_bam")},
+                { assert snapshot(workflow.out.stats).match("with igenomes - stats")},
+                { assert snapshot(workflow.out.tab).match("with igenomes - tab")},
+                { assert snapshot(workflow.out.versions).match("with igenomes - versions")}
+            )
+        }
+    }
+
+}

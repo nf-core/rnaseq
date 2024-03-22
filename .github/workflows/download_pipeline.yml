@@ -1,0 +1,72 @@
+name: Test successful pipeline download with 'nf-core download'
+
+# Run the workflow when:
+#  - dispatched manually
+#  - when a PR is opened or reopened to master branch
+#  - the head branch of the pull request is updated, i.e. if fixes for a release are pushed last minute to dev.
+on:
+  workflow_dispatch:
+    inputs:
+      testbranch:
+        description: "The specific branch you wish to utilize for the test execution of nf-core download."
+        required: true
+        default: "dev"
+  pull_request:
+    types:
+      - opened
+    branches:
+      - master
+  pull_request_target:
+    branches:
+      - master
+
+env:
+  NXF_ANSI_LOG: false
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+
+      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+      - uses: eWaterCycle/setup-singularity@931d4e31109e875b13309ae1d07c70ca8fbc8537 # v7
+        with:
+          singularity-version: 3.8.3
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/nf-core/tools.git@dev
+
+      - name: Get the repository name and current branch set as environment variable
+        run: |
+          echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+          echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> ${GITHUB_ENV}
+          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> ${GITHUB_ENV}
+
+      - name: Download the pipeline
+        env:
+          NXF_SINGULARITY_CACHEDIR: ./
+        run: |
+          nf-core download ${{ env.REPO_LOWERCASE }} \
+          --revision ${{ env.REPO_BRANCH }} \
+          --outdir ./${{ env.REPOTITLE_LOWERCASE }} \
+          --compress "none" \
+          --container-system 'singularity' \
+          --container-library "quay.io" -l "docker.io" -l "ghcr.io" \
+          --container-cache-utilisation 'amend' \
+          --download-configuration
+
+      - name: Inspect download
+        run: tree ./${{ env.REPOTITLE_LOWERCASE }}
+
+      - name: Run the downloaded pipeline
+        env:
+          NXF_SINGULARITY_CACHEDIR: ./
+          NXF_SINGULARITY_HOME_MOUNT: true
+        run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results

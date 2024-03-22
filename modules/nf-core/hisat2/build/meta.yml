@@ -13,7 +13,6 @@ tools:
       documentation: https://daehwankimlab.github.io/hisat2/manual/
       doi: "10.1038/s41587-019-0201-4"
       licence: ["MIT"]
-
 input:
   - meta:
       type: map
@@ -42,7 +41,6 @@ input:
       type: file
       description: Splices sites in gtf file
       pattern: "*.{txt}"
-
 output:
   - meta:
       type: map
@@ -57,6 +55,7 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@ntoda03"
+maintainers:
   - "@ntoda03"

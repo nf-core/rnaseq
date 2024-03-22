@@ -1,6 +1,7 @@
 name: rseqc_innerdistance
 description: Calculate inner distance between read pairs.
 keywords:
+  - read_pairs
   - fragment_size
   - inner_distance
 tools:
@@ -52,5 +53,8 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@drpatelh"
+  - "@kevinmenden"
+maintainers:
   - "@drpatelh"
   - "@kevinmenden"

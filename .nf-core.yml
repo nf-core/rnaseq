@@ -3,6 +3,10 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
-    - lib/NfcoreTemplate.groovy
-    - pyproject.toml
-  multiqc_config: false
+    - .gitignore
+    - .github/PULL_REQUEST_TEMPLATE.md
+  files_exist:
+    - conf/modules.config
+  nextflow_config:
+    - config_defaults:
+        - params.ribo_database_manifest

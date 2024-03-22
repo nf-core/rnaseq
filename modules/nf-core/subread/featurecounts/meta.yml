@@ -5,7 +5,6 @@ keywords:
   - fasta
   - genome
   - reference
-
 tools:
   - featurecounts:
       description: featureCounts is a highly efficient general-purpose read summarization program that counts mapped reads for genomic features such as genes, exons, promoter, gene bodies, genomic bins and chromosomal locations. It can be used to count both RNA-seq and genomic DNA-seq reads.
@@ -13,7 +12,6 @@ tools:
       documentation: http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf
       doi: "10.1093/bioinformatics/btt656"
       licence: ["GPL v3"]
-
 input:
   - meta:
       type: map
@@ -28,7 +26,6 @@ input:
       type: file
       description: Genomic features annotation in GTF or SAF
       pattern: "*.{gtf,saf}"
-
 output:
   - meta:
       type: map
@@ -47,6 +44,7 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@ntoda03"
+maintainers:
   - "@ntoda03"

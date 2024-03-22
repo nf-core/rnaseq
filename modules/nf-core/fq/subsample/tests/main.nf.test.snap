@@ -1,0 +1,145 @@
+{
+    "test_fq_subsample_probability": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_R1.fastq.gz:md5,19326ff922a16c0cb81191f2a0a5c5fc",
+                            "test_R2.fastq.gz:md5,ce7ff46296d89b68521ad55a3588bcfe"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,ffbf935bd0de512fbc9e83b187bf924f"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_R1.fastq.gz:md5,19326ff922a16c0cb81191f2a0a5c5fc",
+                            "test_R2.fastq.gz:md5,ce7ff46296d89b68521ad55a3588bcfe"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ffbf935bd0de512fbc9e83b187bf924f"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:57:15.446336"
+    },
+    "test_fq_subsample_record_count": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_R1.fastq.gz:md5,394c7a233f1c1c1a167a34cf2895d26d",
+                            "test_R2.fastq.gz:md5,32724cbdb5ab954a0a659ebcd56ca422"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,ffbf935bd0de512fbc9e83b187bf924f"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_R1.fastq.gz:md5,394c7a233f1c1c1a167a34cf2895d26d",
+                            "test_R2.fastq.gz:md5,32724cbdb5ab954a0a659ebcd56ca422"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ffbf935bd0de512fbc9e83b187bf924f"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:57:23.920058"
+    },
+    "test_fq_subsample_single": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.fastq.gz:md5,19326ff922a16c0cb81191f2a0a5c5fc"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,ffbf935bd0de512fbc9e83b187bf924f"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.fastq.gz:md5,19326ff922a16c0cb81191f2a0a5c5fc"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ffbf935bd0de512fbc9e83b187bf924f"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:57:31.908993"
+    },
+    "test_fq_subsample_no_args": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2023-10-17T11:17:09.761156"
+    },
+    "test_fq_subsample_no_input": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2023-10-17T11:17:37.555824"
+    }
+}

@@ -6,7 +6,6 @@ keywords:
   - bam
   - sam
   - cram
-
 components:
   - picard/markduplicates
   - samtools/index
@@ -14,7 +13,6 @@ components:
   - samtools/idxstats
   - samtools/flagstat
   - bam_stats_samtools
-
 input:
   - ch_bam:
       description: |
@@ -58,5 +56,8 @@ output:
         Files containing software versions
         Structure: [ path(versions.yml) ]
 authors:
+  - "@dmarron"
+  - "@drpatelh"
+maintainers:
   - "@dmarron"
   - "@drpatelh"

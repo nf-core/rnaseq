@@ -31,7 +31,7 @@ input:
   - gtf:
       type: file
       description: GTF of the reference transcriptome
-  - transcriptome_fasta:
+  - transcript_fasta:
       type: file
       description: Fasta file of the reference transcriptome
   - alignment_mode:
@@ -41,7 +41,6 @@ input:
       type: string
       description: |
         Override library type inferred based on strandedness defined in meta object
-
 output:
   - results:
       type: directory
@@ -55,7 +54,9 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@kevinmenden"
+  - "@drpatelh"
+maintainers:
   - "@kevinmenden"
   - "@drpatelh"

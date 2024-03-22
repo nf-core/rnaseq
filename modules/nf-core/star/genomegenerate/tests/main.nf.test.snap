@@ -1,0 +1,90 @@
+{
+    "fasta_gtf_versions": {
+        "content": [
+            [
+                "versions.yml:md5,46b8f1f34bb7f23892cd1eb249ed4d7f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:54:31.798555"
+    },
+    "fasta_stub_versions": {
+        "content": [
+            [
+                "versions.yml:md5,46b8f1f34bb7f23892cd1eb249ed4d7f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:55:07.521209"
+    },
+    "fasta_gtf_stub_index": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:54:46.478098"
+    },
+    "fasta_gtf_stub_versions": {
+        "content": [
+            [
+                "versions.yml:md5,46b8f1f34bb7f23892cd1eb249ed4d7f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:54:46.491657"
+    },
+    "fasta_index": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, genomeParameters.txt]"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:54:57.552329"
+    },
+    "fasta_versions": {
+        "content": [
+            [
+                "versions.yml:md5,46b8f1f34bb7f23892cd1eb249ed4d7f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:54:57.560541"
+    },
+    "fasta_gtf_index": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:54:31.786814"
+    },
+    "fasta_stub_index": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, genomeParameters.txt]"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-01T15:55:07.517472"
+    }
+}

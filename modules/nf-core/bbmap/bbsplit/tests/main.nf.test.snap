@@ -1,0 +1,30 @@
+{
+    "bbsplit_index_filtered_files": {
+        "content": [
+            [
+                "chr1.chrom.gz:md5,8fec4c63ec642613ad10adf4cc2e6ade",
+                "chr1_index_k13_c13_b1.block:md5,385913c1e84b77dc7bf36288ee1c8706",
+                "chr1_index_k13_c13_b1.block2.gz:md5,2556b45206835a0ff7078d683b5fd6e2",
+                "merged_ref_9222711925172838098.fa.gz:md5,983cef447fb28394b88a5b49b3579f0c",
+                "namelist.txt:md5,45e7a4cdc7a11a39ada56844ca3a1e30"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T17:15:59.705013452"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T17:11:22.441753642"
+    }
+}

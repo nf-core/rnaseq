@@ -1,0 +1,58 @@
+{
+    "single_end - lc_extrap": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.lc_extrap.txt:md5,1fa5cdd601079329618f61660bee00de"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T17:20:40.735535"
+    },
+    "paired_end - log": {
+        "content": [
+            "test.command.log"
+        ],
+        "timestamp": "2023-11-23T17:20:51.981746"
+    },
+    "single_end - versions": {
+        "content": [
+            [
+                "versions.yml:md5,9a62ff1c212c53573808ccd2137b8922"
+            ]
+        ],
+        "timestamp": "2023-11-23T17:20:40.74601"
+    },
+    "paired_end - versions": {
+        "content": [
+            [
+                "versions.yml:md5,9a62ff1c212c53573808ccd2137b8922"
+            ]
+        ],
+        "timestamp": "2023-11-23T17:20:52.02843"
+    },
+    "single_end - log": {
+        "content": [
+            "test.command.log"
+        ],
+        "timestamp": "2023-11-23T17:20:40.72985"
+    },
+    "paired_end - lc_extrap": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.lc_extrap.txt:md5,10e5ea860e87fb6f5dc10f4f20c62040"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T17:20:51.998533"
+    }
+}

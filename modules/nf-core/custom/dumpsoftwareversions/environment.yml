@@ -1,7 +1,0 @@
-name: custom_dumpsoftwareversions
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::multiqc=1.17

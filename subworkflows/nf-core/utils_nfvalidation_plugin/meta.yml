@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "UTILS_NFVALIDATION_PLUGIN"
+description: Use nf-validation to initiate and validate a pipeline
+keywords:
+  - utility
+  - pipeline
+  - initialise
+  - validation
+components: []
+input:
+  - print_help:
+      type: boolean
+      description: |
+        Print help message and exit
+  - workflow_command:
+      type: string
+      description: |
+        The command to run the workflow e.g. "nextflow run main.nf"
+  - pre_help_text:
+      type: string
+      description: |
+        Text to print before the help message
+  - post_help_text:
+      type: string
+      description: |
+        Text to print after the help message
+  - validate_params:
+      type: boolean
+      description: |
+        Validate the parameters and error if invalid.
+  - schema_filename:
+      type: string
+      description: |
+        The filename of the schema to validate against.
+output:
+  - dummy_emit:
+      type: boolean
+      description: |
+        Dummy emit to make nf-core subworkflows lint happy
+authors:
+  - "@adamrtalbot"
+maintainers:
+  - "@adamrtalbot"
+  - "@maxulysse"

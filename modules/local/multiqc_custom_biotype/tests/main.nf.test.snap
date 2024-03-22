@@ -1,0 +1,41 @@
+{
+    "test sarscov2 count data succesfully completes": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.biotype_counts_mqc.tsv:md5,d996f27aeec64370cade26717aa22e1e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,405217e65a76b104b00bb41f6bf10a92"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.biotype_counts_mqc.tsv:md5,d996f27aeec64370cade26717aa22e1e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,405217e65a76b104b00bb41f6bf10a92"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-08T09:38:04.260609"
+    }
+}

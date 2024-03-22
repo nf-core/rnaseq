@@ -22,6 +22,7 @@ process STAR_GENOMEGENERATE_IGENOMES {
     def args = task.ext.args ?: ''
     def args_list = args.tokenize()
     def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
+    def include_gtf = gtf ? "--sjdbGTFfile $gtf" : ''
     if (args_list.contains('--genomeSAindexNbases')) {
         """
         mkdir star
@@ -29,7 +30,7 @@ process STAR_GENOMEGENERATE_IGENOMES {
             --runMode genomeGenerate \\
             --genomeDir star/ \\
             --genomeFastaFiles $fasta \\
-            --sjdbGTFfile $gtf \\
+            $include_gtf \\
             --runThreadN $task.cpus \\
             $memory \\
             $args
@@ -51,7 +52,7 @@ process STAR_GENOMEGENERATE_IGENOMES {
             --runMode genomeGenerate \\
             --genomeDir star/ \\
             --genomeFastaFiles $fasta \\
-            --sjdbGTFfile $gtf \\
+            $include_gtf \\
             --runThreadN $task.cpus \\
             --genomeSAindexNbases \$NUM_BASES \\
             $memory \\

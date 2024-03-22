@@ -53,7 +53,9 @@ output:
       description: |
         Files containing software versions
         Structure: [ path(versions.yml) ]
-
 authors:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"
+maintainers:
   - "@drpatelh"
   - "@KamilMaliszArdigen"

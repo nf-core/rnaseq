@@ -1,0 +1,50 @@
+{
+    "versions_single_end": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-01T11:51:01.865730832"
+    },
+    "versions_pair_end": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-06T17:10:56.121713"
+    },
+    "versions_single_end_lib_type_a": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-06T17:09:14.898351"
+    },
+    "versions_pair_end_multiple": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-06T17:11:07.846643"
+    }
+}

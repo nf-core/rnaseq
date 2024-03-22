@@ -87,3 +87,5 @@ output:
       pattern: "versions.yml"
 authors:
   - "@priyanka-surana"
+maintainers:
+  - "@priyanka-surana"

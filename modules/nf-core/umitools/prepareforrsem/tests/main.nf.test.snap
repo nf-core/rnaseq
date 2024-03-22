@@ -1,0 +1,62 @@
+{
+    "versions_sarscov2_bam": {
+        "content": [
+            [
+                "versions.yml:md5,3403849e88fbd33fadd928f8b6ca60bb"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-16T09:46:33.206750132"
+    },
+    "bam_sarscov2_bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,fe4b8302182615651e4e7784ec67c819"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-12T17:33:02.066537672"
+    },
+    "bam_sarscov2_bam - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-12T17:33:39.36279218"
+    },
+    "versions_sarscov2_bam - stub": {
+        "content": [
+            [
+                "versions.yml:md5,3403849e88fbd33fadd928f8b6ca60bb"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-16T09:46:47.363697981"
+    }
+}

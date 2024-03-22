@@ -1,0 +1,110 @@
+{
+    "logs": {
+        "content": [
+            "test.log"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T18:25:31.476361"
+    },
+    "homo_sapiens": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.genes.results:md5,c7ec226f76736ea805771e73553ae359"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.isoforms.results:md5,99f7f80aa505b44ca429fdebbd7dd5d8"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test.cnt:md5,76249e6b2f3c104f414aae596ba2c2f4",
+                        "test.model:md5,a7a4bc1734918ef5848604e3362b83e2",
+                        "test.theta:md5,de2e4490c98cc5383a86ae8225fd0a28"
+                    ]
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.transcript.bam:md5,ed681d39f5700ffc74d6321525330d93"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.isoforms.results:md5,99f7f80aa505b44ca429fdebbd7dd5d8"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "rsem.merged.gene_counts.tsv:md5,f3b586000c97c89aec45360772e73df1"
+            ],
+            [
+                "rsem.merged.gene_tpm.tsv:md5,e6ae3dfa9913a7c15b705ec27c376212"
+            ],
+            [
+                "rsem.merged.transcript_counts.tsv:md5,235c002b811360183494a2aac74d1f5b"
+            ],
+            [
+                "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
+            ],
+            [
+                "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
+                "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T18:15:03.001083"
+    }
+}

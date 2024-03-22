@@ -1,0 +1,288 @@
+{
+    "pe - stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,ed4e2ba437f4819b7ab93a6df8dd5348"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.091982"
+    },
+    "pe - csi": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.081055"
+    },
+    "se - bai": {
+        "content": [
+            "test.sorted.bam.bai"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.763127"
+    },
+    "pe - flagstat": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,2fa0d90162a1b655863796c2a6bd8f45"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.08653"
+    },
+    "pe - orig_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.077797"
+    },
+    "se - bam": {
+        "content": [
+            "test.sorted.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.773767"
+    },
+    "se - summary": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.hisat2.summary.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.818659"
+    },
+    "pe - bam": {
+        "content": [
+            "test.sorted.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.074968"
+    },
+    "se - versions": {
+        "content": [
+            [
+                "versions.yml:md5,34be144fb97a11f1c581b39301f6f0d1",
+                "versions.yml:md5,4392ca9e255d9137e74a73a8d1e1559d",
+                "versions.yml:md5,651e735a2754f3be76b516f5fbf099b5",
+                "versions.yml:md5,912e1daa1e432f6b5ca601ab2294e37f",
+                "versions.yml:md5,9b7dd7f9a173fbf92f5e476451c840c1",
+                "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.826601"
+    },
+    "pe - idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,1adb27b52d4d64b826f48b59d61dcd4d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.089411"
+    },
+    "pe - bai": {
+        "content": [
+            "test.sorted.bam.bai"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.071767"
+    },
+    "pe - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.083598"
+    },
+    "se - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.782981"
+    },
+    "se - csi": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.77962"
+    },
+    "se - idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.idxstats:md5,2a5df85e0d90e55bb2b359f6e05d5fbb"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.798637"
+    },
+    "se - orig_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.776773"
+    },
+    "pe - summary": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.hisat2.summary.log:md5,9839b31db795958cc4b70711a3414e9c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.095265"
+    },
+    "pe - versions": {
+        "content": [
+            [
+                "versions.yml:md5,34be144fb97a11f1c581b39301f6f0d1",
+                "versions.yml:md5,4392ca9e255d9137e74a73a8d1e1559d",
+                "versions.yml:md5,651e735a2754f3be76b516f5fbf099b5",
+                "versions.yml:md5,912e1daa1e432f6b5ca601ab2294e37f",
+                "versions.yml:md5,9b7dd7f9a173fbf92f5e476451c840c1",
+                "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:28:06.098801"
+    },
+    "se - flagstat": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.flagstat:md5,6de3bfde9582ad2532033832091f5c46"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.786813"
+    },
+    "se - stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.stats:md5,f712acf6108a70c3fb06ac51e5e76f15"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T13:27:50.804219"
+    }
+}

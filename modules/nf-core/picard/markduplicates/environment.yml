@@ -1,0 +1,7 @@
+name: picard_markduplicates
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::picard=3.1.1

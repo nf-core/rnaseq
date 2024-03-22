@@ -1,0 +1,32 @@
+{
+    "log": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.junction_annotation.log:md5,ef37d06d169a1adbeec23fddf82aee2b"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:52.732937"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:52.734515"
+    }
+}

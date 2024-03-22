@@ -1,0 +1,69 @@
+{
+    "test_reads_1_size": {
+        "content": [
+            1066944
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-11T10:33:54.747992124"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,12c0d1f67c2afb97470ae0974e5e01bb",
+                "versions.yml:md5,885fde9e7beac002b3a17b66b92db4bd"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-11-26T16:41:10.396971682"
+    },
+    "test_reads_1_lines": {
+        "content": [
+            [
+                "@normal#21#998579#1/1",
+                "CCTTCTCCCTGCTGGGGTTGCTTGTCAGTAGCGGGCAAGGTAGGAGTGTGGCGCTTTATTGCATTTACTTTCCCTCCCCCTTCCCCCCGGCCAAGAGAGG",
+                "+",
+                "102302000331;3333;23133320233330*33/233333333333333/313232333/3;3;3/333000;11/00;;01//103*1032323233",
+                "@normal#21#998572#2/1",
+                "CTCCTCTCCTTCTACCTGCTGGGGTTGCTTGTCAGTAGCGGGCAAGGTCGGAGTGTTGCGCTTTATTGCATTTACTTTCCCTCCCCCTTCCACCCGGCCA"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-11T10:33:54.730250665"
+    },
+    "test_reads_2_lines": {
+        "content": [
+            [
+                "@normal#21#998579#1/2",
+                "AAAAAAAAAGAAGAAGCAGAAGCTGTTTCCCTGGATATCCTGCTCACCGATTCCCCTCTCCAATTCTGTATTTTCCCTTCTCTTATTTAAGGGTCTCCAC",
+                "+",
+                "023333233332333310333302333211/3333;0300;*/;000/32;201003031/22;21333032;;11/23030322;2332333313/030",
+                "@normal#21#998572#2/2",
+                "TTCCCCTCTCCAATTGAGTATTTTCCCTTCTCTTATTTAAGGGTCTCCACACAAACAGATACAATTTTAGGGACAGCTAGGAGAAAGAACGAAAATAATAA"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-11T10:33:54.756723613"
+    },
+    "test_reads_2_size": {
+        "content": [
+            1066944
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-11T10:33:54.763399473"
+    }
+}

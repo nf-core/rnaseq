@@ -1,0 +1,769 @@
+{
+    "homo_sapiens - paired_end - multiple - bam_sorted": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,ab07c21d63ab0a6c07d171d213c81d5a"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T18:01:19.968225733"
+    },
+    "homo_sapiens - paired_end - multiple - wig": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.857804"
+    },
+    "homo_sapiens - paired_end - arriba - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:56:12.347549723"
+    },
+    "homo_sapiens - single_end - wig": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.24701"
+    },
+    "homo_sapiens - paired_end - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.383818"
+    },
+    "homo_sapiens - paired_end - arriba - versions": {
+        "content": [
+            [
+                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+            ]
+        ],
+        "timestamp": "2023-12-04T17:56:12.431212643"
+    },
+    "homo_sapiens - paired_end - multiple - bedgraph": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T18:01:20.07119229"
+    },
+    "homo_sapiens - paired_end - read_per_gene_tab": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.368841"
+    },
+    "homo_sapiens - paired_end - arriba - bedgraph": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.102537"
+    },
+    "homo_sapiens - single_end - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.185369"
+    },
+    "homo_sapiens - paired_end - arriba - spl_junc_tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:56:12.268388251"
+    },
+    "homo_sapiens - single_end - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.216183"
+    },
+    "homo_sapiens - paired_end - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.327236"
+    },
+    "homo_sapiens - single_end - versions": {
+        "content": [
+            [
+                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.664210196"
+    },
+    "homo_sapiens - paired_end - multiple - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "timestamp": "2023-11-23T13:29:01.022176"
+    },
+    "homo_sapiens - paired_end - arriba - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.15277"
+    },
+    "homo_sapiens - paired_end - multiple - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.52923"
+    },
+    "homo_sapiens - paired_end - multiple - spl_junc_tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T18:01:20.189486201"
+    },
+    "homo_sapiens - paired_end - starfusion - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "timestamp": "2023-11-23T13:27:55.905883"
+    },
+    "homo_sapiens - paired_end - starfusion - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.192302"
+    },
+    "homo_sapiens - paired_end - multiple - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.661837"
+    },
+    "homo_sapiens - paired_end - multiple - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "timestamp": "2023-11-23T13:29:00.966417"
+    },
+    "homo_sapiens - paired_end - starfusion - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.out.bam:md5,bcad07b838f6762fc01eea52b5cd3f84"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:59:58.53235164"
+    },
+    "homo_sapiens - paired_end - arriba - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.202776"
+    },
+    "homo_sapiens - single_end - bedgraph": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    [
+                        "test.Signal.Unique.str1.out.bg:md5,c56fc1472776fb927eaf62d973da5f9a",
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,e93373cf6f2a2a9506e2efdb260cdd4f"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.394863748"
+    },
+    "homo_sapiens - paired_end - arriba - read_per_gene_tab": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.251962"
+    },
+    "homo_sapiens - paired_end - starfusion - bam_sorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.040843"
+    },
+    "homo_sapiens - single_end - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.154172"
+    },
+    "homo_sapiens - paired_end - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:11.934832258"
+    },
+    "homo_sapiens - paired_end - arriba - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:06.998817"
+    },
+    "homo_sapiens - paired_end - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "timestamp": "2023-11-23T13:23:33.259699"
+    },
+    "homo_sapiens - paired_end - arriba - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "timestamp": "2023-11-23T13:25:06.849451"
+    },
+    "homo_sapiens - paired_end - multiple - versions": {
+        "content": [
+            [
+                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+            ]
+        ],
+        "timestamp": "2023-12-04T18:01:20.393705142"
+    },
+    "homo_sapiens - paired_end - starfusion - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.082408"
+    },
+    "homo_sapiens - paired_end - starfusion - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:59:58.818041322"
+    },
+    "homo_sapiens - single_end - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.175307"
+    },
+    "homo_sapiens - paired_end - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:12.255481058"
+    },
+    "homo_sapiens - paired_end - starfusion - bedgraph": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.155413"
+    },
+    "homo_sapiens - single_end - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.144852"
+    },
+    "homo_sapiens - paired_end - versions": {
+        "content": [
+            [
+                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:12.343840482"
+    },
+    "homo_sapiens - paired_end - multiple - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T18:01:20.291692062"
+    },
+    "homo_sapiens - single_end - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,c6cfaccaf91bc7fdabed3cfe236d4535"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.265642675"
+    },
+    "homo_sapiens - paired_end - arriba - wig": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.444214"
+    },
+    "homo_sapiens - paired_end - log_progress": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:12.126063825"
+    },
+    "homo_sapiens - paired_end - arriba - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "timestamp": "2023-11-23T13:25:06.829799"
+    },
+    "homo_sapiens - paired_end - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.300509"
+    },
+    "homo_sapiens - paired_end - arriba - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.300383"
+    },
+    "homo_sapiens - paired_end - multiple - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,ab07c21d63ab0a6c07d171d213c81d5a"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T18:01:19.851247126"
+    },
+    "homo_sapiens - paired_end - multiple - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.462257"
+    },
+    "homo_sapiens - single_end - bam_sorted": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,c6cfaccaf91bc7fdabed3cfe236d4535"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.335457371"
+    },
+    "homo_sapiens - paired_end - arriba - bam_sorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:06.94699"
+    },
+    "homo_sapiens - paired_end - starfusion - junction": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Chimeric.out.junction:md5,c10ef219f4a30e83711b995bc5e40dba"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:59:58.641115828"
+    },
+    "homo_sapiens - single_end - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.580593434"
+    },
+    "homo_sapiens - paired_end - starfusion - versions": {
+        "content": [
+            [
+                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+            ]
+        ],
+        "timestamp": "2023-12-04T17:59:58.907317103"
+    },
+    "homo_sapiens - paired_end - multiple - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.330463"
+    },
+    "homo_sapiens - paired_end - arriba - log_progress": {
+        "content": [
+            "test.Log.progress.out"
+        ],
+        "timestamp": "2023-11-23T13:25:06.86866"
+    },
+    "homo_sapiens - paired_end - bedgraph": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:12.064121304"
+    },
+    "homo_sapiens - paired_end - starfusion - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.118974"
+    },
+    "homo_sapiens - paired_end - starfusion - read_per_gene_tab": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.264699"
+    },
+    "homo_sapiens - paired_end - multiple - log_progress": {
+        "content": [
+            "test.Log.progress.out"
+        ],
+        "timestamp": "2023-11-23T13:29:01.076947"
+    },
+    "homo_sapiens - paired_end - arriba - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:25:07.050409"
+    },
+    "homo_sapiens - paired_end - bam_sorted": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:12.002180537"
+    },
+    "homo_sapiens - single_end - spl_junc_tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.50932751"
+    },
+    "homo_sapiens - paired_end - starfusion - spl_junc_tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:59:58.731699486"
+    },
+    "homo_sapiens - single_end - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "timestamp": "2023-11-23T13:22:55.126286"
+    },
+    "homo_sapiens - paired_end - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "timestamp": "2023-11-23T13:23:33.253884"
+    },
+    "homo_sapiens - single_end - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "timestamp": "2023-11-23T13:22:55.11799"
+    },
+    "homo_sapiens - paired_end - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.287684"
+    },
+    "homo_sapiens - paired_end - starfusion - log_progress": {
+        "content": [
+            "test.Log.progress.out"
+        ],
+        "timestamp": "2023-11-23T13:27:55.971484"
+    },
+    "homo_sapiens - paired_end - multiple - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.264176"
+    },
+    "homo_sapiens - paired_end - multiple - read_per_gene_tab": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:29:01.596406"
+    },
+    "homo_sapiens - single_end - read_per_gene_tab": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:22:55.205936"
+    },
+    "homo_sapiens - paired_end - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.340653"
+    },
+    "homo_sapiens - paired_end - spl_junc_tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:54:12.185730856"
+    },
+    "homo_sapiens - paired_end - starfusion - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.300637"
+    },
+    "homo_sapiens - paired_end - arriba - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.out.bam:md5,c1b1747f5873f2d17762725636e891d5"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:56:12.190560178"
+    },
+    "homo_sapiens - single_end - log_progress": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-04T17:53:26.450352138"
+    },
+    "homo_sapiens - paired_end - starfusion - wig": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:27:56.422018"
+    },
+    "homo_sapiens - paired_end - wig": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-11-23T13:23:33.429457"
+    },
+    "homo_sapiens - paired_end - starfusion - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "timestamp": "2023-11-23T13:27:55.93945"
+    }
+}

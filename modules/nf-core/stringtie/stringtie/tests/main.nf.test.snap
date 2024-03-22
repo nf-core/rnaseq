@@ -1,0 +1,186 @@
+{
+    "fs_abundance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:55:41.032044613"
+    },
+    "fs_transcript_gtf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.transcripts.gtf:md5,569137af5be452413086b50653a97203"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:55:41.017978904"
+    },
+    "rs_abundance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:13.601112933"
+    },
+    "fs_gtf_versions": {
+        "content": [
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:00.523797974"
+    },
+    "fs_gtf_transcript_gtf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.transcripts.gtf:md5,f56cf8aba2c4a5673bc7963ba5f12d04"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:00.475164879"
+    },
+    "rs_versions": {
+        "content": [
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:13.623892691"
+    },
+    "rs_gtf_transcript_gtf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.transcripts.gtf:md5,bb346053a8c156b803b055133376c7fa"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:22.693599559"
+    },
+    "fs_gtf_abundance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.gene.abundance.txt:md5,7d8bce7f2a922e367cedccae7267c22e"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:00.482135418"
+    },
+    "rs_gtf_ballgown": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    [
+                        "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                        "e_data.ctab:md5,879b6696029d19c4737b562e9d149218",
+                        "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                        "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                        "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:22.715698347"
+    },
+    "rs_transcript_gtf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.transcripts.gtf:md5,31c34aec2bf36bb0ea3c16c2afeeeb1f"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:13.590054035"
+    },
+    "rs_gtf_versions": {
+        "content": [
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:22.725513476"
+    },
+    "fs_gtf_ballgown": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    [
+                        "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                        "e_data.ctab:md5,6b4cf69bc03f3f69890f972a0e8b7471",
+                        "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                        "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                        "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:00.494299817"
+    },
+    "fs_versions": {
+        "content": [
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+            ]
+        ],
+        "timestamp": "2023-11-23T13:55:41.049417582"
+    },
+    "rs_gtf_abundance": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.gene.abundance.txt:md5,7385b870b955dae2c2ab78a70cf05cce"
+                ]
+            ]
+        ],
+        "timestamp": "2023-11-23T13:56:22.701059059"
+    }
+}

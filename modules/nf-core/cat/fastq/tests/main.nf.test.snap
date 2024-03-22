@@ -1,0 +1,169 @@
+{
+    "test_cat_fastq_single_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:30:39.816981"
+    },
+    "test_cat_fastq_single_end_same_name": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:32:35.229332"
+    },
+    "test_cat_fastq_single_end_single_file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:34:00.058829"
+    },
+    "test_cat_fastq_paired_end_same_name": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:33:33.031555"
+    },
+    "test_cat_fastq_paired_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d42d6e24d67004608495883e00bd501b"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-17T17:32:02.270935"
+    }
+}

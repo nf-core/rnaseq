@@ -1,0 +1,16 @@
+{
+    "rnaseq_qc_results": {
+        "content": [
+            "rnaseq_qc_results.txt:md5,b77878cac45beaa79a892af54aad2da3"
+        ],
+        "timestamp": "2024-01-19T12:07:55.509784"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
+            ]
+        ],
+        "timestamp": "2024-01-19T12:07:55.512116"
+    }
+}

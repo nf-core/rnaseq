@@ -345,31 +345,26 @@ workflow PREPARE_GENOME {
 }
 
 output {
-    if( !params.save_reference )
-        return
+    directory params.outdir, mode: params.publish_dir_mode, enabled: params.save_reference
 
-    path(params.outdir, mode: params.publish_dir_mode) {
-        path('genome') {
-            select 'GUNZIP_.*'
-            select 'MAKE_TRANSCRIPTS_FASTA'
-            select 'GFFREAD'
-            select 'GTF2BED'
-            select 'CAT_ADDITIONAL_FASTA'
-            select 'PREPROCESS_TRANSCRIPTS_FASTA_GENCODE'
-            select 'GTF_FILTER'
-            select 'CUSTOM_GETCHROMSIZES'
-        }
+    'genome' {
+        from PREPARE_GENOME.out.fasta
+        from PREPARE_GENOME.out.gtf
+        // from PREPARE_GENOME.out.gff
+        // from PREPARE_GENOME.out.add_fasta
+        from PREPARE_GENOME.out.gene_bed
+        from PREPARE_GENOME.out.transcript_fasta
+        from PREPARE_GENOME.out.fai
+        // from PREPARE_GENOME.out.sizes
+    }
 
-        path('genome/index') {
-            select 'UNTAR_.*'
-            select 'STAR_GENOMEGENERATE'
-            select 'STAR_GENOMEGENERATE_IGENOMES'
-            select 'HISAT2_BUILD'
-            select 'HISAT2_EXTRACTSPLICESITES'
-            select 'SALMON_INDEX'
-            select 'KALLISTO_INDEX'
-            select 'RSEM_PREPAREREFERENCE_GENOME'
-            select 'PREPARE_GENOME:BBMAP_BBSPLIT'
-        }
+    'genome/index' {
+        from PREPARE_GENOME.out.splicesites
+        from PREPARE_GENOME.out.bbsplit_index
+        from PREPARE_GENOME.out.star_index
+        from PREPARE_GENOME.out.rsem_index
+        from PREPARE_GENOME.out.hisat2_index
+        from PREPARE_GENOME.out.salmon_index
+        from PREPARE_GENOME.out.kallisto_index
     }
 }

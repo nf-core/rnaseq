@@ -117,9 +117,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     merged_gene_rds               = SE_GENE.out.rds                                //    path: *.rds
     merged_gene_rds_length_scaled = SE_GENE_LENGTH_SCALED.out.rds                  //    path: *.rds
     merged_gene_rds_scaled        = SE_GENE_SCALED.out.rds                         //    path: *.rds
-
-    merged_counts_transcript      = TXIMETA_TXIMPORT.out.counts_transcript         //    path: *.transcript_counts.tsv
-    merged_tpm_transcript         = TXIMETA_TXIMPORT.out.tpm_transcript            //    path: *.transcript_tpm.tsv
     merged_transcript_rds         = SE_TRANSCRIPT.out.rds                          //    path: *.rds
 
     versions                      = ch_versions                                    // channel: [ versions.yml ]

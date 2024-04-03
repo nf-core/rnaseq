@@ -4,13 +4,17 @@ nextflow_workflow {
     script "../main.nf"
     workflow "QUANTIFY_PSEUDO_ALIGNMENT"
 
-    tag "SALMON_INDEX"
-    tag "SALMON_QUANT"
-    tag "KALLISTO_INDEX"
-    tag "KALLISTO_QUANT"
-    tag "CUSTOM_TX2GENE"
-    tag "TXIMETA_TXIMPORT"
-    tag "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/quantify_pseudo_alignment"
+    
+    tag "salmon/index"
+    tag "salmon/quant"
+    tag "kallisto/index"
+    tag "kallisto/quant"
+    tag "custom/tx2gene"
+    tag "tximeta/tximport"
+    tag "summarizedexperiment/summarizedexperiment"
 
     test("salmon") {
 
@@ -31,7 +35,7 @@ nextflow_workflow {
                 """
                 input[0]  = [
                     [ id: 'samplesheet' ],
-                    file(params.pipelines_testdata_base_path + '/csv/samplesheet_micro.csv', checkIfExists: true)
+                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
                 ]
                 input[1]  = [
                     [ id: 'test' ],
@@ -64,13 +68,13 @@ nextflow_workflow {
                         workflow.out.counts_gene_length_scaled,
                         workflow.out.tpm_transcript,
                         workflow.out.lengths_transcript,
-                        workflow.out.merged_gene_rds,
-                        workflow.out.merged_gene_rds_length_scaled,
-                        workflow.out.merged_gene_rds_scaled,
                         workflow.out.merged_counts_transcript,
                         workflow.out.merged_tpm_transcript,
-                        workflow.out.merged_transcript_rds,
-                        workflow.out.versions
+                        workflow.out.versions,
+                        file(workflow.out.merged_gene_rds[0][1]).name,
+                        file(workflow.out.merged_gene_rds_length_scaled[0][1]).name,
+                        file(workflow.out.merged_gene_rds_scaled[0][1]).name,
+                        file(workflow.out.merged_transcript_rds[0][1]).name
                     ).match()
                 }
             )
@@ -100,7 +104,7 @@ nextflow_workflow {
                 """
                 input[0]  = [
                     [ id: 'samplesheet' ],
-                    file(params.pipelines_testdata_base_path + '/csv/samplesheet_micro.csv', checkIfExists: true)
+                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
                 ]
                 input[1]  = [
                     [ id: 'test' ],
@@ -133,13 +137,11 @@ nextflow_workflow {
                         workflow.out.counts_gene_length_scaled,
                         workflow.out.tpm_transcript,
                         workflow.out.lengths_transcript,
-                        workflow.out.merged_gene_rds,
-                        workflow.out.merged_gene_rds_length_scaled,
-                        workflow.out.merged_gene_rds_scaled,
-                        workflow.out.merged_counts_transcript,
-                        workflow.out.merged_tpm_transcript,
-                        workflow.out.merged_transcript_rds,
-                        workflow.out.versions
+                        workflow.out.versions,
+                        file(workflow.out.merged_gene_rds[0][1]).name,
+                        file(workflow.out.merged_gene_rds_length_scaled[0][1]).name,
+                        file(workflow.out.merged_gene_rds_scaled[0][1]).name,
+                        file(workflow.out.merged_transcript_rds[0][1]).name
                     ).match()
                 }
             )

@@ -1,0 +1,2 @@
+subworkflows/quantify_pseudo_alignment:
+  - subworkflows/nf-core/quantify_pseudo_alignment/**

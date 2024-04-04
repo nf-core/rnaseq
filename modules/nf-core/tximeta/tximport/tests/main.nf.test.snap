@@ -1,21 +1,4 @@
 {
-    "tpm_gene_salmon - stub": {
-        "content": [
-            [
-                [
-                    [
-                        
-                    ],
-                    "[].gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-09T13:31:05.203366546"
-    },
     "tpm_transcript_salmon - stub": {
         "content": [
             [
@@ -31,7 +14,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.238815422"
+        "timestamp": "2024-03-11T11:35:54.169267"
     },
     "lengths_gene_kallisto - stub": {
         "content": [
@@ -48,7 +31,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.169986951"
+        "timestamp": "2024-03-11T11:35:20.838048"
     },
     "counts_gene_scaled_salmon - stub": {
         "content": [
@@ -65,7 +48,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.224281753"
+        "timestamp": "2024-03-11T11:35:54.139493"
     },
     "counts_gene_kallisto - stub": {
         "content": [
@@ -82,7 +65,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.141099674"
+        "timestamp": "2024-03-11T11:35:20.823542"
     },
     "lengths_transcript_salmon - stub": {
         "content": [
@@ -99,19 +82,19 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.255932841"
+        "timestamp": "2024-03-11T11:35:54.157265"
     },
     "versions_salmon - stub": {
         "content": [
             [
-                "versions.yml:md5,721fc5c3bfa6792e8982f2662908b836"
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.26533312"
+        "timestamp": "2024-03-11T11:35:54.175019"
     },
     "counts_gene_length_scaled_kallisto": {
         "content": [
@@ -128,7 +111,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.246852231"
+        "timestamp": "2024-03-11T11:35:04.116135"
     },
     "lengths_transcript_salmon": {
         "content": [
@@ -145,7 +128,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.717395151"
+        "timestamp": "2024-03-11T11:35:37.664041"
     },
     "counts_transcript_kallisto": {
         "content": [
@@ -162,24 +145,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.267269829"
-    },
-    "tpm_gene_kallisto - stub": {
-        "content": [
-            [
-                [
-                    [
-                        
-                    ],
-                    "[].gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-09T13:30:39.133021984"
+        "timestamp": "2024-03-11T11:35:04.162273"
     },
     "counts_transcript_kallisto - stub": {
         "content": [
@@ -196,7 +162,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.191224569"
+        "timestamp": "2024-03-11T11:35:20.834743"
     },
     "counts_transcript_salmon": {
         "content": [
@@ -213,7 +179,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.711194061"
+        "timestamp": "2024-03-11T11:35:37.652813"
     },
     "lengths_gene_salmon - stub": {
         "content": [
@@ -230,7 +196,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.231479353"
+        "timestamp": "2024-03-11T11:35:54.151603"
     },
     "tpm_gene_salmon": {
         "content": [
@@ -247,7 +213,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.676380215"
+        "timestamp": "2024-03-11T11:35:37.669821"
     },
     "tpm_transcript_salmon": {
         "content": [
@@ -264,7 +230,24 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.705920722"
+        "timestamp": "2024-03-11T11:35:37.674895"
+    },
+    "tpm_gene_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.163303"
     },
     "lengths_transcript_kallisto": {
         "content": [
@@ -281,7 +264,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.274231188"
+        "timestamp": "2024-03-11T11:35:04.1686"
     },
     "counts_gene_length_scaled_kallisto - stub": {
         "content": [
@@ -298,7 +281,24 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.151132722"
+        "timestamp": "2024-03-11T11:35:20.827742"
+    },
+    "tpm_gene_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.846428"
     },
     "counts_transcript_salmon - stub": {
         "content": [
@@ -315,7 +315,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.247380891"
+        "timestamp": "2024-03-11T11:35:54.145564"
     },
     "counts_gene_scaled_kallisto": {
         "content": [
@@ -332,7 +332,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.251356171"
+        "timestamp": "2024-03-11T11:35:04.159638"
     },
     "counts_gene_salmon": {
         "content": [
@@ -349,19 +349,19 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.685043764"
+        "timestamp": "2024-03-11T11:35:37.636972"
     },
     "versions_salmon": {
         "content": [
             [
-                "versions.yml:md5,a6476f297a8e9396f4cfc151cd7f25ed"
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.73053927"
+        "timestamp": "2024-03-11T11:35:37.680246"
     },
     "counts_gene_length_scaled_salmon": {
         "content": [
@@ -378,7 +378,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.689830703"
+        "timestamp": "2024-03-11T11:35:37.642848"
     },
     "tpm_gene_kallisto": {
         "content": [
@@ -395,7 +395,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.240422122"
+        "timestamp": "2024-03-11T11:35:04.172531"
     },
     "lengths_transcript_kallisto - stub": {
         "content": [
@@ -412,7 +412,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.201244158"
+        "timestamp": "2024-03-11T11:35:20.842475"
     },
     "lengths_gene_kallisto": {
         "content": [
@@ -429,7 +429,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.25633664"
+        "timestamp": "2024-03-11T11:35:04.16551"
     },
     "counts_gene_scaled_kallisto - stub": {
         "content": [
@@ -446,7 +446,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.160095512"
+        "timestamp": "2024-03-11T11:35:20.831518"
     },
     "tpm_transcript_kallisto": {
         "content": [
@@ -463,7 +463,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.2613952"
+        "timestamp": "2024-03-11T11:35:04.177955"
     },
     "lengths_gene_salmon": {
         "content": [
@@ -480,7 +480,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.700155703"
+        "timestamp": "2024-03-11T11:35:37.658624"
     },
     "counts_gene_length_scaled_salmon - stub": {
         "content": [
@@ -497,7 +497,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.217581894"
+        "timestamp": "2024-03-11T11:35:54.13369"
     },
     "counts_gene_kallisto": {
         "content": [
@@ -514,19 +514,19 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.243833201"
+        "timestamp": "2024-03-11T11:35:04.113216"
     },
     "versions_kallisto": {
         "content": [
             [
-                "versions.yml:md5,a6476f297a8e9396f4cfc151cd7f25ed"
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:30.280881588"
+        "timestamp": "2024-03-11T11:35:04.181904"
     },
     "counts_gene_salmon - stub": {
         "content": [
@@ -543,19 +543,19 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:31:05.210758835"
+        "timestamp": "2024-03-11T11:35:54.127272"
     },
     "versions_kallisto - stub": {
         "content": [
             [
-                "versions.yml:md5,721fc5c3bfa6792e8982f2662908b836"
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.210884587"
+        "timestamp": "2024-03-11T11:35:20.86053"
     },
     "tpm_transcript_kallisto - stub": {
         "content": [
@@ -572,7 +572,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:39.18051906"
+        "timestamp": "2024-03-11T11:35:20.856075"
     },
     "counts_gene_scaled_salmon": {
         "content": [
@@ -589,6 +589,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-09T13:30:55.694826803"
+        "timestamp": "2024-03-11T11:35:37.647691"
     }
 }

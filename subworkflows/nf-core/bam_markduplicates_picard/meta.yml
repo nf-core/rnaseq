@@ -14,13 +14,13 @@ components:
   - samtools/flagstat
   - bam_stats_samtools
 input:
-  - ch_bam:
+  - ch_reads:
       description: |
-        BAM/CRAM/SAM file
-        Structure: [ val(meta), path(bam) ]
+        Sequence reads in BAM/CRAM/SAM format
+        Structure: [ val(meta), path(reads) ]
   - ch_fasta:
       description: |
-        Reference genome fasta file
+        Reference genome fasta file required for CRAM input
         Structure: [ path(fasta) ]
   - ch_fasta:
       description: |
@@ -29,12 +29,20 @@ input:
 output:
   - bam:
       description: |
-        processed BAM/CRAM/SAM file
+        processed BAM/SAM file
         Structure: [ val(meta), path(bam) ]
   - bai:
       description: |
-        BAM/CRAM/SAM samtools index
+        BAM/SAM samtools index
         Structure: [ val(meta), path(bai) ]
+  - cram:
+      description: |
+        processed CRAM file
+        Structure: [ val(meta), path(cram) ]
+  - crai:
+      description: |
+        CRAM samtools index
+        Structure: [ val(meta), path(crai) ]
   - csi:
       description: |
         CSI samtools index

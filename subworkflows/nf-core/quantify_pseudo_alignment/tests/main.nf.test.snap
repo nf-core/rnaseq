@@ -50,65 +50,21 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,ba4ff9c05eea56d71bb2de77ae960f9c"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,d8a8f1b178acd49dc04c6dabbc00bbab"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,d535f7e33c2a7fd98aeedbfe23fc9cfe"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.transcript_counts.tsv:md5,c5a43880cd87d00ef40de5df9ca3afa7"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.transcript_tpm.tsv:md5,de458e1c2a579e53bd7671c5176f5d0c"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,a681c620612c2496ea8294af38c7443e"
-                ]
-            ],
-            [
                 "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
-                "versions.yml:md5,dbf98ec672f75a683c28dcf4121364d2",
+                "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
                 "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
                 "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
-            ]
+            ],
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.02.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-12T10:33:14.836979"
+        "timestamp": "2024-04-03T17:29:13.487959"
     },
     "salmon": {
         "content": [
@@ -160,65 +116,23 @@
                     "all_samples.transcript_lengths.tsv:md5,f39a15fea56a5a8e5776dcdda0c8f102"
                 ]
             ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,504f040f8916a0cb0d462fa4991ec4ee"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,f3082e7eba40fa82d018d3d3b94b83b7"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,477703064bec63ece90942f25121bda2"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.transcript_counts.tsv:md5,f68224a34261b93f432ef4f97dfabe15"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.SummarizedExperiment.rds:md5,8d52eafb09e5c901ed384c7e5403a0bc"
-                ]
-            ],
+            null,
+            null,
             [
                 "versions.yml:md5,4c3564e1ba17d8ce2b0ee784251ddd87",
                 "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
-                "versions.yml:md5,dbf98ec672f75a683c28dcf4121364d2",
+                "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
                 "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed"
-            ]
+            ],
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.02.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-12T10:31:15.969548"
+        "timestamp": "2024-04-03T17:28:43.74907"
     }
 }

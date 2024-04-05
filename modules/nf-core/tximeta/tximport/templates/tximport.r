@@ -210,7 +210,6 @@ tximeta.version <- as.character(packageVersion('tximeta'))
 writeLines(
     c(
         '"${task.process}":',
-        paste('    r-base:', r.version),
         paste('    bioconductor-tximeta:', tximeta.version)
     ),
 'versions.yml')

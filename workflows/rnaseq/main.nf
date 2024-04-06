@@ -782,388 +782,183 @@ workflow RNASEQ {
         ch_multiqc_report = MULTIQC.out.report
     }
 
+    topic:
+    QUANTIFY_STAR_SALMON.out.results                        >> 'align'
+    QUANTIFY_STAR_SALMON.out.tpm_gene                       >> 'align'
+    QUANTIFY_STAR_SALMON.out.counts_gene                    >> 'align'
+    QUANTIFY_STAR_SALMON.out.lengths_gene                   >> 'align'
+    QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled      >> 'align'
+    QUANTIFY_STAR_SALMON.out.counts_gene_scaled             >> 'align'
+    QUANTIFY_STAR_SALMON.out.tpm_transcript                 >> 'align'
+    QUANTIFY_STAR_SALMON.out.counts_transcript              >> 'align'
+    QUANTIFY_STAR_SALMON.out.lengths_transcript             >> 'align'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds                >> 'align'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled  >> 'align'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled         >> 'align'
+    QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'align'
+
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam         >> 'align-intermeds'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bai         >> 'align-intermeds'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.stats       >> 'align-samtools-stats'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.flagstat    >> 'align-samtools-stats'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.idxstats    >> 'align-samtools-stats'
+    BAM_SORT_STATS_SAMTOOLS.out.bam         >> 'align-intermeds'
+    BAM_SORT_STATS_SAMTOOLS.out.bai         >> 'align-intermeds'
+    BAM_SORT_STATS_SAMTOOLS.out.stats       >> 'align-intermeds-samtools-stats'
+    BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> 'align-intermeds-samtools-stats'
+    BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> 'align-intermeds-samtools-stats'
+    SAMTOOLS_SORT.out.bam                   >> 'align-intermeds'
+    UMITOOLS_PREPAREFORSALMON.out.bam       >> 'align-intermeds'
+    UMITOOLS_PREPAREFORSALMON.out.log       >> 'align-intermeds-umitools-log'
+
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam        >> 'align-intermeds'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai        >> 'align-intermeds'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats      >> 'align-samtools-stats'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat   >> 'align-samtools-stats'
+    BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats   >> 'align-samtools-stats'
+
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig    >> 'align-bigwig'
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig    >> 'align-bigwig'
+
+    DESEQ2_QC_STAR_SALMON.out.rdata         >> 'align-deseq2'
+    DESEQ2_QC_STAR_SALMON.out.pca_txt       >> 'align-deseq2'
+    DESEQ2_QC_STAR_SALMON.out.pdf           >> 'align-deseq2'
+    DESEQ2_QC_STAR_SALMON.out.dists_txt     >> 'align-deseq2'
+    DESEQ2_QC_STAR_SALMON.out.size_factors  >> 'align-deseq2'
+    DESEQ2_QC_STAR_SALMON.out.log           >> 'align-deseq2'
+    DESEQ2_QC_RSEM.out.rdata                >> 'align-deseq2'
+    DESEQ2_QC_RSEM.out.pca_txt              >> 'align-deseq2'
+    DESEQ2_QC_RSEM.out.pdf                  >> 'align-deseq2'
+    DESEQ2_QC_RSEM.out.dists_txt            >> 'align-deseq2'
+    DESEQ2_QC_RSEM.out.size_factors         >> 'align-deseq2'
+    DESEQ2_QC_RSEM.out.log                  >> 'align-deseq2'
+
+    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene                      >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene                   >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene                  >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled     >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled            >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript                >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript             >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript            >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds               >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled        >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds         >> 'pseudo-align'
+
+    DESEQ2_QC_PSEUDO.out.rdata          >> 'pseudo-align-deseq2'
+    DESEQ2_QC_PSEUDO.out.pca_txt        >> 'pseudo-align-deseq2'
+    DESEQ2_QC_PSEUDO.out.pdf            >> 'pseudo-align-deseq2'
+    DESEQ2_QC_PSEUDO.out.dists_txt      >> 'pseudo-align-deseq2'
+    DESEQ2_QC_PSEUDO.out.size_factors   >> 'pseudo-align-deseq2'
+    DESEQ2_QC_PSEUDO.out.log            >> 'pseudo-align-deseq2'
+
+    DUPRADAR.out.pdf >> 'align-dupradar'
+    DUPRADAR.out.txt >> 'align-dupradar'
+
+    BBMAP_BBSPLIT.out.stats     >> 'bbsplit'
+    BBMAP_BBSPLIT.out.all_fastq >> 'bbsplit-intermeds'
+
+    CAT_FASTQ.out.reads >> 'merged-fastq'
+
+    MULTIQC.out.report  >> 'multiqc'
+    MULTIQC.out.data    >> 'multiqc'
+    MULTIQC.out.plots   >> 'multiqc'
+
+    PRESEQ_LCEXTRAP.out.lc_extrap   >> 'align-preseq'
+    PRESEQ_LCEXTRAP.out.log         >> 'align-preseq-log'
+
+    QUALIMAP_RNASEQ.out.results >> 'align-qualimap'
+
+    SORTMERNA.out.log   >> 'sortmerna'
+    SORTMERNA.out.reads >> 'sortmerna-intermeds'
+
+    STRINGTIE_STRINGTIE.out.transcript_gtf  >> 'align-stringtie'
+    STRINGTIE_STRINGTIE.out.abundance       >> 'align-stringtie'
+    STRINGTIE_STRINGTIE.out.coverage_gtf    >> 'align-stringtie'
+    STRINGTIE_STRINGTIE.out.ballgown        >> 'align-stringtie'
+
+    SUBREAD_FEATURECOUNTS.out.counts    >> 'align-featurecounts'
+    SUBREAD_FEATURECOUNTS.out.summary   >> 'align-featurecounts'
+    MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> 'align-featurecounts'
+
+    ALIGN_STAR.out.log_final        >> 'align-star-log'
+    ALIGN_STAR.out.log_out          >> 'align-star-log'
+    ALIGN_STAR.out.log_progress     >> 'align-star-log'
+    ALIGN_STAR.out.tab              >> 'align-star-log'
+    ALIGN_STAR.out.orig_bam         >> 'align-star-intermeds'
+    ALIGN_STAR.out.bam_sorted       >> 'align-star-intermeds'
+    ALIGN_STAR.out.bam_transcript   >> 'align-star-intermeds'
+    ALIGN_STAR.out.fastq            >> 'align-star-unaligned'
+
+    QUANTIFY_RSEM.out.counts_gene               >> 'quantify-rsem'
+    QUANTIFY_RSEM.out.counts_transcript         >> 'quantify-rsem'
+    QUANTIFY_RSEM.out.stat                      >> 'quantify-rsem'
+    QUANTIFY_RSEM.out.logs                      >> 'quantify-rsem-log'
+    QUANTIFY_RSEM.out.bam_star                  >> 'quantify-rsem-intermeds'
+    QUANTIFY_RSEM.out.bam_genome                >> 'quantify-rsem-intermeds'
+    QUANTIFY_RSEM.out.bam_transcript            >> 'quantify-rsem-intermeds'
+    QUANTIFY_RSEM.out.merged_counts_gene        >> 'quantify-rsem'
+    QUANTIFY_RSEM.out.merged_tpm_gene           >> 'quantify-rsem'
+    QUANTIFY_RSEM.out.merged_counts_transcript  >> 'quantify-rsem'
+    QUANTIFY_RSEM.out.merged_tpm_transcript     >> 'quantify-rsem'
+
+    BAM_MARKDUPLICATES_PICARD.out.bam       >> 'align-picard'
+    BAM_MARKDUPLICATES_PICARD.out.bai       >> 'align-picard'
+    BAM_MARKDUPLICATES_PICARD.out.csi       >> 'align-picard'
+    BAM_MARKDUPLICATES_PICARD.out.metrics   >> 'align-picard-metrics'
+    BAM_MARKDUPLICATES_PICARD.out.stats     >> 'align-picard-stats'
+    BAM_MARKDUPLICATES_PICARD.out.flagstat  >> 'align-picard-stats'
+    BAM_MARKDUPLICATES_PICARD.out.idxstats  >> 'align-picard-stats'
+
+    BAM_RSEQC.out.bamstat_txt   >> 'align-rseqc-bamstat'
+    BAM_RSEQC.out.inferexperiment_txt >> 'align-rseqc-inferexperiment'
+    BAM_RSEQC.out.junctionannotation_pdf            >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionannotation_events_pdf     >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionannotation_bed            >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionannotation_interact_bed   >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionannotation_xls            >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionannotation_log            >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionannotation_rscript        >> 'align-rseqc-junctionannotation'
+    BAM_RSEQC.out.junctionsaturation_pdf        >> 'align-rseqc-junctionsaturation'
+    BAM_RSEQC.out.junctionsaturation_rscript    >> 'align-rseqc-junctionsaturation'
+    BAM_RSEQC.out.readduplication_pdf       >> 'align-rseqc-readduplication'
+    BAM_RSEQC.out.readduplication_seq_xls   >> 'align-rseqc-readduplication'
+    BAM_RSEQC.out.readduplication_pos_xls   >> 'align-rseqc-readduplication'
+    BAM_RSEQC.out.readduplication_rscript   >> 'align-rseqc-readduplication'
+    BAM_RSEQC.out.readdistribution_txt  >> 'align-rseqc-readdistribution'
+    BAM_RSEQC.out.innerdistance_distance    >> 'align-rseqc-innerdistance'
+    BAM_RSEQC.out.innerdistance_freq        >> 'align-rseqc-innerdistance'
+    BAM_RSEQC.out.innerdistance_mean        >> 'align-rseqc-innerdistance'
+    BAM_RSEQC.out.innerdistance_pdf         >> 'align-rseqc-innerdistance'
+    BAM_RSEQC.out.innerdistance_rscript     >> 'align-rseqc-innerdistance'
+    BAM_RSEQC.out.tin_txt   >> 'align-rseqc-tin'
+
+    FASTQ_ALIGN_HISAT2.out.summary  >> 'align-hisat2-log'
+    FASTQ_ALIGN_HISAT2.out.orig_bam >> 'align-hisat2-intermeds'
+    FASTQ_ALIGN_HISAT2.out.fastq    >> 'align-hisat2-unaligned'
+
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_html    >> 'trim-fastqc'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip     >> 'trim-fastqc'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json           >> 'trim'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_html           >> 'trim'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_log            >> 'trim-log'
+    // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads          >> 'trim-intermeds'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_fail     >> 'trim-intermeds'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_merged   >> 'trim-intermeds'
+    FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_log             >> 'umitools'
+    // FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_reads           >> 'umitools-intermeds'
+
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_html  >> 'trim-fastqc'
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip   >> 'trim-fastqc'
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log   >> 'trim'
+    // FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_reads >> 'trim-intermeds'
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log    >> 'umitools'
+    // FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_reads  >> 'umitools-intermeds'
+
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]
-}
-
-output {
-    directory params.outdir, mode: params.publish_dir_mode
-
-    //
-    // STAR Salmon alignment options
-    //
-    "${params.aligner}" {
-        from QUANTIFY_STAR_SALMON.out.results
-        from QUANTIFY_STAR_SALMON.out.tpm_gene
-        from QUANTIFY_STAR_SALMON.out.counts_gene
-        from QUANTIFY_STAR_SALMON.out.lengths_gene
-        from QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled
-        from QUANTIFY_STAR_SALMON.out.counts_gene_scaled
-        from QUANTIFY_STAR_SALMON.out.tpm_transcript
-        from QUANTIFY_STAR_SALMON.out.counts_transcript
-        from QUANTIFY_STAR_SALMON.out.lengths_transcript
-        from QUANTIFY_STAR_SALMON.out.merged_gene_rds
-        from QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled
-        from QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled
-        from QUANTIFY_STAR_SALMON.out.merged_transcript_rds
-    }
-
-    "${params.aligner}" {
-        defaults enabled: params.save_align_intermeds || params.save_umi_intermeds
-
-        from SAMTOOLS_SORT.out.bam
-        'umitools/log' {
-            from UMITOOLS_PREPAREFORSALMON.out.log
-        }
-        from UMITOOLS_PREPAREFORSALMON.out.bam
-
-        from BAM_SORT_STATS_SAMTOOLS.bam
-        from BAM_SORT_STATS_SAMTOOLS.bai
-
-        'samtools_stats' {
-            from BAM_SORT_STATS_SAMTOOLS.stats
-            from BAM_SORT_STATS_SAMTOOLS.flagstat
-            from BAM_SORT_STATS_SAMTOOLS.idxstats
-        }
-    }
-
-    "${params.aligner}" {
-        'umitools' {
-            // from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.tsv_edit_distance
-            // from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.tsv_per_umi
-            // from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.tsv_umi_per_position
-        }
-        from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam, enabled: params.save_align_intermeds || params.save_umi_intermeds
-        from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bai, enabled: params.save_align_intermeds || params.save_umi_intermeds
-
-        'samtools_stats' {
-            from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.stats
-            from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.flagstat
-            from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.idxstats
-        }
-    }
-
-    //
-    // General alignment options
-    //
-    "${params.aligner}" {
-        'umitools' {
-            // from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.tsv_edit_distance
-            // from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.tsv_per_umi
-            // from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.tsv_umi_per_position
-        }
-        from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam, enabled: params.save_align_intermeds || params.with_umi || params.save_umi_intermeds
-        from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai, enabled: params.save_align_intermeds || params.with_umi || params.save_umi_intermeds
-
-        'samtools_stats' {
-            from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats
-            from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat
-            from BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats
-        }
-    }
-
-    //
-    // bigWig coverage options
-    //
-    "${params.aligner}/bigwig" {
-        from BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig
-        from BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig
-    }
-
-    //
-    // DESeq2 QC options
-    //
-    "${params.aligner}/deseq2_qc" {
-        from DESEQ2_QC_STAR_SALMON.out.rdata
-        from DESEQ2_QC_STAR_SALMON.out.pca_txt
-        from DESEQ2_QC_STAR_SALMON.out.pdf, pattern: '*.plots.pdf'
-        from DESEQ2_QC_STAR_SALMON.out.dists_txt
-        from DESEQ2_QC_STAR_SALMON.out.size_factors
-        from DESEQ2_QC_STAR_SALMON.out.log
-
-        from DESEQ2_QC_RSEM.out.rdata
-        from DESEQ2_QC_RSEM.out.pca_txt
-        from DESEQ2_QC_RSEM.out.pdf, pattern: '*.plots.pdf'
-        from DESEQ2_QC_RSEM.out.dists_txt
-        from DESEQ2_QC_RSEM.out.size_factors
-        from DESEQ2_QC_RSEM.out.log
-    }
-
-    //
-    // Pseudo-alignment options
-    //
-    "${params.pseudo_aligner}" {
-        // from 'QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
-
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript
-
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled
-        from QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds
-
-        'deseq2_qc' {
-            from DESEQ2_QC_PSEUDO.out.rdata
-            from DESEQ2_QC_PSEUDO.out.pca_txt
-            from DESEQ2_QC_PSEUDO.out.pdf, pattern: '*.plots.pdf'
-            from DESEQ2_QC_PSEUDO.out.dists_txt
-            from DESEQ2_QC_PSEUDO.out.size_factors
-            from DESEQ2_QC_PSEUDO.out.log
-        }
-    }
-
-    // modules/local/dupradar
-    "${params.aligner}/dupradar" {
-        'scatter_plot' {
-            from DUPRADAR.out.pdf, pattern: "*Dens.pdf"
-        }
-        'box_plot' {
-            from DUPRADAR.out.pdf, pattern: "*Boxplot.pdf"
-        }
-        'histogram' {
-            from DUPRADAR.out.pdf, pattern: "*Hist.pdf"
-        }
-        'gene_data' {
-            from DUPRADAR.out.txt, pattern: "*Matrix.txt"
-        }
-        'intercepts_slope' {
-            from DUPRADAR.out.txt, pattern: "*slope.txt"
-        }
-    }
-
-    // modules/nf-core/bbmap/bbsplit
-    'bbsplit' {
-        from BBMAP_BBSPLIT.out.stats
-        from BBMAP_BBSPLIT.out.all_fastq, enabled: params.save_bbsplit_reads
-    }
-
-    // modules/nf-core/cat/fastq
-    'fastq' {
-        from CAT_FASTQ.out.reads, enabled: params.save_merged_fastq
-    }
-
-    // modules/nf-core/multiqc
-    def multiqc_path = params.skip_alignment
-        ? 'multiqc'
-        : "multiqc/${params.aligner}"
-
-    "${multiqc_path}" {
-        from MULTIQC.out.report
-        from MULTIQC.out.data
-        from MULTIQC.out.plots
-    }
-
-    // modules/nf-core/preseq/lcextrap
-    "${params.aligner}" {
-        'preseq' {
-            from PRESEQ_LCEXTRAP.out.lc_extrap
-        }
-        'preseq/log' {
-            from PRESEQ_LCEXTRAP.out.log
-        }
-    }
-
-    // modules/nf-core/qualimap/rnaseq
-    "${params.aligner}/qualimap" {
-        from QUALIMAP_RNASEQ.out.results
-    }
-
-    // modules/nf-core/sortmerna
-    'sortmerna' {
-        from SORTMERNA.out.log
-        from SORTMERNA.out.reads, enabled: params.save_non_ribo_reads
-    }
-
-    // modules/nf-core/stringtie/stringtie
-    "${params.aligner}/stringtie" {
-        from STRINGTIE_STRINGTIE.out.transcript_gtf
-        from STRINGTIE_STRINGTIE.out.abundance
-        from STRINGTIE_STRINGTIE.out.coverage_gtf
-        from STRINGTIE_STRINGTIE.out.ballgown
-    }
-
-    // modules/nf-core/subread/featurecounts
-    "${params.aligner}/featurecounts" {
-        from SUBREAD_FEATURECOUNTS.out.counts
-        from SUBREAD_FEATURECOUNTS.out.summary
-        from MULTIQC_CUSTOM_BIOTYPE.out.tsv
-    }
-
-    // subworkflows/local/align_star
-    "${params.aligner}" {
-        'log' {
-            from ALIGN_STAR.out.log_final
-            from ALIGN_STAR.out.log_out
-            from ALIGN_STAR.out.log_progress
-            from ALIGN_STAR.out.tab
-        }
-
-        from ALIGN_STAR.out.orig_bam, enabled: params.save_align_intermeds
-        from ALIGN_STAR.out.bam_sorted, enabled: params.save_align_intermeds
-        from ALIGN_STAR.out.bam_transcript, enabled: params.save_align_intermeds
-
-        'unmapped' {
-            from ALIGN_STAR.out.fastq, enabled: params.save_unaligned
-        }
-    }
-
-    // subworkflows/local/quantify_rsem
-    "${params.aligner}" {
-        from QUANTIFY_RSEM.out.counts_gene
-        from QUANTIFY_RSEM.out.counts_transcript
-        from QUANTIFY_RSEM.out.stat
-
-        from QUANTIFY_RSEM.out.bam_star, enabled: params.save_align_intermeds
-        from QUANTIFY_RSEM.out.bam_genome, enabled: params.save_align_intermeds
-        from QUANTIFY_RSEM.out.bam_transcript, enabled: params.save_align_intermeds
-
-        'log' {
-            from QUANTIFY_RSEM.out.logs
-        }
-
-        from QUANTIFY_RSEM.out.merged_counts_gene
-        from QUANTIFY_RSEM.out.merged_tpm_gene
-        from QUANTIFY_RSEM.out.merged_counts_transcript
-        from QUANTIFY_RSEM.out.merged_tpm_transcript
-    }
-
-    // subworkflows/nf-core/bam_markduplicates_picard
-    "${params.aligner}" {
-        'picard_metrics' {
-            from BAM_MARKDUPLICATES_PICARD.out.metrics
-        }
-        from BAM_MARKDUPLICATES_PICARD.out.bam
-        from BAM_MARKDUPLICATES_PICARD.out.bai
-        from BAM_MARKDUPLICATES_PICARD.out.csi
-        'samtools_stats' {
-            from BAM_MARKDUPLICATES_PICARD.out.stats
-            from BAM_MARKDUPLICATES_PICARD.out.flagstat
-            from BAM_MARKDUPLICATES_PICARD.out.idxstats
-        }
-    }
-
-    // subworkflows/nf-core/bam_rseqc
-    "${params.aligner}/rseqc" {
-        'bam_stat' {
-            from BAM_RSEQC.out.bamstat_txt
-        }
-        'infer_experiment' {
-            from BAM_RSEQC.out.inferexperiment_txt
-        }
-        'junction_annotation' {
-            'pdf' {
-                from BAM_RSEQC.out.junctionannotation_pdf
-                from BAM_RSEQC.out.junctionannotation_events_pdf
-            }
-            'bed' {
-                from BAM_RSEQC.out.junctionannotation_bed
-                from BAM_RSEQC.out.junctionannotation_interact_bed
-            }
-            'xls' {
-                from BAM_RSEQC.out.junctionannotation_xls
-            }
-            'log' {
-                from BAM_RSEQC.out.junctionannotation_log
-            }
-            'rscript' {
-                from BAM_RSEQC.out.junctionannotation_rscript
-            }
-        }
-        'junction_saturation' {
-            'pdf' {
-                from BAM_RSEQC.out.junctionsaturation_pdf
-            }
-            'rscript' {
-                from BAM_RSEQC.out.junctionsaturation_rscript
-            }
-        }
-        'read_duplication' {
-            'pdf' {
-                from BAM_RSEQC.out.readduplication_pdf
-            }
-            'xls' {
-                from BAM_RSEQC.out.readduplication_seq_xls
-                from BAM_RSEQC.out.readduplication_pos_xls
-            }
-            'rscript' {
-                from BAM_RSEQC.out.readduplication_rscript
-            }
-        }
-        'read_distribution' {
-            from BAM_RSEQC.out.readdistribution_txt
-        }
-        'inner_distance' {
-            'txt' {
-                from BAM_RSEQC.out.innerdistance_distance
-                from BAM_RSEQC.out.innerdistance_freq
-                from BAM_RSEQC.out.innerdistance_mean
-            }
-            'pdf' {
-                from BAM_RSEQC.out.innerdistance_pdf
-            }
-            'rscript' {
-                from BAM_RSEQC.out.innerdistance_rscript
-            }
-        }
-        'tin' {
-            from BAM_RSEQC.out.tin_txt
-        }
-    }
-
-    // subworkflows/nf-core/fastq_align_hisat2
-    "${params.aligner}" {
-        'log' {
-            from FASTQ_ALIGN_HISAT2.out.summary
-        }
-        from FASTQ_ALIGN_HISAT2.out.orig_bam, enabled: params.save_align_intermeds
-        'unmapped' {
-            fom FASTQ_ALIGN_HISAT2.out.fastq, enabled: params.save_unaligned
-        }
-    }
-
-    // subworkflows/nf-core/fastq_fastqc_umitools_fastp
-    "${params.trimmer}" {
-        'fastqc' {
-            from FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_html
-            from FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip
-        }
-        from FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json
-        from FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_html
-        'log' {
-            from FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_log
-        }
-        // from FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads, enabled: params.save_trimmed
-        from FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_fail, enabled: params.save_trimmed
-        from FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_merged, enabled: params.save_trimmed
-    }
-
-    'umitools' {
-        from FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_log
-        // from FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_reads, enabled: params.save_umi_intermeds
-    }
-
-    // subworkflows/nf-core/fastq_fastqc_umitools_trimgalore
-    "${params.trimmer}" {
-        'fastqc' {
-            from FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_html
-            from FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
-        }
-        from FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
-        // from FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_reads, enabled: params.save_trimmed
-    }
-
-    'umitools' {
-        from FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log
-        // from FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_reads, enabled: params.save_umi_intermeds
-    }
 }
 
 /*

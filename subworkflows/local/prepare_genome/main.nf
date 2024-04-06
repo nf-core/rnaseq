@@ -327,6 +327,23 @@ workflow PREPARE_GENOME {
         }
     }
 
+    topic:
+    ch_fasta            >> 'genome'
+    ch_gtf              >> 'genome'
+    ch_gff              >> 'genome'
+    ch_add_fasta        >> 'genome'
+    ch_gene_bed         >> 'genome'
+    ch_transcript_fasta >> 'genome'
+    ch_fai              >> 'genome'
+    ch_sizes            >> 'genome'
+    ch_splicesites      >> 'genome-index'
+    ch_bbsplit_index    >> 'genome-index'
+    ch_star_index       >> 'genome-index'
+    ch_rsem_index       >> 'genome-index'
+    ch_hisat2_index     >> 'genome-index'
+    ch_salmon_index     >> 'genome-index'
+    ch_kallisto_index   >> 'genome-index'
+
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -342,29 +359,4 @@ workflow PREPARE_GENOME {
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
-}
-
-output {
-    directory params.outdir, mode: params.publish_dir_mode, enabled: params.save_reference
-
-    'genome' {
-        from PREPARE_GENOME.out.fasta
-        from PREPARE_GENOME.out.gtf
-        // from PREPARE_GENOME.out.gff
-        // from PREPARE_GENOME.out.add_fasta
-        from PREPARE_GENOME.out.gene_bed
-        from PREPARE_GENOME.out.transcript_fasta
-        from PREPARE_GENOME.out.fai
-        // from PREPARE_GENOME.out.sizes
-    }
-
-    'genome/index' {
-        from PREPARE_GENOME.out.splicesites
-        from PREPARE_GENOME.out.bbsplit_index
-        from PREPARE_GENOME.out.star_index
-        from PREPARE_GENOME.out.rsem_index
-        from PREPARE_GENOME.out.hisat2_index
-        from PREPARE_GENOME.out.salmon_index
-        from PREPARE_GENOME.out.kallisto_index
-    }
 }

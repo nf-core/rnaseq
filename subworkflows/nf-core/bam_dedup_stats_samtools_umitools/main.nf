@@ -42,6 +42,11 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     BAM_STATS_SAMTOOLS ( ch_bam_bai_dedup, [ [:], [] ] )
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
+    topic:
+    UMITOOLS_DEDUP.out.tsv_edit_distance    >> 'align-umitools'
+    UMITOOLS_DEDUP.out.tsv_per_umi          >> 'align-umitools'
+    UMITOOLS_DEDUP.out.tsv_umi_per_position >> 'align-umitools'
+
     emit:
     bam      = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), path(bam) ]
 

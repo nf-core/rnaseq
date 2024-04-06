@@ -82,6 +82,7 @@ workflow PREPARE_GENOME {
             } else {
                 ch_gtf = Channel.value(file(gtf))
             }
+            ch_gff = Channel.empty()
         } else if (gff) {
             if (gff.endsWith('.gz')) {
                 ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
@@ -335,7 +336,7 @@ workflow PREPARE_GENOME {
     ch_gene_bed         >> 'genome'
     ch_transcript_fasta >> 'genome'
     ch_fai              >> 'genome'
-    ch_sizes            >> 'genome'
+    ch_chrom_sizes      >> 'genome'
     ch_splicesites      >> 'genome-index'
     ch_bbsplit_index    >> 'genome-index'
     ch_star_index       >> 'genome-index'

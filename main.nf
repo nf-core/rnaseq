@@ -10,6 +10,7 @@
 */
 
 nextflow.enable.dsl = 2
+nextflow.preview.topic = true
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,12 +172,12 @@ output {
     // Genome preparation
     //
     'genome' {
-        enabled params.save_reference
+        defaults enabled: params.save_reference
         from 'genome'
     }
 
     'genome/index' {
-        enabled params.save_reference
+        defaults enabled: params.save_reference
         from 'genome-index'
     }
 
@@ -196,7 +197,7 @@ output {
     }
 
     "${params.aligner}" {
-        enabled params.save_align_intermeds || params.save_umi_intermeds
+        defaults enabled: params.save_align_intermeds || params.save_umi_intermeds
         from 'align-intermeds'
 
         'samtools_stats' {
@@ -260,7 +261,7 @@ output {
 
     // modules/nf-core/cat/fastq
     'fastq' {
-        enabled params.save_merged_fastq
+        defaults enabled: params.save_merged_fastq
         from 'merged-fastq'
     }
 

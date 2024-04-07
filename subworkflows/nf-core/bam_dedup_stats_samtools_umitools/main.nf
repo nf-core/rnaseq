@@ -43,9 +43,14 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     topic:
+    UMITOOLS_DEDUP.out.bam                  >> 'align-intermeds'
     UMITOOLS_DEDUP.out.tsv_edit_distance    >> 'align-umitools'
     UMITOOLS_DEDUP.out.tsv_per_umi          >> 'align-umitools'
     UMITOOLS_DEDUP.out.tsv_umi_per_position >> 'align-umitools'
+    SAMTOOLS_INDEX.out.bai                  >> 'align-intermeds'
+    BAM_STATS_SAMTOOLS.out.stats            >> 'align-samtools-stats'
+    BAM_STATS_SAMTOOLS.out.flagstat         >> 'align-samtools-stats'
+    BAM_STATS_SAMTOOLS.out.idxstats         >> 'align-samtools-stats'
 
     emit:
     bam      = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), path(bam) ]

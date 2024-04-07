@@ -26,6 +26,9 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out.bedgraph, sizes )
     ch_versions = ch_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.versions.first())
 
+    topic:
+    UCSC_BEDGRAPHTOBIGWIG.out.bigwig >> 'align-bigwig'
+
     emit:
     bigwig   = UCSC_BEDGRAPHTOBIGWIG.out.bigwig // channel: [ val(meta), [ bigwig ] ]
     bedgraph = UCSC_BEDCLIP.out.bedgraph        // channel: [ val(meta), [ bedgraph ] ]

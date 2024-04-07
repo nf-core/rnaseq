@@ -12,8 +12,8 @@ process SORTMERNA {
     path  fastas
 
     output:
-    tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads
-    tuple val(meta), path("*.log")     , emit: log
+    tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads    , topic: 'sortmerna-intermeds'
+    tuple val(meta), path("*.log")     , emit: log              , topic: 'sortmerna'
     path  "versions.yml"               , emit: versions
 
     when:

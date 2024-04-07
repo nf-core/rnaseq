@@ -62,6 +62,16 @@ workflow ALIGN_STAR {
     BAM_SORT_STATS_SAMTOOLS ( ch_orig_bam, fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
+    topic:
+    ch_orig_bam         >> 'align-star-intermeds'
+    ch_log_final        >> 'align-star-log'
+    ch_log_out          >> 'align-star-log'
+    ch_log_progress     >> 'align-star-log'
+    ch_bam_sorted       >> 'align-star-intermeds'
+    ch_bam_transcript   >> 'align-star-intermeds'
+    ch_fastq            >> 'align-star-unaligned'
+    ch_tab              >> 'align-star-log'
+
     emit:
     orig_bam       = ch_orig_bam                    // channel: [ val(meta), bam            ]
     log_final      = ch_log_final                   // channel: [ val(meta), log_final      ]

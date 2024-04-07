@@ -37,6 +37,19 @@ workflow QUANTIFY_RSEM {
     )
     ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 
+    topic:
+    RSEM_CALCULATEEXPRESSION.out.counts_gene        >> 'quantify-rsem'
+    RSEM_CALCULATEEXPRESSION.out.counts_transcript  >> 'quantify-rsem'
+    RSEM_CALCULATEEXPRESSION.out.stat               >> 'quantify-rsem'
+    RSEM_CALCULATEEXPRESSION.out.logs               >> 'quantify-rsem-log'
+    RSEM_CALCULATEEXPRESSION.out.bam_star           >> 'quantify-rsem-intermeds'
+    RSEM_CALCULATEEXPRESSION.out.bam_genome         >> 'quantify-rsem-intermeds'
+    RSEM_CALCULATEEXPRESSION.out.bam_transcript     >> 'quantify-rsem-intermeds'
+    RSEM_MERGE_COUNTS.out.merged_counts_gene        >> 'quantify-rsem'
+    RSEM_MERGE_COUNTS.out.merged_tpm_gene           >> 'quantify-rsem'
+    RSEM_MERGE_COUNTS.out.merged_counts_transcript  >> 'quantify-rsem'
+    RSEM_MERGE_COUNTS.out.merged_tpm_transcript     >> 'quantify-rsem'
+
     emit:
     counts_gene              = RSEM_CALCULATEEXPRESSION.out.counts_gene       // channel: [ val(meta), counts ]
     counts_transcript        = RSEM_CALCULATEEXPRESSION.out.counts_transcript // channel: [ val(meta), counts ]

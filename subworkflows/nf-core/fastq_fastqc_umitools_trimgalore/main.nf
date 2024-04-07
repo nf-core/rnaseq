@@ -105,6 +105,15 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
             .set { trim_read_count }
     }
 
+    topic:
+    // TODO: need to recover trim_reads and umi_reads
+    // trim_reads >> 'trim-intermeds'
+    // umi_reads  >> 'umitools-intermeds'
+    umi_log    >> 'umitools'
+    trim_html  >> 'trim-fastqc'
+    trim_zip   >> 'trim-fastqc'
+    trim_log   >> 'trim'
+
     emit:
     reads = trim_reads // channel: [ val(meta), [ reads ] ]
 

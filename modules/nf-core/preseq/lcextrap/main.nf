@@ -12,8 +12,8 @@ process PRESEQ_LCEXTRAP {
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("*.lc_extrap.txt"), emit: lc_extrap
-    tuple val(meta), path("*.log")          , emit: log
+    tuple val(meta), path("*.lc_extrap.txt"), emit: lc_extrap   , topic: 'align-preseq'
+    tuple val(meta), path("*.log")          , emit: log         , topic: 'align-preseq-log'
     path  "versions.yml"                    , emit: versions
 
     when:

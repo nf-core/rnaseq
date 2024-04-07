@@ -146,6 +146,30 @@ workflow BAM_RSEQC {
         versions    = versions.mix(RSEQC_TIN.out.versions.first())
     }
 
+    topic:
+    bamstat_txt                     >> 'align-rseqc-bamstat'
+    inferexperiment_txt             >> 'align-rseqc-inferexperiment'
+    junctionannotation_pdf          >> 'align-rseqc-junctionannotation'
+    junctionannotation_events_pdf   >> 'align-rseqc-junctionannotation'
+    junctionannotation_bed          >> 'align-rseqc-junctionannotation'
+    junctionannotation_interact_bed >> 'align-rseqc-junctionannotation'
+    junctionannotation_xls          >> 'align-rseqc-junctionannotation'
+    junctionannotation_log          >> 'align-rseqc-junctionannotation'
+    junctionannotation_rscript      >> 'align-rseqc-junctionannotation'
+    junctionsaturation_pdf          >> 'align-rseqc-junctionsaturation'
+    junctionsaturation_rscript      >> 'align-rseqc-junctionsaturation'
+    readduplication_pdf             >> 'align-rseqc-readduplication'
+    readduplication_seq_xls         >> 'align-rseqc-readduplication'
+    readduplication_pos_xls         >> 'align-rseqc-readduplication'
+    readduplication_rscript         >> 'align-rseqc-readduplication'
+    readdistribution_txt            >> 'align-rseqc-readdistribution'
+    innerdistance_distance          >> 'align-rseqc-innerdistance'
+    innerdistance_freq              >> 'align-rseqc-innerdistance'
+    innerdistance_mean              >> 'align-rseqc-innerdistance'
+    innerdistance_pdf               >> 'align-rseqc-innerdistance'
+    innerdistance_rscript           >> 'align-rseqc-innerdistance'
+    tin_txt                         >> 'align-rseqc-tin'
+
     emit:
     bamstat_txt                     // channel: [ val(meta), txt ]
 

@@ -26,6 +26,10 @@ workflow FASTQ_ALIGN_HISAT2 {
     BAM_SORT_STATS_SAMTOOLS ( HISAT2_ALIGN.out.bam, ch_fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
+    topic:
+    HISAT2_ALIGN.out.bam        >> 'align-hisat2-intermeds'
+    HISAT2_ALIGN.out.summary    >> 'align-hisat2-log'
+    HISAT2_ALIGN.out.fastq      >> 'align-hisat2-unaligned'
 
     emit:
     orig_bam = HISAT2_ALIGN.out.bam                 // channel: [ val(meta), bam   ]

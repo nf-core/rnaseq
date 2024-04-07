@@ -12,7 +12,7 @@ process QUALIMAP_RNASEQ {
     tuple val(meta2), path(gtf)
 
     output:
-    tuple val(meta), path("${prefix}"), emit: results
+    tuple val(meta), path("${prefix}"), emit: results, topic: 'align-qualimap'
     path  "versions.yml"              , emit: versions
 
     when:

@@ -11,7 +11,7 @@ process CAT_FASTQ {
     tuple val(meta), path(reads, stageAs: "input*/*")
 
     output:
-    tuple val(meta), path("*.merged.fastq.gz"), emit: reads
+    tuple val(meta), path("*.merged.fastq.gz"), emit: reads     , topic: 'merged-fastq'
     path "versions.yml"                       , emit: versions
 
     when:

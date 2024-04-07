@@ -798,11 +798,6 @@ workflow RNASEQ {
     QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'align'
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon' && params.with_umi
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bam         >> 'align-intermeds'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.bai         >> 'align-intermeds'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.stats       >> 'align-samtools-stats'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.flagstat    >> 'align-samtools-stats'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.idxstats    >> 'align-samtools-stats'
     // BAM_SORT_STATS_SAMTOOLS.out.bam         >> 'align-intermeds'
     // BAM_SORT_STATS_SAMTOOLS.out.bai         >> 'align-intermeds'
     // BAM_SORT_STATS_SAMTOOLS.out.stats       >> 'align-intermeds-samtools-stats'
@@ -811,16 +806,6 @@ workflow RNASEQ {
     // SAMTOOLS_SORT.out.bam                   >> 'align-intermeds'
     // UMITOOLS_PREPAREFORSALMON.out.bam       >> 'align-intermeds'
     // UMITOOLS_PREPAREFORSALMON.out.log       >> 'align-intermeds-umitools-log'
-
-    // TODO: !params.skip_alignment && params.aligner in ['star_salmon', 'hisat2']
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam        >> 'align-intermeds'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai        >> 'align-intermeds'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats      >> 'align-samtools-stats'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat   >> 'align-samtools-stats'
-    // BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats   >> 'align-samtools-stats'
-
-    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig    >> 'align-bigwig'
-    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig    >> 'align-bigwig'
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
     DESEQ2_QC_STAR_SALMON.out.rdata         >> 'align-deseq2'
@@ -858,114 +843,8 @@ workflow RNASEQ {
     DESEQ2_QC_PSEUDO.out.size_factors   >> 'pseudo-align-deseq2'
     DESEQ2_QC_PSEUDO.out.log            >> 'pseudo-align-deseq2'
 
-    DUPRADAR.out.pdf >> 'align-dupradar'
-    DUPRADAR.out.txt >> 'align-dupradar'
-
     BBMAP_BBSPLIT.out.stats     >> 'bbsplit'
     BBMAP_BBSPLIT.out.all_fastq >> 'bbsplit-intermeds'
-
-    CAT_FASTQ.out.reads >> 'merged-fastq'
-
-    MULTIQC.out.report  >> 'multiqc'
-    MULTIQC.out.data    >> 'multiqc'
-    MULTIQC.out.plots   >> 'multiqc'
-
-    // TODO: !params.skip_alignment && !params.skip_qc && !params.skip_preseq
-    // PRESEQ_LCEXTRAP.out.lc_extrap   >> 'align-preseq'
-    // PRESEQ_LCEXTRAP.out.log         >> 'align-preseq-log'
-
-    QUALIMAP_RNASEQ.out.results >> 'align-qualimap'
-
-    // TODO: params.remove_ribo_rna
-    // SORTMERNA.out.log   >> 'sortmerna'
-    // SORTMERNA.out.reads >> 'sortmerna-intermeds'
-
-    STRINGTIE_STRINGTIE.out.transcript_gtf  >> 'align-stringtie'
-    STRINGTIE_STRINGTIE.out.abundance       >> 'align-stringtie'
-    STRINGTIE_STRINGTIE.out.coverage_gtf    >> 'align-stringtie'
-    STRINGTIE_STRINGTIE.out.ballgown        >> 'align-stringtie'
-
-    SUBREAD_FEATURECOUNTS.out.counts    >> 'align-featurecounts'
-    SUBREAD_FEATURECOUNTS.out.summary   >> 'align-featurecounts'
-    MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> 'align-featurecounts'
-
-    ALIGN_STAR.out.log_final        >> 'align-star-log'
-    ALIGN_STAR.out.log_out          >> 'align-star-log'
-    ALIGN_STAR.out.log_progress     >> 'align-star-log'
-    ALIGN_STAR.out.tab              >> 'align-star-log'
-    ALIGN_STAR.out.orig_bam         >> 'align-star-intermeds'
-    ALIGN_STAR.out.bam_sorted       >> 'align-star-intermeds'
-    ALIGN_STAR.out.bam_transcript   >> 'align-star-intermeds'
-    ALIGN_STAR.out.fastq            >> 'align-star-unaligned'
-
-    // TODO: !params.skip_alignment && params.aligner == 'star_rsem'
-    // QUANTIFY_RSEM.out.counts_gene               >> 'quantify-rsem'
-    // QUANTIFY_RSEM.out.counts_transcript         >> 'quantify-rsem'
-    // QUANTIFY_RSEM.out.stat                      >> 'quantify-rsem'
-    // QUANTIFY_RSEM.out.logs                      >> 'quantify-rsem-log'
-    // QUANTIFY_RSEM.out.bam_star                  >> 'quantify-rsem-intermeds'
-    // QUANTIFY_RSEM.out.bam_genome                >> 'quantify-rsem-intermeds'
-    // QUANTIFY_RSEM.out.bam_transcript            >> 'quantify-rsem-intermeds'
-    // QUANTIFY_RSEM.out.merged_counts_gene        >> 'quantify-rsem'
-    // QUANTIFY_RSEM.out.merged_tpm_gene           >> 'quantify-rsem'
-    // QUANTIFY_RSEM.out.merged_counts_transcript  >> 'quantify-rsem'
-    // QUANTIFY_RSEM.out.merged_tpm_transcript     >> 'quantify-rsem'
-
-    BAM_MARKDUPLICATES_PICARD.out.bam       >> 'align-picard'
-    BAM_MARKDUPLICATES_PICARD.out.bai       >> 'align-picard'
-    BAM_MARKDUPLICATES_PICARD.out.csi       >> 'align-picard'
-    BAM_MARKDUPLICATES_PICARD.out.metrics   >> 'align-picard-metrics'
-    BAM_MARKDUPLICATES_PICARD.out.stats     >> 'align-picard-stats'
-    BAM_MARKDUPLICATES_PICARD.out.flagstat  >> 'align-picard-stats'
-    BAM_MARKDUPLICATES_PICARD.out.idxstats  >> 'align-picard-stats'
-
-    BAM_RSEQC.out.bamstat_txt   >> 'align-rseqc-bamstat'
-    BAM_RSEQC.out.inferexperiment_txt >> 'align-rseqc-inferexperiment'
-    BAM_RSEQC.out.junctionannotation_pdf            >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionannotation_events_pdf     >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionannotation_bed            >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionannotation_interact_bed   >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionannotation_xls            >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionannotation_log            >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionannotation_rscript        >> 'align-rseqc-junctionannotation'
-    BAM_RSEQC.out.junctionsaturation_pdf        >> 'align-rseqc-junctionsaturation'
-    BAM_RSEQC.out.junctionsaturation_rscript    >> 'align-rseqc-junctionsaturation'
-    BAM_RSEQC.out.readduplication_pdf       >> 'align-rseqc-readduplication'
-    BAM_RSEQC.out.readduplication_seq_xls   >> 'align-rseqc-readduplication'
-    BAM_RSEQC.out.readduplication_pos_xls   >> 'align-rseqc-readduplication'
-    BAM_RSEQC.out.readduplication_rscript   >> 'align-rseqc-readduplication'
-    BAM_RSEQC.out.readdistribution_txt  >> 'align-rseqc-readdistribution'
-    BAM_RSEQC.out.innerdistance_distance    >> 'align-rseqc-innerdistance'
-    BAM_RSEQC.out.innerdistance_freq        >> 'align-rseqc-innerdistance'
-    BAM_RSEQC.out.innerdistance_mean        >> 'align-rseqc-innerdistance'
-    BAM_RSEQC.out.innerdistance_pdf         >> 'align-rseqc-innerdistance'
-    BAM_RSEQC.out.innerdistance_rscript     >> 'align-rseqc-innerdistance'
-    BAM_RSEQC.out.tin_txt   >> 'align-rseqc-tin'
-
-    // TODO: !params.skip_alignment && params.aligner == 'hisat2'
-    // FASTQ_ALIGN_HISAT2.out.summary  >> 'align-hisat2-log'
-    // FASTQ_ALIGN_HISAT2.out.orig_bam >> 'align-hisat2-intermeds'
-    // FASTQ_ALIGN_HISAT2.out.fastq    >> 'align-hisat2-unaligned'
-
-    // TODO: params.trimmer == 'fastp'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_html    >> 'trim-fastqc'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip     >> 'trim-fastqc'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json           >> 'trim'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_html           >> 'trim'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_log            >> 'trim-log'
-    // // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads          >> 'trim-intermeds'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_fail     >> 'trim-intermeds'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_merged   >> 'trim-intermeds'
-    // FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_log             >> 'umitools'
-    // // FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_reads           >> 'umitools-intermeds'
-
-    // TODO: params.trimmer == 'trimgalore'
-    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_html  >> 'trim-fastqc'
-    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip   >> 'trim-fastqc'
-    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log   >> 'trim'
-    // FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_reads >> 'trim-intermeds'
-    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log    >> 'umitools'
-    // FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_reads  >> 'umitools-intermeds'
 
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html

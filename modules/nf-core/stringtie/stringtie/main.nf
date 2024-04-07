@@ -12,10 +12,10 @@ process STRINGTIE_STRINGTIE {
     path  annotation_gtf
 
     output:
-    tuple val(meta), path("*.transcripts.gtf"), emit: transcript_gtf
-    tuple val(meta), path("*.abundance.txt")  , emit: abundance
-    tuple val(meta), path("*.coverage.gtf")   , optional: true, emit: coverage_gtf
-    tuple val(meta), path("*.ballgown")       , optional: true, emit: ballgown
+    tuple val(meta), path("*.transcripts.gtf"), emit: transcript_gtf                , topic: 'align-stringtie'
+    tuple val(meta), path("*.abundance.txt")  , emit: abundance                     , topic: 'align-stringtie'
+    tuple val(meta), path("*.coverage.gtf")   , optional: true, emit: coverage_gtf  , topic: 'align-stringtie'
+    tuple val(meta), path("*.ballgown")       , optional: true, emit: ballgown      , topic: 'align-stringtie'
     path  "versions.yml"                      , emit: versions
 
     when:

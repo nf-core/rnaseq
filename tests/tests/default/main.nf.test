@@ -1,11 +1,11 @@
 nextflow_pipeline {
 
     name "Test pipeline"
-    script "../main.nf"
+    script "../../../main.nf"
     tag "rnaseq"
     tag "PIPELINE"
 
-    test("Run with profile test") {
+    test("Default profile test") {
 
         when {
             params {

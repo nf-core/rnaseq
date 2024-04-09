@@ -1,17 +1,17 @@
 {
     "homo_sapiens - cram": {
         "content": [
-            "test.bam:md5,6641dc05efa8384a061f378d86d922cd",
-            "test.bam.bai:md5,c41c60d8a94adebe53b6df80b6e90d38",
+            "test.cram",
+            "test.cram.crai:md5,78d47ba01ac4e05f3ae1e353902a989e",
             "test.flagstat:md5,93b0ef463df947ede1f42ff60396c34d",
             "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
-            "test.stats:md5,9ac28e327a7797d7bb6a5922fde59ed1"
+            "test.stats:md5,c2f74a4d9b2377bcf4f4f184da3801af"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:46:16.302755774"
+        "timestamp": "2024-03-20T20:45:38.364189"
     },
     "sarscov2 - bam": {
         "content": [
@@ -23,8 +23,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:46:02.942115679"
+        "timestamp": "2024-03-21T11:38:08.434529"
     }
 }

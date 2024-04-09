@@ -41,7 +41,7 @@ process TXIMETA_TXIMPORT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        r: \$( R --version | sed '1!d; s/.*version //; s/ .*//' )
+        bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
     END_VERSIONS
     """
 }

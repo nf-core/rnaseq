@@ -1,7 +1,7 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
-    script "../../../main.nf"
+    name "Test pipeline with min_mapped_reads = 90"
+    script "../main.nf"
     tag "rnaseq"
     tag "PIPELINE"
 

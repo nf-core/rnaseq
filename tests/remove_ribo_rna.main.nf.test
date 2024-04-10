@@ -1,7 +1,7 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
-    script "../../../main.nf"
+    name "Test pipeline with ribosomal RNA removal"
+    script "../main.nf"
     tag "rnaseq"
     tag "PIPELINE"
 

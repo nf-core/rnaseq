@@ -7,11 +7,11 @@ nextflow_pipeline {
 
     test("Default profile test") {
 
-    when {
-        params {
-            outdir = "$outputDir"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
         }
-    }
 
         then {
             assert workflow.success

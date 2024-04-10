@@ -134,18 +134,18 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         }
     }
 
-    topic:
+    publish:
     // TODO: need to recover trim_reads and umi_reads
-    // trim_reads          >> 'trim-intermeds'
-    // umi_reads           >> 'umitools-intermeds'
-    umi_log             >> 'umitools'
-    trim_json           >> 'trim'
-    trim_html           >> 'trim'
-    trim_log            >> 'trim-log'
-    trim_reads_fail     >> 'trim-intermeds'
-    trim_reads_merged   >> 'trim-intermeds'
-    fastqc_trim_html    >> 'trim-fastqc'
-    fastqc_trim_zip     >> 'trim-fastqc'
+    // trim_reads          >> 'fastp/intermeds/'
+    // umi_reads           >> 'umitools/intermeds/'
+    umi_log             >> 'umitools/'
+    trim_json           >> 'fastp/'
+    trim_html           >> 'fastp/'
+    trim_log            >> 'fastp/log/'
+    trim_reads_fail     >> 'fastp/intermeds/'
+    trim_reads_merged   >> 'fastp/intermeds/'
+    fastqc_trim_html    >> 'fastp/fastqc/'
+    fastqc_trim_zip     >> 'fastp/fastqc/'
 
     emit:
     reads = trim_reads // channel: [ val(meta), [ reads ] ]

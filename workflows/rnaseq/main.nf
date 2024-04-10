@@ -782,69 +782,70 @@ workflow RNASEQ {
         ch_multiqc_report = MULTIQC.out.report
     }
 
-    topic:
-    QUANTIFY_STAR_SALMON.out.results                        >> 'align'
-    QUANTIFY_STAR_SALMON.out.tpm_gene                       >> 'align'
-    QUANTIFY_STAR_SALMON.out.counts_gene                    >> 'align'
-    QUANTIFY_STAR_SALMON.out.lengths_gene                   >> 'align'
-    QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled      >> 'align'
-    QUANTIFY_STAR_SALMON.out.counts_gene_scaled             >> 'align'
-    QUANTIFY_STAR_SALMON.out.tpm_transcript                 >> 'align'
-    QUANTIFY_STAR_SALMON.out.counts_transcript              >> 'align'
-    QUANTIFY_STAR_SALMON.out.lengths_transcript             >> 'align'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds                >> 'align'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled  >> 'align'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled         >> 'align'
-    QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'align'
+    publish:
+    QUANTIFY_STAR_SALMON.out.results                        >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.tpm_gene                       >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.counts_gene                    >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.lengths_gene                   >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled      >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.counts_gene_scaled             >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.tpm_transcript                 >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.counts_transcript              >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.lengths_transcript             >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds                >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled  >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled         >> 'star_salmon/'
+    QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'star_salmon/'
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon' && params.with_umi
-    // BAM_SORT_STATS_SAMTOOLS.out.bam         >> 'align-intermeds'
-    // BAM_SORT_STATS_SAMTOOLS.out.bai         >> 'align-intermeds'
-    // BAM_SORT_STATS_SAMTOOLS.out.stats       >> 'align-intermeds-samtools-stats'
-    // BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> 'align-intermeds-samtools-stats'
-    // BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> 'align-intermeds-samtools-stats'
-    // SAMTOOLS_SORT.out.bam                   >> 'align-intermeds'
-    // UMITOOLS_PREPAREFORSALMON.out.bam       >> 'align-intermeds'
-    // UMITOOLS_PREPAREFORSALMON.out.log       >> 'align-intermeds-umitools-log'
+    // BAM_SORT_STATS_SAMTOOLS.out.bam         >> 'star_salmon/intermeds/'
+    // BAM_SORT_STATS_SAMTOOLS.out.bai         >> 'star_salmon/intermeds/'
+    // BAM_SORT_STATS_SAMTOOLS.out.stats       >> 'star_salmon/samtools_stats/intermeds/'
+    // BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> 'star_salmon/samtools_stats/intermeds/'
+    // BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> 'star_salmon/samtools_stats/intermeds/'
+    // SAMTOOLS_SORT.out.bam                   >> 'star_salmon/intermeds/'
+    // UMITOOLS_PREPAREFORSALMON.out.bam       >> 'star_salmon/intermeds/'
+    // UMITOOLS_PREPAREFORSALMON.out.log       >> 'star_salmon/umitools/log/intermeds/'
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
-    DESEQ2_QC_STAR_SALMON.out.rdata         >> 'align-deseq2'
-    DESEQ2_QC_STAR_SALMON.out.pca_txt       >> 'align-deseq2'
-    DESEQ2_QC_STAR_SALMON.out.pdf           >> 'align-deseq2'
-    DESEQ2_QC_STAR_SALMON.out.dists_txt     >> 'align-deseq2'
-    DESEQ2_QC_STAR_SALMON.out.size_factors  >> 'align-deseq2'
-    DESEQ2_QC_STAR_SALMON.out.log           >> 'align-deseq2'
+    DESEQ2_QC_STAR_SALMON.out.rdata         >> 'star_salmon/deseq2_qc/'
+    DESEQ2_QC_STAR_SALMON.out.pca_txt       >> 'star_salmon/deseq2_qc/'
+    DESEQ2_QC_STAR_SALMON.out.pdf           >> 'star_salmon/deseq2_qc/'
+    DESEQ2_QC_STAR_SALMON.out.dists_txt     >> 'star_salmon/deseq2_qc/'
+    DESEQ2_QC_STAR_SALMON.out.size_factors  >> 'star_salmon/deseq2_qc/'
+    DESEQ2_QC_STAR_SALMON.out.log           >> 'star_salmon/deseq2_qc/'
 
     // TODO: !params.skip_alignment && params.aligner == 'star_rsem'
-    // DESEQ2_QC_RSEM.out.rdata                >> 'align-deseq2'
-    // DESEQ2_QC_RSEM.out.pca_txt              >> 'align-deseq2'
-    // DESEQ2_QC_RSEM.out.pdf                  >> 'align-deseq2'
-    // DESEQ2_QC_RSEM.out.dists_txt            >> 'align-deseq2'
-    // DESEQ2_QC_RSEM.out.size_factors         >> 'align-deseq2'
-    // DESEQ2_QC_RSEM.out.log                  >> 'align-deseq2'
+    // DESEQ2_QC_RSEM.out.rdata                >> 'star_rsem/deseq2_qc/'
+    // DESEQ2_QC_RSEM.out.pca_txt              >> 'star_rsem/deseq2_qc/'
+    // DESEQ2_QC_RSEM.out.pdf                  >> 'star_rsem/deseq2_qc/'
+    // DESEQ2_QC_RSEM.out.dists_txt            >> 'star_rsem/deseq2_qc/'
+    // DESEQ2_QC_RSEM.out.size_factors         >> 'star_rsem/deseq2_qc/'
+    // DESEQ2_QC_RSEM.out.log                  >> 'star_rsem/deseq2_qc/'
 
-    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene                      >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene                   >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene                  >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled     >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled            >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript                >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript             >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript            >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds               >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled        >> 'pseudo-align'
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds         >> 'pseudo-align'
+    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene                      >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene                   >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene                  >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled     >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled            >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript                >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript             >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript            >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds               >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled        >> "${params.pseudo_aligner}/"
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds         >> "${params.pseudo_aligner}/"
+    // TODO: process 'QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
 
-    DESEQ2_QC_PSEUDO.out.rdata          >> 'pseudo-align-deseq2'
-    DESEQ2_QC_PSEUDO.out.pca_txt        >> 'pseudo-align-deseq2'
-    DESEQ2_QC_PSEUDO.out.pdf            >> 'pseudo-align-deseq2'
-    DESEQ2_QC_PSEUDO.out.dists_txt      >> 'pseudo-align-deseq2'
-    DESEQ2_QC_PSEUDO.out.size_factors   >> 'pseudo-align-deseq2'
-    DESEQ2_QC_PSEUDO.out.log            >> 'pseudo-align-deseq2'
+    DESEQ2_QC_PSEUDO.out.rdata          >> "${params.pseudo_aligner}/deseq2_qc/"
+    DESEQ2_QC_PSEUDO.out.pca_txt        >> "${params.pseudo_aligner}/deseq2_qc/"
+    DESEQ2_QC_PSEUDO.out.pdf            >> "${params.pseudo_aligner}/deseq2_qc/"
+    DESEQ2_QC_PSEUDO.out.dists_txt      >> "${params.pseudo_aligner}/deseq2_qc/"
+    DESEQ2_QC_PSEUDO.out.size_factors   >> "${params.pseudo_aligner}/deseq2_qc/"
+    DESEQ2_QC_PSEUDO.out.log            >> "${params.pseudo_aligner}/deseq2_qc/"
 
-    BBMAP_BBSPLIT.out.stats     >> 'bbsplit'
-    BBMAP_BBSPLIT.out.all_fastq >> 'bbsplit-intermeds'
+    BBMAP_BBSPLIT.out.stats     >> 'bbsplit/'
+    BBMAP_BBSPLIT.out.all_fastq >> 'bbsplit/intermeds/'
 
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html

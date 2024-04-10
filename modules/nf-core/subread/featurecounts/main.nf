@@ -11,9 +11,13 @@ process SUBREAD_FEATURECOUNTS {
     tuple val(meta), path(bams), path(annotation)
 
     output:
-    tuple val(meta), path("*featureCounts.txt")        , emit: counts   , topic: 'align-featurecounts'
-    tuple val(meta), path("*featureCounts.txt.summary"), emit: summary  , topic: 'align-featurecounts'
+    tuple val(meta), path("*featureCounts.txt")        , emit: counts
+    tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
     path "versions.yml"                                , emit: versions
+
+    publish:
+    counts  >> 'featurecounts'
+    summary >> 'featurecounts'
 
     when:
     task.ext.when == null || task.ext.when

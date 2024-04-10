@@ -24,6 +24,16 @@ process DESEQ2_QC {
     path "size_factors"         , optional:true, emit: size_factors
     path "versions.yml"         , emit: versions
 
+    publish:
+    pdf             >> 'deseq2'
+    rdata           >> 'deseq2'
+    pca_txt         >> 'deseq2'
+    pca_multiqc     >> 'deseq2'
+    dists_txt       >> 'deseq2'
+    dists_multiqc   >> 'deseq2'
+    log             >> 'deseq2'
+    size_factors    >> 'deseq2'
+
     when:
     task.ext.when == null || task.ext.when
 

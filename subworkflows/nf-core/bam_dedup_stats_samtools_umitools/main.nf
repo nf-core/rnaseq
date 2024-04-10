@@ -42,15 +42,15 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     BAM_STATS_SAMTOOLS ( ch_bam_bai_dedup, [ [:], [] ] )
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
-    topic:
-    UMITOOLS_DEDUP.out.bam                  >> 'align-intermeds'
-    UMITOOLS_DEDUP.out.tsv_edit_distance    >> 'align-umitools'
-    UMITOOLS_DEDUP.out.tsv_per_umi          >> 'align-umitools'
-    UMITOOLS_DEDUP.out.tsv_umi_per_position >> 'align-umitools'
-    SAMTOOLS_INDEX.out.bai                  >> 'align-intermeds'
-    BAM_STATS_SAMTOOLS.out.stats            >> 'align-samtools-stats'
-    BAM_STATS_SAMTOOLS.out.flagstat         >> 'align-samtools-stats'
-    BAM_STATS_SAMTOOLS.out.idxstats         >> 'align-samtools-stats'
+    publish:
+    UMITOOLS_DEDUP.out.bam                  >> 'star_salmon/intermeds/'
+    UMITOOLS_DEDUP.out.tsv_edit_distance    >> 'star_salmon/umitools/'
+    UMITOOLS_DEDUP.out.tsv_per_umi          >> 'star_salmon/umitools/'
+    UMITOOLS_DEDUP.out.tsv_umi_per_position >> 'star_salmon/umitools/'
+    SAMTOOLS_INDEX.out.bai                  >> 'star_salmon/intermeds/'
+    BAM_STATS_SAMTOOLS.out.stats            >> 'star_salmon/samtools_stats/'
+    BAM_STATS_SAMTOOLS.out.flagstat         >> 'star_salmon/samtools_stats/'
+    BAM_STATS_SAMTOOLS.out.idxstats         >> 'star_salmon/samtools_stats/'
 
     emit:
     bam      = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), path(bam) ]

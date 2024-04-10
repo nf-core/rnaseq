@@ -34,14 +34,14 @@ workflow BAM_MARKDUPLICATES_PICARD {
     BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta )
     ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
-    topic:
-    PICARD_MARKDUPLICATES.out.bam       >> 'align-picard'
-    PICARD_MARKDUPLICATES.out.metrics   >> 'align-picard-metrics'
-    SAMTOOLS_INDEX.out.bai              >> 'align-picard'
-    SAMTOOLS_INDEX.out.csi              >> 'align-picard'
-    BAM_STATS_SAMTOOLS.out.stats        >> 'align-picard-stats'
-    BAM_STATS_SAMTOOLS.out.flagstat     >> 'align-picard-stats'
-    BAM_STATS_SAMTOOLS.out.idxstats     >> 'align-picard-stats'
+    publish:
+    PICARD_MARKDUPLICATES.out.bam       >> 'picard/'
+    PICARD_MARKDUPLICATES.out.metrics   >> 'picard/metrics/'
+    SAMTOOLS_INDEX.out.bai              >> 'picard/'
+    SAMTOOLS_INDEX.out.csi              >> 'picard/'
+    BAM_STATS_SAMTOOLS.out.stats        >> 'picard/samtools_stats/'
+    BAM_STATS_SAMTOOLS.out.flagstat     >> 'picard/samtools_stats/'
+    BAM_STATS_SAMTOOLS.out.idxstats     >> 'picard/samtools_stats/'
 
     emit:
     bam      = PICARD_MARKDUPLICATES.out.bam     // channel: [ val(meta), path(bam) ]

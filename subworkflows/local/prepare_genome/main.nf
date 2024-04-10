@@ -328,7 +328,7 @@ workflow PREPARE_GENOME {
         }
     }
 
-    topic:
+    publish:
     ch_fasta            >> 'genome'
     ch_gtf              >> 'genome'
     ch_gff              >> 'genome'
@@ -337,13 +337,13 @@ workflow PREPARE_GENOME {
     ch_transcript_fasta >> 'genome'
     ch_fai              >> 'genome'
     ch_chrom_sizes      >> 'genome'
-    ch_splicesites      >> 'genome-index'
-    ch_bbsplit_index    >> 'genome-index'
-    ch_star_index       >> 'genome-index'
-    ch_rsem_index       >> 'genome-index'
-    ch_hisat2_index     >> 'genome-index'
-    ch_salmon_index     >> 'genome-index'
-    ch_kallisto_index   >> 'genome-index'
+    ch_splicesites      >> 'genome/index'
+    ch_bbsplit_index    >> 'genome/index'
+    ch_star_index       >> 'genome/index'
+    ch_rsem_index       >> 'genome/index'
+    ch_hisat2_index     >> 'genome/index'
+    ch_salmon_index     >> 'genome/index'
+    ch_kallisto_index   >> 'genome/index'
 
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)

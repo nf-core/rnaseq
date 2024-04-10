@@ -166,236 +166,168 @@ workflow {
 }
 
 output {
-    directory params.outdir, mode: params.publish_dir_mode
+    directory params.outdir
+    mode params.publish_dir_mode
 
-    //
-    // Genome preparation
-    //
     'genome' {
-        defaults enabled: params.save_reference
-        from 'genome'
+        enabled params.save_reference
     }
 
     'genome/index' {
-        defaults enabled: params.save_reference
-        from 'genome-index'
+        enabled params.save_reference
     }
 
-    //
-    // Alignment
-    //
-    "${params.aligner}" {
-        from 'align'
-
-        'samtools_stats' {
-            from 'align-samtools-stats'
-        }
-
-        'umitools' {
-            from 'align-umitools'
-        }
+    'star_salmon/intermeds/' {
+        path 'star_salmon'
+        enabled params.save_align_intermeds || params.save_umi_intermeds
     }
 
-    "${params.aligner}" {
-        defaults enabled: params.save_align_intermeds || params.save_umi_intermeds
-        from 'align-intermeds'
-
-        'samtools_stats' {
-            from 'align-intermeds-samtools-stats'
-        }
-        'umitools/log' {
-            from 'align-intermeds-umitools-log'
-        }
+    'star_salmon/samtools_stats/intermeds/' {
+        path 'star_salmon/samtools_stats'
+        enabled params.save_align_intermeds || params.save_umi_intermeds
     }
 
-    //
-    // bigWig coverage
-    //
-    "${params.aligner}/bigwig" {
-        from 'align-bigwig'
+    'star_salmon/umitools/log/intermeds/' {
+        path 'star_salmon/umitools/log'
+        enabled params.save_align_intermeds || params.save_umi_intermeds
     }
 
-    //
-    // DESeq2 QC
-    //
-    "${params.aligner}/deseq2_qc" {
-        from 'align-deseq2'
-    }
-
-    //
-    // Pseudo-alignment
-    //
-    "${params.pseudo_aligner}" {
-        from 'pseudo-align'
-        // TODO: process 'QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
-
-        'deseq2_qc' {
-            from 'pseudo-align-deseq2'
-        }
+    'bigwig' {
+        path "${params.aligner}/bigwig"
     }
 
     // modules/local/dupradar
-    "${params.aligner}/dupradar" {
-        'scatter_plot' {
-            from 'align-dupradar', pattern: "*Dens.pdf"
-        }
-        'box_plot' {
-            from 'align-dupradar', pattern: "*Boxplot.pdf"
-        }
-        'histogram' {
-            from 'align-dupradar', pattern: "*Hist.pdf"
-        }
-        'gene_data' {
-            from 'align-dupradar', pattern: "*Matrix.txt"
-        }
-        'intercepts_slope' {
-            from 'align-dupradar', pattern: "*slope.txt"
-        }
+    'dupradar' {
+        path "${params.aligner}/dupradar"
     }
 
     // modules/nf-core/bbmap/bbsplit
-    'bbsplit' {
-        from 'bbsplit'
-        from 'bbsplit-intermeds', enabled: params.save_bbsplit_reads
+    'bbsplit/intermeds/' {
+        path 'bbsplit'
+        enabled params.save_bbsplit_reads
     }
 
     // modules/nf-core/cat/fastq
-    'fastq' {
-        defaults enabled: params.save_merged_fastq
-        from 'merged-fastq'
+    'cat/fastq' {
+        path 'fastq'
+        enabled params.save_merged_fastq
     }
 
     // modules/nf-core/multiqc
-    def multiqc_path = params.skip_alignment
-        ? 'multiqc'
-        : "multiqc/${params.aligner}"
-
-    "${multiqc_path}" {
-        from 'multiqc'
+    'multiqc' {
+        path params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}"
     }
 
     // modules/nf-core/preseq/lcextrap
-    "${params.aligner}" {
-        'preseq' {
-            from 'preseq'
-        }
-        'preseq/log' {
-            from 'preseq-log'
-        }
+    'preseq' {
+        path "${params.aligner}/preseq"
+    }
+
+    'preseq/log' {
+        path "${params.aligner}/preseq/log"
     }
 
     // modules/nf-core/qualimap/rnaseq
-    "${params.aligner}/qualimap" {
-        from 'qualimap'
+    'qualimap' {
+        path "${params.aligner}/qualimap"
     }
 
     // modules/nf-core/sortmerna
-    'sortmerna' {
-        from 'sortmerna'
-        from 'sortmerna-intermeds', enabled: params.save_non_ribo_reads
+    'sortmerna/intermeds/' {
+        path 'sortmerna'
+        enabled params.save_non_ribo_reads
     }
 
     // modules/nf-core/stringtie/stringtie
-    "${params.aligner}/stringtie" {
-        from 'align-stringtie'
+    'stringtie' {
+        path "${params.aligner}/stringtie"
     }
 
     // modules/nf-core/subread/featurecounts
-    "${params.aligner}/featurecounts" {
-        from 'align-featurecounts'
+    'featurecounts' {
+        path "${params.aligner}/featurecounts"
     }
 
     // subworkflows/local/align_star
-    "${params.aligner}" {
-        'log' {
-            from 'align-star-log'
-        }
+    // 'star_salmon/intermeds/' {
+    //     path 'star_salmon'
+    //     enabled params.save_align_intermeds
+    // }
 
-        from 'align-star-intermeds'
-
-        'unmapped' {
-            from 'align-star-unaligned'
-        }
+    'star_salmon/unmapped/' {
+        enabled params.save_unaligned
     }
 
     // subworkflows/local/quantify_rsem
-    "${params.aligner}" {
-        from 'quantify-rsem'
-        from 'quantify-rsem-intermeds', enabled: params.save_align_intermeds
-
-        'log' {
-            from 'quantify-rsem-log'
-        }
+    'star_rsem/intermeds/' {
+        path 'star_rsem'
+        enabled params.save_align_intermeds
     }
 
     // subworkflows/nf-core/bam_markduplicates_picard
-    "${params.aligner}" {
-        from 'align-picard'
-        'picard_metrics' {
-            from 'align-picard-metrics'
-        }
-        'samtools_stats' {
-            from 'align-picard-stats'
-        }
+    'picard/' {
+        path params.aligner
+    }
+
+    'picard/metrics/' {
+        path "${params.aligner}/picard_metrics"
+    }
+
+    'picard/samtools_stats/' {
+        path "${params.aligner}/samtools_stats"
     }
 
     // subworkflows/nf-core/bam_rseqc
-    "${params.aligner}/rseqc" {
-        'bam_stat' {
-            from 'align-rseqc-bamstat'
-        }
-        'infer_experiment' {
-            from 'align-rseqc-inferexperiment'
-        }
-        'junction_annotation' {
-            from 'align-rseqc-junctionannotation'
-        }
-        'junction_saturation' {
-            from 'align-rseqc-junctionsaturation'
-        }
-        'read_duplication' {
-            from 'align-rseqc-readduplication'
-        }
-        'read_distribution' {
-            from 'align-rseqc-readdistribution'
-        }
-        'inner_distance' {
-            from 'align-rseqc-innerdistance'
-        }
-        'tin' {
-            from 'align-rseqc-tin'
-        }
+    'rseqc/bam_stat/' {
+        path "${params.aligner}/rseqc/bam_stat"
+    }
+    'rseqc/infer_experiment/' {
+        path "${params.aligner}/rseqc/infer_experiment"
+    }
+    'rseqc/junction_annotation/' {
+        path "${params.aligner}/rseqc/junction_annotation"
+    }
+    'rseqc/junction_saturation/' {
+        path "${params.aligner}/rseqc/junction_saturation"
+    }
+    'rseqc/read_duplication/' {
+        path "${params.aligner}/rseqc/read_duplication"
+    }
+    'rseqc/read_distribution/' {
+        path "${params.aligner}/rseqc/read_distribution"
+    }
+    'rseqc/inner_distance/' {
+        path "${params.aligner}/rseqc/inner_distance"
+    }
+    'rseqc/tin/' {
+        path "${params.aligner}/rseqc/tin"
     }
 
     // subworkflows/nf-core/fastq_align_hisat2
-    "${params.aligner}" {
-        'log' {
-            from 'align-hisat2-log'
-        }
+    'hisat2/intermeds/' {
+        path 'hisat2'
+        enabled params.save_align_intermeds
+    }
 
-        from 'align-hisat2-intermeds', enabled: params.save_align_intermeds
-
-        'unmapped' {
-            from 'align-hisat2-unaligned', enabled: params.save_unaligned
-        }
+    'hisat2/unmapped/' {
+        enabled params.save_unaligned
     }
 
     // subworkflows/nf-core/fastq_fastqc_umitools_fastp
     // subworkflows/nf-core/fastq_fastqc_umitools_trimgalore
-    "${params.trimmer}" {
-        'fastqc' {
-            from 'trim-fastqc'
-        }
-        from 'trim'
-        'log' {
-            from 'trim-log'
-        }
-        from 'trim-intermeds', enabled: params.save_trimmed
+    'fastp/intermeds/' {
+        path 'fastp'
+        enabled params.save_trimmed
     }
 
-    'umitools' {
-        from 'umitools'
-        from 'umitools-intermeds', enabled: params.save_umi_intermeds
+    'trimgalore/intermeds/' {
+        path 'trimgalore'
+        enabled params.save_trimmed
+    }
+
+    'umitools/intermeds/' {
+        path 'umitools'
+        enabled params.save_umi_intermeds
     }
 }
 

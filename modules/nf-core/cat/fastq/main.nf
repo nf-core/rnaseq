@@ -11,8 +11,11 @@ process CAT_FASTQ {
     tuple val(meta), path(reads, stageAs: "input*/*")
 
     output:
-    tuple val(meta), path("*.merged.fastq.gz"), emit: reads     , topic: 'merged-fastq'
+    tuple val(meta), path("*.merged.fastq.gz"), emit: reads
     path "versions.yml"                       , emit: versions
+
+    publish:
+    reads   >> 'cat/fastq'
 
     when:
     task.ext.when == null || task.ext.when

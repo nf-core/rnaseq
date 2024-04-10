@@ -11,8 +11,11 @@ process MULTIQC_CUSTOM_BIOTYPE {
     path  header
 
     output:
-    tuple val(meta), path("*.tsv"), emit: tsv       , topic: 'align-featurecounts'
+    tuple val(meta), path("*.tsv"), emit: tsv
     path "versions.yml"           , emit: versions
+
+    publish:
+    tsv >> 'featurecounts'
 
     when:
     task.ext.when == null || task.ext.when

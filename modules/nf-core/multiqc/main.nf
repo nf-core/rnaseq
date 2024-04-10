@@ -13,10 +13,15 @@ process MULTIQC {
     path(multiqc_logo)
 
     output:
-    path "*multiqc_report.html", emit: report               , topic: 'multiqc'
-    path "*_data"              , emit: data                 , topic: 'multiqc'
-    path "*_plots"             , optional:true, emit: plots , topic: 'multiqc'
+    path "*multiqc_report.html", emit: report
+    path "*_data"              , emit: data
+    path "*_plots"             , optional:true, emit: plots
     path "versions.yml"        , emit: versions
+
+    publish:
+    report  >> 'multiqc'
+    data    >> 'multiqc'
+    plots   >> 'multiqc'
 
     when:
     task.ext.when == null || task.ext.when

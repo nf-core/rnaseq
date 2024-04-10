@@ -64,7 +64,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1266](https://github.com/nf-core/rnaseq/pull/1266) - Delete unecessary tags from nf.test files for modules and subworkflows
 - [PR #1253](https://github.com/nf-core/rnaseq/pull/1253) - Use nf-test files as matrix to test over in CI/CD for efficiency
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
-- [PR ####](https://github.com/nf-core/rnaseq/pull/####) - Reorganise pipeline level tests into flat directory structure
+- [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
+- [PR #####](https://github.com/nf-core/rnaseq/pull/####) - Add output files to nf-test snapshot
 
 ### Parameters
 

@@ -1,0 +1,23 @@
+nextflow_pipeline {
+
+    name "Test pipeline using Salmon"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("Default profile test") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'salmon'
+                skip_qc = true
+                skip_alignment = true
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

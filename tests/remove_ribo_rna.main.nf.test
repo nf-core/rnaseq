@@ -1,7 +1,7 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
-    script "../../../main.nf"
+    name "Test pipeline with ribosomal RNA removal"
+    script "../main.nf"
     tag "rnaseq"
     tag "PIPELINE"
 
@@ -10,7 +10,6 @@ nextflow_pipeline {
         when {
             params {
                 outdir          = "$outputDir"
-                input           = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
                 remove_ribo_rna = true
             }
         }

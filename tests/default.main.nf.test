@@ -7,12 +7,11 @@ nextflow_pipeline {
 
     test("Default profile test") {
 
-        when {
-            params {
-                outdir = "$outputDir"
-                input  = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
-            }
+    when {
+        params {
+            outdir = "$outputDir"
         }
+    }
 
         then {
             assert workflow.success

@@ -1,16 +1,15 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
+    name "Test pipeline with default settings"
     script "../main.nf"
     tag "rnaseq"
     tag "PIPELINE"
 
-    test("Run with profile test") {
+    test("Default profile test") {
 
         when {
             params {
                 outdir = "$outputDir"
-                input  = 'https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv'
             }
         }
 

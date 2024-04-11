@@ -62,7 +62,9 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1261](https://github.com/nf-core/rnaseq/pull/1261) - Add more tests for PREPARE_GENOME
 - [PR #1265](https://github.com/nf-core/rnaseq/pull/1265) - Small updates noticed during code review
 - [PR #1266](https://github.com/nf-core/rnaseq/pull/1266) - Delete unecessary tags from nf.test files for modules and subworkflows
+- [PR #1253](https://github.com/nf-core/rnaseq/pull/1253) - Use nf-test files as matrix to test over in CI/CD for efficiency
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
+- [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
 
 ### Parameters
 

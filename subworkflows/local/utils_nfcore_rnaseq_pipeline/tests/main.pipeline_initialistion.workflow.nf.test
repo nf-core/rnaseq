@@ -8,10 +8,6 @@ nextflow_workflow {
 
         when {
             params {
-                // parameters copied from test profile.
-                // We should be able to automatically import these somehow.
-                input = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/samplesheet/v3.10/samplesheet_test.csv"
-
                 // Genome references
                 fasta              = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genome.fasta"
                 gtf                = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genes_with_empty_tid.gtf.gz"

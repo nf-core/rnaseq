@@ -1,0 +1,21 @@
+nextflow_pipeline {
+
+    name "Test pipeline with featureCounts with group type false"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("--featurecounts_group_type false") {
+
+        when {
+            params {
+                outdir        = "$outputDir"
+                featurecounts_group_type = false
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

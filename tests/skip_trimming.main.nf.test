@@ -1,0 +1,21 @@
+nextflow_pipeline {
+
+    name "Test pipeline with trimming disabled"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("--skip_trimming") {
+
+        when {
+            params {
+                outdir        = "$outputDir"
+                skip_qc       = true
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

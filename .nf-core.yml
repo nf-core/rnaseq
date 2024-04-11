@@ -1,5 +1,6 @@
 repository_type: pipeline
 lint:
+  actions_ci: false
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt

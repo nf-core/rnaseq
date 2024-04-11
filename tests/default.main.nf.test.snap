@@ -1,11 +1,6 @@
 {
     "output_files": {
         "content": [
-            "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
-            "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
-            "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-            "WT_REP2.stats.txt:md5,f6df7d4d9a5b553209f31dec2a30f92b",
             "salmon.merged.transcript_counts.tsv:md5,ff0f5be09ca7a322672c0074ba35da17",
             "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
             "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
@@ -24,7 +19,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-11T13:15:25.54128645"
+        "timestamp": "2024-04-11T14:39:58.637279952"
     },
     "software_versions": {
         "content": [

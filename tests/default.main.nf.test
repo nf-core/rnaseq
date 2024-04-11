@@ -26,8 +26,6 @@ nextflow_pipeline {
                         path("${params.outdir}/bbsplit/WT_REP1.stats.txt"),
                         path("${params.outdir}/bbsplit/WT_REP2.stats.txt"),
                         path("${params.outdir}/salmon/salmon.merged.transcript_counts.tsv"),
-                        path("${params.outdir}/salmon/salmon.merged.transcript_lengths.tsv"),
-                        path("${params.outdir}/salmon/salmon.merged.transcript_tpm.tsv"),
                         path("${params.outdir}/custom/out/genome_gfp.fasta"),
                         path("${params.outdir}/custom/out/genome_gfp.gtf"),
                         path("${params.outdir}/star_salmon/bigwig/RAP1_IAA_30M_REP1.forward.bigWig"),
@@ -39,12 +37,7 @@ nextflow_pipeline {
                         path("${params.outdir}/star_salmon/bigwig/WT_REP1.forward.bigWig"),
                         path("${params.outdir}/star_salmon/bigwig/WT_REP1.reverse.bigWig"),
                         path("${params.outdir}/star_salmon/bigwig/WT_REP2.forward.bigWig"),
-                        path("${params.outdir}/star_salmon/bigwig/WT_REP2.reverse.bigWig"),
-                        path("${params.outdir}/star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam"),
-                        path("${params.outdir}/star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam"),
-                        path("${params.outdir}/star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam"),
-                        path("${params.outdir}/star_salmon/WT_REP1.markdup.sorted.bam"),
-                        path("${params.outdir}/star_salmon/WT_REP2.markdup.sorted.bam")
+                        path("${params.outdir}/star_salmon/bigwig/WT_REP2.reverse.bigWig")
                     ).match("output_files")
                 }
             )

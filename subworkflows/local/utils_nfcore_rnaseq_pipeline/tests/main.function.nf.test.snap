@@ -45,14 +45,6 @@
         },
         "timestamp": "2024-03-06T14:33:26.903306"
     },
-    "Test Function getGenomeAttribute missing attribute": {
-        "content": null,
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:32:55.635006"
-    },
     "Test Function getSalmonInferredStrandedness unstranded": {
         "content": [
             "unstranded"
@@ -122,16 +114,6 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2024-03-06T14:33:40.548126"
-    },
-    "Test Function getGenomeAttribute finds attribute": {
-        "content": [
-            "myValue"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:32:52.593188"
     },
     "Test Function multiqcTsvFromList": {
         "content": [

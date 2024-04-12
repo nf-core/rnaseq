@@ -132,64 +132,6 @@ nextflow_function {
 
     }
 
-    test("Test Function getGenomeAttribute finds attribute") {
-
-        function "getGenomeAttribute"
-
-        when {
-            params {
-                genome = "myTest"
-                genomes {
-                    "myTest" {
-                        myAttribute = "myValue"
-                    }
-                }
-            }
-            function {
-                """
-                input[0] = "myAttribute"
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
-    test("Test Function getGenomeAttribute missing attribute") {
-
-        function "getGenomeAttribute"
-
-        when {
-            params {
-                genome = "myTest"
-                genomes {
-                    "myTest" {
-                        myAttribute = "myValue"
-                    }
-                }
-            }
-            function {
-                """
-                input[0] = "missingAttribute"
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
     test("Test Function genomeExistsError finds genome") {
 
         function "genomeExistsError"

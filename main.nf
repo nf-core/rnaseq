@@ -17,19 +17,19 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-getGenomeAttribute('additional_fasta', 'additional_fasta')
-getGenomeAttribute('bbsplit', 'bbsplit_index')
-getGenomeAttribute('bed12', 'gene_bed')
-getGenomeAttribute('fasta', 'fasta')
-getGenomeAttribute('gff', 'gff')
-getGenomeAttribute('gtf', 'gtf')
-getGenomeAttribute('hisat2', 'hisat2')
-getGenomeAttribute('kallisto', 'kallisto_index')
-getGenomeAttribute('rsem', 'rsem')
-getGenomeAttribute('salmon', 'salmon')
-getGenomeAttribute('sortmerna', 'sortmerna_index')
-getGenomeAttribute('star', 'star_index')
-getGenomeAttribute('transcript_fasta', 'transcript_fasta')
+params.additional_fasta = getGenomeAttribute('additional_fasta')
+params.bbsplit_index    = getGenomeAttribute('bbsplit')
+params.gene_bed         = getGenomeAttribute('bed12')
+params.fasta            = getGenomeAttribute('fasta')
+params.gff              = getGenomeAttribute('gff')
+params.gtf              = getGenomeAttribute('gtf')
+params.hisat2_index     = getGenomeAttribute('hisat2')
+params.kallisto_index   = getGenomeAttribute('kallisto')
+params.rsem_index       = getGenomeAttribute('rsem')
+params.salmon_index     = getGenomeAttribute('salmon')
+params.sortmerna_index  = getGenomeAttribute('sortmerna')
+params.star_index       = getGenomeAttribute('star')
+params.transcript_fasta = getGenomeAttribute('transcript_fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -181,7 +181,7 @@ workflow {
 // Get attribute from genome config file e.g. fasta
 //
 
-def getGenomeAttribute(attribute) {
+def getGenomeAttribute(attribute, key) {
     if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
         if (params.genomes[ params.genome ].containsKey(attribute)) {
             return params.genomes[ params.genome ][ attribute ]

@@ -56,6 +56,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1245](https://github.com/nf-core/rnaseq/pull/1245) - nf test quantify rsem
 - [PR #1246](https://github.com/nf-core/rnaseq/pull/1246) - nf-test quantify pseudoalignment
 - [PR #1247](https://github.com/nf-core/rnaseq/pull/1247) - nf-test prepare_genome
+- [PR #1248](https://github.com/nf-core/rnaseq/pull/1248) - Improved ext.args consolidation for STAR and TRIMGALORE extra_args parameters
 - [PR #1249](https://github.com/nf-core/rnaseq/pull/1249) - Include nf-tests for rsem_merge_counts module
 - [PR #1250](https://github.com/nf-core/rnaseq/pull/1250) - Remove all tags.yml files because the testing system has changed
 - [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2qc paths

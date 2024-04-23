@@ -1,10 +1,10 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/rnaseq/master/nextflow_schema.json",
     "title": "nf-core/rnaseq pipeline parameters",
     "description": "RNA sequencing analysis pipeline for gene/isoform quantification and extensive quality control.",
     "type": "object",
-    "definitions": {
+    "defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -839,40 +839,40 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/defs/reference_genome_options"
         },
         {
-            "$ref": "#/definitions/read_trimming_options"
+            "$ref": "#/defs/read_trimming_options"
         },
         {
-            "$ref": "#/definitions/read_filtering_options"
+            "$ref": "#/defs/read_filtering_options"
         },
         {
-            "$ref": "#/definitions/umi_options"
+            "$ref": "#/defs/umi_options"
         },
         {
-            "$ref": "#/definitions/alignment_options"
+            "$ref": "#/defs/alignment_options"
         },
         {
-            "$ref": "#/definitions/optional_outputs"
+            "$ref": "#/defs/optional_outputs"
         },
         {
-            "$ref": "#/definitions/quality_control"
+            "$ref": "#/defs/quality_control"
         },
         {
-            "$ref": "#/definitions/process_skipping_options"
+            "$ref": "#/defs/process_skipping_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/defs/max_job_request_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/defs/generic_options"
         }
     ]
 }

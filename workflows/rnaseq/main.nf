@@ -52,8 +52,8 @@ include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../mod
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { paramsSummaryMap                 } from 'plugin/nf-validation'
-include { fromSamplesheet                  } from 'plugin/nf-validation'
+include { paramsSummaryMap                 } from 'plugin/nf-schema'
+include { samplesheetToList                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../../subworkflows/nf-core/fastq_subsample_fq_salmon'
@@ -111,7 +111,7 @@ workflow RNASEQ {
     // Create channel from input file provided through params.input
     //
     Channel
-        .fromSamplesheet("input")
+        .fromList(samplesheetToList(params.input, "$projectDir/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2 ->
                 if (!fastq_2) {

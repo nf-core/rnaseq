@@ -798,14 +798,14 @@ workflow RNASEQ {
     QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'star_salmon/'
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon' && params.with_umi
-    // BAM_SORT_STATS_SAMTOOLS.out.bam         >> 'star_salmon/intermeds/'
-    // BAM_SORT_STATS_SAMTOOLS.out.bai         >> 'star_salmon/intermeds/'
-    // BAM_SORT_STATS_SAMTOOLS.out.stats       >> 'star_salmon/samtools_stats/intermeds/'
-    // BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> 'star_salmon/samtools_stats/intermeds/'
-    // BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> 'star_salmon/samtools_stats/intermeds/'
-    // SAMTOOLS_SORT.out.bam                   >> 'star_salmon/intermeds/'
-    // UMITOOLS_PREPAREFORSALMON.out.bam       >> 'star_salmon/intermeds/'
-    // UMITOOLS_PREPAREFORSALMON.out.log       >> 'star_salmon/umitools/log/intermeds/'
+    // BAM_SORT_STATS_SAMTOOLS.out.bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.bai         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.stats       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats/' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats/' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats/' : null)
+    // SAMTOOLS_SORT.out.bam                   >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    // UMITOOLS_PREPAREFORSALMON.out.bam       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    // UMITOOLS_PREPAREFORSALMON.out.log       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/umitools/log/' : null)
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
     DESEQ2_QC_STAR_SALMON.out.rdata         >> 'star_salmon/deseq2_qc/'
@@ -845,7 +845,9 @@ workflow RNASEQ {
     DESEQ2_QC_PSEUDO.out.log            >> "${params.pseudo_aligner}/deseq2_qc/"
 
     BBMAP_BBSPLIT.out.stats     >> 'bbsplit/'
-    BBMAP_BBSPLIT.out.all_fastq >> 'bbsplit/intermeds/'
+    BBMAP_BBSPLIT.out.all_fastq >> (params.save_bbsplit_reads ? 'bbsplit/' : null)
+    CAT_FASTQ.out.reads         >> (params.save_merged_fastq ? 'fastq/' : null)
+    SORTMERNA.out.reads         >> (params.save_non_ribo_reads ? 'sortmerna/' : null)
 
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html

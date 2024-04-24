@@ -329,21 +329,21 @@ workflow PREPARE_GENOME {
     }
 
     publish:
-    ch_fasta            >> 'genome'
-    ch_gtf              >> 'genome'
-    ch_gff              >> 'genome'
-    ch_add_fasta        >> 'genome'
-    ch_gene_bed         >> 'genome'
-    ch_transcript_fasta >> 'genome'
-    ch_fai              >> 'genome'
-    ch_chrom_sizes      >> 'genome'
-    ch_splicesites      >> 'genome/index'
-    ch_bbsplit_index    >> 'genome/index'
-    ch_star_index       >> 'genome/index'
-    ch_rsem_index       >> 'genome/index'
-    ch_hisat2_index     >> 'genome/index'
-    ch_salmon_index     >> 'genome/index'
-    ch_kallisto_index   >> 'genome/index'
+    ch_fasta            >> (params.save_reference ? 'genome' : null)
+    ch_gtf              >> (params.save_reference ? 'genome' : null)
+    ch_gff              >> (params.save_reference ? 'genome' : null)
+    ch_add_fasta        >> (params.save_reference ? 'genome' : null)
+    ch_gene_bed         >> (params.save_reference ? 'genome' : null)
+    ch_transcript_fasta >> (params.save_reference ? 'genome' : null)
+    ch_fai              >> (params.save_reference ? 'genome' : null)
+    ch_chrom_sizes      >> (params.save_reference ? 'genome' : null)
+    ch_splicesites      >> (params.save_reference ? 'genome/index' : null)
+    ch_bbsplit_index    >> (params.save_reference ? 'genome/index' : null)
+    ch_star_index       >> (params.save_reference ? 'genome/index' : null)
+    ch_rsem_index       >> (params.save_reference ? 'genome/index' : null)
+    ch_hisat2_index     >> (params.save_reference ? 'genome/index' : null)
+    ch_salmon_index     >> (params.save_reference ? 'genome/index' : null)
+    ch_kallisto_index   >> (params.save_reference ? 'genome/index' : null)
 
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)

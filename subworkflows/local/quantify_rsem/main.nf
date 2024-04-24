@@ -42,9 +42,9 @@ workflow QUANTIFY_RSEM {
     RSEM_CALCULATEEXPRESSION.out.counts_transcript  >> 'star_rsem/'
     RSEM_CALCULATEEXPRESSION.out.stat               >> 'star_rsem/'
     RSEM_CALCULATEEXPRESSION.out.logs               >> 'star_rsem/log/'
-    RSEM_CALCULATEEXPRESSION.out.bam_star           >> 'star_rsem/intermeds/'
-    RSEM_CALCULATEEXPRESSION.out.bam_genome         >> 'star_rsem/intermeds/'
-    RSEM_CALCULATEEXPRESSION.out.bam_transcript     >> 'star_rsem/intermeds/'
+    RSEM_CALCULATEEXPRESSION.out.bam_star           >> (params.save_align_intermeds ? 'star_rsem/' : null)
+    RSEM_CALCULATEEXPRESSION.out.bam_genome         >> (params.save_align_intermeds ? 'star_rsem/' : null)
+    RSEM_CALCULATEEXPRESSION.out.bam_transcript     >> (params.save_align_intermeds ? 'star_rsem/' : null)
     RSEM_MERGE_COUNTS.out.merged_counts_gene        >> 'star_rsem/'
     RSEM_MERGE_COUNTS.out.merged_tpm_gene           >> 'star_rsem/'
     RSEM_MERGE_COUNTS.out.merged_counts_transcript  >> 'star_rsem/'

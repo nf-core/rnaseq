@@ -63,13 +63,13 @@ workflow ALIGN_STAR {
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     publish:
-    ch_orig_bam         >> 'star_salmon/intermeds/'
+    ch_orig_bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
     ch_log_final        >> 'star_salmon/log/'
     ch_log_out          >> 'star_salmon/log/'
     ch_log_progress     >> 'star_salmon/log/'
-    ch_bam_sorted       >> 'star_salmon/intermeds/'
-    ch_bam_transcript   >> 'star_salmon/intermeds/'
-    ch_fastq            >> 'star_salmon/unmapped/'
+    ch_bam_sorted       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    ch_bam_transcript   >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    ch_fastq            >> (params.save_unaligned ? 'star_salmon/unmapped/' : null)
     ch_tab              >> 'star_salmon/log/'
 
     emit:

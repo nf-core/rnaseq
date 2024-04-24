@@ -27,9 +27,9 @@ workflow FASTQ_ALIGN_HISAT2 {
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     publish:
-    HISAT2_ALIGN.out.bam        >> 'hisat2/intermeds/'
+    HISAT2_ALIGN.out.bam        >> (params.save_align_intermeds ? 'hisat2/' : null)
     HISAT2_ALIGN.out.summary    >> 'hisat2/log/'
-    HISAT2_ALIGN.out.fastq      >> 'hisat2/unmapped/'
+    HISAT2_ALIGN.out.fastq      >> (params.save_unaligned ? 'hisat2/unmapped/' : null)
 
     emit:
     orig_bam = HISAT2_ALIGN.out.bam                 // channel: [ val(meta), bam   ]

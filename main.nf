@@ -168,29 +168,6 @@ publish {
     directory params.outdir
     mode params.publish_dir_mode
 
-    'genome' {
-        enabled params.save_reference
-    }
-
-    'genome/index' {
-        enabled params.save_reference
-    }
-
-    'star_salmon/intermeds/' {
-        path 'star_salmon'
-        enabled params.save_align_intermeds || params.save_umi_intermeds
-    }
-
-    'star_salmon/samtools_stats/intermeds/' {
-        path 'star_salmon/samtools_stats'
-        enabled params.save_align_intermeds || params.save_umi_intermeds
-    }
-
-    'star_salmon/umitools/log/intermeds/' {
-        path 'star_salmon/umitools/log'
-        enabled params.save_align_intermeds || params.save_umi_intermeds
-    }
-
     'bigwig' {
         path "${params.aligner}/bigwig"
     }
@@ -198,18 +175,6 @@ publish {
     // modules/local/dupradar
     'dupradar' {
         path "${params.aligner}/dupradar"
-    }
-
-    // modules/nf-core/bbmap/bbsplit
-    'bbsplit/intermeds/' {
-        path 'bbsplit'
-        enabled params.save_bbsplit_reads
-    }
-
-    // modules/nf-core/cat/fastq
-    'cat/fastq' {
-        path 'fastq'
-        enabled params.save_merged_fastq
     }
 
     // modules/nf-core/multiqc
@@ -231,12 +196,6 @@ publish {
         path "${params.aligner}/qualimap"
     }
 
-    // modules/nf-core/sortmerna
-    'sortmerna/intermeds/' {
-        path 'sortmerna'
-        enabled params.save_non_ribo_reads
-    }
-
     // modules/nf-core/stringtie/stringtie
     'stringtie' {
         path "${params.aligner}/stringtie"
@@ -245,22 +204,6 @@ publish {
     // modules/nf-core/subread/featurecounts
     'featurecounts' {
         path "${params.aligner}/featurecounts"
-    }
-
-    // subworkflows/local/align_star
-    // 'star_salmon/intermeds/' {
-    //     path 'star_salmon'
-    //     enabled params.save_align_intermeds
-    // }
-
-    'star_salmon/unmapped/' {
-        enabled params.save_unaligned
-    }
-
-    // subworkflows/local/quantify_rsem
-    'star_rsem/intermeds/' {
-        path 'star_rsem'
-        enabled params.save_align_intermeds
     }
 
     // subworkflows/nf-core/bam_markduplicates_picard
@@ -300,33 +243,6 @@ publish {
     }
     'rseqc/tin/' {
         path "${params.aligner}/rseqc/tin"
-    }
-
-    // subworkflows/nf-core/fastq_align_hisat2
-    'hisat2/intermeds/' {
-        path 'hisat2'
-        enabled params.save_align_intermeds
-    }
-
-    'hisat2/unmapped/' {
-        enabled params.save_unaligned
-    }
-
-    // subworkflows/nf-core/fastq_fastqc_umitools_fastp
-    // subworkflows/nf-core/fastq_fastqc_umitools_trimgalore
-    'fastp/intermeds/' {
-        path 'fastp'
-        enabled params.save_trimmed
-    }
-
-    'trimgalore/intermeds/' {
-        path 'trimgalore'
-        enabled params.save_trimmed
-    }
-
-    'umitools/intermeds/' {
-        path 'umitools'
-        enabled params.save_umi_intermeds
     }
 }
 

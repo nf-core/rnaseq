@@ -136,14 +136,14 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
 
     publish:
     // TODO: need to recover trim_reads and umi_reads
-    // trim_reads          >> 'fastp/intermeds/'
-    // umi_reads           >> 'umitools/intermeds/'
+    // trim_reads          >> (params.save_trimmed ? 'fastp/intermeds/' : null)
+    // umi_reads           >> (params.save_umi_intermeds ? 'umitools/' : null)
     umi_log             >> 'umitools/'
     trim_json           >> 'fastp/'
     trim_html           >> 'fastp/'
     trim_log            >> 'fastp/log/'
-    trim_reads_fail     >> 'fastp/intermeds/'
-    trim_reads_merged   >> 'fastp/intermeds/'
+    trim_reads_fail     >> (params.save_trimmed ? 'fastp/intermeds/' : null)
+    trim_reads_merged   >> (params.save_trimmed ? 'fastp/intermeds/' : null)
     fastqc_trim_html    >> 'fastp/fastqc/'
     fastqc_trim_zip     >> 'fastp/fastqc/'
 

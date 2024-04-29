@@ -19,9 +19,9 @@ process MULTIQC {
     path "versions.yml"        , emit: versions
 
     publish:
-    report  >> 'multiqc'
-    data    >> 'multiqc'
-    plots   >> 'multiqc'
+    report  >> 'multiqc/'
+    data    >> 'multiqc/'
+    plots   >> 'multiqc/'
 
     when:
     task.ext.when == null || task.ext.when

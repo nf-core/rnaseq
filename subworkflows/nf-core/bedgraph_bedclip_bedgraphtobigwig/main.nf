@@ -27,7 +27,7 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     ch_versions = ch_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.versions.first())
 
     publish:
-    UCSC_BEDGRAPHTOBIGWIG.out.bigwig >> 'bigwig'
+    UCSC_BEDGRAPHTOBIGWIG.out.bigwig >> 'bigwig/'
 
     emit:
     bigwig   = UCSC_BEDGRAPHTOBIGWIG.out.bigwig // channel: [ val(meta), [ bigwig ] ]

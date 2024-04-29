@@ -18,8 +18,8 @@ process DUPRADAR {
     path "versions.yml"               , emit: versions
 
     publish:
-    pdf >> 'dupradar'
-    txt >> 'dupradar'
+    pdf >> 'dupradar/'
+    txt >> 'dupradar/'
 
     when:
     task.ext.when == null || task.ext.when

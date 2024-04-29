@@ -849,6 +849,26 @@ workflow RNASEQ {
     CAT_FASTQ.out.reads         >> (params.save_merged_fastq ? 'fastq/' : null)
     SORTMERNA.out.reads         >> (params.save_non_ribo_reads ? 'sortmerna/' : null)
 
+    'bigwig/'                       >> "${params.aligner}/bigwig/"
+    'dupradar/'                     >> "${params.aligner}/dupradar/"
+    'multiqc/'                      >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
+    'preseq/'                       >> "${params.aligner}/preseq/"
+    'preseq/log/'                   >> "${params.aligner}/preseq/log/"
+    'qualimap/'                     >> "${params.aligner}/qualimap/"
+    'stringtie/'                    >> "${params.aligner}/stringtie/"
+    'featurecounts/'                >> "${params.aligner}/featurecounts/"
+    'picard/'                       >> "${params.aligner}/"
+    'picard/metrics/'               >> "${params.aligner}/picard_metrics/"
+    'picard/samtools_stats/'        >> "${params.aligner}/samtools_stats/"
+    'rseqc/bam_stat/'               >> "${params.aligner}/rseqc/bam_stat/"
+    'rseqc/infer_experiment/'       >> "${params.aligner}/rseqc/infer_experiment/"
+    'rseqc/junction_annotation/'    >> "${params.aligner}/rseqc/junction_annotation/"
+    'rseqc/junction_saturation/'    >> "${params.aligner}/rseqc/junction_saturation/"
+    'rseqc/read_duplication/'       >> "${params.aligner}/rseqc/read_duplication/"
+    'rseqc/read_distribution/'      >> "${params.aligner}/rseqc/read_distribution/"
+    'rseqc/inner_distance/'         >> "${params.aligner}/rseqc/inner_distance/"
+    'rseqc/tin/'                    >> "${params.aligner}/rseqc/tin/"
+
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]

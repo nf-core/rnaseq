@@ -19,10 +19,10 @@ process STRINGTIE_STRINGTIE {
     path  "versions.yml"                      , emit: versions
 
     publish:
-    transcript_gtf  >> 'stringtie'
-    abundance       >> 'stringtie'
-    coverage_gtf    >> 'stringtie'
-    ballgown        >> 'stringtie'
+    transcript_gtf  >> 'stringtie/'
+    abundance       >> 'stringtie/'
+    coverage_gtf    >> 'stringtie/'
+    ballgown        >> 'stringtie/'
 
     when:
     task.ext.when == null || task.ext.when

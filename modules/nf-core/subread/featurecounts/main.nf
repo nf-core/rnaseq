@@ -16,8 +16,8 @@ process SUBREAD_FEATURECOUNTS {
     path "versions.yml"                                , emit: versions
 
     publish:
-    counts  >> 'featurecounts'
-    summary >> 'featurecounts'
+    counts  >> 'featurecounts/'
+    summary >> 'featurecounts/'
 
     when:
     task.ext.when == null || task.ext.when

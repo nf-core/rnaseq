@@ -17,8 +17,8 @@ process PRESEQ_LCEXTRAP {
     path  "versions.yml"                    , emit: versions
 
     publish:
-    lc_extrap   >> 'preseq'
-    log         >> 'preseq/log'
+    lc_extrap   >> 'preseq/'
+    log         >> 'preseq/log/'
 
     when:
     task.ext.when == null || task.ext.when

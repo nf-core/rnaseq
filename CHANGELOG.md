@@ -67,6 +67,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
 - [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
+- [PR #1291](https://github.com/nf-core/rnaseq/pull/1291) - Add `wave` profile
 
 ### Parameters
 

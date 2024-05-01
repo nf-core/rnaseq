@@ -847,27 +847,61 @@ workflow RNASEQ {
     BBMAP_BBSPLIT.out.stats     >> 'bbsplit/'
     BBMAP_BBSPLIT.out.all_fastq >> (params.save_bbsplit_reads ? 'bbsplit/' : null)
     CAT_FASTQ.out.reads         >> (params.save_merged_fastq ? 'fastq/' : null)
-    SORTMERNA.out.reads         >> (params.save_non_ribo_reads ? 'sortmerna/' : null)
 
-    'bigwig/'                       >> "${params.aligner}/bigwig/"
-    'dupradar/'                     >> "${params.aligner}/dupradar/"
-    'multiqc/'                      >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
-    'preseq/'                       >> "${params.aligner}/preseq/"
-    'preseq/log/'                   >> "${params.aligner}/preseq/log/"
-    'qualimap/'                     >> "${params.aligner}/qualimap/"
-    'stringtie/'                    >> "${params.aligner}/stringtie/"
-    'featurecounts/'                >> "${params.aligner}/featurecounts/"
-    'picard/'                       >> "${params.aligner}/"
-    'picard/metrics/'               >> "${params.aligner}/picard_metrics/"
-    'picard/samtools_stats/'        >> "${params.aligner}/samtools_stats/"
-    'rseqc/bam_stat/'               >> "${params.aligner}/rseqc/bam_stat/"
-    'rseqc/infer_experiment/'       >> "${params.aligner}/rseqc/infer_experiment/"
-    'rseqc/junction_annotation/'    >> "${params.aligner}/rseqc/junction_annotation/"
-    'rseqc/junction_saturation/'    >> "${params.aligner}/rseqc/junction_saturation/"
-    'rseqc/read_duplication/'       >> "${params.aligner}/rseqc/read_duplication/"
-    'rseqc/read_distribution/'      >> "${params.aligner}/rseqc/read_distribution/"
-    'rseqc/inner_distance/'         >> "${params.aligner}/rseqc/inner_distance/"
-    'rseqc/tin/'                    >> "${params.aligner}/rseqc/tin/"
+    // TODO: params.remove_ribo_rna
+    // SORTMERNA.out.reads         >> (params.save_non_ribo_reads ? 'sortmerna/' : null)
+
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig >> "${params.aligner}/bigwig/"
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig >> "${params.aligner}/bigwig/"
+    DUPRADAR.out.pdf                >> "${params.aligner}/dupradar/"
+    DUPRADAR.out.txt                >> "${params.aligner}/dupradar/"
+    MULTIQC.out.report              >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
+    MULTIQC.out.data                >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
+    MULTIQC.out.plots               >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
+
+    // TODO: !params.skip_alignment && !params.skip_qc && !params.skip_preseq
+    // PRESEQ_LCEXTRAP.out.lc_extrap   >> "${params.aligner}/preseq/"
+    // PRESEQ_LCEXTRAP.out.log         >> "${params.aligner}/preseq/log/"
+
+    QUALIMAP_RNASEQ.out.results     >> "${params.aligner}/qualimap/"
+    STRINGTIE_STRINGTIE.out.transcript_gtf  >> "${params.aligner}/stringtie/"
+    STRINGTIE_STRINGTIE.out.abundance       >> "${params.aligner}/stringtie/"
+    STRINGTIE_STRINGTIE.out.coverage_gtf    >> "${params.aligner}/stringtie/"
+    STRINGTIE_STRINGTIE.out.ballgown        >> "${params.aligner}/stringtie/"
+    MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> "${params.aligner}/featurecounts/"
+    SUBREAD_FEATURECOUNTS.out.counts    >> "${params.aligner}/featurecounts/"
+    SUBREAD_FEATURECOUNTS.out.summary   >> "${params.aligner}/featurecounts/"
+
+    BAM_MARKDUPLICATES_PICARD.out.bam       >> "${params.aligner}/"
+    BAM_MARKDUPLICATES_PICARD.out.bai       >> "${params.aligner}/"
+    BAM_MARKDUPLICATES_PICARD.out.csi       >> "${params.aligner}/"
+    BAM_MARKDUPLICATES_PICARD.out.metrics   >> "${params.aligner}/picard_metrics/"
+    BAM_MARKDUPLICATES_PICARD.out.stats     >> "${params.aligner}/samtools_stats/"
+    BAM_MARKDUPLICATES_PICARD.out.flagstat  >> "${params.aligner}/samtools_stats/"
+    BAM_MARKDUPLICATES_PICARD.out.idxstats  >> "${params.aligner}/samtools_stats/"
+
+    BAM_RSEQC.out.bamstat_txt                       >> "${params.aligner}/rseqc/bam_stat/"
+    BAM_RSEQC.out.inferexperiment_txt               >> "${params.aligner}/rseqc/infer_experiment/"
+    BAM_RSEQC.out.junctionannotation_pdf            >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionannotation_events_pdf     >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionannotation_bed            >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionannotation_interact_bed   >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionannotation_xls            >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionannotation_log            >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionannotation_rscript        >> "${params.aligner}/rseqc/junction_annotation/"
+    BAM_RSEQC.out.junctionsaturation_pdf            >> "${params.aligner}/rseqc/junction_saturation/"
+    BAM_RSEQC.out.junctionsaturation_rscript        >> "${params.aligner}/rseqc/junction_saturation/"
+    BAM_RSEQC.out.readduplication_pdf               >> "${params.aligner}/rseqc/read_duplication/"
+    BAM_RSEQC.out.readduplication_seq_xls           >> "${params.aligner}/rseqc/read_duplication/"
+    BAM_RSEQC.out.readduplication_pos_xls           >> "${params.aligner}/rseqc/read_duplication/"
+    BAM_RSEQC.out.readduplication_rscript           >> "${params.aligner}/rseqc/read_duplication/"
+    BAM_RSEQC.out.readdistribution_txt              >> "${params.aligner}/rseqc/read_distribution/"
+    BAM_RSEQC.out.innerdistance_distance            >> "${params.aligner}/rseqc/inner_distance/"
+    BAM_RSEQC.out.innerdistance_freq                >> "${params.aligner}/rseqc/inner_distance/"
+    BAM_RSEQC.out.innerdistance_mean                >> "${params.aligner}/rseqc/inner_distance/"
+    BAM_RSEQC.out.innerdistance_pdf                 >> "${params.aligner}/rseqc/inner_distance/"
+    BAM_RSEQC.out.innerdistance_rscript             >> "${params.aligner}/rseqc/inner_distance/"
+    BAM_RSEQC.out.tin_txt                           >> "${params.aligner}/rseqc/tin/"
 
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html

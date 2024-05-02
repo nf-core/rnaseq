@@ -10,7 +10,7 @@
 */
 
 nextflow.enable.dsl = 2
-nextflow.preview.publish = true
+nextflow.preview.output = true
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -165,7 +165,7 @@ workflow {
     )
 }
 
-publish {
+output {
     directory params.outdir
     mode params.publish_dir_mode
 }

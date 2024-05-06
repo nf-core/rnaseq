@@ -68,6 +68,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
 - [PR #1291](https://github.com/nf-core/rnaseq/pull/1291) - Add `wave` profile
+- [PR #1293](https://github.com/nf-core/rnaseq/pull/1293) - Update subworkflow utils_nfcore_pipeline
 
 ### Parameters
 

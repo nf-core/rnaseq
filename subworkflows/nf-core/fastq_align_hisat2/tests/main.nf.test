@@ -1,0 +1,118 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTQ_ALIGN_HISAT2"
+    script "../main.nf"
+    workflow "FASTQ_ALIGN_HISAT2"
+    config "./nextflow.config"
+
+    tag "HISAT2_EXTRACTSPLICESITES"
+    tag "HISAT2_BUILD"
+    tag "HISAT2_ALIGN"
+    tag "BAM_SORT_STATS_SAMTOOLS"
+
+    setup {
+        run("HISAT2_EXTRACTSPLICESITES") {
+            script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ])
+                """
+            }
+        }
+        run("HISAT2_BUILD") {
+            script "../../../../modules/nf-core/hisat2/build/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ])
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                """
+            }
+        }
+    }
+
+    test("sarscov2 - bam - single_end") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = HISAT2_BUILD.out.index
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                input[3] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(file(workflow.out.bai[0][1]).name).match("se - bai")},
+                { assert snapshot(file(workflow.out.bam[0][1]).name).match("se - bam")},
+                { assert snapshot(file(workflow.out.orig_bam[0][1]).name).match("se - orig_bam")},
+                { assert snapshot(workflow.out.csi).match("se - csi")},
+                { assert snapshot(workflow.out.fastq).match("se - fastq")},
+                { assert snapshot(workflow.out.flagstat).match("se - flagstat")},
+                { assert snapshot(workflow.out.idxstats).match("se - idxstats")},
+                { assert snapshot(workflow.out.stats).match("se - stats")},
+                { assert snapshot(workflow.out.summary).match("se - summary")},
+                { assert snapshot(workflow.out.versions).match("se - versions")}
+            )
+        }
+    }
+    test("sarscov2 - bam - paired_end") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = HISAT2_BUILD.out.index
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                input[3] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(file(workflow.out.bai[0][1]).name).match("pe - bai")},
+                { assert snapshot(file(workflow.out.bam[0][1]).name).match("pe - bam")},
+                { assert snapshot(file(workflow.out.orig_bam[0][1]).name).match("pe - orig_bam")},
+                { assert snapshot(workflow.out.csi).match("pe - csi")},
+                { assert snapshot(workflow.out.fastq).match("pe - fastq")},
+                { assert snapshot(workflow.out.flagstat).match("pe - flagstat")},
+                { assert snapshot(workflow.out.idxstats).match("pe - idxstats")},
+                { assert snapshot(workflow.out.stats).match("pe - stats")},
+                { assert snapshot(workflow.out.summary).match("pe - summary")},
+                { assert snapshot(workflow.out.versions).match("pe - versions")}
+            )
+        }
+    }
+}

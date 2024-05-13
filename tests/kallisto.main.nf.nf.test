@@ -1,0 +1,23 @@
+nextflow_pipeline {
+
+    name "Test pipeline using Kallisto"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("Default profile test") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'kallisto'
+                skip_qc = true
+                skip_alignment = true
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

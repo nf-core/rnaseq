@@ -1,0 +1,594 @@
+{
+    "tpm_transcript_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.169267"
+    },
+    "lengths_gene_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.838048"
+    },
+    "counts_gene_scaled_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.139493"
+    },
+    "counts_gene_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.823542"
+    },
+    "lengths_transcript_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.157265"
+    },
+    "versions_salmon - stub": {
+        "content": [
+            [
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.175019"
+    },
+    "counts_gene_length_scaled_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_counts_length_scaled.tsv:md5,4944841ac711124d29673b6b6ed16ef3"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.116135"
+    },
+    "lengths_transcript_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.transcript_lengths.tsv:md5,db6d8ab9f8e1123d5984fd534b4347dc"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.664041"
+    },
+    "counts_transcript_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.transcript_counts.tsv:md5,42e0106e75fa97c1c684c6d9060f1724"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.162273"
+    },
+    "counts_transcript_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.834743"
+    },
+    "counts_transcript_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.transcript_counts.tsv:md5,ff0f5be09ca7a322672c0074ba35da17"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.652813"
+    },
+    "lengths_gene_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.151603"
+    },
+    "tpm_gene_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_tpm.tsv:md5,6076364cc78741a4f8bc8935a045d13d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.669821"
+    },
+    "tpm_transcript_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.transcript_tpm.tsv:md5,7a334b565e1e865efb1caf615f194ef7"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.674895"
+    },
+    "tpm_gene_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.163303"
+    },
+    "lengths_transcript_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.transcript_lengths.tsv:md5,f974b52840431a5dae57bcb615badbf1"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.1686"
+    },
+    "counts_gene_length_scaled_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.827742"
+    },
+    "tpm_gene_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.846428"
+    },
+    "counts_transcript_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.145564"
+    },
+    "counts_gene_scaled_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_counts_scaled.tsv:md5,39d14e361434978b3cadae901a26a028"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.159638"
+    },
+    "counts_gene_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_counts.tsv:md5,c14cab7e15cfac73ec0602dc2c404551"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.636972"
+    },
+    "versions_salmon": {
+        "content": [
+            [
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.680246"
+    },
+    "counts_gene_length_scaled_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_counts_length_scaled.tsv:md5,5f92a6784f6edc5e3b336c71c3ee7daf"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.642848"
+    },
+    "tpm_gene_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_tpm.tsv:md5,85d108269769ae0d841247b9b9ed922d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.172531"
+    },
+    "lengths_transcript_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.842475"
+    },
+    "lengths_gene_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_lengths.tsv:md5,db6becdf807fd164a9c63dd1dd916d9c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.16551"
+    },
+    "counts_gene_scaled_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.831518"
+    },
+    "tpm_transcript_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.transcript_tpm.tsv:md5,65862ed9d4a05abfab952e680dc0e49d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.177955"
+    },
+    "lengths_gene_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_lengths.tsv:md5,1691ea2677612805cd699265c83024d7"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.658624"
+    },
+    "counts_gene_length_scaled_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.13369"
+    },
+    "counts_gene_kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_counts.tsv:md5,e89c28692ea214396b2d4cb702a804c3"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.113216"
+    },
+    "versions_kallisto": {
+        "content": [
+            [
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:04.181904"
+    },
+    "counts_gene_salmon - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:54.127272"
+    },
+    "versions_kallisto - stub": {
+        "content": [
+            [
+                "versions.yml:md5,6ff317cceddc686f84d79cb976e1e28b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.86053"
+    },
+    "tpm_transcript_kallisto - stub": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    "[].transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:20.856075"
+    },
+    "counts_gene_scaled_salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.gene_counts_scaled.tsv:md5,fdfb3d23aaf5d4316d81247ec4664ca0"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-11T11:35:37.647691"
+    }
+}

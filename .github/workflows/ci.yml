@@ -10,22 +10,63 @@ on:
 
 env:
   NXF_ANSI_LOG: false
+  NFT_VER: "0.8.4"
+  NFT_WORKDIR: "~"
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
   cancel-in-progress: true
-
 jobs:
+  nf-test-changes:
+    name: Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      nf_test_files: ${{ steps.list.outputs.nf_test_files }}
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install gitpython pyyaml
+
+      - name: list nf_test_files
+        id: list
+        run: |
+          echo nf_test_files=$(python \
+            .github/python/find_changed_files.py \
+            -t pipeline workflow process \
+            --head_ref ${{ github.sha }} \
+            --base_ref origin/${{ github.base_ref }} \
+          ) >> $GITHUB_OUTPUT
+
+      - name: debug
+        run: |
+          echo ${{ steps.list.outputs.nf_test_files }}
+
   test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/rnaseq') }}"
+    name: ${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }}
+    needs: [nf-test-changes]
+    if: needs.nf-test-changes.outputs.nf_test_files != '[]'
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         NXF_VER:
-          - "23.04.0"
           - "latest-everything"
+          - "23.04"
+        nf_test_files: ["${{ fromJson(needs.nf-test-changes.outputs.nf_test_files) }}"]
+        profile:
+          - "docker"
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -35,12 +76,66 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          architecture: "x64"
 
-      - name: Run pipeline with test data
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
+      - name: Install pdiff to see diff between nf-test snapshots
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          python -m pip install --upgrade pip
+          pip install pdiff
+
+      - name: Cache nf-test installation
+        id: cache-software
+        uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/nf-test
+            /home/runner/.nf-test/nf-test.jar
+          key: ${{ runner.os }}-${{ env.NFT_VER }}-nftest
+
+      - name: Install nf-test
+        if: steps.cache-software.outputs.cache-hit != 'true'
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
+
+      - name: Run nf-test
+        run: |
+          nf-test test --verbose ${{ matrix.nf_test_files }} --profile "+${{ matrix.profile }}" --junitxml=test.xml --tap=test.tap
+
+      - uses: pcolby/tap-summary@v1
+        with:
+          path: >-
+            test.tap
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always ${{ github.workspace }}/.nf-test/tests/*/meta/nextflow.log
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: test.xml
+
+  confirm-pass:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !contains(needs.*.result, 'failure') }}
+        run: exit 0
+      - name: One or more tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+
+      - name: debug-print
+        if: always()
+        run: |
+          echo "toJSON(needs) = ${{ toJSON(needs) }}"
+          echo "toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"

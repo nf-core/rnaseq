@@ -1,0 +1,26 @@
+{
+    "test_trimgalore_single_end": {
+        "content": [
+            [
+                "versions.yml:md5,47d966cbb31c80eb8f7fe860d55659b7"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T16:33:20.401347"
+    },
+    "test_trimgalore_paired_end": {
+        "content": [
+            [
+                "versions.yml:md5,47d966cbb31c80eb8f7fe860d55659b7"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-29T16:33:28.960497"
+    }
+}

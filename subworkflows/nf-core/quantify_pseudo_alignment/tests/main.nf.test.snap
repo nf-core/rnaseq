@@ -1,0 +1,138 @@
+{
+    "kallisto": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm.tsv:md5,23fa0c64cfbd198806b53897de791b8b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_counts.tsv:md5,4ba44e5ebc9ed0ca2ca008d10a1dddc3"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_lengths.tsv:md5,b031192af7a8f64dcc887978a69fdbb7"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_counts_length_scaled.tsv:md5,078746568e3fd0c995559352b661b2d9"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.transcript_tpm.tsv:md5,de458e1c2a579e53bd7671c5176f5d0c"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.transcript_lengths.tsv:md5,131952a97905469ab012f0f46e52405c"
+                ]
+            ],
+            [
+                "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
+                "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
+                "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
+            ],
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-03T17:29:13.487959"
+    },
+    "salmon": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm.tsv:md5,9711ed8364c3a1ea4fc87bd5e0780835"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_counts.tsv:md5,865a4706b8bf47f476d8298fdd344902"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_lengths.tsv:md5,158e17a7bda7827b3d528f379e81d2bd"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_counts_length_scaled.tsv:md5,46194b28815747fe3c3d5a619fa994a7"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.transcript_lengths.tsv:md5,f39a15fea56a5a8e5776dcdda0c8f102"
+                ]
+            ],
+            null,
+            null,
+            [
+                "versions.yml:md5,4c3564e1ba17d8ce2b0ee784251ddd87",
+                "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
+                "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed"
+            ],
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-03T17:28:43.74907"
+    }
+}

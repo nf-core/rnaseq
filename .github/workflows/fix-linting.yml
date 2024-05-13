@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Use the @nf-core-bot token to check out so we can push later
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
           token: ${{ secrets.nf_core_bot_auth_token }}
 
@@ -32,9 +32,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
 
       # Install and run pre-commit
-      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
+      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
         with:
-          python-version: 3.11
+          python-version: "3.12"
 
       - name: Install pre-commit
         run: pip install pre-commit

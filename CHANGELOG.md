@@ -60,15 +60,16 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1249](https://github.com/nf-core/rnaseq/pull/1249) - Include nf-tests for rsem_merge_counts module
 - [PR #1250](https://github.com/nf-core/rnaseq/pull/1250) - Remove all tags.yml files because the testing system has changed
 - [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2qc paths
+- [PR #1253](https://github.com/nf-core/rnaseq/pull/1253) - Use nf-test files as matrix to test over in CI/CD for efficiency
 - [PR #1261](https://github.com/nf-core/rnaseq/pull/1261) - Add more tests for PREPARE_GENOME
 - [PR #1265](https://github.com/nf-core/rnaseq/pull/1265) - Small updates noticed during code review
 - [PR #1266](https://github.com/nf-core/rnaseq/pull/1266) - Delete unecessary tags from nf.test files for modules and subworkflows
-- [PR #1253](https://github.com/nf-core/rnaseq/pull/1253) - Use nf-test files as matrix to test over in CI/CD for efficiency
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
 - [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
 - [PR #1291](https://github.com/nf-core/rnaseq/pull/1291) - Add `seqera_containers` profile
 - [PR #1293](https://github.com/nf-core/rnaseq/pull/1293) - Update subworkflow utils_nfcore_pipeline
+- [PR #1297](https://github.com/nf-core/rnaseq/pull/1297) - Important! Template update for nf-core/tools v2.14.1
 
 ### Parameters
 

@@ -14,6 +14,22 @@
                     {
                         "id": "all_samples"
                     },
+                    "all_samples.gene_tpm_scaled.tsv:md5,23fa0c64cfbd198806b53897de791b8b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm_length_scaled.tsv:md5,23fa0c64cfbd198806b53897de791b8b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
                     "all_samples.gene_counts.tsv:md5,4ba44e5ebc9ed0ca2ca008d10a1dddc3"
                 ]
             ],
@@ -64,7 +80,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-03T17:29:13.487959"
+        "timestamp": "2024-05-16T11:00:38.264567"
     },
     "salmon": {
         "content": [
@@ -74,6 +90,22 @@
                         "id": "all_samples"
                     },
                     "all_samples.gene_tpm.tsv:md5,9711ed8364c3a1ea4fc87bd5e0780835"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm_scaled.tsv:md5,9711ed8364c3a1ea4fc87bd5e0780835"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm_length_scaled.tsv:md5,9711ed8364c3a1ea4fc87bd5e0780835"
                 ]
             ],
             [
@@ -133,6 +165,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-03T17:28:43.74907"
+        "timestamp": "2024-05-16T11:00:09.117121"
     }
 }

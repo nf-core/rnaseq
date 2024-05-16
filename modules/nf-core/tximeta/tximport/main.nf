@@ -13,6 +13,8 @@ process TXIMETA_TXIMPORT {
 
     output:
     tuple val(meta), path("*gene_tpm.tsv")                 , emit: tpm_gene
+    tuple val(meta), path("*gene_tpm_scaled.tsv")          , emit: tpm_gene_scaled
+    tuple val(meta), path("*gene_tpm_length_scaled.tsv")   , emit: tpm_gene_length_scaled
     tuple val(meta), path("*gene_counts.tsv")              , emit: counts_gene
     tuple val(meta), path("*gene_counts_length_scaled.tsv"), emit: counts_gene_length_scaled
     tuple val(meta), path("*gene_counts_scaled.tsv")       , emit: counts_gene_scaled
@@ -31,6 +33,8 @@ process TXIMETA_TXIMPORT {
     stub:
     """
     touch ${meta.id}.gene_tpm.tsv
+    touch ${meta.id}.gene_tpm_scaled.tsv
+    touch ${meta.id}.gene_tpm_length_scaled.tsv
     touch ${meta.id}.gene_counts.tsv
     touch ${meta.id}.gene_counts_length_scaled.tsv
     touch ${meta.id}.gene_counts_scaled.tsv

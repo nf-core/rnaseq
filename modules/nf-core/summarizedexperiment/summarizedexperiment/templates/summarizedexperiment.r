@@ -121,6 +121,9 @@ parse_metadata <- function(metadata_path, ids, metadata_id_col = NULL){
         metadata_id_col <- findColumnWithAllEntries(ids, metadata)
     }
 
+    # Remove any all-NA columns
+    metadata <-  metadata[, colSums(is.na(metadata)) != nrow(metadata)]
+
     # Allow for duplicate rows by the id column
     metadata <- aggregate(
         . ~ metadata[[metadata_id_col]],

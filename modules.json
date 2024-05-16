@@ -167,7 +167,7 @@
                     },
                     "salmon/quant": {
                         "branch": "master",
-                        "git_sha": "03a8562231d575c313266c193a980594b941e3ea",
+                        "git_sha": "cb6b2b94fc40dea58f0b1e3dd095f3dd24f2ac8a",
                         "installed_by": ["fastq_subsample_fq_salmon", "modules", "quantify_pseudo_alignment"]
                     },
                     "samtools/flagstat": {
@@ -226,7 +226,7 @@
                     },
                     "summarizedexperiment/summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "05a252a330273c67795aed2b18e86c53c4c9382a",
+                        "git_sha": "31751460f9ce9552846e13fdeec6953dcb47132d",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
                     "trimgalore": {
@@ -236,7 +236,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "c275c3baac6df8f0c7c500760a0cf014ce7b525d",
+                        "git_sha": "689323f8f89a120469b4c898cf7f19f758c3080e",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
                     "ucsc/bedclip": {
@@ -329,7 +329,7 @@
                     },
                     "quantify_pseudo_alignment": {
                         "branch": "master",
-                        "git_sha": "bca4985339b3ba879f457565806deb2377873b83",
+                        "git_sha": "0c3275555f670ac32270175390a14fa676404bac",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {

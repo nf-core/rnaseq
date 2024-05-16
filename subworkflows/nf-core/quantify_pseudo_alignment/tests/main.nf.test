@@ -63,6 +63,8 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                         workflow.out.tpm_gene,
+                        workflow.out.tpm_gene_scaled,
+                        workflow.out.tpm_gene_length_scaled,
                         workflow.out.counts_gene,
                         workflow.out.lengths_gene,
                         workflow.out.counts_gene_length_scaled,
@@ -132,6 +134,8 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                         workflow.out.tpm_gene,
+                        workflow.out.tpm_gene_scaled,
+                        workflow.out.tpm_gene_length_scaled,
                         workflow.out.counts_gene,
                         workflow.out.lengths_gene,
                         workflow.out.counts_gene_length_scaled,

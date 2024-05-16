@@ -1,4 +1,43 @@
 {
+    "versions_single_end_lib_type_a_stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-24T14:34:21.647863"
+    },
+    "versions_pair_end_multiple_stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-24T14:34:48.03415"
+    },
+    "sarscov2 - single_end stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-23T09:34:16.444372"
+    },
     "versions_single_end": {
         "content": [
             [
@@ -22,6 +61,42 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2024-02-06T17:10:56.121713"
+    },
+    "versions_pair_end_stub": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-23T08:38:01.276656"
+    },
+    "versions_pair_end stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-24T14:34:36.570127"
+    },
+    "versions_single_end_stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-24T14:28:01.864343"
     },
     "versions_single_end_lib_type_a": {
         "content": [

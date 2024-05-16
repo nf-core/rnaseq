@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::preseq=3.1.2
+  - bioconda::preseq

@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::qualimap=2.3
+  - bioconda::qualimap

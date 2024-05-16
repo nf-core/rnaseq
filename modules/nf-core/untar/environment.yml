@@ -6,6 +6,6 @@ channels:
   - defaults
 
 dependencies:
-  - conda-forge::grep=3.11
-  - conda-forge::sed=4.7
-  - conda-forge::tar=1.34
+  - conda-forge::grep
+  - conda-forge::sed
+  - conda-forge::tar

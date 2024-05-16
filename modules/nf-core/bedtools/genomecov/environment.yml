@@ -1,7 +1,8 @@
 name: bedtools_genomecov
 channels:
+  - seqera
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::bedtools=2.31.1
+  - bioconda::bedtools

@@ -4,7 +4,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::star=2.7.10a
-  - bioconda::samtools=1.18
-  - bioconda::htslib=1.18
-  - conda-forge::gawk=5.1.0
+  - bioconda::star
+  - bioconda::samtools
+  - bioconda::htslib
+  - conda-forge::gawk

@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::salmon=1.10.1
+  - bioconda::salmon

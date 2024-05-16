@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - conda-forge::coreutils=8.30
+  - conda-forge::coreutils

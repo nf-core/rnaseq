@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::hisat2=2.2.1
+  - bioconda::hisat2

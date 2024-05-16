@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::stringtie=2.2.1
+  - bioconda::stringtie

@@ -69,6 +69,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
 - [PR #1293](https://github.com/nf-core/rnaseq/pull/1293) - Update subworkflow utils_nfcore_pipeline
 - [PR #1297](https://github.com/nf-core/rnaseq/pull/1297) - Important! Template update for nf-core/tools v2.14.1
+- [PR #1302](https://github.com/nf-core/rnaseq/pull/1302) - Add missing files from Tximport processing
 
 ### Parameters
 

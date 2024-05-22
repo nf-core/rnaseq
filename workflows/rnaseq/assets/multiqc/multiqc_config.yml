@@ -21,6 +21,7 @@ run_modules:
   - star
   - hisat2
   - rsem
+  - umi-tools
   - salmon
   - kallisto
   - samtools

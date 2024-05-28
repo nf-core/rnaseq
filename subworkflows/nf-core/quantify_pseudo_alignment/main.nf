@@ -106,8 +106,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     multiqc                       = ch_pseudo_multiqc                              // channel: [ val(meta), files_for_multiqc ]
 
     tpm_gene                      = TXIMETA_TXIMPORT.out.tpm_gene                  //    path: *gene_tpm.tsv
-    tpm_gene_scaled               = TXIMETA_TXIMPORT.out.tpm_gene_scaled           //    path: *gene_tpm_scaled.tsv
-    tpm_gene_length_scaled        = TXIMETA_TXIMPORT.out.tpm_gene_length_scaled    //    path: *gene_tpm_length_scaled.tsv
     counts_gene                   = TXIMETA_TXIMPORT.out.counts_gene               //    path: *gene_counts.tsv
     lengths_gene                  = TXIMETA_TXIMPORT.out.lengths_gene              //    path: *gene_lengths.tsv
     counts_gene_length_scaled     = TXIMETA_TXIMPORT.out.counts_gene_length_scaled //    path: *gene_counts_length_scaled.tsv

@@ -21,7 +21,7 @@ run_modules:
   - star
   - hisat2
   - rsem
-  - umi-tools
+  - umitools
   - salmon
   - kallisto
   - samtools
@@ -43,20 +43,25 @@ top_modules:
   - "salmon_deseq2_clustering"
   - "biotype_counts"
   - "dupradar"
+  - "umitools"
 
 module_order:
   - fastqc:
       name: "FastQC (raw)"
+      anchor: "fastqc_raw"
       info: "This section of the report shows FastQC results before adapter trimming."
       path_filters:
-        - "./fastqc/raw/*.zip"
+        - "**/raw/*.zip"
   - cutadapt
   - fastp
   - fastqc:
       name: "FastQC (trimmed)"
+      anchor: "fastqc_trimmed"
       info: "This section of the report shows FastQC results after adapter trimming."
       path_filters:
-        - "./fastqc/trim/*.zip"
+        - "**/trim/*.zip"
+
+
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:

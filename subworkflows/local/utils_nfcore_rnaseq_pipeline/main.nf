@@ -567,7 +567,7 @@ def getInferexperimentStrandedness(inferexperiment_file, cutoff_ratio=5) {
     ratio = sense / antisense
 
     if (ratio >= cutoff_ratio) {
-        strandedness = 'forward'i
+        strandedness = 'forward'
     } else if ((1 / ratio) >= cutoff_ratio) {
         strandedness = 'reverse'
     }

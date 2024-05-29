@@ -547,7 +547,7 @@ def biotypeInGtf(gtf_file, biotype) {
 //
 // Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
 //
-def getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
+def getInferexperimentStrandedness(inferexperiment_file, cutoff_ratio=5) {
     def sense        = 0
     def antisense    = 0
     def undetermined = 0
@@ -564,9 +564,11 @@ def getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
         if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat() * 100
     }
     def strandedness = 'unstranded'
-    if (sense >= 100-cutoff) {
-        strandedness = 'forward'
-    } else if (antisense >= 100-cutoff) {
+    ratio = sense / antisense
+
+    if (ratio >= cutoff_ratio) {
+        strandedness = 'forward'i
+    } else if ((1 / ratio) >= cutoff_ratio) {
         strandedness = 'reverse'
     }
     return [ strandedness, sense, antisense, undetermined ]

@@ -723,7 +723,7 @@ workflow RNASEQ {
                 .inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
+                        def inferred_strand = getInferexperimentStrandedness(strand_log, 5)
                         if (meta.strandedness != inferred_strand[0]) {
                             return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
                         }

@@ -169,9 +169,7 @@ if ("tx2gene" %in% names(transcript_info) && !is.null(transcript_info\$tx2gene))
         list(obj = gse, slot = "length", suffix = "gene_lengths.tsv"),
         list(obj = gse, slot = "abundance", suffix = "gene_tpm.tsv"),
         list(obj = gse, slot = "counts", suffix = "gene_counts.tsv"),
-        list(obj = gse.ls, slot = "abundance", suffix = "gene_tpm_length_scaled.tsv"),
         list(obj = gse.ls, slot = "counts", suffix = "gene_counts_length_scaled.tsv"),
-        list(obj = gse.s, slot = "abundance", suffix = "gene_tpm_scaled.tsv"),
         list(obj = gse.s, slot = "counts", suffix = "gene_counts_scaled.tsv")
     ))
 }

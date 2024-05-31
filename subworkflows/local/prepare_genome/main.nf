@@ -82,14 +82,14 @@ workflow PREPARE_GENOME {
     if (gtf || gff) {
         if (gtf) {
             if (gtf.endsWith('.gz')) {
-                ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
+                ch_gtf      = GUNZIP_GTF ( [ [:], file(gtf) ] ).gunzip.map { it[1] }
                 ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
             } else {
                 ch_gtf = Channel.value(file(gtf))
             }
         } else if (gff) {
             if (gff.endsWith('.gz')) {
-                ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
+                ch_gff      = GUNZIP_GFF ( [ [:], file(gff) ] ).gunzip.map { it[1] }
                 ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
             } else {
                 ch_gff = Channel.value(file(gff))

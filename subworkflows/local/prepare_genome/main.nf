@@ -70,7 +70,7 @@ workflow PREPARE_GENOME {
     // Uncompress genome fasta file if required
     //
     if (fasta.endsWith('.gz')) {
-        ch_fasta    = GUNZIP_FASTA ( [ [:], fasta ] ).gunzip.map { it[1] }
+        ch_fasta    = GUNZIP_FASTA ( [ [:], file(fasta) ] ).gunzip.map { it[1] }
         ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
     } else {
         ch_fasta = Channel.value(file(fasta))
@@ -129,7 +129,7 @@ workflow PREPARE_GENOME {
     def biotype = gencode ? "gene_type" : featurecounts_group_type
     if (additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], additional_fasta ] ).gunzip.map { it[1] }
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], file(additional_fasta) ] ).gunzip.map { it[1] }
             ch_versions  = ch_versions.mix(GUNZIP_ADDITIONAL_FASTA.out.versions)
         } else {
             ch_add_fasta = Channel.value(file(additional_fasta))
@@ -150,7 +150,7 @@ workflow PREPARE_GENOME {
     //
     if (gene_bed) {
         if (gene_bed.endsWith('.gz')) {
-            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], gene_bed ] ).gunzip.map { it[1] }
+            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], file(gene_bed) ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GENE_BED.out.versions)
         } else {
             ch_gene_bed = Channel.value(file(gene_bed))
@@ -165,7 +165,7 @@ workflow PREPARE_GENOME {
     //
     if (transcript_fasta) {
         if (transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], transcript_fasta ] ).gunzip.map { it[1] }
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], file(transcript_fasta) ] ).gunzip.map { it[1] }
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
             ch_transcript_fasta = Channel.value(file(transcript_fasta))

@@ -61,8 +61,6 @@ module_order:
       path_filters:
         - "**/trim/*.zip"
 
-
-
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:
   fastqc:

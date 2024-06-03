@@ -63,7 +63,9 @@ module_order:
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:
-  fastqc:
+  "FastQC (raw)":
+    percent_duplicates: False
+  "FastQC (trimmed)":
     percent_duplicates: False
 
 extra_fn_clean_exts:

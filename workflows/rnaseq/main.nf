@@ -372,6 +372,7 @@ workflow RNASEQ {
             )
             ch_genome_bam       = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.deduplog.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats.collect{it[1]})
@@ -394,6 +395,7 @@ workflow RNASEQ {
                 ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
                 params.umitools_dedup_stats
             )
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME.out.deduplog.collect{it[1]})
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
@@ -525,6 +527,7 @@ workflow RNASEQ {
             )
             ch_genome_bam       = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.deduplog.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats.collect{it[1]})

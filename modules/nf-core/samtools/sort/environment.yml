@@ -1,0 +1,8 @@
+name: samtools_sort
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::samtools=1.19.2
+  - bioconda::htslib=1.19.1

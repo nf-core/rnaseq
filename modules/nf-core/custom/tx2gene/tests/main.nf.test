@@ -1,0 +1,76 @@
+nextflow_process {
+
+    name "Test Process CUSTOM_TX2GENE"
+    script "../main.nf"
+    process "CUSTOM_TX2GENE"
+    tag "UNTAR"
+
+    setup {
+
+        run("UNTAR") {
+            script "../../../untar/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                ])
+                """
+            }
+        }
+    }
+
+    test("saccharomyces_cerevisiae - gtf") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                ])
+                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[2] = 'kallisto'
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.tx2gene).match('tx2gene') },
+                { assert snapshot(process.out.versions).match('versions') }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - gtf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                ])
+                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[2] = 'kallisto'
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.tx2gene).match('tx2gene - stub') },
+                { assert snapshot(process.out.versions).match('versions - stub') }
+            )
+        }
+    }
+}

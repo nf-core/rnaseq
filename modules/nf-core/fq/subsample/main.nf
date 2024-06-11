@@ -2,7 +2,7 @@ process FQ_SUBSAMPLE {
     tag "$meta.id"
     label 'process_single'
 
-    conda "bioconda::fq=0.9.1"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fq:0.9.1--h9ee0642_0':
         'biocontainers/fq:0.9.1--h9ee0642_0' }"

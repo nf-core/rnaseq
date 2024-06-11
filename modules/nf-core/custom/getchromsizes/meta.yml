@@ -12,7 +12,6 @@ tools:
       tool_dev_url: https://github.com/samtools/samtools
       doi: 10.1093/bioinformatics/btp352
       licence: ["MIT"]
-
 input:
   - meta:
       type: map
@@ -23,7 +22,6 @@ input:
       type: file
       description: FASTA file
       pattern: "*.{fa,fasta,fna,fas}"
-
 output:
   - meta:
       type: map
@@ -46,8 +44,11 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@tamara-hodgetts"
+  - "@chris-cheshire"
+  - "@muffato"
+maintainers:
   - "@tamara-hodgetts"
   - "@chris-cheshire"
   - "@muffato"

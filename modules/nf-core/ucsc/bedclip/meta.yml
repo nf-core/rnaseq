@@ -9,7 +9,6 @@ tools:
       description: Remove lines from bed file that refer to off-chromosome locations.
       homepage: http://hgdownload.cse.ucsc.edu/admin/exe/
       licence: ["varies; see http://genome.ucsc.edu/license"]
-
 input:
   - meta:
       type: map
@@ -20,7 +19,6 @@ input:
       type: file
       description: bedGraph file
       pattern: "*.{bedgraph}"
-
 output:
   - meta:
       type: map
@@ -35,6 +33,7 @@ output:
       type: file
       description: bedGraph file
       pattern: "*.{bedgraph}"
-
 authors:
+  - "@drpatelh"
+maintainers:
   - "@drpatelh"

@@ -1,0 +1,112 @@
+nextflow_process {
+
+    name "Test Process STRINGTIE_STRINGTIE"
+    script "../main.nf"
+    process "STRINGTIE_STRINGTIE"
+
+    test("sarscov2 [bam] - forward strandedness") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.transcript_gtf).match("fs_transcript_gtf") },
+                { assert snapshot(process.out.abundance).match("fs_abundance") },
+                { assert snapshot(process.out.versions).match("fs_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness + reference annotation") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', strandedness:'forward' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+                { assert snapshot(process.out.transcript_gtf).match("fs_gtf_transcript_gtf") },
+                { assert snapshot(process.out.abundance).match("fs_gtf_abundance") },
+                { assert snapshot(process.out.ballgown).match("fs_gtf_ballgown") },
+                { assert snapshot(process.out.versions).match("fs_gtf_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.transcript_gtf).match("rs_transcript_gtf") },
+                { assert snapshot(process.out.abundance).match("rs_abundance") },
+                { assert snapshot(process.out.versions).match("rs_versions") }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness + reference annotation") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.transcript_gtf).match("rs_gtf_transcript_gtf") },
+                { assert snapshot(process.out.abundance).match("rs_gtf_abundance") },
+                { assert snapshot(process.out.ballgown).match("rs_gtf_ballgown") },
+                { assert snapshot(process.out.versions).match("rs_gtf_versions") }
+            )
+        }
+    }
+}

@@ -2,7 +2,7 @@ process SALMON_QUANT {
     tag "$meta.id"
     label "process_medium"
 
-    conda "bioconda::salmon=1.10.1"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/salmon:1.10.1--h7e5ed60_0' :
         'biocontainers/salmon:1.10.1--h7e5ed60_0' }"
@@ -70,6 +70,18 @@ process SALMON_QUANT {
     if [ -f $prefix/aux_info/meta_info.json ]; then
         cp $prefix/aux_info/meta_info.json "${prefix}_meta_info.json"
     fi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
+    END_VERSIONS
+    """
+
+    stub:
+    prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    mkdir ${prefix}
+    touch ${prefix}_meta_info.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

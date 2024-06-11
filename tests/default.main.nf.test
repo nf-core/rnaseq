@@ -1,0 +1,41 @@
+nextflow_pipeline {
+
+    name "Test pipeline with default settings"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("Default profile test") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+
+
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml")).match("software_versions") },
+                { assert snapshot(
+                        path("${params.outdir}/salmon/salmon.merged.transcript_counts.tsv"),
+                        path("${params.outdir}/custom/out/genome_gfp.fasta"),
+                        path("${params.outdir}/custom/out/genome_gfp.gtf"),
+                        path("${params.outdir}/star_salmon/bigwig/RAP1_IAA_30M_REP1.forward.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/RAP1_IAA_30M_REP1.reverse.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/RAP1_UNINDUCED_REP1.forward.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/RAP1_UNINDUCED_REP1.reverse.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/RAP1_UNINDUCED_REP2.forward.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/RAP1_UNINDUCED_REP2.reverse.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/WT_REP1.forward.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/WT_REP1.reverse.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/WT_REP2.forward.bigWig"),
+                        path("${params.outdir}/star_salmon/bigwig/WT_REP2.reverse.bigWig")
+                    ).match("output_files")
+                }
+            )
+        }
+    }
+}

@@ -1,0 +1,958 @@
+{
+    "homo_sapiens - paired_end - multiple - bam_sorted": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,7b20152380dbc52ec23d2e95a7953710"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:13.056684"
+    },
+    "homo_sapiens - paired_end - multiple - wig": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.502911"
+    },
+    "homo_sapiens - paired_end - arriba - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:07.200426"
+    },
+    "homo_sapiens - single_end - wig": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.419461"
+    },
+    "homo_sapiens - paired_end - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.821547"
+    },
+    "homo_sapiens - paired_end - arriba - versions": {
+        "content": [
+            [
+                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:07.267343"
+    },
+    "homo_sapiens - paired_end - multiple - bedgraph": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.432752"
+    },
+    "homo_sapiens - paired_end - read_per_gene_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.81774"
+    },
+    "homo_sapiens - paired_end - arriba - bedgraph": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.643743"
+    },
+    "homo_sapiens - single_end - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.406191"
+    },
+    "homo_sapiens - paired_end - arriba - spl_junc_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.65723"
+    },
+    "homo_sapiens - single_end - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.411481"
+    },
+    "homo_sapiens - paired_end - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.810584"
+    },
+    "homo_sapiens - single_end - versions": {
+        "content": [
+            [
+                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:00.104687"
+    },
+    "homo_sapiens - paired_end - multiple - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:12.894285"
+    },
+    "homo_sapiens - paired_end - arriba - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.646457"
+    },
+    "homo_sapiens - paired_end - multiple - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.45332"
+    },
+    "homo_sapiens - paired_end - multiple - spl_junc_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.482358"
+    },
+    "homo_sapiens - paired_end - starfusion - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.475493"
+    },
+    "homo_sapiens - paired_end - starfusion - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.262375"
+    },
+    "homo_sapiens - paired_end - multiple - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.472236"
+    },
+    "homo_sapiens - paired_end - multiple - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:12.865334"
+    },
+    "homo_sapiens - paired_end - starfusion - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.out.bam:md5,7806e69c537f72e494f9ce8e95f16355"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.545949"
+    },
+    "homo_sapiens - paired_end - arriba - junction": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Chimeric.out.junction:md5,62760fd60371d5bacae324c370358944"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:07.133125"
+    },
+    "homo_sapiens - single_end - bedgraph": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.402541"
+    },
+    "homo_sapiens - paired_end - arriba - read_per_gene_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.651485"
+    },
+    "homo_sapiens - paired_end - starfusion - bam_sorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.217628"
+    },
+    "homo_sapiens - single_end - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.400925"
+    },
+    "homo_sapiens - paired_end - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.530038"
+    },
+    "homo_sapiens - paired_end - arriba - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.63966"
+    },
+    "homo_sapiens - paired_end - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.492406"
+    },
+    "homo_sapiens - paired_end - arriba - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:06.975033"
+    },
+    "homo_sapiens - paired_end - multiple - versions": {
+        "content": [
+            [
+                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:13.193701"
+    },
+    "homo_sapiens - paired_end - starfusion - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.224799"
+    },
+    "homo_sapiens - paired_end - starfusion - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.631643"
+    },
+    "homo_sapiens - single_end - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.404069"
+    },
+    "homo_sapiens - paired_end - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.687553"
+    },
+    "homo_sapiens - paired_end - starfusion - bedgraph": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.254528"
+    },
+    "homo_sapiens - single_end - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.39955"
+    },
+    "homo_sapiens - paired_end - versions": {
+        "content": [
+            [
+                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.748799"
+    },
+    "homo_sapiens - paired_end - multiple - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:13.125877"
+    },
+    "homo_sapiens - single_end - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,e5060a8dd60584378786c588c3f25b4d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:39:59.959658"
+    },
+    "homo_sapiens - paired_end - arriba - wig": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.663497"
+    },
+    "homo_sapiens - paired_end - log_progress": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.630526"
+    },
+    "homo_sapiens - paired_end - arriba - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:06.951543"
+    },
+    "homo_sapiens - paired_end - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.805957"
+    },
+    "homo_sapiens - paired_end - arriba - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.654389"
+    },
+    "homo_sapiens - paired_end - multiple - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,7b20152380dbc52ec23d2e95a7953710"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:12.98725"
+    },
+    "homo_sapiens - paired_end - multiple - fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.445019"
+    },
+    "homo_sapiens - single_end - bam_sorted": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,e5060a8dd60584378786c588c3f25b4d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:39:59.996165"
+    },
+    "homo_sapiens - paired_end - arriba - bam_sorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.637599"
+    },
+    "homo_sapiens - paired_end - starfusion - junction": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Chimeric.out.junction:md5,c6d4d8c641ebb1c152a10da44f0dbf20"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.589611"
+    },
+    "homo_sapiens - single_end - tab": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:00.069146"
+    },
+    "homo_sapiens - paired_end - starfusion - versions": {
+        "content": [
+            [
+                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.672571"
+    },
+    "homo_sapiens - paired_end - multiple - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.423849"
+    },
+    "homo_sapiens - paired_end - arriba - log_progress": {
+        "content": [
+            "test.Log.progress.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:06.986955"
+    },
+    "homo_sapiens - paired_end - bedgraph": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.808248"
+    },
+    "homo_sapiens - paired_end - starfusion - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.247036"
+    },
+    "homo_sapiens - paired_end - starfusion - read_per_gene_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.285373"
+    },
+    "homo_sapiens - paired_end - multiple - log_progress": {
+        "content": [
+            "test.Log.progress.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:52:12.923841"
+    },
+    "homo_sapiens - paired_end - arriba - bam_unsorted": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:45.641672"
+    },
+    "homo_sapiens - paired_end - bam_sorted": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.577077"
+    },
+    "homo_sapiens - single_end - spl_junc_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.4135"
+    },
+    "homo_sapiens - paired_end - starfusion - spl_junc_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.298186"
+    },
+    "homo_sapiens - single_end - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:39:59.921499"
+    },
+    "homo_sapiens - paired_end - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:45.485532"
+    },
+    "homo_sapiens - paired_end - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.803499"
+    },
+    "homo_sapiens - single_end - log_final": {
+        "content": [
+            "test.Log.final.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:39:59.911473"
+    },
+    "homo_sapiens - paired_end - starfusion - log_progress": {
+        "content": [
+            "test.Log.progress.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.502543"
+    },
+    "homo_sapiens - paired_end - multiple - bam_transcript": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.413659"
+    },
+    "homo_sapiens - paired_end - multiple - read_per_gene_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:43:54.462815"
+    },
+    "homo_sapiens - single_end - read_per_gene_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:12.409493"
+    },
+    "homo_sapiens - paired_end - junction": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.812836"
+    },
+    "homo_sapiens - paired_end - spl_junc_tab": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.825946"
+    },
+    "homo_sapiens - paired_end - starfusion - sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.291398"
+    },
+    "homo_sapiens - paired_end - arriba - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Aligned.out.bam:md5,28ecaa85a5dec1a18c877c85d874adf2"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:48:07.064585"
+    },
+    "homo_sapiens - single_end - log_progress": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:40:00.033267"
+    },
+    "homo_sapiens - paired_end - starfusion - wig": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:41:39.311386"
+    },
+    "homo_sapiens - paired_end - wig": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T11:39:28.830843"
+    },
+    "homo_sapiens - paired_end - starfusion - log_out": {
+        "content": [
+            "test.Log.out"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-03-05T12:44:02.489254"
+    }
+}

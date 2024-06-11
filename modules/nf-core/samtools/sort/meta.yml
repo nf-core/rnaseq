@@ -23,8 +23,18 @@ input:
         e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
-      description: BAM/CRAM/SAM file
+      description: BAM/CRAM/SAM file(s)
       pattern: "*.{bam,cram,sam}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - fasta:
+      type: file
+      description: Reference genome FASTA file
+      pattern: "*.{fa,fasta,fna}"
+      optional: true
 output:
   - meta:
       type: map
@@ -33,16 +43,29 @@ output:
         e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
-      description: Sorted BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - versions:
+      description: Sorted BAM file
+      pattern: "*.{bam}"
+  - cram:
       type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: Sorted CRAM file
+      pattern: "*.{cram}"
+  - crai:
+      type: file
+      description: CRAM index file (optional)
+      pattern: "*.crai"
   - csi:
       type: file
       description: BAM index file (optional)
       pattern: "*.csi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@ewels"
+  - "@matthdsm"
+maintainers:
+  - "@drpatelh"
+  - "@ewels"
+  - "@matthdsm"

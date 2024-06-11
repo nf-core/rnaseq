@@ -11,7 +11,7 @@
                 ]
             ]
         ],
-        "timestamp": "2023-11-02T09:16:05.163403975"
+        "timestamp": "2024-01-19T09:31:05.549084"
     },
     "se_versions": {
         "content": [
@@ -19,13 +19,19 @@
                 "versions.yml:md5,f981ad0cc089194a8fb00a47948eea94"
             ]
         ],
-        "timestamp": "2023-10-30T22:11:17.982220232"
+        "timestamp": "2024-01-19T09:30:00.138848"
     },
-    "abundance_tsv_paired": {
+    "se_abundance_tsv": {
+        "content": [
+            "abundance.tsv:md5,8a4afe91e6a75b4e619daaf664eb7d9b"
+        ],
+        "timestamp": "2024-01-19T09:30:00.127992"
+    },
+    "pe_abundance_tsv": {
         "content": [
             "abundance.tsv:md5,f0a9a2543f8fc0c8442be0a939d70f66"
         ],
-        "timestamp": "2023-11-02T09:16:05.157883165"
+        "timestamp": "2024-01-19T09:31:05.544756"
     },
     "se_log": {
         "content": [
@@ -39,13 +45,7 @@
                 ]
             ]
         ],
-        "timestamp": "2023-10-30T22:11:17.973230763"
-    },
-    "abundance_tsv_single": {
-        "content": [
-            "abundance.tsv:md5,8a4afe91e6a75b4e619daaf664eb7d9b"
-        ],
-        "timestamp": "2023-11-02T09:01:51.48615229"
+        "timestamp": "2024-01-19T09:30:00.135036"
     },
     "pe_versions": {
         "content": [
@@ -53,6 +53,6 @@
                 "versions.yml:md5,f981ad0cc089194a8fb00a47948eea94"
             ]
         ],
-        "timestamp": "2023-11-02T09:16:05.168753684"
+        "timestamp": "2024-01-19T09:31:05.553993"
     }
 }

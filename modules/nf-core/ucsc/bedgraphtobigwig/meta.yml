@@ -12,7 +12,6 @@ tools:
       homepage: http://hgdownload.cse.ucsc.edu/admin/exe/
       documentation: https://genome.ucsc.edu/goldenPath/help/bigWig.html
       licence: ["varies; see http://genome.ucsc.edu/license"]
-
 input:
   - meta:
       type: map
@@ -27,7 +26,6 @@ input:
       type: file
       description: chromosome sizes file
       pattern: "*.{sizes}"
-
 output:
   - meta:
       type: map
@@ -42,6 +40,7 @@ output:
       type: file
       description: bigWig file
       pattern: "*.{bigWig}"
-
 authors:
+  - "@drpatelh"
+maintainers:
   - "@drpatelh"

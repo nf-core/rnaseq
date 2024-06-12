@@ -142,7 +142,7 @@ workflow RNASEQ {
     .reads
     .mix(ch_fastq.single)
     .set { ch_cat_fastq }
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!

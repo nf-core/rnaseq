@@ -169,7 +169,7 @@ custom_data:
       format: "{:.2f}"
   fail_strand_check:
     section_name: "WARNING: Fail Strand Check"
-    description: "List of samples that failed the strandedness check between that provided in the samplesheet and calculated by the <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> tool."
+    description: "List of samples that failed the strandedness check between that provided in the samplesheet (or detected via an 'auto' strandedness) and calculated by the <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> tool."
     plot_type: "table"
     pconfig:
       id: "fail_strand_check_table"

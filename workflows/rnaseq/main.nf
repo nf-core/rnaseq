@@ -299,10 +299,15 @@ workflow RNASEQ {
 
     FASTQ_SUBSAMPLE_FQ_SALMON
         .out
-        .json_info
+        .lib_format_counts
         .join(ch_strand_fastq.auto_strand)
         .map { meta, json, reads ->
-            return [ meta + [ strandedness: getSalmonInferredStrandedness(json) ], reads ]
+            def salmon_strand_analysis = getSalmonInferredStrandedness(json, threshold = params.strand_predict_threshold)
+            strandedness = salmon_strand_analysis.inferred_strandedness            
+            if ( strandedness == 'undetermined' ){
+                strandedness = 'unstranded'
+            } 
+            return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
         }
         .mix(ch_strand_fastq.known_strand)
         .set { ch_strand_inferred_filtered_fastq }
@@ -723,17 +728,38 @@ workflow RNASEQ {
                 .inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def inferred_strand = getInferexperimentStrandedness(strand_log, 5)
-                        if (meta.strandedness != inferred_strand[0]) {
-                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, threshold = params.strand_predict_threshold)
+                        if (meta.salmon_strand_analysis){
+                            if (meta.salmon_strand_analysis.inferred_strandedness != rseqc_inferred_strand.inferred_strandedness) {
+                                status = "&#10060;" // Cross mark 
+                            } else {
+                                status = "&#9989;" // Check mark  
+                            }
+                            return [
+                                [ 
+                                  "$status $meta.id \tauto\tSalmon\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                  "$status $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
+                                ]
+                            ]
+                        }
+                        else{
+                            if (meta.strandedness != rseqc_inferred_strand[0]) {
+                                status = "&#10060;" // Cross mark 
+                            } else {
+                                status = "&#9989;" // Check mark  
+                            }
+          
+                            return [ "$status $meta.id\t$meta.strandedness\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}" ]
                         }
                 }
+                .flatten()
                 .collect()
                 .map {
                     tsv_data ->
                         def header = [
                             "Sample",
                             "Provided strandedness",
+                            "Strand inference method",
                             "Inferred strandedness",
                             "Sense (%)",
                             "Antisense (%)",

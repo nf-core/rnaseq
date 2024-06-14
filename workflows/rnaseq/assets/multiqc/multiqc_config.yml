@@ -168,8 +168,8 @@ custom_data:
       namespace: "Samples failed mapping threshold"
       format: "{:.2f}"
   fail_strand_check:
-    section_name: "WARNING: Fail Strand Check"
-    description: "List of samples that failed the strandedness check between that provided in the samplesheet (or detected via an 'auto' strandedness) and calculated by the <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> tool."
+    section_name: "Strand Check"
+    description: "This table shows library starandedness as provided in the sample sheet, inferred from a read sample by Salmon (where 'auto' was used in the sample sheet), and inferred by the RSeQC <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> tool from genomic alignments. A 'cross' status symbol indicated where a mismatch occurs between what was supplied (or inferred by Salmon) and the RSeQC result."  
     plot_type: "table"
     pconfig:
       id: "fail_strand_check_table"

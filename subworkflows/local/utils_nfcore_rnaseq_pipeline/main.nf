@@ -483,24 +483,6 @@ def multiqcTsvFromList(tsv_data, header) {
 }
 
 //
-// Function that parses Salmon quant 'meta_info.json' output file to get inferred strandedness
-//
-def getSalmonInferredStrandedness(json_file) {
-    def lib_type = new JsonSlurper().parseText(json_file.text).get('library_types')[0]
-    def strandedness = 'reverse'
-    if (lib_type) {
-        if (lib_type in ['U', 'IU']) {
-            strandedness = 'unstranded'
-        } else if (lib_type in ['SF', 'ISF']) {
-            strandedness = 'forward'
-        } else if (lib_type in ['SR', 'ISR']) {
-            strandedness = 'reverse'
-        }
-    }
-    return strandedness
-}
-
-//
 // Function that parses and returns the alignment rate from the STAR log output
 //
 def getStarPercentMapped(params, align_log) {
@@ -545,31 +527,79 @@ def biotypeInGtf(gtf_file, biotype) {
 }
 
 //
-// Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+// Function to determine library type by comparing type counts. Consistent
+// between Salmon and RSeQC
 //
-def getInferexperimentStrandedness(inferexperiment_file, cutoff_ratio=5) {
-    def sense        = 0
-    def antisense    = 0
-    def undetermined = 0
+
+def calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragments, threshold) {
+    def totalFragments = forwardFragments + reverseFragments + undeterminedFragments
+    def totalStrandedFragments = forwardFragments + reverseFragments
+
+    def strandedness = 'undetermined'
+    if (totalStrandedFragments > 0) {
+        def forwardProportion = forwardFragments / (totalStrandedFragments as double)
+        def reverseProportion = reverseFragments / (totalStrandedFragments as double)
+        def proportionDifference = Math.abs(forwardProportion - reverseProportion)
+
+        if (forwardProportion >= threshold) {
+            strandedness = 'forward'
+        } else if (reverseProportion >= threshold) {
+            strandedness = 'reverse'
+        } else if (proportionDifference <= (1 - threshold)) {
+            strandedness = 'unstranded'
+        }
+    }
+
+    return [
+        inferred_strandedness: strandedness,
+        forwardFragments: forwardFragments / (totalFragments as double),
+        reverseFragments: reverseFragments / (totalFragments as double),
+        undeterminedFragments: undeterminedFragments / (totalFragments as double)
+    ]
+}
+
+//
+// Function that parses Salmon quant 'lib_format_counts.json' output file to get inferred strandedness
+//
+
+def getSalmonInferredStrandedness(json_file, threshold = 0.9) {
+    // Parse the JSON content of the file
+    def libCounts = new JsonSlurper().parseText(json_file.text)
+    
+    // Calculate the counts for forward and reverse strand fragments
+    def forwardFragments = libCounts['SF'] + libCounts['ISF']
+    def reverseFragments = libCounts['SR'] + libCounts['ISR']
+    // Calculate undetermined fragments (IU and U)
+    def undeterminedFragments = libCounts['IU'] + libCounts['U']
+
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragments, threshold)
+}
+
+//
+// Function that parses RSeQC infer_experiment output file to get inferred strandedness
+//
+
+def getInferexperimentStrandedness(inferexperiment_file, threshold = 0.9) {
+    def forwardFragments = 0
+    def reverseFragments = 0
+    def undeterminedFragments = 0
+
     inferexperiment_file.eachLine { line ->
         def undetermined_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
-        def se_sense_matcher     = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
+        def se_sense_matcher = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
         def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
-        def pe_sense_matcher     = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
+        def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
         def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
-        if (undetermined_matcher) undetermined = undetermined_matcher[0][1].toFloat() * 100
-        if (se_sense_matcher)     sense        = se_sense_matcher[0][1].toFloat() * 100
-        if (se_antisense_matcher) antisense    = se_antisense_matcher[0][1].toFloat() * 100
-        if (pe_sense_matcher)     sense        = pe_sense_matcher[0][1].toFloat() * 100
-        if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat() * 100
+        
+        if (undetermined_matcher) undeterminedFragments = undetermined_matcher[0][1].toFloat() * 100
+        if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
+        if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
+        if (pe_sense_matcher) forwardFragments = pe_sense_matcher[0][1].toFloat() * 100
+        if (pe_antisense_matcher) reverseFragments = pe_antisense_matcher[0][1].toFloat() * 100
     }
-    def strandedness = 'unstranded'
-    ratio = sense / antisense
 
-    if (ratio >= cutoff_ratio) {
-        strandedness = 'forward'
-    } else if ((1 / ratio) >= cutoff_ratio) {
-        strandedness = 'reverse'
-    }
-    return [ strandedness, sense, antisense, undetermined ]
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragments, threshold)
 }
+

@@ -562,7 +562,7 @@ def calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragme
 // Function that parses Salmon quant 'lib_format_counts.json' output file to get inferred strandedness
 //
 
-def getSalmonInferredStrandedness(json_file, threshold = 0.9) {
+def getSalmonInferredStrandedness(json_file, threshold = 0.8) {
     // Parse the JSON content of the file
     def libCounts = new JsonSlurper().parseText(json_file.text)
     
@@ -580,7 +580,7 @@ def getSalmonInferredStrandedness(json_file, threshold = 0.9) {
 // Function that parses RSeQC infer_experiment output file to get inferred strandedness
 //
 
-def getInferexperimentStrandedness(inferexperiment_file, threshold = 0.9) {
+def getInferexperimentStrandedness(inferexperiment_file, threshold = 0.8) {
     def forwardFragments = 0
     def reverseFragments = 0
     def undeterminedFragments = 0

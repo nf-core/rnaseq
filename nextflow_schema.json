@@ -411,7 +411,7 @@
                 },
                 "min_mapped_reads": {
                     "type": "number",
-                    "default": 5.0,
+                    "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
                     "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
@@ -452,6 +452,12 @@
                     "description": "In single-end mode, Kallisto requires an estimated standard error for fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
                     "default": 200,
                     "fa_icon": "fas fa-sort-amount-up-alt"
+                },
+                "strand_predict_threshold": {
+                    "type": "number",
+                    "default": 0.8,
+                    "description": "The fraction of stranded reads that must be assigned to a strandedness for confident assignment.",
+                    "help_text": "To be assigned as unstranded, read fractions must be different by less than 1- this value. Samples not convincingly assigned as stranded or unstranded will be assigned as 'undetermined'. These will be treated as unstranded but flagged as potential problems in the final MultiQC report."
                 }
             }
         },

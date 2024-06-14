@@ -729,8 +729,12 @@ workflow RNASEQ {
                 .map {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, threshold = params.strand_predict_threshold)
+                        rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
+
                         if (meta.salmon_strand_analysis){
-                            if (meta.salmon_strand_analysis.inferred_strandedness != rseqc_inferred_strand.inferred_strandedness) {
+                            salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
+
+                            if (salmon_strandedness != rseqc_strandedness || rseqc_strandedness == 'undetermined' || salmon_strandedness == 'undetermined') {
                                 status = "&#10060;" // Cross mark 
                             } else {
                                 status = "&#9989;" // Check mark  
@@ -743,7 +747,7 @@ workflow RNASEQ {
                             ]
                         }
                         else{
-                            if (meta.strandedness != rseqc_inferred_strand[0]) {
+                            if (meta.strandedness != rseqc_strandedness) {
                                 status = "&#10060;" // Cross mark 
                             } else {
                                 status = "&#9989;" // Check mark  

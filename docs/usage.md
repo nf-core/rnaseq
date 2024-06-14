@@ -57,68 +57,45 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 
 ## Reference files
 
-The only reference files required by the pipeline are a FASTA file with the reference genome sequence and a GTF/GFF file with a gene annotation. All other reference files can be created from those by the pipeline.
-However, selecting the appropriate reference genome and annotation to use analysis can still be difficult.
-Here we provide some advice on what is expected by the pipeline:
+The pipeline has a number of options for reference files provided for maximum flexibility, but most can be generated dynamically and need not be supplied. The minimal requirement is two reference files: a FASTA file containing the reference genome sequence and a GTF/GFF file with gene annotations. Further guidance is provided below.
 
 :::note
-**GENCODE vs ENSEMBL**
+**Consistent reference resource usage**
 
-Two of the most common sources of genomic references are GENCODE (for mouse and human) and ENSEMBL (for many organisms).
-There has been an effort to standardise information between the two sources and now the references [should be consistent](https://www.gencodegenes.org/pages/faq.html) regardless of where they are obtained from (for mouse and human).
-
-However, while the information is consistent, there are still some practical differences.
-ENSEMBL prefixes chromosome names with `chr` (e.g. `chr1`, `chr1`, ...) while GENCODE uses simple `1`, `2`, etc.
-There can also be different names used for sequences outside the reference chromosomes.
-GENCODE also attaches version identifiers to gene and transcript names (e.g. `ENSG00000254647.1`).
-For these reasons, resources from the two sources cannot be mixed and it is important to stick to one reference source. Some of the steps in the pipeline expect an ENSEMBL reference by default so it is important to set the `--gencode` option if your reference comes from GENCODE.
+When supplying reference files as discussed below, it is important to be consistent in the reference resource used (Ensembl, Gencode, UCSC etc), since differences in conventions between these resources can make their files incompatible. For example, UCSC prefixes chromosomes with `chr`, while Ensembl does not, so a GTF file from Ensembl should not be supplied alongside a genome FASTA from UCSC.
 :::
 
 ### Reference genome
 
-It is recommended to provide the most complete reference genome for your species, without additional loci (haplotypes) or patches.
-For models organisms such as mouse or human this is the so-called "primary assembly" which includes the reference chromosomes as well as some additional scaffolds.
-For human assembly GRCh38 (hg38) this would be the `GRCh38.primary_assembly.genome.fa.gz` file from GENCODE or the `Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz` file from ENSEMBL.
-These files are preferred as they cover the largest amount of the reference genome without including multiple copies of the same sequence which can confuse aligners such as STAR. Most other species (fly, cow, dog etc.) do not have a primary assembly, in which case the complete reference sequence, or "toplevel" assembly, should be used.
-The difference between the two is the inclusion of alternative loci (haplotypes) but these do not typically exist for species outside mouse and human.
+It is recommended to provide the most complete reference genome for your species, without additional loci (haplotypes) or patches. For model organisms such as mouse or human, this is the "primary assembly," which includes the reference chromosomes and some additional scaffolds. For the human assembly GRCh38 (hg38), use the `GRCh38.primary_assembly.genome.fa.gz` file from GENCODE or the `Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz` file from ENSEMBL. These files cover the largest portion of the reference genome without including multiple copies of the same sequence, which can confuse aligners like STAR.
+
+Most other species (e.g., fly, cow, dog) do not have a primary assembly. In these cases, use the complete reference sequence, or "toplevel" assembly. The main difference between the primary and toplevel assemblies is the inclusion of alternative loci (haplotypes), which typically do not exist for species outside of mouse and human.
 
 ### Gene annotation
 
-Gene annotations are updated more frequently than the reference genome sequence and there are more options to consider here.
-Because annotations can be updated frequently, you should rely on sources that include well-defined, versioned releases such as ENSEMBL or GENCODE.
-We generally recommend using the most recent release in order to have the latest and most up-to-date gene annotations.
-However, if you are planning to combine your data with a dataset that was processed in the past you may want to use the annotation version that was used previously for greater consistency.
-Once you have decided on a release to use, you can then select an annotation file.
-This should be the most comprehensive annotation that matches the reference genome you are using.
-So if you are using the human primary assembly you would want the comprehensive annotation for the primary assembly (the `gencode.{release}.primary_assembly.annotation.gtf.gz` file from GENCODE or the `Homo_sapiens.GRCh38.{release}.gtf.gz` file from ENSEMBL).
-For something like fly, you would want the annotation matching the toplevel assembly (e.g. `Drosophila_melanogaster.BDGP6.46.{release}.gtf.gz` from ENSEMBL).
-As well as the comprehensive annotations for the primary and toplevel assemblies, and just the reference chromomes, GENCODE also provides "basic" annotations which only include representative transcripts, but we do not recommend using these.
+Gene annotations are updated more frequently than the reference genome sequence, so you much choose an appropriate annotation version (e.g. Ensembl release)  We recommend using sources with well-defined, versioned releases such as ENSEMBL or GENCODE. Generally, it is best to use the most recent release for the latest gene annotations. However, if you are combining your data with older datasets, use the annotation version previously used for consistency.
 
-Gene annotations typically provide a primary identifier for each feature as well as a more common name.
-For example, the ENSEMBL ID `ENSG00000254647` corresponds to the `INS` gene which encodes the insulin protein.
-While the gene names may be more familiar and easier to understand it is important to retain and use the primary identifiers as the are unique for a given annotation and are much easier to map between annotation versions or sources.
+Once you have chosen a release, select the annotation file that matches your reference genome. For the human primary assembly, use the comprehensive annotation (e.g., `gencode.{release}.primary_assembly.annotation.gtf.gz` from GENCODE or `Homo_sapiens.GRCh38.{release}.gtf.gz` from ENSEMBL). For other species, like fly, use the annotation matching the toplevel assembly (e.g., `Drosophila_melanogaster.BDGP6.46.{release}.gtf.gz` from ENSEMBL).
 
-To take advantage of all the quality control modules implemented in the pipeline, the gene annotation should include a `gene_biotype` field which describes the function of each feature (protein coding, long non-coding etc.).
-This is usually the case for annotations from GENCODE or ENSEMBL but may not be if your annotation comes from another source.
-If your annotation does not include this field, please set the `--skip_biotype_qc` option to avoid running the steps that rely on it.
+GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
+
+Gene annotations provide a primary identifier for each feature as well as a common name. For example, the ENSEMBL ID `ENSG00000254647` corresponds to the `INS` gene, which encodes the insulin protein. While gene names are more familiar, it is crucial to retain and use the primary identifiers as they are unique and easier to map between annotation versions or sources.
+
+To take advantage of all the quality control modules implemented in the pipeline, the gene annotation should include a `gene_biotype` field which describes the function of each feature (protein coding, long non-coding etc.). This is usually the case for annotations from GENCODE or ENSEMBL but may not be if your annotation comes from another source. If your annotation does not include this field, please set the `--skip_biotype_qc` option to avoid running the steps that rely on it.
 
 :::note
 **GTF vs GFF**
 
-GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations.
-GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2.
-The pipeline can accept both GFF and GTF but any GFF files will be converted to GFF so if a GTF is available for your annotation of choice it is better to provide that directly.
+GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline can accept both GFF and GTF but any GFF files will be converted to GTF so if a GTF is available for your annotation of choice it is better to provide that directly.
 
 More information and links to further resources are [available from ENSEMBL](https://www.ensembl.org/info/website/upload/gff.html).
 :::
 
 ### Reference transcriptome
 
-As well as the reference genome sequence and annotation it is possible to provide a reference transcriptome FASTA file.
-These can be obtained from GENCODE or ENSEMBL but it is important to note that the sequences they provide only cover the reference chromosome and can result in inconsistencies if you have provided a primary or toplevel genome assembly and annotation.
-For this reason, we recommend to not provide a transcriptome FASTA and instead let the pipeline create it from the provided genome and annotation.
-As with the aligner indexes, it is possible to save the created transcriptome FASTA and BED files to a central location and provide it to future pipeline runs in order to avoid having multiple copies on your system but it is important to make sure that all genome, annotation, transcriptome and index versions match.
+In addition to the reference genome sequence and annotation, you can provide a reference transcriptome FASTA file. These files can be obtained from GENCODE or ENSEMBL. However, these sequences only cover the reference chromosomes and can cause inconsistencies if you are using a primary or toplevel genome assembly and annotation.
 
+We recommend not providing a transcriptome FASTA file and instead allowing the pipeline to create it from the provided genome and annotation. Similar to aligner indexes, you can save the created transcriptome FASTA and BED files to a central location for future pipeline runs. This helps avoid multiple copies on your system. Ensure that all genome, annotation, transcriptome, and index versions match to maintain consistency.
 ### Indexes
 
 Creating the index files required for the alignment and/or pseudoalignment steps can be computationally intensive and the files they produce are quite large.

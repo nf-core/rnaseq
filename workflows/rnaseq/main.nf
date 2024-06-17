@@ -742,7 +742,7 @@ workflow RNASEQ {
                     meta, strand_log ->
                         def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
                         return [ meta, inferred_strand ]
-                 }
+                }
 
             // Save status for workflow summary
             ch_strand_status = ch_inferexperiment_strand

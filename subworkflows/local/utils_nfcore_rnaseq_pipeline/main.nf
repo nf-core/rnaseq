@@ -587,7 +587,7 @@ def calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragme
 def getSalmonInferredStrandedness(json_file, threshold = 0.8) {
     // Parse the JSON content of the file
     def libCounts = new JsonSlurper().parseText(json_file.text)
-    
+
     // Calculate the counts for forward and reverse strand fragments
     def forwardFragments = libCounts['SF'] + libCounts['ISF']
     def reverseFragments = libCounts['SR'] + libCounts['ISR']
@@ -613,7 +613,7 @@ def getInferexperimentStrandedness(inferexperiment_file, threshold = 0.8) {
         def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
         def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
         def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
-        
+
         if (undetermined_matcher) undeterminedFragments = undetermined_matcher[0][1].toFloat() * 100
         if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
         if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
@@ -659,3 +659,4 @@ def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_read
         log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
     }
 }
+

@@ -759,9 +759,9 @@ workflow RNASEQ {
                                 mark = "&#9989;" // Check mark
                             }
                             multiqc_lines = [
-                                  "$mark $meta.id \tauto\tSalmon (used)\t${meta.salmon_strand_analysis.values().join('\t')}",
-                                  "$mark $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
-                                ]
+                                $mark $meta.id \tauto\tSalmon (used)\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                "$mark $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
+                            ]
                         }
                         else{
                             if (meta.strandedness == rseqc_strandedness) {

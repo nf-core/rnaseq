@@ -73,7 +73,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1304](https://github.com/nf-core/rnaseq/pull/1304) - Remove redundant gene TPM outputs
 - [PR #1317](https://github.com/nf-core/rnaseq/pull/1317) - Strip problematic ifEmpty()
 - [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
-- [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison 
+- [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison
 
 ### Parameters
 

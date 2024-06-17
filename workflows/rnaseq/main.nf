@@ -106,6 +106,9 @@ workflow RNASEQ {
     main:
 
     ch_multiqc_files = Channel.empty()
+    ch_trim_status = Channel.empty()
+    ch_map_status = Channel.empty()
+    ch_strand_status = Channel.empty()
 
     //
     // Create channel from input file provided through params.input
@@ -191,6 +194,13 @@ workflow RNASEQ {
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
     }
 
+    // Save trim status for workflow summary
+
+    ch_trim_status = ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
+        }
     //
     // Get list of samples that failed trimming threshold for MultiQC report
     //
@@ -528,6 +538,13 @@ workflow RNASEQ {
             .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
+        // Save status for workflow summary
+        ch_map_status = ch_percent_mapped
+            .map {
+                meta, mapped, pass ->
+                    return [ meta.id, pass ]
+            }
+
         ch_genome_bam
             .join(ch_percent_mapped, by: [0])
             .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
@@ -718,12 +735,25 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
-            BAM_RSEQC
+            ch_inferexperiment_strand = BAM_RSEQC
                 .out
                 .inferexperiment_txt
                 .map {
                     meta, strand_log ->
                         def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
+                        return [ meta, inferred_strand ]
+                 }
+
+            // Save status for workflow summary
+            ch_strand_status = ch_inferexperiment_strand
+                .map{
+                    meta, inferred_strand ->
+                        return [ meta.id, meta.strandedness == inferred_strand[0]]
+                }
+
+            ch_inferexperiment_strand
+                .map{
+                    meta, inferred_strand ->
                         if (meta.strandedness != inferred_strand[0]) {
                             return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
                         }
@@ -817,6 +847,9 @@ workflow RNASEQ {
     }
 
     emit:
+    trim_status    = ch_trim_status    // channel: [id, boolean]
+    map_status     = ch_map_status     // channel: [id, boolean]
+    strand_status  = ch_strand_status  // channel: [id, boolean]
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]
 }

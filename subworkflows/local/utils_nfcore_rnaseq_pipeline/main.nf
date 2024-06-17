@@ -20,6 +20,7 @@ include { nfCoreLogo                } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
+include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
 
 /*
 ========================================================================================
@@ -85,21 +86,43 @@ workflow PIPELINE_INITIALISATION {
 ========================================================================================
 */
 
+def pass_mapped_reads  = [:]
+def pass_trimmed_reads = [:]
+def pass_strand_check  = [:]
+
 workflow PIPELINE_COMPLETION {
 
     take:
-    schema          //  string: Path to the JSON schema file
-    email           //  string: email address
-    email_on_fail   //  string: email address sent on pipeline failure
-    plaintext_email // boolean: Send plain-text email instead of HTML
-    outdir          //    path: Path to output directory where results will be published
-    monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url        //  string: hook URL for notifications
-    multiqc_report  //  string: Path to MultiQC report
+    schema             //  string: Path to the JSON schema file
+    email              //  string: email address
+    email_on_fail      //  string: email address sent on pipeline failure
+    plaintext_email    // boolean: Send plain-text email instead of HTML
+    outdir             //    path: Path to output directory where results will be published
+    monochrome_logs    // boolean: Disable ANSI colour codes in log output
+    hook_url           //  string: hook URL for notifications
+    multiqc_report     //  string: Path to MultiQC report
+    trim_status        // map: pass/fail status per sample for trimming
+    map_status         // map: pass/fail status per sample for mapping
+    strand_status      // map: pass/fail status per sample for strandedness check
 
     main:
 
     summary_params = paramsSummaryMap(workflow, parameters_schema: schema)
+
+    trim_status
+        .map{
+            id, status -> pass_trimmed_reads[id] = status
+        }
+
+    map_status
+        .map{
+            id, status -> pass_mapped_reads[id] = status
+        }
+
+    strand_status
+        .map{
+            id, status -> pass_strand_check[id] = status
+        }
 
     //
     // Completion email and summary
@@ -109,7 +132,7 @@ workflow PIPELINE_COMPLETION {
             completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
         }
 
-        completionSummary(monochrome_logs)
+        rnaseqSummary(monochrome_logs=monochrome_logs, pass_mapped_reads=pass_mapped_reads, pass_trimmed_reads=pass_trimmed_reads, pass_strand_check=pass_strand_check)
 
         if (hook_url) {
             imNotification(summary_params, hook_url)
@@ -570,4 +593,39 @@ def getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
         strandedness = 'reverse'
     }
     return [ strandedness, sense, antisense, undetermined ]
+}
+
+//
+// Print pipeline summary on completion
+//
+def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
+    def colors = logColours(monochrome_logs)
+
+    def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+    def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+    def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+    if (workflow.success) {
+        def color = colors.green
+        def status = []
+        if (workflow.stats.ignoredCount != 0) {
+            color = colors.yellow
+            status += ['with errored process(es)']
+        }
+        if (fail_mapped_count > 0 || fail_trimmed_count > 0 || fail_strand_count > 0) {
+            color = colors.yellow
+            status += ['with skipped sampl(es)']
+        }
+        log.info "-${colors.purple}[$workflow.manifest.name]${color} Pipeline completed successfully ${status.join(', ')}${colors.reset}-"
+        if (fail_trimmed_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_trimmed_count}/${pass_trimmed_reads.size()} samples skipped since they failed ${params.min_trimmed_reads} trimmed read threshold.${colors.reset}-"
+        }
+        if (fail_mapped_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
+        }
+        if (fail_strand_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_strand_count}/${pass_strand_check.size()} samples failed strandedness check.${colors.reset}-"
+        }
+    } else {
+        log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
+    }
 }

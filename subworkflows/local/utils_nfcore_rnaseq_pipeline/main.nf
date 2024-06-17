@@ -611,7 +611,7 @@ def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_read
             color = colors.yellow
             status += ['with errored process(es)']
         }
-        if (fail_mapped_count > 0 || fail_trimmed_count > 0 || fail_strand_count > 0) {
+        if (fail_mapped_count > 0 || fail_trimmed_count > 0) {
             color = colors.yellow
             status += ['with skipped sampl(es)']
         }

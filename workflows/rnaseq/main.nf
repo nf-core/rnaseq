@@ -313,10 +313,10 @@ workflow RNASEQ {
         .join(ch_strand_fastq.auto_strand)
         .map { meta, json, reads ->
             def salmon_strand_analysis = getSalmonInferredStrandedness(json, threshold = params.strand_predict_threshold)
-            strandedness = salmon_strand_analysis.inferred_strandedness            
+            strandedness = salmon_strand_analysis.inferred_strandedness
             if ( strandedness == 'undetermined' ){
                 strandedness = 'unstranded'
-            } 
+            }
             return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
         }
         .mix(ch_strand_fastq.known_strand)
@@ -741,16 +741,15 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
-            ch_strand_comparison = BAM_RSEQC
-                .out
-                .inferexperiment_txt
+            ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, threshold = params.strand_predict_threshold)
                         rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
-                        
-                        status = false
-                        mark = "&#10060;" // Cross mark                        
+
+                        def status = false
+                        def mark = "&#10060;" // Cross mark
+                        def multiqc_lines = []
 
                         if (meta.salmon_strand_analysis){
                             salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
@@ -758,12 +757,11 @@ workflow RNASEQ {
                             if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
                                 status = true
                                 mark = "&#9989;" // Check mark
-                            } 
+                            }
                             multiqc_lines = [
                                   "$mark $meta.id \tauto\tSalmon (used)\t${meta.salmon_strand_analysis.values().join('\t')}",
                                   "$mark $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
                                 ]
-                            ]
                         }
                         else{
                             if (meta.strandedness == rseqc_strandedness) {
@@ -771,16 +769,16 @@ workflow RNASEQ {
                                 mark = "&#9989;" // Check mark
                             }
 
-                            multiqc_lines [ "$status $meta.id\t$meta.strandedness\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}" ]
+                            multiqc_lines = [ "$mark $meta.id\t$meta.strandedness\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}" ]
                         }
-                    return [ meta, status, multiqc_lines ]
+                        return [ meta, status, multiqc_lines ]
                 }
                 .multiMap{ meta, status, multiqc_lines ->
                     status: [ meta.id, status ]
-                    multiqc_lines = multiqc_lines
+                    multiqc_lines: multiqc_lines
                 }
-                
-            // Take the lines formatted for MultiQC and output    
+
+            // Take the lines formatted for MultiQC and output
             ch_strand_comparison.multiqc_lines
                 .flatten()
                 .collect()

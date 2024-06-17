@@ -106,6 +106,9 @@ workflow RNASEQ {
     main:
 
     ch_multiqc_files = Channel.empty()
+    ch_trim_status = Channel.empty()
+    ch_map_status = Channel.empty()
+    ch_strand_status = Channel.empty()
 
     //
     // Create channel from input file provided through params.input
@@ -191,6 +194,13 @@ workflow RNASEQ {
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
     }
 
+    // Save trim status for workflow summary
+
+    ch_trim_status = ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
+        }
     //
     // Get list of samples that failed trimming threshold for MultiQC report
     //
@@ -533,6 +543,13 @@ workflow RNASEQ {
             .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
+        // Save status for workflow summary
+        ch_map_status = ch_percent_mapped
+            .map {
+                meta, mapped, pass ->
+                    return [ meta.id, pass ]
+            }
+
         ch_genome_bam
             .join(ch_percent_mapped, by: [0])
             .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
@@ -723,39 +740,48 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
-            BAM_RSEQC
+            // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
+            ch_strand_comparison = BAM_RSEQC
                 .out
                 .inferexperiment_txt
                 .map {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, threshold = params.strand_predict_threshold)
                         rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
+                        
+                        status = false
+                        mark = "&#10060;" // Cross mark                        
 
                         if (meta.salmon_strand_analysis){
                             salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
 
-                            if (salmon_strandedness != rseqc_strandedness || rseqc_strandedness == 'undetermined' || salmon_strandedness == 'undetermined') {
-                                status = "&#10060;" // Cross mark 
-                            } else {
-                                status = "&#9989;" // Check mark  
-                            }
-                            return [
-                                [ 
-                                  "$status $meta.id \tauto\tSalmon\t${meta.salmon_strand_analysis.values().join('\t')}",
-                                  "$status $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
+                            if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
+                                status = true
+                                mark = "&#9989;" // Check mark
+                            } 
+                            multiqc_lines = [
+                                  "$mark $meta.id \tauto\tSalmon (used)\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                  "$mark $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
                                 ]
                             ]
                         }
                         else{
-                            if (meta.strandedness != rseqc_strandedness) {
-                                status = "&#10060;" // Cross mark 
-                            } else {
-                                status = "&#9989;" // Check mark  
+                            if (meta.strandedness == rseqc_strandedness) {
+                                status = true
+                                mark = "&#9989;" // Check mark
                             }
-          
-                            return [ "$status $meta.id\t$meta.strandedness\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}" ]
+
+                            multiqc_lines [ "$status $meta.id\t$meta.strandedness\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}" ]
                         }
+                    return [ meta, status, multiqc_lines ]
                 }
+                .multiMap{ meta, status, multiqc_lines ->
+                    status: [ meta.id, status ]
+                    multiqc_lines = multiqc_lines
+                }
+                
+            // Take the lines formatted for MultiQC and output    
+            ch_strand_comparison.multiqc_lines
                 .flatten()
                 .collect()
                 .map {
@@ -772,6 +798,7 @@ workflow RNASEQ {
                         multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
+
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
     }
@@ -847,8 +874,11 @@ workflow RNASEQ {
     }
 
     emit:
-    multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
-    versions       = ch_versions       // channel: [ path(versions.yml) ]
+    trim_status    = ch_trim_status               // channel: [id, boolean]
+    map_status     = ch_map_status                // channel: [id, boolean]
+    strand_status  = ch_strand_comparison.status  // channel: [id, boolean]
+    multiqc_report = ch_multiqc_report            // channel: /path/to/multiqc_report.html
+    versions       = ch_versions                  // channel: [ path(versions.yml) ]
 }
 
 /*

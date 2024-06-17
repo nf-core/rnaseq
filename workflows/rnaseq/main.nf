@@ -778,6 +778,9 @@ workflow RNASEQ {
                     multiqc_lines: multiqc_lines
                 }
 
+            // Store the statuses for output
+            ch_strand_status = ch_strand_comparison.status
+
             // Take the lines formatted for MultiQC and output
             ch_strand_comparison.multiqc_lines
                 .flatten()
@@ -872,11 +875,11 @@ workflow RNASEQ {
     }
 
     emit:
-    trim_status    = ch_trim_status               // channel: [id, boolean]
-    map_status     = ch_map_status                // channel: [id, boolean]
-    strand_status  = ch_strand_comparison.status  // channel: [id, boolean]
-    multiqc_report = ch_multiqc_report            // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                  // channel: [ path(versions.yml) ]
+    trim_status    = ch_trim_status    // channel: [id, boolean]
+    map_status     = ch_map_status     // channel: [id, boolean]
+    strand_status  = ch_strand_status  // channel: [id, boolean]
+    multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
+    versions       = ch_versions       // channel: [ path(versions.yml) ]
 }
 
 /*

@@ -162,7 +162,7 @@
                     },
                     "salmon/index": {
                         "branch": "master",
-                        "git_sha": "ffc101e1b84ef3df2e4e4a966e84b3c513ae5693",
+                        "git_sha": "cb6b2b94fc40dea58f0b1e3dd095f3dd24f2ac8a",
                         "installed_by": ["fastq_subsample_fq_salmon"]
                     },
                     "salmon/quant": {

@@ -589,15 +589,19 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
     def libCounts = new JsonSlurper().parseText(json_file.text)
 
     // Calculate the counts for forward and reverse strand fragments
-    def forwardFragments = libCounts['SF'] + libCounts['ISF'] + libCounts['MSF'] + libCounts['OSF']
-    def reverseFragments = libCounts['SR'] + libCounts['ISR'] + libCounts['MSR'] + libCounts['OSR']
+    def forwardKeys = ['SF', 'ISF', 'MSF', 'OSF']
+    def reverseKeys = ['SR', 'ISR', 'MSR', 'OSR']
 
     // Calculate unstranded fragments (IU and U)
     // NOTE: this is here for completeness, but actually all fragments have a
     // strandedness (even if the overall library does not), so all these values
     // will be '0'. See
     // https://groups.google.com/g/sailfish-users/c/yxzBDv6NB6I
-    def unstrandedFragments = libCounts['IU'] + libCounts['U'] + libCounts['MU']
+    def unstrandedKeys = ['IU', 'U', 'MU']
+
+    def forwardFragments = forwardKeys.collect { libCounts[it] ?: 0 }.sum()
+    def reverseFragments = reverseKeys.collect { libCounts[it] ?: 0 }.sum()
+    def unstrandedFragments = unstrandedKeys.collect { libCounts[it] ?: 0 }.sum()
 
     // Use shared calculation function to determine strandedness
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)

@@ -574,9 +574,9 @@ def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragment
 
     return [
         inferred_strandedness: strandedness,
-        forwardFragments: forwardFragments / (totalFragments as double),
-        reverseFragments: reverseFragments / (totalFragments as double),
-        unstrandedFragments: unstrandedFragments / (totalFragments as double)
+        forwardFragments: (forwardFragments / (totalFragments as double)) * 100,
+        reverseFragments: (reverseFragments / (totalFragments as double)) * 100,
+        unstrandedFragments: (unstrandedFragments / (totalFragments as double)) * 100
     ]
 }
 

@@ -49,8 +49,8 @@
         "content": [
             {
                 "inferred_strandedness": "unstranded",
-                "forwardFragments": 0.5,
-                "reverseFragments": 0.5,
+                "forwardFragments": 50.0,
+                "reverseFragments": 50.0,
                 "unstrandedFragments": 0.0
             }
         ],
@@ -65,7 +65,7 @@
             {
                 "inferred_strandedness": "reverse",
                 "forwardFragments": 0.0,
-                "reverseFragments": 1.0,
+                "reverseFragments": 100.0,
                 "unstrandedFragments": 0.0
             }
         ],
@@ -219,7 +219,7 @@
         "content": [
             {
                 "inferred_strandedness": "forward",
-                "forwardFragments": 1.0,
+                "forwardFragments": 100.0,
                 "reverseFragments": 0.0,
                 "unstrandedFragments": 0.0
             }
@@ -242,9 +242,9 @@
         "content": [
             {
                 "inferred_strandedness": "reverse",
-                "forwardFragments": 0.0074992500657742505,
-                "reverseFragments": 0.8360163982823675,
-                "unstrandedFragments": 0.1564843516518582
+                "forwardFragments": 0.749925006577425,
+                "reverseFragments": 83.60163982823676,
+                "unstrandedFragments": 15.64843516518582 
             }
         ],
         "meta": {

@@ -72,6 +72,10 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1302](https://github.com/nf-core/rnaseq/pull/1302) - Add missing files from Tximport processing
 - [PR #1304](https://github.com/nf-core/rnaseq/pull/1304) - Remove redundant gene TPM outputs
 - [PR #1307](https://github.com/nf-core/rnaseq/pull/1307) - Clarify infer strandedness step in subway map and text
+- [PR #1317](https://github.com/nf-core/rnaseq/pull/1317) - Strip problematic ifEmpty()
+- [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
+- [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
+- [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
 
 ### Parameters
 

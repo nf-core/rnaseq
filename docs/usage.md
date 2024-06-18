@@ -55,6 +55,14 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 
 > **NB:** The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility in instances where replicate information is not required e.g. when sequencing clinical samples. If all values of `sample` have the same number of underscores, fields defined by these underscore-separated names may be used in the PCA plots produced by the pipeline, to regain the ability to represent different groupings.
 
+## FASTQ sampling
+
+If you would like to reduce the number of reads used in the analysis, for example to test pipeline operation with limited resource usage, you can make use of the FASTP option for trimming (see below). FASTP has an option to take the first `n` reads of input FASTQ file(s), so this can be used to reduce the reads passed to subsequent steps. For example, to pass only the first 10,000 reads for trimming you would set input paramters like:
+
+```
+--trimmer fastp --extra_fastp_args '--reads_to_process 10000'
+```
+
 ## Adapter trimming options
 
 [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) is a wrapper tool around Cutadapt and FastQC to peform quality and adapter trimming on FastQ files. Trim Galore! will automatically detect and trim the appropriate adapter sequence. It is the default trimming tool used by this pipeline, however you can use fastp instead by specifying the `--trimmer fastp` parameter. [fastp](https://github.com/OpenGene/fastp) is a tool designed to provide fast, all-in-one preprocessing for FastQ files. It has been developed in C++ with multithreading support to achieve higher performance. You can specify additional options for Trim Galore! and fastp via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.

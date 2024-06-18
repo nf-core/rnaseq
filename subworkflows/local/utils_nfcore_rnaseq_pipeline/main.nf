@@ -553,21 +553,21 @@ def biotypeInGtf(gtf_file, biotype) {
 // between Salmon and RSeQC
 //
 
-def calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragments, threshold) {
-    def totalFragments = forwardFragments + reverseFragments + undeterminedFragments
+def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold=0.8, unstranded_threshold=0.1) {
+    def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
     def totalStrandedFragments = forwardFragments + reverseFragments
 
-    def strandedness = 'undetermined'
+    def library_strandedness = 'undetermined'
     if (totalStrandedFragments > 0) {
         def forwardProportion = forwardFragments / (totalStrandedFragments as double)
         def reverseProportion = reverseFragments / (totalStrandedFragments as double)
         def proportionDifference = Math.abs(forwardProportion - reverseProportion)
 
-        if (forwardProportion >= threshold) {
+        if (forwardProportion >= stranded_threshold) {
             strandedness = 'forward'
-        } else if (reverseProportion >= threshold) {
+        } else if (reverseProportion >= stranded_threshold) {
             strandedness = 'reverse'
-        } else if (proportionDifference <= (1 - threshold)) {
+        } else if (proportionDifference <= unstranded_threshold) {
             strandedness = 'unstranded'
         }
     }
@@ -576,7 +576,7 @@ def calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragme
         inferred_strandedness: strandedness,
         forwardFragments: forwardFragments / (totalFragments as double),
         reverseFragments: reverseFragments / (totalFragments as double),
-        undeterminedFragments: undeterminedFragments / (totalFragments as double)
+        unstrandedFragments: unstrandedFragments / (totalFragments as double)
     ]
 }
 
@@ -584,37 +584,42 @@ def calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragme
 // Function that parses Salmon quant 'lib_format_counts.json' output file to get inferred strandedness
 //
 
-def getSalmonInferredStrandedness(json_file, threshold = 0.8) {
+def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
     // Parse the JSON content of the file
     def libCounts = new JsonSlurper().parseText(json_file.text)
 
     // Calculate the counts for forward and reverse strand fragments
-    def forwardFragments = libCounts['SF'] + libCounts['ISF']
-    def reverseFragments = libCounts['SR'] + libCounts['ISR']
-    // Calculate undetermined fragments (IU and U)
-    def undeterminedFragments = libCounts['IU'] + libCounts['U']
+    def forwardFragments = libCounts['SF'] + libCounts['ISF'] + libCounts['MSF'] + libCounts['OSF']
+    def reverseFragments = libCounts['SR'] + libCounts['ISR'] + libCounts['MSR'] + libCounts['OSR']
+
+    // Calculate unstranded fragments (IU and U)
+    // NOTE: this is here for completeness, but actually all fragments have a
+    // strandedness (even if the overall library does not), so all these values
+    // will be '0'. See
+    // https://groups.google.com/g/sailfish-users/c/yxzBDv6NB6I
+    def unstrandedFragments = libCounts['IU'] + libCounts['U'] + libCounts['MU']
 
     // Use shared calculation function to determine strandedness
-    return calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragments, threshold)
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
 
 //
 // Function that parses RSeQC infer_experiment output file to get inferred strandedness
 //
 
-def getInferexperimentStrandedness(inferexperiment_file, threshold = 0.8) {
+def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
     def forwardFragments = 0
     def reverseFragments = 0
-    def undeterminedFragments = 0
+    def unstrandedFragments = 0
 
     inferexperiment_file.eachLine { line ->
-        def undetermined_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
+        def unstranded_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
         def se_sense_matcher = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
         def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
         def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
         def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
 
-        if (undetermined_matcher) undeterminedFragments = undetermined_matcher[0][1].toFloat() * 100
+        if (unstranded_matcher) unstrandedFragments = unstranded_matcher[0][1].toFloat() * 100
         if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
         if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
         if (pe_sense_matcher) forwardFragments = pe_sense_matcher[0][1].toFloat() * 100
@@ -622,7 +627,7 @@ def getInferexperimentStrandedness(inferexperiment_file, threshold = 0.8) {
     }
 
     // Use shared calculation function to determine strandedness
-    return calculateStrandedness(forwardFragments, reverseFragments, undeterminedFragments, threshold)
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
 
 //

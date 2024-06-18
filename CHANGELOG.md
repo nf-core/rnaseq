@@ -75,6 +75,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
 - [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
 - [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
+- [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths
 - [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison
 
 ### Parameters

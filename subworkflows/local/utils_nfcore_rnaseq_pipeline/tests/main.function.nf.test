@@ -449,6 +449,8 @@ nextflow_function {
                 jsonFile.write(json_contents)
 
                 input[0] = jsonFile
+                input[1] = 0.8
+                input[2] = 0.1
                 """
             }
         }
@@ -483,6 +485,8 @@ nextflow_function {
                 jsonFile.write(json_contents)
 
                 input[0] = jsonFile
+                input[1] = 0.8
+                input[2] = 0.1
                 """
             }
         }
@@ -614,6 +618,8 @@ nextflow_function {
                 }
 
                 input[0] = inferExperimentFile
+                input[1] = 0.8
+                input[2] = 0.1
                 """
             }
         }

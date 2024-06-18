@@ -1,46 +1,12 @@
 {
-    "Test Function checkSamplesAfterGrouping invalid endedness": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function gtfGffWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
+    "Test Function gtfGffWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:11.163299"
+    },
     "Test Function biotypeInGtf success": {
         "content": [
             true
@@ -49,7 +15,125 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:13:47.34837"
+        "timestamp": "2024-03-06T14:34:03.414382"
+    },
+    "Test Function toolBibliographyText": {
+        "content": [
+            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li> <li>Ewels, P., Magnusson, M., Lundin, S., & K\u00e4ller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047\u20133048. doi: /10.1093/bioinformatics/btw354</li>"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:07.698845"
+    },
+    "Test Function toolCitationText": {
+        "content": [
+            "Tools used in the workflow included: FastQC (Andrews 2010), MultiQC (Ewels et al. 2016) ."
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:04.677913"
+    },
+    "Test Function rsemUmiError": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:26.903306"
+    },
+    "Test Function getSalmonInferredStrandedness unstranded": {
+        "content": [
+            {
+                "inferred_strandedness": "unstranded",
+                "forwardFragments": 0.5,
+                "reverseFragments": 0.5,
+                "unstrandedFragments": 0.0
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-18T14:29:54.96715"
+    },
+    "Test Function getSalmonInferredStrandedness reverse": {
+        "content": [
+            {
+                "inferred_strandedness": "reverse",
+                "forwardFragments": 0.0,
+                "reverseFragments": 1.0,
+                "unstrandedFragments": 0.0
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-18T14:30:11.417381"
+    },
+    "Test Function checkSamplesAfterGrouping invalid strandedness": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:32:41.841561"
+    },
+    "Test Function biotypeInGtf failed": {
+        "content": [
+            false
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:34:07.750259"
+    },
+    "Test Function transcriptsFastaWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:20.618971"
+    },
+    "Test Function ucscGenomeWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:17.405648"
+    },
+    "Test Function skipAlignmentWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:23.76368"
+    },
+    "Test Function checkMaxContigSize": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:40.548126"
+    },
+    "Test Function multiqcTsvFromList": {
+        "content": [
+            "id\tattribute\ntest\nvalue"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:43.671826"
     },
     "Test Function checkSamplesAfterGrouping success": {
         "content": [
@@ -73,345 +157,64 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:10:27.043746"
+        "timestamp": "2024-03-06T14:32:37.450298"
     },
-    "Test Function toolBibliographyText": {
-        "content": [
-            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li> <li>Ewels, P., Magnusson, M., Lundin, S., & K\u00e4ller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047\u20133048. doi: /10.1093/bioinformatics/btw354</li>"
-        ],
+    "Test Function checkSamplesAfterGrouping invalid endedness": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:11:26.247587"
+        "timestamp": "2024-03-06T14:32:46.420194"
     },
-    "Test Function toolCitationText": {
-        "content": [
-            "Tools used in the workflow included: FastQC (Andrews 2010), MultiQC (Ewels et al. 2016) ."
-        ],
+    "Test Function genomeExistsError finds genome": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:11:18.036509"
+        "timestamp": "2024-03-06T14:32:58.626473"
     },
-    "Test Function rsemUmiError": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function getSalmonInferredStrandedness unstranded": {
-        "content": [
-            {
-                "inferred_strandedness": "unstranded",
-                "forwardFragments": 0.5,
-                "reverseFragments": 0.5,
-                "unstrandedFragments": 0.0
-            }
-        ],
+    "Test Function additionaFastaIndexWarn": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:13:05.924663"
+        "timestamp": "2024-03-06T14:33:36.224496"
     },
-    "Test Function getSalmonInferredStrandedness reverse": {
-        "content": [
-            {
-                "inferred_strandedness": "reverse",
-                "forwardFragments": 0.0,
-                "reverseFragments": 1.0,
-                "unstrandedFragments": 0.0
-            }
-        ],
+    "Test Function genomeExistsError missing genome": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:13:22.16482"
+        "timestamp": "2024-03-06T14:33:01.625542"
     },
-    "Test Function biotypeInGtf failed": {
-        "content": [
-            false
-        ],
+    "Test Function ncbiGenomeWarn": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:13:56.573221"
+        "timestamp": "2024-03-06T14:33:14.286665"
     },
-    "Test Function checkSamplesAfterGrouping invalid strandedness": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function transcriptsFastaWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function ucscGenomeWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function skipAlignmentWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function checkMaxContigSize": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function multiqcTsvFromList": {
-        "content": [
-            "id\tattribute\ntest\nvalue"
-        ],
+    "Test Function rsemStarExtraArgumentsWarn": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:12:57.654517"
+        "timestamp": "2024-03-06T14:33:33.141215"
     },
-    "Test Function genomeExistsError finds genome": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function additionaFastaIndexWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function genomeExistsError missing genome": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function ncbiGenomeWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function rsemStarExtraArgumentsWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
-    "Test Function getInferexperimentStrandedness reverse": {
-        "content": [
-            {
-                "inferred_strandedness": "reverse",
-                "forwardFragments": 0.0074992500657742505,
-                "reverseFragments": 0.8360163982823675,
-                "unstrandedFragments": 0.1564843516518582
-            }
-        ],
+    "Test Function validateInputParameters success": {
+        "content": null,
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:14:04.695285"
+        "timestamp": "2024-03-06T14:32:49.565504"
     },
-    "Test Function validateInputParameters success": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ],
     "Test Function getSalmonInferredStrandedness forward": {
         "content": [
             {
@@ -425,27 +228,29 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T13:13:14.043488"
+        "timestamp": "2024-06-18T14:30:03.301262"
     },
-    "Test Function rsemStarIndexWarn": [
-        [
-            "execution_report_2024-06-18_12-41-20.html:md5,7f1fb0c459b4248ddee2e774460622c4",
-            "execution_timeline_2024-06-18_12-41-20.html:md5,b9af3d34d5ca4c25d4dbf338742fbab8",
-            "execution_trace_2024-04-22_18-48-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-13-37.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-05-30_16-15-27.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-41-20.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-01.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-42-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-43-18.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-45-39.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-09.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-46-56.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-47-34.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-49-28.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-50-19.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "execution_trace_2024-06-18_12-52-44.txt:md5,8ad4a81ac400f067841cbfb3f18e6889",
-            "pipeline_dag_2024-06-18_12-41-20.html:md5,a34dde54205547b2f74a814976b9eb24"
-        ]
-    ]
+    "Test Function rsemStarIndexWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:30.02058"
+    },
+    "Test Function getInferexperimentStrandedness reverse": {
+        "content": [
+            {
+                "inferred_strandedness": "reverse",
+                "forwardFragments": 0.0074992500657742505,
+                "reverseFragments": 0.8360163982823675,
+                "unstrandedFragments": 0.1564843516518582
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-18T14:30:53.743529"
+    }
 }

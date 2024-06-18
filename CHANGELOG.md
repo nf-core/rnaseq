@@ -71,6 +71,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1297](https://github.com/nf-core/rnaseq/pull/1297) - Important! Template update for nf-core/tools v2.14.1
 - [PR #1302](https://github.com/nf-core/rnaseq/pull/1302) - Add missing files from Tximport processing
 - [PR #1304](https://github.com/nf-core/rnaseq/pull/1304) - Remove redundant gene TPM outputs
+- [PR #1317](https://github.com/nf-core/rnaseq/pull/1317) - Strip problematic ifEmpty()
+- [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
 - [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths
 
 ### Parameters

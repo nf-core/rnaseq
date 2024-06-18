@@ -391,7 +391,6 @@ nextflow_function {
 
     }
 
-
     test("Test Function getSalmonInferredStrandedness unstranded") {
 
         function "getSalmonInferredStrandedness"
@@ -401,15 +400,21 @@ nextflow_function {
                 """
                 import groovy.json.JsonOutput
 
+                // Define the JSON contents for the test
                 def json_contents = JsonOutput.toJson([
-                    library_types: [
-                        "U"
-                    ]
+                    "SF": 0,
+                    "SR": 0,
+                    "ISF": 100,
+                    "ISR": 100,
+                    "IU": 0,
+                    "U": 0
                 ])
                 def jsonFile = file("${workDir}/salmonUnstranded.json")
                 jsonFile.write(json_contents)
 
                 input[0] = jsonFile
+                input[1] = 0.8
+                input[2] = 0.1
                 """
             }
         }
@@ -433,9 +438,12 @@ nextflow_function {
                 import groovy.json.JsonOutput
 
                 def json_contents = JsonOutput.toJson([
-                    library_types: [
-                        "SF"
-                    ]
+                    "SF": 0,
+                    "SR": 0,
+                    "ISF": 100,
+                    "ISR": 0,
+                    "IU": 0,
+                    "U": 0
                 ])
                 def jsonFile = file("${workDir}/salmonForward.json")
                 jsonFile.write(json_contents)
@@ -464,9 +472,12 @@ nextflow_function {
                 import groovy.json.JsonOutput
 
                 def json_contents = JsonOutput.toJson([
-                    library_types: [
-                        "SR"
-                    ]
+                    "SF": 0,
+                    "SR": 0,
+                    "ISF": 0,
+                    "ISR": 100,
+                    "IU": 0,
+                    "U": 0
                 ])
                 def jsonFile = file("${workDir}/salmonReverse.json")
                 jsonFile.write(json_contents)
@@ -584,7 +595,7 @@ nextflow_function {
 
     }
 
-    test("Test Function getInferexperimentStrandedness") {
+    test("Test Function getInferexperimentStrandedness reverse") {
 
         function "getInferexperimentStrandedness"
 

@@ -310,7 +310,7 @@ workflow RNASEQ {
         .out
         .lib_format_counts
         .join(ch_strand_fastq.auto_strand)
-        .map { 
+        .map {
             meta, json, reads ->
                 def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold=params.stranded_threshold, unstranded_threshold=params.unstranded_threshold)
                 strandedness = salmon_strand_analysis.inferred_strandedness

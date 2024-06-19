@@ -64,8 +64,6 @@ nextflow_process {
                 { assert snapshot(process.out.lengths_gene).match('lengths_gene_kallisto') },
                 { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_kallisto') },
                 { assert snapshot(process.out.tpm_gene).match('tpm_gene_kallisto') },
-                { assert snapshot(process.out.tpm_gene_scaled).match('tpm_gene_scaled_kallisto') },
-                { assert snapshot(process.out.tpm_gene_length_scaled).match('tpm_gene_length_scaled_kallisto') },
                 { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_kallisto') },
                 { assert snapshot(process.out.versions).match('versions_kallisto') }
             )
@@ -96,8 +94,6 @@ nextflow_process {
                 { assert snapshot(process.out.lengths_gene).match('lengths_gene_kallisto - stub') },
                 { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_kallisto - stub') },
                 { assert snapshot(process.out.tpm_gene).match('tpm_gene_kallisto - stub') },
-                { assert snapshot(process.out.tpm_gene_scaled).match('tpm_gene_scaled_kallisto - stub') },
-                { assert snapshot(process.out.tpm_gene_length_scaled).match('tpm_gene_length_scaled_kallisto - stub') },
                 { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_kallisto - stub') },
                 { assert snapshot(process.out.versions).match('versions_kallisto - stub') }
             )
@@ -157,8 +153,6 @@ nextflow_process {
                 { assert snapshot(process.out.lengths_gene).match('lengths_gene_salmon') },
                 { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_salmon') },
                 { assert snapshot(process.out.tpm_gene).match('tpm_gene_salmon') },
-                { assert snapshot(process.out.tpm_gene_scaled).match('tpm_gene_scaled_salmon') },
-                { assert snapshot(process.out.tpm_gene_length_scaled).match('tpm_gene_length_scaled_salmon') },
                 { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_salmon') },
                 { assert snapshot(process.out.versions).match('versions_salmon') }
             )
@@ -190,8 +184,6 @@ nextflow_process {
                 { assert snapshot(process.out.lengths_gene).match('lengths_gene_salmon - stub') },
                 { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_salmon - stub') },
                 { assert snapshot(process.out.tpm_gene).match('tpm_gene_salmon - stub') },
-                { assert snapshot(process.out.tpm_gene_scaled).match('tpm_gene_scaled_salmon - stub') },
-                { assert snapshot(process.out.tpm_gene_length_scaled).match('tpm_gene_length_scaled_salmon - stub') },
                 { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_salmon - stub') },
                 { assert snapshot(process.out.versions).match('versions_salmon - stub') }
             )

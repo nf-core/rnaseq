@@ -124,6 +124,9 @@ workflow NFCORE_RNASEQ {
     ch_versions = ch_versions.mix(RNASEQ.out.versions)
 
     emit:
+    trim_status    = RNASEQ.out.trim_status    // channel: [id, boolean]
+    map_status     = RNASEQ.out.map_status     // channel: [id, boolean]
+    strand_status  = RNASEQ.out.strand_status  // channel: [id, boolean]
     multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions               // channel: [version1, version2, ...]
 }
@@ -167,7 +170,10 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_RNASEQ.out.multiqc_report
+        NFCORE_RNASEQ.out.multiqc_report,
+        NFCORE_RNASEQ.out.trim_status,
+        NFCORE_RNASEQ.out.map_status,
+        NFCORE_RNASEQ.out.strand_status
     )
 }
 

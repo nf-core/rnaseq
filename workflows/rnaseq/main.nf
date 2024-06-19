@@ -747,34 +747,31 @@ workflow RNASEQ {
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, threshold = params.strand_predict_threshold)
                         rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
 
-                        def status = false
-                        def mark = "&#10060;" // Cross mark
+                        def status = 'fail'
                         def multiqc_lines = []
 
                         if (meta.salmon_strand_analysis){
                             salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
 
                             if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
-                                status = true
-                                mark = "&#9989;" // Check mark
+                                status = 'fail'
                             }
                             multiqc_lines = [
-                                "$mark $meta.id \tauto\tSalmon (used)\t${meta.salmon_strand_analysis.values().join('\t')}",
-                                "$mark $meta.id\tauto\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
+                                "$meta.id \tSalmon\t$status\tauto\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                "$meta.id\tRSeQC\t$status\tauto\t${rseqc_inferred_strand.values().join('\t')}"
                             ]
                         }
                         else{
                             if (meta.strandedness == rseqc_strandedness) {
-                                status = true
-                                mark = "&#9989;" // Check mark
+                                status = 'pass'
                             }
 
-                            multiqc_lines = [ "$mark $meta.id\t$meta.strandedness\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}" ]
+                            multiqc_lines = [ "$meta.id\tRSeQC\t$status\t$meta.strandedness\t${rseqc_inferred_strand.values().join('\t')}" ]
                         }
                         return [ meta, status, multiqc_lines ]
                 }
                 .multiMap{ meta, status, multiqc_lines ->
-                    status: [ meta.id, status ]
+                    status: [ meta.id, status == 'pass' ]
                     multiqc_lines: multiqc_lines
                 }
 
@@ -789,12 +786,13 @@ workflow RNASEQ {
                     tsv_data ->
                         def header = [
                             "Sample",
-                            "Provided strandedness",
                             "Strand inference method",
+                            "Status",
+                            "Provided strandedness",
                             "Inferred strandedness",
                             "Sense (%)",
                             "Antisense (%)",
-                            "Undetermined (%)"
+                            "Unstranded (%)"
                         ]
                         multiqcTsvFromList(tsv_data, header)
                 }

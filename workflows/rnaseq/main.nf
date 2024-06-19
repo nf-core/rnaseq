@@ -312,7 +312,7 @@ workflow RNASEQ {
         .lib_format_counts
         .join(ch_strand_fastq.auto_strand)
         .map { meta, json, reads ->
-            def salmon_strand_analysis = getSalmonInferredStrandedness(json, threshold = params.strand_predict_threshold)
+            def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
             strandedness = salmon_strand_analysis.inferred_strandedness
             if ( strandedness == 'undetermined' ){
                 strandedness = 'unstranded'
@@ -744,7 +744,7 @@ workflow RNASEQ {
             ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, threshold = params.strand_predict_threshold)
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
                         rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
 
                         def status = 'fail'

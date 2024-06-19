@@ -95,8 +95,10 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 | Old parameter      | New parameter                    |
 | ------------------ | -------------------------------- |
-|                    | `--sortmerna_index`              |
 |                    | `--pipelines_testdata_base_path` |
+|                    | `--sortmerna_index`              |
+|                    | `--stranded_threshold`           |
+|                    | `--unstranded_threshold`         |
 | `--test_data_base` |                                  |
 
 ### Software dependencies

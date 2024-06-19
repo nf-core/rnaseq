@@ -176,3 +176,16 @@ custom_data:
       table_title: "Samples strandedness check"
       namespace: "Samples strandedness check"
       format: "{:.2f}"
+    headers:
+      Provided strandednes:
+        description: User-provided strandedness
+      Strand inference method:
+        description: Tool used to detect strandedness
+      Inferred strandedness:
+        description: Interred strandedness
+      Sense (%):
+        max: 100
+      Antisense (%):
+        max: 100
+      Unstranded (%):
+        max: 100

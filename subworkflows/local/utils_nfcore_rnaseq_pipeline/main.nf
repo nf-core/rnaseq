@@ -552,7 +552,6 @@ def biotypeInGtf(gtf_file, biotype) {
 // Function to determine library type by comparing type counts. Consistent
 // between Salmon and RSeQC
 //
-
 def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold=0.8, unstranded_threshold=0.1) {
     def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
     def totalStrandedFragments = forwardFragments + reverseFragments
@@ -583,7 +582,6 @@ def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragment
 //
 // Function that parses Salmon quant 'lib_format_counts.json' output file to get inferred strandedness
 //
-
 def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
     // Parse the JSON content of the file
     def libCounts = new JsonSlurper().parseText(json_file.text)
@@ -610,7 +608,6 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
 //
 // Function that parses RSeQC infer_experiment output file to get inferred strandedness
 //
-
 def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
     def forwardFragments = 0
     def reverseFragments = 0

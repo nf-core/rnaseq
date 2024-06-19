@@ -23,7 +23,7 @@
 ![nf-core/rnaseq metro map](docs/images/nf-core-rnaseq_metro_map_grey.png)
 
 1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))
-2. Sub-sample FastQ files and auto-infer strandedness ([`fq`](https://github.com/stjude-rust-labs/fq), [`Salmon`](https://combine-lab.github.io/salmon/))
+2. Auto-infer strandedness by subsampling and pseudoalignment ([`fq`](https://github.com/stjude-rust-labs/fq), [`Salmon`](https://combine-lab.github.io/salmon/))
 3. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 4. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))

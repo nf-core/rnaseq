@@ -16,9 +16,10 @@ process SALMON_QUANT {
     val   lib_type
 
     output:
-    tuple val(meta), path("${prefix}") , emit: results
-    tuple val(meta), path("*info.json"), emit: json_info, optional: true
-    path  "versions.yml"               , emit: versions
+    tuple val(meta), path("${prefix}")              , emit: results
+    tuple val(meta), path("*info.json")             , emit: json_info, optional: true
+    tuple val(meta), path("*lib_format_counts.json"), emit: lib_format_counts, optional: true
+    path  "versions.yml"                            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -70,6 +71,9 @@ process SALMON_QUANT {
     if [ -f $prefix/aux_info/meta_info.json ]; then
         cp $prefix/aux_info/meta_info.json "${prefix}_meta_info.json"
     fi
+    if [ -f $prefix/lib_format_counts.json ]; then
+        cp $prefix/lib_format_counts.json "${prefix}_lib_format_counts.json"
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -82,6 +86,7 @@ process SALMON_QUANT {
     """
     mkdir ${prefix}
     touch ${prefix}_meta_info.json
+    touch ${prefix}_lib_format_counts.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

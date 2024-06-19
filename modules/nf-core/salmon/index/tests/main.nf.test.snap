@@ -10,5 +10,17 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2023-11-22T14:26:33.32036"
+    },
+    "versions stub": {
+        "content": [
+            [
+                "versions.yml:md5,563eeafb4577be0b13801d7021c0bf42"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-23T09:47:58.828124"
     }
 }

@@ -309,10 +309,15 @@ workflow RNASEQ {
 
     FASTQ_SUBSAMPLE_FQ_SALMON
         .out
-        .json_info
+        .lib_format_counts
         .join(ch_strand_fastq.auto_strand)
         .map { meta, json, reads ->
-            return [ meta + [ strandedness: getSalmonInferredStrandedness(json) ], reads ]
+            def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+            strandedness = salmon_strand_analysis.inferred_strandedness
+            if ( strandedness == 'undetermined' ){
+                strandedness = 'unstranded'
+            }
+            return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
         }
         .mix(ch_strand_fastq.known_strand)
         .set { ch_strand_inferred_filtered_fastq }
@@ -735,43 +740,64 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
-            ch_inferexperiment_strand = BAM_RSEQC
-                .out
-                .inferexperiment_txt
+            // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
+            ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
-                        return [ meta, inferred_strand ]
-                }
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+                        rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
 
-            // Save status for workflow summary
-            ch_strand_status = ch_inferexperiment_strand
-                .map{
-                    meta, inferred_strand ->
-                        return [ meta.id, meta.strandedness == inferred_strand[0]]
-                }
+                        def status = 'fail'
+                        def multiqc_lines = []
 
-            ch_inferexperiment_strand
-                .map{
-                    meta, inferred_strand ->
-                        if (meta.strandedness != inferred_strand[0]) {
-                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                        if (meta.salmon_strand_analysis){
+                            salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
+
+                            if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
+                                status = 'pass'
+                            }
+                            multiqc_lines = [
+                                "$meta.id \tSalmon\t$status\tauto\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                "$meta.id\tRSeQC\t$status\tauto\t${rseqc_inferred_strand.values().join('\t')}"
+                            ]
                         }
+                        else{
+                            if (meta.strandedness == rseqc_strandedness) {
+                                status = 'pass'
+                            }
+
+                            multiqc_lines = [ "$meta.id\tRSeQC\t$status\t$meta.strandedness\t${rseqc_inferred_strand.values().join('\t')}" ]
+                        }
+                        return [ meta, status, multiqc_lines ]
                 }
+                .multiMap{ meta, status, multiqc_lines ->
+                    status: [ meta.id, status == 'pass' ]
+                    multiqc_lines: multiqc_lines
+                }
+
+            // Store the statuses for output
+            ch_strand_status = ch_strand_comparison.status
+
+            // Take the lines formatted for MultiQC and output
+            ch_strand_comparison.multiqc_lines
+                .flatten()
                 .collect()
                 .map {
                     tsv_data ->
                         def header = [
                             "Sample",
+                            "Strand inference method",
+                            "Status",
                             "Provided strandedness",
                             "Inferred strandedness",
                             "Sense (%)",
                             "Antisense (%)",
-                            "Undetermined (%)"
+                            "Unstranded (%)"
                         ]
                         multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
+
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
     }

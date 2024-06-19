@@ -48,7 +48,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_single_end") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -80,7 +83,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_single_end_stub") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -112,7 +118,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_single_end_lib_type_a") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -144,7 +153,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_single_end_lib_type_a_stub") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -179,7 +191,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_pair_end") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -214,7 +229,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_pair_end stub") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -251,7 +269,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_pair_end_multiple") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 
@@ -288,7 +309,10 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
-                { assert snapshot(process.out.versions).match("versions_pair_end_multiple_stub") }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
             )
         }
 

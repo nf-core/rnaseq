@@ -20,7 +20,7 @@ jobs:
     outputs:
       nf_test_files: ${{ steps.list.outputs.components }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 

@@ -754,7 +754,7 @@ workflow RNASEQ {
                             salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
 
                             if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
-                                status = 'fail'
+                                status = 'pass'
                             }
                             multiqc_lines = [
                                 "$meta.id \tSalmon\t$status\tauto\t${meta.salmon_strand_analysis.values().join('\t')}",

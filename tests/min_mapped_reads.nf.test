@@ -1,15 +1,15 @@
 nextflow_pipeline {
 
-    name "Test pipeline with min_mapped_reads = 90"
+    name "Test pipeline with --min_mapped_reads 90"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("--min_mapped_reads 90") {
+    test("Parameters: --min_mapped_reads 90") {
 
         when {
             params {
-                outdir           = "$outputDir"
+                outdir = "$outputDir"
                 min_mapped_reads = 90
             }
         }

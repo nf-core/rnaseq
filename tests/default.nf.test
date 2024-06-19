@@ -2,10 +2,10 @@ nextflow_pipeline {
 
     name "Test pipeline with default settings"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("Default profile test") {
+    test("Parameters: default") {
 
         when {
             params {
@@ -14,8 +14,6 @@ nextflow_pipeline {
         }
 
         then {
-
-
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml")).match("software_versions") },

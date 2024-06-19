@@ -1,18 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline using Salmon"
+    name "Test pipeline with --featurecounts_group_type false"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("Default profile test") {
+    test("Parameters: --featurecounts_group_type false") {
 
         when {
             params {
                 outdir = "$outputDir"
-                pseudo_aligner = 'salmon'
-                skip_qc = true
-                skip_alignment = true
+                featurecounts_group_type = false
             }
         }
 

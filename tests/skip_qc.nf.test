@@ -1,16 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline with trimming disabled"
+    name "Test pipeline with --skip_qc"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("--skip_trimming") {
+    test("Parameters: --skip_qc") {
 
         when {
             params {
-                outdir        = "$outputDir"
-                skip_qc       = true
+                outdir = "$outputDir"
+                skip_qc = true
             }
         }
 

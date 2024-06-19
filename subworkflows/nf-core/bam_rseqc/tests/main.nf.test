@@ -3,7 +3,6 @@ nextflow_workflow {
     name "Test Workflow BAM_RSEQC"
     script "../main.nf"
     workflow "BAM_RSEQC"
-
     tag "RSEQC_BAMSTAT"
     tag "RSEQC_INNERDISTANCE"
     tag "RSEQC_INFEREXPERIMENT"

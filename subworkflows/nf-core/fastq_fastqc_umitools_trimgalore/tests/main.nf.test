@@ -4,7 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "FASTQ_FASTQC_UMITOOLS_TRIMGALORE"
     config './nextflow.config'
-
     tag "FASTQC"
     tag "UMITOOLS_EXTRACT"
     tag "TRIMGALORE"

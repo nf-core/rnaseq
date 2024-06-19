@@ -3,7 +3,6 @@ nextflow_workflow {
     name "Test Workflow BAM_STATS_SAMTOOLS"
     script "../main.nf"
     workflow "BAM_STATS_SAMTOOLS"
-
     tag "SAMTOOLS_STATS"
     tag "SAMTOOLS_IDXSTATS"
     tag "SAMTOOLS_FLAGSTAT"

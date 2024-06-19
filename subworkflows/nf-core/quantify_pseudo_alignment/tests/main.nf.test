@@ -3,18 +3,13 @@ nextflow_workflow {
     name "Test Workflow QUANTIFY_PSEUDO_ALIGNMENT"
     script "../main.nf"
     workflow "QUANTIFY_PSEUDO_ALIGNMENT"
-
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/quantify_pseudo_alignment"
-    
-    tag "salmon/index"
-    tag "salmon/quant"
-    tag "kallisto/index"
-    tag "kallisto/quant"
-    tag "custom/tx2gene"
-    tag "tximeta/tximport"
-    tag "summarizedexperiment/summarizedexperiment"
+    tag "SALMON_INDEX"
+    tag "KALLISTO_INDEX"
+    tag "SALMON_QUANT"
+    tag "KALLISTO_QUANT"
+    tag "CUSTOM_TX2GENE"
+    tag "TXIMETA_TXIMPORT"
+    tag "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
 
     test("salmon") {
 

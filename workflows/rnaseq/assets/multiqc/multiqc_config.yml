@@ -183,8 +183,28 @@ custom_data:
         description: Tool used to detect strandedness
       Provided strandedness:
         description: User-provided strandedness
+        cond_formatting_rules:
+          blue:
+            - s_eq: "auto"
+          black:
+            - s_eq: "forward"
+          grey:
+            - s_eq: "reverse"
+        cond_formatting_colours:
+          - grey: "#AAB7B8"
+          - black: "#17202A"
       Inferred strandedness:
         description: Interred strandedness
+        cond_formatting_rules:
+          blue:
+            - s_eq: "auto"
+          black:
+            - s_eq: "forward"
+          grey:
+            - s_eq: "reverse"
+        cond_formatting_colours:
+          - grey: "#AAB7B8"
+          - black: "#17202A"
       Sense (%):
         max: 100
       Antisense (%):

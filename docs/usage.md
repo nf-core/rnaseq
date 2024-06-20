@@ -164,13 +164,13 @@ Notes:
 - If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
 - When using `--aligner star_rsem`, both the STAR and RSEM indices should be present in the path specified by `--rsem_index` (see [#568](https://github.com/nf-core/rnaseq/issues/568)).
 
-### Reference genome
+#### Reference genome
 
 It is recommended to provide the most complete reference genome for your species, without additional loci (haplotypes) or patches. For model organisms such as mouse or human, this is the "primary assembly," which includes the reference chromosomes and some additional scaffolds. For the human assembly GRCh38 (hg38), use the `GRCh38.primary_assembly.genome.fa.gz` file from GENCODE or the `Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz` file from Ensembl. These files cover the largest portion of the reference genome without including multiple copies of the same sequence, which can confuse aligners like STAR.
 
 Most other species (e.g., fly, cow, dog) do not have a primary assembly. In these cases, use the complete reference sequence, or "toplevel" assembly. The main difference between the primary and toplevel assemblies is the inclusion of alternative loci (haplotypes), which typically do not exist for species outside of mouse and human.
 
-### Gene annotation
+#### Gene annotation
 
 Gene annotations are updated more frequently than the reference genome sequence, so you much choose an appropriate annotation version (e.g. Ensembl release)  We recommend using sources with well-defined, versioned releases such as ENSEMBL or GENCODE. Generally, it is best to use the most recent release for the latest gene annotations. However, if you are combining your data with older datasets, use the annotation version previously used for consistency.
 
@@ -178,7 +178,7 @@ Once you have chosen a release, select the annotation file that matches your ref
 
 GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
 
-Gene annotations provide a primary identifier for each feature as well as a common name. For example, the Ensembl ID `ENSG00000254647` corresponds to the `INS` gene, which encodes the insulin protein. While gene names are more familiar, it is crucial to retain and use the primary identifiers as they are unique and easier to map between annotation versions or sources.
+Ensure that the annotation files use gene IDs as the primary identifier, not the gene name/ symbol. For example, the Ensembl ID `ENSG00000254647` corresponds to the `INS` gene, which encodes the insulin protein. While gene names are more familiar, it is crucial to retain and use the primary identifiers as they are unique and easier to map between annotation versions or sources.
 
 To take advantage of all the quality control modules implemented in the pipeline, the gene annotation should include a `gene_biotype` field which describes the function of each feature (protein coding, long non-coding etc.). This is usually the case for annotations from GENCODE or Ensembl but may not be if your annotation comes from another source. If your annotation does not include this field, please set the `--skip_biotype_qc` option to avoid running the steps that rely on it.
 
@@ -205,7 +205,7 @@ By default, indices are generated dynamically by the workflow for tools such as 
 
 Once you have the indices from a workflow run you should save them somewhere central and reuse them in subsequent runs using custom config files or command line parameters such as `--star_index '/path/to/STAR/index/'`.
 
-When doing this, it is important to record the genome and annotations versions they correspond to so you can easily locate the correct index to use and the program version as an index produced with one version may not have a format compatible with other versions.
+Note the genome and annotation versions as well as the versions of the software used for indexing, as an index created with one version may not be compatible with other versions.
 
 ### GENCODE
 

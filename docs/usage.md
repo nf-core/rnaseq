@@ -184,7 +184,7 @@ Most other species (e.g., fly, cow, dog) do not have a primary assembly. In thes
 
 #### Gene annotation
 
-Gene annotations are updated more frequently than the reference genome sequence, so you much choose an appropriate annotation version (e.g. Ensembl release)  We recommend using sources with well-defined, versioned releases such as ENSEMBL or GENCODE. Generally, it is best to use the most recent release for the latest gene annotations. However, if you are combining your data with older datasets, use the annotation version previously used for consistency.
+Gene annotations are updated more frequently than the reference genome sequence, so you must choose an appropriate annotation version (e.g. Ensembl release). We recommend using sources with well-defined, versioned releases such as ENSEMBL or GENCODE. Generally, it is best to use the most recent release for the latest gene annotations. However, if you are combining your data with older datasets, use the annotation version previously used for consistency.
 
 Once you have chosen a release, select the annotation file that matches your reference genome. For the human primary assembly, use the comprehensive annotation (e.g., `gencode.{release}.primary_assembly.annotation.gtf.gz` from GENCODE or `Homo_sapiens.GRCh38.{release}.gtf.gz` from Ensembl). For other species, like fly, use the annotation matching the toplevel assembly (e.g., `Drosophila_melanogaster.BDGP6.46.{release}.gtf.gz` from Ensembl).
 

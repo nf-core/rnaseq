@@ -4,9 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "FASTQ_FASTQC_UMITOOLS_FASTP"
     config './nextflow.config'
-    tag "FASTQC"
-    tag "UMITOOLS_EXTRACT"
-    tag "FASTP"
 
     test("sarscov2 paired-end [fastq]") {
 

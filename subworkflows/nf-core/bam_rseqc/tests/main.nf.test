@@ -3,14 +3,6 @@ nextflow_workflow {
     name "Test Workflow BAM_RSEQC"
     script "../main.nf"
     workflow "BAM_RSEQC"
-    tag "RSEQC_BAMSTAT"
-    tag "RSEQC_INNERDISTANCE"
-    tag "RSEQC_INFEREXPERIMENT"
-    tag "RSEQC_JUNCTIONANNOTATION"
-    tag "RSEQC_JUNCTIONSATURATION"
-    tag "RSEQC_READDISTRIBUTION"
-    tag "RSEQC_READDUPLICATION"
-    tag "RSEQC_TIN"
 
     test("sarscov2 paired-end [bam]") {
 

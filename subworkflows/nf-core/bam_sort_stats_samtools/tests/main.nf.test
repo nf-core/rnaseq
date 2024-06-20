@@ -3,9 +3,6 @@ nextflow_workflow {
     name "Test Workflow BAM_SORT_STATS_SAMTOOLS"
     script "../main.nf"
     workflow "BAM_SORT_STATS_SAMTOOLS"
-    tag "SAMTOOLS_SORT"
-    tag "SAMTOOLS_INDEX"
-    tag "BAM_STATS_SAMTOOLS"
 
     test("test_bam_sort_stats_samtools_single_end") {
 

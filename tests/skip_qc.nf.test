@@ -2,8 +2,6 @@ nextflow_pipeline {
 
     name "Test pipeline by skipping QC options"
     script "../main.nf"
-    tag "RNASEQ"
-    tag "PIPELINE"
 
     test("Params: --skip_qc") {
 

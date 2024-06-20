@@ -14,12 +14,12 @@ include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plu
 include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { dashedLine                } from '../../nf-core/utils_nfcore_pipeline'
 include { nfCoreLogo                } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
+include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
 
 /*
 ========================================================================================
@@ -85,21 +85,43 @@ workflow PIPELINE_INITIALISATION {
 ========================================================================================
 */
 
+def pass_mapped_reads  = [:]
+def pass_trimmed_reads = [:]
+def pass_strand_check  = [:]
+
 workflow PIPELINE_COMPLETION {
 
     take:
-    schema          //  string: Path to the JSON schema file
-    email           //  string: email address
-    email_on_fail   //  string: email address sent on pipeline failure
-    plaintext_email // boolean: Send plain-text email instead of HTML
-    outdir          //    path: Path to output directory where results will be published
-    monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url        //  string: hook URL for notifications
-    multiqc_report  //  string: Path to MultiQC report
+    schema             //  string: Path to the JSON schema file
+    email              //  string: email address
+    email_on_fail      //  string: email address sent on pipeline failure
+    plaintext_email    // boolean: Send plain-text email instead of HTML
+    outdir             //    path: Path to output directory where results will be published
+    monochrome_logs    // boolean: Disable ANSI colour codes in log output
+    hook_url           //  string: hook URL for notifications
+    multiqc_report     //  string: Path to MultiQC report
+    trim_status        // map: pass/fail status per sample for trimming
+    map_status         // map: pass/fail status per sample for mapping
+    strand_status      // map: pass/fail status per sample for strandedness check
 
     main:
 
     summary_params = paramsSummaryMap(workflow, parameters_schema: schema)
+
+    trim_status
+        .map{
+            id, status -> pass_trimmed_reads[id] = status
+        }
+
+    map_status
+        .map{
+            id, status -> pass_mapped_reads[id] = status
+        }
+
+    strand_status
+        .map{
+            id, status -> pass_strand_check[id] = status
+        }
 
     //
     // Completion email and summary
@@ -109,7 +131,7 @@ workflow PIPELINE_COMPLETION {
             completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
         }
 
-        completionSummary(monochrome_logs)
+        rnaseqSummary(monochrome_logs=monochrome_logs, pass_mapped_reads=pass_mapped_reads, pass_trimmed_reads=pass_trimmed_reads, pass_strand_check=pass_strand_check)
 
         if (hook_url) {
             imNotification(summary_params, hook_url)
@@ -483,24 +505,6 @@ def multiqcTsvFromList(tsv_data, header) {
 }
 
 //
-// Function that parses Salmon quant 'meta_info.json' output file to get inferred strandedness
-//
-def getSalmonInferredStrandedness(json_file) {
-    def lib_type = new JsonSlurper().parseText(json_file.text).get('library_types')[0]
-    def strandedness = 'reverse'
-    if (lib_type) {
-        if (lib_type in ['U', 'IU']) {
-            strandedness = 'unstranded'
-        } else if (lib_type in ['SF', 'ISF']) {
-            strandedness = 'forward'
-        } else if (lib_type in ['SR', 'ISR']) {
-            strandedness = 'reverse'
-        }
-    }
-    return strandedness
-}
-
-//
 // Function that parses and returns the alignment rate from the STAR log output
 //
 def getStarPercentMapped(params, align_log) {
@@ -545,29 +549,123 @@ def biotypeInGtf(gtf_file, biotype) {
 }
 
 //
-// Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+// Function to determine library type by comparing type counts. Consistent
+// between Salmon and RSeQC
 //
-def getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
-    def sense        = 0
-    def antisense    = 0
-    def undetermined = 0
-    inferexperiment_file.eachLine { line ->
-        def undetermined_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
-        def se_sense_matcher     = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
-        def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
-        def pe_sense_matcher     = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
-        def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
-        if (undetermined_matcher) undetermined = undetermined_matcher[0][1].toFloat() * 100
-        if (se_sense_matcher)     sense        = se_sense_matcher[0][1].toFloat() * 100
-        if (se_antisense_matcher) antisense    = se_antisense_matcher[0][1].toFloat() * 100
-        if (pe_sense_matcher)     sense        = pe_sense_matcher[0][1].toFloat() * 100
-        if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat() * 100
+
+def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold=0.8, unstranded_threshold=0.1) {
+    def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
+    def totalStrandedFragments = forwardFragments + reverseFragments
+
+    def library_strandedness = 'undetermined'
+    if (totalStrandedFragments > 0) {
+        def forwardProportion = forwardFragments / (totalStrandedFragments as double)
+        def reverseProportion = reverseFragments / (totalStrandedFragments as double)
+        def proportionDifference = Math.abs(forwardProportion - reverseProportion)
+
+        if (forwardProportion >= stranded_threshold) {
+            strandedness = 'forward'
+        } else if (reverseProportion >= stranded_threshold) {
+            strandedness = 'reverse'
+        } else if (proportionDifference <= unstranded_threshold) {
+            strandedness = 'unstranded'
+        }
     }
-    def strandedness = 'unstranded'
-    if (sense >= 100-cutoff) {
-        strandedness = 'forward'
-    } else if (antisense >= 100-cutoff) {
-        strandedness = 'reverse'
-    }
-    return [ strandedness, sense, antisense, undetermined ]
+
+    return [
+        inferred_strandedness: strandedness,
+        forwardFragments: (forwardFragments / (totalFragments as double)) * 100,
+        reverseFragments: (reverseFragments / (totalFragments as double)) * 100,
+        unstrandedFragments: (unstrandedFragments / (totalFragments as double)) * 100
+    ]
 }
+
+//
+// Function that parses Salmon quant 'lib_format_counts.json' output file to get inferred strandedness
+//
+
+def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    // Parse the JSON content of the file
+    def libCounts = new JsonSlurper().parseText(json_file.text)
+
+    // Calculate the counts for forward and reverse strand fragments
+    def forwardKeys = ['SF', 'ISF', 'MSF', 'OSF']
+    def reverseKeys = ['SR', 'ISR', 'MSR', 'OSR']
+
+    // Calculate unstranded fragments (IU and U)
+    // NOTE: this is here for completeness, but actually all fragments have a
+    // strandedness (even if the overall library does not), so all these values
+    // will be '0'. See
+    // https://groups.google.com/g/sailfish-users/c/yxzBDv6NB6I
+    def unstrandedKeys = ['IU', 'U', 'MU']
+
+    def forwardFragments = forwardKeys.collect { libCounts[it] ?: 0 }.sum()
+    def reverseFragments = reverseKeys.collect { libCounts[it] ?: 0 }.sum()
+    def unstrandedFragments = unstrandedKeys.collect { libCounts[it] ?: 0 }.sum()
+
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
+}
+
+//
+// Function that parses RSeQC infer_experiment output file to get inferred strandedness
+//
+
+def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    def forwardFragments = 0
+    def reverseFragments = 0
+    def unstrandedFragments = 0
+
+    inferexperiment_file.eachLine { line ->
+        def unstranded_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
+        def se_sense_matcher = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
+        def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
+        def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
+        def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
+
+        if (unstranded_matcher) unstrandedFragments = unstranded_matcher[0][1].toFloat() * 100
+        if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
+        if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
+        if (pe_sense_matcher) forwardFragments = pe_sense_matcher[0][1].toFloat() * 100
+        if (pe_antisense_matcher) reverseFragments = pe_antisense_matcher[0][1].toFloat() * 100
+    }
+
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
+}
+
+//
+// Print pipeline summary on completion
+//
+def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
+    def colors = logColours(monochrome_logs)
+
+    def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+    def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+    def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+    if (workflow.success) {
+        def color = colors.green
+        def status = []
+        if (workflow.stats.ignoredCount != 0) {
+            color = colors.yellow
+            status += ['with errored process(es)']
+        }
+        if (fail_mapped_count > 0 || fail_trimmed_count > 0) {
+            color = colors.yellow
+            status += ['with skipped sampl(es)']
+        }
+        log.info "-${colors.purple}[$workflow.manifest.name]${color} Pipeline completed successfully ${status.join(', ')}${colors.reset}-"
+        if (fail_trimmed_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_trimmed_count}/${pass_trimmed_reads.size()} samples skipped since they failed ${params.min_trimmed_reads} trimmed read threshold.${colors.reset}-"
+        }
+        if (fail_mapped_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
+        }
+        if (fail_strand_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_strand_count}/${pass_strand_check.size()} samples failed strandedness check.${colors.reset}-"
+        }
+    } else {
+        log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
+    }
+}
+

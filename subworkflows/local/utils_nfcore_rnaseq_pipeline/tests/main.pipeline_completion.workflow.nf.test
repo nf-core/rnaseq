@@ -18,6 +18,9 @@ nextflow_workflow {
                 input[5] = true // monochrome_logs (boolean)
                 input[6] = null // hook_url (string)
                 input[7] = "${outputDir}/multiqc_report.html" // multiqc_report (string)
+                input[8] = Channel.of(['test_sample', true])
+                input[9] = Channel.of(['test_sample', true])
+                input[10] = Channel.of(['test_sample', true])
                 """
             }
         }

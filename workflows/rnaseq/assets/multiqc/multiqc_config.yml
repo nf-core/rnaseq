@@ -168,11 +168,46 @@ custom_data:
       namespace: "Samples failed mapping threshold"
       format: "{:.2f}"
   fail_strand_check:
-    section_name: "WARNING: Fail Strand Check"
-    description: "List of samples that failed the strandedness check between that provided in the samplesheet and calculated by the <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> tool."
+    section_name: "Strandedness Checks"
+    description: "<p>The strandedness used for analysis in this workflow can be provided by a user, or automatically inferred by <b>Salmon</b> using a sample of reads. In either case, strandedness is verified at the end of the workflow, using the <b>RSeQC</b> <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> operating on genomic alignments. In this table a pass indicates a match between suplied (or inferred by Salmon) and RSeQC, fail indicates a mismatch or 'undetermined' strandedness. Undetermined strandedness can indicate QC problems, including possible genomic DNA contamination.</p><p><b>Note:</b>Rows are duplicated for an 'auto' setting to allow comparison of statistics between inference methods.</p>"
     plot_type: "table"
     pconfig:
       id: "fail_strand_check_table"
-      table_title: "Samples failed strandedness check"
-      namespace: "Samples failed strandedness check"
+      table_title: "Samples strandedness check"
+      namespace: "Samples strandedness check"
       format: "{:.2f}"
+    headers:
+      Status:
+        description: Pass if the strandedness inferred by RSeQC matches that provided by the user or predicted by Salmon. Fail otherwise.
+      Strand inference method:
+        description: Tool used to detect strandedness
+      Provided strandedness:
+        description: User-provided strandedness
+        cond_formatting_rules:
+          blue:
+            - s_eq: "auto"
+          black:
+            - s_eq: "forward"
+          grey:
+            - s_eq: "reverse"
+        cond_formatting_colours:
+          - grey: "#AAB7B8"
+          - black: "#17202A"
+      Inferred strandedness:
+        description: Interred strandedness
+        cond_formatting_rules:
+          blue:
+            - s_eq: "auto"
+          black:
+            - s_eq: "forward"
+          grey:
+            - s_eq: "reverse"
+        cond_formatting_colours:
+          - grey: "#AAB7B8"
+          - black: "#17202A"
+      Sense (%):
+        max: 100
+      Antisense (%):
+        max: 100
+      Unstranded (%):
+        max: 100

@@ -1,12 +1,7 @@
 name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
-  push:
-    branches:
-      - dev
   pull_request:
-  release:
-    types: [published]
 
 env:
   NXF_ANSI_LOG: false
@@ -23,34 +18,23 @@ jobs:
     name: Check for changes
     runs-on: ubuntu-latest
     outputs:
-      nf_test_files: ${{ steps.list.outputs.nf_test_files }}
+      nf_test_files: ${{ steps.list.outputs.components }}
     steps:
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-          architecture: "x64"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install gitpython pyyaml
-
-      - name: list nf_test_files
+      - name: List nf-test files
         id: list
-        run: |
-          echo nf_test_files=$(python \
-            .github/python/find_changed_files.py \
-            -t pipeline workflow process \
-            --head_ref ${{ github.sha }} \
-            --base_ref origin/${{ github.base_ref }} \
-          ) >> $GITHUB_OUTPUT
+        uses: adamrtalbot/detect-nf-test-changes@v0.0.2
+        with:
+          head: ${{ github.sha }}
+          base: origin/${{ github.base_ref }}
+          include: .github/include.yaml
 
-      - name: debug
+      - name: print list of nf-test files
         run: |
-          echo ${{ steps.list.outputs.nf_test_files }}
+          echo ${{ steps.list.outputs.components }}
 
   test:
     name: ${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }}

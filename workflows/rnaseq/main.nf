@@ -106,6 +106,9 @@ workflow RNASEQ {
     main:
 
     ch_multiqc_files = Channel.empty()
+    ch_trim_status = Channel.empty()
+    ch_map_status = Channel.empty()
+    ch_strand_status = Channel.empty()
 
     //
     // Create channel from input file provided through params.input
@@ -142,7 +145,7 @@ workflow RNASEQ {
     .reads
     .mix(ch_fastq.single)
     .set { ch_cat_fastq }
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
@@ -191,6 +194,13 @@ workflow RNASEQ {
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
     }
 
+    // Save trim status for workflow summary
+
+    ch_trim_status = ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
+        }
     //
     // Get list of samples that failed trimming threshold for MultiQC report
     //
@@ -299,10 +309,15 @@ workflow RNASEQ {
 
     FASTQ_SUBSAMPLE_FQ_SALMON
         .out
-        .json_info
+        .lib_format_counts
         .join(ch_strand_fastq.auto_strand)
         .map { meta, json, reads ->
-            return [ meta + [ strandedness: getSalmonInferredStrandedness(json) ], reads ]
+            def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+            strandedness = salmon_strand_analysis.inferred_strandedness
+            if ( strandedness == 'undetermined' ){
+                strandedness = 'unstranded'
+            }
+            return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
         }
         .mix(ch_strand_fastq.known_strand)
         .set { ch_strand_inferred_filtered_fastq }
@@ -528,6 +543,13 @@ workflow RNASEQ {
             .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
 
+        // Save status for workflow summary
+        ch_map_status = ch_percent_mapped
+            .map {
+                meta, mapped, pass ->
+                    return [ meta.id, pass ]
+            }
+
         ch_genome_bam
             .join(ch_percent_mapped, by: [0])
             .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
@@ -718,30 +740,64 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
-            BAM_RSEQC
-                .out
-                .inferexperiment_txt
+            // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
+            ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
-                        if (meta.strandedness != inferred_strand[0]) {
-                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+                        rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
+
+                        def status = 'fail'
+                        def multiqc_lines = []
+
+                        if (meta.salmon_strand_analysis){
+                            salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
+
+                            if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
+                                status = 'pass'
+                            }
+                            multiqc_lines = [
+                                "$meta.id \tSalmon\t$status\tauto\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                "$meta.id\tRSeQC\t$status\tauto\t${rseqc_inferred_strand.values().join('\t')}"
+                            ]
                         }
+                        else{
+                            if (meta.strandedness == rseqc_strandedness) {
+                                status = 'pass'
+                            }
+
+                            multiqc_lines = [ "$meta.id\tRSeQC\t$status\t$meta.strandedness\t${rseqc_inferred_strand.values().join('\t')}" ]
+                        }
+                        return [ meta, status, multiqc_lines ]
                 }
+                .multiMap{ meta, status, multiqc_lines ->
+                    status: [ meta.id, status == 'pass' ]
+                    multiqc_lines: multiqc_lines
+                }
+
+            // Store the statuses for output
+            ch_strand_status = ch_strand_comparison.status
+
+            // Take the lines formatted for MultiQC and output
+            ch_strand_comparison.multiqc_lines
+                .flatten()
                 .collect()
                 .map {
                     tsv_data ->
                         def header = [
                             "Sample",
+                            "Strand inference method",
+                            "Status",
                             "Provided strandedness",
                             "Inferred strandedness",
                             "Sense (%)",
                             "Antisense (%)",
-                            "Undetermined (%)"
+                            "Unstranded (%)"
                         ]
                         multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
+
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
     }
@@ -817,6 +873,9 @@ workflow RNASEQ {
     }
 
     emit:
+    trim_status    = ch_trim_status    // channel: [id, boolean]
+    map_status     = ch_map_status     // channel: [id, boolean]
+    strand_status  = ch_strand_status  // channel: [id, boolean]
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]
 }

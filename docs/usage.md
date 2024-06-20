@@ -18,7 +18,7 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Multiple runs of the same sample
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes. If you set the strandedness value to `auto` the pipeline will sub-sample the input FastQ files to 1 million reads, use Salmon Quant to infer the strandedness automatically and then propagate this information to the remainder of the pipeline. If the strandedness has been inferred or provided incorrectly a warning will be present at the top of the MultiQC report so please be sure to check when looking at the QC for your samples.
+The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes.
 
 ```csv title="samplesheet.csv"
 sample,fastq_1,fastq_2,strandedness
@@ -26,6 +26,10 @@ CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,a
 CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,auto
 CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,auto
 ```
+
+### Strandedness prediction
+
+If you set the strandedness value to `auto` the pipeline will sub-sample the input FastQ files to 1 million reads, use Salmon Quant to infer the strandedness automatically and then propagate this information to the remainder of the pipeline. If the strandedness has been inferred or provided incorrectly the sample will be flagged in the 'Strandedness Checks' section of the MultiQC report, so please be sure to check when looking at the QC for your samples.
 
 ### Full samplesheet
 
@@ -54,6 +58,14 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 > **NB:** The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility in instances where replicate information is not required e.g. when sequencing clinical samples. If all values of `sample` have the same number of underscores, fields defined by these underscore-separated names may be used in the PCA plots produced by the pipeline, to regain the ability to represent different groupings.
+
+## FASTQ sampling
+
+If you would like to reduce the number of reads used in the analysis, for example to test pipeline operation with limited resource usage, you can make use of the FASTP option for trimming (see below). FASTP has an option to take the first `n` reads of input FASTQ file(s), so this can be used to reduce the reads passed to subsequent steps. For example, to pass only the first 10,000 reads for trimming you would set input paramters like:
+
+```
+--trimmer fastp --extra_fastp_args '--reads_to_process 10000'
+```
 
 ## Adapter trimming options
 

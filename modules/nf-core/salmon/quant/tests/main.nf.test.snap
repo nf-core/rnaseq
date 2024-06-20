@@ -1,125 +1,170 @@
 {
-    "versions_single_end_lib_type_a_stub": {
+    "sarscov2 - single_end": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-24T14:34:21.647863"
-    },
-    "versions_pair_end_multiple_stub": {
-        "content": [
-            [
-                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-24T14:34:48.03415"
+        "timestamp": "2024-06-14T09:51:22.424672"
     },
     "sarscov2 - single_end stub": {
         "content": [
             [
-                
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
             ],
             [
-                
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T09:34:16.444372"
+        "timestamp": "2024-06-14T09:51:32.292277"
     },
-    "versions_single_end": {
+    "sarscov2 - single_end lib type A": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-01T11:51:01.865730832"
+        "timestamp": "2024-06-14T09:51:42.656382"
     },
-    "versions_pair_end": {
+    "sarscov2 - pair_end multiple": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-06T17:10:56.121713"
-    },
-    "versions_pair_end_stub": {
-        "content": [
+            ],
             [
-                
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,4a2ee0fac91a4a3471872808d8bd3ff8"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T08:38:01.276656"
+        "timestamp": "2024-06-14T09:52:33.03647"
     },
-    "versions_pair_end stub": {
+    "sarscov2 - pair_end multiple stub": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-24T14:34:36.570127"
+        "timestamp": "2024-06-14T09:52:43.388379"
     },
-    "versions_single_end_stub": {
+    "sarscov2 - single_end lib type A stub": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-24T14:28:01.864343"
+        "timestamp": "2024-06-14T09:51:52.612664"
     },
-    "versions_single_end_lib_type_a": {
+    "sarscov2 - pair_end": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,e9516e73c9fb39145513b2a41a0af95f"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-06T17:09:14.898351"
+        "timestamp": "2024-06-14T09:52:05.577881"
     },
-    "versions_pair_end_multiple": {
+    "sarscov2 - pair_end stub": {
         "content": [
             [
                 "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-06T17:11:07.846643"
+        "timestamp": "2024-06-14T09:52:15.286461"
     }
 }

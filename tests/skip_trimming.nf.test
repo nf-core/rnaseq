@@ -1,11 +1,11 @@
 nextflow_pipeline {
 
-    name "Test pipeline with --skip_trimming"
+    name "Test pipeline by skipping trimming options"
     script "../main.nf"
     tag "RNASEQ"
     tag "PIPELINE"
 
-    test("Parameters: --skip_trimming") {
+    test("Params: --skip_trimming") {
 
         when {
             params {

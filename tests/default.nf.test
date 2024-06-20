@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "RNASEQ"
     tag "PIPELINE"
 
-    test("Parameters: default") {
+    test("Params: default") {
 
         when {
             params {

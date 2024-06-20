@@ -1,11 +1,11 @@
 nextflow_pipeline {
 
-    name "Test pipeline with --pseudo_aligner kallisto --skip_qc --skip_alignment"
+    name "Test pipeline with Kallisto, skipping both QC and alignment"
     script "../main.nf"
     tag "RNASEQ"
     tag "PIPELINE"
 
-    test("Parameters: --pseudo_aligner kallisto --skip_qc --skip_alignment") {
+    test("Params: --pseudo_aligner kallisto --skip_qc --skip_alignment") {
 
         when {
             params {

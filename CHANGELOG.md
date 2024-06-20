@@ -95,6 +95,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1326](https://github.com/nf-core/rnaseq/pull/1326) - Move Conda dependencies for local modules to individual environment file
 - [PR #1328](https://github.com/nf-core/rnaseq/pull/1328) - Add pipeline level test for STAR-RSEM and HISAT2
 - [PR #1329](https://github.com/nf-core/rnaseq/pull/1329) - Remove tags from all nf-test files
+- [PR #1330](https://github.com/nf-core/rnaseq/pull/1330) - Update all nf-core/modules and subworkflows
 
 ### Parameters
 
@@ -114,9 +115,10 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 | `bioconductor-dupradar`             | 1.28.0      | 1.32.0      |
 | `bioconductor-summarizedexperiment` | 1.24.0      | 1.32.0      |
 | `bioconductor-tximeta`              | 1.12.0      | 1.20.1      |
-| `multiqc`                           | 1.20        | 1.21        |
+| `gffread`                           | 0.12.1      | 0.12.7      |
+| `multiqc`                           | 1.20        | 1.22.2      |
 | `picard`                            | 3.0.0       | 3.1.1       |
-| `samtools`                          | 1.17        | 1.19.2      |
+| `samtools`                          | 1.17        | 1.20        |
 | `sortmerna`                         | 4.3.4       | 4.3.6       |
 | `umi_tools`                         | 1.14        | 1.15        |
 

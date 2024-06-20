@@ -3,7 +3,7 @@ nextflow_pipeline {
     name "Test pipeline with STAR aligner and RSEM for quantification"
     script "../main.nf"
 
-    test("Default profile test") {
+    test("Params: --aligner star_rsem") {
 
         when {
             params {

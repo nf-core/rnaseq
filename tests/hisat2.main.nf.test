@@ -3,7 +3,7 @@ nextflow_pipeline {
     name "Test pipeline with HISAT2 aligner"
     script "../main.nf"
 
-    test("Default profile test") {
+    test("Params: --aligner hisat2") {
 
         when {
             params {

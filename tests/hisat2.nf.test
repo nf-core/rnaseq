@@ -1,0 +1,20 @@
+nextflow_pipeline {
+
+    name "Test pipeline with HISAT2 aligner"
+    script "../main.nf"
+
+    test("Params: --aligner hisat2") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'hisat2'
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}
+

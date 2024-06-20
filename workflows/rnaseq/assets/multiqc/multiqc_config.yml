@@ -169,7 +169,7 @@ custom_data:
       format: "{:.2f}"
   fail_strand_check:
     section_name: "Strandedness Checks"
-    description: "<p>The strandedness used for analysis in this workflow can be provided by a user, or automatically inferred by <b>Salmon</b> using a sample of reads. In either case, strandedness is verified at the end of the workflow, using the <b>RSeQC</b> <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>RSeQC infer_experiment.py</a> operating on genomic alignments. In this table a pass indicates a match between suplied (or inferred by Salmon) and RSeQC, fail indicates a mismatch or 'undetermined' strandedness. Undetermined strandedness can indicate QC problems, including possible genomic DNA contamination.</p><p><b>Note:</b>Rows are duplicated for an 'auto' setting to allow comparison of statistics between inference methods.</p>"
+    description: "<p>The strandedness used for analysis in this workflow can either be provided by the user or automatically inferred by <b>Salmon</b> using a sample of reads. In both cases, strandedness is verified at the end of the workflow using <b>RSeQC</b>'s <a href='http://rseqc.sourceforge.net/#infer-experiment-py'>infer_experiment.py</a> on genomic alignments. In this table, a pass indicates a match between the supplied strandedness (or that inferred by Salmon) and RSeQC results. A fail indicates a mismatch or 'undetermined' strandedness. 'Undetermined' strandedness can signal QC issues, including potential genomic DNA contamination.</p><p><b>Note:</b> Rows are duplicated for an 'auto' setting to allow comparison of statistics between inference methods.</p>"
     plot_type: "table"
     pconfig:
       id: "fail_strand_check_table"

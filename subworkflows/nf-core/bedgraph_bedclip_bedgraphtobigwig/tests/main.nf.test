@@ -3,9 +3,9 @@ nextflow_workflow {
     name "Test Workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG"
     script "../main.nf"
     workflow "BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG"
+    config "./nextflow.config"
     tag "UCSC_BEDCLIP"
     tag "UCSC_BEDGRAPHTOBIGWIG"
-    config "./nextflow.config"
     
     test("sarscov2 [bedgraph] [genome_sizes]") {
 

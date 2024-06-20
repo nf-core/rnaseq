@@ -2,8 +2,6 @@ nextflow_pipeline {
 
     name "Test pipeline with STAR aligner and RSEM for quantification"
     script "../main.nf"
-    tag "rnaseq"
-    tag "PIPELINE"
 
     test("Default profile test") {
 

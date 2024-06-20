@@ -80,6 +80,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1322](https://github.com/nf-core/rnaseq/pull/1322) - Use pre-built Github Action to detect nf-test changes
 - [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison
 - [PR #1326](https://github.com/nf-core/rnaseq/pull/1326) - Move Conda dependencies for local modules to individual environment file
+- [PR #####]() - Add pipeline level test for STAR-RSEM and HISAT2
 
 ### Parameters
 

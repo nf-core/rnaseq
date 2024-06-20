@@ -1,0 +1,22 @@
+nextflow_pipeline {
+
+    name "Test pipeline with HISAT2 aligner"
+    script "../main.nf"
+    tag "rnaseq"
+    tag "PIPELINE"
+
+    test("Default profile test") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner =  'hisat2'
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}
+

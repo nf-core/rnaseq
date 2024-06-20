@@ -190,7 +190,7 @@ Once you have chosen a release, select the annotation file that matches your ref
 
 GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
 
-Ensure that the annotation files use gene IDs as the primary identifier, not the gene name/ symbol. For example, the Ensembl ID `ENSG00000254647` corresponds to the `INS` gene, which encodes the insulin protein. While gene names are more familiar, it is crucial to retain and use the primary identifiers as they are unique and easier to map between annotation versions or sources.
+Ensure that the annotation files use gene IDs as the primary identifier, not the gene name/symbol. For example, the Ensembl ID `ENSG00000254647` corresponds to the `INS` gene, which encodes the insulin protein. While gene names are more familiar, it is crucial to retain and use the primary identifiers as they are unique and easier to map between annotation versions or sources.
 
 To take advantage of all the quality control modules implemented in the pipeline, the gene annotation should include a `gene_biotype` field which describes the function of each feature (protein coding, long non-coding etc.). This is usually the case for annotations from GENCODE or Ensembl but may not be if your annotation comes from another source. If your annotation does not include this field, please set the `--skip_biotype_qc` option to avoid running the steps that rely on it.
 
@@ -217,7 +217,7 @@ By default, indices are generated dynamically by the workflow for tools such as 
 
 Once you have the indices from a workflow run you should save them somewhere central and reuse them in subsequent runs using custom config files or command line parameters such as `--star_index '/path/to/STAR/index/'`.
 
-Note the genome and annotation versions as well as the versions of the software used for indexing, as an index created with one version may not be compatible with other versions.
+Remember to note the genome and annotation versions as well as the versions of the software used for indexing, as an index created with one version may not be compatible with other versions.
 
 ### GENCODE
 

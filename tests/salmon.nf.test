@@ -1,16 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline using Kallisto"
+    name "Test pipeline with Salmon, skipping both QC and alignment"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("Default profile test") {
+    test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment") {
 
         when {
             params {
                 outdir = "$outputDir"
-                pseudo_aligner = 'kallisto'
+                pseudo_aligner = 'salmon'
                 skip_qc = true
                 skip_alignment = true
             }

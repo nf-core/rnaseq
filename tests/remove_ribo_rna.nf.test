@@ -1,16 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline with trimming disabled"
+    name "Test pipeline with ribosomal RNA removal"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("--skip_trimming") {
+    test("Params: --remove_ribo_rna") {
 
         when {
             params {
-                outdir        = "$outputDir"
-                skip_qc       = true
+                outdir = "$outputDir"
+                remove_ribo_rna = true
             }
         }
 

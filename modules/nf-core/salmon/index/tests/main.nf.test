@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process SALMON_INDEX"
     script "../main.nf"
     process "SALMON_INDEX"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "salmon"
-    tag "salmon/index"
 
     test("sarscov2") {
 

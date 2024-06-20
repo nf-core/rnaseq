@@ -1,16 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline with min_mapped_reads = 90"
+    name "Test pipeline by skipping trimming options"
     script "../main.nf"
-    tag "rnaseq"
+    tag "RNASEQ"
     tag "PIPELINE"
 
-    test("--min_mapped_reads 90") {
+    test("Params: --skip_trimming") {
 
         when {
             params {
-                outdir           = "$outputDir"
-                min_mapped_reads = 90
+                outdir = "$outputDir"
+                skip_trimming = true
             }
         }
 

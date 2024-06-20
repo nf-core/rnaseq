@@ -17,19 +17,19 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.additional_fasta = getGenomeAttribute('additional_fasta')
-params.bbsplit_index    = getGenomeAttribute('bbsplit')
-params.gene_bed         = getGenomeAttribute('bed12')
 params.fasta            = getGenomeAttribute('fasta')
+params.additional_fasta = getGenomeAttribute('additional_fasta')
+params.transcript_fasta = getGenomeAttribute('transcript_fasta')
 params.gff              = getGenomeAttribute('gff')
 params.gtf              = getGenomeAttribute('gtf')
-params.hisat2_index     = getGenomeAttribute('hisat2')
-params.kallisto_index   = getGenomeAttribute('kallisto')
-params.rsem_index       = getGenomeAttribute('rsem')
-params.salmon_index     = getGenomeAttribute('salmon')
+params.gene_bed         = getGenomeAttribute('bed12')
+params.bbsplit_index    = getGenomeAttribute('bbsplit')
 params.sortmerna_index  = getGenomeAttribute('sortmerna')
 params.star_index       = getGenomeAttribute('star')
-params.transcript_fasta = getGenomeAttribute('transcript_fasta')
+params.rsem_index       = getGenomeAttribute('rsem')
+params.hisat2_index     = getGenomeAttribute('hisat2')
+params.salmon_index     = getGenomeAttribute('salmon')
+params.kallisto_index   = getGenomeAttribute('kallisto')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -50,7 +50,7 @@ module_order:
       anchor: "fastqc_raw"
       info: "This section of the report shows FastQC results before adapter trimming."
       path_filters:
-        - "**/raw/*.zip"
+        - "*_raw_fastqc.zip"
   - cutadapt
   - fastp
   - fastqc:
@@ -58,7 +58,7 @@ module_order:
       anchor: "fastqc_trimmed"
       info: "This section of the report shows FastQC results after adapter trimming."
       path_filters:
-        - "**/trim/*.zip"
+        - "*_trimmed_fastqc.zip"
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:

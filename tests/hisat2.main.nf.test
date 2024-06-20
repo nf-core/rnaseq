@@ -8,7 +8,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-                aligner =  'hisat2'
+                aligner = 'hisat2'
             }
         }
 

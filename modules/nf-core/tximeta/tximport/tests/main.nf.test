@@ -3,8 +3,6 @@ nextflow_process {
     name "Test Process TXIMETA_TXIMPORT"
     script "../main.nf"
     process "TXIMETA_TXIMPORT"
-    tag "UNTAR"
-    tag "CUSTOM_TX2GENE"
 
     test("saccharomyces_cerevisiae - kallisto - gtf") {
 

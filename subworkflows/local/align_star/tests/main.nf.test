@@ -4,11 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "ALIGN_STAR"
     config "./nextflow.config"
-    tag "STAR_GENOMEGENERATE"
-    tag "STAR_GENOMEGENERATE_IGENOMES"
-    tag "STAR_ALIGN"
-    tag "STAR_ALIGN_IGENOMES"
-    tag "BAM_SORT_STATS_SAMTOOLS"
 
     test("star - no igenomes") {
 

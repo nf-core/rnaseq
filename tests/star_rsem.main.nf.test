@@ -8,7 +8,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-                aligner =  'star_rsem'
+                aligner = 'star_rsem'
             }
         }
 

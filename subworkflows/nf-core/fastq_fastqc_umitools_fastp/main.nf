@@ -91,6 +91,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         FASTP (
             umi_reads,
             adapter_fasta,
+            false, // don't want to set discard_trimmed_pass, else there will be no reads output
             save_trimmed_fail,
             save_merged
         )

@@ -27,12 +27,16 @@ input:
       type: file
       description: File in FASTA format containing possible adapters to remove.
       pattern: "*.{fasta,fna,fas,fa}"
+  - discard_trimmed_pass:
+      type: boolean
+      description: Specify true to not write any reads that pass trimming thresholds. |
+        This can be used to use fastp for the output report only.
   - save_trimmed_fail:
       type: boolean
       description: Specify true to save files that failed to pass trimming thresholds ending in `*.fail.fastq.gz`
   - save_merged:
       type: boolean
-      description: Specify true to save all merged reads to the a file ending in `*.merged.fastq.gz`
+      description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
 output:
   - meta:
       type: map

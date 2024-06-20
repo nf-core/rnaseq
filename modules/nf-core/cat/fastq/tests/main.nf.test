@@ -1,3 +1,5 @@
+// NOTE The version snaps may not be consistant
+// https://github.com/nf-core/modules/pull/4087#issuecomment-1767948035
 nextflow_process {
 
     name "Test Process CAT_FASTQ"

@@ -1,0 +1,7 @@
+name: gtf_filter
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::python=3.9.5

@@ -90,6 +90,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1321](https://github.com/nf-core/rnaseq/pull/1321) - Remove push and release triggers from CI
 - [PR #1322](https://github.com/nf-core/rnaseq/pull/1322) - Use pre-built Github Action to detect nf-test changes
 - [PR #1323](https://github.com/nf-core/rnaseq/pull/1323) - Update actions/checkout to v4
+- [PR #1324](https://github.com/nf-core/rnaseq/pull/1324) - Fix tags entries and rename pipeline level tests
 
 ### Parameters
 

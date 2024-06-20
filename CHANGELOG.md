@@ -91,6 +91,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1322](https://github.com/nf-core/rnaseq/pull/1322) - Use pre-built Github Action to detect nf-test changes
 - [PR #1323](https://github.com/nf-core/rnaseq/pull/1323) - Update actions/checkout to v4
 - [PR #1324](https://github.com/nf-core/rnaseq/pull/1324) - Fix tags entries and rename pipeline level tests
+- [PR #1325](https://github.com/nf-core/rnaseq/pull/1325) - Minor fixes to strandedness settings and messaging
+- [PR #1326](https://github.com/nf-core/rnaseq/pull/1326) - Move Conda dependencies for local modules to individual environment file
 
 ### Parameters
 

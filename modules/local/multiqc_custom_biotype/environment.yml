@@ -1,0 +1,7 @@
+name: multiqc_custom_biotype
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::python=3.9.5

@@ -52,4 +52,17 @@ process RSEM_MERGE_COUNTS {
         sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
     END_VERSIONS
     """
+
+    stub:
+    """
+    touch rsem.merged.gene_counts.tsv
+    touch rsem.merged.gene_tpm.tsv
+    touch rsem.merged.transcript_counts.tsv
+    touch rsem.merged.transcript_tpm.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+    END_VERSIONS
+    """
 }

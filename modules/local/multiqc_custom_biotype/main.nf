@@ -33,4 +33,16 @@ process MULTIQC_CUSTOM_BIOTYPE {
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.biotype_counts_mqc.tsv
+    touch ${prefix}.biotype_counts_rrna_mqc.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
+    """
 }

@@ -1,5 +1,5 @@
 {
-    "Should run without failures": {
+    "sarscov2 - fasta - gtf": {
         "content": [
             {
                 "0": [
@@ -18,8 +18,31 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-06T15:52:37.977802"
+        "timestamp": "2024-06-21T11:47:56.314297"
+    },
+    "sarscov2 - fasta - gtf - stub": {
+        "content": [
+            {
+                "0": [
+                    "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "versions.yml:md5,4adf55ec05d247fd6d253459bd80856f"
+                ],
+                "genome_gtf": [
+                    "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,4adf55ec05d247fd6d253459bd80856f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:48:19.085835"
     }
 }

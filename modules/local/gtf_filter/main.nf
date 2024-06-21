@@ -29,4 +29,14 @@ process GTF_FILTER {
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """
+
+    stub:
+    """
+    touch ${fasta.baseName}.filtered.gtf
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
+    """
 }

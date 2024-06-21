@@ -8,4 +8,5 @@
 #anchor: 'deseq2_clustering'
 #pconfig:
 #    title: 'DESeq2: Heatmap of the sample-to-sample distances'
+#    xlab: True
 #    reverseColors: True

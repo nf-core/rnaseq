@@ -3,7 +3,6 @@ nextflow_process {
     name "Test Process CUSTOM_TX2GENE"
     script "../main.nf"
     process "CUSTOM_TX2GENE"
-    tag "UNTAR"
 
     setup {
 

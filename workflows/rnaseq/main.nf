@@ -15,9 +15,8 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { ALIGN_STAR                                        } from '../../subworkflows/local/align_star'
-include { QUANTIFY_RSEM                                     } from '../../subworkflows/local/quantify_rsem'
-
+include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
+include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -311,13 +310,14 @@ workflow RNASEQ {
         .out
         .lib_format_counts
         .join(ch_strand_fastq.auto_strand)
-        .map { meta, json, reads ->
-            def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
-            strandedness = salmon_strand_analysis.inferred_strandedness
-            if ( strandedness == 'undetermined' ){
-                strandedness = 'unstranded'
-            }
-            return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
+        .map {
+            meta, json, reads ->
+                def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold=params.stranded_threshold, unstranded_threshold=params.unstranded_threshold)
+                strandedness = salmon_strand_analysis.inferred_strandedness
+                if (strandedness == 'undetermined') {
+                    strandedness = 'unstranded'
+                }
+                return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
         }
         .mix(ch_strand_fastq.known_strand)
         .set { ch_strand_inferred_filtered_fastq }
@@ -749,11 +749,10 @@ workflow RNASEQ {
 
                         def status = 'fail'
                         def multiqc_lines = []
-
-                        if (meta.salmon_strand_analysis){
+                        if (meta.salmon_strand_analysis) {
                             salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
 
-                            if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined'){
+                            if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined') {
                                 status = 'pass'
                             }
                             multiqc_lines = [
@@ -761,18 +760,18 @@ workflow RNASEQ {
                                 "$meta.id\tRSeQC\t$status\tauto\t${rseqc_inferred_strand.values().join('\t')}"
                             ]
                         }
-                        else{
+                        else {
                             if (meta.strandedness == rseqc_strandedness) {
                                 status = 'pass'
                             }
-
                             multiqc_lines = [ "$meta.id\tRSeQC\t$status\t$meta.strandedness\t${rseqc_inferred_strand.values().join('\t')}" ]
                         }
                         return [ meta, status, multiqc_lines ]
                 }
-                .multiMap{ meta, status, multiqc_lines ->
-                    status: [ meta.id, status == 'pass' ]
-                    multiqc_lines: multiqc_lines
+                .multiMap {
+                    meta, status, multiqc_lines ->
+                        status: [ meta.id, status == 'pass' ]
+                        multiqc_lines: multiqc_lines
                 }
 
             // Store the statuses for output

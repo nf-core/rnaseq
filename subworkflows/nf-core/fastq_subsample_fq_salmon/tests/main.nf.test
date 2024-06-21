@@ -4,13 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "FASTQ_SUBSAMPLE_FQ_SALMON"
     config "./nextflow.config"
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/fastq_subsample_fq_salmon"
-    tag "fastq_subsample_fq_salmon"
-    tag "salmon/index"
-    tag "fq/subsample"
-    tag "salmon/quant"
 
     test("homo_sapiens paired-end [fastq]") {
 

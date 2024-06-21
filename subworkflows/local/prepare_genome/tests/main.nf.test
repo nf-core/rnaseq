@@ -5,24 +5,6 @@ nextflow_workflow {
     workflow "PREPARE_GENOME"
     config "./nextflow.config"
 
-    tag "BBMAP_BBSPLIT"
-    tag "CUSTOM_CATADDITIONALFASTA"
-    tag "CUSTOM_GETCHROMSIZES"
-    tag "GFFREAD"
-    tag "GTF2BED"
-    tag "GTF_FILTER"
-    tag "GUNZIP"
-    tag "HISAT2_BUILD"
-    tag "HISAT2_EXTRACTSPLICESITES"
-    tag "KALLISTO_INDEX"
-    tag "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
-    tag "RSEM_PREPAREREFERENCE"
-    tag "SALMON_INDEX"
-    tag "SORTMERNA"
-    tag "STAR_GENOMEGENERATE"
-    tag "STAR_GENOMEGENERATE_IGENOMES"
-    tag "UNTAR"
-
     test("default options") {
 
         when {
@@ -79,7 +61,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -147,7 +128,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -215,7 +195,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -283,7 +262,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -351,7 +329,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -419,7 +396,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -487,7 +463,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -555,7 +530,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -623,7 +597,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -691,7 +664,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -759,7 +731,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -827,7 +798,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -895,7 +865,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -962,7 +931,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -1030,7 +998,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -1098,7 +1065,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -1166,7 +1132,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -1234,7 +1199,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -1302,7 +1266,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,
@@ -1370,7 +1333,6 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
-                    // workflow.out.bbsplit_index,
                     workflow.out.sortmerna_index,
                     workflow.out.star_index,
                     workflow.out.rsem_index,

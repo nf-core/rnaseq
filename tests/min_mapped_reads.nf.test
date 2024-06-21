@@ -1,15 +1,13 @@
 nextflow_pipeline {
 
-    name "Test pipeline with min_mapped_reads = 90"
+    name "Test pipeline with a minimum mapped read threshold of 90"
     script "../main.nf"
-    tag "rnaseq"
-    tag "PIPELINE"
 
-    test("--min_mapped_reads 90") {
+    test("Params: --min_mapped_reads 90") {
 
         when {
             params {
-                outdir           = "$outputDir"
+                outdir = "$outputDir"
                 min_mapped_reads = 90
             }
         }

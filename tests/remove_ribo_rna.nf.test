@@ -2,14 +2,12 @@ nextflow_pipeline {
 
     name "Test pipeline with ribosomal RNA removal"
     script "../main.nf"
-    tag "rnaseq"
-    tag "PIPELINE"
 
-    test("--remove_ribo_rna") {
+    test("Params: --remove_ribo_rna") {
 
         when {
             params {
-                outdir          = "$outputDir"
+                outdir = "$outputDir"
                 remove_ribo_rna = true
             }
         }

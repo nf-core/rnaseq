@@ -60,31 +60,51 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1249](https://github.com/nf-core/rnaseq/pull/1249) - Include nf-tests for rsem_merge_counts module
 - [PR #1250](https://github.com/nf-core/rnaseq/pull/1250) - Remove all tags.yml files because the testing system has changed
 - [PR #1251](https://github.com/nf-core/rnaseq/pull/1251) - Replace deseq2qc paths
+- [PR #1252](https://github.com/nf-core/rnaseq/pull/1252) - Fix genomeAttribute usage
 - [PR #1253](https://github.com/nf-core/rnaseq/pull/1253) - Use nf-test files as matrix to test over in CI/CD for efficiency
+- [PR #1260](https://github.com/nf-core/rnaseq/pull/1260) - Update CHANGELOG
 - [PR #1261](https://github.com/nf-core/rnaseq/pull/1261) - Add more tests for PREPARE_GENOME
+- [PR #1262](https://github.com/nf-core/rnaseq/pull/1262) - Fix CI pipeline
+- [PR #1264](https://github.com/nf-core/rnaseq/pull/1264) - Add GHA files back into include statement of Github workflow change detection
 - [PR #1265](https://github.com/nf-core/rnaseq/pull/1265) - Small updates noticed during code review
 - [PR #1266](https://github.com/nf-core/rnaseq/pull/1266) - Delete unecessary tags from nf.test files for modules and subworkflows
+- [PR #1271](https://github.com/nf-core/rnaseq/pull/1271) - Update trimming subworkflow to include more tests
+- [PR #1272](https://github.com/nf-core/rnaseq/pull/1272) - Simple pipeline level nf-tests
+- [PR #1274](https://github.com/nf-core/rnaseq/pull/1274) - Update bam_markduplicates_picard subworkflow
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
+- [PR #1279](https://github.com/nf-core/rnaseq/pull/1279) - Add psueudoaligner pipeline level tests to test suite
 - [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
+- [PR #1282](https://github.com/nf-core/rnaseq/pull/1282) - Fix CHANGELOG error
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
 - [PR #1293](https://github.com/nf-core/rnaseq/pull/1293) - Update subworkflow utils_nfcore_pipeline
 - [PR #1297](https://github.com/nf-core/rnaseq/pull/1297) - Important! Template update for nf-core/tools v2.14.1
 - [PR #1302](https://github.com/nf-core/rnaseq/pull/1302) - Add missing files from Tximport processing
 - [PR #1304](https://github.com/nf-core/rnaseq/pull/1304) - Remove redundant gene TPM outputs
+- [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison
 - [PR #1307](https://github.com/nf-core/rnaseq/pull/1307) - Clarify infer strandedness step in subway map and text
+- [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
+- [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
+- [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths
 - [PR #1317](https://github.com/nf-core/rnaseq/pull/1317) - Strip problematic ifEmpty()
 - [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
-- [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
-- [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
-- [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths
+- [PR #1321](https://github.com/nf-core/rnaseq/pull/1321) - Remove push and release triggers from CI
 - [PR #1322](https://github.com/nf-core/rnaseq/pull/1322) - Use pre-built Github Action to detect nf-test changes
-- [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison
+- [PR #1323](https://github.com/nf-core/rnaseq/pull/1323) - Update actions/checkout to v4
+- [PR #1324](https://github.com/nf-core/rnaseq/pull/1324) - Fix tags entries and rename pipeline level tests
+- [PR #1325](https://github.com/nf-core/rnaseq/pull/1325) - Minor fixes to strandedness settings and messaging
+- [PR #1326](https://github.com/nf-core/rnaseq/pull/1326) - Move Conda dependencies for local modules to individual environment file
+- [PR #1328](https://github.com/nf-core/rnaseq/pull/1328) - Add pipeline level test for STAR-RSEM and HISAT2
+- [PR #1329](https://github.com/nf-core/rnaseq/pull/1329) - Remove tags from all nf-test files
 
 ### Parameters
 
-| Old parameter | New parameter       |
-| ------------- | ------------------- |
-|               | `--sortmerna_index` |
+| Old parameter      | New parameter                    |
+| ------------------ | -------------------------------- |
+|                    | `--pipelines_testdata_base_path` |
+|                    | `--sortmerna_index`              |
+|                    | `--stranded_threshold`           |
+|                    | `--unstranded_threshold`         |
+| `--test_data_base` |                                  |
 
 ### Software dependencies
 

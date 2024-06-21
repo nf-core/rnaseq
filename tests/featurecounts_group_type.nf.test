@@ -1,15 +1,13 @@
 nextflow_pipeline {
 
-    name "Test pipeline with featureCounts with group type false"
+    name "Test pipeline without a group type for featureCounts"
     script "../main.nf"
-    tag "rnaseq"
-    tag "PIPELINE"
 
-    test("--featurecounts_group_type false") {
+    test("Params: --featurecounts_group_type false") {
 
         when {
             params {
-                outdir        = "$outputDir"
+                outdir = "$outputDir"
                 featurecounts_group_type = false
             }
         }

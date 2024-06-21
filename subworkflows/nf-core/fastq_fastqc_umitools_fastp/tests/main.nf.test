@@ -5,15 +5,6 @@ nextflow_workflow {
     workflow "FASTQ_FASTQC_UMITOOLS_FASTP"
     config './nextflow.config'
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/fastq_fastqc_umitools_fastp"
-    tag "fastq_fastqc_umitools_fastp"
-    tag "fastqc"
-    tag "umitools/extract"
-    tag "fastp"
-
-
     test("sarscov2 paired-end [fastq]") {
 
         when {

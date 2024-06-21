@@ -1,0 +1,19 @@
+nextflow_pipeline {
+
+    name "Test pipeline by skipping trimming options"
+    script "../main.nf"
+
+    test("Params: --skip_trimming") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                skip_trimming = true
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

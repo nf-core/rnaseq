@@ -5,11 +5,6 @@ nextflow_workflow {
     workflow "FASTQ_ALIGN_HISAT2"
     config "./nextflow.config"
 
-    tag "HISAT2_EXTRACTSPLICESITES"
-    tag "HISAT2_BUILD"
-    tag "HISAT2_ALIGN"
-    tag "BAM_SORT_STATS_SAMTOOLS"
-
     setup {
         run("HISAT2_EXTRACTSPLICESITES") {
             script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"

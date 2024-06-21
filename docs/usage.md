@@ -188,8 +188,6 @@ Gene annotations are updated more frequently than the reference genome sequence,
 
 Once you have chosen a release, select the annotation file that matches your reference genome. For the human primary assembly, use the comprehensive annotation (e.g., `gencode.{release}.primary_assembly.annotation.gtf.gz` from GENCODE or `Homo_sapiens.GRCh38.{release}.gtf.gz` from Ensembl). For other species, like fly, use the annotation matching the toplevel assembly (e.g., `Drosophila_melanogaster.BDGP6.46.{release}.gtf.gz` from Ensembl).
 
-GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
-
 Ensure that the annotation files use gene IDs as the primary identifier, not the gene name/symbol. For example, the Ensembl ID `ENSG00000254647` corresponds to the `INS` gene, which encodes the insulin protein. While gene names are more familiar, it is crucial to retain and use the primary identifiers as they are unique and easier to map between annotation versions or sources.
 
 To take advantage of all the quality control modules implemented in the pipeline, the gene annotation should include a `gene_biotype` field which describes the function of each feature (protein coding, long non-coding etc.). This is usually the case for annotations from GENCODE or Ensembl but may not be if your annotation comes from another source. If your annotation does not include this field, please set the `--skip_biotype_qc` option to avoid running the steps that rely on it.
@@ -225,6 +223,8 @@ If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files
 
 - The `--gtf_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively.
 - If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
+
+As well as the standard annotations, GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
 
 ### Prokaryotic genome annotations
 

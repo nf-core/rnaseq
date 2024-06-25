@@ -1,0 +1,7 @@
+name: preprocess_transcripts_fasta_gencode
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::sed=4.7

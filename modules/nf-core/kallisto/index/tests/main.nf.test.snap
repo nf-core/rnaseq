@@ -1,13 +1,13 @@
 {
-    "homo_sapiens genome_fasta": {
+    "sarscov2 transcriptome.fasta": {
         "content": [
             {
                 "0": [
                     [
                         {
-                            "id": "test_fasta"
+                            "id": "transcriptome"
                         },
-                        "kallisto:md5,2dab84e1456201beca5a43f4c514d67c"
+                        "kallisto:md5,ba657b396f8449f5c85b0563cdaa8346"
                     ]
                 ],
                 "1": [
@@ -16,9 +16,9 @@
                 "index": [
                     [
                         {
-                            "id": "test_fasta"
+                            "id": "transcriptome"
                         },
-                        "kallisto:md5,2dab84e1456201beca5a43f4c514d67c"
+                        "kallisto:md5,ba657b396f8449f5c85b0563cdaa8346"
                     ]
                 ],
                 "versions": [
@@ -26,6 +26,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-11-02T09:58:48.83625986"
+        "timestamp": "2024-01-19T09:17:56.733532"
     }
 }

@@ -1,0 +1,35 @@
+nextflow_workflow {
+
+    name "Test Workflow PIPELINE_COMPLETION"
+    script "../main.nf"
+    workflow "PIPELINE_COMPLETION"
+
+    test("test PIPELINE_COMPLETION successfully completes") {
+
+        when {
+            workflow {
+                """
+                input[0] = "${projectDir}/nextflow_schema.json" // schema (string)
+                input[1] = null // email (string)
+                input[2] = null // email_on_fail (string)
+                input[3] = true // plaintext_email (boolean)
+                input[4] = "${outputDir}" // outputDir (string)
+                input[5] = true // monochrome_logs (boolean)
+                input[6] = null // hook_url (string)
+                input[7] = "${outputDir}/multiqc_report.html" // multiqc_report (string)
+                input[8] = Channel.of(['test_sample', true])
+                input[9] = Channel.of(['test_sample', true])
+                input[10] = Channel.of(['test_sample', true])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success}
+            )
+        }
+
+    }
+
+}

@@ -1,0 +1,10 @@
+name: trimgalore
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - bioconda::cutadapt=3.4
+  - bioconda::trim-galore=0.6.7

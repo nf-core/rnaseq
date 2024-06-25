@@ -17,6 +17,16 @@ def getFastpReadsAfterFiltering(json_file) {
     return json['after_filtering']['total_reads'].toLong()
 }
 
+def getFastpAdapterSequence(json_file){
+    def Map json = (Map) new JsonSlurper().parseText(json_file.text)
+    try{
+        adapter = json['adapter_cutting']['read1_adapter_sequence']
+    } catch(Exception ex){
+        adapter = ""
+    }
+    return adapter
+}
+
 workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     take:
     reads             // channel: [ val(meta), [ reads ] ]
@@ -25,7 +35,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     skip_umi_extract  // boolean: true/false
     umi_discard_read  // integer: 0, 1 or 2
     skip_trimming     // boolean: true/false
-    adapter_fasta     //    file: adapter.fasta
+    adapter_fasta     // file: adapter.fasta
     save_trimmed_fail // boolean: true/false
     save_merged       // boolean: true/false
     min_trimmed_reads // integer: > 0
@@ -75,10 +85,13 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_trim_html  = Channel.empty()
     fastqc_trim_zip   = Channel.empty()
     trim_read_count   = Channel.empty()
+    adapter_seq       = Channel.empty()
+
     if (!skip_trimming) {
         FASTP (
             umi_reads,
             adapter_fasta,
+            false, // don't want to set discard_trimmed_pass, else there will be no reads output
             save_trimmed_fail,
             save_merged
         )
@@ -108,6 +121,10 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             .map { meta, reads, num_reads -> [ meta, num_reads ] }
             .set { trim_read_count }
 
+        trim_json
+            .map { meta, json -> [meta, getFastpAdapterSequence(json)] }
+            .set { adapter_seq }
+
         if (!skip_fastqc) {
             FASTQC_TRIM (
                 trim_reads
@@ -125,6 +142,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_raw_zip     // channel: [ val(meta), [ zip ] ]
 
     umi_log            // channel: [ val(meta), [ log ] ]
+    adapter_seq        // channel: [ val(meta), [ adapter_seq] ]
 
     trim_json          // channel: [ val(meta), [ json ] ]
     trim_html          // channel: [ val(meta), [ html ] ]

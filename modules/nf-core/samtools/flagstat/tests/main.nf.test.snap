@@ -1,0 +1,32 @@
+{
+    "flagstat": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T18:31:37.783927"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,f606681ef971cbb548a4d9e3fbabdbc2"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-28T15:41:52.516253882"
+    }
+}

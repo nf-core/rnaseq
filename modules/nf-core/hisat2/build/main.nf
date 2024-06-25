@@ -4,7 +4,7 @@ process HISAT2_BUILD {
     label 'process_high_memory'
 
     // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
-    conda "bioconda::hisat2=2.2.1"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
         'biocontainers/hisat2:2.2.1--h1b792b2_3' }"

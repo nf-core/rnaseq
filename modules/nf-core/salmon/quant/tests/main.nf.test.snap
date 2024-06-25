@@ -1,0 +1,170 @@
+{
+    "sarscov2 - single_end": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:51:22.424672"
+    },
+    "sarscov2 - single_end stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:51:32.292277"
+    },
+    "sarscov2 - single_end lib type A": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:51:42.656382"
+    },
+    "sarscov2 - pair_end multiple": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,4a2ee0fac91a4a3471872808d8bd3ff8"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:52:33.03647"
+    },
+    "sarscov2 - pair_end multiple stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:52:43.388379"
+    },
+    "sarscov2 - single_end lib type A stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:51:52.612664"
+    },
+    "sarscov2 - pair_end": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,e9516e73c9fb39145513b2a41a0af95f"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:52:05.577881"
+    },
+    "sarscov2 - pair_end stub": {
+        "content": [
+            [
+                "versions.yml:md5,80eb3d2ad36960c7e9263f81ede9d263"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-14T09:52:15.286461"
+    }
+}

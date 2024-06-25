@@ -1,0 +1,19 @@
+nextflow_pipeline {
+
+    name "Test pipeline by skipping QC options"
+    script "../main.nf"
+
+    test("Params: --skip_qc") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                skip_qc = true
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

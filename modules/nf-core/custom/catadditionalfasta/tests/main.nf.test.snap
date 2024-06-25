@@ -1,0 +1,38 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,26f47339777a265af57338ac7f0f8798"
+            ]
+        ],
+        "timestamp": "2023-12-20T20:52:55.242485"
+    },
+    "gtf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "genome_transcriptome.gtf:md5,bc88d95e7f27540e6b9906105d5be361"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-20T19:46:31.839377"
+    },
+    "fasta": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "genome_transcriptome.fasta:md5,6a20c1a2e465519320a0d01f338f5cb5"
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-20T19:42:47.12194"
+    }
+}

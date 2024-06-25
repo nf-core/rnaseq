@@ -1,0 +1,53 @@
+{
+    "test_bam_dedup_stats_samtools_umitools_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.idxstats:md5,1adb27b52d4d64b826f48b59d61dcd4d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2023-11-06T09:58:40.394333937"
+    },
+    "test_bam_dedup_stats_samtools_umitools_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.flagstat:md5,0bb716e40fae381b97484b58e0b16efe"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2023-11-06T09:58:40.385185447"
+    },
+    "test_bam_dedup_stats_samtools_umitools_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.stats:md5,09d1bd8f10e000921202f7ea1cd0679e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-29T07:36:18.573909434"
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "test_untar_onlyfiles": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    [
+                        "hello.txt:md5,e59ff97941044f85df5297e1c302d260"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T11:49:41.320643"
+    },
+    "test_untar": {
+        "content": [
+            [
+                [
+                    [
+                        
+                    ],
+                    [
+                        "hash.k2d:md5,8b8598468f54a7087c203ad0190555d9",
+                        "opts.k2d:md5,a033d00cf6759407010b21700938f543",
+                        "taxo.k2d:md5,094d5891cdccf2f1468088855c214b2c"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T11:49:33.795172"
+    }
+}

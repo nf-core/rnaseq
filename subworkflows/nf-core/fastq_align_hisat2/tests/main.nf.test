@@ -5,35 +5,35 @@ nextflow_workflow {
     workflow "FASTQ_ALIGN_HISAT2"
     config "./nextflow.config"
 
-    setup {
-        run("HISAT2_EXTRACTSPLICESITES") {
-            script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"
-            process {
-                """
-                input[0] = Channel.of([
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ])
-                """
+        setup {
+            run("HISAT2_EXTRACTSPLICESITES") {
+                script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("HISAT2_BUILD") {
+                script "../../../../modules/nf-core/hisat2/build/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                    ])
+                    input[1] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ])
+                    input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                    """
+                }
             }
         }
-        run("HISAT2_BUILD") {
-            script "../../../../modules/nf-core/hisat2/build/main.nf"
-            process {
-                """
-                input[0] = Channel.of([
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
-                ])
-                input[1] = Channel.of([
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ])
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
-                """
-            }
-        }
-    }
 
     test("sarscov2 - bam - single_end") {
 

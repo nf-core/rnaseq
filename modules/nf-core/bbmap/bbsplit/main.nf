@@ -105,4 +105,23 @@ process BBMAP_BBSPLIT {
     END_VERSIONS
     """
 
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def other_refs = ''
+    other_ref_names.eachWithIndex { name, index ->
+        other_refs += "echo '' | gzip > ${prefix}_primary_${name}.fastq.gz"
+    }
+    """
+    mkdir bbsplit
+
+    echo '' | gzip >  ${prefix}_primary.fastq.gz
+    ${other_refs}
+    touch ${prefix}.stats.txt
+    touch ${prefix}.log
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
+    END_VERSIONS
+    """
 }

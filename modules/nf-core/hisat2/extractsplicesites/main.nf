@@ -28,4 +28,15 @@ process HISAT2_EXTRACTSPLICESITES {
         hisat2: $VERSION
     END_VERSIONS
     """
+
+    stub:
+    def VERSION = '2.2.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    """
+    touch ${gtf.baseName}.splice_sites.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        hisat2: $VERSION
+    END_VERSIONS
+    """
 }

@@ -116,7 +116,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 | `bioconductor-summarizedexperiment` | 1.24.0      | 1.32.0      |
 | `bioconductor-tximeta`              | 1.12.0      | 1.20.1      |
 | `gffread`                           | 0.12.1      | 0.12.7      |
-| `multiqc`                           | 1.20        | 1.22.2      |
+| `multiqc`                           | 1.20        | 1.22.3      |
 | `picard`                            | 3.0.0       | 3.1.1       |
 | `samtools`                          | 1.17        | 1.20        |
 | `sortmerna`                         | 4.3.4       | 4.3.6       |

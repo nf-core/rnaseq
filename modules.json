@@ -39,6 +39,7 @@
                         "branch": "master",
                         "git_sha": "f632a6e25b05497477920183cff33ba72ab7b6fc",
                         "installed_by": ["modules"]
+                        "patch": "modules/nf-core/dupradar/dupradar.diff"
                     },
                     "fastp": {
                         "branch": "master",

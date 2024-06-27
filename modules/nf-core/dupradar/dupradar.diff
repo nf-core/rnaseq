@@ -1,0 +1,100 @@
+Changes in module 'nf-core/dupradar'
+--- /dev/null
++++ modules/nf-core/dupradar/nextflow.config
+@@ -0,0 +1,35 @@
++if (!params.skip_alignment && !params.skip_qc) {
++    if (!params.skip_dupradar) {
++        process {
++            withName: 'DUPRADAR' {
++                publishDir = [
++                    [
++                        path: { "${params.outdir}/${params.aligner}/dupradar/scatter_plot" },
++                        mode: params.publish_dir_mode,
++                        pattern: "*Dens.pdf"
++                    ],
++                    [
++                        path: { "${params.outdir}/${params.aligner}/dupradar/box_plot" },
++                        mode: params.publish_dir_mode,
++                        pattern: "*Boxplot.pdf"
++                    ],
++                    [
++                        path: { "${params.outdir}/${params.aligner}/dupradar/histogram" },
++                        mode: params.publish_dir_mode,
++                        pattern: "*Hist.pdf"
++                    ],
++                    [
++                        path: { "${params.outdir}/${params.aligner}/dupradar/gene_data" },
++                        mode: params.publish_dir_mode,
++                        pattern: "*Matrix.txt"
++                    ],
++                    [
++                        path: { "${params.outdir}/${params.aligner}/dupradar/intercepts_slope" },
++                        mode: params.publish_dir_mode,
++                        pattern: "*slope.txt"
++                    ]
++                ]
++            }
++        }
++    }
++}
+
+--- modules/nf-core/dupradar/tests/main.nf.test
++++ modules/nf-core/dupradar/tests/main.nf.test
+@@ -3,10 +3,6 @@
+     name "Test Process DUPRADAR"
+     script "../main.nf"
+     process "DUPRADAR"
+-
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "dupradar"
+ 
+     test("sarscov2 - bam - single_end") {
+ 
+
+--- modules/nf-core/dupradar/templates/dupradar.r
++++ modules/nf-core/dupradar/templates/dupradar.r
+@@ -88,7 +88,6 @@
+ #        max: 100
+ #        min: 0
+ #        scale: 'RdYlGn-rev'
+-#        format: '{:.2f}%'
+ Sample dupRadar_intercept"
+ 
+ write(line,file=paste0(output_prefix, "_dup_intercept_mqc.txt"),append=TRUE)
+@@ -115,15 +114,15 @@
+ #    This plot shows the general linear models - a summary of the gene duplication distributions. \"
+ #pconfig:
+ #    title: 'DupRadar General Linear Model'
+-#    xLog: True
++#    xlog: True
+ #    xlab: 'expression (reads/kbp)'
+ #    ylab: '% duplicate reads'
+ #    ymax: 100
+ #    ymin: 0
+ #    tt_label: '<b>{point.x:.1f} reads/kbp</b>: {point.y:,.2f}% duplicates'
+-#    xPlotLines:
++#    x_lines:
+ #        - color: 'green'
+-#          dashStyle: 'LongDash'
++#          dash: 'LongDash'
+ #          label:
+ #                style: {color: 'green'}
+ #                text: '0.5 RPKM'
+@@ -132,7 +131,7 @@
+ #          value: 0.5
+ #          width: 1
+ #        - color: 'red'
+-#          dashStyle: 'LongDash'
++#          dash: 'LongDash'
+ #          label:
+ #                style: {color: 'red'}
+ #                text: '1 read/bp'
+
+--- modules/nf-core/dupradar/tests/tags.yml
++++ /dev/null
+@@ -1,2 +0,0 @@
+-dupradar:
+-  - "modules/nf-core/dupradar/**"
+
+************************************************************

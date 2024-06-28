@@ -21,8 +21,7 @@ mqc_pconf = """#    percent_{ft}:
 #        description: '% reads overlapping {ft} features'
 #        max: 100
 #        min: 0
-#        scale: 'RdYlGn-rev'
-#        format: '{{:.2f}}%'"""
+#        scale: 'RdYlGn-rev'"""
 
 
 def mqc_feature_stat(bfile, features, outfile, sname=None):

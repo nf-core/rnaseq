@@ -24,10 +24,9 @@ nextflow_process {
         then {
             assertAll (
                 { assert !process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(process.out).match() }
             )
         }
-
     }
 
     test("test_fq_subsample_probability") {
@@ -50,10 +49,35 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(process.out).match() }
             )
         }
+    }
 
+    test("test_fq_subsample_probability - stub") {
+        config "./nextflow_probability.config"
+        options "-stub"
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
     }
 
     test("test_fq_subsample_record_count") {
@@ -76,10 +100,35 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(process.out).match() }
             )
         }
+    }
 
+    test("test_fq_subsample_record_count - stub") {
+        config "./nextflow_record_count.config"
+        options "-stub"
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
     }
 
     test("test_fq_subsample_single") {
@@ -101,10 +150,34 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(process.out).match() }
             )
         }
+    }
 
+    test("test_fq_subsample_single - stub") {
+        config "./nextflow.config"
+        options "-stub"
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
     }
 
     test("test_fq_subsample_no_input") {
@@ -117,7 +190,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
-                    [ ]
+                    []
                 ])
                 """
             }
@@ -126,10 +199,8 @@ nextflow_process {
         then {
             assertAll (
                 { assert !process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(process.out).match() }
             )
         }
-
     }
-
 }

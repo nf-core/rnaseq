@@ -25,15 +25,15 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.stats:md5,ddaf8f33fe9c1ebe9b06933213aec8ed"
+                    "test.stats:md5,7afd486ad6abb9a2a3dac90c99e1d87b"
                 ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:45:06.230091746"
+        "timestamp": "2024-05-29T07:46:05.502831991"
     },
     "test_bam_stats_samtools_paired_end_flagstats": {
         "content": [
@@ -97,15 +97,15 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.stats:md5,dc178e1a4956043aba8abc83e203521b"
+                    "test.stats:md5,4a0c429c661d6aa0b60acb9309da642d"
                 ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:44:57.442208382"
+        "timestamp": "2024-05-29T07:45:59.612412212"
     },
     "test_bam_stats_samtools_paired_end_idxstats": {
         "content": [
@@ -151,14 +151,14 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,d3345c4887f4a9ea4f7f56405b495db0"
+                    "test.stats:md5,16b59a1f2c99d9fe30f711adc3ebe32d"
                 ]
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:45:14.997164209"
+        "timestamp": "2024-05-29T07:46:11.96999343"
     }
 }

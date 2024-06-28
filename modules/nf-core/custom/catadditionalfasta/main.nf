@@ -1,7 +1,7 @@
 process CUSTOM_CATADDITIONALFASTA {
     tag "$meta.id"
 
-    conda "conda-forge::python=3.9.5"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/python:3.9--1' :
         'biocontainers/python:3.9--1' }"
@@ -21,4 +21,17 @@ process CUSTOM_CATADDITIONALFASTA {
 
     script:
     template 'fasta2gtf.py'
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    mkdir out
+    touch out/genome_transcriptome.fasta
+    touch out/genome_transcriptome.gtf
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | grep -v "Python ")
+    END_VERSIONS
+    """
 }

@@ -55,9 +55,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T16:53:49.315194"
+        "timestamp": "2024-06-10T15:08:06.209854813"
     },
     "save_trimmed_fail": {
         "content": [
@@ -127,9 +127,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T16:51:45.34934"
+        "timestamp": "2024-06-10T15:09:56.338504908"
     },
     "skip_umi_extract": {
         "content": [
@@ -189,9 +189,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T12:07:40.34249"
+        "timestamp": "2024-06-10T15:08:51.174735433"
     },
     "umi_discard_read = 2": {
         "content": [
@@ -251,9 +251,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T12:08:24.141938"
+        "timestamp": "2024-06-10T15:09:14.145250471"
     },
     "save_merged": {
         "content": [
@@ -319,9 +319,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T12:10:18.546963"
+        "timestamp": "2024-06-10T15:10:16.25526763"
     },
     "skip_trimming": {
         "content": [
@@ -417,9 +417,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T16:53:39.139038"
+        "timestamp": "2024-06-10T15:07:52.031579846"
     },
     "min_trimmed_reads = 26": {
         "content": [
@@ -485,9 +485,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T11:52:23.849945"
+        "timestamp": "2024-06-10T15:10:34.68796644"
     },
     "with_umi": {
         "content": [
@@ -542,8 +542,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-18T17:31:09.193212"
+        "timestamp": "2024-06-10T15:08:32.267769943"
     }
 }

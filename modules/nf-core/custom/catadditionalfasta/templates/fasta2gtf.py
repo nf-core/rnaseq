@@ -114,16 +114,8 @@ def main() -> None:
     fasta_to_gtf("$add_fasta", f"{add_name}.gtf", "$biotype")
 
     # Concatenate new fasta to existing fasta, and the GTF we just generated to the GTF
-    genome_name = (
-        "$params.genome"
-        if "$params.genome" != "null"
-        else os.path.splitext(os.path.basename("$fasta"))[0]
-    )
-    output_prefix = (
-        "$task.ext.prefix"
-        if "$task.ext.prefix" != "null"
-        else f"{genome_name}_{add_name}"
-    )
+    genome_name = "$params.genome" if "$params.genome" != "null" else os.path.splitext(os.path.basename("$fasta"))[0]
+    output_prefix = "$task.ext.prefix" if "$task.ext.prefix" != "null" else f"{genome_name}_{add_name}"
 
     os.mkdir("out")
     os.system(f"cat $fasta $add_fasta > out/{output_prefix}.fasta")

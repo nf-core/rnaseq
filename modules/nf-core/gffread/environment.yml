@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::gffread=0.12.1
+  - bioconda::gffread=0.12.7

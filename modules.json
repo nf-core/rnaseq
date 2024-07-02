@@ -113,52 +113,52 @@
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
-                        "git_sha": "7c82eda52cb493c4cf500e3fb7d1597a5d766165",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["modules"]
                     },
                     "rsem/preparereference": {
                         "branch": "master",
-                        "git_sha": "301b088c7e9e00c4c80686411383f07173b54d69",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["modules"]
                     },
                     "rseqc/bamstat": {
                         "branch": "master",
-                        "git_sha": "9eb22e4d3f28c274b7c498a1564581377349a242",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/inferexperiment": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/innerdistance": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/junctionannotation": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/junctionsaturation": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/readdistribution": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/readduplication": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "rseqc/tin": {
                         "branch": "master",
-                        "git_sha": "6c7d8f1d6247655e4bc4d97f37b68b2461f645f6",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bam_rseqc"]
                     },
                     "salmon/index": {
@@ -222,7 +222,7 @@
                     },
                     "subread/featurecounts": {
                         "branch": "master",
-                        "git_sha": "e5265c217dcfbff7731c40623aaf07538fdd3e1c",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["modules"]
                     },
                     "summarizedexperiment/summarizedexperiment": {
@@ -232,7 +232,7 @@
                     },
                     "trimgalore": {
                         "branch": "master",
-                        "git_sha": "a98418419ae6c9df3cf6cf108d1e1aba71037d5a",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore"]
                     },
                     "tximeta/tximport": {
@@ -242,7 +242,7 @@
                     },
                     "ucsc/bedclip": {
                         "branch": "master",
-                        "git_sha": "7c75d01997236f61b9b77399d9933cb36041f2c3",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["bedgraph_bedclip_bedgraphtobigwig"]
                     },
                     "ucsc/bedgraphtobigwig": {
@@ -257,7 +257,7 @@
                     },
                     "umitools/extract": {
                         "branch": "master",
-                        "git_sha": "d2c5e76f291379f3dd403e48e46ed7e6ba5da744",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
                     },
                     "umitools/prepareforrsem": {
@@ -315,7 +315,7 @@
                     },
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "b90b5cd93149a1b3be263d916c7234fe0708a71c",
+                        "git_sha": "db35d26edeafacf9906a517827df621a29adc13d",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {

@@ -33,4 +33,15 @@ process RSEQC_INFEREXPERIMENT {
         rseqc: \$(infer_experiment.py --version | sed -e "s/infer_experiment.py //g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.infer_experiment.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(infer_experiment.py --version | sed -e "s/infer_experiment.py //g")
+    END_VERSIONS
+    """
 }

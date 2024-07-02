@@ -4,7 +4,12 @@ nextflow_process {
     script "../main.nf"
     process "RSEM_CALCULATEEXPRESSION"
     config "./nextflow.config"
-    
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rsem"
+    tag "rsem/calculateexpression"
+    tag "rsem/preparereference"
+
     test("homo_sapiens") {
 
         setup {
@@ -46,7 +51,43 @@ nextflow_process {
                 { assert snapshot(process.out.versions).match("versions") }
             )
         }
-
     }
 
+    test("homo_sapiens - stub") {
+
+    options "-stub"
+
+        setup {
+            run("RSEM_PREPAREREFERENCE") {
+                script "../../../rsem/preparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = RSEM_PREPAREREFERENCE.out.index
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
 }

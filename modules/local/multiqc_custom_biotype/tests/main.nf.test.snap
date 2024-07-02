@@ -9,7 +9,7 @@
                         },
                         [
                             "test.biotype_counts_mqc.tsv:md5,d996f27aeec64370cade26717aa22e1e",
-                            "test.biotype_counts_rrna_mqc.tsv:md5,405217e65a76b104b00bb41f6bf10a92"
+                            "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9"
                         ]
                     ]
                 ],
@@ -23,7 +23,7 @@
                         },
                         [
                             "test.biotype_counts_mqc.tsv:md5,d996f27aeec64370cade26717aa22e1e",
-                            "test.biotype_counts_rrna_mqc.tsv:md5,405217e65a76b104b00bb41f6bf10a92"
+                            "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9"
                         ]
                     ]
                 ],
@@ -34,9 +34,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-08T09:38:04.260609"
+        "timestamp": "2024-07-02T16:48:24.844934"
     },
     "test sarscov2 count data - stub": {
         "content": [

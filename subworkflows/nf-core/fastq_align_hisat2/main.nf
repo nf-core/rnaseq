@@ -41,4 +41,3 @@ workflow FASTQ_ALIGN_HISAT2 {
 
     versions = ch_versions                          // channel: [ versions.yml ]
 }
-

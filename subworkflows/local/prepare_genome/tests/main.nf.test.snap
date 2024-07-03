@@ -1,116 +1,5 @@
 {
-    "gencode = true": {
-        "content": [
-            [
-                "transcriptome.fixed.fa:md5,faf3a64453ae73983bbf2743387fbdf2"
-            ],
-            [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
-            ],
-            [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
-            ],
-            [
-                "genome_gfp.gtf:md5,2593a0843dd97f0b7dfb62cdd2c21ab8"
-            ],
-            [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
-            ],
-            [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
-            ],
-            [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
-                "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
-        },
-        "timestamp": "2024-06-20T18:17:05.661629"
-    },
-    "hisat2_index = false": {
-        "content": [
-            [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
-            ],
-            [
-                
-            ],
-            [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
-            ],
-            [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
-            ],
-            [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
-            ],
-            [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
-            ],
-            [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
-                "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
-        },
-        "timestamp": "2024-06-20T18:16:45.642259"
-    },
-    "featurecounts_group_type = 'gene_type'": {
+    "skip_gtf_filter = true - stub": {
         "content": [
             [
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
@@ -119,19 +8,19 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.gtf:md5,2593a0843dd97f0b7dfb62cdd2c21ab8"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 
@@ -153,17 +42,16 @@
             ],
             [
                 "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T18:17:22.714024"
+        "timestamp": "2024-07-03T11:03:49.482635"
     },
     "skip_gtf_filter": {
         "content": [
@@ -218,6 +106,226 @@
             "nextflow": "24.04.1"
         },
         "timestamp": "2024-06-20T18:13:30.196042"
+    },
+    "gencode = false - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T10:58:02.396852"
+    },
+    "gff = false - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:00:22.950255"
+    },
+    "skip_pseudoalignment = true - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:04:58.786648"
+    },
+    "featurecounts_group_type = 'gene_type' - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:03:27.557216"
     },
     "gtf = false": {
         "content": [
@@ -330,60 +438,6 @@
         },
         "timestamp": "2024-06-20T18:15:16.551347"
     },
-    "skip_bbsplit": {
-        "content": [
-            [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
-            ],
-            [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
-            ],
-            [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
-            ],
-            [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
-            ],
-            [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
-            ],
-            [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
-            ],
-            [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
-                "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
-        },
-        "timestamp": "2024-06-20T18:13:46.28042"
-    },
     "skip_bbsplit = true": {
         "content": [
             [
@@ -438,28 +492,28 @@
         },
         "timestamp": "2024-06-20T18:17:57.14732"
     },
-    "with bed": {
+    "salmon_index = false - stub": {
         "content": [
             [
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+                
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/ngscheckmate.bed"
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 
@@ -481,16 +535,17 @@
             ],
             [
                 "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T18:15:52.284517"
+        "timestamp": "2024-07-03T11:02:14.826294"
     },
     "skip_alignment": {
         "content": [
@@ -547,6 +602,60 @@
         },
         "timestamp": "2024-06-20T18:14:04.612027"
     },
+    "gfp = false - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
+            ],
+            [
+                "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:00:46.397617"
+    },
     "gencode = false": {
         "content": [
             [
@@ -601,61 +710,6 @@
             "nextflow": "24.04.1"
         },
         "timestamp": "2024-06-20T18:13:13.483047"
-    },
-    "gff = false": {
-        "content": [
-            [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
-            ],
-            [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
-            ],
-            [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
-            ],
-            [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
-            ],
-            [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
-            ],
-            [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
-            ],
-            [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
-                "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
-        },
-        "timestamp": "2024-06-20T18:15:00.759762"
     },
     "default options": {
         "content": [
@@ -712,28 +766,28 @@
         },
         "timestamp": "2024-06-20T18:12:54.779065"
     },
-    "salmon_index = false": {
+    "gencode = true - stub": {
         "content": [
             [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+                "transcriptome.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 
@@ -755,19 +809,20 @@
             ],
             [
                 "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+                "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T18:16:27.229869"
+        "timestamp": "2024-07-03T11:03:04.549888"
     },
-    "rsem_index = false": {
+    "skip_alignment - stub": {
         "content": [
             [
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
@@ -776,19 +831,19 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 
@@ -810,19 +865,19 @@
             ],
             [
                 "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T18:16:09.968836"
+        "timestamp": "2024-07-03T10:59:08.39617"
     },
-    "skip_psuedo_alignment": {
+    "skip_bbsplit = true - stub": {
         "content": [
             [
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
@@ -831,22 +886,19 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
-            ],
-            [
-                
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 
@@ -864,18 +916,20 @@
                 
             ],
             [
-                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
-                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                
+            ],
+            [
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T18:14:22.598093"
+        "timestamp": "2024-07-03T11:04:11.263136"
     },
     "transcriptome = false": {
         "content": [
@@ -988,6 +1042,941 @@
         },
         "timestamp": "2024-06-20T18:18:35.783312"
     },
+    "skip_gtf_filter - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T10:58:24.03187"
+    },
+    "gencode = true": {
+        "content": [
+            [
+                "transcriptome.fixed.fa:md5,faf3a64453ae73983bbf2743387fbdf2"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,2593a0843dd97f0b7dfb62cdd2c21ab8"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:17:05.661629"
+    },
+    "hisat2_index = false": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:16:45.642259"
+    },
+    "rsem_index = false - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:01:53.55074"
+    },
+    "featurecounts_group_type = 'gene_type'": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,2593a0843dd97f0b7dfb62cdd2c21ab8"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:17:22.714024"
+    },
+    "with bed - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/ngscheckmate.bed"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:01:31.850549"
+    },
+    "skip_bbsplit": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:13:46.28042"
+    },
+    "skip_psuedo_alignment - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T10:59:34.532745"
+    },
+    "with bed": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/ngscheckmate.bed"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:15:52.284517"
+    },
+    "gtf = false - stub": {
+        "content": [
+            [
+                "transcriptome.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,2a3ed31ad34b8864fb9278dcdef596ec",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T10:59:58.494014"
+    },
+    "gff = false": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:15:00.759762"
+    },
+    "default options - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T10:57:35.951638"
+    },
+    "salmon_index = false": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:16:27.229869"
+    },
+    "rsem_index = false": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:16:09.968836"
+    },
+    "skip_alignment = true - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:04:34.49836"
+    },
+    "skip_psuedo_alignment": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+            ],
+            [
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+            ],
+            [
+                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+            ],
+            [
+                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
+            ],
+            [
+                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,1cd265cb86a23a27f683ffb2459f37f5",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-06-20T18:14:22.598093"
+    },
+    "transcriptome = false - stub": {
+        "content": [
+            [
+                "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,918fe0b59c0986eb602ace85841c5ab3",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:01:10.499079"
+    },
     "skip_alignment = true": {
         "content": [
             [
@@ -1096,5 +2085,114 @@
             "nextflow": "24.04.1"
         },
         "timestamp": "2024-06-20T18:17:39.358651"
+    },
+    "hisat2_index = false - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0bc25597acf1d50abf7070d19d311cd7",
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:02:39.443965"
+    },
+    "skip_bbsplit - stub": {
+        "content": [
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,bc99889446f02427c166b3219b793672",
+                "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T10:58:46.540136"
     }
 }

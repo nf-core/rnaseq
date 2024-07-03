@@ -44,4 +44,16 @@ process SUBREAD_FEATURECOUNTS {
         subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.featureCounts.txt
+    touch ${prefix}.featureCounts.txt.summary
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
+    END_VERSIONS
+    """
 }

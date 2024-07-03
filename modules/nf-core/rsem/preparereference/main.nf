@@ -69,4 +69,15 @@ process RSEM_PREPAREREFERENCE {
         END_VERSIONS
         """
     }
+
+    stub:
+    """
+    touch genome.transcripts.fa
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        star: \$(STAR --version | sed -e "s/STAR_//g")
+    END_VERSIONS
+    """
 }

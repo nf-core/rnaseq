@@ -34,4 +34,16 @@ process RSEQC_JUNCTIONSATURATION {
         rseqc: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.junctionSaturation_plot.pdf
+    touch ${prefix}.junctionSaturation_plot.r
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(junction_saturation.py --version | sed -e "s/junction_saturation.py //g")
+    END_VERSIONS
+    """
 }

@@ -40,4 +40,21 @@ process RSEQC_JUNCTIONANNOTATION {
         rseqc: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.junction.xls
+    touch ${prefix}.junction_plot.r
+    touch ${prefix}.junction_annotation.log
+    touch ${prefix}.junction.bed
+    touch ${prefix}.Interact.bed
+    touch ${prefix}.junction.pdf
+    touch ${prefix}.events.pdf
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
+    END_VERSIONS
+    """
 }

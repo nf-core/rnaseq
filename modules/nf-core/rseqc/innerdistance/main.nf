@@ -48,4 +48,19 @@ process RSEQC_INNERDISTANCE {
         END_VERSIONS
         """
     }
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.inner_distance.txt
+    touch ${prefix}.inner_distance_freq.txt
+    touch ${prefix}.inner_distance_mean.txt
+    touch ${prefix}.inner_distance_plot.pdf
+    touch ${prefix}.inner_distance_plot.r
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
+    END_VERSIONS
+    """
 }

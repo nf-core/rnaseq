@@ -32,4 +32,15 @@ process RSEQC_READDISTRIBUTION {
         rseqc: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.read_distribution.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
+    END_VERSIONS
+    """
 }

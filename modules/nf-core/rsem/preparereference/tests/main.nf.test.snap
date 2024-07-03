@@ -1,10 +1,47 @@
 {
+    "homo_sapiens - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e"
+                    ]
+                ],
+                "1": [
+                    "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    "versions.yml:md5,517611c42f6354d3609db1b35fffa397"
+                ],
+                "index": [
+                    [
+                        "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e"
+                    ]
+                ],
+                "transcript_fasta": [
+                    "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,517611c42f6354d3609db1b35fffa397"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:00:50.389847"
+    },
     "versions": {
         "content": [
             [
                 "versions.yml:md5,517611c42f6354d3609db1b35fffa397"
             ]
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
         "timestamp": "2023-11-22T13:16:49.170587"
     },
     "index": {
@@ -22,6 +59,10 @@
                 ]
             ]
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
         "timestamp": "2023-11-22T13:16:49.140398"
     },
     "transcript_fasta": {
@@ -30,6 +71,10 @@
                 "genome.transcripts.fa:md5,050c521a2719c2ae48267c1e65218f29"
             ]
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
         "timestamp": "2023-11-22T13:16:49.159946"
     }
 }

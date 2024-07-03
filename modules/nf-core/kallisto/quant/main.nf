@@ -69,7 +69,13 @@ process KALLISTO_QUANT {
     """
 
     stub:
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
+    mkdir -p $prefix
+    touch ${prefix}.log
+    touch ${prefix}.run_info.json
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )

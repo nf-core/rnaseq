@@ -1,4 +1,110 @@
 {
+    "homo_sapiens - stub": {
+        "content": [
+            "test.log",
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.STAR.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.transcript.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:09:12.443079"
+    },
     "logs": {
         "content": [
             "test.log"
@@ -11,6 +117,7 @@
     },
     "homo_sapiens": {
         "content": [
+            "test.log",
             [
                 [
                     {
@@ -103,8 +210,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-07T18:15:03.001083"
+        "timestamp": "2024-07-03T11:08:53.123014"
     }
 }

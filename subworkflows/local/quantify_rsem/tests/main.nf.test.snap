@@ -1,119 +1,290 @@
 {
     "homo_sapiens - stub": {
         "content": [
-            "test.log",
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "14": [
+                    "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "15": [
+                    "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "16": [
+                    "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "17": [
+                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
+                    "versions.yml:md5,3399809728955f4654ab781f37ea42d3",
+                    "versions.yml:md5,4219f710ca21b71a7c7db6b02ac19bb3",
+                    "versions.yml:md5,912c613bca84f899b3e890985ecc6fc2",
+                    "versions.yml:md5,a4755dd9acbfa60dbc38e172ffda193f",
+                    "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c",
+                    "versions.yml:md5,f645ee5b20a4e89c6ed48fdc27c21791"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.STAR.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcript.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_genome": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_star": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.STAR.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcript.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "csi": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "logs": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_counts_gene": [
+                    "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_counts_transcript": [
+                    "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_tpm_gene": [
+                    "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_tpm_transcript": [
+                    "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "stat": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
+                    "versions.yml:md5,3399809728955f4654ab781f37ea42d3",
+                    "versions.yml:md5,4219f710ca21b71a7c7db6b02ac19bb3",
+                    "versions.yml:md5,912c613bca84f899b3e890985ecc6fc2",
+                    "versions.yml:md5,a4755dd9acbfa60dbc38e172ffda193f",
+                    "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c",
+                    "versions.yml:md5,f645ee5b20a4e89c6ed48fdc27c21791"
                 ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.STAR.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.genome.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.transcript.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-07-03T11:09:12.443079"
-    },
-    "logs": {
-        "content": [
-            "test.log"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-07T18:25:31.476361"
+        "timestamp": "2024-07-03T19:53:42.558374"
     },
     "homo_sapiens": {
         "content": [
@@ -212,6 +383,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-07-03T11:08:53.123014"
+        "timestamp": "2024-07-03T19:53:14.561568"
     }
 }

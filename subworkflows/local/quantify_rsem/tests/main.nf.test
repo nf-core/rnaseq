@@ -90,7 +90,7 @@ nextflow_workflow {
                     ]
                 ])
                 input[1] = RSEM_PREPAREREFERENCE.out.index
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of([[id:'test'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
                 """
             }
         }
@@ -98,27 +98,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(
-                    file(workflow.out.logs[0][1]).name,
-                    workflow.out.counts_gene,
-                    workflow.out.counts_transcript,
-                    workflow.out.stat,
-                    workflow.out.bam_star,
-                    workflow.out.bam_genome,
-                    workflow.out.bam_transcript,
-                    workflow.out.counts_transcript,
-                    workflow.out.bam,
-                    workflow.out.bai,
-                    workflow.out.csi,
-                    workflow.out.stats,
-                    workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.merged_counts_gene,
-                    workflow.out.merged_tpm_gene,
-                    workflow.out.merged_counts_transcript,
-                    workflow.out.merged_tpm_transcript,
-                    workflow.out.versions
-                ).match()}
+                { assert snapshot(workflow.out).match()}
             )
         }
     }

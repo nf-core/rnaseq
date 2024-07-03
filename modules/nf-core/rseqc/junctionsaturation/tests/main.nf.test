@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "RSEQC_JUNCTIONSATURATION"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/junctionsaturation"
-
     test("sarscov2 paired-end [bam]") {
 
         when {

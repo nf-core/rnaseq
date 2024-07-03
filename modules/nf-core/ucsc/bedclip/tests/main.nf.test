@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process UCSC_BEDCLIP"
     script "../main.nf"
     process "UCSC_BEDCLIP"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "ucsc"
-    tag "ucsc/bedclip"
 
     test("sarscov2") {
         config "./nextflow.config"

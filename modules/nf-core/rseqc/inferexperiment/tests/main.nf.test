@@ -5,11 +5,6 @@ nextflow_process {
     process "RSEQC_INFEREXPERIMENT"
     config "./nextflow.config"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/inferexperiment"
-
     test("sarscov2 - [[meta] - bam] - bed") {
 
         when {

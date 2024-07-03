@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process RSEQC_TIN"
     script "../main.nf"
     process "RSEQC_TIN"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/tin"
 
     test("sarscov2 paired-end [bam]") {
 

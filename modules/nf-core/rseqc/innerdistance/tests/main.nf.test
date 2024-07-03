@@ -5,11 +5,6 @@ nextflow_process {
     process "RSEQC_INNERDISTANCE"
     config "./nextflow.config"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/innerdistance"
-
     test("sarscov2 - [[meta] - bam] - bed") {
 
         when {

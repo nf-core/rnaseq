@@ -206,22 +206,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    file(workflow.out.log_final[0][1]).name,
-                    file(workflow.out.log_out[0][1]).name,
-                    workflow.out.bai,
-                    workflow.out.bam,
-                    workflow.out.bam_sorted,
-                    workflow.out.bam_transcript,
-                    workflow.out.csi,
-                    workflow.out.log_progress,
-                    workflow.out.fastq,
-                    workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.orig_bam,
-                    workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                { assert snapshot(workflow.out).match()}
             )
         }
     }
@@ -277,22 +262,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    file(workflow.out.log_final[0][1]).name,
-                    file(workflow.out.log_out[0][1]).name,
-                    workflow.out.bai,
-                    workflow.out.bam,
-                    workflow.out.bam_sorted,
-                    workflow.out.bam_transcript,
-                    workflow.out.csi,
-                    workflow.out.log_progress,
-                    workflow.out.fastq,
-                    workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.orig_bam,
-                    workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                { assert snapshot(workflow.out).match()}
             )
         }
     }

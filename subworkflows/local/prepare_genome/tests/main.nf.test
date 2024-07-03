@@ -1394,22 +1394,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1463,22 +1448,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1532,22 +1502,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1601,22 +1556,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1670,22 +1610,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1739,22 +1664,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1808,22 +1718,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1877,22 +1772,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -1946,22 +1826,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2015,22 +1880,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2084,22 +1934,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2153,22 +1988,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2222,22 +2042,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2291,22 +2096,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2360,22 +2150,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2429,22 +2204,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2498,22 +2258,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2567,22 +2312,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2636,22 +2366,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }
@@ -2705,22 +2420,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    workflow.out.transcript_fasta,
-                    workflow.out.salmon_index,
-                    workflow.out.fasta,
-                    workflow.out.gtf,
-                    workflow.out.fai,
-                    workflow.out.gene_bed,
-                    workflow.out.chrom_sizes,
-                    workflow.out.splicesites,
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index,
-                    workflow.out.rsem_index,
-                    workflow.out.hisat2_index,
-                    workflow.out.kallisto_index,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out).match() }
             )
         }
     }

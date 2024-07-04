@@ -3,7 +3,7 @@
         "content": [
             {
                 "0": [
-                    
+
                 ],
                 "1": [
                     [
@@ -33,13 +33,13 @@
                     ]
                 ],
                 "4": [
-                    
+
                 ],
                 "5": [
-                    
+
                 ],
                 "6": [
-                    
+
                 ],
                 "7": [
                     [
@@ -83,10 +83,10 @@
                     ]
                 ],
                 "reads": [
-                    
+
                 ],
                 "trim_html": [
-                    
+
                 ],
                 "trim_log": [
                     [
@@ -107,10 +107,10 @@
                     ]
                 ],
                 "trim_unpaired": [
-                    
+
                 ],
                 "trim_zip": [
-                    
+
                 ],
                 "umi_log": [
                     [
@@ -138,7 +138,7 @@
         "content": [
             {
                 "0": [
-                    
+
                 ],
                 "1": [
                     [
@@ -159,16 +159,16 @@
                     ]
                 ],
                 "3": [
-                    
+
                 ],
                 "4": [
-                    
+
                 ],
                 "5": [
-                    
+
                 ],
                 "6": [
-                    
+
                 ],
                 "7": [
                     [
@@ -214,10 +214,10 @@
                     ]
                 ],
                 "reads": [
-                    
+
                 ],
                 "trim_html": [
-                    
+
                 ],
                 "trim_log": [
                     [
@@ -241,13 +241,13 @@
                     ]
                 ],
                 "trim_unpaired": [
-                    
+
                 ],
                 "trim_zip": [
-                    
+
                 ],
                 "umi_log": [
-                    
+
                 ],
                 "versions": [
                     "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -285,7 +285,7 @@
                 ]
             ],
             [
-                
+
             ],
             [
                 "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -297,95 +297,6 @@
             "nextflow": "24.04.2"
         },
         "timestamp": "2024-07-03T14:13:11.46458"
-    },
-    "test skip all steps - stub": {
-        "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
-                        ]
-                    ]
-                ],
-                "1": [
-                    
-                ],
-                "2": [
-                    
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    
-                ],
-                "5": [
-                    
-                ],
-                "6": [
-                    
-                ],
-                "7": [
-                    
-                ],
-                "8": [
-                    
-                ],
-                "9": [
-                    
-                ],
-                "fastqc_html": [
-                    
-                ],
-                "fastqc_zip": [
-                    
-                ],
-                "reads": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
-                        ]
-                    ]
-                ],
-                "trim_html": [
-                    
-                ],
-                "trim_log": [
-                    
-                ],
-                "trim_read_count": [
-                    
-                ],
-                "trim_unpaired": [
-                    
-                ],
-                "trim_zip": [
-                    
-                ],
-                "umi_log": [
-                    
-                ],
-                "versions": [
-                    
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2024-07-03T14:14:15.060475"
     },
     "test single end read with UMI": {
         "content": [
@@ -408,7 +319,7 @@
                 ]
             ],
             [
-                
+
             ],
             [
                 "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -443,7 +354,7 @@
                 ]
             ],
             [
-                
+
             ],
             [
                 "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -460,13 +371,13 @@
     "test skip all steps": {
         "content": [
             [
-                
+
             ],
             [
-                
+
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -479,7 +390,7 @@
         "content": [
             {
                 "0": [
-                    
+
                 ],
                 "1": [
                     [
@@ -509,13 +420,13 @@
                     ]
                 ],
                 "4": [
-                    
+
                 ],
                 "5": [
-                    
+
                 ],
                 "6": [
-                    
+
                 ],
                 "7": [
                     [
@@ -559,10 +470,10 @@
                     ]
                 ],
                 "reads": [
-                    
+
                 ],
                 "trim_html": [
-                    
+
                 ],
                 "trim_log": [
                     [
@@ -583,10 +494,10 @@
                     ]
                 ],
                 "trim_unpaired": [
-                    
+
                 ],
                 "trim_zip": [
-                    
+
                 ],
                 "umi_log": [
                     [

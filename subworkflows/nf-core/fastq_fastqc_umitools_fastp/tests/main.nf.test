@@ -345,9 +345,7 @@ nextflow_workflow {
                 { assert !workflow.out.trim_html },
                 { assert !workflow.out.trim_log },
                 { assert snapshot(
-                        // Because the input file is passed to the output file, we have to do check the filename only
-                        file(workflow.out.reads.get(0).get(1).get(0)).name,
-                        file(workflow.out.reads.get(0).get(1).get(1)).name,
+                        // If we skip trimming then input is output, so not snapshotting
                         workflow.out.adapter_seq,
                         workflow.out.reads.get(0).get(0), // Reads meta map
                         workflow.out.trim_json,

@@ -687,8 +687,6 @@
     },
     "skip_trimming": {
         "content": [
-            "test_1.fastq.gz",
-            "test_2.fastq.gz",
             [
                 
             ],
@@ -719,7 +717,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-07-03T15:58:56.986224"
+        "timestamp": "2024-07-04T14:06:02.495425"
     },
     "with_umi": {
         "content": [

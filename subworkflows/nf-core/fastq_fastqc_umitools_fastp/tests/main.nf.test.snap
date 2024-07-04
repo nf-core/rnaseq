@@ -482,140 +482,63 @@
     },
     "skip_trimming - stub": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
-                        ]
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    "versions.yml:md5,f3dcaae948e8eed92b4a5557b4c6668e"
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    
-                ],
-                "5": [
-                    
-                ],
-                "6": [
-                    
-                ],
-                "7": [
-                    
-                ],
-                "8": [
-                    
-                ],
-                "9": [
-                    
-                ],
-                "adapter_seq": [
-                    
-                ],
-                "fastqc_raw_html": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "fastqc_raw_zip": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "fastqc_trim_html": [
-                    
-                ],
-                "fastqc_trim_zip": [
-                    
-                ],
-                "reads": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
-                        ]
-                    ]
-                ],
-                "trim_html": [
-                    
-                ],
-                "trim_json": [
-                    
-                ],
-                "trim_log": [
-                    
-                ],
-                "trim_read_count": [
-                    
-                ],
-                "trim_reads_fail": [
-                    
-                ],
-                "trim_reads_merged": [
-                    
-                ],
-                "umi_log": [
-                    
-                ],
-                "versions": [
-                    "versions.yml:md5,f3dcaae948e8eed92b4a5557b4c6668e"
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ]
-            }
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f3dcaae948e8eed92b4a5557b4c6668e"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-07-03T16:01:03.169826"
+        "timestamp": "2024-07-04T16:05:39.721894"
     },
     "save_merged": {
         "content": [

@@ -315,7 +315,7 @@
                     },
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "f3aef88fcb3101e404b8385dbabaaba06f898dc4",
+                        "git_sha": "9070d95e10a580a53629d3e32a8137fe87bba1e3",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {

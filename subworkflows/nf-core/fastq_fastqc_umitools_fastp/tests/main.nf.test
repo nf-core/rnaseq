@@ -806,7 +806,20 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(workflow.out).match() }
+                { assert snapshot(
+                    workflow.out.adapter_seq,
+                    workflow.out.fastqc_raw_html,
+                    workflow.out.fastqc_raw_zip,
+                    workflow.out.fastqc_trim_html,
+                    workflow.out.fastqc_trim_zip,
+                    workflow.out.trim_html,
+                    workflow.out.trim_json,
+                    workflow.out.trim_log,
+                    workflow.out.trim_read_count,
+                    workflow.out.trim_reads_fail,
+                    workflow.out.trim_reads_merged,
+                    workflow.out.umi_log,
+                    workflow.out.versions).match() }
             )
         }
     }

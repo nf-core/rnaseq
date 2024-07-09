@@ -2039,7 +2039,17 @@
                     ]
                 ],
                 "8": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.paired.fail.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_1.fail.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_2.fail.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
                 ],
                 "9": [
                     
@@ -2138,7 +2148,17 @@
                     ]
                 ],
                 "trim_reads_fail": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.paired.fail.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_1.fail.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_2.fail.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
                 ],
                 "trim_reads_merged": [
                     
@@ -2157,7 +2177,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-07-03T16:01:15.380539"
+        "timestamp": "2024-07-05T16:30:39.079822"
     },
     "skip_umi_extract - stub": {
         "content": [

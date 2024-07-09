@@ -34,7 +34,8 @@ process DUPRADAR {
     touch ${meta.id}_expressionHist.pdf
     touch ${meta.id}_dupMatrix.txt
     touch ${meta.id}_intercept_slope.txt
-    touch ${meta.id}_mqc.txt
+    touch ${meta.id}_dup_intercept_mqc.txt
+    touch ${meta.id}_duprateExpDensCurve_mqc.txt
     touch ${meta.id}.R_sessionInfo.log
 
     cat <<-END_VERSIONS > versions.yml

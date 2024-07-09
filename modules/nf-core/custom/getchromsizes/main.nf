@@ -35,6 +35,9 @@ process CUSTOM_GETCHROMSIZES {
     """
     touch ${fasta}.fai
     touch ${fasta}.sizes
+    if [[ "${fasta.extension}" == "gz" ]]; then
+        touch ${fasta}.gzi
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

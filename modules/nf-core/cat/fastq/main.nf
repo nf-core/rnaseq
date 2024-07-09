@@ -53,9 +53,9 @@ process CAT_FASTQ {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def readList = reads instanceof List ? reads.collect{ it.toString() } : [reads.toString()]
     if (meta.single_end) {
-        if (readList.size > 1) {
+        if (readList.size >= 1) {
             """
-            touch ${prefix}.merged.fastq.gz
+            echo '' | gzip > ${prefix}.merged.fastq.gz
 
             cat <<-END_VERSIONS > versions.yml
             "${task.process}":
@@ -64,10 +64,10 @@ process CAT_FASTQ {
             """
         }
     } else {
-        if (readList.size > 2) {
+        if (readList.size >= 2) {
             """
-            touch ${prefix}_1.merged.fastq.gz
-            touch ${prefix}_2.merged.fastq.gz
+            echo '' | gzip > ${prefix}_1.merged.fastq.gz
+            echo '' | gzip > ${prefix}_2.merged.fastq.gz
 
             cat <<-END_VERSIONS > versions.yml
             "${task.process}":

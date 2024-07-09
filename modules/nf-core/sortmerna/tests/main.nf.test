@@ -5,7 +5,7 @@ nextflow_process {
     process "SORTMERNA"
 
     test("sarscov2 indexing only") {
- 
+
         config './indexing_only.config'
 
         when {

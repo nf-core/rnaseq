@@ -219,9 +219,9 @@ Notes:
 
 #### Reference genome
 
-It is recommended to provide the most complete reference genome for your species, without additional loci (haplotypes) or patches. For model organisms such as mouse or human, this is the "primary assembly," which includes the reference chromosomes and some additional scaffolds. For the human assembly GRCh38 (hg38), use the `GRCh38.primary_assembly.genome.fa.gz` file from GENCODE or the `Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz` file from Ensembl. These files cover the largest portion of the reference genome without including multiple copies of the same sequence, which can confuse aligners like STAR.
+It is recommended to provide the most complete reference genome for your species, without additional loci (haplotypes) or patches. For model organisms such as mouse or human, this is the "primary assembly", which includes the reference chromosomes and some additional scaffolds. For the human assembly GRCh38 (hg38), use the `GRCh38.primary_assembly.genome.fa.gz` file from GENCODE or the `Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz` file from Ensembl. These files cover the largest portion of the reference genome without including multiple copies of the same sequence, which would result in heavy mapping quality penalties.
 
-Most other species (e.g., fly, cow, dog) do not have a primary assembly. In these cases, use the complete reference sequence, or "toplevel" assembly. The main difference between the primary and toplevel assemblies is the inclusion of alternative loci (haplotypes), which typically do not exist for species outside of mouse and human.
+For most other species (e.g., fly, cow, dog), no primary assembly is published. This reflects inadequately characterized genomic variation and a lower degree of curation, meaning that there are no established alternative loci (haplotypes), and that the toplevel file is equivalent to a primary assembly. Therefore, while the toplevel assembly may be utilized for these organisms, it is nonetheless advisable to verify the absence of N-padded haplotype or patch regions first.
 
 #### Gene annotation
 

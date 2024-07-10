@@ -70,6 +70,20 @@ Changes in module 'nf-core/dupradar'
 +        "timestamp": "2024-07-10T10:42:41.326491"
      }
  }
+--- modules/nf-core/dupradar/tests/main.nf.test
++++ modules/nf-core/dupradar/tests/main.nf.test
+@@ -3,10 +3,6 @@
+     name "Test Process DUPRADAR"
+     script "../main.nf"
+     process "DUPRADAR"
+-
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "dupradar"
+ 
+     test("sarscov2 - bam - single_end") {
+ 
+
 --- modules/nf-core/dupradar/templates/dupradar.r
 +++ modules/nf-core/dupradar/templates/dupradar.r
 @@ -88,7 +88,6 @@

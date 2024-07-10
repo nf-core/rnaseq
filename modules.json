@@ -37,7 +37,7 @@
                     },
                     "dupradar": {
                         "branch": "master",
-                        "git_sha": "f632a6e25b05497477920183cff33ba72ab7b6fc",
+                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dupradar/dupradar.diff"
                     },

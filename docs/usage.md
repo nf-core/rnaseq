@@ -241,13 +241,13 @@ GFF (General Feature Format) is a tab-separated text file format for representin
 More information and links to further resources are [available from Ensembl](https://www.ensembl.org/info/website/upload/gff.html).
 :::
 
-### Reference transcriptome
+#### Reference transcriptome
 
 In addition to the reference genome sequence and annotation, you can provide a reference transcriptome FASTA file. These files can be obtained from GENCODE or Ensembl. However, these sequences only cover the reference chromosomes and can cause inconsistencies if you are using a primary or toplevel genome assembly and annotation.
 
 We recommend not providing a transcriptome FASTA file and instead allowing the pipeline to create it from the provided genome and annotation. Similar to aligner indexes, you can save the created transcriptome FASTA and BED files to a central location for future pipeline runs. This helps avoid redundant computation and having multiple copies on your system. Ensure that all genome, annotation, transcriptome, and index versions match to maintain consistency.
 
-### Indices
+#### Indices
 
 By default, indices are generated dynamically by the workflow for tools such as STAR and Salmon. Since indexing is an expensive process in time and resources you should ensure that it is only done once, by retaining the indices generated from each batch of reference files:
 
@@ -258,7 +258,7 @@ Once you have the indices from a workflow run you should save them somewhere cen
 
 Remember to note the genome and annotation versions as well as the versions of the software used for indexing, as an index created with one version may not be compatible with other versions.
 
-### GENCODE
+#### GENCODE
 
 If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files please specify the `--gencode` parameter because the format of these files is slightly different to ENSEMBL genome files:
 
@@ -267,7 +267,7 @@ If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files
 
 As well as the standard annotations, GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
 
-### Prokaryotic genome annotations
+#### Prokaryotic genome annotations
 
 This pipeline uses featureCounts to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. The format of these annotation files can vary significantly depending on the source of the annotation and the type of organism. The default settings in the pipeline are tailored towards Ensembl GTF annotations available for eukaryotic genomes. Prokaryotic genome annotations tend to be distributed in GFF format which are structured differently in terms of the feature naming conventions. There are a number of ways you can tune the behaviour of the pipeline to cater for differences/absence of biotype information:
 

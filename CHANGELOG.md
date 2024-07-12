@@ -82,6 +82,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1304](https://github.com/nf-core/rnaseq/pull/1304) - Remove redundant gene TPM outputs
 - [PR #1306](https://github.com/nf-core/rnaseq/pull/1306) - Overhaul strandedness detection / comparison
 - [PR #1307](https://github.com/nf-core/rnaseq/pull/1307) - Clarify infer strandedness step in subway map and text
+- [PR #1308](https://github.com/nf-core/rnaseq/pull/1308) - Various MultiQC issues: FastQC sections for raw and trimmed reads // umi-tools dedup and extraction plots, custom content styling.
 - [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
 - [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
 - [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths

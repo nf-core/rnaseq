@@ -13,7 +13,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ],
                 "untar": [
                     [
@@ -26,7 +26,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ]
             }
         ],
@@ -34,7 +34,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-11T10:40:48.001369"
+        "timestamp": "2024-07-10T12:04:28.231047"
     },
     "test_untar_onlyfiles - stub": {
         "content": [
@@ -45,12 +45,12 @@
                             
                         ],
                         [
-                            "file.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "hello.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ],
                 "untar": [
                     [
@@ -58,12 +58,12 @@
                             
                         ],
                         [
-                            "file.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "hello.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ]
             }
         ],
@@ -71,7 +71,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-11T10:41:14.953989"
+        "timestamp": "2024-07-10T12:04:45.773103"
     },
     "test_untar - stub": {
         "content": [
@@ -82,12 +82,14 @@
                             
                         ],
                         [
-                            "file.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "hash.k2d:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "opts.k2d:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "taxo.k2d:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ],
                 "untar": [
                     [
@@ -95,12 +97,14 @@
                             
                         ],
                         [
-                            "file.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "hash.k2d:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "opts.k2d:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "taxo.k2d:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ]
             }
         ],
@@ -108,7 +112,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-11T10:41:01.619275"
+        "timestamp": "2024-07-10T12:04:36.777441"
     },
     "test_untar": {
         "content": [
@@ -126,7 +130,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ],
                 "untar": [
                     [
@@ -141,7 +145,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0cd92d20f9dfdad1f4fac382631cef03"
+                    "versions.yml:md5,6063247258c56fd271d076bb04dd7536"
                 ]
             }
         ],
@@ -149,6 +153,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-11T10:40:32.530882"
+        "timestamp": "2024-07-10T12:04:19.377674"
     }
 }

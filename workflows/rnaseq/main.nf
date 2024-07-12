@@ -869,10 +869,23 @@ workflow RNASEQ {
         ch_workflow_summary      = Channel.value(paramsSummaryMultiqc(summary_params))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+
+        // Derive a set of rename patterns such that any sample names derived
+        // from input fastqs in MultiQC are replaced with specified sample name
+        // strings
+
         ch_name_replacements = ch_samples
             .map{
-                it[1].name.split('\\.')[0] + "\t" + it[0].id
+                def read1 = it[1].name.split('\\.')[0] + "\t" + it[0].id + '_1'
+                def read2 = ''
+                if (it[2] ){
+                    read2 = it[2].name.split('\\.')[0] + "\t" + it[0].id + '_2'
+                }
+                return [[read1, read2]]
             }
+            .transpose()
+            .filter { it[0] != ''}
+            .map{it[0]}
             .collectFile(name: 'name_replacement.txt', newLine: true)
 
         MULTIQC (
@@ -880,7 +893,8 @@ workflow RNASEQ {
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
             ch_multiqc_logo.toList(),
-            ch_name_replacements
+            ch_name_replacements,
+            []
         )
         ch_multiqc_report = MULTIQC.out.report
     }

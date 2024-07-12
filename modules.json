@@ -37,9 +37,8 @@
                     },
                     "dupradar": {
                         "branch": "master",
-                        "git_sha": "f632a6e25b05497477920183cff33ba72ab7b6fc",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/dupradar/dupradar.diff"
+                        "git_sha": "055416736dcb4955960ecc17dea61eb41b68c024",
+                        "installed_by": ["modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -93,7 +92,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "314d742bdb357a1df5f9b88427b3b6ac78aa33f7",
+                        "git_sha": "45d482f013f7da8a3e050e855f04ada418d91c3c",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {

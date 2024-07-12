@@ -18,6 +18,7 @@ nextflow_process {
                 input[2] = []
                 input[3] = []
                 input[4] = []
+                input[5] = []
                 """
             }
         }
@@ -43,6 +44,7 @@ nextflow_process {
                 input[2] = []
                 input[3] = []
                 input[4] = []
+                input[5] = []
                 """
             }
         }
@@ -69,6 +71,7 @@ nextflow_process {
                 input[2] = []
                 input[3] = []
                 input[4] = []
+                input[5] = []
                 """
             }
         }

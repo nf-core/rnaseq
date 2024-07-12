@@ -36,6 +36,12 @@ input:
         patterns, second column a set of corresponding replacements. Passed via
         MultiQC's `--replace-names` option.
       pattern: "*.{tsv}"
+  - sample_names:
+      type: file
+      description: |
+        Optional TSV file with headers, passed to the MultiQC --sample_names
+        argument.
+      pattern: "*.{tsv}"
 output:
   - report:
       type: file

@@ -29,6 +29,19 @@ input:
       type: file
       description: Optional logo file for MultiQC
       pattern: "*.{png}"
+  - replace_names:
+      type: file
+      description: |
+        Optional two-column sample renaming file. First column a set of
+        patterns, second column a set of corresponding replacements. Passed via
+        MultiQC's `--replace-names` option.
+      pattern: "*.{tsv}"
+  - sample_names:
+      type: file
+      description: |
+        Optional TSV file with headers, passed to the MultiQC --sample_names
+        argument.
+      pattern: "*.{tsv}"
 output:
   - report:
       type: file

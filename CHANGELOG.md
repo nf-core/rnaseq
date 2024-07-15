@@ -101,6 +101,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1330](https://github.com/nf-core/rnaseq/pull/1330) - Update all nf-core/modules and subworkflows
 - [PR #1331](https://github.com/nf-core/rnaseq/pull/1331) - Adding stubs for local modules
 - [PR #1334](https://github.com/nf-core/rnaseq/pull/1334) - Update all nf-core/modules and subworkflows with stubs
+- [PR #1336](https://github.com/nf-core/rnaseq/pull/1334) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
 - [PR #1340](https://github.com/nf-core/rnaseq/pull/1340) - Remove out-of-date Azure specific guidance
 - [PR #1341](https://github.com/nf-core/rnaseq/pull/1341) - Add rename in the MultiQC report for samples without techreps
 

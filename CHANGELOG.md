@@ -13,6 +13,7 @@ Special thanks to the following for their contributions to the release:
 - [Edmund Miller](https://github.com/edmundmiller)
 - [Jonathan Manning](https://github.com/pinin4fjords)
 - [Laramie Lindsey](https://github.com/laramiellindsey)
+- [Luke Zappia](https://github.com/lazappi)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
 - [Rob Syme](https://github.com/robsyme)
@@ -85,6 +86,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
 - [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
 - [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths
+- [PR #1314](https://github.com/nf-core/rnaseq/pull/1314) - Add reference genome recommendations to usage docs
 - [PR #1317](https://github.com/nf-core/rnaseq/pull/1317) - Strip problematic ifEmpty()
 - [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
 - [PR #1321](https://github.com/nf-core/rnaseq/pull/1321) - Remove push and release triggers from CI

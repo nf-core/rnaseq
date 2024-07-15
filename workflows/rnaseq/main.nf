@@ -114,9 +114,6 @@ workflow RNASEQ {
     //
     Channel
         .fromSamplesheet("input")
-        .set{ ch_samples }
-
-    ch_samples
         .map {
             meta, fastq_1, fastq_2 ->
                 if (!fastq_2) {
@@ -870,15 +867,15 @@ workflow RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
 
-        // Derive a set of rename patterns such that any sample names derived
-        // from input fastqs in MultiQC are replaced with specified sample name
-        // strings
+        // Generate replacements based on sample names to ensure MultiQC
+        // renames sequence files correctly if they didn't go through
+        // CAT_FASTQ.
 
-        ch_name_replacements = ch_samples
-            .map{ meta, reads1, reads2 ->
-                def name1 = file(reads1).simpleName + "\t" + meta.id + '_1'
-                if (reads2 ){
-                    def name2 = file(reads2).simpleName + "\t" + meta.id + '_2'
+        ch_name_replacements = ch_fastq.single
+            .map{ meta, reads ->
+                def name1 = file(reads[0]).simpleName + "\t" + meta.id + '_1'
+                if (reads[1] ){
+                    def name2 = file(reads[1]).simpleName + "\t" + meta.id + '_2'
                     return [ name1, name2 ]
                 } else{
                     return name1

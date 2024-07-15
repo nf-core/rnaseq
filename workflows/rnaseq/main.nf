@@ -875,17 +875,16 @@ workflow RNASEQ {
         // strings
 
         ch_name_replacements = ch_samples
-            .map{
-                def read1 = it[1].name.split('\\.')[0] + "\t" + it[0].id + '_1'
-                def read2 = ''
-                if (it[2] ){
-                    read2 = it[2].name.split('\\.')[0] + "\t" + it[0].id + '_2'
+            .map{ meta, reads1, reads2 ->
+                def name1 = file(reads1).simpleName + "\t" + meta.id + '_1'
+                if (reads2 ){
+                    def name2 = file(reads2).simpleName + "\t" + meta.id + '_2'
+                    return [ name1, name2 ]
+                } else{
+                    return name1
                 }
-                return [[read1, read2]]
             }
-            .transpose()
-            .filter { it[0] != ''}
-            .map{it[0]}
+            .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)
 
         MULTIQC (

@@ -866,7 +866,7 @@ workflow RNASEQ {
         ch_workflow_summary      = Channel.value(paramsSummaryMultiqc(summary_params))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    
+
         // Provide MultiQC with rename patterns to ensure it uses sample names
         // for single-techrep samples not processed by CAT_FASTQ.
 

@@ -20,6 +20,7 @@ include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
 include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
+include { calculateStrandedness     } from '../../nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
 ========================================================================================
@@ -546,63 +547,6 @@ def biotypeInGtf(gtf_file, biotype) {
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         return false
     }
-}
-
-//
-// Function to determine library type by comparing type counts. Consistent
-// between Salmon and RSeQC
-//
-def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold=0.8, unstranded_threshold=0.1) {
-    def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
-    def totalStrandedFragments = forwardFragments + reverseFragments
-
-    def library_strandedness = 'undetermined'
-    if (totalStrandedFragments > 0) {
-        def forwardProportion = forwardFragments / (totalStrandedFragments as double)
-        def reverseProportion = reverseFragments / (totalStrandedFragments as double)
-        def proportionDifference = Math.abs(forwardProportion - reverseProportion)
-
-        if (forwardProportion >= stranded_threshold) {
-            strandedness = 'forward'
-        } else if (reverseProportion >= stranded_threshold) {
-            strandedness = 'reverse'
-        } else if (proportionDifference <= unstranded_threshold) {
-            strandedness = 'unstranded'
-        }
-    }
-
-    return [
-        inferred_strandedness: strandedness,
-        forwardFragments: (forwardFragments / (totalFragments as double)) * 100,
-        reverseFragments: (reverseFragments / (totalFragments as double)) * 100,
-        unstrandedFragments: (unstrandedFragments / (totalFragments as double)) * 100
-    ]
-}
-
-//
-// Function that parses Salmon quant 'lib_format_counts.json' output file to get inferred strandedness
-//
-def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
-    // Parse the JSON content of the file
-    def libCounts = new JsonSlurper().parseText(json_file.text)
-
-    // Calculate the counts for forward and reverse strand fragments
-    def forwardKeys = ['SF', 'ISF', 'MSF', 'OSF']
-    def reverseKeys = ['SR', 'ISR', 'MSR', 'OSR']
-
-    // Calculate unstranded fragments (IU and U)
-    // NOTE: this is here for completeness, but actually all fragments have a
-    // strandedness (even if the overall library does not), so all these values
-    // will be '0'. See
-    // https://groups.google.com/g/sailfish-users/c/yxzBDv6NB6I
-    def unstrandedKeys = ['IU', 'U', 'MU']
-
-    def forwardFragments = forwardKeys.collect { libCounts[it] ?: 0 }.sum()
-    def reverseFragments = reverseKeys.collect { libCounts[it] ?: 0 }.sum()
-    def unstrandedFragments = unstrandedKeys.collect { libCounts[it] ?: 0 }.sum()
-
-    // Use shared calculation function to determine strandedness
-    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
 
 //

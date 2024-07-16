@@ -1,0 +1,112 @@
+{
+    "fastp_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    3022
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T16:19:13.057802"
+    },
+    "trimgalore_test_pe_reads_2_lines": {
+        "content": "eccf3e9e74589ff01c77fce7f4548e41",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:44:07.667653"
+    },
+    "fastp_test_pe_reads_1_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:43:46.173892"
+    },
+    "trimgalore_test_pe_reads_1_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:44:07.642318"
+    },
+    "trimgalore_test_pe_reads_1_lines": {
+        "content": "3868fc1caf09367141d2bbf47e158823",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:44:07.641186"
+    },
+    "fastp_test_pe_reads_2_lines": {
+        "content": "eccf3e9e74589ff01c77fce7f4548e41",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:43:46.235022"
+    },
+    "fastp_test_pe_reads_2_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:43:46.242006"
+    },
+    "trimgalore_test_pe_reads_2_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:44:07.668644"
+    },
+    "fastp_test_pe_reads_1_lines": {
+        "content": "3868fc1caf09367141d2bbf47e158823",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:43:46.161535"
+    },
+    "trimgalore_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    3022
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-24T17:44:07.669435"
+    }
+}

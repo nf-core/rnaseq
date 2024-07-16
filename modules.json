@@ -92,7 +92,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "45d482f013f7da8a3e050e855f04ada418d91c3c",
+                        "git_sha": "b80f5fd12ff7c43938f424dd76392a2704fa2396",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {

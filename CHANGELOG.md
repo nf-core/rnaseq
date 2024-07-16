@@ -13,6 +13,7 @@ Special thanks to the following for their contributions to the release:
 - [Edmund Miller](https://github.com/edmundmiller)
 - [Jonathan Manning](https://github.com/pinin4fjords)
 - [Laramie Lindsey](https://github.com/laramiellindsey)
+- [Luke Zappia](https://github.com/lazappi)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
 - [Rob Syme](https://github.com/robsyme)
@@ -86,6 +87,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1309](https://github.com/nf-core/rnaseq/pull/1309) - Document FASTP sampling
 - [PR #1310](https://github.com/nf-core/rnaseq/pull/1310) - Reinstate pseudoalignment subworkflow config
 - [PR #1312](https://github.com/nf-core/rnaseq/pull/1312) - Fix issues with unzipping of GTF/ GFF files without absolute paths
+- [PR #1314](https://github.com/nf-core/rnaseq/pull/1314) - Add reference genome recommendations to usage docs
 - [PR #1317](https://github.com/nf-core/rnaseq/pull/1317) - Strip problematic ifEmpty()
 - [PR #1319](https://github.com/nf-core/rnaseq/pull/1319) - Reinstate oncomplete error messages
 - [PR #1321](https://github.com/nf-core/rnaseq/pull/1321) - Remove push and release triggers from CI
@@ -99,6 +101,9 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1330](https://github.com/nf-core/rnaseq/pull/1330) - Update all nf-core/modules and subworkflows
 - [PR #1331](https://github.com/nf-core/rnaseq/pull/1331) - Adding stubs for local modules
 - [PR #1334](https://github.com/nf-core/rnaseq/pull/1334) - Update all nf-core/modules and subworkflows with stubs
+- [PR #1336](https://github.com/nf-core/rnaseq/pull/1334) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
+- [PR #1340](https://github.com/nf-core/rnaseq/pull/1340) - Remove out-of-date Azure specific guidance
+- [PR #1341](https://github.com/nf-core/rnaseq/pull/1341) - Add rename in the MultiQC report for samples without techreps
 
 ### Parameters
 

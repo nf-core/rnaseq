@@ -323,8 +323,8 @@
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
-                        "branch": "rrna_prerpo_rrna_should_be_channel",
-                        "git_sha": "e9fde2d1f5d38e2ed61c217aef44e23e8ed07103",
+                        "branch": "master",
+                        "git_sha": "b86de50ab60c19ab40e70a4501820f4cb307050b",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

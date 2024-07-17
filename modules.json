@@ -8,7 +8,7 @@
                     "bbmap/bbsplit": {
                         "branch": "master",
                         "git_sha": "2c6b1144ed58b6184ad58fc4e6b6a90219b4bf4f",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "bedtools/genomecov": {
                         "branch": "master",
@@ -18,7 +18,7 @@
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "4fc983ad0b30e6e32696fa7d980c76c7bfe1c03e",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "custom/catadditionalfasta": {
                         "branch": "master",
@@ -202,7 +202,7 @@
                     "sortmerna": {
                         "branch": "master",
                         "git_sha": "df05c8db5195867c0bc7b92c1788115b66f0d17d",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "star/align": {
                         "branch": "master",
@@ -315,17 +315,22 @@
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
                         "git_sha": "db35d26edeafacf9906a517827df621a29adc13d",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
                         "git_sha": "cb6defa0834eda9d6d3f967e981c819fc3e257bf",
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
+                    },
+                    "fastq_qc_trim_filter_setstrandedness": {
+                        "branch": "master",
+                        "git_sha": "b86de50ab60c19ab40e70a4501820f4cb307050b",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {
                         "branch": "master",
                         "git_sha": "727232afb8294b53dd9d05bfe469b70cce1675bb",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "quantify_pseudo_alignment": {
                         "branch": "master",

@@ -91,7 +91,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_salmon_index      // channel: /path/to/salmon/index/ (optional)
     ch_sortmerna_index   // channel: /path/to/sortmerna/index/ (optional)
     ch_bbsplit_index     // channel: /path/to/bbsplit/index/ (optional)
-    ch_rrna_fastas       // channel: one or more fasta files containing rrna sequencs passed to SortMeRNA (optional)
+    ch_rrna_fastas       // channel: one or more fasta files containing rrna sequences to be passed to SortMeRNA (optional)
     skip_bbsplit         // boolean: Skip BBSplit for removal of non-reference genome reads.
     skip_fastqc          // boolean: true/false
     skip_trimming        // boolean: true/false

@@ -228,10 +228,10 @@ workflow PREPARE_GENOME {
     // Uncompress sortmerna index or generate from scratch if required
     //
     ch_sortmerna_index = Channel.empty()
-    ch_ribo_db = Channel.empty()
+    ch_rrna_fastas = Channel.empty()
 
     if ('sortmerna' in prepare_tool_indices) {
-        ch_ribo_db = file(sortmerna_fasta_list)
+        ribo_db = file(sortmerna_fasta_list)
 
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {
@@ -241,14 +241,12 @@ workflow PREPARE_GENOME {
                 ch_sortmerna_index = Channel.value(file(sortmerna_index))
             }
         } else {
-            ch_sortmerna_fastas = Channel.from(ch_ribo_db.readLines())
+            ch_rrna_fastas = Channel.from(ribo_db.readLines())
                 .map { row -> file(row, checkIfExists: true) }
-                .collect()
-                .map { [ 'rrna_refs', it ] }
 
             SORTMERNA_INDEX (
                 Channel.of([ [],[] ]),
-                ch_sortmerna_fastas,
+                ch_rrna_fastas.collect().map { [ 'rrna_refs', it ] },
                 Channel.of([ [],[] ])
             )
             ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
@@ -374,7 +372,7 @@ workflow PREPARE_GENOME {
     chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
     splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
     bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
-    ribo_db          = ch_ribo_db                // channel: path(sortmerna_fasta_list)
+    rrna_fastas      = ch_rrna_fastas            // channel: path(sortmerna_fasta_list)
     sortmerna_index  = ch_sortmerna_index        // channel: path(sortmerna/index/)
     star_index       = ch_star_index             // channel: path(star/index/)
     rsem_index       = ch_rsem_index             // channel: path(rsem/index/)

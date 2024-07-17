@@ -117,7 +117,7 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME.out.salmon_index,
         PREPARE_GENOME.out.kallisto_index,
         PREPARE_GENOME.out.bbsplit_index,
-        PREPARE_GENOME.out.ribo_db,
+        PREPARE_GENOME.out.rrna_fastas,
         PREPARE_GENOME.out.sortmerna_index,
         PREPARE_GENOME.out.splicesites,
         !params.remove_ribo_rna && params.remove_ribo_rna

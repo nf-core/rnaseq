@@ -47,11 +47,11 @@ input:
   - ch_bbsplit_index:
       type: file
       description: Path to directory or tar.gz archive for pre-built BBSplit index
-  - ch_ribo_db:
+  - ch_rrna_fastas:
       type: file
       description: |
-        Channel with text file containing paths to fasta files (one per line)
-        that will be used to create the database for SortMeRNA
+        Channel containing one or more FASTA files containing rRNA sequences
+        for use with SortMeRNA
   - skip_bbsplit:
       type: boolean
       description: Whether to skip BBSplit for removal of non-reference genome reads

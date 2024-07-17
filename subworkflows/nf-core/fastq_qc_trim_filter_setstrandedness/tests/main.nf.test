@@ -33,9 +33,6 @@ nextflow_workflow {
                     ]
                 ])
 
-                ch_ribo_db = file('ribo_db.txt')
-                ch_ribo_db.append('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta')
-
                 input[0] = ch_reads
                 input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
                 input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
@@ -43,7 +40,7 @@ nextflow_workflow {
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bbsplit_index
-                input[7] = ch_ribo_db      // ch_ribo_db
+                input[7] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas 
                 input[8] = true            // skip_bbsplit
                 input[9] = false           // skip_fastqc
                 input[10] = false           // skip_trimming
@@ -91,9 +88,6 @@ nextflow_workflow {
                     ]
                 ])
 
-                ch_ribo_db = file('ribo_db.txt')
-                ch_ribo_db.append('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta')
-
                 input[0] = ch_reads
                 input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
                 input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
@@ -101,7 +95,7 @@ nextflow_workflow {
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bbsplit_index
-                input[7] = ch_ribo_db      // ch_ribo_db
+                input[7] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas 
                 input[8] = true            // skip_bbsplit
                 input[9] = false           // skip_fastqc
                 input[10] = false           // skip_trimming

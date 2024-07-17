@@ -45,36 +45,6 @@
         },
         "timestamp": "2024-03-06T14:33:26.903306"
     },
-    "Test Function getSalmonInferredStrandedness unstranded": {
-        "content": [
-            {
-                "inferred_strandedness": "unstranded",
-                "forwardFragments": 50.0,
-                "reverseFragments": 50.0,
-                "unstrandedFragments": 0.0
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-06-18T14:29:54.96715"
-    },
-    "Test Function getSalmonInferredStrandedness reverse": {
-        "content": [
-            {
-                "inferred_strandedness": "reverse",
-                "forwardFragments": 0.0,
-                "reverseFragments": 100.0,
-                "unstrandedFragments": 0.0
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-06-18T14:30:11.417381"
-    },
     "Test Function checkSamplesAfterGrouping invalid strandedness": {
         "content": null,
         "meta": {
@@ -214,21 +184,6 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2024-03-06T14:32:49.565504"
-    },
-    "Test Function getSalmonInferredStrandedness forward": {
-        "content": [
-            {
-                "inferred_strandedness": "forward",
-                "forwardFragments": 100.0,
-                "reverseFragments": 0.0,
-                "unstrandedFragments": 0.0
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-06-18T14:30:03.301262"
     },
     "Test Function rsemStarIndexWarn": {
         "content": null,

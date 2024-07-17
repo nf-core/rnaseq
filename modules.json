@@ -324,7 +324,7 @@
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "rrna_prerpo_rrna_should_be_channel",
-                        "git_sha": "d1e4c1977912284d6c4c1a1b351968cb6fcf1b6d",
+                        "git_sha": "d41517e03cd875b9b469a0d27e31c7afd9d2250f",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

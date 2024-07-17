@@ -104,7 +104,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     remove_ribo_rna      // boolean: true/false: whether to run sortmerna to remove rrnas
     with_umi             // boolean: true/false: Enable UMI-based read deduplication.
     umi_discard_read     // integer: 0, 1 or 2
-    stranded_threshold   // float: The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5 
+    stranded_threshold   // float: The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5
     unstranded_threshold // float: The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
 
     main:
@@ -296,8 +296,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     FASTQ_SUBSAMPLE_FQ_SALMON
         .out
-        .lib_format_counts               
-        .join(ch_strand_fastq.auto_strand) 
+        .lib_format_counts
+        .join(ch_strand_fastq.auto_strand)
         .map {
             meta, json, reads ->
                 def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold=stranded_threshold, unstranded_threshold=unstranded_threshold)

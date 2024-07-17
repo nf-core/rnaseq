@@ -56,6 +56,8 @@ nextflow_workflow {
                 input[17] = true           // remove_ribo_rna
                 input[18] = false          // with_umi
                 input[19] = 0              // umi_discard_read
+                input[20] = 0.8            // stranded_threshold
+                input[21] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -112,6 +114,8 @@ nextflow_workflow {
                 input[17] = true           // remove_ribo_rna
                 input[18] = false          // with_umi
                 input[19] = 0              // umi_discard_read
+                input[20] = 0.8            // stranded_threshold
+                input[21] = 0.1            // unstranded_threshold
                 """
             }
         }

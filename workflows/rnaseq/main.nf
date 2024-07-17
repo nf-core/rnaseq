@@ -32,8 +32,6 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ               } from '../../modules/nf-core/cat/fastq'
-include { BBMAP_BBSPLIT           } from '../../modules/nf-core/bbmap/bbsplit'
 include { DUPRADAR                } from '../../modules/nf-core/dupradar'
 include { SAMTOOLS_SORT           } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP         } from '../../modules/nf-core/preseq/lcextrap'
@@ -42,8 +40,6 @@ include { STRINGTIE_STRINGTIE     } from '../../modules/nf-core/stringtie/string
 include { SUBREAD_FEATURECOUNTS   } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                 } from '../../modules/nf-core/multiqc'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
-include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
-include { SORTMERNA as SORTMERNA_INDEX                         } from '../../modules/nf-core/sortmerna'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 
@@ -54,9 +50,6 @@ include { paramsSummaryMap                 } from 'plugin/nf-validation'
 include { fromSamplesheet                  } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../../subworkflows/nf-core/fastq_subsample_fq_salmon'
-include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore'
-include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_SORT_STATS_SAMTOOLS          } from '../../subworkflows/nf-core/bam_sort_stats_samtools'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'

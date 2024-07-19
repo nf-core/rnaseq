@@ -139,7 +139,7 @@ workflow RNASEQ {
         params.skip_fastqc || params.skip_qc,
         params.skip_trimming,
         params.skip_umi_extract,
-        !params.salmon_index && params.pseudo_aligner == 'salmon' && !skip_pseudo_alignment,
+        !params.salmon_index && params.pseudo_aligner == 'salmon' && !params.skip_pseudo_alignment,
         !params.sortmerna_index && params.remove_ribo_rna,
         params.trimmer,
         params.min_trimmed_reads,
@@ -169,6 +169,7 @@ workflow RNASEQ {
                 is_aws_igenome = true
             }
         }
+        print(is_aws_igenome)
 
         ALIGN_STAR (
             ch_strand_inferred_filtered_fastq,

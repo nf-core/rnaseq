@@ -169,7 +169,6 @@ workflow RNASEQ {
                 is_aws_igenome = true
             }
         }
-        print(is_aws_igenome)
 
         ALIGN_STAR (
             ch_strand_inferred_filtered_fastq,

@@ -132,13 +132,7 @@
                     ]
                 ],
                 "9": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "bai": [
                     [
@@ -204,13 +198,7 @@
                     ]
                 ],
                 "csi": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "flagstat": [
                     [
@@ -281,10 +269,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T19:53:42.558374"
+        "timestamp": "2024-07-22T19:32:06.579549"
     },
     "homo_sapiens": {
         "content": [

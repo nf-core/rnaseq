@@ -3,7 +3,7 @@
         "content": [
             {
                 "0": [
-
+                    
                 ],
                 "1": [
                     [
@@ -33,13 +33,13 @@
                     ]
                 ],
                 "4": [
-
+                    
                 ],
                 "5": [
-
+                    
                 ],
                 "6": [
-
+                    
                 ],
                 "7": [
                     [
@@ -83,10 +83,10 @@
                     ]
                 ],
                 "reads": [
-
+                    
                 ],
                 "trim_html": [
-
+                    
                 ],
                 "trim_log": [
                     [
@@ -107,10 +107,10 @@
                     ]
                 ],
                 "trim_unpaired": [
-
+                    
                 ],
                 "trim_zip": [
-
+                    
                 ],
                 "umi_log": [
                     [
@@ -129,16 +129,16 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:13:53.031608"
+        "timestamp": "2024-07-22T17:06:34.919444"
     },
     "test paired end read without UMI - stub": {
         "content": [
             {
                 "0": [
-
+                    
                 ],
                 "1": [
                     [
@@ -159,16 +159,16 @@
                     ]
                 ],
                 "3": [
-
+                    
                 ],
                 "4": [
-
+                    
                 ],
                 "5": [
-
+                    
                 ],
                 "6": [
-
+                    
                 ],
                 "7": [
                     [
@@ -214,10 +214,10 @@
                     ]
                 ],
                 "reads": [
-
+                    
                 ],
                 "trim_html": [
-
+                    
                 ],
                 "trim_log": [
                     [
@@ -241,13 +241,13 @@
                     ]
                 ],
                 "trim_unpaired": [
-
+                    
                 ],
                 "trim_zip": [
-
+                    
                 ],
                 "umi_log": [
-
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -256,10 +256,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:14:06.231746"
+        "timestamp": "2024-07-22T17:06:51.765414"
     },
     "test paired end read without UMI": {
         "content": [
@@ -285,7 +285,7 @@
                 ]
             ],
             [
-
+                
             ],
             [
                 "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -293,10 +293,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:13:11.46458"
+        "timestamp": "2024-07-22T17:05:37.366404"
     },
     "test single end read with UMI": {
         "content": [
@@ -319,7 +319,7 @@
                 ]
             ],
             [
-
+                
             ],
             [
                 "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -328,10 +328,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:12:37.894066"
+        "timestamp": "2024-07-22T17:04:53.072227"
     },
     "test paired end read with UMI": {
         "content": [
@@ -354,7 +354,7 @@
                 ]
             ],
             [
-
+                
             ],
             [
                 "versions.yml:md5,0a5b8fa83ba29cf645bf9e9471cca150",
@@ -363,34 +363,34 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:12:56.665213"
+        "timestamp": "2024-07-22T17:05:16.709704"
     },
     "test skip all steps": {
         "content": [
             [
-
+                
             ],
             [
-
+                
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:13:22.584359"
+        "timestamp": "2024-07-22T17:05:49.455992"
     },
     "test single end read with UMI - stub": {
         "content": [
             {
                 "0": [
-
+                    
                 ],
                 "1": [
                     [
@@ -420,13 +420,13 @@
                     ]
                 ],
                 "4": [
-
+                    
                 ],
                 "5": [
-
+                    
                 ],
                 "6": [
-
+                    
                 ],
                 "7": [
                     [
@@ -470,10 +470,10 @@
                     ]
                 ],
                 "reads": [
-
+                    
                 ],
                 "trim_html": [
-
+                    
                 ],
                 "trim_log": [
                     [
@@ -494,10 +494,10 @@
                     ]
                 ],
                 "trim_unpaired": [
-
+                    
                 ],
                 "trim_zip": [
-
+                    
                 ],
                 "umi_log": [
                     [
@@ -516,9 +516,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T14:13:37.957993"
+        "timestamp": "2024-07-22T17:06:09.844235"
     }
 }

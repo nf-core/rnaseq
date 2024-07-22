@@ -50,10 +50,20 @@ process SAMTOOLS_SORT {
     """
 
     stub:
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def extension = args.contains("--output-fmt sam") ? "sam" :
+                    args.contains("--output-fmt cram") ? "cram" :
+                    "bam"
     """
-    touch ${prefix}.bam
-    touch ${prefix}.bam.csi
+    touch ${prefix}.${extension}
+    if [ "${extension}" == "bam" ];
+    then
+        touch ${prefix}.${extension}.csi
+    elif [ "${extension}" == "cram" ];
+    then
+        touch ${prefix}.${extension}.crai
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

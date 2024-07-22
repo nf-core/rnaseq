@@ -37,10 +37,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T12:20:38.911799"
+        "timestamp": "2024-07-22T17:02:44.34964"
     },
     "test_bam_sort_stats_samtools_paired_end": {
         "content": [
@@ -80,10 +80,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T12:20:51.171967"
+        "timestamp": "2024-07-22T17:03:02.583095"
     },
     "test_bam_sort_stats_samtools_single_end - stub": {
         "content": [
@@ -107,13 +107,7 @@
                     ]
                 ],
                 "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "3": [
                     [
@@ -168,13 +162,7 @@
                     ]
                 ],
                 "csi": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "flagstat": [
                     [
@@ -213,10 +201,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T12:13:52.386146"
+        "timestamp": "2024-07-22T17:03:22.328703"
     },
     "test_bam_sort_stats_samtools_paired_end - stub": {
         "content": [
@@ -240,13 +228,7 @@
                     ]
                 ],
                 "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "3": [
                     [
@@ -301,13 +283,7 @@
                     ]
                 ],
                 "csi": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "flagstat": [
                     [
@@ -346,9 +322,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T12:14:06.231663"
+        "timestamp": "2024-07-22T17:03:38.833662"
     }
 }

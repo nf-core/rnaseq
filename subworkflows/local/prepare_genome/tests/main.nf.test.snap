@@ -948,12 +948,15 @@
                     
                 ],
                 "12": [
-                    "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
-                ],
-                "13": [
                     
                 ],
+                "13": [
+                    "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+                ],
                 "14": [
+                    
+                ],
+                "15": [
                     "versions.yml:md5,71252f1a221be05593361acccb99506b",
                     "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                     "versions.yml:md5,bc99889446f02427c166b3219b793672",
@@ -1007,6 +1010,9 @@
                 "kallisto_index": [
                     
                 ],
+                "rrna_fastas": [
+                    
+                ],
                 "rsem_index": [
                     
                 ],
@@ -1034,10 +1040,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T19:40:48.402507"
+        "timestamp": "2024-07-22T12:56:12.856413"
     },
     "transcriptome = false": {
         "content": [
@@ -2210,12 +2216,15 @@
                     
                 ],
                 "12": [
-                    "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
-                ],
-                "13": [
                     
                 ],
+                "13": [
+                    "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/salmon.tar.gz"
+                ],
                 "14": [
+                    
+                ],
+                "15": [
                     "versions.yml:md5,71252f1a221be05593361acccb99506b",
                     "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                     "versions.yml:md5,bc99889446f02427c166b3219b793672",
@@ -2269,6 +2278,9 @@
                 "kallisto_index": [
                     
                 ],
+                "rrna_fastas": [
+                    
+                ],
                 "rsem_index": [
                     
                 ],
@@ -2296,9 +2308,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T19:24:38.592099"
+        "timestamp": "2024-07-22T12:50:45.029123"
     }
 }

@@ -104,13 +104,7 @@
                     ]
                 ],
                 "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.sorted.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "6": [
                     [
@@ -166,13 +160,7 @@
                     ]
                 ],
                 "csi": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.sorted.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "fastq": [
                     
@@ -233,10 +221,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T12:36:44.15748"
+        "timestamp": "2024-07-22T19:36:23.861012"
     },
     "sarscov2 - bam - paired_end": {
         "content": [
@@ -343,13 +331,7 @@
                     ]
                 ],
                 "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sorted.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "6": [
                     [
@@ -405,13 +387,7 @@
                     ]
                 ],
                 "csi": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sorted.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "fastq": [
                     
@@ -472,9 +448,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-07-03T12:36:59.553237"
+        "timestamp": "2024-07-22T19:36:44.894976"
     }
 }

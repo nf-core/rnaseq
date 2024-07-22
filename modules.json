@@ -217,7 +217,7 @@
                     },
                     "stringtie/stringtie": {
                         "branch": "master",
-                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
+                        "git_sha": "c789476080a150f87066ca3ed42a622339a26c0b",
                         "installed_by": ["modules"]
                     },
                     "subread/featurecounts": {

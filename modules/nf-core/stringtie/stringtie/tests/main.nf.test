@@ -3,6 +3,7 @@ nextflow_process {
     name "Test Process STRINGTIE_STRINGTIE"
     script "../main.nf"
     process "STRINGTIE_STRINGTIE"
+    config "./nextflow.config"
 
     test("sarscov2 [bam] - forward strandedness") {
 

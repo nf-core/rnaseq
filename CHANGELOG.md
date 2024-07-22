@@ -104,6 +104,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1336](https://github.com/nf-core/rnaseq/pull/1334) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
 - [PR #1340](https://github.com/nf-core/rnaseq/pull/1340) - Remove out-of-date Azure specific guidance
 - [PR #1341](https://github.com/nf-core/rnaseq/pull/1341) - Add rename in the MultiQC report for samples without techreps
+- [PR #1342](https://github.com/nf-core/rnaseq/pull/1342) - Factor out preprocessing
+- [PR #1345](https://github.com/nf-core/rnaseq/pull/1345) - Fix preprocessing call
 
 ### Parameters
 

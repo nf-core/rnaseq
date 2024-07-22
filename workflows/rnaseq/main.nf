@@ -19,7 +19,6 @@ include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -33,8 +32,6 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ               } from '../../modules/nf-core/cat/fastq'
-include { BBMAP_BBSPLIT           } from '../../modules/nf-core/bbmap/bbsplit'
 include { DUPRADAR                } from '../../modules/nf-core/dupradar'
 include { SAMTOOLS_SORT           } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP         } from '../../modules/nf-core/preseq/lcextrap'
@@ -43,8 +40,6 @@ include { STRINGTIE_STRINGTIE     } from '../../modules/nf-core/stringtie/string
 include { SUBREAD_FEATURECOUNTS   } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                 } from '../../modules/nf-core/multiqc'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
-include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
-include { SORTMERNA as SORTMERNA_INDEX                         } from '../../modules/nf-core/sortmerna'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 
@@ -55,9 +50,6 @@ include { paramsSummaryMap                 } from 'plugin/nf-validation'
 include { fromSamplesheet                  } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../../subworkflows/nf-core/fastq_subsample_fq_salmon'
-include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore'
-include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_SORT_STATS_SAMTOOLS          } from '../../subworkflows/nf-core/bam_sort_stats_samtools'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
@@ -68,6 +60,7 @@ include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
+include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,6 +91,7 @@ workflow RNASEQ {
     ch_salmon_index      // channel: path(salmon/index/)
     ch_kallisto_index    // channel: [ meta, path(kallisto/index/) ]
     ch_bbsplit_index     // channel: path(bbsplit/index/)
+    ch_ribo_db           // channel: path(sortmerna_fasta_list)
     ch_sortmerna_index   // channel: path(sortmerna/index/)
     ch_splicesites       // channel: path(genome.splicesites.txt)
     make_sortmerna_index // boolean: Whether to create an index before running sortmerna
@@ -126,203 +120,40 @@ workflow RNASEQ {
         .map {
             checkSamplesAfterGrouping(it)
         }
-        .branch {
-            meta, fastqs ->
-                single  : fastqs.size() == 1
-                    return [ meta, fastqs.flatten() ]
-                multiple: fastqs.size() > 1
-                    return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_fastq }
+        .set{ ch_fastq }
 
     //
-    // MODULE: Concatenate FastQ files from same sample if required
-    //
-    CAT_FASTQ (
-        ch_fastq.multiple
-    )
-    .reads
-    .mix(ch_fastq.single)
-    .set { ch_cat_fastq }
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
-
-    //
-    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
-    //
-    ch_filtered_reads  = Channel.empty()
-    ch_trim_read_count = Channel.empty()
-    if (params.trimmer == 'trimgalore') {
-        FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
-            ch_cat_fastq,
-            params.skip_fastqc || params.skip_qc,
-            params.with_umi,
-            params.skip_umi_extract,
-            params.skip_trimming,
-            params.umi_discard_read,
-            params.min_trimmed_reads
-        )
-        ch_filtered_reads  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
-        ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}) // FastQC report - untrimmed
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log.collect{it[1]}) // umi-tools extract logs
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]})  // FastQC report - trimmed
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}) // Trim Galore! trimming report
-        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
-    }
-
-    //
-    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with fastp
-    //
-    if (params.trimmer == 'fastp') {
-        FASTQ_FASTQC_UMITOOLS_FASTP (
-            ch_cat_fastq,
-            params.skip_fastqc || params.skip_qc,
-            params.with_umi,
-            params.skip_umi_extract,
-            params.umi_discard_read,
-            params.skip_trimming,
-            [],
-            params.save_trimmed,
-            params.save_trimmed,
-            params.min_trimmed_reads
-        )
-        ch_filtered_reads  = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
-        ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_log.collect{it[1]}) // umi-tools extract logs
-        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
-    }
-
-    // Save trim status for workflow summary
-
-    ch_trim_status = ch_trim_read_count
-        .map {
-            meta, num_reads ->
-                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
-        }
-    //
-    // Get list of samples that failed trimming threshold for MultiQC report
-    //
-    ch_trim_read_count
-        .map {
-            meta, num_reads ->
-                if (num_reads <= params.min_trimmed_reads.toFloat()) {
-                    return [ "$meta.id\t$num_reads" ]
-                }
-        }
-        .collect()
-        .map {
-            tsv_data ->
-                def header = ["Sample", "Reads after trimming"]
-                multiqcTsvFromList(tsv_data, header)
-        }
-        .set { ch_fail_trimming_multiqc }
-    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
-
-    //
-    // MODULE: Remove genome contaminant reads
-    //
-    if (!params.skip_bbsplit) {
-        BBMAP_BBSPLIT (
-            ch_filtered_reads,
-            ch_bbsplit_index,
-            [],
-            [ [], [] ],
-            false
-        )
-        .primary_fastq
-        .set { ch_filtered_reads }
-        ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions.first())
-    }
-
-    //
-    // MODULE: Remove ribosomal RNA reads
-    //
-    // Check rRNA databases for sortmerna
-    if (params.remove_ribo_rna) {
-        ch_ribo_db = file(params.ribo_database_manifest)
-        if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
-
-        Channel.from(ch_ribo_db.readLines())
-            .map { row -> file(row, checkIfExists: true) }
-            .collect()
-            .map { [ 'rrna_refs', it ] }
-            .set { ch_sortmerna_fastas }
-
-        if (make_sortmerna_index) {
-            SORTMERNA_INDEX (
-                [ [],[] ],
-                ch_sortmerna_fastas,
-                [ [],[] ]
-            )
-            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
-        }
-
-        SORTMERNA (
-            ch_filtered_reads,
-            ch_sortmerna_fastas,
-            ch_sortmerna_index
-        )
-        .reads
-        .set { ch_filtered_reads }
-
-        ch_multiqc_files = ch_multiqc_files.mix(SORTMERNA.out.log.collect{it[1]})
-        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
-    }
-
-    //
-    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
+    // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // Branch FastQ channels if 'auto' specified to infer strandedness
-    ch_filtered_reads
-        .branch {
-            meta, fastq ->
-                auto_strand : meta.strandedness == 'auto'
-                    return [ meta, fastq ]
-                known_strand: meta.strandedness != 'auto'
-                    return [ meta, fastq ]
-        }
-        .set { ch_strand_fastq }
-
-    // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-    ch_fasta
-        .combine(ch_strand_fastq.auto_strand)
-        .map { it.first() }
-        .first()
-        .set { ch_genome_fasta }
-
-    def prepare_tool_indices = []
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
-        prepare_tool_indices << params.pseudo_aligner
-    }
-    FASTQ_SUBSAMPLE_FQ_SALMON (
-        ch_strand_fastq.auto_strand,
-        ch_genome_fasta,
+    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
+        ch_fastq,
+        ch_fasta,
         ch_transcript_fasta,
         ch_gtf,
         ch_salmon_index,
-        !params.salmon_index && !('salmon' in prepare_tool_indices)
+        ch_sortmerna_index,
+        ch_bbsplit_index,
+        ch_ribo_db,
+        params.skip_bbsplit,
+        params.skip_fastqc || params.skip_qc,
+        params.skip_trimming,
+        params.skip_umi_extract,
+        !params.salmon_index && params.pseudo_aligner == 'salmon' && !params.skip_pseudo_alignment,
+        !params.sortmerna_index && params.remove_ribo_rna,
+        params.trimmer,
+        params.min_trimmed_reads,
+        params.save_trimmed,
+        params.remove_ribo_rna,
+        params.with_umi,
+        params.umi_discard_read,
+        params.stranded_threshold,
+        params.unstranded_threshold
     )
-    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 
-    FASTQ_SUBSAMPLE_FQ_SALMON
-        .out
-        .lib_format_counts
-        .join(ch_strand_fastq.auto_strand)
-        .map {
-            meta, json, reads ->
-                def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold=params.stranded_threshold, unstranded_threshold=params.unstranded_threshold)
-                strandedness = salmon_strand_analysis.inferred_strandedness
-                if (strandedness == 'undetermined') {
-                    strandedness = 'unstranded'
-                }
-                return [ meta + [ strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis ], reads ]
-        }
-        .mix(ch_strand_fastq.known_strand)
-        .set { ch_strand_inferred_filtered_fastq }
+    ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
+    ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
+    ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
@@ -870,11 +701,14 @@ workflow RNASEQ {
         // Provide MultiQC with rename patterns to ensure it uses sample names
         // for single-techrep samples not processed by CAT_FASTQ.
 
-        ch_name_replacements = ch_fastq.single
+        ch_name_replacements = ch_fastq
+            .filter{ meta, reads ->
+                reads.size() == 1
+            }
             .map{ meta, reads ->
-                def name1 = file(reads[0]).simpleName + "\t" + meta.id + '_1'
+                def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
                 if (reads[1] ){
-                    def name2 = file(reads[1]).simpleName + "\t" + meta.id + '_2'
+                    def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
                     return [ name1, name2 ]
                 } else{
                     return name1

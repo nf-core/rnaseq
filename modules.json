@@ -98,7 +98,8 @@
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "0dee12b56ccecc416d6f7a1ccd85fd571eab3307",
-                        "installed_by": ["bam_markduplicates_picard"]
+                        "installed_by": ["bam_markduplicates_picard"],
+                        "patch": "modules/nf-core/picard/markduplicates/picard-markduplicates.diff"
                     },
                     "preseq/lcextrap": {
                         "branch": "master",

@@ -1,0 +1,45 @@
+Changes in module 'nf-core/picard/markduplicates'
+--- modules/nf-core/picard/markduplicates/main.nf
++++ modules/nf-core/picard/markduplicates/main.nf
+@@ -4,8 +4,8 @@
+ 
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/picard:3.2.0--hdfd78af_0' :
+-        'biocontainers/picard:3.2.0--hdfd78af_0' }"
++        'https://depot.galaxyproject.org/singularity/picard:3.1.1--hdfd78af_0' :
++        'biocontainers/picard:3.1.1--hdfd78af_0' }"
+ 
+     input:
+     tuple val(meta), path(reads)
+
+--- modules/nf-core/picard/markduplicates/environment.yml
++++ modules/nf-core/picard/markduplicates/environment.yml
+@@ -4,4 +4,4 @@
+   - bioconda
+   - defaults
+ dependencies:
+-  - bioconda::picard=3.2.0
++  - bioconda::picard=3.1.1
+
+--- modules/nf-core/picard/markduplicates/tests/main.nf.test
++++ modules/nf-core/picard/markduplicates/tests/main.nf.test
+@@ -4,10 +4,6 @@
+     script "../main.nf"
+     process "PICARD_MARKDUPLICATES"
+     config "./nextflow.config"
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "picard"
+-    tag "picard/markduplicates"
+ 
+     test("sarscov2 [unsorted bam]") {
+ 
+
+--- modules/nf-core/picard/markduplicates/tests/tags.yml
++++ /dev/null
+@@ -1,2 +0,0 @@
+-picard/markduplicates:
+-  - modules/nf-core/picard/markduplicates/**
+
+************************************************************

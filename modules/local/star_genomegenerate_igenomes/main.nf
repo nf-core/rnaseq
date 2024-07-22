@@ -115,4 +115,5 @@ process STAR_GENOMEGENERATE_IGENOMES {
             gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
         END_VERSIONS
         """
-    }}
+    }
+}

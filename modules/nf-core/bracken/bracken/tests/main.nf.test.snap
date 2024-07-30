@@ -1,0 +1,157 @@
+{
+    "sarscov2 - single-end - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.tsv:md5,4a21ae14ff8a0311d55f139af5247838"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.kraken2.report_bracken_species.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,599fbbf4c1cd5851022a98788f2afdba"
+                ],
+                "reports": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.tsv:md5,4a21ae14ff8a0311d55f139af5247838"
+                    ]
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.kraken2.report_bracken_species.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,599fbbf4c1cd5851022a98788f2afdba"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-04-16T14:14:27.122403998"
+    },
+    "sarscov2 - paired-end - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.tsv:md5,4a21ae14ff8a0311d55f139af5247838"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.kraken2.report_bracken_species.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,599fbbf4c1cd5851022a98788f2afdba"
+                ],
+                "reports": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.tsv:md5,4a21ae14ff8a0311d55f139af5247838"
+                    ]
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.kraken2.report_bracken_species.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,599fbbf4c1cd5851022a98788f2afdba"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-04-16T14:19:15.627050252"
+    },
+    "sarscov2 - stub - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_bracken_species.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,599fbbf4c1cd5851022a98788f2afdba"
+                ],
+                "reports": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_bracken_species.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,599fbbf4c1cd5851022a98788f2afdba"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-04-16T14:14:36.5929911"
+    }
+}

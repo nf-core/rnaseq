@@ -15,6 +15,11 @@
                         "git_sha": "81b90194ce9911dbd55bba2c65c6919f6677abc4",
                         "installed_by": ["modules"]
                     },
+                    "bracken/bracken": {
+                        "branch": "master",
+                        "git_sha": "f362bca32735a848feb314d601db1cee584ee0d1",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "4fc983ad0b30e6e32696fa7d980c76c7bfe1c03e",
@@ -89,6 +94,11 @@
                         "branch": "master",
                         "git_sha": "de5811dd9ca15af1e131806001bcaae909e42021",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
+                    },
+                    "kraken2/kraken2": {
+                        "branch": "master",
+                        "git_sha": "ca87ad032a62f025f0c373facacef2df0c5411b2",
+                        "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",

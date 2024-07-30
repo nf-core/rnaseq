@@ -38,6 +38,8 @@ include { PRESEQ_LCEXTRAP         } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ         } from '../../modules/nf-core/qualimap/rnaseq'
 include { STRINGTIE_STRINGTIE     } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS   } from '../../modules/nf-core/subread/featurecounts'
+include { KRAKEN2_BUILD               } from '../modules/nf-core/kraken2/build/main'
+include { BRACKEN_BUILD               } from '../modules/nf-core/bracken/build/main'
 include { MULTIQC                 } from '../../modules/nf-core/multiqc'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
@@ -158,9 +160,10 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
-    ch_genome_bam       = Channel.empty()
-    ch_genome_bam_index = Channel.empty()
-    ch_star_log         = Channel.empty()
+    ch_genome_bam          = Channel.empty()
+    ch_genome_bam_index    = Channel.empty()
+    ch_star_log            = Channel.empty()
+    ch_unaligned_sequences = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
         def is_aws_igenome = false
@@ -180,10 +183,11 @@ workflow RNASEQ {
             is_aws_igenome,
             ch_fasta.map { [ [:], it ] }
         )
-        ch_genome_bam        = ALIGN_STAR.out.bam
-        ch_genome_bam_index  = ALIGN_STAR.out.bai
-        ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
-        ch_star_log          = ALIGN_STAR.out.log_final
+        ch_genome_bam          = ALIGN_STAR.out.bam
+        ch_genome_bam_index    = ALIGN_STAR.out.bai
+        ch_transcriptome_bam   = ALIGN_STAR.out.bam_transcript
+        ch_star_log            = ALIGN_STAR.out.log_final
+        ch_unaligned_sequences = ALIGN_STAR.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.idxstats.collect{it[1]})
@@ -337,8 +341,9 @@ workflow RNASEQ {
             ch_splicesites.map { [ [:], it ] },
             ch_fasta.map { [ [:], it ] }
         )
-        ch_genome_bam       = FASTQ_ALIGN_HISAT2.out.bam
-        ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.bai
+        ch_genome_bam          = FASTQ_ALIGN_HISAT2.out.bam
+        ch_genome_bam_index    = FASTQ_ALIGN_HISAT2.out.bai
+        ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{it[1]})
@@ -633,6 +638,24 @@ workflow RNASEQ {
                 .set { ch_fail_strand_multiqc }
 
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
+        }
+
+        if (!params.skip_kraken2) {
+            KRAKEN2 (
+                ch_unaligned_sequences,
+                params.kraken_db,
+                false, //TODO Not saving read alignments. Should this be modifiable?
+                false
+            )
+            ch_kraken_reports = KRAKEN2.out.report
+            ch_versions = ch_versions.mix(KRAKEN2.out.versions)
+
+            BRACKEN (
+                ch_kraken_reports,
+                kraken_db
+            )
+            ch_versions = ch_versions.mix(BRACKEN.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.reports.collect().ifEmpty([]))
         }
     }
 

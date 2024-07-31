@@ -38,8 +38,8 @@ include { PRESEQ_LCEXTRAP            } from '../../modules/nf-core/preseq/lcextr
 include { QUALIMAP_RNASEQ            } from '../../modules/nf-core/qualimap/rnaseq'
 include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/stringtie'
 include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
-include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../modules/nf-core/kraken2/kraken2/main'
-include { BRACKEN_BRACKEN as BRACKEN } from '../modules/nf-core/bracken/bracken/main'
+include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
+include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
 include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
@@ -652,7 +652,7 @@ workflow RNASEQ {
 
             BRACKEN (
                 ch_kraken_reports,
-                kraken_db
+                params.kraken_db
             )
             ch_versions = ch_versions.mix(BRACKEN.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.reports.collect().ifEmpty([]))

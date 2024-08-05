@@ -640,22 +640,29 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
 
-        if (!params.skip_kraken2) {
+        if (params.kraken_db) {
             KRAKEN2 (
                 ch_unaligned_sequences,
                 params.kraken_db,
-                false, //TODO Not saving read alignments. Should this be modifiable?
-                false
+                params.save_kraken_assignments,
+                params.save_kraken_unassigned
             )
             ch_kraken_reports = KRAKEN2.out.report
             ch_versions = ch_versions.mix(KRAKEN2.out.versions)
 
-            BRACKEN (
-                ch_kraken_reports,
-                params.kraken_db
-            )
-            ch_versions = ch_versions.mix(BRACKEN.out.versions)
-            ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.reports.collect().ifEmpty([]))
+            // Only put Kraken2 output in MultiQC if Bracken is not run
+            if (params.skip_bracken) {
+                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.reports.collect{it[1]}.ifEmpty([]))
+            }
+
+            if (!params.skip_bracken) {
+                BRACKEN (
+                    ch_kraken_reports,
+                    params.kraken_db
+                )
+                ch_versions = ch_versions.mix(BRACKEN.out.versions)
+                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.reports.collect{it[1]}.ifEmpty([]))
+            }
         }
     }
 

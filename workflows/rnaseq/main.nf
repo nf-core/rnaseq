@@ -652,7 +652,7 @@ workflow RNASEQ {
 
             // Only put Kraken2 output in MultiQC if Bracken is not run
             if (params.skip_bracken) {
-                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.reports.collect{it[1]}.ifEmpty([]))
+                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]})
             }
 
             if (!params.skip_bracken) {
@@ -661,7 +661,7 @@ workflow RNASEQ {
                     params.kraken_db
                 )
                 ch_versions = ch_versions.mix(BRACKEN.out.versions)
-                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.reports.collect{it[1]}.ifEmpty([]))
+                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{it[1]})
             }
         }
     }

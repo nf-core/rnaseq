@@ -30,6 +30,8 @@ run_modules:
   - preseq
   - rseqc
   - qualimap
+  - kraken
+  - bracken
 
 # Order of modules
 top_modules:
@@ -104,6 +106,12 @@ sp:
     fn: "*.flagstat"
   samtools/idxstats:
     fn: "*.idxstats*"
+
+  kraken:
+    fn: "*report.txt"
+
+  bracken:
+    fn: "*bracken_species.txt"
 
   rseqc/bam_stat:
     fn: "*.bam_stat.txt"

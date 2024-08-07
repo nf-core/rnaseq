@@ -111,7 +111,7 @@ sp:
     fn: "*report.txt"
 
   bracken:
-    fn: "*bracken_species.txt"
+    fn: "*.kraken2.report_bracken.txt"
 
   rseqc/bam_stat:
     fn: "*.bam_stat.txt"

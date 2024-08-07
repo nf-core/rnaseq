@@ -697,9 +697,12 @@ workflow RNASEQ {
         ch_workflow_summary      = Channel.value(paramsSummaryMultiqc(summary_params))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+        multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description) : file("$projectDir/workflows/rnaseq/assets/multiqc/methods_description_template.yml", checkIfExists: true)
+        ch_multiqc_files = ch_multiqc_files.mix(Channel.from(multiqc_custom_methods_description))
 
         // Provide MultiQC with rename patterns to ensure it uses sample names
-        // for single-techrep samples not processed by CAT_FASTQ.
+        // for single-techrep samples not processed by CAT_FASTQ, and trims out
+        // _raw or _trimmed
 
         ch_name_replacements = ch_fastq
             .filter{ meta, reads ->
@@ -707,11 +710,13 @@ workflow RNASEQ {
             }
             .map{ meta, reads ->
                 def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
+                def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
                 if (reads[1] ){
                     def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
-                    return [ name1, name2 ]
+                    def fastqcnames2 = meta.id + "_raw_2\t" + meta.id + "_2\n" + meta.id + "_trimmed_2\t" + meta.id + "_2"
+                    return [ name1, name2, fastqcnames1, fastqcnames2 ]
                 } else{
-                    return name1
+                    return [ name1, fastqcnames1 ]
                 }
             }
             .flatten()

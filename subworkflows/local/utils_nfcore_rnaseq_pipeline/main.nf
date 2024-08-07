@@ -256,6 +256,27 @@ def validateInputParameters() {
         }
     }
 
+    // Check that unaligned reads are saved when using Kraken2
+    if (params.kraken_db) {
+        if (!params.save_unaligned) {
+            error("Please provide --save_unaligned when using Kraken2 to save unaligned reads for analysis.")
+        }
+
+        if (params.aligner = 'star_rsem') {
+            error("Kraken2 cannot be used with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
+        }
+    }
+
+    // Check that Bracken skipped option is not given when not running kraken
+    if (!params.kraken_db && params.skip_bracken) {
+        skipBrackenWithoutKrackenWarn()
+    }
+
+    // Check that no kraken options are given when not running kraken
+    if (!params.kraken_db && (params.save_kraken_assignments || params.save_kraken_unassigned)) {
+        krakenArgumentsWithoutKrakenDBWarn()
+    }
+
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
     def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
@@ -468,6 +489,26 @@ def additionaFastaIndexWarn(index) {
         "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/556\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print a warning if using '--skip_bracken' without '--kraken_db'
+//
+def skipBrackenWithoutKrackenWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--skip_bracken' parameter has been provided without '--kraken_db'.\n" +
+        "  Neither bracken or kraken will run.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print a warning if save_kraken_assignments or save_kraken_unassigned is provided without kraken_db
+//
+def krakenArgumentsWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--save_kraken_assignments' or '--save_kraken_unassigned' parameters have been provided without '--kraken_db'.\n" +
+        "  Kraken2 is not being run so neither will be saved.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

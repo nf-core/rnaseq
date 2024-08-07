@@ -560,7 +560,7 @@
                 },
                 "bracken_precision": {
                     "type": "string",
-                    "default": "G",
+                    "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
                     "help_text": "Options are D, P, C, O, F, G, S."

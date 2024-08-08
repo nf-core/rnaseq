@@ -494,18 +494,6 @@ def checkMaxContigSize(fai_file) {
 }
 
 //
-// Create MultiQC tsv custom content from a list of values
-//
-def multiqcTsvFromList(tsv_data, header) {
-    def tsv_string = ""
-    if (tsv_data.size() > 0) {
-        tsv_string += "${header.join('\t')}\n"
-        tsv_string += tsv_data.join('\n')
-    }
-    return tsv_string
-}
-
-//
 // Function that parses and returns the alignment rate from the STAR log output
 //
 def getStarPercentMapped(params, align_log) {

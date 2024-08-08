@@ -18,7 +18,7 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'

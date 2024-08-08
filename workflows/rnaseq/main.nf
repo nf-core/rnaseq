@@ -69,10 +69,11 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 */
 
 // Header files for MultiQC
-ch_pca_header_multiqc        = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
-ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
-ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-ch_dummy_file                = ch_pca_header_multiqc
+ch_pca_header_multiqc           = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
+sample_status_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
+ch_clustering_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
+ch_biotypes_header_multiqc      = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_dummy_file                   = ch_pca_header_multiqc
 
 workflow RNASEQ {
 
@@ -152,8 +153,34 @@ workflow RNASEQ {
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-    ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
+    ich_versions                      = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
+
+    ch_trim_status = ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
+        }
+    //
+    // Get list of samples that failed trimming threshold for MultiQC report
+    //
+    ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                if (num_reads <= params.min_trimmed_reads.toFloat()) {
+                    return [ "$meta.id\t$num_reads" ]
+                }
+        }
+        .collect()
+        .map {
+            tsv_data ->
+                def header = ["Sample", "Reads after trimming"]
+                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
+        }
+        .set { ch_fail_trimming_multiqc }
+
+    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
@@ -410,7 +437,7 @@ workflow RNASEQ {
             .map {
                 tsv_data ->
                     def header = ["Sample", "STAR uniquely mapped reads (%)"]
-                    multiqcTsvFromList(tsv_data, header)
+                    sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
             }
             .set { ch_fail_mapping_multiqc }
         ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv'))
@@ -628,7 +655,7 @@ workflow RNASEQ {
                             "Antisense (%)",
                             "Unstranded (%)"
                         ]
-                        multiqcTsvFromList(tsv_data, header)
+                        sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
 

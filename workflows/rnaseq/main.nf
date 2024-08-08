@@ -705,18 +705,16 @@ workflow RNASEQ {
         // _raw or _trimmed
 
         ch_name_replacements = ch_fastq
-            .filter{ meta, reads ->
-                reads.size() == 1
-            }
             .map{ meta, reads ->
                 def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
-                def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
-                if (reads[1] ){
+                def fastqcnames = meta.id + "_raw\t" + meta.id + "\n" + meta.id + "_trimmed\t" + meta.id
+                if (reads[0][1] ){
                     def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
+                    def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
                     def fastqcnames2 = meta.id + "_raw_2\t" + meta.id + "_2\n" + meta.id + "_trimmed_2\t" + meta.id + "_2"
                     return [ name1, name2, fastqcnames1, fastqcnames2 ]
                 } else{
-                    return [ name1, fastqcnames1 ]
+                    return [ name1, fastqcnames ]
                 }
             }
             .flatten()

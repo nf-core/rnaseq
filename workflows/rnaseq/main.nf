@@ -22,6 +22,7 @@ include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fast
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { methodsDescriptionText         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,7 +154,7 @@ workflow RNASEQ {
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-    ich_versions                      = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
+    ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
@@ -717,15 +718,33 @@ workflow RNASEQ {
     ch_multiqc_report = Channel.empty()
 
     if (!params.skip_multiqc) {
+
+        // Load MultiQC configuration files
         ch_multiqc_config        = Channel.fromPath("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true)
         ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
         ch_multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo)   : Channel.empty()
-        summary_params           = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary      = Channel.value(paramsSummaryMultiqc(summary_params))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-        multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description) : file("$projectDir/workflows/rnaseq/assets/multiqc/methods_description_template.yml", checkIfExists: true)
-        ch_multiqc_files = ch_multiqc_files.mix(Channel.from(multiqc_custom_methods_description))
+
+        // Prepare the workflow summary
+        ch_workflow_summary = Channel.value(
+            paramsSummaryMultiqc(
+                paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+            )
+        ).collectFile(name: 'workflow_summary_mqc.yaml')
+
+        // Prepare the methods section
+        ch_methods_description = Channel.value(
+            methodsDescriptionText(
+                params.multiqc_methods_description
+                    ? file(params.multiqc_methods_description)
+                    : file("$projectDir/workflows/rnaseq/assets/multiqc/methods_description_template.yml", checkIfExists: true)
+            )
+        ).collectFile(name: 'methods_description_mqc.yaml')
+
+        // Add summary, versions, and methods to the MultiQC input file list
+        ch_multiqc_files = ch_multiqc_files
+            .mix(ch_workflow_summary)
+            .mix(ch_collated_versions)
+            .mix(ch_methods_description)
 
         // Provide MultiQC with rename patterns to ensure it uses sample names
         // for single-techrep samples not processed by CAT_FASTQ, and trims out

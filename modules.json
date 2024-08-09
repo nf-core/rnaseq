@@ -97,7 +97,7 @@
                     },
                     "kraken2/kraken2": {
                         "branch": "master",
-                        "git_sha": "ca87ad032a62f025f0c373facacef2df0c5411b2",
+                        "git_sha": "a13d5d945742a60bbef6e5c177e81cda540f75dc",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {

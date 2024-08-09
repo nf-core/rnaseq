@@ -107,6 +107,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1342](https://github.com/nf-core/rnaseq/pull/1342) - Factor out preprocessing
 - [PR #1345](https://github.com/nf-core/rnaseq/pull/1345) - Fix preprocessing call
 - [PR #1350](https://github.com/nf-core/rnaseq/pull/1350) - Reduce resource usage for sort process in bedtools/genomecov
+- [PR #1352](https://github.com/nf-core/rnaseq/pull/1352) - Assorted fixes to MultiQC usage
 
 ### Parameters
 

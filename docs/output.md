@@ -674,7 +674,6 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 ![MultiQC - Bracken top species plot](images/bracken-top-n-plot.png)
 
-
 ### MultiQC
 
 <details markdown="1">

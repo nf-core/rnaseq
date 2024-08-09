@@ -22,6 +22,7 @@ Special thanks to the following for their contributions to the release:
 Thank you to everyone else that has contributed by reporting bugs, enhancements or in any other way, shape or form.
 
 ### Enhancements & fixes
+
 - [PR #1351](https://github.com/nf-core/rnaseq/pull/1351) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
 - [PR #1197](https://github.com/nf-core/rnaseq/pull/1197) - Delete lib directory and replace with utils\_\* subworkflows

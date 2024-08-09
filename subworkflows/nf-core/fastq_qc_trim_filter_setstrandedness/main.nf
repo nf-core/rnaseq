@@ -72,7 +72,7 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
 //
 // Create MultiQC tsv custom content from a list of values
 //
-public static String multiqcTsvFromList(tsv_data, header) {
+def multiqcTsvFromList(tsv_data, header) {
     def tsv_string = ""
     if (tsv_data.size() > 0) {
         tsv_string += "${header.join('\t')}\n"

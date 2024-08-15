@@ -73,7 +73,8 @@
                     "hisat2/align": {
                         "branch": "master",
                         "git_sha": "2c6b1144ed58b6184ad58fc4e6b6a90219b4bf4f",
-                        "installed_by": ["fastq_align_hisat2"]
+                        "installed_by": ["fastq_align_hisat2"],
+                        "patch": "modules/nf-core/hisat2/align/hisat2-align.diff"
                     },
                     "hisat2/build": {
                         "branch": "master",

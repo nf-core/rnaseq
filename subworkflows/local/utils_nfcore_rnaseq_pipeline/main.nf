@@ -274,7 +274,7 @@ def validateInputParameters() {
             brackenPrecisionWithoutKrakenDBWarn()
         }
 
-        if (params.save_kraken_assignments || params.save_kraken_unassigned) {
+        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
             krakenArgumentsWithoutKrakenDBWarn()
         }
     }
@@ -499,9 +499,8 @@ def additionaFastaIndexWarn(index) {
 //
 def krakenArgumentsWithoutKrakenDBWarn() {
     log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--save_kraken_assignments' or '--save_kraken_unassigned' parameters\n" +
-        "  have been provided when contaminant screening is not set to Kraken2.\n" +
-        "  Kraken2 is not being run so neither will be saved.\n" +
+        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
+        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

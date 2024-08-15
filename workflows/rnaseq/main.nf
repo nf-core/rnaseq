@@ -652,7 +652,7 @@ workflow RNASEQ {
 
             if (params.contaminant_screening == 'kraken2') {
                 ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]})
-            } else if (params.contaminant_screening == 'kraken2_bracken')
+            } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
                     ch_kraken_reports,
                     params.kraken_db

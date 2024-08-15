@@ -552,18 +552,24 @@
                     "fa_icon": "fas fa-chart-pie",
                     "description": "Specify the RSeQC modules to run."
                 },
+                "contaminant_screening": {
+                    "type": "string",
+                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
+                    "fa_icon": "fas fa-virus-slash",
+                    "enum": ["kraken2", "kraken2_bracken"]
+                },
                 "kraken_db": {
                     "type": "string",
-                    "description": "Run Kraken2 and Bracken with provided database on unaligned reads.",
-                    "help_text": "See [pre-built Kraken/Bracken databases](https://benlangmead.github.io/aws-indexes/k2). This option must be ran with `--save_unaligned`",
-                    "fa_icon": "fas fa-bacteria"
+                    "description": "Database when using Kraken2/Bracken for contaminant screening.",
+                    "help_text": "See [pre-built Kraken2/Bracken databases](https://benlangmead.github.io/aws-indexes/k2).",
+                    "fa_icon": "fas fa-fish"
                 },
                 "bracken_precision": {
                     "type": "string",
                     "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
-                    "help_text": "Options are D, P, C, O, F, G, S."
+                    "enum": ["D", "P", "C", "O", "F", "G", "S"]
                 }
             }
         },
@@ -661,12 +667,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip DESeq2 PCA and heatmap plotting."
-                },
-                "skip_bracken": {
-                    "type": "boolean",
-                    "description": "Skip Bracken.",
-                    "fa_icon": "fas fa-fast-forward",
-                    "help_text": "If running Kraken2, skips Bracken post-processing."
                 },
                 "skip_multiqc": {
                     "type": "boolean",

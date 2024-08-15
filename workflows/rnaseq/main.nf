@@ -640,7 +640,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
 
-        if (params.kraken_db) {
+        if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
                 ch_unaligned_sequences,
                 params.kraken_db,
@@ -650,12 +650,9 @@ workflow RNASEQ {
             ch_kraken_reports = KRAKEN2.out.report
             ch_versions = ch_versions.mix(KRAKEN2.out.versions)
 
-            // Only put Kraken2 output in MultiQC if Bracken is not run
-            if (params.skip_bracken) {
+            if (params.contaminant_screening == 'kraken2') {
                 ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]})
-            }
-
-            if (!params.skip_bracken) {
+            } else if (params.contaminant_screening == 'kraken2_bracken')
                 BRACKEN (
                     ch_kraken_reports,
                     params.kraken_db

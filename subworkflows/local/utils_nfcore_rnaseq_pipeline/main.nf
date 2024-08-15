@@ -256,26 +256,22 @@ def validateInputParameters() {
         }
     }
 
-    // Check that unaligned reads are saved when using Kraken2
-    if (params.kraken_db) {
-        if (!params.save_unaligned) {
-            error("Please provide --save_unaligned when using Kraken2 to save unaligned reads for analysis.")
-        }
-
+    //General checks for if contaminant screening is used
+    if (params.contaminant_screening) {
         if (params.aligner == 'star_rsem') {
-            error("Kraken2 cannot be used with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
+            error("Contaminant screeneing cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
         }
     }
 
-    //Check that Kraken/Bracken parameters are not provided without the --kraken_db
-    if (!params.kraken_db) {
-
+    // Check that Kraken/Bracken database provided if using kraken2/bracken
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
+        if (!params.kraken_db) {
+            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
+        }
+    //Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
+    } else {
         if (!params.bracken_precision.equals('S')) {
             brackenPrecisionWithoutKrakenDBWarn()
-        }
-
-        if (params.skip_bracken) {
-            skipBrackenWithoutKrackenWarn()
         }
 
         if (params.save_kraken_assignments || params.save_kraken_unassigned) {
@@ -499,21 +495,12 @@ def additionaFastaIndexWarn(index) {
 }
 
 //
-// Print a warning if using '--skip_bracken' without '--kraken_db'
-//
-def skipBrackenWithoutKrackenWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--skip_bracken' parameter has been provided without '--kraken_db'.\n" +
-        "  Neither Bracken nor Kraken2 will run.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
 // Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
 //
 def krakenArgumentsWithoutKrakenDBWarn() {
     log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--save_kraken_assignments' or '--save_kraken_unassigned' parameters have been provided without '--kraken_db'.\n" +
+        "  '--save_kraken_assignments' or '--save_kraken_unassigned' parameters\n" +
+        "  have been provided when contaminant screening is not set to Kraken2.\n" +
         "  Kraken2 is not being run so neither will be saved.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
@@ -523,7 +510,7 @@ def krakenArgumentsWithoutKrakenDBWarn() {
 ///
 def brackenPrecisionWithoutKrakenDBWarn() {
     log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--bracken-precision' parameter has been provided without '--kraken_db'.\n" +
+        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
         "  Bracken will not run so precision will not be set.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }

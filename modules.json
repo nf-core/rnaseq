@@ -12,7 +12,7 @@
                     },
                     "bedtools/genomecov": {
                         "branch": "master",
-                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
+                        "git_sha": "9ba6b02bbcb322ff4265cc51fca0ee5d8420b929",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {

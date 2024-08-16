@@ -126,6 +126,10 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
+    // The subworkflow only has to do Salmon indexing if it discovers 'auto'
+    // samples, and if we haven't already made one elsewhere
+    salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
+
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,
         ch_fasta,
@@ -139,7 +143,7 @@ workflow RNASEQ {
         params.skip_fastqc || params.skip_qc,
         params.skip_trimming,
         params.skip_umi_extract,
-        !params.salmon_index && params.pseudo_aligner == 'salmon' && !params.skip_pseudo_alignment,
+        !salmon_index_available,
         !params.sortmerna_index && params.remove_ribo_rna,
         params.trimmer,
         params.min_trimmed_reads,

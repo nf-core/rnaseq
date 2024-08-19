@@ -660,11 +660,11 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `kraken2/kraken_reports`
+- `<ALIGNER>/contaminants/kraken2/kraken_reports`
   - `*.kraken2.report.txt`: Classification of unaligned reads in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
   - `*.classified*.fastq.gz` If `--save_kraken_alignments`, outputs fastq file for each sample with each classified read annotated with taxonomic identification from Kraken2.
   - `*.unclassified*.fastq.gz` If `save_kraken_unassigned`, outputs fastq file with all reads that were not classified by Kraken2.
-- `bracken/`
+- `<ALIGNER>/contaminants/bracken/`
   - `*.kraken2.report_bracken.txt`: Kraken-style reports of the Bracken abundance estimate results. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details.
   - `*.tsv` Summary of estimated reads for each taxon member at the given classification level and what corrections were made from Kraken2.
 

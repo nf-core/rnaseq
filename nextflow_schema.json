@@ -561,7 +561,7 @@
                 "kraken_db": {
                     "type": "string",
                     "description": "Database when using Kraken2/Bracken for contaminant screening.",
-                    "help_text": "See [pre-built Kraken2/Bracken databases](https://benlangmead.github.io/aws-indexes/k2).",
+                    "help_text": "See the usage tab for more information",
                     "fa_icon": "fas fa-fish"
                 },
                 "bracken_precision": {
@@ -569,6 +569,7 @@
                     "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
+                    "help_text": "First letter of Domain / Phylum / Class / Order / Family / Genus / Species",
                     "enum": ["D", "P", "C", "O", "F", "G", "S"]
                 }
             }

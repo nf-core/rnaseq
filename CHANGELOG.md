@@ -109,6 +109,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1345](https://github.com/nf-core/rnaseq/pull/1345) - Fix preprocessing call
 - [PR #1350](https://github.com/nf-core/rnaseq/pull/1350) - Reduce resource usage for sort process in bedtools/genomecov
 - [PR #1353](https://github.com/nf-core/rnaseq/pull/1353) - Correct conditional for salmon indexing in preprocessing workflow
+- [PR #1355](https://github.com/nf-core/rnaseq/pull/1355) - Make all curves on subway map better looking, and all lines now have the same width
 
 ### Parameters
 

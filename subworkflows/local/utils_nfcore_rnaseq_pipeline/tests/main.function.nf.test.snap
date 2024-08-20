@@ -95,16 +95,6 @@
         },
         "timestamp": "2024-03-06T14:33:40.548126"
     },
-    "Test Function multiqcTsvFromList": {
-        "content": [
-            "id\tattribute\ntest\nvalue"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:33:43.671826"
-    },
     "Test Function checkSamplesAfterGrouping success": {
         "content": [
             [

@@ -18,10 +18,11 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { methodsDescriptionText         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,10 +70,11 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 */
 
 // Header files for MultiQC
-ch_pca_header_multiqc        = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
-ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
-ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-ch_dummy_file                = ch_pca_header_multiqc
+ch_pca_header_multiqc           = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
+sample_status_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
+ch_clustering_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
+ch_biotypes_header_multiqc      = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+ch_dummy_file                   = ch_pca_header_multiqc
 
 workflow RNASEQ {
 
@@ -158,6 +160,32 @@ workflow RNASEQ {
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
+
+    ch_trim_status = ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
+        }
+    //
+    // Get list of samples that failed trimming threshold for MultiQC report
+    //
+    ch_trim_read_count
+        .map {
+            meta, num_reads ->
+                if (num_reads <= params.min_trimmed_reads.toFloat()) {
+                    return [ "$meta.id\t$num_reads" ]
+                }
+        }
+        .collect()
+        .map {
+            tsv_data ->
+                def header = ["Sample", "Reads after trimming"]
+                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
+        }
+        .set { ch_fail_trimming_multiqc }
+
+    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
@@ -414,7 +442,7 @@ workflow RNASEQ {
             .map {
                 tsv_data ->
                     def header = ["Sample", "STAR uniquely mapped reads (%)"]
-                    multiqcTsvFromList(tsv_data, header)
+                    sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
             }
             .set { ch_fail_mapping_multiqc }
         ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv'))
@@ -632,7 +660,7 @@ workflow RNASEQ {
                             "Antisense (%)",
                             "Unstranded (%)"
                         ]
-                        multiqcTsvFromList(tsv_data, header)
+                        sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
 
@@ -694,28 +722,49 @@ workflow RNASEQ {
     ch_multiqc_report = Channel.empty()
 
     if (!params.skip_multiqc) {
+
+        // Load MultiQC configuration files
         ch_multiqc_config        = Channel.fromPath("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true)
         ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
         ch_multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo)   : Channel.empty()
-        summary_params           = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary      = Channel.value(paramsSummaryMultiqc(summary_params))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+
+        // Prepare the workflow summary
+        ch_workflow_summary = Channel.value(
+            paramsSummaryMultiqc(
+                paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+            )
+        ).collectFile(name: 'workflow_summary_mqc.yaml')
+
+        // Prepare the methods section
+        ch_methods_description = Channel.value(
+            methodsDescriptionText(
+                params.multiqc_methods_description
+                    ? file(params.multiqc_methods_description)
+                    : file("$projectDir/workflows/rnaseq/assets/multiqc/methods_description_template.yml", checkIfExists: true)
+            )
+        ).collectFile(name: 'methods_description_mqc.yaml')
+
+        // Add summary, versions, and methods to the MultiQC input file list
+        ch_multiqc_files = ch_multiqc_files
+            .mix(ch_workflow_summary)
+            .mix(ch_collated_versions)
+            .mix(ch_methods_description)
 
         // Provide MultiQC with rename patterns to ensure it uses sample names
-        // for single-techrep samples not processed by CAT_FASTQ.
+        // for single-techrep samples not processed by CAT_FASTQ, and trims out
+        // _raw or _trimmed
 
         ch_name_replacements = ch_fastq
-            .filter{ meta, reads ->
-                reads.size() == 1
-            }
             .map{ meta, reads ->
                 def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
-                if (reads[1] ){
+                def fastqcnames = meta.id + "_raw\t" + meta.id + "\n" + meta.id + "_trimmed\t" + meta.id
+                if (reads[0][1] ){
                     def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
-                    return [ name1, name2 ]
+                    def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
+                    def fastqcnames2 = meta.id + "_raw_2\t" + meta.id + "_2\n" + meta.id + "_trimmed_2\t" + meta.id + "_2"
+                    return [ name1, name2, fastqcnames1, fastqcnames2 ]
                 } else{
-                    return name1
+                    return [ name1, fastqcnames ]
                 }
             }
             .flatten()

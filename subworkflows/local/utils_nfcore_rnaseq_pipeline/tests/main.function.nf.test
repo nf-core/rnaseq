@@ -367,29 +367,6 @@ nextflow_function {
     }
 
 
-    test("Test Function multiqcTsvFromList") {
-
-        function "multiqcTsvFromList"
-
-        when {
-            function {
-                """
-                // Create a TSV of one entry
-                input[0] = [ 'test', 'value'    ]
-                input[1] = [ 'id'  , 'attribute']
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
     test("Test Function getStarPercentMapped pass") {
 
         function "getStarPercentMapped"

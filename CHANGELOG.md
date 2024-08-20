@@ -102,6 +102,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1330](https://github.com/nf-core/rnaseq/pull/1330) - Update all nf-core/modules and subworkflows
 - [PR #1331](https://github.com/nf-core/rnaseq/pull/1331) - Adding stubs for local modules
 - [PR #1334](https://github.com/nf-core/rnaseq/pull/1334) - Update all nf-core/modules and subworkflows with stubs
+- [PR #1335](https://github.com/nf-core/rnaseq/pull/1335) - Adding stubs at all levels
 - [PR #1336](https://github.com/nf-core/rnaseq/pull/1334) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
 - [PR #1340](https://github.com/nf-core/rnaseq/pull/1340) - Remove out-of-date Azure specific guidance
 - [PR #1341](https://github.com/nf-core/rnaseq/pull/1341) - Add rename in the MultiQC report for samples without techreps
@@ -137,6 +138,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 | `samtools`                          | 1.17        | 1.20        |
 | `sortmerna`                         | 4.3.4       | 4.3.6       |
 | `umi_tools`                         | 1.14        | 1.15        |
+| `untar`                             | 1.3         | 1.34        |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

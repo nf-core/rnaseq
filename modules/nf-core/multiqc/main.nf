@@ -3,8 +3,8 @@ process MULTIQC {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.23--pyhdfd78af_0' :
-        'biocontainers/multiqc:1.23--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/multiqc:1.24--pyhdfd78af_0' :
+        'biocontainers/multiqc:1.24--pyhdfd78af_0' }"
 
     input:
     path  multiqc_files, stageAs: "?/*"
@@ -25,6 +25,7 @@ process MULTIQC {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ? "--filename ${task.ext.prefix}.html" : ''
     def config = multiqc_config ? "--config $multiqc_config" : ''
     def extra_config = extra_multiqc_config ? "--config $extra_multiqc_config" : ''
     def logo = multiqc_logo ? /--cl-config 'custom_logo: "${multiqc_logo}"'/ : ''
@@ -35,6 +36,7 @@ process MULTIQC {
         --force \\
         $args \\
         $config \\
+        $prefix \\
         $extra_config \\
         $logo \\
         $replace \\

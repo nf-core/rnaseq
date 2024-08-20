@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "PICARD_MARKDUPLICATES"
     config "./nextflow.config"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "picard"
-    tag "picard/markduplicates"
 
     test("sarscov2 [unsorted bam]") {
 

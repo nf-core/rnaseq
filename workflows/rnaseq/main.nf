@@ -15,12 +15,10 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { ALIGN_STAR                                        } from '../../subworkflows/local/align_star'
-include { QUANTIFY_RSEM                                     } from '../../subworkflows/local/quantify_rsem'
-
+include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
+include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { getSalmonInferredStrandedness  } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -34,8 +32,6 @@ include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CAT_FASTQ               } from '../../modules/nf-core/cat/fastq'
-include { BBMAP_BBSPLIT           } from '../../modules/nf-core/bbmap/bbsplit'
 include { DUPRADAR                } from '../../modules/nf-core/dupradar'
 include { SAMTOOLS_SORT           } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP         } from '../../modules/nf-core/preseq/lcextrap'
@@ -44,8 +40,6 @@ include { STRINGTIE_STRINGTIE     } from '../../modules/nf-core/stringtie/string
 include { SUBREAD_FEATURECOUNTS   } from '../../modules/nf-core/subread/featurecounts'
 include { MULTIQC                 } from '../../modules/nf-core/multiqc'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
-include { SORTMERNA                                            } from '../../modules/nf-core/sortmerna'
-include { SORTMERNA as SORTMERNA_INDEX                         } from '../../modules/nf-core/sortmerna'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 
@@ -56,9 +50,6 @@ include { paramsSummaryMap                 } from 'plugin/nf-schema'
 include { samplesheetToList                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../../subworkflows/nf-core/fastq_subsample_fq_salmon'
-include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore'
-include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_SORT_STATS_SAMTOOLS          } from '../../subworkflows/nf-core/bam_sort_stats_samtools'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
@@ -69,6 +60,7 @@ include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
+include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,6 +91,7 @@ workflow RNASEQ {
     ch_salmon_index      // channel: path(salmon/index/)
     ch_kallisto_index    // channel: [ meta, path(kallisto/index/) ]
     ch_bbsplit_index     // channel: path(bbsplit/index/)
+    ch_ribo_db           // channel: path(sortmerna_fasta_list)
     ch_sortmerna_index   // channel: path(sortmerna/index/)
     ch_splicesites       // channel: path(genome.splicesites.txt)
     make_sortmerna_index // boolean: Whether to create an index before running sortmerna
@@ -106,6 +99,9 @@ workflow RNASEQ {
     main:
 
     ch_multiqc_files = Channel.empty()
+    ch_trim_status = Channel.empty()
+    ch_map_status = Channel.empty()
+    ch_strand_status = Channel.empty()
 
     //
     // Create channel from input file provided through params.input
@@ -124,188 +120,44 @@ workflow RNASEQ {
         .map {
             checkSamplesAfterGrouping(it)
         }
-        .branch {
-            meta, fastqs ->
-                single  : fastqs.size() == 1
-                    return [ meta, fastqs.flatten() ]
-                multiple: fastqs.size() > 1
-                    return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_fastq }
+        .set{ ch_fastq }
 
     //
-    // MODULE: Concatenate FastQ files from same sample if required
-    //
-    CAT_FASTQ (
-        ch_fastq.multiple
-    )
-    .reads
-    .mix(ch_fastq.single)
-    .set { ch_cat_fastq }
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
-
-    //
-    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
-    //
-    ch_filtered_reads  = Channel.empty()
-    ch_trim_read_count = Channel.empty()
-    if (params.trimmer == 'trimgalore') {
-        FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
-            ch_cat_fastq,
-            params.skip_fastqc || params.skip_qc,
-            params.with_umi,
-            params.skip_umi_extract,
-            params.skip_trimming,
-            params.umi_discard_read,
-            params.min_trimmed_reads
-        )
-        ch_filtered_reads  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
-        ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]})
-        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
-    }
-
-    //
-    // SUBWORKFLOW: Read QC, extract UMI and trim adapters with fastp
-    //
-    if (params.trimmer == 'fastp') {
-        FASTQ_FASTQC_UMITOOLS_FASTP (
-            ch_cat_fastq,
-            params.skip_fastqc || params.skip_qc,
-            params.with_umi,
-            params.skip_umi_extract,
-            params.umi_discard_read,
-            params.skip_trimming,
-            [],
-            params.save_trimmed,
-            params.save_trimmed,
-            params.min_trimmed_reads
-        )
-        ch_filtered_reads  = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
-        ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json.collect{it[1]})
-        ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
-    }
-
-    //
-    // Get list of samples that failed trimming threshold for MultiQC report
-    //
-    ch_trim_read_count
-        .map {
-            meta, num_reads ->
-                if (num_reads <= params.min_trimmed_reads.toFloat()) {
-                    return [ "$meta.id\t$num_reads" ]
-                }
-        }
-        .collect()
-        .map {
-            tsv_data ->
-                def header = ["Sample", "Reads after trimming"]
-                multiqcTsvFromList(tsv_data, header)
-        }
-        .set { ch_fail_trimming_multiqc }
-    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
-
-    //
-    // MODULE: Remove genome contaminant reads
-    //
-    if (!params.skip_bbsplit) {
-        BBMAP_BBSPLIT (
-            ch_filtered_reads,
-            ch_bbsplit_index,
-            [],
-            [ [], [] ],
-            false
-        )
-        .primary_fastq
-        .set { ch_filtered_reads }
-        ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions.first())
-    }
-
-    //
-    // MODULE: Remove ribosomal RNA reads
-    //
-    // Check rRNA databases for sortmerna
-    if (params.remove_ribo_rna) {
-        ch_ribo_db = file(params.ribo_database_manifest)
-        if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
-
-        Channel.from(ch_ribo_db.readLines())
-            .map { row -> file(row, checkIfExists: true) }
-            .collect()
-            .map { [ 'rrna_refs', it ] }
-            .set { ch_sortmerna_fastas }
-
-        if (make_sortmerna_index) {
-            SORTMERNA_INDEX (
-                [ [],[] ],
-                ch_sortmerna_fastas,
-                [ [],[] ]
-            )
-            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
-        }
-
-        SORTMERNA (
-            ch_filtered_reads,
-            ch_sortmerna_fastas,
-            ch_sortmerna_index
-        )
-        .reads
-        .set { ch_filtered_reads }
-
-        ch_multiqc_files = ch_multiqc_files.mix(SORTMERNA.out.log.collect{it[1]})
-        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
-    }
-
-    //
-    // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
+    // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // Branch FastQ channels if 'auto' specified to infer strandedness
-    ch_filtered_reads
-        .branch {
-            meta, fastq ->
-                auto_strand : meta.strandedness == 'auto'
-                    return [ meta, fastq ]
-                known_strand: meta.strandedness != 'auto'
-                    return [ meta, fastq ]
-        }
-        .set { ch_strand_fastq }
+    // The subworkflow only has to do Salmon indexing if it discovers 'auto'
+    // samples, and if we haven't already made one elsewhere
+    salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
 
-    // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-    ch_fasta
-        .combine(ch_strand_fastq.auto_strand)
-        .map { it.first() }
-        .first()
-        .set { ch_genome_fasta }
-
-    def prepare_tool_indices = []
-    if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
-        prepare_tool_indices << params.pseudo_aligner
-    }
-    FASTQ_SUBSAMPLE_FQ_SALMON (
-        ch_strand_fastq.auto_strand,
-        ch_genome_fasta,
+    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
+        ch_fastq,
+        ch_fasta,
         ch_transcript_fasta,
         ch_gtf,
         ch_salmon_index,
-        !params.salmon_index && !('salmon' in prepare_tool_indices)
+        ch_sortmerna_index,
+        ch_bbsplit_index,
+        ch_ribo_db,
+        params.skip_bbsplit,
+        params.skip_fastqc || params.skip_qc,
+        params.skip_trimming,
+        params.skip_umi_extract,
+        !salmon_index_available,
+        !params.sortmerna_index && params.remove_ribo_rna,
+        params.trimmer,
+        params.min_trimmed_reads,
+        params.save_trimmed,
+        params.remove_ribo_rna,
+        params.with_umi,
+        params.umi_discard_read,
+        params.stranded_threshold,
+        params.unstranded_threshold
     )
-    ch_versions = ch_versions.mix(FASTQ_SUBSAMPLE_FQ_SALMON.out.versions)
 
-    FASTQ_SUBSAMPLE_FQ_SALMON
-        .out
-        .json_info
-        .join(ch_strand_fastq.auto_strand)
-        .map { meta, json, reads ->
-            return [ meta + [ strandedness: getSalmonInferredStrandedness(json) ], reads ]
-        }
-        .mix(ch_strand_fastq.known_strand)
-        .set { ch_strand_inferred_filtered_fastq }
+    ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
+    ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
+    ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
@@ -357,6 +209,7 @@ workflow RNASEQ {
             )
             ch_genome_bam       = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.deduplog.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats.collect{it[1]})
@@ -510,6 +363,7 @@ workflow RNASEQ {
             )
             ch_genome_bam       = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bam
             ch_genome_bam_index = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.bai
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.deduplog.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.stats.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.flagstat.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME.out.idxstats.collect{it[1]})
@@ -527,6 +381,13 @@ workflow RNASEQ {
         ch_star_log
             .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
             .set { ch_percent_mapped }
+
+        // Save status for workflow summary
+        ch_map_status = ch_percent_mapped
+            .map {
+                meta, mapped, pass ->
+                    return [ meta.id, pass ]
+            }
 
         ch_genome_bam
             .join(ch_percent_mapped, by: [0])
@@ -718,30 +579,63 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
             ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
-            BAM_RSEQC
-                .out
-                .inferexperiment_txt
+            // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
+            ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def inferred_strand = getInferexperimentStrandedness(strand_log, 30)
-                        if (meta.strandedness != inferred_strand[0]) {
-                            return [ "$meta.id\t$meta.strandedness\t${inferred_strand.join('\t')}" ]
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+                        rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
+
+                        def status = 'fail'
+                        def multiqc_lines = []
+                        if (meta.salmon_strand_analysis) {
+                            salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
+
+                            if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined') {
+                                status = 'pass'
+                            }
+                            multiqc_lines = [
+                                "$meta.id \tSalmon\t$status\tauto\t${meta.salmon_strand_analysis.values().join('\t')}",
+                                "$meta.id\tRSeQC\t$status\tauto\t${rseqc_inferred_strand.values().join('\t')}"
+                            ]
                         }
+                        else {
+                            if (meta.strandedness == rseqc_strandedness) {
+                                status = 'pass'
+                            }
+                            multiqc_lines = [ "$meta.id\tRSeQC\t$status\t$meta.strandedness\t${rseqc_inferred_strand.values().join('\t')}" ]
+                        }
+                        return [ meta, status, multiqc_lines ]
                 }
+                .multiMap {
+                    meta, status, multiqc_lines ->
+                        status: [ meta.id, status == 'pass' ]
+                        multiqc_lines: multiqc_lines
+                }
+
+            // Store the statuses for output
+            ch_strand_status = ch_strand_comparison.status
+
+            // Take the lines formatted for MultiQC and output
+            ch_strand_comparison.multiqc_lines
+                .flatten()
                 .collect()
                 .map {
                     tsv_data ->
                         def header = [
                             "Sample",
+                            "Strand inference method",
+                            "Status",
                             "Provided strandedness",
                             "Inferred strandedness",
                             "Sense (%)",
                             "Antisense (%)",
-                            "Undetermined (%)"
+                            "Unstranded (%)"
                         ]
                         multiqcTsvFromList(tsv_data, header)
                 }
                 .set { ch_fail_strand_multiqc }
+
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
     }
@@ -798,6 +692,7 @@ workflow RNASEQ {
     // MODULE: MultiQC
     //
     ch_multiqc_report = Channel.empty()
+
     if (!params.skip_multiqc) {
         ch_multiqc_config        = Channel.fromPath("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true)
         ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
@@ -807,16 +702,40 @@ workflow RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
 
+        // Provide MultiQC with rename patterns to ensure it uses sample names
+        // for single-techrep samples not processed by CAT_FASTQ.
+
+        ch_name_replacements = ch_fastq
+            .filter{ meta, reads ->
+                reads.size() == 1
+            }
+            .map{ meta, reads ->
+                def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
+                if (reads[1] ){
+                    def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
+                    return [ name1, name2 ]
+                } else{
+                    return name1
+                }
+            }
+            .flatten()
+            .collectFile(name: 'name_replacement.txt', newLine: true)
+
         MULTIQC (
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
+            ch_multiqc_logo.toList(),
+            ch_name_replacements,
+            []
         )
         ch_multiqc_report = MULTIQC.out.report
     }
 
     emit:
+    trim_status    = ch_trim_status    // channel: [id, boolean]
+    map_status     = ch_map_status     // channel: [id, boolean]
+    strand_status  = ch_strand_status  // channel: [id, boolean]
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]
 }

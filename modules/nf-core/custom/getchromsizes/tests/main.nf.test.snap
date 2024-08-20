@@ -22,7 +22,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ],
                 "fai": [
                     [
@@ -44,11 +44,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ]
             }
         ],
-        "timestamp": "2024-01-17T17:48:35.562918"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-20T13:22:34.14237"
     },
     "test_custom_getchromsizes_bgzip": {
         "content": [
@@ -78,7 +82,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ],
                 "fai": [
                     [
@@ -105,10 +109,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ]
             }
         ],
-        "timestamp": "2024-01-17T17:49:02.562311"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-20T13:23:06.241379"
     }
 }

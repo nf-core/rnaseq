@@ -4,6 +4,10 @@ nextflow_process {
     script "../main.nf"
     process "MULTIQC"
 
+    tag "modules"
+    tag "modules_nfcore"
+    tag "multiqc"
+
     test("sarscov2 single-end [fastqc]") {
 
         when {
@@ -13,6 +17,8 @@ nextflow_process {
                 input[1] = []
                 input[2] = []
                 input[3] = []
+                input[4] = []
+                input[5] = []
                 """
             }
         }
@@ -37,6 +43,8 @@ nextflow_process {
                 input[1] = Channel.of(file("https://github.com/nf-core/tools/raw/dev/nf_core/pipeline-template/assets/multiqc_config.yml", checkIfExists: true))
                 input[2] = []
                 input[3] = []
+                input[4] = []
+                input[5] = []
                 """
             }
         }
@@ -62,6 +70,8 @@ nextflow_process {
                 input[1] = []
                 input[2] = []
                 input[3] = []
+                input[4] = []
+                input[5] = []
                 """
             }
         }

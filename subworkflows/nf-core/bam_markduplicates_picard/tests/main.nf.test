@@ -4,20 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BAM_MARKDUPLICATES_PICARD"
 
-    tag "picard"
-    tag "picard/markduplicates"
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "bam_markduplicates_picard"
-    tag "subworkflows/bam_markduplicates_picard"
-    tag "subworkflows/bam_stats_samtools"
-    tag "bam_stats_samtools"
-    tag "samtools"
-    tag "samtools/flagstat"
-    tag "samtools/idxstats"
-    tag "samtools/index"
-    tag "samtools/stats"
-
     test("sarscov2 - bam") {
 
         when {

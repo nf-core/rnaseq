@@ -17,19 +17,19 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.additional_fasta = getGenomeAttribute('additional_fasta')
-params.bbsplit_index    = getGenomeAttribute('bbsplit')
-params.gene_bed         = getGenomeAttribute('bed12')
 params.fasta            = getGenomeAttribute('fasta')
+params.additional_fasta = getGenomeAttribute('additional_fasta')
+params.transcript_fasta = getGenomeAttribute('transcript_fasta')
 params.gff              = getGenomeAttribute('gff')
 params.gtf              = getGenomeAttribute('gtf')
-params.hisat2_index     = getGenomeAttribute('hisat2')
-params.kallisto_index   = getGenomeAttribute('kallisto')
-params.rsem_index       = getGenomeAttribute('rsem')
-params.salmon_index     = getGenomeAttribute('salmon')
+params.gene_bed         = getGenomeAttribute('bed12')
+params.bbsplit_index    = getGenomeAttribute('bbsplit')
 params.sortmerna_index  = getGenomeAttribute('sortmerna')
 params.star_index       = getGenomeAttribute('star')
-params.transcript_fasta = getGenomeAttribute('transcript_fasta')
+params.rsem_index       = getGenomeAttribute('rsem')
+params.hisat2_index     = getGenomeAttribute('hisat2')
+params.salmon_index     = getGenomeAttribute('salmon')
+params.kallisto_index   = getGenomeAttribute('kallisto')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,6 +117,7 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME.out.salmon_index,
         PREPARE_GENOME.out.kallisto_index,
         PREPARE_GENOME.out.bbsplit_index,
+        PREPARE_GENOME.out.rrna_fastas,
         PREPARE_GENOME.out.sortmerna_index,
         PREPARE_GENOME.out.splicesites,
         !params.remove_ribo_rna && params.remove_ribo_rna
@@ -124,6 +125,9 @@ workflow NFCORE_RNASEQ {
     ch_versions = ch_versions.mix(RNASEQ.out.versions)
 
     emit:
+    trim_status    = RNASEQ.out.trim_status    // channel: [id, boolean]
+    map_status     = RNASEQ.out.map_status     // channel: [id, boolean]
+    strand_status  = RNASEQ.out.strand_status  // channel: [id, boolean]
     multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions               // channel: [version1, version2, ...]
 }
@@ -167,7 +171,10 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_RNASEQ.out.multiqc_report
+        NFCORE_RNASEQ.out.multiqc_report,
+        NFCORE_RNASEQ.out.trim_status,
+        NFCORE_RNASEQ.out.map_status,
+        NFCORE_RNASEQ.out.strand_status
     )
 }
 

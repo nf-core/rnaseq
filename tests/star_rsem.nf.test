@@ -1,0 +1,20 @@
+nextflow_pipeline {
+
+    name "Test pipeline with STAR aligner and RSEM for quantification"
+    script "../main.nf"
+
+    test("Params: --aligner star_rsem") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'star_rsem'
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}
+

@@ -3,10 +3,19 @@ nextflow_workflow {
     name "Test Workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
     script "../main.nf"
     workflow "BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
-    
-    tag "UMITOOLS_DEDUP"
-    tag "SAMTOOLS_INDEX"
-    tag "BAM_STATS_SAMTOOLS"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/bam_dedup_stats_samtools_umitools"
+    tag "subworkflows/bam_stats_samtools"
+    tag "bam_dedup_stats_samtools_umitools"
+    tag "bam_stats_samtools"
+    tag "samtools"
+    tag "samtools/index"
+    tag "samtools/stats"
+    tag "samtools/idxstats"
+    tag "samtools/flagstat"
+    tag "umitools"
+    tag "umitools/dedup"
 
     test("sarscov2_bam_bai") {
 
@@ -31,6 +40,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
+                { assert workflow.out.deduplog.get(0).get(1) ==~ ".*.log"},
                 { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
                 { assert workflow.out.bai.get(0).get(1) ==~ ".*.bai"},
                 { assert snapshot(workflow.out.stats).match("test_bam_dedup_stats_samtools_umitools_stats") },

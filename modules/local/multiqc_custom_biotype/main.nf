@@ -1,7 +1,7 @@
 process MULTIQC_CUSTOM_BIOTYPE {
     tag "$meta.id"
 
-    conda "conda-forge::python=3.9.5"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/python:3.9--1' :
         'biocontainers/python:3.9--1' }"
@@ -27,6 +27,18 @@ process MULTIQC_CUSTOM_BIOTYPE {
         -s $meta.id \\
         -f rRNA \\
         -o ${prefix}.biotype_counts_rrna_mqc.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.biotype_counts_mqc.tsv
+    touch ${prefix}.biotype_counts_rrna_mqc.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -3,8 +3,7 @@ nextflow_function {
 
     name "Test Functions"
     script "../main.nf"
-    config "subworkflows/nf-core/utils_nfcore_pipeline/tests/nextflow.config"    
-    tag "UTILS_NFCORE_PIPELINE"
+    config "subworkflows/nf-core/utils_nfcore_pipeline/tests/nextflow.config"
 
     test("Test Function checkConfigProvided") {
 

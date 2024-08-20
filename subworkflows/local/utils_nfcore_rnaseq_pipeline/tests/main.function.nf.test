@@ -2,7 +2,6 @@ nextflow_function {
 
     name "Test Functions"
     script "../main.nf"
-    tag "UTILS_NFCORE_RNASEQ_PIPELINE"
 
     test("Test Function checkSamplesAfterGrouping success") {
 
@@ -391,100 +390,6 @@ nextflow_function {
 
     }
 
-
-    test("Test Function getSalmonInferredStrandedness unstranded") {
-
-        function "getSalmonInferredStrandedness"
-
-        when {
-            function {
-                """
-                import groovy.json.JsonOutput
-
-                def json_contents = JsonOutput.toJson([
-                    library_types: [
-                        "U"
-                    ]
-                ])
-                def jsonFile = file("${workDir}/salmonUnstranded.json")
-                jsonFile.write(json_contents)
-
-                input[0] = jsonFile
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
-    test("Test Function getSalmonInferredStrandedness forward") {
-
-        function "getSalmonInferredStrandedness"
-
-        when {
-            function {
-                """
-                import groovy.json.JsonOutput
-
-                def json_contents = JsonOutput.toJson([
-                    library_types: [
-                        "SF"
-                    ]
-                ])
-                def jsonFile = file("${workDir}/salmonForward.json")
-                jsonFile.write(json_contents)
-
-                input[0] = jsonFile
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
-    test("Test Function getSalmonInferredStrandedness reverse") {
-
-        function "getSalmonInferredStrandedness"
-
-        when {
-            function {
-                """
-                import groovy.json.JsonOutput
-
-                def json_contents = JsonOutput.toJson([
-                    library_types: [
-                        "SR"
-                    ]
-                ])
-                def jsonFile = file("${workDir}/salmonReverse.json")
-                jsonFile.write(json_contents)
-
-                input[0] = jsonFile
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
     test("Test Function getStarPercentMapped pass") {
 
         function "getStarPercentMapped"
@@ -584,7 +489,7 @@ nextflow_function {
 
     }
 
-    test("Test Function getInferexperimentStrandedness") {
+    test("Test Function getInferexperimentStrandedness reverse") {
 
         function "getInferexperimentStrandedness"
 
@@ -603,6 +508,8 @@ nextflow_function {
                 }
 
                 input[0] = inferExperimentFile
+                input[1] = 0.8
+                input[2] = 0.1
                 """
             }
         }

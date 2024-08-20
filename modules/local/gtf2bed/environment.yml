@@ -1,0 +1,7 @@
+name: gtf2bed
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::perl=5.26.2

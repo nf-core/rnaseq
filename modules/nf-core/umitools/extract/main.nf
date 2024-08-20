@@ -53,4 +53,22 @@ process UMITOOLS_EXTRACT {
         END_VERSIONS
         """
     }
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    if (meta.single_end) {
+        output_command = "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
+    } else {
+        output_command = "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;"
+        output_command += "echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
+    }
+    """
+    touch ${prefix}.umi_extract.log
+    ${output_command}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
+    END_VERSIONS
+    """
 }

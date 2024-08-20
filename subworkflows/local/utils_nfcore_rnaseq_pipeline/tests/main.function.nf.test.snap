@@ -45,16 +45,6 @@
         },
         "timestamp": "2024-03-06T14:33:26.903306"
     },
-    "Test Function getSalmonInferredStrandedness unstranded": {
-        "content": [
-            "unstranded"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:33:46.772392"
-    },
     "Test Function checkSamplesAfterGrouping invalid strandedness": {
         "content": null,
         "meta": {
@@ -62,16 +52,6 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2024-03-06T14:32:41.841561"
-    },
-    "Test Function getSalmonInferredStrandedness reverse": {
-        "content": [
-            "reverse"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:33:52.860997"
     },
     "Test Function biotypeInGtf failed": {
         "content": [
@@ -205,16 +185,6 @@
         },
         "timestamp": "2024-03-06T14:32:49.565504"
     },
-    "Test Function getSalmonInferredStrandedness forward": {
-        "content": [
-            "forward"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:33:49.794775"
-    },
     "Test Function rsemStarIndexWarn": {
         "content": null,
         "meta": {
@@ -223,19 +193,19 @@
         },
         "timestamp": "2024-03-06T14:33:30.02058"
     },
-    "Test Function getInferexperimentStrandedness": {
+    "Test Function getInferexperimentStrandedness reverse": {
         "content": [
-            [
-                "reverse",
-                0.7499999832361937,
-                83.60999822616577,
-                15.649999678134918
-            ]
+            {
+                "inferred_strandedness": "reverse",
+                "forwardFragments": 0.749925006577425,
+                "reverseFragments": 83.60163982823676,
+                "unstrandedFragments": 15.64843516518582 
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-06T14:34:10.929416"
+        "timestamp": "2024-06-18T14:30:53.743529"
     }
 }

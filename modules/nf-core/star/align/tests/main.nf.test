@@ -3,7 +3,6 @@ nextflow_process {
     name "Test Process STAR_ALIGN"
     script "../main.nf"
     process "STAR_ALIGN"
-    tag "STAR_GENOMEGENERATE"
 
     setup {
         run("STAR_GENOMEGENERATE") {

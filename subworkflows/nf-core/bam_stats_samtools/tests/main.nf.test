@@ -4,10 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BAM_STATS_SAMTOOLS"
 
-    tag "SAMTOOLS_STATS"
-    tag "SAMTOOLS_IDXSTATS"
-    tag "SAMTOOLS_FLAGSTAT"
-
     test("test_bam_stats_samtools_single_end") {
 
         when {

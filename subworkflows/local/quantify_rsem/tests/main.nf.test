@@ -5,11 +5,6 @@ nextflow_workflow {
     workflow "QUANTIFY_RSEM"
     config "./nextflow.config"
 
-    tag "RSEM_PREPAREREFERENCE"
-    tag "RSEM_CALCULATEEXPRESSION"
-    tag "RSEM_MERGE_COUNTS"
-    tag "BAM_SORT_STATS_SAMTOOLS"
-
     test("homo_sapiens") {
 
         setup {

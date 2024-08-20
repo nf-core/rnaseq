@@ -14,6 +14,8 @@ on:
   pull_request:
     types:
       - opened
+      - edited
+      - synchronize
     branches:
       - master
   pull_request_target:
@@ -28,11 +30,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@v2
 
-      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+
+      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           architecture: "x64"
       - uses: eWaterCycle/setup-singularity@931d4e31109e875b13309ae1d07c70ca8fbc8537 # v7
         with:
@@ -65,8 +70,17 @@ jobs:
       - name: Inspect download
         run: tree ./${{ env.REPOTITLE_LOWERCASE }}
 
-      - name: Run the downloaded pipeline
+      - name: Run the downloaded pipeline (stub)
+        id: stub_run_pipeline
+        continue-on-error: true
         env:
           NXF_SINGULARITY_CACHEDIR: ./
           NXF_SINGULARITY_HOME_MOUNT: true
         run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results
+      - name: Run the downloaded pipeline (stub run not supported)
+        id: run_pipeline
+        if: ${{ job.steps.stub_run_pipeline.status == failure() }}
+        env:
+          NXF_SINGULARITY_CACHEDIR: ./
+          NXF_SINGULARITY_HOME_MOUNT: true
+        run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -profile test,singularity --outdir ./results

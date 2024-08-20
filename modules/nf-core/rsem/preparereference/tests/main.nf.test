@@ -26,7 +26,26 @@ nextflow_process {
                 { assert snapshot(process.out.versions).match("versions") }
             )
         }
-
     }
 
+    test("homo_sapiens - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
 }

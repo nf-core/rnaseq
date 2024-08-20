@@ -1,0 +1,2 @@
+subworkflows/preprocess_rnaseq:
+  - subworkflows/nf-core/preprocess_rnaseq/**

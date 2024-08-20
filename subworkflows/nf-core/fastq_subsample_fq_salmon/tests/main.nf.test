@@ -5,10 +5,6 @@ nextflow_workflow {
     workflow "FASTQ_SUBSAMPLE_FQ_SALMON"
     config "./nextflow.config"
 
-    tag "SALMON_INDEX"
-    tag "FQ_SUBSAMPLE"
-    tag "SALMON_QUANT"
-
     test("homo_sapiens paired-end [fastq]") {
 
         setup {
@@ -52,6 +48,7 @@ nextflow_workflow {
                 { assert snapshot(readlines2[0..5]).match("test_reads_2_lines") },
                 { assert snapshot(readlines2.size()).match("test_reads_2_size") },
                 { assert snapshot(workflow.out.versions).match("versions") },
+                { assert snapshot(workflow.out.lib_format_counts).match("lib_format_counts") },
 
                 { assert workflow.out.index },
                 { assert workflow.out.results },

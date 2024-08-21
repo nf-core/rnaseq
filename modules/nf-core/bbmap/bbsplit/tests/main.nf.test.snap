@@ -1,5 +1,5 @@
 {
-    "bbsplit_index_filtered_files": {
+    "sarscov2_se_fastq_fasta_chr22_fasta": {
         "content": [
             [
                 "chr1.chrom.gz:md5,8fec4c63ec642613ad10adf4cc2e6ade",
@@ -7,25 +7,16 @@
                 "chr1_index_k13_c13_b1.block2.gz:md5,2556b45206835a0ff7078d683b5fd6e2",
                 "merged_ref_9222711925172838098.fa.gz:md5,983cef447fb28394b88a5b49b3579f0c",
                 "namelist.txt:md5,45e7a4cdc7a11a39ada56844ca3a1e30"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-01T17:15:59.705013452"
-    },
-    "versions": {
-        "content": [
+            ],
             [
                 "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-02-01T17:11:22.441753642"
+        "timestamp": "2024-07-05T11:41:32.116928"
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - index": {
         "content": [
@@ -37,7 +28,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T16:41:29.784895"
+        "timestamp": "2024-07-05T11:41:06.072212"
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - index - stub": {
         "content": [
@@ -48,34 +39,13 @@
                     ]
                 ],
                 "1": [
-                    [
-                        {
-                            
-                        },
-                        [
-                            "null_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "null_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
+                    
                 ],
                 "2": [
-                    [
-                        {
-                            
-                        },
-                        [
-                            "null_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "null_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
+                    
                 ],
                 "3": [
-                    [
-                        {
-                            
-                        },
-                        "null.stats.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "4": [
                     [
@@ -89,15 +59,7 @@
                     "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
                 ],
                 "all_fastq": [
-                    [
-                        {
-                            
-                        },
-                        [
-                            "null_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "null_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
+                    
                 ],
                 "index": [
                     [
@@ -113,23 +75,10 @@
                     ]
                 ],
                 "primary_fastq": [
-                    [
-                        {
-                            
-                        },
-                        [
-                            "null_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "null_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
+                    
                 ],
                 "stats": [
-                    [
-                        {
-                            
-                        },
-                        "null.stats.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
@@ -140,7 +89,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T18:49:27.280432"
+        "timestamp": "2024-07-05T11:45:21.48352"
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - stub": {
         "content": [
@@ -156,10 +105,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        [
-                            "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                     ]
                 ],
                 "2": [
@@ -169,8 +115,8 @@
                             "single_end": true
                         },
                         [
-                            "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                            "test_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -202,8 +148,8 @@
                             "single_end": true
                         },
                         [
-                            "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                            "test_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -227,10 +173,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        [
-                            "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_primary_human.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test_primary.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                     ]
                 ],
                 "stats": [
@@ -251,6 +194,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T16:16:05.793544"
+        "timestamp": "2024-07-05T11:51:38.805111"
     }
 }

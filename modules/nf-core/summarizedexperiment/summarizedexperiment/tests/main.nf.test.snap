@@ -12,9 +12,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-02-09T13:57:39.545403663"
+        "timestamp": "2024-07-11T16:41:31.796715"
     },
     "gene_log_single_matrix_stub": {
         "content": [
@@ -29,9 +29,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-02-09T13:58:23.258210775"
+        "timestamp": "2024-07-11T16:42:47.12955"
     },
     "versions_single_matrix": {
         "content": [
@@ -58,9 +58,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-02-09T13:57:52.234643863"
+        "timestamp": "2024-07-11T16:41:54.028064"
     },
     "gene_log_multi_matrix_rowdata": {
         "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
@@ -78,9 +78,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-08T14:46:04.546156"
+        "timestamp": "2024-07-11T16:41:54.080728"
     },
     "versions_multi_matrix_stub": {
         "content": [
@@ -90,9 +90,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-08T14:46:21.128541"
+        "timestamp": "2024-07-11T16:42:21.425746"
     },
     "versions_multi_matrix_rowdata_coldata_stub": {
         "content": [
@@ -102,9 +102,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-08T14:45:43.440258"
+        "timestamp": "2024-07-11T16:41:31.837174"
     },
     "gene_log_multi_matrix": {
         "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
@@ -127,9 +127,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-02-09T13:58:07.904228634"
+        "timestamp": "2024-07-11T16:42:21.370562"
     },
     "gene_log_single_matrix": {
         "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
@@ -147,9 +147,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-08T14:46:37.670798"
+        "timestamp": "2024-07-11T16:42:47.173221"
     },
     "versions_multi_matrix_rowdata": {
         "content": [

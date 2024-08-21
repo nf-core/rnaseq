@@ -39,6 +39,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
+                    file(workflow.out.logs[0][1]).name,
                     workflow.out.counts_gene,
                     workflow.out.counts_transcript,
                     workflow.out.stat,
@@ -57,11 +58,48 @@ nextflow_workflow {
                     workflow.out.merged_counts_transcript,
                     workflow.out.merged_tpm_transcript,
                     workflow.out.versions
-                ).match()
-                },
-                { assert snapshot(file(workflow.out.logs[0][1]).name).match('logs') }
+                ).match()}
             )
         }
     }
 
+    test("homo_sapiens - stub") {
+
+        options "-stub"
+
+        setup {
+            run("RSEM_PREPAREREFERENCE") {
+                script "../../../../modules/nf-core/rsem/preparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = Channel.of([[id:'test'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
 }

@@ -5,7 +5,7 @@ on:
 
 env:
   NXF_ANSI_LOG: false
-  NFT_VER: "0.8.4"
+  NFT_VER: "0.9.0"
   NFT_WORKDIR: "~"
   NFT_DIFF: "pdiff"
   NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"

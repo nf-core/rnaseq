@@ -4,8 +4,8 @@ process GUNZIP {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+        'https://depot.galaxyproject.org/singularity/ubuntu:22.04' :
+        'nf-core/ubuntu:22.04' }"
 
     input:
     tuple val(meta), path(archive)

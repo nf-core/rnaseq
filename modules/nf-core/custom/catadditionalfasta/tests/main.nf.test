@@ -26,9 +26,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.fasta).match("fasta") },
-                { assert snapshot(process.out.gtf).match("gtf") },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(
+                    process.out.fasta,
+                    process.out.gtf,
+                    process.out.versions
+                ).match() }
             )
         }
     }

@@ -5,11 +5,7 @@ nextflow_process {
     process "UCSC_BEDGRAPHTOBIGWIG"
 
     test("Should run without failures") {
-
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -27,7 +23,27 @@ nextflow_process {
             { assert snapshot(process.out).match() }
             )
         }
-
     }
 
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bedgraph/test.bedgraph", checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assertAll (
+            { assert process.success },
+            { assert snapshot(process.out).match() }
+            )
+        }
+    }
 }

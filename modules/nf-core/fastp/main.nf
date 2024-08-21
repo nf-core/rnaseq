@@ -106,14 +106,16 @@ process FASTP {
     stub:
     def prefix              = task.ext.prefix ?: "${meta.id}"
     def is_single_output    = task.ext.args?.contains('--interleaved_in') || meta.single_end
-    def touch_reads         = (is_single_output && !discard_trimmed_pass) ? "echo '' | gzip > ${prefix}.fastp.fastq.gz" : "echo '' | gzip > ${prefix}_1.fastp.fastq.gz ; echo '' | gzip > ${prefix}_2.fastp.fastq.gz"
+    def touch_reads         = (discard_trimmed_pass) ? "" : (is_single_output) ? "echo '' | gzip > ${prefix}.fastp.fastq.gz" : "echo '' | gzip > ${prefix}_1.fastp.fastq.gz ; echo '' | gzip > ${prefix}_2.fastp.fastq.gz"
     def touch_merged        = (!is_single_output && save_merged) ? "echo '' | gzip >  ${prefix}.merged.fastq.gz" : ""
+    def touch_fail_fastq    = (!save_trimmed_fail) ? "" : meta.single_end ? "echo '' | gzip > ${prefix}.fail.fastq.gz" : "echo '' | gzip > ${prefix}.paired.fail.fastq.gz ; echo '' | gzip > ${prefix}_1.fail.fastq.gz ; echo '' | gzip > ${prefix}_2.fail.fastq.gz"
     """
     $touch_reads
+    $touch_fail_fastq
+    $touch_merged
     touch "${prefix}.fastp.json"
     touch "${prefix}.fastp.html"
     touch "${prefix}.fastp.log"
-    $touch_merged
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,35 +1,5 @@
 {
-    "versions": {
-        "content": [
-            [
-                "versions.yml:md5,26f47339777a265af57338ac7f0f8798"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2023-12-20T20:52:55.242485"
-    },
-    "gtf": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "genome_transcriptome.gtf:md5,bc88d95e7f27540e6b9906105d5be361"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2023-12-20T19:46:31.839377"
-    },
-    "fasta": {
+    "sarscov2 - fastq - gtf": {
         "content": [
             [
                 [
@@ -39,13 +9,25 @@
                     },
                     "genome_transcriptome.fasta:md5,6a20c1a2e465519320a0d01f338f5cb5"
                 ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "genome_transcriptome.gtf:md5,bc88d95e7f27540e6b9906105d5be361"
+                ]
+            ],
+            [
+                "versions.yml:md5,26f47339777a265af57338ac7f0f8798"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2023-12-20T19:42:47.12194"
+        "timestamp": "2024-07-05T12:19:28.965471"
     },
     "sarscov2 - fastq - gtf - stub": {
         "content": [
@@ -98,6 +80,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-20T17:10:38.966949"
+        "timestamp": "2024-07-05T12:19:38.549677"
     }
 }

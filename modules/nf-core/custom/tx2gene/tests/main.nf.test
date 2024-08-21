@@ -4,22 +4,21 @@ nextflow_process {
     script "../main.nf"
     process "CUSTOM_TX2GENE"
 
-    setup {
+    test("saccharomyces_cerevisiae - gtf") {
 
-        run("UNTAR") {
-            script "../../../untar/main.nf"
-            process {
-                """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                ])
-                """
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
             }
         }
-    }
-
-    test("saccharomyces_cerevisiae - gtf") {
 
         when {
             process {
@@ -39,8 +38,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.tx2gene).match('tx2gene') },
-                { assert snapshot(process.out.versions).match('versions') }
+                { assert snapshot(process.out).match() }
             )
         }
     }
@@ -49,6 +47,20 @@ nextflow_process {
 
         options "-stub"
 
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
         when {
             process {
                 """
@@ -67,8 +79,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.tx2gene).match('tx2gene - stub') },
-                { assert snapshot(process.out.versions).match('versions - stub') }
+                { assert snapshot(process.out).match() }
             )
         }
     }

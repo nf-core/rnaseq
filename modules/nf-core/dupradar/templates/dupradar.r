@@ -88,6 +88,7 @@ line="#id: DupInt
 #        max: 100
 #        min: 0
 #        scale: 'RdYlGn-rev'
+#        format: '{:.2f}%'
 Sample dupRadar_intercept"
 
 write(line,file=paste0(output_prefix, "_dup_intercept_mqc.txt"),append=TRUE)
@@ -114,21 +115,21 @@ line="#id: dupradar
 #    This plot shows the general linear models - a summary of the gene duplication distributions. \"
 #pconfig:
 #    title: 'DupRadar General Linear Model'
-#    xlog: True
+#    xLog: True
 #    xlab: 'expression (reads/kbp)'
 #    ylab: '% duplicate reads'
 #    ymax: 100
 #    ymin: 0
 #    tt_label: '<b>{point.x:.1f} reads/kbp</b>: {point.y:,.2f}% duplicates'
-#    x_lines:
+#    xPlotLines:
 #        - color: 'green'
-#          dash: 'LongDash'
+#          dashStyle: 'LongDash'
 #          label:
 #                text: '0.5 RPKM'
 #          value: 0.5
 #          width: 1
 #        - color: 'red'
-#          dash: 'LongDash'
+#          dashStyle: 'LongDash'
 #          label:
 #                text: '1 read/bp'
 #          value: 1000

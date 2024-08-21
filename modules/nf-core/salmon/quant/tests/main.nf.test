@@ -4,7 +4,7 @@ nextflow_process {
     script "../main.nf"
     process "SALMON_QUANT"
     config "./nextflow.config"
- 
+
     setup {
         run("SALMON_INDEX") {
             script "../../../salmon/index/main.nf"

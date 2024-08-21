@@ -113,6 +113,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1352](https://github.com/nf-core/rnaseq/pull/1352) - Assorted fixes to MultiQC usage
 - [PR #1355](https://github.com/nf-core/rnaseq/pull/1355) - Make all curves on subway map better looking, and all lines now have the same width
 - [PR #1357](https://github.com/nf-core/rnaseq/pull/1357) - Fix anchor issue in multiqc
+- [PR #1358](https://github.com/nf-core/rnaseq/pull/1358) - Update test_full.config to restore a static URI for megatests
 
 ### Parameters
 

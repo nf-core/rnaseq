@@ -91,8 +91,8 @@
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
                     "multiqc": {
-                        "branch": "bump-multiqc",
-                        "git_sha": "717aa5a675ab1726a6374724847c4e6e1a52386e",
+                        "branch": "master",
+                        "git_sha": "fb387b16025333f6d66b88d6c48c3719f47b1637",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {

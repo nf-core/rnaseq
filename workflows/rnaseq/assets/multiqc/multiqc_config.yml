@@ -11,13 +11,13 @@ report_section_order:
   fail_strand_check-module:
     order: 5001
   # Preprocessing and pre-alignment QC
-  fastqc:
+  fastqc_raw:
     order: 4004
   cutadapt:
     order: 4003
   fastp:
     order: 4003
-  fastqc-1:
+  fastqc_trimmed:
     order: 4002
   # Alignment
   star:
@@ -98,6 +98,7 @@ run_modules:
 
 module_order:
   - fastqc:
+      anchor: "fastqc_raw"
       name: "FastQC (raw)"
       info: "This section of the report shows FastQC results before adapter trimming."
       path_filters:
@@ -105,6 +106,7 @@ module_order:
   - cutadapt
   - fastp
   - fastqc:
+      anchor: "fastqc_trimmed"
       name: "FastQC (trimmed)"
       info: "This section of the report shows FastQC results after adapter trimming."
       path_filters:

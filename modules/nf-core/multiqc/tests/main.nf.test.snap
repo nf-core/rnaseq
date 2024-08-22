@@ -2,7 +2,7 @@
     "multiqc_versions_single": {
         "content": [
             [
-                "versions.yml:md5,0c5c5c2a79011c26b34b0b0e80b7c8e2"
+                "versions.yml:md5,6eb13f3b11bbcbfc98ad3166420ff760"
             ]
         ],
         "meta": {
@@ -17,7 +17,7 @@
                 "multiqc_report.html",
                 "multiqc_data",
                 "multiqc_plots",
-                "versions.yml:md5,0c5c5c2a79011c26b34b0b0e80b7c8e2"
+                "versions.yml:md5,6eb13f3b11bbcbfc98ad3166420ff760"
             ]
         ],
         "meta": {
@@ -29,7 +29,7 @@
     "multiqc_versions_config": {
         "content": [
             [
-                "versions.yml:md5,0c5c5c2a79011c26b34b0b0e80b7c8e2"
+                "versions.yml:md5,6eb13f3b11bbcbfc98ad3166420ff760"
             ]
         ],
         "meta": {

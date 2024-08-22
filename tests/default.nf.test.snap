@@ -63,7 +63,6 @@
             "multiqc_rseqc_junction_annotation.txt:md5,e78e23f7f32cc2c58136df6ed89d7638",
             "multiqc_rseqc_read_distribution.txt:md5,b7106d48346fe4150a8094ef1744f8b3",
             "multiqc_samtools_idxstats.txt:md5,fd7d03a91f0b9e01a6939941f7f2243f",
-            "multiqc_star.txt:md5,b3dc9dd2d290f12b8835758654a29edd",
             "multiqc_star_salmon_deseq2_clustering-plot.txt:md5,72d5b6d429709160351d875524a50a7c",
             "multiqc_star_salmon_deseq2_clustering-plot_1.txt:md5,37a19cbfb14a04455b57b6160d4ef25e",
             "multiqc_star_salmon_deseq2_clustering-plot_2.txt:md5,ebad3b29617432485579000fb421958b",
@@ -89,8 +88,6 @@
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,01637c600d3840500851eb4118564cc6",
             "samtools_alignment_plot.txt:md5,32474a6cb875a2a43febb1b9fb33be20",
-            "star_alignment_plot.txt:md5,77fc30308bc1b75bcf6e99630fc15344",
-            "star_summary_table.txt:md5,188cd28a8f309eb7c095694d79920eda",
             "fastqc_top_overrepresented_sequences_table-1.txt",
             "fastqc_top_overrepresented_sequences_table.txt",
             "junction_saturation_known.txt",
@@ -111,6 +108,7 @@
             "multiqc_samtools_stats.txt",
             "multiqc_software_versions.txt",
             "multiqc_sources.txt",
+            "multiqc_star.txt",
             "rseqc_inner_distance.txt",
             "rseqc_inner_distance_plot_Counts.txt",
             "rseqc_inner_distance_plot_Percentages.txt",
@@ -122,13 +120,15 @@
             "salmon_plot.txt",
             "samtools-flagstat-dp_Percentage_of_total.txt",
             "samtools-flagstat-dp_Read_counts.txt",
-            "samtools-stats-dp.txt"
+            "samtools-stats-dp.txt",
+            "star_alignment_plot.txt",
+            "star_summary_table.txt"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T15:35:07.389668"
+        "timestamp": "2024-08-22T16:18:49.968848"
     },
     "trimgalore": {
         "content": [
@@ -470,8 +470,6 @@
             "samtools-idxstats-mapped-reads-plot_Raw_Counts-log.png:md5,4c06988372df63a1fb5f8be93f73ae8f",
             "samtools_alignment_plot-cnt.png:md5,84f0e82efcef1221c5c2d292b4d4431c",
             "samtools_alignment_plot-pct.png:md5,7836b2057272b390f75c890e26034ec2",
-            "star_alignment_plot-cnt.png:md5,9fd09a2f2ab54160d2add396817109db",
-            "star_alignment_plot-pct.png:md5,94ddaa0cadd919493440e9b2d225c288",
             "multiqc_report.html",
             "cutadapt_filtered_reads_plot-cnt.pdf",
             "cutadapt_filtered_reads_plot-pct.pdf",
@@ -567,6 +565,8 @@
             "samtools-flagstat-dp_Percentage_of_total.png",
             "samtools-flagstat-dp_Read_counts.png",
             "samtools-stats-dp.png",
+            "star_alignment_plot-cnt.png",
+            "star_alignment_plot-pct.png",
             "star_salmon_deseq2_clustering-plot.png",
             "star_salmon_deseq2_pca-plot.png",
             "star_summary_table.png",
@@ -647,7 +647,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T15:35:07.505889"
+        "timestamp": "2024-08-22T16:18:50.128016"
     },
     "star_salmon/picard_metrics": {
         "content": [
@@ -923,17 +923,17 @@
     },
     "bbsplit": {
         "content": [
-            "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
-            "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
-            "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-            "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-            "WT_REP2.stats.txt:md5,f6df7d4d9a5b553209f31dec2a30f92b"
+            "RAP1_IAA_30M_REP1.stats.txt",
+            "RAP1_UNINDUCED_REP1.stats.txt",
+            "RAP1_UNINDUCED_REP2.stats.txt",
+            "WT_REP1.stats.txt",
+            "WT_REP2.stats.txt"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T15:35:07.2382"
+        "timestamp": "2024-08-22T16:18:49.803978"
     },
     "salmon_quant": {
         "content": [

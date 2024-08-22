@@ -58,19 +58,19 @@
             "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
             "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
             "multiqc_featurecounts_biotype_plot.txt:md5,56be7f0813c3cbea0f68f61d9b355b71",
-            "multiqc_general_stats.txt:md5,e729536411db0746fa1089a77216fec0",
+            "multiqc_general_stats.txt:md5,1646098b9a057635ef1fcfeb33189b53",
             "multiqc_picard_dups.txt:md5,4f4aca636444de555500207fec553076",
             "multiqc_rseqc_bam_stat.txt:md5,1aa9eeb5b9d283ba77e98f0f5ea0f712",
             "multiqc_rseqc_junction_annotation.txt:md5,e78e23f7f32cc2c58136df6ed89d7638",
             "multiqc_rseqc_read_distribution.txt:md5,b7106d48346fe4150a8094ef1744f8b3",
             "multiqc_samtools_idxstats.txt:md5,fd7d03a91f0b9e01a6939941f7f2243f",
-            "multiqc_star.txt:md5,ae82337a5f847c86e8ffe14e04dfeaee",
-            "multiqc_star_salmon_deseq2_clustering-plot.txt:md5,e6817b3941a927f2b4a77fb3518cf7e3",
-            "multiqc_star_salmon_deseq2_clustering-plot_1.txt:md5,1c75490fd2daea7224c45013c0f42b50",
-            "multiqc_star_salmon_deseq2_clustering-plot_2.txt:md5,c31a1e6b2433ea398377d732a646da9d",
-            "multiqc_star_salmon_deseq2_clustering-plot_3.txt:md5,c7ff1e0d3420f66a7c4009ea7f97a1b8",
-            "multiqc_star_salmon_deseq2_clustering-plot_4.txt:md5,aa35ef7e0d5f6e035487e452a5b05eef",
-            "multiqc_star_salmon_deseq2_pca-plot.txt:md5,9ee379d6fcf4a28b4f7fa604e560f6ea",
+            "multiqc_star.txt:md5,b3dc9dd2d290f12b8835758654a29edd",
+            "multiqc_star_salmon_deseq2_clustering-plot.txt:md5,72d5b6d429709160351d875524a50a7c",
+            "multiqc_star_salmon_deseq2_clustering-plot_1.txt:md5,37a19cbfb14a04455b57b6160d4ef25e",
+            "multiqc_star_salmon_deseq2_clustering-plot_2.txt:md5,ebad3b29617432485579000fb421958b",
+            "multiqc_star_salmon_deseq2_clustering-plot_3.txt:md5,0623170a882f18ef18387da6df69a650",
+            "multiqc_star_salmon_deseq2_clustering-plot_4.txt:md5,ebaa497884793b38eef593d98516ecc9",
+            "multiqc_star_salmon_deseq2_pca-plot.txt:md5,be897cdf8bba2b37249925f42a3dceae",
             "picard_deduplication.txt:md5,35c88deda36f1b3e0ff1ee0799b141d4",
             "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
             "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -82,9 +82,6 @@
             "qualimap_rnaseq_genome_results.txt:md5,ce5f4f7f5afa8f1e5666f738c4f414e7",
             "rseqc_bam_stat.txt:md5,ba2575875efaf137f8bf7c2b790d5b1b",
             "rseqc_infer_experiment_plot.txt:md5,de5a0bad9cca763928e7c33375eb5218",
-            "rseqc_inner_distance.txt:md5,33a445ddf5841156362e908d62ab2a81",
-            "rseqc_inner_distance_plot_Counts.txt:md5,04561343fab91ad7e1e285f5816cf740",
-            "rseqc_inner_distance_plot_Percentages.txt:md5,92f40f2969a02e28a70b94ae78be045a",
             "rseqc_junction_annotation_junctions_plot_Events.txt:md5,90f1fabea84aa36f647b980978d01e58",
             "rseqc_junction_annotation_junctions_plot_Junctions.txt:md5,454eb9917793890ee4837fce43e3a8dd",
             "rseqc_read_distribution_plot.txt:md5,48cea394a38d0f0ed3044b0a54638e65",
@@ -93,8 +90,8 @@
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,01637c600d3840500851eb4118564cc6",
             "samtools_alignment_plot.txt:md5,32474a6cb875a2a43febb1b9fb33be20",
-            "star_alignment_plot.txt:md5,a44811c928719507cee0f98da7492fd1",
-            "star_summary_table.txt:md5,32aab6812d43f3c850b739eda99990f1",
+            "star_alignment_plot.txt:md5,77fc30308bc1b75bcf6e99630fc15344",
+            "star_summary_table.txt:md5,188cd28a8f309eb7c095694d79920eda",
             "fastqc_top_overrepresented_sequences_table-1.txt",
             "fastqc_top_overrepresented_sequences_table.txt",
             "junction_saturation_known.txt",
@@ -114,6 +111,9 @@
             "multiqc_samtools_stats.txt",
             "multiqc_software_versions.txt",
             "multiqc_sources.txt",
+            "rseqc_inner_distance.txt",
+            "rseqc_inner_distance_plot_Counts.txt",
+            "rseqc_inner_distance_plot_Percentages.txt",
             "rseqc_junction_saturation_all.txt",
             "rseqc_junction_saturation_plot_All_Junctions.txt",
             "rseqc_junction_saturation_plot_Known_Junctions.txt",
@@ -128,7 +128,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T14:57:57.607534"
+        "timestamp": "2024-08-22T15:35:07.389668"
     },
     "trimgalore": {
         "content": [
@@ -159,15 +159,6 @@
             "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,7d5705880188f9beab1939e08d6b8f40",
             "WT_REP1.infer_experiment.txt:md5,bf0c137f5fca06e7c40e1984a1acb06d",
             "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
-            "RAP1_IAA_30M_REP1.inner_distance_plot.r:md5,ff29586a3be60b4a70b588de8f087abf",
-            "WT_REP1.inner_distance_plot.r:md5,94fc957e3bb8f361e813249db5e3371e",
-            "WT_REP2.inner_distance_plot.r:md5,ca997fdf40d4b5170e1af3b29d760a20",
-            "RAP1_IAA_30M_REP1.inner_distance_freq.txt:md5,0d3b00e36f5afa9c058fb3a99a5d9dcf",
-            "RAP1_IAA_30M_REP1.inner_distance_mean.txt:md5,002a82a3fb9fe6eb58e2dce854a5922f",
-            "WT_REP1.inner_distance_freq.txt:md5,2a6ca2a4a50884fa865e96acb1386cc9",
-            "WT_REP1.inner_distance_mean.txt:md5,f36f6be86cc002953735999a93a40bf1",
-            "WT_REP2.inner_distance_freq.txt:md5,8fb8b3b9bc1684c3948db4857218959e",
-            "WT_REP2.inner_distance_mean.txt:md5,74177bfbb70daf8bdc3557b3253089b8",
             "RAP1_IAA_30M_REP1.junction.Interact.bed:md5,71af7df839b494ea12df802369befb06",
             "RAP1_IAA_30M_REP1.junction.bed:md5,abc741dcce71900d4145f3aaf3bd9c64",
             "RAP1_UNINDUCED_REP1.junction.Interact.bed:md5,228588b36cef3af0c46e1c819e801931",
@@ -216,9 +207,18 @@
             "RAP1_IAA_30M_REP1.inner_distance_plot.pdf",
             "WT_REP1.inner_distance_plot.pdf",
             "WT_REP2.inner_distance_plot.pdf",
+            "RAP1_IAA_30M_REP1.inner_distance_plot.r",
+            "WT_REP1.inner_distance_plot.r",
+            "WT_REP2.inner_distance_plot.r",
             "RAP1_IAA_30M_REP1.inner_distance.txt",
+            "RAP1_IAA_30M_REP1.inner_distance_freq.txt",
+            "RAP1_IAA_30M_REP1.inner_distance_mean.txt",
             "WT_REP1.inner_distance.txt",
+            "WT_REP1.inner_distance_freq.txt",
+            "WT_REP1.inner_distance_mean.txt",
             "WT_REP2.inner_distance.txt",
+            "WT_REP2.inner_distance_freq.txt",
+            "WT_REP2.inner_distance_mean.txt",
             "RAP1_IAA_30M_REP1.splice_events.pdf",
             "RAP1_IAA_30M_REP1.splice_junction.pdf",
             "RAP1_UNINDUCED_REP1.splice_events.pdf",
@@ -249,7 +249,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T14:57:59.277185"
+        "timestamp": "2024-08-22T15:35:07.931345"
     },
     "references": {
         "content": [
@@ -280,7 +280,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T14:57:58.5321"
+        "timestamp": "2024-08-22T15:35:07.764873"
     },
     "star_salmon/featurecounts": {
         "content": [
@@ -384,22 +384,22 @@
     "salmon/deseq2_qc": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
-            "RAP1_IAA_30M_REP1.txt:md5,070ac8e0dd225793901887863446798d",
-            "RAP1_UNINDUCED_REP1.txt:md5,d7a80c27e64f8314547c1062adaab174",
-            "RAP1_UNINDUCED_REP2.txt:md5,a9278cb2b25db32f9f6af60ca8789ca8",
-            "WT_REP1.txt:md5,ec8f0bdfaa7bb558c91e0db2679eec8f",
-            "WT_REP2.txt:md5,3761cdcd554d5b696a42fd83f0f4cab7",
-            "deseq2.size_factors.RData:md5,85580212f39183401f5bb23ef381e6b5",
             "deseq2.dds.RData",
             "deseq2.pca.vals.txt",
             "deseq2.plots.pdf",
-            "deseq2.sample.dists.txt"
+            "deseq2.sample.dists.txt",
+            "RAP1_IAA_30M_REP1.txt",
+            "RAP1_UNINDUCED_REP1.txt",
+            "RAP1_UNINDUCED_REP2.txt",
+            "WT_REP1.txt",
+            "WT_REP2.txt",
+            "deseq2.size_factors.RData"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T14:57:58.223719"
+        "timestamp": "2024-08-22T15:35:07.630987"
     },
     "salmon": {
         "content": [
@@ -455,8 +455,6 @@
             "qualimap_genomic_origin-cnt.png:md5,49c63998f83c3220a35cd4839bf7fecd",
             "qualimap_genomic_origin-pct.png:md5,ab6697c27cf430782bda984483e708e9",
             "rseqc_infer_experiment_plot.png:md5,60c3cafb671fad2cf5f695615230eb8f",
-            "rseqc_inner_distance_plot_Counts.png:md5,1adc2a578d1774ab065195a31256df17",
-            "rseqc_inner_distance_plot_Percentages.png:md5,382ee483b066cfa168e094d3a932c804",
             "rseqc_junction_annotation_junctions_plot_Events-cnt.png:md5,1003e4b5012bbddc40badd9e2dfdda8e",
             "rseqc_junction_annotation_junctions_plot_Events-pct.png:md5,676644afc0aee6f63c1299b691b2b93f",
             "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png:md5,a01190d3ad8e4b9cede321d56e633ec7",
@@ -472,8 +470,8 @@
             "samtools-idxstats-mapped-reads-plot_Raw_Counts-log.png:md5,4c06988372df63a1fb5f8be93f73ae8f",
             "samtools_alignment_plot-cnt.png:md5,84f0e82efcef1221c5c2d292b4d4431c",
             "samtools_alignment_plot-pct.png:md5,7836b2057272b390f75c890e26034ec2",
-            "star_alignment_plot-cnt.png:md5,60df4a4f2ff26bfc6ab4f6f0196a29e2",
-            "star_alignment_plot-pct.png:md5,fefe14d6a715ec0e6df01bf48c781899",
+            "star_alignment_plot-cnt.png:md5,9fd09a2f2ab54160d2add396817109db",
+            "star_alignment_plot-pct.png:md5,94ddaa0cadd919493440e9b2d225c288",
             "multiqc_report.html",
             "cutadapt_filtered_reads_plot-cnt.pdf",
             "cutadapt_filtered_reads_plot-pct.pdf",
@@ -558,6 +556,8 @@
             "fastqc_top_overrepresented_sequences_table.png",
             "general_stats_table.png",
             "rseqc_bam_stat.png",
+            "rseqc_inner_distance_plot_Counts.png",
+            "rseqc_inner_distance_plot_Percentages.png",
             "rseqc_junction_saturation_plot_All_Junctions.png",
             "rseqc_junction_saturation_plot_Known_Junctions.png",
             "rseqc_junction_saturation_plot_Novel_Junctions.png",
@@ -647,7 +647,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T14:57:57.921685"
+        "timestamp": "2024-08-22T15:35:07.505889"
     },
     "star_salmon/picard_metrics": {
         "content": [
@@ -734,48 +734,48 @@
             "e_data.ctab:md5,3f149502efe2a9d4bac98b1dd18c15e7",
             "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
             "i_data.ctab:md5,a052ab04070e72cc318fb7680b0764e3",
-            "t_data.ctab:md5,50ccf0dd1eec29e2c3fc300b4774e63e",
-            "RAP1_IAA_30M_REP1.coverage.gtf:md5,cc904ea93fdc057ecb0d215d0d36cb2c",
-            "RAP1_IAA_30M_REP1.gene.abundance.txt:md5,f9d863eb7c592dae0a150bb75e6dfb11",
-            "RAP1_IAA_30M_REP1.transcripts.gtf:md5,0d4a9f2704df48c1cc551e67d0321217",
             "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
             "e_data.ctab:md5,e82329a443b9ff50a86e42aff91bd704",
             "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
             "i_data.ctab:md5,d279003d92f7feef9adb31203f84474a",
-            "t_data.ctab:md5,84dd1bc7a05b232810b895e96ed7f904",
-            "RAP1_UNINDUCED_REP1.coverage.gtf:md5,7999b0d4310300375a75afc0268c6422",
-            "RAP1_UNINDUCED_REP1.gene.abundance.txt:md5,43d91c4bd7de0dce0bd4c55a107b15f3",
-            "RAP1_UNINDUCED_REP1.transcripts.gtf:md5,7baec01c88cc5bca52c82c299b6a56c0",
             "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
             "e_data.ctab:md5,10e2d00f93f9e74f224bd3c1bfbeb29b",
             "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
             "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e",
-            "t_data.ctab:md5,851111ca03fe424b6cda8243778a7699",
-            "RAP1_UNINDUCED_REP2.coverage.gtf:md5,7ee4e626d7866dc4a7f4ca95149d3ca2",
-            "RAP1_UNINDUCED_REP2.gene.abundance.txt:md5,1b6cd8a16d7b12f4e0b2da9d008799a6",
-            "RAP1_UNINDUCED_REP2.transcripts.gtf:md5,e88202e890d56ea9f9d7319043e2dc3d",
             "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
             "e_data.ctab:md5,9aa371befc36478d7720d3ea275e6f4d",
             "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
             "i_data.ctab:md5,907ab2e06346df131cbdb929afc005a8",
-            "t_data.ctab:md5,13caaa5e407b1b0bd874395dde0b3005",
-            "WT_REP1.coverage.gtf:md5,81b17080623c279b1b9ff1f1d353c212",
-            "WT_REP1.gene.abundance.txt:md5,0a6f85865a0d3c6d1f0d425bf64d3570",
-            "WT_REP1.transcripts.gtf:md5,b3fc465d263d7c46816f78a3211de4e8",
             "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
             "e_data.ctab:md5,b03f3118d1aa58fceadcb3311028e856",
             "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
             "i_data.ctab:md5,041edee3193df311f621c09f4991892b",
-            "t_data.ctab:md5,27c3984c29befbe71aa569aa34ce0fc3",
-            "WT_REP2.coverage.gtf:md5,02bb1a3cb3add2ffae40201e78030a5d",
-            "WT_REP2.gene.abundance.txt:md5,b470d8d9e5b556bcd5605d5f1984178a",
-            "WT_REP2.transcripts.gtf:md5,65677f9903f752764e8c240f73e30c45"
+            "t_data.ctab",
+            "RAP1_IAA_30M_REP1.coverage.gtf",
+            "RAP1_IAA_30M_REP1.gene.abundance.txt",
+            "RAP1_IAA_30M_REP1.transcripts.gtf",
+            "t_data.ctab",
+            "RAP1_UNINDUCED_REP1.coverage.gtf",
+            "RAP1_UNINDUCED_REP1.gene.abundance.txt",
+            "RAP1_UNINDUCED_REP1.transcripts.gtf",
+            "t_data.ctab",
+            "RAP1_UNINDUCED_REP2.coverage.gtf",
+            "RAP1_UNINDUCED_REP2.gene.abundance.txt",
+            "RAP1_UNINDUCED_REP2.transcripts.gtf",
+            "t_data.ctab",
+            "WT_REP1.coverage.gtf",
+            "WT_REP1.gene.abundance.txt",
+            "WT_REP1.transcripts.gtf",
+            "t_data.ctab",
+            "WT_REP2.coverage.gtf",
+            "WT_REP2.gene.abundance.txt",
+            "WT_REP2.transcripts.gtf"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T14:57:59.939836"
+        "timestamp": "2024-08-22T15:35:08.116582"
     },
     "star_salmon": {
         "content": [
@@ -927,13 +927,13 @@
             "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
             "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
             "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-            "WT_REP2.stats.txt:md5,002ddf6b828d34979652a40f05462843"
+            "WT_REP2.stats.txt:md5,f6df7d4d9a5b553209f31dec2a30f92b"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T13:59:53.163717"
+        "timestamp": "2024-08-22T15:35:07.2382"
     },
     "salmon_quant": {
         "content": [

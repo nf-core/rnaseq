@@ -13,7 +13,58 @@ nextflow_pipeline {
         }
 
         then {
-            assert workflow.success
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    path("${params.outdir}/bbsplit/RAP1_IAA_30M_REP1.stats.txt"),
+                    path("${params.outdir}/bbsplit/RAP1_UNINDUCED_REP1.stats.txt"),
+                    path("${params.outdir}/bbsplit/RAP1_UNINDUCED_REP2.stats.txt"),
+                    path("${params.outdir}/bbsplit/WT_REP1.stats.txt"),
+                    path("${params.outdir}/bbsplit/WT_REP2.stats.txt")
+                ).match("bbsplit") },
+                { assert snapshot(
+                    path("${params.outdir}/custom/out/genome_gfp.fasta"),
+                    path("${params.outdir}/custom/out/genome_gfp.gtf")
+                ).match("references") },
+                { assert snapshot(
+                    path("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw_2_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP1_raw_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP2_raw_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/WT_REP1_raw_1_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/WT_REP1_raw_2_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/WT_REP2_raw_1_fastqc.html"),
+                    path("${params.outdir}/fastqc/raw/WT_REP2_raw_2_fastqc.html"),
+                    // ZIPs are not stable
+                    file("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw_2_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP1_raw_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP2_raw_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP1_raw_1_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP1_raw_2_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP2_raw_1_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP2_raw_2_fastqc.zip").name
+                ).match("fastqc/raw") },
+                { assert snapshot(
+                    path("${params.outdir}/fastqc/trim/RAP1_IAA_30M_REP1_trimmed_1_val_1_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/RAP1_IAA_30M_REP1_trimmed_2_val_2_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/RAP1_UNINDUCED_REP1_trimmed_trimmed_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/RAP1_UNINDUCED_REP2_trimmed_trimmed_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/WT_REP1_trimmed_1_val_1_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/WT_REP1_trimmed_2_val_2_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/WT_REP2_trimmed_1_val_1_fastqc.html"),
+                    path("${params.outdir}/fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.html"),
+                    // ZIPs are not stable
+                    file("${params.outdir}/fastqc/trim/RAP1_IAA_30M_REP1_trimmed_1_val_1_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/RAP1_IAA_30M_REP1_trimmed_2_val_2_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/RAP1_UNINDUCED_REP1_trimmed_trimmed_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/RAP1_UNINDUCED_REP2_trimmed_trimmed_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/WT_REP1_trimmed_1_val_1_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/WT_REP1_trimmed_2_val_2_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/WT_REP2_trimmed_1_val_1_fastqc.zip").name,
+                    file("${params.outdir}/fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.zip").name
+                ).match("fastqc/trim") }
+            )
         }
     }
 }

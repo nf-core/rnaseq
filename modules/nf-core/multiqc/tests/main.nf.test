@@ -8,6 +8,8 @@ nextflow_process {
     tag "modules_nfcore"
     tag "multiqc"
 
+    config "./nextflow.config"
+
     test("sarscov2 single-end [fastqc]") {
 
         when {

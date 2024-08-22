@@ -114,6 +114,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1355](https://github.com/nf-core/rnaseq/pull/1355) - Make all curves on subway map better looking, and all lines now have the same width
 - [PR #1357](https://github.com/nf-core/rnaseq/pull/1357) - Fix anchor issue in multiqc
 - [PR #1358](https://github.com/nf-core/rnaseq/pull/1358) - Update test profiles to restore a static URI for megatests
+- [PR #1359](https://github.com/nf-core/rnaseq/pull/1359) - Update MultiQC and revert unnecessary workaround
+- [PR #1362](https://github.com/nf-core/rnaseq/pull/1362) - Move multiqc module prefix for nf-test to module
 
 ### Parameters
 

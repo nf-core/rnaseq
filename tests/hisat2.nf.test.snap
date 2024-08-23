@@ -127,9 +127,6 @@
             "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
             "fastqc-status-check-heatmap-1.txt:md5,22a03548736b88b23be6bc0c9ef1b4a6",
             "fastqc-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
-            "hisat2_pe_plot.txt:md5,ca416ae8b811b11fe4cad79ef583aa3e",
-            "hisat2_se_plot.txt:md5,f8cd912353aa55e6e670b72a736b656c",
-            "multiqc_hisat2.txt:md5,998b80a66a54cf87a571d95d9d6d5798",
             "fastqc_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
             "fastqc_overrepresented_sequences_plot-1.txt:md5,4adfeacd3a3a6c7c808f121b24e6b247",
             "fastqc_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
@@ -179,12 +176,21 @@
             "samtools_alignment_plot.txt:md5,b6ba3cc94a91b3d0a84c3fa721914744",
             "fastqc_top_overrepresented_sequences_table-1.txt",
             "fastqc_top_overrepresented_sequences_table.txt",
+            "hisat2_pe_plot.txt",
+            "hisat2_se_plot.txt",
             "junction_saturation_known.txt",
             "junction_saturation_novel.txt",
             "multiqc_data.json",
             "multiqc_dupradar-section-plot.txt",
             "multiqc_fail_strand_check_table.txt",
             "multiqc_general_stats.txt",
+            "multiqc_hisat2.txt",
+            "multiqc_hisat2_deseq2_clustering-plot.txt",
+            "multiqc_hisat2_deseq2_clustering-plot_1.txt",
+            "multiqc_hisat2_deseq2_clustering-plot_2.txt",
+            "multiqc_hisat2_deseq2_clustering-plot_3.txt",
+            "multiqc_hisat2_deseq2_clustering-plot_4.txt",
+            "multiqc_hisat2_deseq2_pca-plot.txt",
             "multiqc_rseqc_infer_experiment.txt",
             "multiqc_salmon.txt",
             "multiqc_salmon_deseq2_clustering-plot.txt",
@@ -197,12 +203,6 @@
             "multiqc_samtools_stats.txt",
             "multiqc_software_versions.txt",
             "multiqc_sources.txt",
-            "multiqc_hisat2_deseq2_clustering-plot.txt",
-            "multiqc_hisat2_deseq2_clustering-plot_1.txt",
-            "multiqc_hisat2_deseq2_clustering-plot_2.txt",
-            "multiqc_hisat2_deseq2_clustering-plot_3.txt",
-            "multiqc_hisat2_deseq2_clustering-plot_4.txt",
-            "multiqc_hisat2_deseq2_pca-plot.txt",
             "rseqc_inner_distance.txt",
             "rseqc_inner_distance_plot_Counts.txt",
             "rseqc_inner_distance_plot_Percentages.txt",
@@ -220,7 +220,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T13:40:29.874797"
+        "timestamp": "2024-08-23T14:34:39.931494"
     },
     "hisat2/picard_metrics": {
         "content": [
@@ -379,10 +379,6 @@
     "multiqc_plots": {
         "content": [
             "cutadapt_filtered_reads_plot-cnt.png:md5,704cf0d91bfa3dd658dd8c9590f669a2",
-            "hisat2_pe_plot-cnt.png:md5,1e0841cb32f6aaad84772ff2267b70ad",
-            "hisat2_pe_plot-pct.png:md5,e201931cd7b31e7227a6273ca1587f56",
-            "hisat2_se_plot-cnt.png:md5,840937eb5952fa98987a1d2aa8267959",
-            "hisat2_se_plot-pct.png:md5,51bb5f9ba36dab1ba32fc4e273e865a9",
             "cutadapt_filtered_reads_plot-pct.png:md5,2684d8b2afca3300e5786486b80237f0",
             "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
             "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
@@ -513,6 +509,10 @@
             "general_stats_table.png",
             "hisat2_deseq2_clustering-plot.png",
             "hisat2_deseq2_pca-plot.png",
+            "hisat2_pe_plot-cnt.png",
+            "hisat2_pe_plot-pct.png",
+            "hisat2_se_plot-cnt.png",
+            "hisat2_se_plot-pct.png",
             "rseqc_bam_stat.png",
             "rseqc_inner_distance_plot_Counts.png",
             "rseqc_inner_distance_plot_Percentages.png",
@@ -603,7 +603,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T14:08:21.859495"
+        "timestamp": "2024-08-23T14:34:40.253371"
     },
     "fastqc/raw": {
         "content": [

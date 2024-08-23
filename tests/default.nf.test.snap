@@ -265,12 +265,12 @@
     "star_salmon/deseq2_qc": {
         "content": [
             "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
-            "RAP1_IAA_30M_REP1.txt:md5,c9edfeadc7fb5111837101a81af1c87e",
-            "RAP1_UNINDUCED_REP1.txt:md5,18a36718e888c138c65f2a6ecd8862a7",
-            "RAP1_UNINDUCED_REP2.txt:md5,6bd573fd119f84464dfca6044fe41704",
-            "WT_REP1.txt:md5,118f0ab1b07ae7f4ef0b0bbdf738770d",
-            "WT_REP2.txt:md5,c23242f9bc76f5528d17d869554c8d2c",
-            "deseq2.size_factors.RData:md5,5fd85441110c2615b08d8f564b88e011",
+            "RAP1_IAA_30M_REP1.txt",
+            "RAP1_UNINDUCED_REP1.txt",
+            "RAP1_UNINDUCED_REP2.txt",
+            "WT_REP1.txt",
+            "WT_REP2.txt",
+            "deseq2.size_factors.RData",
             "deseq2.dds.RData",
             "deseq2.pca.vals.txt",
             "deseq2.plots.pdf",
@@ -280,7 +280,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T15:35:07.764873"
+        "timestamp": "2024-08-23T12:20:39.105655"
     },
     "star_salmon/featurecounts": {
         "content": [

@@ -14,14 +14,14 @@
             "fastqc_sequence_counts_plot.txt:md5,3861354bbedfbde7ca36a72994f9425c",
             "fastqc_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
             "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
-            "kallisto_alignment.txt:md5,6f1850f735edb8c199ef69a2aeca746c",
             "multiqc_citations.txt:md5,4cece87a056a29c1338277736855e6ee",
             "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
             "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
-            "multiqc_kallisto.txt:md5,30343a3a84fae482f7695355726ef93a",
             "fastqc_top_overrepresented_sequences_table.txt",
+            "kallisto_alignment.txt",
             "multiqc_data.json",
             "multiqc_general_stats.txt",
+            "multiqc_kallisto.txt",
             "multiqc_software_versions.txt",
             "multiqc_sources.txt"
         ],
@@ -29,7 +29,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T15:35:31.485152"
+        "timestamp": "2024-08-23T15:53:37.272547"
     },
     "trimgalore": {
         "content": [
@@ -50,45 +50,45 @@
     },
     "kallisto": {
         "content": [
-            "kallisto.merged.gene_counts_length_scaled.SummarizedExperiment.rds:md5,a3fc7ad9b88a6c706d41586ea4bebbd9",
-            "kallisto.merged.gene_counts_length_scaled.tsv:md5,bb825716e8d3d6b4df2d672c38e8a625",
-            "kallisto.merged.gene_counts_scaled.SummarizedExperiment.rds:md5,3a12e9abc26a8a5a8127425e9220e6ac",
-            "kallisto.merged.gene_counts_scaled.tsv:md5,ce6ece9365d45cea0a403388af8b583e",
-            "kallisto.merged.gene_counts.SummarizedExperiment.rds:md5,7bb079c92dd98a7c2c030212bc1affb9",
-            "kallisto.merged.gene_counts.tsv:md5,bf274bbe1da240633e9179851c916e02",
-            "kallisto.merged.gene_lengths.tsv:md5,0e55de77f556411d55c69f7e4163722b",
-            "kallisto.merged.gene_tpm.tsv:md5,164e18ff6f95bb56938fb08d2d40be91",
-            "kallisto.merged.transcript_counts.SummarizedExperiment.rds:md5,ce6ed19fb07dffa6af29598a0d845d8b",
-            "kallisto.merged.transcript_counts.tsv:md5,e2a2079e15d2cb31668feee3037ced48",
-            "kallisto.merged.transcript_lengths.tsv:md5,2c64da3760aba7789c8086d3e0e375bf",
-            "kallisto.merged.transcript_tpm.tsv:md5,271d646940e3b934c6e0547ea4c8fc2e",
-            "abundance.h5:md5,d682e51e73620ef44a7ec3285ee64273",
-            "abundance.tsv:md5,b6ae4ef44f718a789f58dc6451b6eebb",
-            "kallisto_quant.log:md5,88a4a4c71762af549f1c42308fe80605",
-            "run_info.json:md5,9d818e3d2ede809baf552274f15ac970",
-            "abundance.h5:md5,c43fb087de19af669142504061d0e3f7",
-            "abundance.tsv:md5,a2c6108c384662f4da8c7b7fe8f27e02",
-            "kallisto_quant.log:md5,b9c4528ce7c00f5f94e7570507d00a51",
-            "run_info.json:md5,42fc6ba7f61ea1c9fdf986859a9ebf3a",
-            "abundance.h5:md5,8211dd327e87d33e186373177481f0ab",
-            "abundance.tsv:md5,6fd77021287360f5005c90807233ab23",
-            "kallisto_quant.log:md5,8a9605e9d228c9cbec97b0883d909754",
-            "run_info.json:md5,975d7f1cc482f2a735ab064ac635ae78",
             "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-            "abundance.h5:md5,94c8aaf349b7c47bc507bf1e84d08b1b",
-            "abundance.tsv:md5,7b62c5df0930e9f5ebc6e90d6aa600f6",
-            "kallisto_quant.log:md5,5a7f563172800853c627e8e4f5da6bdc",
-            "run_info.json:md5,f468d320b4efcdd786ead7826e157017",
-            "abundance.h5:md5,a988b7e8adffd92cc9b7a096b31f83f7",
-            "abundance.tsv:md5,780a5d5c6d12b81f4c1865d0b9e125d3",
-            "kallisto_quant.log:md5,78bf71d8a5b300cc10ed119fdf69c3c0",
-            "run_info.json:md5,782f358803dca4a54dc7e817a4ba5776"
+            "abundance.h5",
+            "abundance.tsv",
+            "kallisto_quant.log",
+            "run_info.json",
+            "abundance.h5",
+            "abundance.tsv",
+            "kallisto_quant.log",
+            "run_info.json",
+            "abundance.h5",
+            "abundance.tsv",
+            "kallisto_quant.log",
+            "run_info.json",
+            "abundance.h5",
+            "abundance.tsv",
+            "kallisto_quant.log",
+            "run_info.json",
+            "abundance.h5",
+            "abundance.tsv",
+            "kallisto_quant.log",
+            "run_info.json",
+            "kallisto.merged.gene_counts.SummarizedExperiment.rds",
+            "kallisto.merged.gene_counts.tsv",
+            "kallisto.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
+            "kallisto.merged.gene_counts_length_scaled.tsv",
+            "kallisto.merged.gene_counts_scaled.SummarizedExperiment.rds",
+            "kallisto.merged.gene_counts_scaled.tsv",
+            "kallisto.merged.gene_lengths.tsv",
+            "kallisto.merged.gene_tpm.tsv",
+            "kallisto.merged.transcript_counts.SummarizedExperiment.rds",
+            "kallisto.merged.transcript_counts.tsv",
+            "kallisto.merged.transcript_lengths.tsv",
+            "kallisto.merged.transcript_tpm.tsv"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T15:35:31.465634"
+        "timestamp": "2024-08-23T15:53:37.166056"
     },
     "references": {
         "content": [
@@ -150,12 +150,6 @@
             "fastqc_sequence_counts_plot-cnt.png:md5,2874fea747c7ff46828bf4f17668caf8",
             "fastqc_sequence_counts_plot-pct.png:md5,0022d7f5ac78b6eff157de24e37c5ab0",
             "fastqc_sequence_duplication_levels_plot.png:md5,fcd3b1ec2b95fe4bcd607dc28179a754",
-            "kallisto_alignment-cnt.pdf:md5,1df1469743dc958991c5680bcad4d06b",
-            "kallisto_alignment-pct.pdf:md5,310edbb17d863cd91213e54cacc3ff28",
-            "kallisto_alignment-cnt.png:md5,27547934e07e17907e0f52eac50cc45c",
-            "kallisto_alignment-pct.png:md5,c34202594e60c3cdc1c713d066e7a381",
-            "kallisto_alignment-cnt.svg:md5,0112322ad8179e1a41520877a1fc0e73",
-            "kallisto_alignment-pct.svg:md5,5c7555a00804ef595254d12a7852d12d",
             "multiqc_report.html",
             "cutadapt_filtered_reads_plot-cnt.pdf",
             "cutadapt_filtered_reads_plot-pct.pdf",
@@ -174,11 +168,15 @@
             "fastqc_sequence_length_distribution_plot.pdf",
             "fastqc_top_overrepresented_sequences_table.pdf",
             "general_stats_table.pdf",
+            "kallisto_alignment-cnt.pdf",
+            "kallisto_alignment-pct.pdf",
             "fastqc_per_base_n_content_plot.png",
             "fastqc_per_base_sequence_quality_plot.png",
             "fastqc_sequence_length_distribution_plot.png",
             "fastqc_top_overrepresented_sequences_table.png",
             "general_stats_table.png",
+            "kallisto_alignment-cnt.png",
+            "kallisto_alignment-pct.png",
             "cutadapt_filtered_reads_plot-cnt.svg",
             "cutadapt_filtered_reads_plot-pct.svg",
             "cutadapt_trimmed_sequences_plot_3_Counts.svg",
@@ -195,13 +193,15 @@
             "fastqc_sequence_duplication_levels_plot.svg",
             "fastqc_sequence_length_distribution_plot.svg",
             "fastqc_top_overrepresented_sequences_table.svg",
-            "general_stats_table.svg"
+            "general_stats_table.svg",
+            "kallisto_alignment-cnt.svg",
+            "kallisto_alignment-pct.svg"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T15:35:31.50623"
+        "timestamp": "2024-08-23T15:53:37.413284"
     },
     "bbsplit": {
         "content": [

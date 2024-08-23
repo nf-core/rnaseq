@@ -806,7 +806,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: --min_mapped_reads 90") {
+    test("Params: --min_mapped_reads 90 - stub") {
 
         options "-stub"
 

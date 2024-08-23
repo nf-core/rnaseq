@@ -18,4 +18,48 @@ nextflow_pipeline {
             assert workflow.success
         }
     }
+
+    test("Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'kallisto'
+                skip_qc = true
+                skip_alignment = true
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    file("${params.outdir}/custom/out/genome_transcriptome.fasta").name,
+                    file("${params.outdir}/custom/out/genome_transcriptome.gtf").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw.html").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw.zip").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP1_raw.html").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP1_raw.zip").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP2_raw.html").name,
+                    file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP2_raw.zip").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP1_raw.html").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP1_raw.zip").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP2_raw.html").name,
+                    file("${params.outdir}/fastqc/raw/WT_REP2_raw.zip").name,
+                    file("${params.outdir}/multiqc/multiqc_report.html").name,
+                    file("${params.outdir}/trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/WT_REP1_trimmed_1.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/WT_REP1_trimmed_2.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt").name,
+                    file("${params.outdir}/trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt").name
+                ).match() }
+            )
+        }
+    }
 }

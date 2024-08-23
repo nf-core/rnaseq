@@ -928,8 +928,8 @@ nextflow_pipeline {
                 { assert workflow.success },
                 { assert snapshot(
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    file("${params.outdir}/custom/out/genome_gfp.fasta").name,
-                    file("${params.outdir}/custom/out/genome_gfp.gtf").name,
+                    file("${params.outdir}/custom/out/genome_transcriptome.fasta").name,
+                    file("${params.outdir}/custom/out/genome_transcriptome.gtf").name,
                     file("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw.html").name,
                     file("${params.outdir}/fastqc/raw/RAP1_IAA_30M_REP1_raw.zip").name,
                     file("${params.outdir}/fastqc/raw/RAP1_UNINDUCED_REP1_raw.html").name,

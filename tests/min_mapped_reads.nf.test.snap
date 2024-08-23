@@ -158,6 +158,7 @@
             "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
             "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
             "dupradar-section-plot.png:md5,eacbc664cc29a7a59a6aa366b4618582",
+            "fail_mapped_samples_table.png:md5,e0702273ab75b55895e566cb2945d893",
             "fastqc-status-check-heatmap-1.png:md5,2402522f8c02e12aea9af088c6595890",
             "fastqc-status-check-heatmap.png:md5,fe8b5b4ab4480d46a12a9005932a9b84",
             "fastqc_overrepresented_sequences_plot-1.png:md5,40e450251b80ec0efc9364434234ec7f",
@@ -204,6 +205,7 @@
             "cutadapt_trimmed_sequences_plot_3_Counts.pdf",
             "cutadapt_trimmed_sequences_plot_3_Obs_Exp.pdf",
             "dupradar-section-plot.pdf",
+            "fail_mapped_samples_table.pdf",
             "fail_strand_check_table.pdf",
             "fastqc-status-check-heatmap-1.pdf",
             "fastqc-status-check-heatmap.pdf",
@@ -303,6 +305,7 @@
             "cutadapt_trimmed_sequences_plot_3_Counts.svg",
             "cutadapt_trimmed_sequences_plot_3_Obs_Exp.svg",
             "dupradar-section-plot.svg",
+            "fail_mapped_samples_table.svg",
             "fail_strand_check_table.svg",
             "fastqc-status-check-heatmap-1.svg",
             "fastqc-status-check-heatmap.svg",
@@ -375,7 +378,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T16:04:54.826515"
+        "timestamp": "2024-08-23T17:12:47.723706"
     },
     "fastqc/raw": {
         "content": [
@@ -596,6 +599,7 @@
             "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
             "multiqc_citations.txt:md5,2d2ab6df367e36e98e081c33dec187a0",
             "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
+            "multiqc_fail_mapped_samples_table.txt:md5,5dd9b06f326b1a55d78878343af89927",
             "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
             "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
             "multiqc_featurecounts_biotype_plot.txt:md5,f3c566d2eaf6bf2ffe5ad12036ce3500",
@@ -669,7 +673,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T16:04:54.775518"
+        "timestamp": "2024-08-23T17:12:47.537212"
     },
     "star_salmon/deseq2_qc": {
         "content": [

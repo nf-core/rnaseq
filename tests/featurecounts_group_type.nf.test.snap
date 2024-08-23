@@ -281,6 +281,25 @@
         },
         "timestamp": "2024-08-23T12:28:48.071152"
     },
+    "star_salmon/markdup": {
+        "content": [
+            "RAP1_IAA_30M_REP1.markdup.sorted.bam",
+            "RAP1_IAA_30M_REP1.markdup.sorted.bam.bai",
+            "RAP1_UNINDUCED_REP1.markdup.sorted.bam",
+            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai",
+            "RAP1_UNINDUCED_REP2.markdup.sorted.bam",
+            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai",
+            "WT_REP1.markdup.sorted.bam",
+            "WT_REP1.markdup.sorted.bam.bai",
+            "WT_REP2.markdup.sorted.bam",
+            "WT_REP2.markdup.sorted.bam.bai"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-23T13:34:18.361387"
+    },
     "star_salmon/samtools_stats": {
         "content": [
             "RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat:md5,e3689e1939a931a656ab14b5a40d27a9",
@@ -779,40 +798,30 @@
             "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
             "cmd_info.json:md5,f234c8d322df3b59d990594c63b24eae",
             "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.bai",
             "fld.gz",
             "meta_info.json",
             "flenDist.txt",
             "salmon_quant.log",
             "quant.genes.sf",
             "quant.sf",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai",
             "fld.gz",
             "meta_info.json",
             "flenDist.txt",
             "salmon_quant.log",
             "quant.genes.sf",
             "quant.sf",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai",
             "fld.gz",
             "meta_info.json",
             "flenDist.txt",
             "salmon_quant.log",
             "quant.genes.sf",
             "quant.sf",
-            "WT_REP1.markdup.sorted.bam",
-            "WT_REP1.markdup.sorted.bam.bai",
             "fld.gz",
             "meta_info.json",
             "flenDist.txt",
             "salmon_quant.log",
             "quant.genes.sf",
             "quant.sf",
-            "WT_REP2.markdup.sorted.bam",
-            "WT_REP2.markdup.sorted.bam.bai",
             "fld.gz",
             "meta_info.json",
             "flenDist.txt",
@@ -824,7 +833,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-22T17:43:26.927936"
+        "timestamp": "2024-08-23T13:34:18.439694"
     },
     "fastqc/trim": {
         "content": [

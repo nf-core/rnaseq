@@ -285,7 +285,7 @@ nextflow_pipeline {
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_bam_stat.png").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_inner_distance_plot_Counts.png").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_inner_distance_plot_Percentages.png").name,
-                    file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_junction_annotation_junctio.namens_plot_Events-cnt.png"),
+                    file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_junction_annotation_junctions_plot_Events-cnt.png"),
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_junction_annotation_junctions_plot_Events-pct.png").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_junction_saturation_plot_All_Junctions.png").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_plots/png/rseqc_junction_saturation_plot_Known_Junctions.png").name,

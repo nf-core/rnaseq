@@ -115,11 +115,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1357](https://github.com/nf-core/rnaseq/pull/1357) - Fix anchor issue in multiqc
 - [PR #1358](https://github.com/nf-core/rnaseq/pull/1358) - Update test profiles to restore a static URI for megatests
 - [PR #1359](https://github.com/nf-core/rnaseq/pull/1359) - Update MultiQC and revert unnecessary workaround
-<<<<<<< Updated upstream
-- [PR #1361](https://github.com/nf-core/rnaseq/pull/1361) - Animate subway map
-=======
 - [PR #1360](https://github.com/nf-core/rnaseq/pull/1360) - More complete snapshots for pipeline level tests
->>>>>>> Stashed changes
+- [PR #1361](https://github.com/nf-core/rnaseq/pull/1361) - Animate subway map
 - [PR #1362](https://github.com/nf-core/rnaseq/pull/1362) - Move multiqc module prefix for nf-test to module
 
 ### Parameters

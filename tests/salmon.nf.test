@@ -236,6 +236,9 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
+                pseudo_aligner = 'salmon'
+                skip_qc = true
+                skip_alignment = true
             }
         }
 

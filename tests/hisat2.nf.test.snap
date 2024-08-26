@@ -160,7 +160,6 @@
             "qualimap_gene_coverage_profile_Normalised.txt:md5,ebcedec8e5c959414a4e89ccae3fc07e",
             "qualimap_rnaseq_cov_hist.txt:md5,b78ff616f267f9b061b3297b767e88fb",
             "rseqc_infer_experiment_plot.txt:md5,0556a013129be7d78fac4345fddbe8c5",
-            "rseqc_junction_annotation_junctions_plot_Junctions.txt:md5,d233f89c3c69a0dfc2e66d4d5b8c7ea1",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,3625f666cc09d0f07990716aeccd869f",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93",
@@ -202,7 +201,8 @@
             "rseqc_inner_distance.txt",
             "rseqc_inner_distance_plot_Counts.txt",
             "rseqc_inner_distance_plot_Percentages.txt",
-            "rseqc_junction_annotation_junctions_plot_Events.txt:md5,db75ad02153035dea3ffaf58aa68894e",
+            "rseqc_junction_annotation_junctions_plot_Events.txt",
+            "rseqc_junction_annotation_junctions_plot_Junctions.txt",
             "rseqc_junction_saturation_all.txt",
             "rseqc_junction_saturation_plot_All_Junctions.txt",
             "rseqc_junction_saturation_plot_Known_Junctions.txt",
@@ -219,7 +219,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T13:55:07.074305"
+        "timestamp": "2024-08-26T16:35:09.357006"
     },
     "hisat2/picard_metrics": {
         "content": [
@@ -405,8 +405,6 @@
             "qualimap_gene_coverage_profile_Counts.png:md5,1aa39028b017760d0b09f1b6f8c1fa3a",
             "qualimap_gene_coverage_profile_Normalised.png:md5,1cd382a79b89564a006afe431aa3916d",
             "rseqc_infer_experiment_plot.png:md5,73f5b860029912da9c3f6a887238d251",
-            "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png:md5,4b91da0c996a436fe52a5b5ce4dee0bf",
-            "rseqc_junction_annotation_junctions_plot_Junctions-pct.png:md5,7b304888b33bce8e4c66475711a0a7d1",
             "rseqc_read_dups_plot.png:md5,fbb8a2268f0468be5a94c960bd2ebd2a",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts-cnt.png:md5,ce6abb232fd5b5f2e66c0fe9a571d75f",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts-log.png:md5,6b44818f886ef020fb3646f152ad4af6",
@@ -513,6 +511,8 @@
             "rseqc_inner_distance_plot_Percentages.png",
             "rseqc_junction_annotation_junctions_plot_Events-cnt.png",
             "rseqc_junction_annotation_junctions_plot_Events-pct.png",
+            "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png",
+            "rseqc_junction_annotation_junctions_plot_Junctions-pct.png",
             "rseqc_junction_saturation_plot_All_Junctions.png",
             "rseqc_junction_saturation_plot_Known_Junctions.png",
             "rseqc_junction_saturation_plot_Novel_Junctions.png",
@@ -602,7 +602,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T13:55:07.18703"
+        "timestamp": "2024-08-26T16:35:09.426445"
     },
     "fastqc/raw": {
         "content": [

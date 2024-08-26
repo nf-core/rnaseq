@@ -294,8 +294,6 @@
             "qualimap_gene_coverage_profile_Counts.png:md5,fb739f4297a156f0913f21f20090f598",
             "qualimap_gene_coverage_profile_Normalised.png:md5,710960caa692f0d0eceadcc83650cf00",
             "rseqc_infer_experiment_plot.png:md5,49f1faa0849545b8a75af2657d0ee5fa",
-            "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png:md5,02a58fa6112699eb73a10bc62e8ff562",
-            "rseqc_junction_annotation_junctions_plot_Junctions-pct.png:md5,ccace8d19fd96e93939c9d446640dc37",
             "rseqc_read_dups_plot.png:md5,1a18ce4ca5f36722f1fdd579d7eb41e1",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts-cnt.png:md5,ce6abb232fd5b5f2e66c0fe9a571d75f",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts-log.png:md5,6b44818f886ef020fb3646f152ad4af6",
@@ -399,6 +397,8 @@
             "rseqc_inner_distance_plot_Percentages.png",
             "rseqc_junction_annotation_junctions_plot_Events-cnt.png",
             "rseqc_junction_annotation_junctions_plot_Events-pct.png",
+            "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png",
+            "rseqc_junction_annotation_junctions_plot_Junctions-pct.png",
             "rseqc_junction_saturation_plot_All_Junctions.png",
             "rseqc_junction_saturation_plot_Known_Junctions.png",
             "rseqc_junction_saturation_plot_Novel_Junctions.png",
@@ -494,7 +494,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T13:19:35.873754"
+        "timestamp": "2024-08-26T16:55:04.146511"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -710,7 +710,6 @@
             "qualimap_gene_coverage_profile_Normalised.txt:md5,6ed32f112c679e73396350cbe5cb9459",
             "qualimap_rnaseq_cov_hist.txt:md5,a895b3af229f661da1edbc21ec72edaa",
             "rseqc_infer_experiment_plot.txt:md5,d8741451248f1a5a4ebe3230c1af9c95",
-            "rseqc_junction_annotation_junctions_plot_Junctions.txt:md5,f4aa74934a4c73c2c8a1b78866090419",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,53addd7b78d8ae224920ec9b97489d72",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,97fc7bde65a7efc5ab3af48ef0400c20",
@@ -730,6 +729,7 @@
             "qualimap_rnaseq_genome_results.txt",
             "rseqc_bam_stat.txt",
             "rseqc_junction_annotation_junctions_plot_Events.txt",
+            "rseqc_junction_annotation_junctions_plot_Junctions.txt",
             "rseqc_read_distribution_plot.txt",
             "rseqc_read_dups_plot.txt",
             "multiqc_rseqc_infer_experiment.txt",
@@ -772,7 +772,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T13:19:35.782125"
+        "timestamp": "2024-08-26T16:55:04.076927"
     },
     "star_salmon/deseq2_qc": {
         "content": [

@@ -118,7 +118,6 @@
             "qualimap_gene_coverage_profile_Normalised.txt:md5,209b0020fcd4c3c497e3abbd1f8cd593",
             "qualimap_rnaseq_cov_hist.txt:md5,3be7bc41531ce84b42092a742bfeb0ab",
             "rseqc_infer_experiment_plot.txt:md5,382397ae264336395e2a3b03af8d7023",
-            "rseqc_junction_annotation_junctions_plot_Junctions.txt:md5,426b963c80ceb1ec4849d03da27e0570",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,a557130553131c893398532377d3b525",
@@ -159,6 +158,7 @@
             "rseqc_inner_distance_plot_Counts.txt",
             "rseqc_inner_distance_plot_Percentages.txt",
             "rseqc_junction_annotation_junctions_plot_Events.txt",
+            "rseqc_junction_annotation_junctions_plot_Junctions.txt",
             "rseqc_junction_saturation_all.txt",
             "rseqc_junction_saturation_plot_All_Junctions.txt",
             "rseqc_junction_saturation_plot_Known_Junctions.txt",
@@ -177,7 +177,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T15:27:28.25949"
+        "timestamp": "2024-08-26T17:04:58.433949"
     },
     "star_salmon/rseqc": {
         "content": [
@@ -461,8 +461,6 @@
             "qualimap_gene_coverage_profile_Counts.png:md5,8312f777db61509caa66d1f53a4b6b07",
             "qualimap_gene_coverage_profile_Normalised.png:md5,66acb12427130766801a8376f95ed88b",
             "rseqc_infer_experiment_plot.png:md5,c3108e35020ee93a77a62ea0167613b2",
-            "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png:md5,7f7ed45c326f7e597af2c59e5ec866b7",
-            "rseqc_junction_annotation_junctions_plot_Junctions-pct.png:md5,fecfef6063c049f440e1b9204f656502",
             "rseqc_read_dups_plot.png:md5,1e43ad78c4a87f7736b552ad71d25c16",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts-cnt.png:md5,ce6abb232fd5b5f2e66c0fe9a571d75f",
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts-log.png:md5,6b44818f886ef020fb3646f152ad4af6",
@@ -542,6 +540,8 @@
             "rseqc_inner_distance_plot_Percentages.png",
             "rseqc_junction_annotation_junctions_plot_Events-cnt.png",
             "rseqc_junction_annotation_junctions_plot_Events-pct.png",
+            "rseqc_junction_annotation_junctions_plot_Junctions-cnt.png",
+            "rseqc_junction_annotation_junctions_plot_Junctions-pct.png",
             "rseqc_junction_saturation_plot_All_Junctions.png",
             "rseqc_junction_saturation_plot_Known_Junctions.png",
             "rseqc_junction_saturation_plot_Novel_Junctions.png",
@@ -619,7 +619,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T15:27:28.389648"
+        "timestamp": "2024-08-26T17:04:58.556659"
     },
     "star_salmon/picard_metrics": {
         "content": [

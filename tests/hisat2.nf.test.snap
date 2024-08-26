@@ -252,29 +252,29 @@
             "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,079b099e5c5e9fe5e2559dfc938aa48b",
             "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
             "RAP1_IAA_30M_REP1.featureCounts.txt:md5,eedff929765dbc950528ee499e6d63ba",
-            "RAP1_IAA_30M_REP1.featureCounts.txt.summary:md5,b4fd537569e939435344a6c9436bcd85",
             "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,4d1820a35481f454f17a14326356253d",
             "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
             "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,b007abbc78b08d8d2bb37a267665947d",
-            "RAP1_UNINDUCED_REP1.featureCounts.txt.summary:md5,d11369e773d95fe3024cdba224532825",
             "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,3632da2126cb33391428ba0d6d10787f",
             "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
             "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,ea897231d1c447d8e395716741b876ab",
-            "RAP1_UNINDUCED_REP2.featureCounts.txt.summary:md5,c8967f02a4598b23d5f56eaed2a35932",
             "WT_REP1.biotype_counts_mqc.tsv:md5,abc303e93390bb5bd8f916f8f5978de3",
             "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
             "WT_REP1.featureCounts.txt:md5,39721c0d981304996438bc2f505bf98c",
-            "WT_REP1.featureCounts.txt.summary:md5,ce8e697f77ca90f65719ba2037c1c107",
             "WT_REP2.biotype_counts_mqc.tsv:md5,74a5436a716a7d99f425f73914cb2794",
             "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
             "WT_REP2.featureCounts.txt:md5,702446d50a5019c84fcef85d1cfef78c",
-            "WT_REP2.featureCounts.txt.summary:md5,48d1f61e21dc37b5206f909606996576"
+            "RAP1_IAA_30M_REP1.featureCounts.txt.summary",
+            "RAP1_UNINDUCED_REP1.featureCounts.txt.summary",
+            "RAP1_UNINDUCED_REP2.featureCounts.txt.summary",
+            "WT_REP1.featureCounts.txt.summary",
+            "WT_REP2.featureCounts.txt.summary"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T12:35:11.708452"
+        "timestamp": "2024-08-26T12:58:36.389406"
     },
     "hisat2/samtools_stats": {
         "content": [
@@ -359,16 +359,16 @@
     },
     "hisat2/bigwig": {
         "content": [
-            "RAP1_IAA_30M_REP1.forward.bigWig:md5,c9ae036650d73b275dfa1348c17fb773",
-            "RAP1_IAA_30M_REP1.reverse.bigWig:md5,b00167c81cf99d088ef36cfbe73dd4c0",
-            "RAP1_UNINDUCED_REP1.forward.bigWig:md5,5bafde76df98023212350e1d0c77ee97",
-            "RAP1_UNINDUCED_REP1.reverse.bigWig:md5,eb5ecce02b6b206e9970070c4e1dad22",
-            "RAP1_UNINDUCED_REP2.forward.bigWig:md5,c49afa16b0e2be87a043ceb45fd6b13b",
-            "RAP1_UNINDUCED_REP2.reverse.bigWig:md5,40916b3a8a8bc183795573ed5014f5f2",
-            "WT_REP1.forward.bigWig:md5,bd0a7dbda673cada114ab2f5609faae6",
-            "WT_REP1.reverse.bigWig:md5,b41fa148408c0969f53886d66236f844",
-            "WT_REP2.forward.bigWig:md5,82a8fec707b818bc18c3861ebd84b3e5",
-            "WT_REP2.reverse.bigWig:md5,d8ac1d7c396be5c4d36919de64505d4f"
+            "RAP1_IAA_30M_REP1.forward.bigWig",
+            "RAP1_IAA_30M_REP1.reverse.bigWig",
+            "RAP1_UNINDUCED_REP1.forward.bigWig",
+            "RAP1_UNINDUCED_REP1.reverse.bigWig",
+            "RAP1_UNINDUCED_REP2.forward.bigWig",
+            "RAP1_UNINDUCED_REP2.reverse.bigWig",
+            "WT_REP1.forward.bigWig",
+            "WT_REP1.reverse.bigWig",
+            "WT_REP2.forward.bigWig",
+            "WT_REP2.reverse.bigWig"
         ],
         "meta": {
             "nf-test": "0.9.0",

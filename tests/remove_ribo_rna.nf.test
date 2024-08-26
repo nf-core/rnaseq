@@ -483,11 +483,12 @@ nextflow_pipeline {
                     file("${params.outdir}/salmon/salmon.merged.transcript_tpm.tsv").name
                 ).match("salmon") },
                 { assert snapshot(
-                    path("${params.outdir}/sortmerna/RAP1_IAA_30M_REP1.sortmerna.log"),
-                    path("${params.outdir}/sortmerna/RAP1_UNINDUCED_REP1.sortmerna.log"),
-                    path("${params.outdir}/sortmerna/RAP1_UNINDUCED_REP2.sortmerna.log"),
-                    path("${params.outdir}/sortmerna/WT_REP1.sortmerna.log"),
-                    path("${params.outdir}/sortmerna/WT_REP2.sortmerna.log")
+                    // These files are not stable
+                    file("${params.outdir}/sortmerna/RAP1_IAA_30M_REP1.sortmerna.log").name,
+                    file("${params.outdir}/sortmerna/RAP1_UNINDUCED_REP1.sortmerna.log").name,
+                    file("${params.outdir}/sortmerna/RAP1_UNINDUCED_REP2.sortmerna.log").name,
+                    file("${params.outdir}/sortmerna/WT_REP1.sortmerna.log").name,
+                    file("${params.outdir}/sortmerna/WT_REP2.sortmerna.log").name
                 ).match("star_salmon/sortmerna") },
                 { assert snapshot(
                     path("${params.outdir}/star_salmon/bigwig/RAP1_IAA_30M_REP1.forward.bigWig"),

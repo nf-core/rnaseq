@@ -940,11 +940,11 @@
     },
     "star_salmon/sortmerna": {
         "content": [
-            "RAP1_IAA_30M_REP1.sortmerna.log:md5,2fe1896779708960052299a1b3bc22e2",
-            "RAP1_UNINDUCED_REP1.sortmerna.log:md5,8866cd5eb622ea19a793fc63f232ea05",
-            "RAP1_UNINDUCED_REP2.sortmerna.log:md5,d905e5b8b51ad7c9524aa7aee8c55dc2",
-            "WT_REP1.sortmerna.log:md5,bf37a10e24b436cdef0d20eef5fedecc",
-            "WT_REP2.sortmerna.log:md5,e7decfb65071a73c0b7a3c43f3530077"
+            "RAP1_IAA_30M_REP1.sortmerna.log",
+            "RAP1_UNINDUCED_REP1.sortmerna.log",
+            "RAP1_UNINDUCED_REP2.sortmerna.log",
+            "WT_REP1.sortmerna.log",
+            "WT_REP2.sortmerna.log"
         ],
         "meta": {
             "nf-test": "0.9.0",

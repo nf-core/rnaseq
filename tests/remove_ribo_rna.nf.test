@@ -99,7 +99,6 @@ nextflow_pipeline {
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_rseqc_junction_annotation.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_rseqc_read_distribution.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_samtools_idxstats.txt"),
-                    path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_sortmerna.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/picard_deduplication.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/picard_histogram.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/picard_histogram_1.txt"),
@@ -119,7 +118,6 @@ nextflow_pipeline {
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/samtools-idxstats-mapped-reads-plot_Raw_Counts.txt"),
                     path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/samtools_alignment_plot.txt"),
-                    path("${params.outdir}/multiqc/star_salmon/multiqc_report_data/sortmerna-detailed-plot.txt"),
                     // These files are not stable
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/fastqc_top_overrepresented_sequences_table-1.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/fastqc_top_overrepresented_sequences_table.txt").name,
@@ -140,6 +138,7 @@ nextflow_pipeline {
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_samtools_flagstat.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_samtools_stats.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_software_versions.txt").name,
+                    file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_sortmerna.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_sources.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_star.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/multiqc_star_salmon_deseq2_clustering-plot.txt").name,
@@ -160,6 +159,7 @@ nextflow_pipeline {
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/samtools-flagstat-dp_Percentage_of_total.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/samtools-flagstat-dp_Read_counts.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/samtools-stats-dp.txt").name,
+                    file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/sortmerna-detailed-plot.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/star_alignment_plot.txt").name,
                     file("${params.outdir}/multiqc/star_salmon/multiqc_report_data/star_summary_table.txt").name
                 ).match("multiqc_data") },

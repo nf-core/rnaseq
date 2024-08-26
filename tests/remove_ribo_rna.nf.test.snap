@@ -705,7 +705,6 @@
             "multiqc_rseqc_junction_annotation.txt:md5,e67493668e9b93f6e15c145d8d844372",
             "multiqc_rseqc_read_distribution.txt:md5,0132183561c399a5b57eee5f82bda19e",
             "multiqc_samtools_idxstats.txt:md5,413ba06f3d8e4ab0dbde8ef8952c4b32",
-            "multiqc_sortmerna.txt:md5,1171fc564e1bfadb49d892535c38c8b6",
             "picard_deduplication.txt:md5,32d912bd78e7d99276a52e13575d08aa",
             "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
             "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -725,7 +724,6 @@
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,53addd7b78d8ae224920ec9b97489d72",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,97fc7bde65a7efc5ab3af48ef0400c20",
             "samtools_alignment_plot.txt:md5,207e0c3f557679f37350577364b8956d",
-            "sortmerna-detailed-plot.txt:md5,b93dadb4ca77c6af68ef2c00a8626f17",
             "fastqc_top_overrepresented_sequences_table-1.txt",
             "fastqc_top_overrepresented_sequences_table.txt",
             "junction_saturation_known.txt",
@@ -745,6 +743,7 @@
             "multiqc_samtools_flagstat.txt",
             "multiqc_samtools_stats.txt",
             "multiqc_software_versions.txt",
+            "multiqc_sortmerna.txt",
             "multiqc_sources.txt",
             "multiqc_star.txt",
             "multiqc_star_salmon_deseq2_clustering-plot.txt",
@@ -765,6 +764,7 @@
             "samtools-flagstat-dp_Percentage_of_total.txt",
             "samtools-flagstat-dp_Read_counts.txt",
             "samtools-stats-dp.txt",
+            "sortmerna-detailed-plot.txt",
             "star_alignment_plot.txt",
             "star_summary_table.txt"
         ],
@@ -772,7 +772,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T18:18:51.71382"
+        "timestamp": "2024-08-26T10:39:39.81199"
     },
     "star_salmon/deseq2_qc": {
         "content": [

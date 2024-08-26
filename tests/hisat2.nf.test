@@ -797,7 +797,8 @@ nextflow_pipeline {
                     file("${params.outdir}/salmon/salmon.merged.transcript_counts.tsv").name,
                     file("${params.outdir}/salmon/salmon.merged.transcript_lengths.tsv").name,
                     file("${params.outdir}/salmon/salmon.merged.transcript_tpm.tsv").name
-                ).match("salmon") },                { assert snapshot(
+                ).match("salmon") },
+                { assert snapshot(
                     // These reports are not stable
                     file("${params.outdir}/trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt").name,
                     file("${params.outdir}/trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt").name,

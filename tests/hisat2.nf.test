@@ -240,8 +240,8 @@ nextflow_pipeline {
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_data/salmon_plot.txt").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_data/samtools-flagstat-dp_Percentage_of_total.txt").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_data/samtools-flagstat-dp_Read_counts.txt").name,
-                    file("${params.outdir}/multiqc/hisat2/multiqc_report_data/samtools-stats-dp.txt").name
-                    file("${params.outdir}/multiqc/hisat2/multiqc_report_data/samtools_alignment_plot.txt").name,
+                    file("${params.outdir}/multiqc/hisat2/multiqc_report_data/samtools-stats-dp.txt").name,
+                    file("${params.outdir}/multiqc/hisat2/multiqc_report_data/samtools_alignment_plot.txt").name
                 ).match("multiqc_data") },
                 { assert snapshot(
                     path("${params.outdir}/multiqc/hisat2/multiqc_report_plots/png/cutadapt_filtered_reads_plot-cnt.png"),
@@ -426,7 +426,7 @@ nextflow_pipeline {
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/featurecounts_biotype_plot-pct.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/general_stats_table.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/hisat2_deseq2_clustering-plot.svg").name,
-                    file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/hisat2_deseq2_pca-plot.svg").name
+                    file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/hisat2_deseq2_pca-plot.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/hisat2_pe_plot-cnt.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/hisat2_pe_plot-pct.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/hisat2_se_plot-cnt.svg").name,
@@ -464,7 +464,7 @@ nextflow_pipeline {
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/samtools-idxstats-mapped-reads-plot_Raw_Counts-log.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/samtools-stats-dp.svg").name,
                     file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/samtools_alignment_plot-cnt.svg").name,
-                    file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/samtools_alignment_plot-pct.svg").name,
+                    file("${params.outdir}/multiqc/hisat2/multiqc_report_plots/svg/samtools_alignment_plot-pct.svg").name
                 ).match("multiqc_plots") },
                 { assert snapshot(
                     // Metrics are not stable

@@ -150,9 +150,7 @@
             "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
             "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
             "multiqc_featurecounts_biotype_plot.txt:md5,d35ad008181f0f7be84d5770d17a3a65",
-            "multiqc_picard_dups.txt:md5,71d5bafee1a4916951349018f387f7a0",
             "multiqc_samtools_idxstats.txt:md5,66a8e8aecb6233f5a3521151b1ce8d49",
-            "picard_deduplication.txt:md5,b54a144d4f23ade2221d7ca1af1997f4",
             "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
             "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
             "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -163,7 +161,6 @@
             "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,3625f666cc09d0f07990716aeccd869f",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93",
-            "samtools_alignment_plot.txt:md5,b6ba3cc94a91b3d0a84c3fa721914744",
             "fastqc_top_overrepresented_sequences_table-1.txt",
             "fastqc_top_overrepresented_sequences_table.txt",
             "hisat2_pe_plot.txt",
@@ -181,6 +178,7 @@
             "multiqc_hisat2_deseq2_clustering-plot_3.txt",
             "multiqc_hisat2_deseq2_clustering-plot_4.txt",
             "multiqc_hisat2_deseq2_pca-plot.txt",
+            "multiqc_picard_dups.txt",
             "multiqc_rseqc_bam_stat.txt",
             "multiqc_rseqc_infer_experiment.txt",
             "multiqc_rseqc_junction_annotation.txt",
@@ -196,6 +194,7 @@
             "multiqc_samtools_stats.txt",
             "multiqc_software_versions.txt",
             "multiqc_sources.txt",
+            "picard_deduplication.txt",
             "qualimap_genomic_origin.txt",
             "rseqc_bam_stat.txt",
             "rseqc_inner_distance.txt",
@@ -213,13 +212,14 @@
             "salmon_plot.txt",
             "samtools-flagstat-dp_Percentage_of_total.txt",
             "samtools-flagstat-dp_Read_counts.txt",
-            "samtools-stats-dp.txt"
+            "samtools-stats-dp.txt",
+            "samtools_alignment_plot.txt"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T16:35:09.357006"
+        "timestamp": "2024-08-26T19:01:52.559836"
     },
     "hisat2/picard_metrics": {
         "content": [
@@ -277,42 +277,42 @@
     },
     "hisat2/samtools_stats": {
         "content": [
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat:md5,e04029ba0b7c9a5007b1e21190416ab3",
-            "RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats:md5,58ac8d961ffe5af5140e597ce46d1ac2",
-            "RAP1_IAA_30M_REP1.sorted.bam.flagstat:md5,acdfa72b8fb5785abeddaabdab1ed8ca",
-            "RAP1_IAA_30M_REP1.sorted.bam.idxstats:md5,58ac8d961ffe5af5140e597ce46d1ac2",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.flagstat:md5,b0b719dd29053aa37010082b6a0bb8d1",
-            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.idxstats:md5,05a67765b944740c60f263a42a5fd65d",
-            "RAP1_UNINDUCED_REP1.sorted.bam.flagstat:md5,0f82cf321c7ac21d11c29b7e8fd6893b",
-            "RAP1_UNINDUCED_REP1.sorted.bam.idxstats:md5,05a67765b944740c60f263a42a5fd65d",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.flagstat:md5,cb40075ffa2e6f66d8b4b5025fd62004",
-            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.idxstats:md5,a72f0d10ac28ec362a79435db766251f",
-            "RAP1_UNINDUCED_REP2.sorted.bam.flagstat:md5,92d7610422de90da2e76f99461721b7f",
-            "RAP1_UNINDUCED_REP2.sorted.bam.idxstats:md5,a72f0d10ac28ec362a79435db766251f",
-            "WT_REP1.markdup.sorted.bam.flagstat:md5,cb3229294e384dba57b00ddab95e5cc9",
-            "WT_REP1.markdup.sorted.bam.idxstats:md5,93da4c4f281b38c0f783cb4b7e93a6d0",
-            "WT_REP1.sorted.bam.flagstat:md5,c55ed3c6ea5f4134036fa8a09c20a1ee",
-            "WT_REP1.sorted.bam.idxstats:md5,93da4c4f281b38c0f783cb4b7e93a6d0",
-            "WT_REP2.markdup.sorted.bam.flagstat:md5,a0702469e2d220391604e1b72100cad1",
-            "WT_REP2.markdup.sorted.bam.idxstats:md5,ea45aa47d0b2b85d8aed7072e6ea36b5",
-            "WT_REP2.sorted.bam.flagstat:md5,b33836e522593ca0aed7c3b10973d5ed",
-            "WT_REP2.sorted.bam.idxstats:md5,ea45aa47d0b2b85d8aed7072e6ea36b5",
+            "RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat",
+            "RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats",
             "RAP1_IAA_30M_REP1.markdup.sorted.bam.stats",
+            "RAP1_IAA_30M_REP1.sorted.bam.flagstat",
+            "RAP1_IAA_30M_REP1.sorted.bam.idxstats",
             "RAP1_IAA_30M_REP1.sorted.bam.stats",
+            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.flagstat",
+            "RAP1_UNINDUCED_REP1.markdup.sorted.bam.idxstats",
             "RAP1_UNINDUCED_REP1.markdup.sorted.bam.stats",
+            "RAP1_UNINDUCED_REP1.sorted.bam.flagstat",
+            "RAP1_UNINDUCED_REP1.sorted.bam.idxstats",
             "RAP1_UNINDUCED_REP1.sorted.bam.stats",
+            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.flagstat",
+            "RAP1_UNINDUCED_REP2.markdup.sorted.bam.idxstats",
             "RAP1_UNINDUCED_REP2.markdup.sorted.bam.stats",
+            "RAP1_UNINDUCED_REP2.sorted.bam.flagstat",
+            "RAP1_UNINDUCED_REP2.sorted.bam.idxstats",
             "RAP1_UNINDUCED_REP2.sorted.bam.stats",
+            "WT_REP1.markdup.sorted.bam.flagstat",
+            "WT_REP1.markdup.sorted.bam.idxstats",
             "WT_REP1.markdup.sorted.bam.stats",
+            "WT_REP1.sorted.bam.flagstat",
+            "WT_REP1.sorted.bam.idxstats",
             "WT_REP1.sorted.bam.stats",
+            "WT_REP2.markdup.sorted.bam.flagstat",
+            "WT_REP2.markdup.sorted.bam.idxstats",
             "WT_REP2.markdup.sorted.bam.stats",
+            "WT_REP2.sorted.bam.flagstat",
+            "WT_REP2.sorted.bam.idxstats",
             "WT_REP2.sorted.bam.stats"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T13:55:07.609425"
+        "timestamp": "2024-08-26T19:01:52.753084"
     },
     "salmon/deseq2_qc": {
         "content": [
@@ -400,8 +400,6 @@
             "fastqc_sequence_duplication_levels_plot.png:md5,747431f0f38f8e4c41a11a072fa18780",
             "featurecounts_biotype_plot-cnt.png:md5,138e00d2fe0af27f2979cf7bdff83b46",
             "featurecounts_biotype_plot-pct.png:md5,3b7550efe9068f3ada2cc64e311f3338",
-            "picard_deduplication-cnt.png:md5,fd520fbb1fda9104eb4d39d42df385d0",
-            "picard_deduplication-pct.png:md5,dbced4008901ab031eda6d0d96ca038b",
             "qualimap_gene_coverage_profile_Counts.png:md5,1aa39028b017760d0b09f1b6f8c1fa3a",
             "qualimap_gene_coverage_profile_Normalised.png:md5,1cd382a79b89564a006afe431aa3916d",
             "rseqc_infer_experiment_plot.png:md5,73f5b860029912da9c3f6a887238d251",
@@ -412,8 +410,6 @@
             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts-log.png:md5,3bb99f72a15a4159860008beea8c802b",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts-cnt.png:md5,25015f9be4710c4eccc50f30db3bf521",
             "samtools-idxstats-mapped-reads-plot_Raw_Counts-log.png:md5,baa90f5ad4d999fc60db30840b72d8c6",
-            "samtools_alignment_plot-cnt.png:md5,142e06e9daa0fe938f1e9162e1e850a2",
-            "samtools_alignment_plot-pct.png:md5,bbffb494310e6dff84d9fe7bc99e34fe",
             "multiqc_report.html",
             "cutadapt_filtered_reads_plot-cnt.pdf",
             "cutadapt_filtered_reads_plot-pct.pdf",
@@ -448,6 +444,8 @@
             "featurecounts_biotype_plot-cnt.pdf",
             "featurecounts_biotype_plot-pct.pdf",
             "general_stats_table.pdf",
+            "hisat2_deseq2_clustering-plot.pdf",
+            "hisat2_deseq2_pca-plot.pdf",
             "hisat2_pe_plot-cnt.pdf",
             "hisat2_pe_plot-pct.pdf",
             "hisat2_se_plot-cnt.pdf",
@@ -457,8 +455,6 @@
             "qualimap_gene_coverage_profile_Counts.pdf",
             "qualimap_gene_coverage_profile_Normalised.pdf",
             "qualimap_genomic_origin-cnt.pdf",
-            "hisat2_deseq2_clustering-plot.pdf",
-            "hisat2_deseq2_pca-plot.pdf",
             "qualimap_genomic_origin-pct.pdf",
             "rseqc_bam_stat.pdf",
             "rseqc_infer_experiment_plot.pdf",
@@ -504,6 +500,8 @@
             "hisat2_pe_plot-pct.png",
             "hisat2_se_plot-cnt.png",
             "hisat2_se_plot-pct.png",
+            "picard_deduplication-cnt.png",
+            "picard_deduplication-pct.png",
             "qualimap_genomic_origin-cnt.png",
             "qualimap_genomic_origin-pct.png",
             "rseqc_bam_stat.png",
@@ -524,6 +522,8 @@
             "samtools-flagstat-dp_Percentage_of_total.png",
             "samtools-flagstat-dp_Read_counts.png",
             "samtools-stats-dp.png",
+            "samtools_alignment_plot-cnt.png",
+            "samtools_alignment_plot-pct.png",
             "cutadapt_filtered_reads_plot-cnt.svg",
             "cutadapt_filtered_reads_plot-pct.svg",
             "cutadapt_trimmed_sequences_plot_3_Counts.svg",
@@ -557,6 +557,8 @@
             "featurecounts_biotype_plot-cnt.svg",
             "featurecounts_biotype_plot-pct.svg",
             "general_stats_table.svg",
+            "hisat2_deseq2_clustering-plot.svg",
+            "hisat2_deseq2_pca-plot.svg",
             "hisat2_pe_plot-cnt.svg",
             "hisat2_pe_plot-pct.svg",
             "hisat2_se_plot-cnt.svg",
@@ -594,15 +596,13 @@
             "samtools-idxstats-mapped-reads-plot_Raw_Counts-log.svg",
             "samtools-stats-dp.svg",
             "samtools_alignment_plot-cnt.svg",
-            "samtools_alignment_plot-pct.svg",
-            "hisat2_deseq2_clustering-plot.svg",
-            "hisat2_deseq2_pca-plot.svg"
+            "samtools_alignment_plot-pct.svg"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-26T16:35:09.426445"
+        "timestamp": "2024-08-26T19:01:52.649421"
     },
     "fastqc/raw": {
         "content": [

@@ -4,7 +4,7 @@
     "title": "nf-core/rnaseq pipeline parameters",
     "description": "RNA sequencing analysis pipeline for gene/isoform quantification and extensive quality control.",
     "type": "object",
-    "defs": {
+    "$defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",

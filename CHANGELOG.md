@@ -118,6 +118,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1360](https://github.com/nf-core/rnaseq/pull/1360) - More complete snapshots for pipeline level tests
 - [PR #1361](https://github.com/nf-core/rnaseq/pull/1361) - Animate subway map
 - [PR #1362](https://github.com/nf-core/rnaseq/pull/1362) - Move multiqc module prefix for nf-test to module
+- [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Minor updates of nf-core modules and subworkflows
+- [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Update dupradar script
 
 ### Parameters
 

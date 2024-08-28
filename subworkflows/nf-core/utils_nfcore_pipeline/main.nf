@@ -2,9 +2,6 @@
 // Subworkflow with utility functions specific to the nf-core pipeline template
 //
 
-import org.yaml.snakeyaml.Yaml
-import nextflow.extension.FilesEx
-
 /*
 ========================================================================================
     SUBWORKFLOW DEFINITION
@@ -34,7 +31,7 @@ workflow UTILS_NFCORE_PIPELINE {
 //  Warn if a -profile or Nextflow config has not been provided to run the pipeline
 //
 def checkConfigProvided() {
-    valid_config = true
+    def valid_config = true as Boolean
     if (workflow.profile == 'standard' && workflow.configFiles.size() <= 1) {
         log.warn "[$workflow.manifest.name] You are attempting to run the pipeline without any custom configuration!\n\n" +
             "This will be dependent on your local compute environment but can be achieved via one or more of the following:\n" +
@@ -66,11 +63,13 @@ def checkProfileProvided(nextflow_cli_args) {
 //
 def workflowCitation() {
     def temp_doi_ref = ""
-    String[] manifest_doi = workflow.manifest.doi.tokenize(",")
+    def manifest_doi = workflow.manifest.doi.tokenize(",")
     // Using a loop to handle multiple DOIs
     // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
     // Removing ` ` since the manifest.doi is a string and not a proper list
-    for (String doi_ref: manifest_doi) temp_doi_ref += "  https://doi.org/${doi_ref.replace('https://doi.org/', '').replace(' ', '')}\n"
+    manifest_doi.each { doi_ref ->
+        temp_doi_ref += "  https://doi.org/${doi_ref.replace('https://doi.org/', '').replace(' ', '')}\n"
+    }
     return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
         "* The pipeline\n" +
         temp_doi_ref + "\n" +
@@ -84,7 +83,7 @@ def workflowCitation() {
 // Generate workflow version string
 //
 def getWorkflowVersion() {
-    String version_string = ""
+    def version_string = "" as String
     if (workflow.manifest.version) {
         def prefix_v = workflow.manifest.version[0] != 'v' ? 'v' : ''
         version_string += "${prefix_v}${workflow.manifest.version}"
@@ -102,8 +101,8 @@ def getWorkflowVersion() {
 // Get software versions for pipeline
 //
 def processVersionsFromYAML(yaml_file) {
-    Yaml yaml = new Yaml()
-    versions = yaml.load(yaml_file).collectEntries { k, v -> [ k.tokenize(':')[-1], v ] }
+    def yaml = new org.yaml.snakeyaml.Yaml()
+    def versions = yaml.load(yaml_file).collectEntries { k, v -> [ k.tokenize(':')[-1], v ] }
     return yaml.dumpAsMap(versions).trim()
 }
 
@@ -124,7 +123,7 @@ def workflowVersionToYAML() {
 def softwareVersionsToYAML(ch_versions) {
     return ch_versions
                 .unique()
-                .map { processVersionsFromYAML(it) }
+                .map { version -> processVersionsFromYAML(version) }
                 .unique()
                 .mix(Channel.of(workflowVersionToYAML()))
 }
@@ -134,19 +133,19 @@ def softwareVersionsToYAML(ch_versions) {
 //
 def paramsSummaryMultiqc(summary_params) {
     def summary_section = ''
-    for (group in summary_params.keySet()) {
+    summary_params.keySet().each { group ->
         def group_params = summary_params.get(group)  // This gets the parameters of that particular group
         if (group_params) {
             summary_section += "    <p style=\"font-size:110%\"><b>$group</b></p>\n"
             summary_section += "    <dl class=\"dl-horizontal\">\n"
-            for (param in group_params.keySet()) {
+            group_params.keySet().sort().each { param ->
                 summary_section += "        <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
             }
             summary_section += "    </dl>\n"
         }
     }
 
-    String yaml_file_text  = "id: '${workflow.manifest.name.replace('/','-')}-summary'\n"
+    def yaml_file_text  = "id: '${workflow.manifest.name.replace('/','-')}-summary'\n" as String
     yaml_file_text        += "description: ' - this information is collected when the pipeline is started.'\n"
     yaml_file_text        += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
     yaml_file_text        += "section_href: 'https://github.com/${workflow.manifest.name}'\n"
@@ -161,7 +160,7 @@ def paramsSummaryMultiqc(summary_params) {
 // nf-core logo
 //
 def nfCoreLogo(monochrome_logs=true) {
-    Map colors = logColours(monochrome_logs)
+    def colors = logColours(monochrome_logs) as Map
     String.format(
         """\n
         ${dashedLine(monochrome_logs)}
@@ -180,7 +179,7 @@ def nfCoreLogo(monochrome_logs=true) {
 // Return dashed line
 //
 def dashedLine(monochrome_logs=true) {
-    Map colors = logColours(monochrome_logs)
+    def colors = logColours(monochrome_logs) as Map
     return "-${colors.dim}----------------------------------------------------${colors.reset}-"
 }
 
@@ -188,7 +187,7 @@ def dashedLine(monochrome_logs=true) {
 // ANSII colours used for terminal logging
 //
 def logColours(monochrome_logs=true) {
-    Map colorcodes = [:]
+    def colorcodes = [:] as Map
 
     // Reset / Meta
     colorcodes['reset']      = monochrome_logs ? '' : "\033[0m"
@@ -287,7 +286,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     }
 
     def summary = [:]
-    for (group in summary_params.keySet()) {
+    summary_params.keySet().sort().each { group ->
         summary << summary_params[group]
     }
 
@@ -344,10 +343,10 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     def sendmail_html          = sendmail_template.toString()
 
     // Send the HTML e-mail
-    Map colors = logColours(monochrome_logs)
+    def colors = logColours(monochrome_logs) as Map
     if (email_address) {
         try {
-            if (plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
+            if (plaintext_email) { throw new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML') }
             // Try to send HTML e-mail using sendmail
             def sendmail_tf = new File(workflow.launchDir.toString(), ".sendmail_tmp.html")
             sendmail_tf.withWriter { w -> w << sendmail_html }
@@ -364,13 +363,13 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     // Write summary e-mail HTML to a file
     def output_hf = new File(workflow.launchDir.toString(), ".pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
-    FilesEx.copyTo(output_hf.toPath(), "${outdir}/pipeline_info/pipeline_report.html");
+    nextflow.extension.FilesEx.copyTo(output_hf.toPath(), "${outdir}/pipeline_info/pipeline_report.html");
     output_hf.delete()
 
     // Write summary e-mail TXT to a file
     def output_tf = new File(workflow.launchDir.toString(), ".pipeline_report.txt")
     output_tf.withWriter { w -> w << email_txt }
-    FilesEx.copyTo(output_tf.toPath(), "${outdir}/pipeline_info/pipeline_report.txt");
+    nextflow.extension.FilesEx.copyTo(output_tf.toPath(), "${outdir}/pipeline_info/pipeline_report.txt");
     output_tf.delete()
 }
 
@@ -378,7 +377,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
 // Print pipeline summary on completion
 //
 def completionSummary(monochrome_logs=true) {
-    Map colors = logColours(monochrome_logs)
+    def colors = logColours(monochrome_logs) as Map
     if (workflow.success) {
         if (workflow.stats.ignoredCount == 0) {
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
@@ -395,7 +394,7 @@ def completionSummary(monochrome_logs=true) {
 //
 def imNotification(summary_params, hook_url) {
     def summary = [:]
-    for (group in summary_params.keySet()) {
+    summary_params.keySet().sort().each { group ->
         summary << summary_params[group]
     }
 

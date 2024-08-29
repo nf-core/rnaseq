@@ -92,7 +92,8 @@ if (decompose) {
 DDSFile <- paste(opt$outprefix,".dds.RData",sep="")
 
 counts  <- count.table[,samples.vec,drop=FALSE]
-dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ 1)
+# `design=~1` creates intercept-only model, equivalent to setting `blind=TRUE` for transformation.
+dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~1)
 dds     <- estimateSizeFactors(dds)
 if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
     save(dds,file=DDSFile)
@@ -102,10 +103,10 @@ if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
 }
 if (!opt$vst) {
     vst_name <- "rlog"
-    rld      <- rlog(dds)
+    rld      <- rlog(dds, blind=TRUE)   # blind=TRUE is the default and already implied by design=~1
 } else {
     vst_name <- "vst"
-    rld      <- varianceStabilizingTransformation(dds)
+    rld      <- varianceStabilizingTransformation(dds, blind=TRUE)
 }
 
 assay(dds, vst_name) <- assay(rld)

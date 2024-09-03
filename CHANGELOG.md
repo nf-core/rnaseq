@@ -120,6 +120,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1362](https://github.com/nf-core/rnaseq/pull/1362) - Move multiqc module prefix for nf-test to module
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Minor updates of nf-core modules and subworkflows
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Update dupradar script
+- [PR #1367](https://github.com/nf-core/rnaseq/pull/1367) - Clarify design formula and blind dispersion estimation
 
 ### Parameters
 

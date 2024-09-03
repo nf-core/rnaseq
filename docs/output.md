@@ -682,10 +682,10 @@ The principal output files are the same between Salmon and Kallsto:
   - `<pseudo_aligner>.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
   - `<pseudo_aligner>.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
   - `<pseudo_aligner>.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  - `<pseudo_aligner>.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples, which can be used as an offset for gene-level analysis.
-  - `<pseudo_aligner>.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts from abundances across all samples.
+  - `<pseudo_aligner>.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples.
+  - `<pseudo_aligner>.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts across all samples.
   - `<pseudo_aligner>.merged.gene_counts_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated library size-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
-  - `<pseudo_aligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts from abundances across all samples.
+  - `<pseudo_aligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
   - `<pseudo_aligner>.merged.gene_counts_length_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated length-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
   - `<pseudo_aligner>.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
   - `<pseudo_aligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.

@@ -1,0 +1,7 @@
+name: umicollapse
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::umicollapse=1.0.0

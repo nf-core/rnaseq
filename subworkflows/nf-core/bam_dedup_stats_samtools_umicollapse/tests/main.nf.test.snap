@@ -1,0 +1,81 @@
+{
+    "test_bam_dedup_stats_samtools_umicollapse_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,34e1f13bd6e6b78bb8a589560222e343"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-29T07:42:00.089356713"
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-09T17:05:48.69612524"
+    },
+    "sarscov2_bam_bai": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,3e2ae4701e3d2ca074ea878a314a3e4f"
+                ]
+            ],
+            [
+                "versions.yml:md5,15f852de3d9e3fb11c786d15873c5d16",
+                "versions.yml:md5,268e43f34038d4c6146ed050630f95b4",
+                "versions.yml:md5,543112ba38e0fae7ae41be77cf1e0791",
+                "versions.yml:md5,7f6271d4e25dc8c739f28a15399787db",
+                "versions.yml:md5,d241a309a3e0eecfe1d3fe6efa65515c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-29T07:42:00.053427512"
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-09T17:05:48.740441747"
+    }
+}

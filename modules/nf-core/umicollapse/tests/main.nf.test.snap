@@ -1,0 +1,124 @@
+{
+    "umicollapse single end test": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,89e844724f73fae9e7100506d0be5775"
+                ]
+            ],
+            [
+                "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:47:11.402203361"
+    },
+    "umicollapse fastq tests": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.fastq.gz:md5,c9bac08c7fd8df3e0203e3eeafc73155"
+                ]
+            ],
+            [
+                "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-30T10:45:56.053352008"
+    },
+    "umicollapse stub tests": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dedup.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dedup_UMICollapse.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dedup.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dedup_UMICollapse.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-01-30T10:46:12.482697713"
+    },
+    "umicollapse paired tests": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,3e2ae4701e3d2ca074ea878a314a3e4f"
+                ]
+            ],
+            [
+                "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:47:30.028323337"
+    }
+}

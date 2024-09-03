@@ -103,10 +103,10 @@ if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
 }
 if (!opt$vst) {
     vst_name <- "rlog"
-    rld      <- rlog(dds, blind=TRUE)   # blind=TRUE is the default and already implied by design=~1
+    rld      <- rlog(dds)
 } else {
     vst_name <- "vst"
-    rld      <- varianceStabilizingTransformation(dds, blind=TRUE)
+    rld      <- varianceStabilizingTransformation(dds)
 }
 
 assay(dds, vst_name) <- assay(rld)

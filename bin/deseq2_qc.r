@@ -92,7 +92,8 @@ if (decompose) {
 DDSFile <- paste(opt$outprefix,".dds.RData",sep="")
 
 counts  <- count.table[,samples.vec,drop=FALSE]
-dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~ 1)
+# `design=~1` creates intercept-only model, equivalent to setting `blind=TRUE` for transformation.
+dds     <- DESeqDataSetFromMatrix(countData=round(counts), colData=coldata, design=~1)
 dds     <- estimateSizeFactors(dds)
 if (min(dim(count.table))<=1)  { # No point if only one sample, or one gene
     save(dds,file=DDSFile)

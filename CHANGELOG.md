@@ -122,6 +122,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Minor updates of nf-core modules and subworkflows
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Update dupradar script
 - [PR #1366](https://github.com/nf-core/rnaseq/pull/1366) - Clarify docs on different tximport count files
+- [PR #1367](https://github.com/nf-core/rnaseq/pull/1367) - Clarify design formula and blind dispersion estimation
 
 ### Parameters
 

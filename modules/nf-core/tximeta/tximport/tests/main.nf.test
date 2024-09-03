@@ -4,13 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "TXIMETA_TXIMPORT"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "custom/tx2gene"
-    tag "tximeta"
-    tag "tximeta/tximport"
-    tag "untar"
-
     test("saccharomyces_cerevisiae - kallisto - gtf") {
 
         setup {

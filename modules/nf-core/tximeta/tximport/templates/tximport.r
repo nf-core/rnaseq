@@ -153,7 +153,7 @@ if ("tx2gene" %in% names(transcript_info) && !is.null(transcript_info\$tx2gene))
     gi.s <- summarizeToGene(txi, tx2gene = tx2gene, countsFromAbundance = "scaledTPM")
 
     gene_info <- transcript_info\$gene[match(rownames(gi[[1]]), transcript_info\$gene[["gene_id"]]),]
-
+    rownames(gene_info) <- NULL
     col_data_frame <- DataFrame(coldata)
 
     # Create gene-level SummarizedExperiment objects

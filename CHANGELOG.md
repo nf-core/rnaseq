@@ -25,6 +25,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Enhancements & fixes
 
+- [PR #1180](https://github.com/nf-core/rnaseq/pull/1180) - Bump pipeline version to 3.15.0dev
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
 - [PR #1197](https://github.com/nf-core/rnaseq/pull/1197) - Delete lib directory and replace with utils\_\* subworkflows
 - [PR #1199](https://github.com/nf-core/rnaseq/pull/1199) - Replace modules.config with more modular config files per module/subworkflow/workflow
@@ -75,7 +76,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1272](https://github.com/nf-core/rnaseq/pull/1272) - Simple pipeline level nf-tests
 - [PR #1274](https://github.com/nf-core/rnaseq/pull/1274) - Update bam_markduplicates_picard subworkflow
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
-- [PR #1279](https://github.com/nf-core/rnaseq/pull/1279) - Add psueudoaligner pipeline level tests to test suite
+- [PR #1279](https://github.com/nf-core/rnaseq/pull/1279) - Add pseudoaligner pipeline level tests to test suite
 - [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
 - [PR #1282](https://github.com/nf-core/rnaseq/pull/1282) - Fix CHANGELOG error
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
@@ -104,14 +105,14 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1331](https://github.com/nf-core/rnaseq/pull/1331) - Adding stubs for local modules
 - [PR #1334](https://github.com/nf-core/rnaseq/pull/1334) - Update all nf-core/modules and subworkflows with stubs
 - [PR #1335](https://github.com/nf-core/rnaseq/pull/1335) - Adding stubs at all levels
-- [PR #1336](https://github.com/nf-core/rnaseq/pull/1334) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
+- [PR #1336](https://github.com/nf-core/rnaseq/pull/1336) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
 - [PR #1340](https://github.com/nf-core/rnaseq/pull/1340) - Remove out-of-date Azure specific guidance
 - [PR #1341](https://github.com/nf-core/rnaseq/pull/1341) - Add rename in the MultiQC report for samples without techreps
 - [PR #1342](https://github.com/nf-core/rnaseq/pull/1342) - Factor out preprocessing
 - [PR #1345](https://github.com/nf-core/rnaseq/pull/1345) - Fix preprocessing call
 - [PR #1350](https://github.com/nf-core/rnaseq/pull/1350) - Reduce resource usage for sort process in bedtools/genomecov
-- [PR #1353](https://github.com/nf-core/rnaseq/pull/1353) - Correct conditional for salmon indexing in preprocessing workflow
 - [PR #1352](https://github.com/nf-core/rnaseq/pull/1352) - Assorted fixes to MultiQC usage
+- [PR #1353](https://github.com/nf-core/rnaseq/pull/1353) - Correct conditional for salmon indexing in preprocessing workflow
 - [PR #1355](https://github.com/nf-core/rnaseq/pull/1355) - Make all curves on subway map better looking, and all lines now have the same width
 - [PR #1357](https://github.com/nf-core/rnaseq/pull/1357) - Fix anchor issue in multiqc
 - [PR #1358](https://github.com/nf-core/rnaseq/pull/1358) - Update test profiles to restore a static URI for megatests
@@ -123,6 +124,8 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Update dupradar script
 - [PR #1366](https://github.com/nf-core/rnaseq/pull/1366) - Clarify docs on different tximport count files
 - [PR #1367](https://github.com/nf-core/rnaseq/pull/1367) - Clarify design formula and blind dispersion estimation
+- [PR #1370](https://github.com/nf-core/rnaseq/pull/1370) - Bump versions for 3.15.0
+- [PR #1371](https://github.com/nf-core/rnaseq/pull/1371) - Apply Maxime's CHANGELOG edits
 
 ### Parameters
 

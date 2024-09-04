@@ -125,7 +125,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1366](https://github.com/nf-core/rnaseq/pull/1366) - Clarify docs on different tximport count files
 - [PR #1367](https://github.com/nf-core/rnaseq/pull/1367) - Clarify design formula and blind dispersion estimation
 - [PR #1370](https://github.com/nf-core/rnaseq/pull/1370) - Bump versions for 3.15.0
-- [PR #1371](https://github.com/nf-core/rnaseq/pull/1371) - Apply Maxime's changelog edits
+- [PR #1371](https://github.com/nf-core/rnaseq/pull/1371) - Apply Maxime's CHANGELOG edits
 
 ### Parameters
 

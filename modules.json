@@ -92,7 +92,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "fe9614c5d1d9820dae56a5e30a07ba336db45835",
+                        "git_sha": "19ca321db5d8bd48923262c2eca6422359633491",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {
@@ -237,7 +237,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "5d095e8413da1f4c72b7d07ce87f75c09482486f",
+                        "git_sha": "af778cca88b2a983152bdf2d80634e52dd1ef80f",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
                     "ucsc/bedclip": {

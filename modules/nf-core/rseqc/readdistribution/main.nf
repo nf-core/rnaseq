@@ -2,7 +2,7 @@ process RSEQC_READDISTRIBUTION {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::rseqc=5.0.3"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
@@ -26,6 +26,17 @@ process RSEQC_READDISTRIBUTION {
         -i $bam \\
         -r $bed \\
         > ${prefix}.read_distribution.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.read_distribution.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

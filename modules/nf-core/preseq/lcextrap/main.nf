@@ -1,9 +1,9 @@
 process PRESEQ_LCEXTRAP {
     tag "$meta.id"
     label 'process_single'
-    label 'error_ignore'
+    label 'error_retry'
 
-    conda "bioconda::preseq=3.1.2"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/preseq:3.1.2--h445547b_2':
         'biocontainers/preseq:3.1.2--h445547b_2' }"
@@ -21,6 +21,7 @@ process PRESEQ_LCEXTRAP {
 
     script:
     def args = task.ext.args ?: ''
+    args = task.attempt > 1 ? args.join(' -defects') : args  // Disable testing for defects
     def prefix = task.ext.prefix ?: "${meta.id}"
     def paired_end = meta.single_end ? '' : '-pe'
     """
@@ -31,6 +32,18 @@ process PRESEQ_LCEXTRAP {
         -output ${prefix}.lc_extrap.txt \\
         $bam
     cp .command.err ${prefix}.command.log
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.lc_extrap.txt
+    touch ${prefix}.command.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -34,7 +34,7 @@ process KALLISTO_INDEX {
 
     stub:
     """
-    touch kallisto
+    mkdir kallisto
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

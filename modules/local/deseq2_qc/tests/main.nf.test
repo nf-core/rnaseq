@@ -1,0 +1,57 @@
+nextflow_process {
+
+    name "Test Process DESEQ2_QC"
+    script "../main.nf"
+    process "DESEQ2_QC"
+
+    test("parse count data correctly") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_pca_header.txt", checkIfExists: true)
+                input[2] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_clustering_header.txt", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.dists_multiqc,
+                    process.out.dists_txt,
+                    process.out.log,
+                    process.out.pca_multiqc,
+                    process.out.pca_txt,
+                    process.out.rdata,
+                    process.out.size_factors,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("parse count data correctly - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = file(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_pca_header.txt", checkIfExists: true)
+                input[2] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_clustering_header.txt", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

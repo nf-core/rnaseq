@@ -11,7 +11,7 @@ workflow ALIGN_STAR {
     reads               // channel: [ val(meta), [ reads ] ]
     index               // channel: [ val(meta), [ index ] ]
     gtf                 // channel: [ val(meta), [ gtf ] ]
-    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file 
+    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
     seq_platform        // string : sequencing platform
     seq_center          // string : sequencing center
     is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes

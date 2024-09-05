@@ -3,7 +3,7 @@ process DESEQ2_QC {
 
     // (Bio)conda packages have intentionally not been pinned to a specific version
     // This was to avoid the pipeline failing due to package conflicts whilst creating the environment when using -profile conda
-    conda "conda-forge::r-base bioconda::bioconductor-deseq2 bioconda::bioconductor-biocparallel bioconda::bioconductor-tximport bioconda::bioconductor-complexheatmap conda-forge::r-optparse conda-forge::r-ggplot2 conda-forge::r-rcolorbrewer conda-forge::r-pheatmap"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0' :
         'biocontainers/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0' }"
@@ -50,6 +50,33 @@ process DESEQ2_QC {
         sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" tmp.txt
         cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
     fi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+    END_VERSIONS
+    """
+
+    stub:
+    def args2 = task.ext.args2 ?: ''
+    def label_lower = args2.toLowerCase()
+    prefix = task.ext.prefix ?: "deseq2"
+    """
+    touch ${label_lower}.pca.vals_mqc.tsv
+    touch ${label_lower}.sample.dists_mqc.tsv
+    touch ${prefix}.dds.RData
+    touch ${prefix}.pca.vals.txt
+    touch ${prefix}.plots.pdf
+    touch ${prefix}.sample.dists.txt
+    touch R_sessionInfo.log
+
+    mkdir size_factors
+    touch size_factors/${prefix}.size_factors.RData
+    for i in `head $counts -n 1 | cut -f3-`;
+    do
+        touch size_factors/\${i}.size_factors.RData
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,8 +1,15 @@
 repository_type: pipeline
+nf_core_version: "2.14.1"
 lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
-    - lib/NfcoreTemplate.groovy
-    - pyproject.toml
+    - .gitignore
+  files_exist:
+    - conf/modules.config
+  actions_ci: false
   multiqc_config: false
+  modules_config: false
+  nextflow_config:
+    - config_defaults:
+        - params.ribo_database_manifest

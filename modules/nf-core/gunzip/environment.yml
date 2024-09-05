@@ -1,0 +1,9 @@
+name: gunzip
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::grep=3.11
+  - conda-forge::sed=4.8
+  - conda-forge::tar=1.34

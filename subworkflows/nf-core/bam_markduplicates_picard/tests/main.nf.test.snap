@@ -1,0 +1,334 @@
+{
+    "homo_sapiens - cram": {
+        "content": [
+            "test.cram",
+            "test.cram.crai:md5,78d47ba01ac4e05f3ae1e353902a989e",
+            "test.flagstat:md5,93b0ef463df947ede1f42ff60396c34d",
+            "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
+            "test.stats:md5,372a7d9d9081aa009b21343a913beb14",
+            [
+                "versions.yml:md5,0d170c963555870ac9a0d438bf6c2f93",
+                "versions.yml:md5,3729819c49e6d8eed9ada247e5d77de1",
+                "versions.yml:md5,966dcea920866a87b55e665563864fc9",
+                "versions.yml:md5,a62ca6eb27e59dd6f03a93fa8656e656",
+                "versions.yml:md5,fcf804c605f455127f2449403d70390c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T19:28:15.15911"
+    },
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.MarkDuplicates.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,0d170c963555870ac9a0d438bf6c2f93",
+                    "versions.yml:md5,3729819c49e6d8eed9ada247e5d77de1",
+                    "versions.yml:md5,966dcea920866a87b55e665563864fc9",
+                    "versions.yml:md5,a62ca6eb27e59dd6f03a93fa8656e656",
+                    "versions.yml:md5,fcf804c605f455127f2449403d70390c"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "crai": [
+                    
+                ],
+                "cram": [
+                    
+                ],
+                "csi": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.MarkDuplicates.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0d170c963555870ac9a0d438bf6c2f93",
+                    "versions.yml:md5,3729819c49e6d8eed9ada247e5d77de1",
+                    "versions.yml:md5,966dcea920866a87b55e665563864fc9",
+                    "versions.yml:md5,a62ca6eb27e59dd6f03a93fa8656e656",
+                    "versions.yml:md5,fcf804c605f455127f2449403d70390c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T19:28:40.128144"
+    },
+    "homo_sapiens - cram - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.MarkDuplicates.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,0d170c963555870ac9a0d438bf6c2f93",
+                    "versions.yml:md5,3729819c49e6d8eed9ada247e5d77de1",
+                    "versions.yml:md5,966dcea920866a87b55e665563864fc9",
+                    "versions.yml:md5,a62ca6eb27e59dd6f03a93fa8656e656",
+                    "versions.yml:md5,fcf804c605f455127f2449403d70390c"
+                ],
+                "bai": [
+                    
+                ],
+                "bam": [
+                    
+                ],
+                "crai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "csi": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.MarkDuplicates.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0d170c963555870ac9a0d438bf6c2f93",
+                    "versions.yml:md5,3729819c49e6d8eed9ada247e5d77de1",
+                    "versions.yml:md5,966dcea920866a87b55e665563864fc9",
+                    "versions.yml:md5,a62ca6eb27e59dd6f03a93fa8656e656",
+                    "versions.yml:md5,fcf804c605f455127f2449403d70390c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T19:29:04.075263"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            "test.bam:md5,3091fe6ba1b7530f382fe40b9fd8f45b",
+            "test.bam.bai:md5,4d3ae8d013444b55e17aa0149a2ab404",
+            "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783",
+            "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2",
+            "test.stats:md5,cca83e4fc9406fc3875b5e60055d6574",
+            [
+                "versions.yml:md5,0d170c963555870ac9a0d438bf6c2f93",
+                "versions.yml:md5,3729819c49e6d8eed9ada247e5d77de1",
+                "versions.yml:md5,966dcea920866a87b55e665563864fc9",
+                "versions.yml:md5,a62ca6eb27e59dd6f03a93fa8656e656",
+                "versions.yml:md5,fcf804c605f455127f2449403d70390c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T19:27:47.343274"
+    }
+}

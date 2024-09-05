@@ -2,10 +2,10 @@ process UNTAR {
     tag "$archive"
     label 'process_single'
 
-    conda "conda-forge::sed=4.7 conda-forge::grep=3.11 conda-forge::tar=1.34"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+        'https://depot.galaxyproject.org/singularity/ubuntu:22.04' :
+        'nf-core/ubuntu:22.04' }"
 
     input:
     tuple val(meta), path(archive)
@@ -52,8 +52,29 @@ process UNTAR {
     stub:
     prefix    = task.ext.prefix ?: ( meta.id ? "${meta.id}" : archive.toString().replaceFirst(/\.[^\.]+(.gz)?$/, ""))
     """
-    mkdir $prefix
-    touch ${prefix}/file.txt
+    mkdir ${prefix}
+    ## Dry-run untaring the archive to get the files and place all in prefix
+    if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
+        for i in `tar -tf ${archive}`;
+        do
+            if [[ \$(echo "\${i}" | grep -E "/\$") == "" ]];
+            then
+                touch \${i}
+            else
+                mkdir -p \${i}
+            fi
+        done
+    else
+        for i in `tar -tf ${archive}`;
+        do
+            if [[ \$(echo "\${i}" | grep -E "/\$") == "" ]];
+            then
+                touch ${prefix}/\${i}
+            else
+                mkdir -p ${prefix}/\${i}
+            fi
+        done
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

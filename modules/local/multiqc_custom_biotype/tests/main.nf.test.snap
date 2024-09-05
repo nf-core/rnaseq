@@ -1,0 +1,80 @@
+{
+    "test sarscov2 count data succesfully completes": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.biotype_counts_mqc.tsv:md5,d996f27aeec64370cade26717aa22e1e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.biotype_counts_mqc.tsv:md5,d996f27aeec64370cade26717aa22e1e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-02T16:48:24.844934"
+    },
+    "test sarscov2 count data - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:50:15.104113"
+    }
+}

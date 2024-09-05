@@ -1,7 +1,7 @@
 process RSEM_MERGE_COUNTS {
     label "process_medium"
 
-    conda "conda-forge::sed=4.7"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
         'nf-core/ubuntu:20.04' }"
@@ -46,6 +46,19 @@ process RSEM_MERGE_COUNTS {
     paste gene_ids.txt tmp/genes/*.tpm.txt > rsem.merged.gene_tpm.tsv
     paste transcript_ids.txt tmp/isoforms/*.counts.txt > rsem.merged.transcript_counts.tsv
     paste transcript_ids.txt tmp/isoforms/*.tpm.txt > rsem.merged.transcript_tpm.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    """
+    touch rsem.merged.gene_counts.tsv
+    touch rsem.merged.gene_tpm.tsv
+    touch rsem.merged.transcript_counts.tsv
+    touch rsem.merged.transcript_tpm.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

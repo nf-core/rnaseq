@@ -1,0 +1,456 @@
+{
+    "sarscov2 - bam - single_end": {
+        "content": [
+            "test.sorted.bam.bai",
+            "test.sorted.bam",
+            "test.bam",
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.flagstat:md5,6de3bfde9582ad2532033832091f5c46"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.idxstats:md5,2a5df85e0d90e55bb2b359f6e05d5fbb"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.stats:md5,845655ccfd1fd701b9f692f8db9508af"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.hisat2.summary.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                "versions.yml:md5,2d9432e15956fe71fe0ba811547acea6",
+                "versions.yml:md5,5fcbed7fee2404be4ecee6efab5914b8",
+                "versions.yml:md5,6b9d9eed13bf074965d1623a7e8a1741",
+                "versions.yml:md5,7767a57d88fff540ce475902df2e9e0a",
+                "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1",
+                "versions.yml:md5,bb6710ee58b84a1ed212f9c599d84066"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T12:36:06.813423"
+    },
+    "sarscov2 - bam - single_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,2d9432e15956fe71fe0ba811547acea6",
+                    "versions.yml:md5,5fcbed7fee2404be4ecee6efab5914b8",
+                    "versions.yml:md5,6b9d9eed13bf074965d1623a7e8a1741",
+                    "versions.yml:md5,7767a57d88fff540ce475902df2e9e0a",
+                    "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1",
+                    "versions.yml:md5,bb6710ee58b84a1ed212f9c599d84066"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "csi": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "orig_bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2d9432e15956fe71fe0ba811547acea6",
+                    "versions.yml:md5,5fcbed7fee2404be4ecee6efab5914b8",
+                    "versions.yml:md5,6b9d9eed13bf074965d1623a7e8a1741",
+                    "versions.yml:md5,7767a57d88fff540ce475902df2e9e0a",
+                    "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1",
+                    "versions.yml:md5,bb6710ee58b84a1ed212f9c599d84066"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T19:36:23.861012"
+    },
+    "sarscov2 - bam - paired_end": {
+        "content": [
+            "test.sorted.bam.bai",
+            "test.sorted.bam",
+            "test.bam",
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,2fa0d90162a1b655863796c2a6bd8f45"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,1adb27b52d4d64b826f48b59d61dcd4d"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,603fa8c9e0e9eb3769498fc989a29250"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.hisat2.summary.log:md5,9839b31db795958cc4b70711a3414e9c"
+                ]
+            ],
+            [
+                "versions.yml:md5,2d9432e15956fe71fe0ba811547acea6",
+                "versions.yml:md5,5fcbed7fee2404be4ecee6efab5914b8",
+                "versions.yml:md5,6b9d9eed13bf074965d1623a7e8a1741",
+                "versions.yml:md5,7767a57d88fff540ce475902df2e9e0a",
+                "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1",
+                "versions.yml:md5,bb6710ee58b84a1ed212f9c599d84066"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T12:36:25.071168"
+    },
+    "sarscov2 - bam - paired_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,2d9432e15956fe71fe0ba811547acea6",
+                    "versions.yml:md5,5fcbed7fee2404be4ecee6efab5914b8",
+                    "versions.yml:md5,6b9d9eed13bf074965d1623a7e8a1741",
+                    "versions.yml:md5,7767a57d88fff540ce475902df2e9e0a",
+                    "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1",
+                    "versions.yml:md5,bb6710ee58b84a1ed212f9c599d84066"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "csi": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "orig_bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2d9432e15956fe71fe0ba811547acea6",
+                    "versions.yml:md5,5fcbed7fee2404be4ecee6efab5914b8",
+                    "versions.yml:md5,6b9d9eed13bf074965d1623a7e8a1741",
+                    "versions.yml:md5,7767a57d88fff540ce475902df2e9e0a",
+                    "versions.yml:md5,b4ccce0351e5718d36600858452dd4b1",
+                    "versions.yml:md5,bb6710ee58b84a1ed212f9c599d84066"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T19:36:44.894976"
+    }
+}

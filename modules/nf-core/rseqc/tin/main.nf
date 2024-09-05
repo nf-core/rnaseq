@@ -2,7 +2,7 @@ process RSEQC_TIN {
     tag "$meta.id"
     label 'process_high'
 
-    conda "bioconda::rseqc=5.0.3"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
@@ -27,6 +27,18 @@ process RSEQC_TIN {
         -i $bam \\
         -r $bed \\
         $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(tin.py --version | sed -e "s/tin.py //g")
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${bam.fileName}.summary.txt
+    touch ${bam.fileName}.tin.xls
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

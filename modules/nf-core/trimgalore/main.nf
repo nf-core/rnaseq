@@ -2,7 +2,7 @@ process TRIMGALORE {
     tag "$meta.id"
     label 'process_high'
 
-    conda "bioconda::trim-galore=0.6.7"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/trim-galore:0.6.7--hdfd78af_0' :
         'biocontainers/trim-galore:0.6.7--hdfd78af_0' }"
@@ -72,4 +72,25 @@ process TRIMGALORE {
         END_VERSIONS
         """
     }
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    if (meta.single_end) {
+        output_command = "echo '' | gzip > ${prefix}_trimmed.fq.gz ;"
+        output_command += "touch ${prefix}.fastq.gz_trimming_report.txt"
+    } else {
+        output_command = "echo '' | gzip > ${prefix}_1_trimmed.fq.gz ;"
+        output_command += "touch ${prefix}_1.fastq.gz_trimming_report.txt ;"
+        output_command += "echo '' | gzip > ${prefix}_2_trimmed.fq.gz ;"
+        output_command += "touch ${prefix}_2.fastq.gz_trimming_report.txt"
+    }
+    """
+    ${output_command}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
+        cutadapt: \$(cutadapt --version)
+    END_VERSIONS
+    """
 }

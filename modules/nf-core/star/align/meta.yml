@@ -52,7 +52,6 @@ input:
   - seq_center:
       type: string
       description: Sequencing center
-
 output:
   - bam:
       type: file
@@ -106,8 +105,11 @@ output:
       type: file
       description: STAR output bedGraph format file(s) (optional)
       pattern: "*.bg"
-
 authors:
+  - "@kevinmenden"
+  - "@drpatelh"
+  - "@praveenraj2018"
+maintainers:
   - "@kevinmenden"
   - "@drpatelh"
   - "@praveenraj2018"

@@ -1,0 +1,15 @@
+name: deseq2_qc
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::r-base
+  - conda-forge::r-optparse
+  - conda-forge::r-ggplot2
+  - conda-forge::r-rcolorbrewer
+  - conda-forge::r-pheatmap
+  - bioconda::bioconductor-deseq2
+  - bioconda::bioconductor-biocparallel
+  - bioconda::bioconductor-tximport
+  - bioconda::bioconductor-complexheatmap

@@ -37,6 +37,10 @@ output:
       description: |
         CSI samtools index
         Structure: [ val(meta), path(csi) ]
+  - deduplog:
+      description: |
+        UMI-tools deduplication log
+        Structure: [ val(meta), path(log) ]
   - stats:
       description: |
         File containing samtools stats output
@@ -53,7 +57,9 @@ output:
       description: |
         Files containing software versions
         Structure: [ path(versions.yml) ]
-
 authors:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"
+maintainers:
   - "@drpatelh"
   - "@KamilMaliszArdigen"

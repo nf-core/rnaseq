@@ -2,7 +2,7 @@ process RSEQC_BAMSTAT {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::rseqc=5.0.3"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
@@ -25,6 +25,17 @@ process RSEQC_BAMSTAT {
         -i $bam \\
         $args \\
         > ${prefix}.bam_stat.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(bam_stat.py --version | sed -e "s/bam_stat.py //g")
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.bam_stat.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

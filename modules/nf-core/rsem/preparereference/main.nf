@@ -2,7 +2,7 @@ process RSEM_PREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
 
-    conda "bioconda::rsem=1.3.3 bioconda::star=2.7.10a"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:64aad4a4e144878400649e71f42105311be7ed87-0' :
         'biocontainers/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:64aad4a4e144878400649e71f42105311be7ed87-0' }"
@@ -69,4 +69,15 @@ process RSEM_PREPAREREFERENCE {
         END_VERSIONS
         """
     }
+
+    stub:
+    """
+    touch genome.transcripts.fa
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        star: \$(STAR --version | sed -e "s/STAR_//g")
+    END_VERSIONS
+    """
 }

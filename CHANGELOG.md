@@ -14,12 +14,14 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1351](https://github.com/nf-core/rnaseq/pull/1351) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
 
 ### Parameters
-| Old parameter      | New parameter               |
-| ------------------ | `--contaminant_screening`   |
-|                    | `--kraken_db`               |
-|                    | `--save_kraken_assignments` |
-|                    | `--save_kraken_unassigned`  |
-|                    | `--bracken_precision`       |
+
+| Old parameter | New parameter               |
+| ------------- | --------------------------- |
+|               | `--contaminant_screening`   |
+|               | `--kraken_db`               |
+|               | `--save_kraken_assignments` |
+|               | `--save_kraken_unassigned`  |
+|               | `--bracken_precision`       |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.
@@ -27,10 +29,10 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Software dependencies
 
-| Dependency     | Old version | New version |
-| -------------- | ----------- | ----------- |
-| `Kraken2`      | ----------- | 2.1.3       |
-| `Bracken`      | ----------- | 2.9         |
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `Kraken2`  | ----------- | 2.1.3       |
+| `Bracken`  | ----------- | 2.9         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

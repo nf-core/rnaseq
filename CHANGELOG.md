@@ -38,8 +38,6 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 >
 > **NB:** Dependency has been **removed** if new version information isn't present.
 
-### Credits
-
 ## [[3.15.0](https://github.com/nf-core/rnaseq/releases/tag/3.15.0)] - 2024-09-04
 
 ### Credits

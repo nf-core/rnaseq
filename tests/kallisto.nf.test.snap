@@ -226,22 +226,9 @@
                 "tx2gene.tsv"
             ],
             [
-                "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
-                "RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,cdb7d4cd19558158c86c9cfc17f6d9b7",
-                "RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,3031e78f567f2d21278eb633cf5d4830",
-                "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
-                "RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt:md5,a4382128973b6dbcbcc9c3cc7263a6e8",
-                "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-                "RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt:md5,91604d61bbc72d4c38df8331cd835ef3",
-                "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-                "WT_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,f99a0bef8bfad292319b3455a71342e3",
-                "WT_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,05260ac3d28c148398d2ae2da98a1c2e",
-                "WT_REP2.stats.txt:md5,f6df7d4d9a5b553209f31dec2a30f92b",
-                "WT_REP2_trimmed_1.fastq.gz_trimming_report.txt:md5,ff437dfc6744a844c412593078fcc593",
-                "WT_REP2_trimmed_2.fastq.gz_trimming_report.txt:md5,5cfdbef1faeb38d9b7e7767fdf19d4df",
-                "abundance.tsv:md5,d781d4480dc636c8a3b6aa300ac184a2",
+                "abundance.tsv:md5,a208e4943f6efb704f68463df3147a49",
                 "abundance.tsv:md5,6fd77021287360f5005c90807233ab23",
-                "abundance.tsv:md5,6fb211dc8e4fd238ca68d21d6cc83cf5",
+                "abundance.tsv:md5,602da7c00d92c1f21905d1a316c4286b",
                 "abundance.tsv:md5,b6ae4ef44f718a789f58dc6451b6eebb",
                 "abundance.tsv:md5,a2c6108c384662f4da8c7b7fe8f27e02",
                 "cutadapt_filtered_reads_plot.txt:md5,bf033e64e9d23bee85b6277f11c663f1",
@@ -257,26 +244,24 @@
                 "fastqc_sequence_counts_plot.txt:md5,3861354bbedfbde7ca36a72994f9425c",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
-                "fastqc_top_overrepresented_sequences_table.txt:md5,6ef1543c6c128d51cc2b702a96c7ef63",
-                "kallisto.merged.gene_counts.tsv:md5,70b5a70a847e2469a3fb3b1ea4886966",
-                "kallisto.merged.gene_counts_length_scaled.tsv:md5,9b85077c766afe71785eb015b09d5a78",
-                "kallisto.merged.gene_counts_scaled.tsv:md5,85e383eff98eedbc678175c8aa873ab0",
-                "kallisto.merged.gene_lengths.tsv:md5,cf249fee85862c2df5a4f76244d6f701",
-                "kallisto.merged.gene_tpm.tsv:md5,baae791ff46f457056571b6923843c28",
-                "kallisto.merged.transcript_counts.tsv:md5,85d11e775aab1bba3c0c5afc97c57129",
-                "kallisto.merged.transcript_lengths.tsv:md5,4f13d812e9eb8b4d85d12b0721d7a37d",
-                "kallisto.merged.transcript_tpm.tsv:md5,89a1d81d93c9dbebdba55e28b52d6ac2",
+                "kallisto.merged.gene_counts.tsv:md5,8813a72fee7acc6683681adcd9c3205d",
+                "kallisto.merged.gene_counts_length_scaled.tsv:md5,385855f0371d9b09f5929943d0bd3c5c",
+                "kallisto.merged.gene_counts_scaled.tsv:md5,384a713001db2273d4aa6a0b5a365f88",
+                "kallisto.merged.gene_lengths.tsv:md5,360be233f67438b3c74b30d4ffb82217",
+                "kallisto.merged.gene_tpm.tsv:md5,1c757b30cf764af3021536ed58929b47",
+                "kallisto.merged.transcript_counts.tsv:md5,12b42da001ba7217d84158bfc1dafb93",
+                "kallisto.merged.transcript_lengths.tsv:md5,efb283191ff876ea179db50bfd67e1e8",
+                "kallisto.merged.transcript_tpm.tsv:md5,f4b96383c1270f734ff291e6cddfcb72",
                 "kallisto_alignment.txt:md5,fafc53710b8d3cd6d3e456a1bd8c30e0",
                 "multiqc_citations.txt:md5,4cece87a056a29c1338277736855e6ee",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
-                "multiqc_general_stats.txt:md5,081a8c7890b8c68da5fcf88509b09648",
-                "multiqc_kallisto.txt:md5,48b29e88fbb64db2069316c6c2f662c3",
-                "run_info.json:md5,2f054b3d7acf563f7c22c006dea7f206",
-                "run_info.json:md5,51bc7adda1942a208b9bdee9bf9214e4",
-                "run_info.json:md5,5fa89f779d412f60cb022615bf22d93c",
-                "run_info.json:md5,a475f356826703868f8d7ed21124babf",
-                "run_info.json:md5,1ddaaf80c06118def7bf6f374ac10b86",
+                "multiqc_kallisto.txt:md5,6fae2082e277bdea611a80f98e124165",
+                "run_info.json:md5,309ff0ae944127e8b6791e76ac196a01",
+                "run_info.json:md5,ccf4a5962415c6f1adb6e7ae05c4b86c",
+                "run_info.json:md5,8d2d93f6a5c27b11d3e428f628385bb7",
+                "run_info.json:md5,d12554278f74e04f7e6614a8f6f0f3dd",
+                "run_info.json:md5,019d3f1b7684c2e153be759cbc388b8b",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
@@ -284,7 +269,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T11:27:10.252249"
+        "timestamp": "2024-09-13T18:00:22.935935"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [
@@ -351,20 +336,13 @@
                 "trimgalore"
             ],
             [
-                "RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP2_trimmed_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP2_trimmed_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T11:28:04.202471"
+        "timestamp": "2024-09-13T18:04:31.974316"
     }
 }

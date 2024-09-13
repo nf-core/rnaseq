@@ -181,7 +181,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
         ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip
             .mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip)
-            .mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json.map{tuple(it[0], [it[1]])})
+            .mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json)
             .mix(ch_multiqc_files)
     }
 
@@ -209,6 +209,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_multiqc_files = ch_multiqc_files
         .mix(
             ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv')
+                .map { [[], it] }
         )
 
     //

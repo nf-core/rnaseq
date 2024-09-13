@@ -30,6 +30,7 @@ class UTILS {
 
         // Stable files, but order is changing
         /ambig_info\.tsv/,
+        /abundance\.tsv/,
         /cmd_info\.json/,
         /coverage_profile_along_genes_(high)\.txt/,
         /coverage_profile_along_genes_(low)\.txt/,
@@ -128,6 +129,7 @@ class UTILS {
         /multiqc_dupradar-section-plot\.txt/,
         /multiqc_fail_strand_check_table\.txt/,
         /multiqc_general_stats\.txt/,
+        /multiqc_kallisto\.txt/,
         /multiqc_picard_dups\.txt/,
         /multiqc_report.html/,
         /multiqc_rseqc_bam_stat\.txt/,
@@ -288,6 +290,16 @@ class UTILS {
         /deseq2\.plots\.pdf/,
         /deseq2\.sample\.dists\.txt/,
         /deseq2\.size_factors\.RData/,
+
+        // To exclude from kallisto
+        /kallisto\.merged\.gene_counts\.tsv/,
+        /kallisto\.merged\.gene_counts_length_scaled\.tsv/,
+        /kallisto\.merged\.gene_counts_scaled\.tsv/,
+        /kallisto\.merged\.gene_lengths\.tsv/,
+        /kallisto\.merged\.gene_tpm\.tsv/,
+        /kallisto\.merged\.transcript_counts\.tsv/,
+        /kallisto\.merged\.transcript_tpm\.tsv/,
+        /kallisto\.merged\.transcript_lengths\.tsv/,
 
         // To exclude from salmon quant
         /fld\.gz/,

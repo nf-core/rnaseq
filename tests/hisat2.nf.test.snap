@@ -1198,16 +1198,6 @@
                 "WT_REP2.infer_experiment.txt:md5,230910b354a5531d1c4bf711ccd6e493",
                 "WT_REP2_dupMatrix.txt:md5,5176c7447c4295f94e2683dd9995cea0",
                 "WT_REP2_intercept_slope.txt:md5,38fbb93a419e666bc81020602852b1e2",
-                "ambig_info.tsv:md5,194f574e0586416155e3f33d42e2b167",
-                "ambig_info.tsv:md5,6dcc2891ea572e9b8d1ba52cd434ab84",
-                "ambig_info.tsv:md5,a26e3f936e65d7da66392603c2f91f6f",
-                "ambig_info.tsv:md5,de973a4b22a4457217ae3dc04caf9401",
-                "ambig_info.tsv:md5,45f252b4f0e11e6730cf0c29f800fdbb",
-                "cmd_info.json:md5,c7ed0aaa5d6c7934ddbebfd29e4eb86d",
-                "cmd_info.json:md5,9bed6e4dc5428d6f6297adcea29a6326",
-                "cmd_info.json:md5,69ebfc2c7ca6b221a0a22fa1dc8c20ac",
-                "cmd_info.json:md5,1215f0c20f87d3aef8553ef119e1e74c",
-                "cmd_info.json:md5,621c6601aade5b1f2e3d6ca2fc71f636",
                 "coverage_profile_along_genes_(high).txt:md5,be72a2c9023f6eb81bd5816af33abb65",
                 "coverage_profile_along_genes_(high).txt:md5,a31cb4ba804080544072cd57fc1bdf1c",
                 "coverage_profile_along_genes_(high).txt:md5,83d436e0ddb7435bb343db5e4dfb744a",
@@ -1248,11 +1238,6 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
                 "hisat2_pe_plot.txt:md5,ca416ae8b811b11fe4cad79ef583aa3e",
                 "hisat2_se_plot.txt:md5,f8cd912353aa55e6e670b72a736b656c",
-                "lib_format_counts.json:md5,d46250bb3677d72feeefc435fe6395a6",
-                "lib_format_counts.json:md5,7c562bf2f70e42f3a7292687dfd328c3",
-                "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "lib_format_counts.json:md5,c24ffe28d70476b5ccdd8bc2d22c0ac1",
-                "lib_format_counts.json:md5,f6d44c0221f7fd559f11a9afe04c9935",
                 "multiqc_citations.txt:md5,da5043f8ab9b5bd51d91ccf3111c655e",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
@@ -1277,6 +1262,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T17:54:49.218047"
+        "timestamp": "2024-09-13T19:38:22.496001"
     }
 }

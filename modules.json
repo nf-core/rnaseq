@@ -227,7 +227,7 @@
                     },
                     "summarizedexperiment/summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "4e5f4687318f24ba944a13609d3ea6ebd890737d",
+                        "git_sha": "625fbbc0531fb1717349c7f1b1c677a3b8619767",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
                     "trimgalore": {
@@ -237,7 +237,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "d612c281cf2fae62cdd79c70a22fc6349108570c",
+                        "git_sha": "625fbbc0531fb1717349c7f1b1c677a3b8619767",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
                     "ucsc/bedclip": {

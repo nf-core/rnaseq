@@ -12,7 +12,8 @@ Special thanks to the following for their contributions to the release:
 ### Enhancements & fixes
 
 - [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
-- [PR #1379](https://github.com/nf-core/rnaseq/pull/1379) - Make pipeline level test versions snapshots pretty
+- [PR #1379](https://github.com/nf-core/rnaseq/pull/1379) - Enhance pipeline level test snapshots
+- [PR #1380](https://github.com/nf-core/rnaseq/pull/1380) - Fix issues with R modules changing sample names
 
 ## [[3.15.0](https://github.com/nf-core/rnaseq/releases/tag/3.15.0)] - 2024-09-04
 

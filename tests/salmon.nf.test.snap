@@ -272,19 +272,6 @@
                 "tx2gene.tsv"
             ],
             [
-                "RAP1_IAA_30M_REP1.stats.txt:md5,a87292c6f7166096166a9015c2e63dac",
-                "RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,b64efca5b1f31cee893f00a00e43baea",
-                "RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,326657738d1f79eb9bc7735f44264b83",
-                "RAP1_UNINDUCED_REP1.stats.txt:md5,781e49024150a8313779c574b58ad035",
-                "RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt:md5,8265d3f3a4084617b6e1e27c2a9ed46c",
-                "RAP1_UNINDUCED_REP2.stats.txt:md5,e455d0163bf2d988224b0c0092605213",
-                "RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt:md5,ed85a0b7af3b2776c065a570d13eacff",
-                "WT_REP1.stats.txt:md5,6eab6936804c1157d5e1c61c0562d7de",
-                "WT_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,e88d0f0c93cf9f8377af01ed161389fe",
-                "WT_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,4f43f1258e593219abbed5f25a087978",
-                "WT_REP2.stats.txt:md5,002ddf6b828d34979652a40f05462843",
-                "WT_REP2_trimmed_1.fastq.gz_trimming_report.txt:md5,12a83e73496de77bd9ac8042be365616",
-                "WT_REP2_trimmed_2.fastq.gz_trimming_report.txt:md5,e73defcfa375bacacb3eede4b65b7b74",
                 "ambig_info.tsv:md5,194f574e0586416155e3f33d42e2b167",
                 "ambig_info.tsv:md5,6dcc2891ea572e9b8d1ba52cd434ab84",
                 "ambig_info.tsv:md5,a26e3f936e65d7da66392603c2f91f6f",
@@ -308,36 +295,14 @@
                 "fastqc_sequence_counts_plot.txt:md5,3861354bbedfbde7ca36a72994f9425c",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
-                "fastqc_top_overrepresented_sequences_table.txt:md5,cf612406874da4e582eaeaa956f7eb66",
-                "flenDist.txt:md5,1a0b01789aabfb817e776e1c364fac85",
-                "flenDist.txt:md5,2de170bdc9f6fd237d286429b292bb28",
-                "flenDist.txt:md5,0aaae0a7f00b6f4037bc77e5f78b78d1",
-                "flenDist.txt:md5,7e3ef392373f4de7bba7eb77cf93590e",
-                "flenDist.txt:md5,2de170bdc9f6fd237d286429b292bb28",
                 "lib_format_counts.json:md5,d46250bb3677d72feeefc435fe6395a6",
                 "lib_format_counts.json:md5,7c562bf2f70e42f3a7292687dfd328c3",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
                 "lib_format_counts.json:md5,c24ffe28d70476b5ccdd8bc2d22c0ac1",
                 "lib_format_counts.json:md5,f6d44c0221f7fd559f11a9afe04c9935",
-                "meta_info.json:md5,e9132375893ce91db6947538e64dd43c",
-                "meta_info.json:md5,5618fe266a5291cfef64e02f2de0547f",
-                "meta_info.json:md5,9bfa0dba837c6ebd4003603548d8f4d1",
-                "meta_info.json:md5,0d553bac54eda6f2a0e9ec847fae2bed",
-                "meta_info.json:md5,d03a4f847bb05b6d512b48903981d95d",
                 "multiqc_citations.txt:md5,f789abe663d4b4214f0ddeb413a7f150",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
-                "multiqc_general_stats.txt:md5,2c469bcca2d53528005d27eabc8abe09",
-                "multiqc_salmon.txt:md5,c321e69be50c717245a31a3a1c99face",
-                "salmon.merged.gene_counts.tsv:md5,c14cab7e15cfac73ec0602dc2c404551",
-                "salmon.merged.gene_counts_length_scaled.tsv:md5,60c648d6bee7364d956c94e7b722c388",
-                "salmon.merged.gene_counts_scaled.tsv:md5,7d28536335720847d2646c5565c2a2e8",
-                "salmon.merged.gene_lengths.tsv:md5,dc106a20fd3f322d3122c7e718ad33ba",
-                "salmon.merged.gene_tpm.tsv:md5,b6d982b0a0bedf3859bd0a950137c43e",
-                "salmon.merged.transcript_counts.tsv:md5,ff0f5be09ca7a322672c0074ba35da17",
-                "salmon.merged.transcript_lengths.tsv:md5,8d33a65a9c07bd59b1aab7d847be1e1a",
-                "salmon.merged.transcript_tpm.tsv:md5,40350df578e9c6b42a4fd67d4fb9905b",
-                "salmon_plot.txt:md5,afe2f326b018c7109a67f0cc86f23dc1",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
@@ -345,7 +310,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T11:52:59.260944"
+        "timestamp": "2024-09-13T18:36:11.677764"
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
         "content": [
@@ -409,20 +374,13 @@
                 "trimgalore"
             ],
             [
-                "RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP1_trimmed_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP1_trimmed_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP2_trimmed_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "WT_REP2_trimmed_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T11:53:47.849117"
+        "timestamp": "2024-09-13T18:37:06.985778"
     }
 }

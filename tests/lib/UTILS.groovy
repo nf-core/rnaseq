@@ -28,6 +28,14 @@ class UTILS {
         // To exclude files with timestamps in the format YYYY-MM-DD_HH-MM-SS
         /\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/,
 
+        // Stable files, but order is changing
+        /ambig_info\.tsv/,
+        /cmd_info\.json/,
+        /coverage_profile_along_genes_(high)\.txt/,
+        /coverage_profile_along_genes_(low)\.txt/,
+        /coverage_profile_along_genes_(total)\.txt/,
+        /lib_format_counts\.json/,
+
         // To exlude bbsplit files
         /.*\.stats\.txt/,
 

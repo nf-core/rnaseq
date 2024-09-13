@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v3.16.0dev - [date]
 
 - [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
+- [PR #1380](https://github.com/nf-core/rnaseq/pull/1380) - Fix issues with R modules changing sample names
 
 ### Credits
 

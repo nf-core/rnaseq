@@ -1,4 +1,5 @@
 Changes in module 'nf-core/picard/markduplicates'
+Changes in 'picard/markduplicates/main.nf':
 --- modules/nf-core/picard/markduplicates/main.nf
 +++ modules/nf-core/picard/markduplicates/main.nf
 @@ -4,8 +4,8 @@
@@ -13,13 +14,19 @@ Changes in module 'nf-core/picard/markduplicates'
      input:
      tuple val(meta), path(reads)
 
+'modules/nf-core/picard/markduplicates/meta.yml' is unchanged
+Changes in 'picard/markduplicates/environment.yml':
 --- modules/nf-core/picard/markduplicates/environment.yml
 +++ modules/nf-core/picard/markduplicates/environment.yml
-@@ -4,4 +4,4 @@
+@@ -2,4 +2,4 @@
+   - conda-forge
    - bioconda
-   - defaults
  dependencies:
 -  - bioconda::picard=3.2.0
 +  - bioconda::picard=3.1.1
 
+'modules/nf-core/picard/markduplicates/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/picard/markduplicates/tests/nextflow.config' is unchanged
+'modules/nf-core/picard/markduplicates/tests/main.nf.test' is unchanged
+'modules/nf-core/picard/markduplicates/tests/tags.yml' was removed
 ************************************************************

@@ -1277,21 +1277,6 @@
                 "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
                 "WT_REP2_dupMatrix.txt:md5,02236769150436cf31b7339f612119a5",
                 "WT_REP2_intercept_slope.txt:md5,5af16b07a734b73a2c1103b535f9e26e",
-                "coverage_profile_along_genes_(high).txt:md5,8bf366c7dbc6170035ee64a057c581f1",
-                "coverage_profile_along_genes_(high).txt:md5,3b20a736708df02ea8c86dc5829ae67e",
-                "coverage_profile_along_genes_(high).txt:md5,3f13eb908d6e97e6831306e9527cc2e3",
-                "coverage_profile_along_genes_(high).txt:md5,fcb06d460810c0555de5396b9dae05e8",
-                "coverage_profile_along_genes_(high).txt:md5,9f1e29a4d6eec52e8796b080daaedca3",
-                "coverage_profile_along_genes_(low).txt:md5,a9102de3ff9679d1f7a86afa85997211",
-                "coverage_profile_along_genes_(low).txt:md5,02b314b76ef1317f20e129412340755d",
-                "coverage_profile_along_genes_(low).txt:md5,24df553662d0cedaa74cf06a8fead40b",
-                "coverage_profile_along_genes_(low).txt:md5,e3c9a1ddfdb89f8534ff7548b70fce32",
-                "coverage_profile_along_genes_(low).txt:md5,353f42a84ff34167646fc83909eac2ff",
-                "coverage_profile_along_genes_(total).txt:md5,a9102de3ff9679d1f7a86afa85997211",
-                "coverage_profile_along_genes_(total).txt:md5,02b314b76ef1317f20e129412340755d",
-                "coverage_profile_along_genes_(total).txt:md5,24df553662d0cedaa74cf06a8fead40b",
-                "coverage_profile_along_genes_(total).txt:md5,e3c9a1ddfdb89f8534ff7548b70fce32",
-                "coverage_profile_along_genes_(total).txt:md5,353f42a84ff34167646fc83909eac2ff",
                 "cutadapt_filtered_reads_plot.txt:md5,bf033e64e9d23bee85b6277f11c663f1",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -1338,6 +1323,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T19:32:25.807531"
+        "timestamp": "2024-09-13T21:48:46.254482"
     }
 }

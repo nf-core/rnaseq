@@ -1255,21 +1255,6 @@
                 "WT_REP2.infer_experiment.txt:md5,18758f433cf5c19bce599e5329da39a9",
                 "WT_REP2_dupMatrix.txt:md5,bab18079153627205e5d907d8dfba677",
                 "WT_REP2_intercept_slope.txt:md5,9bcbc18d0d331fe3c972538456ffd5b2",
-                "coverage_profile_along_genes_(high).txt:md5,a349232d75f6c0adab6afcd9f6cbbafb",
-                "coverage_profile_along_genes_(high).txt:md5,634f447f91db940d2148af74cf36febd",
-                "coverage_profile_along_genes_(high).txt:md5,3f76529bd723d5320c86cc407fbb3294",
-                "coverage_profile_along_genes_(high).txt:md5,5aee6c959137a8c9bfbd0ddaa79dddba",
-                "coverage_profile_along_genes_(high).txt:md5,f5ac8f74fcad5d9ac72dbb6b65184bd0",
-                "coverage_profile_along_genes_(low).txt:md5,b2c696661e6c524b1641eb7267c70edc",
-                "coverage_profile_along_genes_(low).txt:md5,db2e0acbe9f07c68bcd7e08e036f02d3",
-                "coverage_profile_along_genes_(low).txt:md5,b9be191fdec82c78057e083d3adf20dd",
-                "coverage_profile_along_genes_(low).txt:md5,d2742410803e0de7cc606ef118010ea8",
-                "coverage_profile_along_genes_(low).txt:md5,d66da6e3f49b0870184fc881a162e785",
-                "coverage_profile_along_genes_(total).txt:md5,b2c696661e6c524b1641eb7267c70edc",
-                "coverage_profile_along_genes_(total).txt:md5,db2e0acbe9f07c68bcd7e08e036f02d3",
-                "coverage_profile_along_genes_(total).txt:md5,b9be191fdec82c78057e083d3adf20dd",
-                "coverage_profile_along_genes_(total).txt:md5,d2742410803e0de7cc606ef118010ea8",
-                "coverage_profile_along_genes_(total).txt:md5,d66da6e3f49b0870184fc881a162e785",
                 "cutadapt_filtered_reads_plot.txt:md5,bf033e64e9d23bee85b6277f11c663f1",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -1319,7 +1304,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T20:00:52.090372"
+        "timestamp": "2024-09-13T22:17:34.737268"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [

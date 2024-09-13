@@ -243,11 +243,6 @@
                 "multiqc_citations.txt:md5,4cece87a056a29c1338277736855e6ee",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
-                "run_info.json:md5,8c5c575c26f57ba7a8401b428d2634d7",
-                "run_info.json:md5,b85d5d5838fa6f166806415ee9372ce2",
-                "run_info.json:md5,02d4007f4d08f4e63c837cb2eed0c729",
-                "run_info.json:md5,8e274a8414bae6b1b6fa8ab94889e657",
-                "run_info.json:md5,b89650dcbafac69a8bbc2001d1a4d8b7",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
@@ -255,7 +250,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T19:42:11.719429"
+        "timestamp": "2024-09-13T21:58:11.868418"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [

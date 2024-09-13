@@ -1141,21 +1141,6 @@
                 "WT_REP2.infer_experiment.txt:md5,c895dbd41b5a075ad4032e2732145b6a",
                 "WT_REP2_dupMatrix.txt:md5,5052efd01f5086d394499b9c4626deb1",
                 "WT_REP2_intercept_slope.txt:md5,7ddae43baa3c4e499fbc319b95627c41",
-                "coverage_profile_along_genes_(high).txt:md5,6afb5ffc9ddad52f69c518e32118ac61",
-                "coverage_profile_along_genes_(high).txt:md5,2745780cc56258bbe587f9b6db03e9e4",
-                "coverage_profile_along_genes_(high).txt:md5,f7c11dace9fc4f446fc29e5db7b3ee24",
-                "coverage_profile_along_genes_(high).txt:md5,59a01cd5d9bc7b6096490d7f3d6d6877",
-                "coverage_profile_along_genes_(high).txt:md5,61683a2fcf35174fe72a648be63d45ac",
-                "coverage_profile_along_genes_(low).txt:md5,248345fdf0f8de2a8d7d329edd0a5c42",
-                "coverage_profile_along_genes_(low).txt:md5,85154785601b18118ae2e6a19d0a1c0a",
-                "coverage_profile_along_genes_(low).txt:md5,f53cfe3e30c560e3261818c2e6df3d5d",
-                "coverage_profile_along_genes_(low).txt:md5,8a5255e6f9f142bbd22c636296f41d72",
-                "coverage_profile_along_genes_(low).txt:md5,031046ef33de379e0463fddc0b924ecd",
-                "coverage_profile_along_genes_(total).txt:md5,248345fdf0f8de2a8d7d329edd0a5c42",
-                "coverage_profile_along_genes_(total).txt:md5,85154785601b18118ae2e6a19d0a1c0a",
-                "coverage_profile_along_genes_(total).txt:md5,f53cfe3e30c560e3261818c2e6df3d5d",
-                "coverage_profile_along_genes_(total).txt:md5,8a5255e6f9f142bbd22c636296f41d72",
-                "coverage_profile_along_genes_(total).txt:md5,031046ef33de379e0463fddc0b924ecd",
                 "fastqc-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
                 "fastqc_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
@@ -1188,6 +1173,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T20:17:47.057332"
+        "timestamp": "2024-09-13T22:35:39.034925"
     }
 }

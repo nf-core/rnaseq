@@ -32,9 +32,7 @@ class UTILS {
         /ambig_info\.tsv/,
         /abundance\.tsv/,
         /cmd_info\.json/,
-        /coverage_profile_along_genes_(high)\.txt/,
-        /coverage_profile_along_genes_(low)\.txt/,
-        /coverage_profile_along_genes_(total)\.txt/,
+        /coverage_profile_along_genes_.*\.txt/,
         /lib_format_counts\.json/,
 
         // To exlude bbsplit files
@@ -131,7 +129,8 @@ class UTILS {
         /multiqc_general_stats\.txt/,
         /multiqc_kallisto\.txt/,
         /multiqc_picard_dups\.txt/,
-        /multiqc_report.html/,
+        /multiqc_report\.html/,
+        /multiqc_rsem\.txt/,
         /multiqc_rseqc_bam_stat\.txt/,
         /multiqc_rseqc_infer_experiment\.txt/,
         /multiqc_rseqc_junction_annotation\.txt/,
@@ -167,6 +166,8 @@ class UTILS {
         /qualimap_genomic_origin-pct\.svg/,
         /qualimap_genomic_origin\.txt/,
         /qualimap_rnaseq_genome_results\.txt/,
+        /rsem_assignment_plot\.txt/,
+        /rsem_multimapping_rates\.txt/,
         /rseqc_bam_stat\.pdf/,
         /rseqc_bam_stat\.png/,
         /rseqc_bam_stat\.svg/,
@@ -298,8 +299,9 @@ class UTILS {
         /kallisto\.merged\.gene_lengths\.tsv/,
         /kallisto\.merged\.gene_tpm\.tsv/,
         /kallisto\.merged\.transcript_counts\.tsv/,
-        /kallisto\.merged\.transcript_tpm\.tsv/,
         /kallisto\.merged\.transcript_lengths\.tsv/,
+        /kallisto\.merged\.transcript_tpm\.tsv/,
+        /run_info\.json/,
 
         // To exclude from salmon quant
         /fld\.gz/,

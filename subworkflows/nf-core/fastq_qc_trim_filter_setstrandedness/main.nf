@@ -209,7 +209,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_multiqc_files = ch_multiqc_files
         .mix(
             ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv')
-                .map { [[], it] }
+                .map { [[:], it] }
         )
 
     //

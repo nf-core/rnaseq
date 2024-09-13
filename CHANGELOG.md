@@ -5,14 +5,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v3.16.0dev - [date]
 
-- [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
-- [PR #1380](https://github.com/nf-core/rnaseq/pull/1380) - Fix issues with R modules changing sample names
-
 ### Credits
 
 Special thanks to the following for their contributions to the release:
 
 ### Enhancements & fixes
+
+- [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
+- [PR #1380](https://github.com/nf-core/rnaseq/pull/1380) - Fix issues with R modules changing sample names
+- [PR #1381](https://github.com/nf-core/rnaseq/pull/1381) - Update all modules following massive conda usage update in nf-core modules
 
 ## [[3.15.0](https://github.com/nf-core/rnaseq/releases/tag/3.15.0)] - 2024-09-04
 

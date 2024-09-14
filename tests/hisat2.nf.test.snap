@@ -89,7 +89,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T17:55:33.048993"
+        "timestamp": "2024-09-14T09:48:43.13292"
     },
     "Params: --aligner hisat2": {
         "content": [
@@ -1221,14 +1221,12 @@
                 "fastqc_sequence_duplication_levels_plot-1.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,8812cee16f6ca65e2c33635754de1772",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
-                "hisat2_pe_plot.txt:md5,790eea3061c7b76d3a377f00b67c2d33",
                 "hisat2_se_plot.txt:md5,f8cd912353aa55e6e670b72a736b656c",
                 "multiqc_citations.txt:md5,da5043f8ab9b5bd51d91ccf3111c655e",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
                 "multiqc_featurecounts_biotype_plot.txt:md5,d35ad008181f0f7be84d5770d17a3a65",
-                "multiqc_hisat2.txt:md5,8883842d3bca98a0b6651fcd0b3b8cca",
                 "multiqc_samtools_idxstats.txt:md5,66a8e8aecb6233f5a3521151b1ce8d49",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1247,6 +1245,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T21:54:32.213023"
+        "timestamp": "2024-09-14T09:47:53.335596"
     }
 }

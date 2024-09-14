@@ -239,7 +239,6 @@
                 "fastqc_sequence_counts_plot.txt:md5,3861354bbedfbde7ca36a72994f9425c",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
-                "kallisto_alignment.txt:md5,6f1850f735edb8c199ef69a2aeca746c",
                 "multiqc_citations.txt:md5,4cece87a056a29c1338277736855e6ee",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
@@ -250,7 +249,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T21:58:11.868418"
+        "timestamp": "2024-09-14T09:51:53.986015"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [
@@ -324,6 +323,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T18:04:31.974316"
+        "timestamp": "2024-09-14T09:52:28.974644"
     }
 }

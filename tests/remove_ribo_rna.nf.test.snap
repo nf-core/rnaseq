@@ -1284,7 +1284,6 @@
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
                 "multiqc_featurecounts_biotype_plot.txt:md5,54f0eef4ab0ecf6a03505b18752b43cd",
                 "multiqc_samtools_idxstats.txt:md5,413ba06f3d8e4ab0dbde8ef8952c4b32",
-                "multiqc_sortmerna.txt:md5,6eda2b8f75acaf145bd12ce3a5aff0e3",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1295,7 +1294,6 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,53addd7b78d8ae224920ec9b97489d72",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,97fc7bde65a7efc5ab3af48ef0400c20",
-                "sortmerna-detailed-plot.txt:md5,245e3f5575f2886943c833a4d26e5b8c",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
@@ -1304,7 +1302,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T22:17:34.737268"
+        "timestamp": "2024-09-14T10:03:34.943643"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -1398,6 +1396,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T18:32:37.410482"
+        "timestamp": "2024-09-14T10:04:28.342005"
     }
 }

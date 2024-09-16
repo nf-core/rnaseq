@@ -1,7 +1,5 @@
-name: hisat2_extractsplicesites
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::hisat2=2.2.1

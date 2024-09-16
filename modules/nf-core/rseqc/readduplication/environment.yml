@@ -1,8 +1,6 @@
-name: rseqc_readduplication
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::rseqc=5.0.3
   - conda-forge::r-base>=3.5

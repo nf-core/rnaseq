@@ -1,7 +1,5 @@
-name: rsem_merge_counts
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - conda-forge::sed=4.7

@@ -1,9 +1,6 @@
-name: trimgalore
-
 channels:
   - conda-forge
   - bioconda
-  - defaults
 
 dependencies:
   - bioconda::cutadapt=3.4

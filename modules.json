@@ -324,8 +324,8 @@
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
-                        "branch": "fastq_prepro_trimfail_fix",
-                        "git_sha": "5ccbeafc08c38098a5eae0583f97ea56518278ab",
+                        "branch": "master",
+                        "git_sha": "ee3b8b84da02320fff5f3f2dc1d6f9b72d7cd5af",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

@@ -22,7 +22,7 @@ class UTILS {
 
     // Static (global) exclusion regexes list
     static List<String> exclusionRegexesForUnstableFileNames = [/.*\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*/]
-    static List<String> snapshottablePatterns = [/.*\.(txt|json|tsv)$/]
+    static List<String> snapshottablePatterns = [/.*\.(ctab|fasta|gtf|gz|json|log|png|tab|tsv|txt)$/]
     static List<String> exclusionRegexesForUnstableFileContents = [
         // To exclude files with timestamps in the format YYYY-MM-DD_HH-MM-SS
         /\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/,
@@ -30,28 +30,15 @@ class UTILS {
         // To exlude bbsplit files
         /.*\.stats\.txt/,
 
-        // To exclude fastqc files
-        /.*_fastqc\.html/,
-        /.*_fastqc\.zip/,
-
         // To exclude from the MultiQC reports
-        /cutadapt_filtered_reads_plot-cnt\.pdf/,
-        /cutadapt_filtered_reads_plot-cnt\.svg/,
-        /cutadapt_filtered_reads_plot-pct\.pdf/,
-        /cutadapt_filtered_reads_plot-pct\.svg/,
-        /cutadapt_trimmed_sequences_plot_3_Counts\.pdf/,
-        /cutadapt_trimmed_sequences_plot_3_Counts\.svg/,
-        /cutadapt_trimmed_sequences_plot_3_Obs_Exp\.pdf/,
-        /cutadapt_trimmed_sequences_plot_3_Obs_Exp\.svg/,
+        /cutadapt_filtered_reads_plot-.*/,
+        /cutadapt_trimmed_sequences_.*\.pdf/,
+        /cutadapt_trimmed_sequences_.*\.svg/,
         /dupradar-section-plot\.pdf/,
         /dupradar-section-plot\.svg/,
-        /fail_strand_check_table\.pdf/,
-        /fail_strand_check_table\.png/,
-        /fail_strand_check_table\.svg/,
-        /fastqc-status-check-heatmap-1\.pdf/,
-        /fastqc-status-check-heatmap-1\.svg/,
-        /fastqc-status-check-heatmap\.pdf/,
-        /fastqc-status-check-heatmap\.svg/,
+        /fail_strand_check_table.*/,
+        /fastqc-status-check-.*\.pdf/,
+        /fastqc-status-check-.*\.svg/,
         /fastqc_adapter_content_plot\.pdf/,
         /fastqc_adapter_content_plot\.png/,
         /fastqc_adapter_content_plot\.svg/,

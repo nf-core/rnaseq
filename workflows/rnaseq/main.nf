@@ -167,25 +167,6 @@ workflow RNASEQ {
             meta, num_reads ->
                 return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
         }
-    //
-    // Get list of samples that failed trimming threshold for MultiQC report
-    //
-    ch_trim_read_count
-        .map {
-            meta, num_reads ->
-                if (num_reads <= params.min_trimmed_reads.toFloat()) {
-                    return [ "$meta.id\t$num_reads" ]
-                }
-        }
-        .collect()
-        .map {
-            tsv_data ->
-                def header = ["Sample", "Reads after trimming"]
-                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
-        }
-        .set { ch_fail_trimming_multiqc }
-
-    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon

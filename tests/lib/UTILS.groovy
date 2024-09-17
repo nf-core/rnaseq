@@ -13,12 +13,11 @@ class UTILS {
             boolean matchesInclusion = (includeRegexes == null || includeRegexes.any  { regex -> file.name.toString() ==~ regex })
             boolean matchesExclusion = (excludeRegexes == null || !excludeRegexes.any { regex -> file.name.toString() ==~ regex })
 
-            // Conditionally add either full path or just the file name
-            if (matchesInclusion && matchesExclusion) {
-                output.add(file)
-            }
+            // Conditionally add either file path or just the file name
+            if (matchesInclusion && matchesExclusion) output.add(file)
+
         }
-        return output.sort { it.name }
+        return output
     }
 
     // Static (global) exclusion regexes list
@@ -27,13 +26,6 @@ class UTILS {
     static List<String> exclusionRegexesForUnstableFileContents = [
         // To exclude files with timestamps in the format YYYY-MM-DD_HH-MM-SS
         /\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/,
-
-        // Stable files, but order is changing
-        /ambig_info\.tsv/,
-        /abundance\.tsv/,
-        /cmd_info\.json/,
-        /coverage_profile_along_genes_.*\.txt/,
-        /lib_format_counts\.json/,
 
         // To exlude bbsplit files
         /.*\.stats\.txt/,

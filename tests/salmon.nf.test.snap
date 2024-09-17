@@ -1,6 +1,7 @@
 {
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment": {
         "content": [
+            34,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.01
@@ -49,7 +50,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.15.1"
+                    "nf-core/rnaseq": "v3.16.0dev"
                 }
             },
             [
@@ -61,8 +62,6 @@
                 "WT_REP2.stats.txt",
                 "custom",
                 "out",
-                "genome_gfp.fasta",
-                "genome_gfp.gtf",
                 "fastqc",
                 "trim",
                 "RAP1_IAA_30M_REP1_trimmed_1_val_1_fastqc.html",
@@ -84,24 +83,8 @@
                 "multiqc",
                 "multiqc_report.html",
                 "multiqc_report_data",
-                "cutadapt_filtered_reads_plot.txt",
-                "cutadapt_trimmed_sequences_plot_3_Counts.txt",
-                "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt",
-                "fastqc-status-check-heatmap.txt",
-                "fastqc_overrepresented_sequences_plot.txt",
-                "fastqc_per_base_n_content_plot.txt",
-                "fastqc_per_base_sequence_quality_plot.txt",
-                "fastqc_per_sequence_gc_content_plot_Counts.txt",
-                "fastqc_per_sequence_gc_content_plot_Percentages.txt",
-                "fastqc_per_sequence_quality_scores_plot.txt",
-                "fastqc_sequence_counts_plot.txt",
-                "fastqc_sequence_duplication_levels_plot.txt",
-                "fastqc_sequence_length_distribution_plot.txt",
                 "fastqc_top_overrepresented_sequences_table.txt",
-                "multiqc_citations.txt",
-                "multiqc_cutadapt.txt",
                 "multiqc_data.json",
-                "multiqc_fastqc_fastqc_trimmed.txt",
                 "multiqc_general_stats.txt",
                 "multiqc_salmon.txt",
                 "multiqc_software_versions.txt",
@@ -130,18 +113,8 @@
                 "png",
                 "cutadapt_filtered_reads_plot-cnt.png",
                 "cutadapt_filtered_reads_plot-pct.png",
-                "cutadapt_trimmed_sequences_plot_3_Counts.png",
-                "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png",
-                "fastqc-status-check-heatmap.png",
-                "fastqc_overrepresented_sequences_plot.png",
                 "fastqc_per_base_n_content_plot.png",
                 "fastqc_per_base_sequence_quality_plot.png",
-                "fastqc_per_sequence_gc_content_plot_Counts.png",
-                "fastqc_per_sequence_gc_content_plot_Percentages.png",
-                "fastqc_per_sequence_quality_scores_plot.png",
-                "fastqc_sequence_counts_plot-cnt.png",
-                "fastqc_sequence_counts_plot-pct.png",
-                "fastqc_sequence_duplication_levels_plot.png",
                 "fastqc_sequence_length_distribution_plot.png",
                 "fastqc_top_overrepresented_sequences_table.png",
                 "general_stats_table.png",
@@ -170,80 +143,50 @@
                 "salmon",
                 "RAP1_IAA_30M_REP1",
                 "aux_info",
-                "ambig_info.tsv",
-                "expected_bias.gz",
                 "fld.gz",
                 "meta_info.json",
-                "observed_bias.gz",
-                "observed_bias_3p.gz",
-                "cmd_info.json",
                 "libParams",
                 "flenDist.txt",
-                "lib_format_counts.json",
                 "logs",
                 "salmon_quant.log",
                 "quant.genes.sf",
                 "quant.sf",
                 "RAP1_UNINDUCED_REP1",
                 "aux_info",
-                "ambig_info.tsv",
-                "expected_bias.gz",
                 "fld.gz",
                 "meta_info.json",
-                "observed_bias.gz",
-                "observed_bias_3p.gz",
-                "cmd_info.json",
                 "libParams",
                 "flenDist.txt",
-                "lib_format_counts.json",
                 "logs",
                 "salmon_quant.log",
                 "quant.genes.sf",
                 "quant.sf",
                 "RAP1_UNINDUCED_REP2",
                 "aux_info",
-                "ambig_info.tsv",
-                "expected_bias.gz",
                 "fld.gz",
                 "meta_info.json",
-                "observed_bias.gz",
-                "observed_bias_3p.gz",
-                "cmd_info.json",
                 "libParams",
                 "flenDist.txt",
-                "lib_format_counts.json",
                 "logs",
                 "salmon_quant.log",
                 "quant.genes.sf",
                 "quant.sf",
                 "WT_REP1",
                 "aux_info",
-                "ambig_info.tsv",
-                "expected_bias.gz",
                 "fld.gz",
                 "meta_info.json",
-                "observed_bias.gz",
-                "observed_bias_3p.gz",
-                "cmd_info.json",
                 "libParams",
                 "flenDist.txt",
-                "lib_format_counts.json",
                 "logs",
                 "salmon_quant.log",
                 "quant.genes.sf",
                 "quant.sf",
                 "WT_REP2",
                 "aux_info",
-                "ambig_info.tsv",
-                "expected_bias.gz",
                 "fld.gz",
                 "meta_info.json",
-                "observed_bias.gz",
-                "observed_bias_3p.gz",
-                "cmd_info.json",
                 "libParams",
                 "flenDist.txt",
-                "lib_format_counts.json",
                 "logs",
                 "salmon_quant.log",
                 "quant.genes.sf",
@@ -260,7 +203,6 @@
                 "salmon.merged.transcript_counts.tsv",
                 "salmon.merged.transcript_lengths.tsv",
                 "salmon.merged.transcript_tpm.tsv",
-                "tx2gene.tsv",
                 "trimgalore",
                 "RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -272,6 +214,8 @@
                 "WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,bf033e64e9d23bee85b6277f11c663f1",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -288,19 +232,44 @@
                 "multiqc_citations.txt:md5,f789abe663d4b4214f0ddeb413a7f150",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
+                "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
+                "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
+                "fastqc-status-check-heatmap.png:md5,2402522f8c02e12aea9af088c6595890",
+                "fastqc_overrepresented_sequences_plot.png:md5,40e450251b80ec0efc9364434234ec7f",
+                "fastqc_per_sequence_gc_content_plot_Counts.png:md5,8a806cec2142f9911502e0a253d83d13",
+                "fastqc_per_sequence_gc_content_plot_Percentages.png:md5,953929d50c8490029880e205e4db7959",
+                "fastqc_per_sequence_quality_scores_plot.png:md5,d2c29cae169f35744500c751b4a7366e",
+                "fastqc_sequence_counts_plot-cnt.png:md5,2874fea747c7ff46828bf4f17668caf8",
+                "fastqc_sequence_counts_plot-pct.png:md5,0022d7f5ac78b6eff157de24e37c5ab0",
+                "fastqc_sequence_duplication_levels_plot.png:md5,fcd3b1ec2b95fe4bcd607dc28179a754",
                 "ambig_info.tsv:md5,de973a4b22a4457217ae3dc04caf9401",
+                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
+                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
+                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,1215f0c20f87d3aef8553ef119e1e74c",
                 "lib_format_counts.json:md5,c24ffe28d70476b5ccdd8bc2d22c0ac1",
                 "ambig_info.tsv:md5,45f252b4f0e11e6730cf0c29f800fdbb",
+                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
+                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
+                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,621c6601aade5b1f2e3d6ca2fc71f636",
                 "lib_format_counts.json:md5,f6d44c0221f7fd559f11a9afe04c9935",
                 "ambig_info.tsv:md5,6dcc2891ea572e9b8d1ba52cd434ab84",
+                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
+                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
+                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,9bed6e4dc5428d6f6297adcea29a6326",
                 "lib_format_counts.json:md5,7c562bf2f70e42f3a7292687dfd328c3",
                 "ambig_info.tsv:md5,194f574e0586416155e3f33d42e2b167",
+                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
+                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
+                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,c7ed0aaa5d6c7934ddbebfd29e4eb86d",
                 "lib_format_counts.json:md5,d46250bb3677d72feeefc435fe6395a6",
                 "ambig_info.tsv:md5,a26e3f936e65d7da66392603c2f91f6f",
+                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
+                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
+                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,69ebfc2c7ca6b221a0a22fa1dc8c20ac",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
@@ -310,10 +279,11 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-17T13:21:46.987509"
+        "timestamp": "2024-09-17T19:13:06.946699"
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
         "content": [
+            16,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.01
@@ -347,14 +317,12 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.15.1"
+                    "nf-core/rnaseq": "v3.16.0dev"
                 }
             },
             [
                 "custom",
                 "out",
-                "genome_transcriptome.fasta",
-                "genome_transcriptome.gtf",
                 "fastqc",
                 "trim",
                 "multiqc",
@@ -374,13 +342,14 @@
                 "WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-17T13:22:21.275937"
+        "timestamp": "2024-09-17T19:14:07.935482"
     }
 }

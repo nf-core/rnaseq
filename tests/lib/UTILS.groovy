@@ -10,25 +10,34 @@ class UTILS {
     public static getAllFilesFromDir(dir, List<String> includeRegexes = null, List<String> excludeRegexes = null) {
         def output = []
         new File(dir).eachFileRecurse() { file ->
-            boolean matchesInclusion = (includeRegexes == null || includeRegexes.any  { regex -> file.name.toString() ==~ regex })
-            boolean matchesExclusion = (excludeRegexes == null || !excludeRegexes.any { regex -> file.name.toString() ==~ regex })
+            boolean matchesInclusion = includeRegexes ? includeRegexes.any { regex -> file.name.toString() ==~ regex } : true
+            boolean matchesExclusion = excludeRegexes ? excludeRegexes.any { regex -> file.name.toString() ==~ regex } : false
 
-            // Conditionally add either file path or just the file name
-            if (matchesInclusion && matchesExclusion) output.add(file)
-
+            // Add files to the list if they match the includeRegexes and not the excludeRegexes
+            if (matchesInclusion && !matchesExclusion) output.add(file)
         }
         return output.sort { it.path }
     }
-
     // Static (global) exclusion regexes list
     static List<String> exclusionRegexesForUnstableFileNames = [/.*\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*/]
-    static List<String> snapshottablePatterns = [/.*\.(ctab|fasta|gtf|gz|json|log|png|tab|tsv|txt)$/]
+
+    // These are the extension of all files to try to snapshot
+    static List<String> snapshottablePatterns = [/.*\.(ctab|fasta|gtf|gz|html|json|log|pdf|png|svg|tab|tsv|txt|yml)$/]
+
+    // These are the files to exclude when we want to snapshot
     static List<String> exclusionRegexesForUnstableFileContents = [
         // To exclude files with timestamps in the format YYYY-MM-DD_HH-MM-SS
-        /\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/,
+        /.*\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*/,
+
+        // To exlude the pipeline_software_mqc_versions.yml file that contains the Nextflow version
+        /nf_core_rnaseq_software_mqc_versions\.yml/,
 
         // To exlude bbsplit files
         /.*\.stats\.txt/,
+
+        // To exclude FASTQC reports
+        /.*_raw\.html/,
+        /.*_fastqc\.html/,
 
         // To exclude from the MultiQC reports
         /cutadapt_filtered_reads_plot-.*/,

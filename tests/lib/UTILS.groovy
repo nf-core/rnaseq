@@ -17,7 +17,7 @@ class UTILS {
             if (matchesInclusion && matchesExclusion) output.add(file)
 
         }
-        return output
+        return output.sort { it.path }
     }
 
     // Static (global) exclusion regexes list

@@ -133,7 +133,7 @@ class UTILS {
         /multiqc_rseqc_junction_annotation\.txt/,
         /multiqc_rseqc_read_distribution\.txt/,
         /multiqc_salmon\.txt/,
-        /(star_rsem|multiqc_salmon|multiqc_star_salmon)_deseq2_clustering-plot?.*\.(pdf|png|txt)/,
+        /(star_rsem|multiqc_salmon|multiqc_star_salmon)_deseq2_clustering-plot?(.*)\.(pdf|png|txt)/,
         /multiqc_salmon_deseq2_pca-plot.*\.txt/,
         /multiqc_samtools_flagstat\.txt/,
         /multiqc_samtools_stats\.txt/,
@@ -259,6 +259,7 @@ class UTILS {
         /samtools_alignment_plot-pct\.svg/,
         /samtools_alignment_plot\.txt/,
         /sortmerna-detailed-plot-(cnt|pct)\.(pdf|svg)/,
+        /sortmerna-detailed-plot\.txt/,
         /star_alignment_plot-cnt\.pdf/,
         /star_alignment_plot-cnt\.png/,
         /star_alignment_plot-cnt\.svg/,
@@ -266,14 +267,9 @@ class UTILS {
         /star_alignment_plot-pct\.png/,
         /star_alignment_plot-pct\.svg/,
         /star_alignment_plot\.txt/,
-        /(star_rsem|star_salmon)_deseq2_(clustering|pca)-plot-\.(pdf|png|svg)/,
-        /star_salmon_deseq2_pca-plot\.pdf/,
-        /star_salmon_deseq2_pca-plot\.png/,
-        /star_salmon_deseq2_pca-plot\.svg/,
-        /star_summary_table\.pdf/,
-        /star_summary_table\.png/,
-        /star_summary_table\.svg/,
-        /star_summary_table\.txt/,
+        /(star_rsem|star_salmon)_deseq2_(clustering|pca)-plot?(.*)\.(pdf|png|svg)/,
+        /star_salmon_deseq2_pca-plot\.(pdf|png|svg)/,
+        /star_summary_table\.(pdf|png|svg|txt)/,
 
         // To exclude from deseq2_qc
         /RAP1_IAA_30M_REP1\.txt/,
@@ -323,8 +319,7 @@ class UTILS {
         /salmon\.merged\.transcript_tpm\.tsv/,
 
         // To exclude bigwig
-        /.*\.forward\.bigWig/,
-        /.*\.reverse\.bigWig/,
+        /.*\.(forward|reverse)\.bigWig/,
 
         // To exlude dupradar
         /.*_duprateExpBoxplot\.pdf/,
@@ -335,9 +330,7 @@ class UTILS {
         /.*\.featureCounts\.txt\.summary/,
 
         // To exclude star salmon
-        /.*\.Log\.final\.out/,
-        /.*\.Log\.out/,
-        /.*\.Log\.progress\.out/,
+        /.*\.Log\.?(final|progress)\.out/,
 
         // To exclude Picard Markduplicates metrics
         /.*\.markdup\.sorted\.MarkDuplicates\.metrics\.txt/,
@@ -349,25 +342,12 @@ class UTILS {
         /rnaseq_qc_results\.txt/,
 
         // To exclude rseqc
-        /.*\.DupRate_plot\.pdf/,
-        /.*\.DupRate_plot\.r/,
-        /.*\.inner_distance\.txt/,
-        /.*\.inner_distance_freq\.txt/,
-        /.*\.inner_distance_mean\.txt/,
-        /.*\.inner_distance_plot\.pdf/,
-        /.*\.inner_distance_plot\.r/,
-        /.*\.junction\.Interact\.bed/,
-        /.*\.junction\.bed/,
-        /.*\.junction\.xls/,
-        /.*\.junctionSaturation_plot\.pdf/,
-        /.*\.junctionSaturation_plot\.r/,
-        /.*\.junction_annotation\.log/,
-        /.*\.junction_plot\.r/,
-        /.*\.pos\.DupRate\.xls/,
+        /.*\.DupRate_plot\.(pdf|r)/,
+        /.*\.inner_distance.*/,
+        /.*\.junction.*/,
+        /.*\.(pos|seq)\.DupRate\.xls/,
         /.*\.read_distribution\.txt/,
-        /.*\.seq\.DupRate\.xls/,
-        /.*\.splice_events\.pdf/,
-        /.*\.splice_junction\.pdf/,
+        /.*\.splice_(events|junction)\.pdf/,
         /.*\.bam_stat\.txt/,
 
         // To exclude from samtools stats
@@ -393,8 +373,7 @@ class UTILS {
         /WT_REP2\.log/,
 
         // To exclude markdup
-        /.*\.markdup\.sorted\.bam/,
-        /.*\.markdup\.sorted\.bam\.bai/,
+        /.*\.markdup\.sorted\.bam?(\.bai)/,
 
         // To exclude trimgalore
         /.*\.fastq\.gz_trimming_report\.txt/

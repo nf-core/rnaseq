@@ -133,7 +133,7 @@ class UTILS {
         /multiqc_rseqc_junction_annotation\.txt/,
         /multiqc_rseqc_read_distribution\.txt/,
         /multiqc_salmon\.txt/,
-        /(star_rsem|multiqc_salmon|multiqc_star_salmon)_deseq2_clustering-plot?(.*)\.(pdf|png|txt)/,
+        /(multiqc_)?(salmon|star_salmon|star_rsem)_deseq2_clustering-plot(.*)?\.(pdf|png|txt)/,
         /multiqc_salmon_deseq2_pca-plot.*\.txt/,
         /multiqc_samtools_flagstat\.txt/,
         /multiqc_samtools_stats\.txt/,
@@ -267,7 +267,7 @@ class UTILS {
         /star_alignment_plot-pct\.png/,
         /star_alignment_plot-pct\.svg/,
         /star_alignment_plot\.txt/,
-        /(star_rsem|star_salmon)_deseq2_(clustering|pca)-plot?(.*)\.(pdf|png|svg)/,
+        /(star_rsem|star_salmon)_deseq2_(clustering|pca)-plot(.*)?\.(pdf|png|svg)/,
         /star_salmon_deseq2_pca-plot\.(pdf|png|svg)/,
         /star_summary_table\.(pdf|png|svg|txt)/,
 
@@ -330,7 +330,7 @@ class UTILS {
         /.*\.featureCounts\.txt\.summary/,
 
         // To exclude star salmon
-        /.*\.Log\.?(final|progress)\.out/,
+        /.*\.Log\.(final|progress)?\.out/,
 
         // To exclude Picard Markduplicates metrics
         /.*\.markdup\.sorted\.MarkDuplicates\.metrics\.txt/,
@@ -373,7 +373,7 @@ class UTILS {
         /WT_REP2\.log/,
 
         // To exclude markdup
-        /.*\.markdup\.sorted\.bam?(\.bai)/,
+        /.*\.markdup\.sorted\.bam(\.bai)?/,
 
         // To exclude trimgalore
         /.*\.fastq\.gz_trimming_report\.txt/

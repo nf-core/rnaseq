@@ -13,8 +13,8 @@ nextflow_pipeline {
         }
 
         then {
-            def path_not_snapshottable = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def path_snapshottable     = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            def path_from_outdir   = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
+            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},

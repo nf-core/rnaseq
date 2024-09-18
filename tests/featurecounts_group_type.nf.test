@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test pipeline without a group type for featureCounts"
+    name "Test pipeline wjava.lang.String(ithout) a group type for featureCounts"
     script "../main.nf"
 
     test("Params: --featurecounts_group_type false") {
@@ -13,15 +13,16 @@ nextflow_pipeline {
         }
 
         then {
-            def file_complement = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def snapshottable_files = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            def path_from_outdir   = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
+            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
+                    workflow.trace.tasks().size(),
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    file_complement.collect { it.getName() },
-                    snapshottable_files
+                    path_not_snapshottable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    path_snapshottable
                 ).match() }
             )
         }
@@ -39,15 +40,16 @@ nextflow_pipeline {
         }
 
         then {
-            def file_complement = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def snapshottable_files = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            def path_from_outdir   = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
+            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
+                    workflow.trace.tasks().size(),
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    file_complement.collect { it.getName() },
-                    snapshottable_files
+                    path_not_snapshottable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    path_snapshottable
                 ).match() }
             )
         }

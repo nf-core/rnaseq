@@ -133,7 +133,7 @@ class UTILS {
         /multiqc_rseqc_junction_annotation\.txt/,
         /multiqc_rseqc_read_distribution\.txt/,
         /multiqc_salmon\.txt/,
-        /(star_rsem|multiqc_salmon|multiqc_star_salmon)_deseq2_clustering-plot.*\.(pdf|png|txt)/,
+        /(star_rsem|multiqc_salmon|multiqc_star_salmon)_deseq2_clustering-plot?.*\.(pdf|png|txt)/,
         /multiqc_salmon_deseq2_pca-plot.*\.txt/,
         /multiqc_samtools_flagstat\.txt/,
         /multiqc_samtools_stats\.txt/,

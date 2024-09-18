@@ -200,6 +200,11 @@
                 "multiqc_rseqc_junction_annotation.txt",
                 "multiqc_rseqc_read_distribution.txt",
                 "multiqc_salmon.txt",
+                "multiqc_salmon_deseq2_clustering-plot.txt",
+                "multiqc_salmon_deseq2_clustering-plot_1.txt",
+                "multiqc_salmon_deseq2_clustering-plot_2.txt",
+                "multiqc_salmon_deseq2_clustering-plot_3.txt",
+                "multiqc_salmon_deseq2_clustering-plot_4.txt",
                 "multiqc_salmon_deseq2_pca-plot.txt",
                 "multiqc_samtools_flagstat.txt",
                 "multiqc_samtools_stats.txt",
@@ -319,6 +324,8 @@
                 "picard_deduplication-pct.png",
                 "qualimap_genomic_origin-cnt.png",
                 "qualimap_genomic_origin-pct.png",
+                "rsem_assignment_plot-cnt.png",
+                "rsem_assignment_plot-pct.png",
                 "rseqc_bam_stat.png",
                 "rseqc_inner_distance_plot_Counts.png",
                 "rseqc_inner_distance_plot_Percentages.png",
@@ -894,11 +901,6 @@
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
                 "multiqc_featurecounts_biotype_plot.txt:md5,27bb37d346e8f0960c882a3676e219e8",
-                "multiqc_salmon_deseq2_clustering-plot.txt:md5,f5d583266ecc0d0eaddb7a8362405164",
-                "multiqc_salmon_deseq2_clustering-plot_1.txt:md5,2a1097fe03e12542dd198ed805ba108a",
-                "multiqc_salmon_deseq2_clustering-plot_2.txt:md5,5f7195951fd89a62b45d16991d0c83d0",
-                "multiqc_salmon_deseq2_clustering-plot_3.txt:md5,eab5db39f3ee13163329402a87cafd21",
-                "multiqc_salmon_deseq2_clustering-plot_4.txt:md5,c3287dd65316b9afb54f2c3f6931fa51",
                 "multiqc_samtools_idxstats.txt:md5,1cbc64fc9713831a6f45effc0cfe6a39",
                 "multiqc_star_rsem_deseq2_clustering-plot.txt:md5,62bd581d9ea4cc3fb2dbddeb82238ed2",
                 "multiqc_star_rsem_deseq2_clustering-plot_1.txt:md5,acd14c14552684ef5783a490de0bc704",
@@ -939,8 +941,6 @@
                 "featurecounts_biotype_plot-pct.png:md5,1921c3931d871f8326a6a6c5c8278815",
                 "qualimap_gene_coverage_profile_Counts.png:md5,04a262d5af169d6d771e48555adab37e",
                 "qualimap_gene_coverage_profile_Normalised.png:md5,3bddc4f2a7d462996628e33daf490247",
-                "rsem_assignment_plot-cnt.png:md5,15fd495eeee0d791d8fe663c9a981b6a",
-                "rsem_assignment_plot-pct.png:md5,e38d64af2acd404fcdb72a55a6dd1986",
                 "rsem_multimapping_rates.png:md5,e93d35b86e1be681eae9b6ad19e12350",
                 "rseqc_infer_experiment_plot.png:md5,1a3a792e9a6e0c0f93c082594b24e566",
                 "rseqc_read_dups_plot.png:md5,b79c01ce4697ebb7e0ebb4a3da5b44f7",
@@ -1143,7 +1143,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-18T14:27:07.132344"
+        "timestamp": "2024-09-18T15:11:45.123849"
     },
     "Params: --aligner star_rsem - stub": {
         "content": [

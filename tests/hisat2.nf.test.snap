@@ -604,6 +604,11 @@
                 "multiqc_rseqc_junction_annotation.txt",
                 "multiqc_rseqc_read_distribution.txt",
                 "multiqc_salmon.txt",
+                "multiqc_salmon_deseq2_clustering-plot.txt",
+                "multiqc_salmon_deseq2_clustering-plot_1.txt",
+                "multiqc_salmon_deseq2_clustering-plot_2.txt",
+                "multiqc_salmon_deseq2_clustering-plot_3.txt",
+                "multiqc_salmon_deseq2_clustering-plot_4.txt",
                 "multiqc_salmon_deseq2_pca-plot.txt",
                 "multiqc_samtools_flagstat.txt",
                 "multiqc_samtools_stats.txt",
@@ -665,6 +670,10 @@
                 "featurecounts_biotype_plot-cnt.pdf",
                 "featurecounts_biotype_plot-pct.pdf",
                 "general_stats_table.pdf",
+                "hisat2_pe_plot-cnt.pdf",
+                "hisat2_pe_plot-pct.pdf",
+                "hisat2_se_plot-cnt.pdf",
+                "hisat2_se_plot-pct.pdf",
                 "picard_deduplication-cnt.pdf",
                 "picard_deduplication-pct.pdf",
                 "qualimap_gene_coverage_profile_Counts.pdf",
@@ -1086,11 +1095,6 @@
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
                 "multiqc_featurecounts_biotype_plot.txt:md5,d35ad008181f0f7be84d5770d17a3a65",
-                "multiqc_salmon_deseq2_clustering-plot.txt:md5,c39fd219828df33259e48aadcdd1997c",
-                "multiqc_salmon_deseq2_clustering-plot_1.txt:md5,6ccabfcdd11d36e140a7d6615c73ae85",
-                "multiqc_salmon_deseq2_clustering-plot_2.txt:md5,792ce8a58aefbbd10c0f182fcbc37c7a",
-                "multiqc_salmon_deseq2_clustering-plot_3.txt:md5,3080d13dee6e437084f27937296ede8a",
-                "multiqc_salmon_deseq2_clustering-plot_4.txt:md5,c750d2fa8d6dc8a2370335a71d2fa637",
                 "multiqc_samtools_idxstats.txt:md5,66a8e8aecb6233f5a3521151b1ce8d49",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1102,10 +1106,6 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,3625f666cc09d0f07990716aeccd869f",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93",
-                "hisat2_pe_plot-cnt.pdf:md5,597b9758f57712f66956d1065f72f68c",
-                "hisat2_pe_plot-pct.pdf:md5,6baadc07e1d4b51a872fdf288d3a5dcd",
-                "hisat2_se_plot-cnt.pdf:md5,ad78c3a76df184a45d0b9f905ed979d0",
-                "hisat2_se_plot-pct.pdf:md5,60a38be9382dbf103bb0832c2f1bca6c",
                 "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
                 "dupradar-section-plot.png:md5,6074ea2315d296094bd10fad3dcc475b",
@@ -1175,6 +1175,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-18T14:05:59.799519"
+        "timestamp": "2024-09-18T15:04:27.247526"
     }
 }

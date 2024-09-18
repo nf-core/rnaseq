@@ -110,11 +110,9 @@ class UTILS {
         /general_stats_table\.pdf/,
         /general_stats_table\.png/,
         /general_stats_table\.svg/,
-        /hisat2_pe_plot.*\.png/,
-        /hisat2_pe_plot.*\.svg/,
+        /hisat2_(pe|se)_plot-(cnt|pct)\.(png|svg)/,
         /hisat2_pe_plot\.txt/,
-        /hisat2_se_plot.*\.png/,
-        /hisat2_se_plot.*\.svg/,
+        /hisat2_se_plot.*\.(png|svg)/,
         /junction_saturation_known\.txt/,
         /junction_saturation_novel\.txt/,
         /kallisto_alignment.*.pdf/,
@@ -135,8 +133,8 @@ class UTILS {
         /multiqc_rseqc_junction_annotation\.txt/,
         /multiqc_rseqc_read_distribution\.txt/,
         /multiqc_salmon\.txt/,
-        /multiqc_salmon_deseq2_clustering-plot\.txt/,
-        /multiqc_salmon_deseq2_clustering-plot_.*\.txt/,
+        /(star_rsem|multiqc_salmon)_deseq2_clustering-plot-\.txt/,
+        /(star_rsem|multiqc_salmon)_deseq2_clustering_-lot_-.*\.txt/,
         /multiqc_salmon_deseq2_pca-plot\.txt/,
         /multiqc_samtools_flagstat\.txt/,
         /multiqc_samtools_stats\.txt/,
@@ -144,8 +142,8 @@ class UTILS {
         /multiqc_sortmerna\.txt/,
         /multiqc_sources\.txt/,
         /multiqc_star\.txt/,
-        /multiqc_star_salmon_deseq2_clustering-plot\.txt/,
-        /multiqc_star_salmon_deseq2_clustering-plot_.*\.txt/,
+        /(star_rsem|multiqc_star_salmon)_deseq2_clustering-plot-\.txt/,
+        /(star_rsem|multiqc_star_salmon)_deseq2_clustering_-lot_-.*\.txt/,
         /multiqc_star_salmon_deseq2_pca-plot\.txt/,
         /picard_deduplication-cnt\.pdf/,
         /picard_deduplication-cnt\.png/,
@@ -167,9 +165,8 @@ class UTILS {
         /qualimap_genomic_origin\.txt/,
         /qualimap_rnaseq_genome_results\.txt/,
         /rsem_assignment_plot\.txt/,
-        /rsem_assignment_plot-.*\.pdf/,
-        /rsem_assignment_plot-.*\.svgf/,
-        /rsem_multimapping_rates\.txt/,
+        /rsem_assignment_plot-(cnt|pct)\.(pdf|svg)/,
+        /rsem_multimapping_rates\.(pdf|svg|txt)/,
         /rseqc_bam_stat\.pdf/,
         /rseqc_bam_stat\.png/,
         /rseqc_bam_stat\.svg/,
@@ -223,12 +220,12 @@ class UTILS {
         /rseqc_read_dups_plot\.pdf/,
         /rseqc_read_dups_plot\.svg/,
         /rseqc_read_dups_plot\.txt/,
-        /salmon_deseq2_clustering-plot\.pdf/,
-        /salmon_deseq2_clustering-plot\.png/,
-        /salmon_deseq2_clustering-plot\.svg/,
-        /salmon_deseq2_pca-plot\.pdf/,
-        /salmon_deseq2_pca-plot\.png/,
-        /salmon_deseq2_pca-plot\.svg/,
+        /(salmon|star_rsem)_deseq2_(clustering|pca)-plot\.pdf/,
+        /(salmon|star_rsem)_deseq2_(clustering|pca)-plot\.png/,
+        /(salmon|star_rsem)_deseq2_(clustering|pca)-plot\.svg/,
+        /(salmon|star_rsem)_deseq2_(pca|pca)-plot\.pdf/,
+        /(salmon|star_rsem)_deseq2_(pca|pca)-plot\.png/,
+        /(salmon|star_rsem)_deseq2_(pca|pca)-plot\.svg/,
         /salmon_plot\.pdf/,
         /salmon_plot\.png/,
         /salmon_plot\.svg/,
@@ -264,7 +261,7 @@ class UTILS {
         /samtools_alignment_plot-pct\.png/,
         /samtools_alignment_plot-pct\.svg/,
         /samtools_alignment_plot\.txt/,
-        /sortmerna-detailed-plot\.*/,
+        /sortmerna-detailed-plot-(cnt|pct)\.(pdf|svg)/,
         /star_alignment_plot-cnt\.pdf/,
         /star_alignment_plot-cnt\.png/,
         /star_alignment_plot-cnt\.svg/,
@@ -272,9 +269,7 @@ class UTILS {
         /star_alignment_plot-pct\.png/,
         /star_alignment_plot-pct\.svg/,
         /star_alignment_plot\.txt/,
-        /star_salmon_deseq2_clustering-plot\.pdf/,
-        /star_salmon_deseq2_clustering-plot\.png/,
-        /star_salmon_deseq2_clustering-plot\.svg/,
+        /(star_rsem|star_salmon)_deseq2_(clustering|pca)-plot-\.(pdf|png|svg)/,
         /star_salmon_deseq2_pca-plot\.pdf/,
         /star_salmon_deseq2_pca-plot\.png/,
         /star_salmon_deseq2_pca-plot\.svg/,
@@ -379,12 +374,10 @@ class UTILS {
         /.*\.bam_stat\.txt/,
 
         // To exclude from samtools stats
-        /.*\.markdup\.sorted\.bam\.flagstat/,
-        /.*\.markdup\.sorted\.bam\.idxstats/,
-        /.*\.markdup\.sorted\.bam\.stats/,
-        /.*\.sorted\.bam\.flagstat/,
-        /.*\.sorted\.bam\.idxstats/,
-        /.*\.sorted\.bam\.stats/,
+        /.*\.sorted\.bam\.(flagstat|idxstats|stats)/,
+
+        // To exclude from hisat2
+        /.*hisat2\.summary/,
 
         // To exclude from stringtie
         /t_data\.ctab/,
@@ -407,10 +400,7 @@ class UTILS {
         /.*\.markdup\.sorted\.bam\.bai/,
 
         // To exclude trimgalore
-        /.*\.fastq\.gz_trimming_report\.txt/,
-
-        // To exclude params files with timestamps
-        /params_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.json/
+        /.*\.fastq\.gz_trimming_report\.txt/
     ]
 
 }

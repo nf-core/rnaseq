@@ -45,6 +45,7 @@ class UTILS {
         /cutadapt_trimmed_sequences_.*\.svg/,
         /dupradar-section-plot\.pdf/,
         /dupradar-section-plot\.svg/,
+        /fail_mapped_samples_table.*/,
         /fail_strand_check_table.*/,
         /fastqc-status-check-.*\.pdf/,
         /fastqc-status-check-.*\.svg/,
@@ -109,9 +110,16 @@ class UTILS {
         /general_stats_table\.pdf/,
         /general_stats_table\.png/,
         /general_stats_table\.svg/,
+        /hisat2_pe_plot.*\.png/,
+        /hisat2_pe_plot.*\.svg/,
         /hisat2_pe_plot\.txt/,
+        /hisat2_se_plot.*\.png/,
+        /hisat2_se_plot.*\.svg/,
         /junction_saturation_known\.txt/,
         /junction_saturation_novel\.txt/,
+        /kallisto_alignment.*.pdf/,
+        /kallisto_alignment.*.png/,
+        /kallisto_alignment.*.svg/,
         /kallisto_alignment\.txt/,
         /multiqc_data\.json/,
         /multiqc_dupradar-section-plot\.txt/,
@@ -159,6 +167,8 @@ class UTILS {
         /qualimap_genomic_origin\.txt/,
         /qualimap_rnaseq_genome_results\.txt/,
         /rsem_assignment_plot\.txt/,
+        /rsem_assignment_plot-.*\.pdf/,
+        /rsem_assignment_plot-.*\.svgf/,
         /rsem_multimapping_rates\.txt/,
         /rseqc_bam_stat\.pdf/,
         /rseqc_bam_stat\.png/,
@@ -254,7 +264,7 @@ class UTILS {
         /samtools_alignment_plot-pct\.png/,
         /samtools_alignment_plot-pct\.svg/,
         /samtools_alignment_plot\.txt/,
-        /sortmerna-detailed-plot\.txt/,
+        /sortmerna-detailed-plot\.*/,
         /star_alignment_plot-cnt\.pdf/,
         /star_alignment_plot-cnt\.png/,
         /star_alignment_plot-cnt\.svg/,
@@ -286,6 +296,8 @@ class UTILS {
         /deseq2\.size_factors\.RData/,
 
         // To exclude from kallisto
+        /abundance\.tsv/,
+        /kallisto_quant\.log/,
         /kallisto\.merged\.gene_counts\.tsv/,
         /kallisto\.merged\.gene_counts_length_scaled\.tsv/,
         /kallisto\.merged\.gene_counts_scaled\.tsv/,
@@ -379,6 +391,16 @@ class UTILS {
         /.*\.coverage\.gtf/,
         /.*\.gene\.abundance\.txt/,
         /.*\.transcripts\.gtf/,
+
+        // To exclude from sortmerna
+        /.*\.sortmerna\.log/,
+
+        // To exclude log from star rsem
+        /RAP1_IAA_30M_REP1\.log/,
+        /RAP1_UNINDUCED_REP1\.log/,
+        /RAP1_UNINDUCED_REP2\.log/,
+        /WT_REP1\.log/,
+        /WT_REP2\.log/,
 
         // To exclude markdup
         /.*\.markdup\.sorted\.bam/,

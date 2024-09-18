@@ -23,7 +23,7 @@ nextflow_pipeline {
                 { assert snapshot(
                     workflow.trace.tasks().size(),
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    path_not_snapshottable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    path_from_outdir.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
                     path_snapshottable
                 ).match() }
             )
@@ -52,7 +52,7 @@ nextflow_pipeline {
                 { assert snapshot(
                     workflow.trace.tasks().size(),
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    path_not_snapshottable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    path_from_outdir.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
                     path_snapshottable
                 ).match() }
             )

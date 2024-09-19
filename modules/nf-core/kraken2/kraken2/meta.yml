@@ -1,0 +1,78 @@
+name: kraken2_kraken2
+description: Classifies metagenomic sequence data
+keywords:
+  - classify
+  - metagenomics
+  - fastq
+  - db
+tools:
+  - kraken2:
+      description: |
+        Kraken2 is a taxonomic sequence classifier that assigns taxonomic labels to sequence reads
+      homepage: https://ccb.jhu.edu/software/kraken2/
+      documentation: https://github.com/DerrickWood/kraken2/wiki/Manual
+      doi: 10.1186/s13059-019-1891-0
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - db:
+      type: directory
+      description: Kraken2 database
+  - save_output_fastqs:
+      type: string
+      description: |
+        If true, optional commands are added to save classified and unclassified reads
+        as fastq files
+  - save_reads_assignment:
+      type: string
+      description: |
+        If true, an optional command is added to save a file reporting the taxonomic
+        classification of each input read
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - classified_reads_fastq:
+      type: file
+      description: |
+        Reads classified as belonging to any of the taxa
+        on the Kraken2 database.
+      pattern: "*{fastq.gz}"
+  - unclassified_reads_fastq:
+      type: file
+      description: |
+        Reads not classified to any of the taxa
+        on the Kraken2 database.
+      pattern: "*{fastq.gz}"
+  - classified_reads_assignment:
+      type: file
+      description: |
+        Kraken2 output file indicating the taxonomic assignment of
+        each input read
+  - report:
+      type: file
+      description: |
+        Kraken2 report containing stats about classified
+        and not classifed reads.
+      pattern: "*.{report.txt}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"

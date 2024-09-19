@@ -19,7 +19,6 @@ nextflow_pipeline {
             def path_name_stable    = UTILS.getAllFilesFromDir(params.outdir, true, UTILS.exclusionRegexesForUnstableFileNames)
             // path_snapshottable: All files in ${params.outdir}/ with stable content
             def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS.exclusionRegexesForUnstableFileContents)
-
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -27,8 +26,8 @@ nextflow_pipeline {
                     workflow.trace.tasks().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    // All stable path from which we remove files with stable contents
-                    path_name_stable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    // All stable path name from which we remove files with stable contents
+                    (path_name_stable - path_snapshottable).collect{file -> file.getName()},
                     // All files with stable contents
                     path_snapshottable
                 ).match() }
@@ -54,7 +53,6 @@ nextflow_pipeline {
             def path_name_stable    = UTILS.getAllFilesFromDir(params.outdir, true, UTILS.exclusionRegexesForUnstableFileNames)
             // path_snapshottable: All files in ${params.outdir}/ with stable content
             def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS.exclusionRegexesForUnstableFileContents)
-
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -62,8 +60,8 @@ nextflow_pipeline {
                     workflow.trace.tasks().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    // All stable path from which we remove files with stable contents
-                    path_name_stable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    // All stable path name from which we remove files with stable contents
+                    (path_name_stable - path_snapshottable).collect{file -> file.getName()},
                     // All files with stable contents
                     path_snapshottable
                 ).match() }

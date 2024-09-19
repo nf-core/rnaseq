@@ -256,8 +256,6 @@
                 "star_alignment_plot-pct.pdf",
                 "star_summary_table.pdf",
                 "png",
-                "cutadapt_filtered_reads_plot-cnt.png",
-                "cutadapt_filtered_reads_plot-pct.png",
                 "fastqc_per_base_n_content_plot.png",
                 "fastqc_per_base_sequence_quality_plot.png",
                 "fastqc_sequence_length_distribution_plot.png",
@@ -573,6 +571,8 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,01637c600d3840500851eb4118564cc6",
+                "cutadapt_filtered_reads_plot-cnt.png:md5,704cf0d91bfa3dd658dd8c9590f669a2",
+                "cutadapt_filtered_reads_plot-pct.png:md5,2684d8b2afca3300e5786486b80237f0",
                 "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
                 "fastqc-status-check-heatmap.png:md5,2402522f8c02e12aea9af088c6595890",
@@ -677,6 +677,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-17T19:23:30.52516"
+        "timestamp": "2024-09-19T11:04:14.333102"
     }
 }

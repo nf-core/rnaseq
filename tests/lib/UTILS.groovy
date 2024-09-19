@@ -40,9 +40,8 @@ class UTILS {
         /.*_fastqc\.html/,
 
         // To exclude from the MultiQC reports
-        /cutadapt_filtered_reads_plot-.*/,
-        /cutadapt_trimmed_sequences_.*\.pdf/,
-        /cutadapt_trimmed_sequences_.*\.svg/,
+        /cutadapt_filtered_reads_plot-(cnt|pct)\.(pdf|svg)/,
+        /cutadapt_trimmed_sequences_.*\.(pdf|svg)/,
         /dupradar-section-plot\.pdf/,
         /dupradar-section-plot\.svg/,
         /fail_mapped_samples_table.*/,
@@ -277,23 +276,11 @@ class UTILS {
         /RAP1_UNINDUCED_REP2\.txt/,
         /WT_REP1\.txt/,
         /WT_REP2\.txt/,
-        /deseq2\.dds\.RData/,
-        /deseq2\.pca\.vals\.txt/,
-        /deseq2\.plots\.pdf/,
-        /deseq2\.sample\.dists\.txt/,
-        /deseq2\.size_factors\.RData/,
+        /deseq2.*/,
 
         // To exclude from kallisto
         /abundance\.tsv/,
         /kallisto_quant\.log/,
-        /kallisto\.merged\.gene_counts\.tsv/,
-        /kallisto\.merged\.gene_counts_length_scaled\.tsv/,
-        /kallisto\.merged\.gene_counts_scaled\.tsv/,
-        /kallisto\.merged\.gene_lengths\.tsv/,
-        /kallisto\.merged\.gene_tpm\.tsv/,
-        /kallisto\.merged\.transcript_counts\.tsv/,
-        /kallisto\.merged\.transcript_lengths\.tsv/,
-        /kallisto\.merged\.transcript_tpm\.tsv/,
         /run_info\.json/,
 
         // To exclude from salmon quant
@@ -304,27 +291,14 @@ class UTILS {
         /quant\.genes\.sf/,
         /quant\.sf/,
 
-        // To exclude from salmon
-        /salmon\.merged\.gene_counts\.SummarizedExperiment\.rds/,
-        /salmon\.merged\.gene_counts\.tsv/,
-        /salmon\.merged\.gene_counts_length_scaled\.SummarizedExperiment\.rds/,
-        /salmon\.merged\.gene_counts_length_scaled\.tsv/,
-        /salmon\.merged\.gene_counts_scaled\.SummarizedExperiment\.rds/,
-        /salmon\.merged\.gene_counts_scaled\.tsv/,
-        /salmon\.merged\.gene_lengths\.tsv/,
-        /salmon\.merged\.gene_tpm\.tsv/,
-        /salmon\.merged\.transcript_counts\.SummarizedExperiment\.rds/,
-        /salmon\.merged\.transcript_counts\.tsv/,
-        /salmon\.merged\.transcript_lengths\.tsv/,
-        /salmon\.merged\.transcript_tpm\.tsv/,
+        // To exclude from kallisto|salmon aligners
+        /(kallisto|salmon)\.merged.*/,
 
         // To exclude bigwig
         /.*\.(forward|reverse)\.bigWig/,
 
         // To exlude dupradar
-        /.*_duprateExpBoxplot\.pdf/,
-        /.*_expressionHist\.pdf/,
-        /.*_duprateExpDens\.pdf/,
+        /.*_(duprateExpBoxplot|duprateExpDens|expressionHist)\.pdf/,
 
         // To exclude featurecounts
         /.*\.featureCounts\.txt\.summary/,

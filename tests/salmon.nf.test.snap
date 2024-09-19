@@ -111,8 +111,6 @@
                 "general_stats_table.pdf",
                 "salmon_plot.pdf",
                 "png",
-                "cutadapt_filtered_reads_plot-cnt.png",
-                "cutadapt_filtered_reads_plot-pct.png",
                 "fastqc_per_base_n_content_plot.png",
                 "fastqc_per_base_sequence_quality_plot.png",
                 "fastqc_sequence_length_distribution_plot.png",
@@ -232,6 +230,8 @@
                 "multiqc_citations.txt:md5,f789abe663d4b4214f0ddeb413a7f150",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a3238f515e01d158d875d69968753804",
+                "cutadapt_filtered_reads_plot-cnt.png:md5,704cf0d91bfa3dd658dd8c9590f669a2",
+                "cutadapt_filtered_reads_plot-pct.png:md5,2684d8b2afca3300e5786486b80237f0",
                 "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
                 "fastqc-status-check-heatmap.png:md5,2402522f8c02e12aea9af088c6595890",
@@ -279,7 +279,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-17T19:13:06.946699"
+        "timestamp": "2024-09-19T10:58:01.584391"
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
         "content": [

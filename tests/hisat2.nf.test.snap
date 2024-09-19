@@ -709,8 +709,6 @@
                 "samtools_alignment_plot-cnt.pdf",
                 "samtools_alignment_plot-pct.pdf",
                 "png",
-                "cutadapt_filtered_reads_plot-cnt.png",
-                "cutadapt_filtered_reads_plot-pct.png",
                 "fail_strand_check_table.png",
                 "fastqc_adapter_content_plot.png",
                 "fastqc_per_base_n_content_plot-1.png",
@@ -1106,6 +1104,8 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,3625f666cc09d0f07990716aeccd869f",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93",
+                "cutadapt_filtered_reads_plot-cnt.png:md5,704cf0d91bfa3dd658dd8c9590f669a2",
+                "cutadapt_filtered_reads_plot-pct.png:md5,2684d8b2afca3300e5786486b80237f0",
                 "cutadapt_trimmed_sequences_plot_3_Counts.png:md5,bef41d894629b0c4dab4478bbf197f50",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.png:md5,1e0d01537d3797623d0b3fd8fbe42787",
                 "dupradar-section-plot.png:md5,6074ea2315d296094bd10fad3dcc475b",
@@ -1175,6 +1175,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-18T15:04:27.247526"
+        "timestamp": "2024-09-19T10:28:23.826076"
     }
 }

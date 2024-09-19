@@ -13,16 +13,16 @@ nextflow_pipeline {
         }
 
         then {
-            def path_from_outdir   = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            def file_complement    = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
+            def file_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.trace.tasks().size(),
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    path_from_outdir.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
-                    path_snapshottable
+                    file_complement.collect{ file -> file_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    file_snapshottable
                 ).match() }
             )
         }
@@ -40,16 +40,16 @@ nextflow_pipeline {
         }
 
         then {
-            def path_from_outdir   = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            def file_complement    = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
+            def file_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.trace.tasks().size(),
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    path_from_outdir.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
-                    path_snapshottable
+                    file_complement.collect{ file -> file_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    file_snapshottable
                 ).match() }
             )
         }

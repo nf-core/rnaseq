@@ -23,13 +23,18 @@ class UTILS {
 
     // These are the files to exclude when we want to snapshot
     static List<String> exclusionRegexesForUnstableFileContents = [
-        // To exlude the pipeline_software_mqc_versions.yml file that contains the Nextflow version
+        // To exclude the pipeline_software_mqc_versions.yml file that contains the Nextflow version
         /nf_core_.*_software_mqc_versions\.yml/,
 
-        // To exlude this folder that somehow is a file on stub tests
+        // To exclude this folder that somehow is a file on stub tests
         /multiqc_plots/,
 
-        // To exlude bbsplit files
+        // To exclude from qualimap css folders
+        /.*\.css/,
+        /.*\.gif/,
+        /.*\.js/,
+
+        // To exclude bbsplit files
         /.*\.stats\.txt/,
 
         // To exclude FASTQC reports
@@ -276,7 +281,7 @@ class UTILS {
         /deseq2.*/,
 
         // To exclude from kallisto
-        /abundance\.tsv/,
+        /abundance\.(h5|tsv)/,
         /kallisto_quant\.log/,
         /run_info\.json/,
 
@@ -294,14 +299,14 @@ class UTILS {
         // To exclude bigwig
         /.*\.(forward|reverse)\.bigWig/,
 
-        // To exlude dupradar
+        // To exclude dupradar
         /.*_(duprateExpBoxplot|duprateExpDens|expressionHist)\.pdf/,
 
         // To exclude featurecounts
         /.*\.featureCounts\.txt\.summary/,
 
         // To exclude star salmon
-        /.*\.Log\.(final|progress)?\.out/,
+        /.*\.Log\.?(final|progress)?\.out/,
 
         // To exclude Picard Markduplicates metrics
         /.*\.markdup\.sorted\.MarkDuplicates\.metrics\.txt/,

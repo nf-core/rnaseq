@@ -7,14 +7,22 @@ class UTILS {
     }
 
     // Recursively list all files in a directory and its sub-directories, matching or not matching supplied suffixes
-    public static getAllFilesFromDir(dir, List<String> includeRegexes = null, List<String> excludeRegexes = null) {
+    public static getAllFilesFromDir(dir, List<String> includeRegexes = null, List<String> excludeRegexes = null, boolean relativePaths = false) {
         def output = []
-        new File(dir).eachFileRecurse() { file ->
+        def dirFile = new File(dir)
+        dirFile.eachFileRecurse { file ->
             boolean matchesInclusion = includeRegexes ? includeRegexes.any { regex -> file.name.toString() ==~ regex } : true
             boolean matchesExclusion = excludeRegexes ? excludeRegexes.any { regex -> file.name.toString() ==~ regex } : false
 
             // Add files to the list if they match the includeRegexes and not the excludeRegexes
-            if (matchesInclusion && !matchesExclusion) output.add(file)
+            if (matchesInclusion && !matchesExclusion) {
+                if (relativePaths) {
+                    def relativePath = dirFile.toURI().relativize(file.toURI()).getPath()
+                    output.add(new File(relativePath))
+                } else {
+                    output.add(file)
+                }
+            }
         }
         return output.sort { it.path }
     }

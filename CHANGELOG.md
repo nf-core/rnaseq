@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
-- [PR #1351](https://github.com/nf-core/rnaseq/pull/1351) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
+- [PR #1388](https://github.com/nf-core/rnaseq/pull/1351) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Bump pipeline version to 3.16.0dev
 
 ### Parameters

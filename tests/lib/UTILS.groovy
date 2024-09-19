@@ -7,45 +7,34 @@ class UTILS {
     }
 
     // Recursively list all files in a directory and its sub-directories, matching or not matching supplied suffixes
-    public static getAllFilesFromDir(dir, List<String> includeRegexes = null, List<String> excludeRegexes = null, boolean relativePaths = false) {
+    public static getAllFilesFromDir(outdir, boolean includeDir = true, List<String> excludeRegexes = null) {
         def output = []
-        def dirFile = new File(dir)
-        dirFile.eachFileRecurse { file ->
-            boolean matchesInclusion = includeRegexes ? includeRegexes.any { regex -> file.name.toString() ==~ regex } : true
+        new File(outdir).eachFileRecurse() { file ->
+            boolean matchesInclusion = includeDir     ? true : file.isFile()
             boolean matchesExclusion = excludeRegexes ? excludeRegexes.any { regex -> file.name.toString() ==~ regex } : false
 
-            // Add files to the list if they match the includeRegexes and not the excludeRegexes
-            if (matchesInclusion && !matchesExclusion) {
-                if (relativePaths) {
-                    def relativePath = dirFile.toURI().relativize(file.toURI()).getPath()
-                    output.add(new File(relativePath))
-                } else {
-                    output.add(file)
-                }
-            }
+            // Add files (or folders if includeDir is set to true) to the list that don't match excludeRegexes
+            if (matchesInclusion && !matchesExclusion) output.add(file)
         }
         return output.sort { it.path }
     }
     // Static (global) exclusion regexes list
     static List<String> exclusionRegexesForUnstableFileNames = [/.*\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*/]
 
-    // These are the extension of all files to try to snapshot
-    static List<String> snapshottablePatterns = [/.*\.(ctab|fasta|gtf|gz|html|json|log|pdf|png|svg|tab|tsv|txt|yml)$/]
-
     // These are the files to exclude when we want to snapshot
     static List<String> exclusionRegexesForUnstableFileContents = [
-        // To exclude files with timestamps in the format YYYY-MM-DD_HH-MM-SS
-        /.*\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*/,
-
         // To exlude the pipeline_software_mqc_versions.yml file that contains the Nextflow version
-        /nf_core_rnaseq_software_mqc_versions\.yml/,
+        /nf_core_.*_software_mqc_versions\.yml/,
+
+        // To exlude this folder that somehow is a file on stub tests
+        /multiqc_plots/,
 
         // To exlude bbsplit files
         /.*\.stats\.txt/,
 
         // To exclude FASTQC reports
-        /.*_raw\.html/,
-        /.*_fastqc\.html/,
+        /.*_raw\.(html|zip)/,
+        /.*_fastqc\.(html|zip)/,
 
         // To exclude from the MultiQC reports
         /cutadapt_filtered_reads_plot-(cnt|pct)\.(pdf|svg)/,

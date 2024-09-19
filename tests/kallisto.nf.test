@@ -15,16 +15,22 @@ nextflow_pipeline {
         }
 
         then {
-            def file_complement    = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def file_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            // path_name_stable: All files + folders in ${params.outdir}/ with a stable name
+            def path_name_stable    = UTILS.getAllFilesFromDir(params.outdir, true, UTILS.exclusionRegexesForUnstableFileNames)
+            // path_snapshottable: All files in ${params.outdir}/ with stable content
+            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
+                    // Number of tasks
                     workflow.trace.tasks().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    file_complement.collect{ file -> file_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
-                    file_snapshottable
+                    // All stable path from which we remove files with stable contents
+                    path_name_stable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    // All files with stable contents
+                    path_snapshottable
                 ).match() }
             )
         }
@@ -44,16 +50,22 @@ nextflow_pipeline {
         }
 
         then {
-            def file_complement    = UTILS.getAllFilesFromDir(params.outdir, null, UTILS.exclusionRegexesForUnstableFileNames)
-            def file_snapshottable = UTILS.getAllFilesFromDir(params.outdir, UTILS.snapshottablePatterns, UTILS.exclusionRegexesForUnstableFileContents)
+            // path_name_stable: All files + folders in ${params.outdir}/ with a stable name
+            def path_name_stable    = UTILS.getAllFilesFromDir(params.outdir, true, UTILS.exclusionRegexesForUnstableFileNames)
+            // path_snapshottable: All files in ${params.outdir}/ with stable content
+            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS.exclusionRegexesForUnstableFileContents)
 
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
+                    // Number of tasks
                     workflow.trace.tasks().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    file_complement.collect{ file -> file_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
-                    file_snapshottable
+                    // All stable path from which we remove files with stable contents
+                    path_name_stable.collect{ file -> path_snapshottable.contains(file) ? null : file.getName()}.findAll{ it },
+                    // All files with stable contents
+                    path_snapshottable
                 ).match() }
             )
         }

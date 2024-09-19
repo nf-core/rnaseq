@@ -16,7 +16,7 @@ nextflow_pipeline {
             // path_name_stable: All files + folders in ${params.outdir}/ with a stable name
             def path_name_stable    = UTILS.getAllFilesFromDir(params.outdir, true, UTILS.exclusionRegexesForUnstableFileNames)
             // path_snapshottable: All files in ${params.outdir}/ with stable content
-            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS.exclusionRegexesForUnstableFileContents)
+            def path_snapshottable = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS_PIPELINE.exclusionRegexesForUnstableFileContents)
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

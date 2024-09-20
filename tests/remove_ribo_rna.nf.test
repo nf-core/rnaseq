@@ -21,7 +21,8 @@ nextflow_pipeline {
                 { assert workflow.success},
                 { assert snapshot(
                     // Number of tasks
-                    workflow.trace.tasks().size(),
+                    // Not snapshoting number of tasks as one task fails and gets retried quite often
+                    // workflow.trace.tasks().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
                     // All stable path name

@@ -27,7 +27,7 @@ nextflow_pipeline {
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
                     // All stable path name
-                    stable_name.*name,
+                    stable_name*.name,
                     // All files with stable contents
                     stable_path
                 ).match() }
@@ -61,7 +61,7 @@ nextflow_pipeline {
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
                     // All stable path name
-                    stable_name.*name,
+                    stable_name*.name,
                     // All files with stable contents
                     stable_path
                 ).match() }

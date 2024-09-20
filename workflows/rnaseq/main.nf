@@ -597,7 +597,7 @@ workflow RNASEQ {
             ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, params.stranded_threshold, params.unstranded_threshold)
                         rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
 
                         def status = 'fail'

@@ -1,7 +1,5 @@
-name: ucsc_bedclip
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::ucsc-bedclip=377

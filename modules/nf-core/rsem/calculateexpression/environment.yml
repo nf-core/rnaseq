@@ -1,8 +1,6 @@
-name: rsem_calculateexpression
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::rsem=1.3.3
   - bioconda::star=2.7.10a

@@ -5,14 +5,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v3.16.0dev - [date]
 
-- [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
-- [PR #1376](https://github.com/nf-core/rnaseq/pull/1376) - Fix invalid named parameter syntax
-
-### Credits
-
-Special thanks to the following for their contributions to the release:
 
 ### Enhancements & fixes
+
+- [PR #1376](https://github.com/nf-core/rnaseq/pull/1376) - Fix invalid named parameter syntax
+- [PR #1386](https://github.com/nf-core/rnaseq/pull/1386) - Bump pipeline version to 3.16.0dev
+- [PR #1388](https://github.com/nf-core/rnaseq/pull/1388) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
+
+### Parameters
+
+| Old parameter | New parameter               |
+| ------------- | --------------------------- |
+|               | `--contaminant_screening`   |
+|               | `--kraken_db`               |
+|               | `--save_kraken_assignments` |
+|               | `--save_kraken_unassigned`  |
+|               | `--bracken_precision`       |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `Kraken2`  | ----------- | 2.1.3       |
+| `Bracken`  | ----------- | 2.9         |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+## [[3.15.1](https://github.com/nf-core/rnaseq/releases/tag/3.15.1)] - 2024-09-16
+
+### Enhancements & fixes
+
+- [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
+- [PR #1380](https://github.com/nf-core/rnaseq/pull/1380) - Fix issues with R modules changing sample names
+- [PR #1381](https://github.com/nf-core/rnaseq/pull/1381) - Update all modules following massive conda usage update in nf-core modules
+- [PR #1382](https://github.com/nf-core/rnaseq/pull/1381) - Slight fixes for rnaseq preprocessing
+- [P$ #1383](https://github.com/nf-core/rnaseq/pull/1383) - Prerelease 3.15.1 version bumps
 
 ## [[3.15.0](https://github.com/nf-core/rnaseq/releases/tag/3.15.0)] - 2024-09-04
 

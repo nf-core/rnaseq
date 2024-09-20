@@ -26,7 +26,7 @@ library(tximport)
 #' @return A data frame combining the first two columns of the rowData with the assay data from the specified slot.
 
 build_table <- function(se.obj, slot) {
-    cbind(rowData(se.obj)[,1:2], assays(se.obj)[[slot]])
+    data.frame(cbind(rowData(se.obj)[,1:2], assays(se.obj)[[slot]]), check.names = FALSE)
 }
 
 #' Write a table to a file from a SummarizedExperiment object with given parameters

@@ -18,11 +18,6 @@ process MULTIQC {
     path "*_plots"             , optional:true, emit: plots
     path "versions.yml"        , emit: versions
 
-    publish:
-    report  >> 'multiqc/'
-    data    >> 'multiqc/'
-    plots   >> 'multiqc/'
-
     when:
     task.ext.when == null || task.ext.when
 

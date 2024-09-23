@@ -105,15 +105,6 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
             .set { trim_read_count }
     }
 
-    publish:
-    // TODO: need to recover trim_reads and umi_reads
-    // trim_reads >> (params.save_trimmed ? 'trimgalore/' : null)
-    // umi_reads  >> (params.save_umi_intermeds ? 'umitools/' : null)
-    umi_log    >> 'umitools/'
-    trim_html  >> 'trimgalore/fastqc/'
-    trim_zip   >> 'trimgalore/fastqc/'
-    trim_log   >> 'trimgalore/'
-
     emit:
     reads = trim_reads // channel: [ val(meta), [ reads ] ]
 
@@ -129,4 +120,13 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     trim_read_count    // channel: [ val(meta), val(count) ]
 
     versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+
+    publish:
+    // TODO: need to recover trim_reads and umi_reads
+    // trim_reads >> (params.save_trimmed ? 'trimgalore/' : null)
+    // umi_reads  >> (params.save_umi_intermeds ? 'umitools/' : null)
+    umi_log    >> 'umitools/'
+    trim_html  >> 'trimgalore/fastqc/'
+    trim_zip   >> 'trimgalore/fastqc/'
+    trim_log   >> 'trimgalore/'
 }

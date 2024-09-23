@@ -328,6 +328,22 @@ workflow PREPARE_GENOME {
         }
     }
 
+    emit:
+    fasta            = ch_fasta                  // channel: path(genome.fasta)
+    gtf              = ch_gtf                    // channel: path(genome.gtf)
+    fai              = ch_fai                    // channel: path(genome.fai)
+    gene_bed         = ch_gene_bed               // channel: path(gene.bed)
+    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
+    chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
+    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
+    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    star_index       = ch_star_index             // channel: path(star/index/)
+    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
+    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
+    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
+    kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+
     publish:
     ch_fasta            >> (params.save_reference ? 'genome' : null)
     ch_gtf              >> (params.save_reference ? 'genome' : null)
@@ -344,20 +360,4 @@ workflow PREPARE_GENOME {
     ch_hisat2_index     >> (params.save_reference ? 'genome/index' : null)
     ch_salmon_index     >> (params.save_reference ? 'genome/index' : null)
     ch_kallisto_index   >> (params.save_reference ? 'genome/index' : null)
-
-    emit:
-    fasta            = ch_fasta                  // channel: path(genome.fasta)
-    gtf              = ch_gtf                    // channel: path(genome.gtf)
-    fai              = ch_fai                    // channel: path(genome.fai)
-    gene_bed         = ch_gene_bed               // channel: path(gene.bed)
-    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
-    chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
-    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
-    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
-    star_index       = ch_star_index             // channel: path(star/index/)
-    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
-    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
-    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
-    kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
-    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

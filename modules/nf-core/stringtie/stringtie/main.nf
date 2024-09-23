@@ -18,12 +18,6 @@ process STRINGTIE_STRINGTIE {
     tuple val(meta), path("*.ballgown")       , optional: true, emit: ballgown
     path  "versions.yml"                      , emit: versions
 
-    publish:
-    transcript_gtf  >> 'stringtie/'
-    abundance       >> 'stringtie/'
-    coverage_gtf    >> 'stringtie/'
-    ballgown        >> 'stringtie/'
-
     when:
     task.ext.when == null || task.ext.when
 

@@ -62,16 +62,6 @@ workflow ALIGN_STAR {
     BAM_SORT_STATS_SAMTOOLS ( ch_orig_bam, fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
-    publish:
-    ch_orig_bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    ch_log_final        >> 'star_salmon/log/'
-    ch_log_out          >> 'star_salmon/log/'
-    ch_log_progress     >> 'star_salmon/log/'
-    ch_bam_sorted       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    ch_bam_transcript   >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    ch_fastq            >> (params.save_unaligned ? 'star_salmon/unmapped/' : null)
-    ch_tab              >> 'star_salmon/log/'
-
     emit:
     orig_bam       = ch_orig_bam                    // channel: [ val(meta), bam            ]
     log_final      = ch_log_final                   // channel: [ val(meta), log_final      ]
@@ -90,4 +80,14 @@ workflow ALIGN_STAR {
     idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
 
     versions       = ch_versions                    // channel: [ versions.yml ]
+
+    publish:
+    ch_orig_bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    ch_log_final        >> 'star_salmon/log/'
+    ch_log_out          >> 'star_salmon/log/'
+    ch_log_progress     >> 'star_salmon/log/'
+    ch_bam_sorted       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    ch_bam_transcript   >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
+    ch_fastq            >> (params.save_unaligned ? 'star_salmon/unmapped/' : null)
+    ch_tab              >> 'star_salmon/log/'
 }

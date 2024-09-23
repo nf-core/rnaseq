@@ -37,19 +37,6 @@ workflow QUANTIFY_RSEM {
     )
     ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 
-    publish:
-    RSEM_CALCULATEEXPRESSION.out.counts_gene        >> 'star_rsem/'
-    RSEM_CALCULATEEXPRESSION.out.counts_transcript  >> 'star_rsem/'
-    RSEM_CALCULATEEXPRESSION.out.stat               >> 'star_rsem/'
-    RSEM_CALCULATEEXPRESSION.out.logs               >> 'star_rsem/log/'
-    RSEM_CALCULATEEXPRESSION.out.bam_star           >> (params.save_align_intermeds ? 'star_rsem/' : null)
-    RSEM_CALCULATEEXPRESSION.out.bam_genome         >> (params.save_align_intermeds ? 'star_rsem/' : null)
-    RSEM_CALCULATEEXPRESSION.out.bam_transcript     >> (params.save_align_intermeds ? 'star_rsem/' : null)
-    RSEM_MERGE_COUNTS.out.merged_counts_gene        >> 'star_rsem/'
-    RSEM_MERGE_COUNTS.out.merged_tpm_gene           >> 'star_rsem/'
-    RSEM_MERGE_COUNTS.out.merged_counts_transcript  >> 'star_rsem/'
-    RSEM_MERGE_COUNTS.out.merged_tpm_transcript     >> 'star_rsem/'
-
     emit:
     counts_gene              = RSEM_CALCULATEEXPRESSION.out.counts_gene       // channel: [ val(meta), counts ]
     counts_transcript        = RSEM_CALCULATEEXPRESSION.out.counts_transcript // channel: [ val(meta), counts ]
@@ -72,4 +59,17 @@ workflow QUANTIFY_RSEM {
     merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.tsv
 
     versions                 = ch_versions                                    // channel: [ versions.yml ]
+
+    publish:
+    RSEM_CALCULATEEXPRESSION.out.counts_gene        >> 'star_rsem/'
+    RSEM_CALCULATEEXPRESSION.out.counts_transcript  >> 'star_rsem/'
+    RSEM_CALCULATEEXPRESSION.out.stat               >> 'star_rsem/'
+    RSEM_CALCULATEEXPRESSION.out.logs               >> 'star_rsem/log/'
+    RSEM_CALCULATEEXPRESSION.out.bam_star           >> (params.save_align_intermeds ? 'star_rsem/' : null)
+    RSEM_CALCULATEEXPRESSION.out.bam_genome         >> (params.save_align_intermeds ? 'star_rsem/' : null)
+    RSEM_CALCULATEEXPRESSION.out.bam_transcript     >> (params.save_align_intermeds ? 'star_rsem/' : null)
+    RSEM_MERGE_COUNTS.out.merged_counts_gene        >> 'star_rsem/'
+    RSEM_MERGE_COUNTS.out.merged_tpm_gene           >> 'star_rsem/'
+    RSEM_MERGE_COUNTS.out.merged_counts_transcript  >> 'star_rsem/'
+    RSEM_MERGE_COUNTS.out.merged_tpm_transcript     >> 'star_rsem/'
 }

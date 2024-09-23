@@ -14,9 +14,6 @@ process MULTIQC_CUSTOM_BIOTYPE {
     tuple val(meta), path("*.tsv"), emit: tsv
     path "versions.yml"           , emit: versions
 
-    publish:
-    tsv >> 'featurecounts/'
-
     when:
     task.ext.when == null || task.ext.when
 

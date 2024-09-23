@@ -15,9 +15,6 @@ process QUALIMAP_RNASEQ {
     tuple val(meta), path("${prefix}"), emit: results
     path  "versions.yml"              , emit: versions
 
-    publish:
-    results >> 'qualimap/'
-
     when:
     task.ext.when == null || task.ext.when
 

@@ -17,10 +17,6 @@ process DUPRADAR {
     tuple val(meta), path("*_mqc.txt"), emit: multiqc
     path "versions.yml"               , emit: versions
 
-    publish:
-    pdf >> 'dupradar/'
-    txt >> 'dupradar/'
-
     when:
     task.ext.when == null || task.ext.when
 

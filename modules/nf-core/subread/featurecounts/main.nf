@@ -15,10 +15,6 @@ process SUBREAD_FEATURECOUNTS {
     tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
     path "versions.yml"                                , emit: versions
 
-    publish:
-    counts  >> 'featurecounts/'
-    summary >> 'featurecounts/'
-
     when:
     task.ext.when == null || task.ext.when
 

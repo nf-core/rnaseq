@@ -16,10 +16,6 @@ process SORTMERNA {
     tuple val(meta), path("*.log")     , emit: log
     path  "versions.yml"               , emit: versions
 
-    publish:
-    reads   >> 'sortmerna/intermeds/'
-    log     >> 'sortmerna/'
-
     when:
     task.ext.when == null || task.ext.when
 

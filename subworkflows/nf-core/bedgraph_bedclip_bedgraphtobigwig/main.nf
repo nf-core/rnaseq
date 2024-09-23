@@ -26,12 +26,12 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out.bedgraph, sizes )
     ch_versions = ch_versions.mix(UCSC_BEDGRAPHTOBIGWIG.out.versions.first())
 
-    publish:
-    UCSC_BEDGRAPHTOBIGWIG.out.bigwig >> 'bigwig/'
-
     emit:
     bigwig   = UCSC_BEDGRAPHTOBIGWIG.out.bigwig // channel: [ val(meta), [ bigwig ] ]
     bedgraph = UCSC_BEDCLIP.out.bedgraph        // channel: [ val(meta), [ bedgraph ] ]
 
     versions = ch_versions                      // channel: [ versions.yml ]
+
+    publish:
+    UCSC_BEDGRAPHTOBIGWIG.out.bigwig >> 'bigwig/'
 }

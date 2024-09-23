@@ -782,130 +782,130 @@ workflow RNASEQ {
         ch_multiqc_report = MULTIQC.out.report
     }
 
-    publish:
-    QUANTIFY_STAR_SALMON.out.results                        >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.tpm_gene                       >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.counts_gene                    >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.lengths_gene                   >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled      >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.counts_gene_scaled             >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.tpm_transcript                 >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.counts_transcript              >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.lengths_transcript             >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds                >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled  >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled         >> 'star_salmon/'
-    QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'star_salmon/'
-
-    // TODO: !params.skip_alignment && params.aligner == 'star_salmon' && params.with_umi
-    // BAM_SORT_STATS_SAMTOOLS.out.bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    // BAM_SORT_STATS_SAMTOOLS.out.bai         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    // BAM_SORT_STATS_SAMTOOLS.out.stats       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats/' : null)
-    // BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats/' : null)
-    // BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats/' : null)
-    // SAMTOOLS_SORT.out.bam                   >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    // UMITOOLS_PREPAREFORSALMON.out.bam       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/' : null)
-    // UMITOOLS_PREPAREFORSALMON.out.log       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/umitools/log/' : null)
-
-    // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
-    DESEQ2_QC_STAR_SALMON.out.rdata         >> 'star_salmon/deseq2_qc/'
-    DESEQ2_QC_STAR_SALMON.out.pca_txt       >> 'star_salmon/deseq2_qc/'
-    DESEQ2_QC_STAR_SALMON.out.pdf           >> 'star_salmon/deseq2_qc/'
-    DESEQ2_QC_STAR_SALMON.out.dists_txt     >> 'star_salmon/deseq2_qc/'
-    DESEQ2_QC_STAR_SALMON.out.size_factors  >> 'star_salmon/deseq2_qc/'
-    DESEQ2_QC_STAR_SALMON.out.log           >> 'star_salmon/deseq2_qc/'
-
-    // TODO: !params.skip_alignment && params.aligner == 'star_rsem'
-    // DESEQ2_QC_RSEM.out.rdata                >> 'star_rsem/deseq2_qc/'
-    // DESEQ2_QC_RSEM.out.pca_txt              >> 'star_rsem/deseq2_qc/'
-    // DESEQ2_QC_RSEM.out.pdf                  >> 'star_rsem/deseq2_qc/'
-    // DESEQ2_QC_RSEM.out.dists_txt            >> 'star_rsem/deseq2_qc/'
-    // DESEQ2_QC_RSEM.out.size_factors         >> 'star_rsem/deseq2_qc/'
-    // DESEQ2_QC_RSEM.out.log                  >> 'star_rsem/deseq2_qc/'
-
-    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene                      >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene                   >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene                  >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled     >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled            >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript                >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript             >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript            >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds               >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled        >> "${params.pseudo_aligner}/"
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds         >> "${params.pseudo_aligner}/"
-    // TODO: process 'QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
-
-    DESEQ2_QC_PSEUDO.out.rdata          >> "${params.pseudo_aligner}/deseq2_qc/"
-    DESEQ2_QC_PSEUDO.out.pca_txt        >> "${params.pseudo_aligner}/deseq2_qc/"
-    DESEQ2_QC_PSEUDO.out.pdf            >> "${params.pseudo_aligner}/deseq2_qc/"
-    DESEQ2_QC_PSEUDO.out.dists_txt      >> "${params.pseudo_aligner}/deseq2_qc/"
-    DESEQ2_QC_PSEUDO.out.size_factors   >> "${params.pseudo_aligner}/deseq2_qc/"
-    DESEQ2_QC_PSEUDO.out.log            >> "${params.pseudo_aligner}/deseq2_qc/"
-
-    BBMAP_BBSPLIT.out.stats     >> 'bbsplit/'
-    BBMAP_BBSPLIT.out.all_fastq >> (params.save_bbsplit_reads ? 'bbsplit/' : null)
-    CAT_FASTQ.out.reads         >> (params.save_merged_fastq ? 'fastq/' : null)
-
-    // TODO: params.remove_ribo_rna
-    // SORTMERNA.out.reads         >> (params.save_non_ribo_reads ? 'sortmerna/' : null)
-
-    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig >> "${params.aligner}/bigwig/"
-    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig >> "${params.aligner}/bigwig/"
-    DUPRADAR.out.pdf                >> "${params.aligner}/dupradar/"
-    DUPRADAR.out.txt                >> "${params.aligner}/dupradar/"
-    MULTIQC.out.report              >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
-    MULTIQC.out.data                >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
-    MULTIQC.out.plots               >> (params.skip_alignment ? 'multiqc/' : "multiqc/${params.aligner}/")
-
-    // TODO: !params.skip_alignment && !params.skip_qc && !params.skip_preseq
-    // PRESEQ_LCEXTRAP.out.lc_extrap   >> "${params.aligner}/preseq/"
-    // PRESEQ_LCEXTRAP.out.log         >> "${params.aligner}/preseq/log/"
-
-    QUALIMAP_RNASEQ.out.results     >> "${params.aligner}/qualimap/"
-    STRINGTIE_STRINGTIE.out.transcript_gtf  >> "${params.aligner}/stringtie/"
-    STRINGTIE_STRINGTIE.out.abundance       >> "${params.aligner}/stringtie/"
-    STRINGTIE_STRINGTIE.out.coverage_gtf    >> "${params.aligner}/stringtie/"
-    STRINGTIE_STRINGTIE.out.ballgown        >> "${params.aligner}/stringtie/"
-    MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> "${params.aligner}/featurecounts/"
-    SUBREAD_FEATURECOUNTS.out.counts    >> "${params.aligner}/featurecounts/"
-    SUBREAD_FEATURECOUNTS.out.summary   >> "${params.aligner}/featurecounts/"
-
-    BAM_MARKDUPLICATES_PICARD.out.bam       >> "${params.aligner}/"
-    BAM_MARKDUPLICATES_PICARD.out.bai       >> "${params.aligner}/"
-    BAM_MARKDUPLICATES_PICARD.out.csi       >> "${params.aligner}/"
-    BAM_MARKDUPLICATES_PICARD.out.metrics   >> "${params.aligner}/picard_metrics/"
-    BAM_MARKDUPLICATES_PICARD.out.stats     >> "${params.aligner}/samtools_stats/"
-    BAM_MARKDUPLICATES_PICARD.out.flagstat  >> "${params.aligner}/samtools_stats/"
-    BAM_MARKDUPLICATES_PICARD.out.idxstats  >> "${params.aligner}/samtools_stats/"
-
-    BAM_RSEQC.out.bamstat_txt                       >> "${params.aligner}/rseqc/bam_stat/"
-    BAM_RSEQC.out.inferexperiment_txt               >> "${params.aligner}/rseqc/infer_experiment/"
-    BAM_RSEQC.out.junctionannotation_pdf            >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionannotation_events_pdf     >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionannotation_bed            >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionannotation_interact_bed   >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionannotation_xls            >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionannotation_log            >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionannotation_rscript        >> "${params.aligner}/rseqc/junction_annotation/"
-    BAM_RSEQC.out.junctionsaturation_pdf            >> "${params.aligner}/rseqc/junction_saturation/"
-    BAM_RSEQC.out.junctionsaturation_rscript        >> "${params.aligner}/rseqc/junction_saturation/"
-    BAM_RSEQC.out.readduplication_pdf               >> "${params.aligner}/rseqc/read_duplication/"
-    BAM_RSEQC.out.readduplication_seq_xls           >> "${params.aligner}/rseqc/read_duplication/"
-    BAM_RSEQC.out.readduplication_pos_xls           >> "${params.aligner}/rseqc/read_duplication/"
-    BAM_RSEQC.out.readduplication_rscript           >> "${params.aligner}/rseqc/read_duplication/"
-    BAM_RSEQC.out.readdistribution_txt              >> "${params.aligner}/rseqc/read_distribution/"
-    BAM_RSEQC.out.innerdistance_distance            >> "${params.aligner}/rseqc/inner_distance/"
-    BAM_RSEQC.out.innerdistance_freq                >> "${params.aligner}/rseqc/inner_distance/"
-    BAM_RSEQC.out.innerdistance_mean                >> "${params.aligner}/rseqc/inner_distance/"
-    BAM_RSEQC.out.innerdistance_pdf                 >> "${params.aligner}/rseqc/inner_distance/"
-    BAM_RSEQC.out.innerdistance_rscript             >> "${params.aligner}/rseqc/inner_distance/"
-    BAM_RSEQC.out.tin_txt                           >> "${params.aligner}/rseqc/tin/"
-
     emit:
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]
+
+    publish:
+    QUANTIFY_STAR_SALMON.out.results                        >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.tpm_gene                       >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.counts_gene                    >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.lengths_gene                   >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled      >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.counts_gene_scaled             >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.tpm_transcript                 >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.counts_transcript              >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.lengths_transcript             >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds                >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled  >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled         >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'star_salmon'
+
+    // TODO: !params.skip_alignment && params.aligner == 'star_salmon' && params.with_umi
+    // BAM_SORT_STATS_SAMTOOLS.out.bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.bai         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.stats       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.flagstat    >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats' : null)
+    // BAM_SORT_STATS_SAMTOOLS.out.idxstats    >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/samtools_stats' : null)
+    // SAMTOOLS_SORT.out.bam                   >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon' : null)
+    // UMITOOLS_PREPAREFORSALMON.out.bam       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon' : null)
+    // UMITOOLS_PREPAREFORSALMON.out.log       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/umitools/log' : null)
+
+    // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
+    DESEQ2_QC_STAR_SALMON.out.rdata         >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out.pca_txt       >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out.pdf           >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out.dists_txt     >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out.size_factors  >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out.log           >> 'star_salmon/deseq2_qc'
+
+    // TODO: !params.skip_alignment && params.aligner == 'star_rsem'
+    // DESEQ2_QC_RSEM.out.rdata                >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out.pca_txt              >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out.pdf                  >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out.dists_txt            >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out.size_factors         >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out.log                  >> 'star_rsem/deseq2_qc'
+
+    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene                      >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene                   >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene                  >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled     >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled            >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript                >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript             >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript            >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds               >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled        >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds         >> params.pseudo_aligner
+    // TODO: process 'QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
+
+    DESEQ2_QC_PSEUDO.out.rdata          >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out.pca_txt        >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out.pdf            >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out.dists_txt      >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out.size_factors   >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out.log            >> "${params.pseudo_aligner}/deseq2_qc"
+
+    BBMAP_BBSPLIT.out.stats     >> 'bbsplit'
+    BBMAP_BBSPLIT.out.all_fastq >> (params.save_bbsplit_reads ? 'bbsplit' : null)
+    CAT_FASTQ.out.reads         >> (params.save_merged_fastq ? 'fastq' : null)
+
+    // TODO: params.remove_ribo_rna
+    // SORTMERNA.out.reads         >> (params.save_non_ribo_reads ? 'sortmerna' : null)
+
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig >> "${params.aligner}/bigwig"
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig >> "${params.aligner}/bigwig"
+    DUPRADAR.out.pdf                >> "${params.aligner}/dupradar"
+    DUPRADAR.out.txt                >> "${params.aligner}/dupradar"
+    MULTIQC.out.report              >> (params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}")
+    MULTIQC.out.data                >> (params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}")
+    MULTIQC.out.plots               >> (params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}")
+
+    // TODO: !params.skip_alignment && !params.skip_qc && !params.skip_preseq
+    // PRESEQ_LCEXTRAP.out.lc_extrap   >> "${params.aligner}/preseq"
+    // PRESEQ_LCEXTRAP.out.log         >> "${params.aligner}/preseq/log"
+
+    QUALIMAP_RNASEQ.out.results     >> "${params.aligner}/qualimap"
+    STRINGTIE_STRINGTIE.out.transcript_gtf  >> "${params.aligner}/stringtie"
+    STRINGTIE_STRINGTIE.out.abundance       >> "${params.aligner}/stringtie"
+    STRINGTIE_STRINGTIE.out.coverage_gtf    >> "${params.aligner}/stringtie"
+    STRINGTIE_STRINGTIE.out.ballgown        >> "${params.aligner}/stringtie"
+    MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> "${params.aligner}/featurecounts"
+    SUBREAD_FEATURECOUNTS.out.counts    >> "${params.aligner}/featurecounts"
+    SUBREAD_FEATURECOUNTS.out.summary   >> "${params.aligner}/featurecounts"
+
+    BAM_MARKDUPLICATES_PICARD.out.bam       >> "${params.aligner}"
+    BAM_MARKDUPLICATES_PICARD.out.bai       >> "${params.aligner}"
+    BAM_MARKDUPLICATES_PICARD.out.csi       >> "${params.aligner}"
+    BAM_MARKDUPLICATES_PICARD.out.metrics   >> "${params.aligner}/picard_metrics"
+    BAM_MARKDUPLICATES_PICARD.out.stats     >> "${params.aligner}/samtools_stats"
+    BAM_MARKDUPLICATES_PICARD.out.flagstat  >> "${params.aligner}/samtools_stats"
+    BAM_MARKDUPLICATES_PICARD.out.idxstats  >> "${params.aligner}/samtools_stats"
+
+    BAM_RSEQC.out.bamstat_txt                       >> "${params.aligner}/rseqc/bam_stat"
+    BAM_RSEQC.out.inferexperiment_txt               >> "${params.aligner}/rseqc/infer_experiment"
+    BAM_RSEQC.out.junctionannotation_pdf            >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionannotation_events_pdf     >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionannotation_bed            >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionannotation_interact_bed   >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionannotation_xls            >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionannotation_log            >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionannotation_rscript        >> "${params.aligner}/rseqc/junction_annotation"
+    BAM_RSEQC.out.junctionsaturation_pdf            >> "${params.aligner}/rseqc/junction_saturation"
+    BAM_RSEQC.out.junctionsaturation_rscript        >> "${params.aligner}/rseqc/junction_saturation"
+    BAM_RSEQC.out.readduplication_pdf               >> "${params.aligner}/rseqc/read_duplication"
+    BAM_RSEQC.out.readduplication_seq_xls           >> "${params.aligner}/rseqc/read_duplication"
+    BAM_RSEQC.out.readduplication_pos_xls           >> "${params.aligner}/rseqc/read_duplication"
+    BAM_RSEQC.out.readduplication_rscript           >> "${params.aligner}/rseqc/read_duplication"
+    BAM_RSEQC.out.readdistribution_txt              >> "${params.aligner}/rseqc/read_distribution"
+    BAM_RSEQC.out.innerdistance_distance            >> "${params.aligner}/rseqc/inner_distance"
+    BAM_RSEQC.out.innerdistance_freq                >> "${params.aligner}/rseqc/inner_distance"
+    BAM_RSEQC.out.innerdistance_mean                >> "${params.aligner}/rseqc/inner_distance"
+    BAM_RSEQC.out.innerdistance_pdf                 >> "${params.aligner}/rseqc/inner_distance"
+    BAM_RSEQC.out.innerdistance_rscript             >> "${params.aligner}/rseqc/inner_distance"
+    BAM_RSEQC.out.tin_txt                           >> "${params.aligner}/rseqc/tin"
 }
 
 /*

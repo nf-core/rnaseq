@@ -16,10 +16,6 @@ process PRESEQ_LCEXTRAP {
     tuple val(meta), path("*.log")          , emit: log
     path  "versions.yml"                    , emit: versions
 
-    publish:
-    lc_extrap   >> 'preseq/'
-    log         >> 'preseq/log/'
-
     when:
     task.ext.when == null || task.ext.when
 

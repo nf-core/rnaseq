@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test pipeline wjava.lang.String(ithout) a group type for featureCounts"
+    name "Test pipeline without a group type for featureCounts"
     script "../main.nf"
 
     test("Params: --featurecounts_group_type false") {

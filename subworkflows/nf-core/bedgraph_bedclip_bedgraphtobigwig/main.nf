@@ -31,7 +31,14 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     bedgraph = UCSC_BEDCLIP.out.bedgraph        // channel: [ val(meta), [ bedgraph ] ]
 
     versions = ch_versions                      // channel: [ versions.yml ]
+}
+
+workflow {
+    main:
+    def bedgraph = Channel.empty()
+    def sizes = Channel.empty()
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG(bedgraph, sizes)
 
     publish:
-    UCSC_BEDGRAPHTOBIGWIG.out.bigwig >> 'bigwig/'
+    BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG.out.bigwig >> 'bigwig'
 }

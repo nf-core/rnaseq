@@ -123,10 +123,10 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
 
     publish:
     // TODO: need to recover trim_reads and umi_reads
-    // trim_reads >> (params.save_trimmed ? 'trimgalore/' : null)
-    // umi_reads  >> (params.save_umi_intermeds ? 'umitools/' : null)
-    umi_log    >> 'umitools/'
-    trim_html  >> 'trimgalore/fastqc/'
-    trim_zip   >> 'trimgalore/fastqc/'
-    trim_log   >> 'trimgalore/'
+    // trim_reads >> (params.save_trimmed ? 'trimgalore' : null)
+    // umi_reads  >> (params.save_umi_intermeds ? 'umitools' : null)
+    umi_log    >> 'umitools'
+    trim_html  >> 'trimgalore/fastqc'
+    trim_zip   >> 'trimgalore/fastqc'
+    trim_log   >> 'trimgalore'
 }

@@ -182,28 +182,36 @@ workflow BAM_RSEQC {
     tin_txt                         // channel: [ val(meta), txt ]
 
     versions                        // channel: [ versions.yml ]
+}
+
+workflow {
+    main:
+    def bam_bai = Channel.empty()
+    def bed = Channel.empty()
+    def rseqc_modules = Channel.empty()
+    BAM_RSEQC(bam_bai, bed, rseqc_modules)
 
     publish:
-    bamstat_txt                     >> 'rseqc/bam_stat/'
-    inferexperiment_txt             >> 'rseqc/infer_experiment/'
-    junctionannotation_pdf          >> 'rseqc/junction_annotation/'
-    junctionannotation_events_pdf   >> 'rseqc/junction_annotation/'
-    junctionannotation_bed          >> 'rseqc/junction_annotation/'
-    junctionannotation_interact_bed >> 'rseqc/junction_annotation/'
-    junctionannotation_xls          >> 'rseqc/junction_annotation/'
-    junctionannotation_log          >> 'rseqc/junction_annotation/'
-    junctionannotation_rscript      >> 'rseqc/junction_annotation/'
-    junctionsaturation_pdf          >> 'rseqc/junction_saturation/'
-    junctionsaturation_rscript      >> 'rseqc/junction_saturation/'
-    readduplication_pdf             >> 'rseqc/read_duplication/'
-    readduplication_seq_xls         >> 'rseqc/read_duplication/'
-    readduplication_pos_xls         >> 'rseqc/read_duplication/'
-    readduplication_rscript         >> 'rseqc/read_duplication/'
-    readdistribution_txt            >> 'rseqc/read_distribution/'
-    innerdistance_distance          >> 'rseqc/inner_distance/'
-    innerdistance_freq              >> 'rseqc/inner_distance/'
-    innerdistance_mean              >> 'rseqc/inner_distance/'
-    innerdistance_pdf               >> 'rseqc/inner_distance/'
-    innerdistance_rscript           >> 'rseqc/inner_distance/'
-    tin_txt                         >> 'rseqc/tin/'
+    BAM_RSEQC.out.bamstat_txt                     >> 'rseqc/bam_stat'
+    BAM_RSEQC.out.inferexperiment_txt             >> 'rseqc/infer_experiment'
+    BAM_RSEQC.out.junctionannotation_pdf          >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionannotation_events_pdf   >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionannotation_bed          >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionannotation_interact_bed >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionannotation_xls          >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionannotation_log          >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionannotation_rscript      >> 'rseqc/junction_annotation'
+    BAM_RSEQC.out.junctionsaturation_pdf          >> 'rseqc/junction_saturation'
+    BAM_RSEQC.out.junctionsaturation_rscript      >> 'rseqc/junction_saturation'
+    BAM_RSEQC.out.readduplication_pdf             >> 'rseqc/read_duplication'
+    BAM_RSEQC.out.readduplication_seq_xls         >> 'rseqc/read_duplication'
+    BAM_RSEQC.out.readduplication_pos_xls         >> 'rseqc/read_duplication'
+    BAM_RSEQC.out.readduplication_rscript         >> 'rseqc/read_duplication'
+    BAM_RSEQC.out.readdistribution_txt            >> 'rseqc/read_distribution'
+    BAM_RSEQC.out.innerdistance_distance          >> 'rseqc/inner_distance'
+    BAM_RSEQC.out.innerdistance_freq              >> 'rseqc/inner_distance'
+    BAM_RSEQC.out.innerdistance_mean              >> 'rseqc/inner_distance'
+    BAM_RSEQC.out.innerdistance_pdf               >> 'rseqc/inner_distance'
+    BAM_RSEQC.out.innerdistance_rscript           >> 'rseqc/inner_distance'
+    BAM_RSEQC.out.tin_txt                         >> 'rseqc/tin'
 }

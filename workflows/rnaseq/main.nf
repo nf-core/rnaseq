@@ -787,19 +787,11 @@ workflow RNASEQ {
     versions       = ch_versions       // channel: [ path(versions.yml) ]
 
     publish:
-    QUANTIFY_STAR_SALMON.out.results                        >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.tpm_gene                       >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.counts_gene                    >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.lengths_gene                   >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled      >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.counts_gene_scaled             >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.tpm_transcript                 >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.counts_transcript              >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.lengths_transcript             >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds                >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds_length_scaled  >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.merged_gene_rds_scaled         >> 'star_salmon'
-    QUANTIFY_STAR_SALMON.out.merged_transcript_rds          >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out                            >> 'star_salmon'
+    QUANTIFY_STAR_SALMON.out.multiqc                    >> null
+    QUANTIFY_STAR_SALMON.out.merged_counts_transcript   >> null
+    QUANTIFY_STAR_SALMON.out.merged_tpm_transcript      >> null
+    QUANTIFY_STAR_SALMON.out.versions                   >> null
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon' && params.with_umi
     // BAM_SORT_STATS_SAMTOOLS.out.bam         >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon' : null)
@@ -812,41 +804,29 @@ workflow RNASEQ {
     // UMITOOLS_PREPAREFORSALMON.out.log       >> (params.save_align_intermeds || params.save_umi_intermeds ? 'star_salmon/umitools/log' : null)
 
     // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
-    DESEQ2_QC_STAR_SALMON.out.rdata         >> 'star_salmon/deseq2_qc'
-    DESEQ2_QC_STAR_SALMON.out.pca_txt       >> 'star_salmon/deseq2_qc'
-    DESEQ2_QC_STAR_SALMON.out.pdf           >> 'star_salmon/deseq2_qc'
-    DESEQ2_QC_STAR_SALMON.out.dists_txt     >> 'star_salmon/deseq2_qc'
-    DESEQ2_QC_STAR_SALMON.out.size_factors  >> 'star_salmon/deseq2_qc'
-    DESEQ2_QC_STAR_SALMON.out.log           >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out               >> 'star_salmon/deseq2_qc'
+    DESEQ2_QC_STAR_SALMON.out.pca_multiqc   >> null
+    DESEQ2_QC_STAR_SALMON.out.dists_multiqc >> null
+    DESEQ2_QC_STAR_SALMON.out.versions      >> null
 
     // TODO: !params.skip_alignment && params.aligner == 'star_rsem'
-    // DESEQ2_QC_RSEM.out.rdata                >> 'star_rsem/deseq2_qc'
-    // DESEQ2_QC_RSEM.out.pca_txt              >> 'star_rsem/deseq2_qc'
-    // DESEQ2_QC_RSEM.out.pdf                  >> 'star_rsem/deseq2_qc'
-    // DESEQ2_QC_RSEM.out.dists_txt            >> 'star_rsem/deseq2_qc'
-    // DESEQ2_QC_RSEM.out.size_factors         >> 'star_rsem/deseq2_qc'
-    // DESEQ2_QC_RSEM.out.log                  >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out               >> 'star_rsem/deseq2_qc'
+    // DESEQ2_QC_RSEM.out.pca_multiqc   >> null
+    // DESEQ2_QC_RSEM.out.dists_multiqc >> null
+    // DESEQ2_QC_RSEM.out.versions      >> null
 
-    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene                      >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene                   >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene                  >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled     >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled            >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript                >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript             >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript            >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds               >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_length_scaled >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_scaled        >> params.pseudo_aligner
-    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds         >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out                           >> params.pseudo_aligner
+    QUANTIFY_PSEUDO_ALIGNMENT.out.results                   >> null
+    QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc                   >> null
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_counts_transcript  >> null
+    QUANTIFY_PSEUDO_ALIGNMENT.out.merged_tpm_transcript     >> null
+    QUANTIFY_PSEUDO_ALIGNMENT.out.versions                  >> null
     // TODO: process 'QUANTIFY_PSEUDO_ALIGNMENT:CUSTOM_TX2GENE'
 
-    DESEQ2_QC_PSEUDO.out.rdata          >> "${params.pseudo_aligner}/deseq2_qc"
-    DESEQ2_QC_PSEUDO.out.pca_txt        >> "${params.pseudo_aligner}/deseq2_qc"
-    DESEQ2_QC_PSEUDO.out.pdf            >> "${params.pseudo_aligner}/deseq2_qc"
-    DESEQ2_QC_PSEUDO.out.dists_txt      >> "${params.pseudo_aligner}/deseq2_qc"
-    DESEQ2_QC_PSEUDO.out.size_factors   >> "${params.pseudo_aligner}/deseq2_qc"
-    DESEQ2_QC_PSEUDO.out.log            >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out                >> "${params.pseudo_aligner}/deseq2_qc"
+    DESEQ2_QC_PSEUDO.out.pca_multiqc    >> null
+    DESEQ2_QC_PSEUDO.out.dists_multiqc  >> null
+    DESEQ2_QC_PSEUDO.out.versions       >> null
 
     BBMAP_BBSPLIT.out.stats     >> 'bbsplit'
     BBMAP_BBSPLIT.out.all_fastq >> (params.save_bbsplit_reads ? 'bbsplit' : null)
@@ -867,14 +847,12 @@ workflow RNASEQ {
     // PRESEQ_LCEXTRAP.out.lc_extrap   >> "${params.aligner}/preseq"
     // PRESEQ_LCEXTRAP.out.log         >> "${params.aligner}/preseq/log"
 
-    QUALIMAP_RNASEQ.out.results     >> "${params.aligner}/qualimap"
-    STRINGTIE_STRINGTIE.out.transcript_gtf  >> "${params.aligner}/stringtie"
-    STRINGTIE_STRINGTIE.out.abundance       >> "${params.aligner}/stringtie"
-    STRINGTIE_STRINGTIE.out.coverage_gtf    >> "${params.aligner}/stringtie"
-    STRINGTIE_STRINGTIE.out.ballgown        >> "${params.aligner}/stringtie"
+    QUALIMAP_RNASEQ.out.results         >> "${params.aligner}/qualimap"
+    STRINGTIE_STRINGTIE.out             >> "${params.aligner}/stringtie"
+    STRINGTIE_STRINGTIE.out.versions    >> null
     MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> "${params.aligner}/featurecounts"
-    SUBREAD_FEATURECOUNTS.out.counts    >> "${params.aligner}/featurecounts"
-    SUBREAD_FEATURECOUNTS.out.summary   >> "${params.aligner}/featurecounts"
+    SUBREAD_FEATURECOUNTS.out           >> "${params.aligner}/featurecounts"
+    SUBREAD_FEATURECOUNTS.out.versions  >> null
 
     BAM_MARKDUPLICATES_PICARD.out.bam       >> "${params.aligner}"
     BAM_MARKDUPLICATES_PICARD.out.bai       >> "${params.aligner}"

@@ -134,19 +134,6 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         }
     }
 
-    publish:
-    // TODO: need to recover trim_reads and umi_reads
-    // trim_reads          >> (params.save_trimmed ? 'fastp/intermeds/' : null)
-    // umi_reads           >> (params.save_umi_intermeds ? 'umitools/' : null)
-    umi_log             >> 'umitools/'
-    trim_json           >> 'fastp/'
-    trim_html           >> 'fastp/'
-    trim_log            >> 'fastp/log/'
-    trim_reads_fail     >> (params.save_trimmed ? 'fastp/intermeds/' : null)
-    trim_reads_merged   >> (params.save_trimmed ? 'fastp/intermeds/' : null)
-    fastqc_trim_html    >> 'fastp/fastqc/'
-    fastqc_trim_zip     >> 'fastp/fastqc/'
-
     emit:
     reads = trim_reads // channel: [ val(meta), [ reads ] ]
 
@@ -167,4 +154,17 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_trim_zip    // channel: [ val(meta), [ zip ] ]
 
     versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+
+    publish:
+    // TODO: need to recover trim_reads and umi_reads
+    // trim_reads          >> (params.save_trimmed ? 'fastp/intermeds' : null)
+    // umi_reads           >> (params.save_umi_intermeds ? 'umitools' : null)
+    umi_log             >> 'umitools'
+    trim_json           >> 'fastp'
+    trim_html           >> 'fastp'
+    trim_log            >> 'fastp/log'
+    trim_reads_fail     >> (params.save_trimmed ? 'fastp/intermeds' : null)
+    trim_reads_merged   >> (params.save_trimmed ? 'fastp/intermeds' : null)
+    fastqc_trim_html    >> 'fastp/fastqc'
+    fastqc_trim_zip     >> 'fastp/fastqc'
 }

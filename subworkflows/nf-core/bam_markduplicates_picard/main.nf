@@ -45,13 +45,22 @@ workflow BAM_MARKDUPLICATES_PICARD {
     idxstats = BAM_STATS_SAMTOOLS.out.idxstats   // channel: [ val(meta), path(idxstats) ]
 
     versions = ch_versions                       // channel: [ versions.yml ]
+}
+
+workflow {
+    main:
+    def ch_bam = Channel.empty()
+    def ch_fasta = Channel.empty()
+    def ch_fai = Channel.empty()
+
+    BAM_MARKDUPLICATES_PICARD( ch_bam, ch_fasta, ch_fai )
 
     publish:
-    PICARD_MARKDUPLICATES.out.bam       >> 'picard/'
-    PICARD_MARKDUPLICATES.out.metrics   >> 'picard/metrics/'
-    SAMTOOLS_INDEX.out.bai              >> 'picard/'
-    SAMTOOLS_INDEX.out.csi              >> 'picard/'
-    BAM_STATS_SAMTOOLS.out.stats        >> 'picard/samtools_stats/'
-    BAM_STATS_SAMTOOLS.out.flagstat     >> 'picard/samtools_stats/'
-    BAM_STATS_SAMTOOLS.out.idxstats     >> 'picard/samtools_stats/'
+    BAM_MARKDUPLICATES_PICARD.out.bam       >> 'picard'
+    BAM_MARKDUPLICATES_PICARD.out.metrics   >> 'picard/metrics'
+    BAM_MARKDUPLICATES_PICARD.out.bai       >> 'picard'
+    BAM_MARKDUPLICATES_PICARD.out.csi       >> 'picard'
+    BAM_MARKDUPLICATES_PICARD.out.stats     >> 'picard/samtools_stats'
+    BAM_MARKDUPLICATES_PICARD.out.flagstat  >> 'picard/samtools_stats'
+    BAM_MARKDUPLICATES_PICARD.out.idxstats  >> 'picard/samtools_stats'
 }

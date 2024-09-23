@@ -76,13 +76,13 @@ workflow PREPARE_GENOME {
     //
     if (gtf || gff) {
         if (gtf) {
+            ch_gff = Channel.empty()
             if (gtf.endsWith('.gz')) {
                 ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
                 ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
             } else {
                 ch_gtf = Channel.value(file(gtf))
             }
-            ch_gff = Channel.empty()
         } else if (gff) {
             if (gff.endsWith('.gz')) {
                 ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
@@ -328,6 +328,30 @@ workflow PREPARE_GENOME {
         }
     }
 
+    //
+    // Collect channels for publishing
+    //
+    ch_genome = Channel.empty().mix(
+        ch_fasta,
+        ch_gtf,
+        ch_gff,
+        ch_add_fasta,
+        ch_gene_bed,
+        ch_transcript_fasta,
+        ch_fai,
+        ch_chrom_sizes,
+    )
+
+    ch_genome_index = Channel.empty().mix(
+        ch_splicesites,
+        ch_bbsplit_index,
+        ch_star_index,
+        ch_rsem_index,
+        ch_hisat2_index,
+        ch_salmon_index,
+        ch_kallisto_index,
+    )
+
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -345,19 +369,6 @@ workflow PREPARE_GENOME {
     versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 
     publish:
-    ch_fasta            >> (params.save_reference ? 'genome' : null)
-    ch_gtf              >> (params.save_reference ? 'genome' : null)
-    ch_gff              >> (params.save_reference ? 'genome' : null)
-    ch_add_fasta        >> (params.save_reference ? 'genome' : null)
-    ch_gene_bed         >> (params.save_reference ? 'genome' : null)
-    ch_transcript_fasta >> (params.save_reference ? 'genome' : null)
-    ch_fai              >> (params.save_reference ? 'genome' : null)
-    ch_chrom_sizes      >> (params.save_reference ? 'genome' : null)
-    ch_splicesites      >> (params.save_reference ? 'genome/index' : null)
-    ch_bbsplit_index    >> (params.save_reference ? 'genome/index' : null)
-    ch_star_index       >> (params.save_reference ? 'genome/index' : null)
-    ch_rsem_index       >> (params.save_reference ? 'genome/index' : null)
-    ch_hisat2_index     >> (params.save_reference ? 'genome/index' : null)
-    ch_salmon_index     >> (params.save_reference ? 'genome/index' : null)
-    ch_kallisto_index   >> (params.save_reference ? 'genome/index' : null)
+    ch_genome       >> (params.save_reference ? 'genome' : null)
+    ch_genome_index >> (params.save_reference ? 'genome/index' : null)
 }

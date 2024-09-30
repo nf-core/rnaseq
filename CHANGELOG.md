@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.16.0dev - [date]
+## [[3.15.2](https://github.com/nf-core/rnaseq/releases/tag/3.15.2)] - 2024-10-01
 
 ### Enhancements & fixes
 
@@ -39,6 +39,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **NB:** Dependency has been **added** if just the new version information is present.
 >
 > **NB:** Dependency has been **removed** if new version information isn't present.
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Ezra Greenberg](https://github.com/egreenberg7)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Phil Ewels](https://github.com/ewels)
+- [Shaun Regenbaum](https://github.com/Shaun-Regenbaum)
 
 ## [[3.15.1](https://github.com/nf-core/rnaseq/releases/tag/3.15.1)] - 2024-09-16
 

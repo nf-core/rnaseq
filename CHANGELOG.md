@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1386](https://github.com/nf-core/rnaseq/pull/1386) - Bump pipeline version to 3.16.0dev
 - [PR #1388](https://github.com/nf-core/rnaseq/pull/1388) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
 - [PR #1389](https://github.com/nf-core/rnaseq/pull/1389) - Update animated subway map
+- [PR #1393](https://github.com/nf-core/rnaseq/pull/1393) - Use quay.io for bedtools/genomecov to solve issue with nf-core download
 
 ### Parameters
 

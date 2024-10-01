@@ -14,16 +14,16 @@ nextflow_pipeline {
 
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = UTILS.getAllFilesFromDir(params.outdir, true, UTILS.exclusionRegexesForUnstableFileNames)
+            def stable_name = getAllFilesFromDir(params.outdir, true, ['pipeline_info/*.{html,json,txt}'], null)
             // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = UTILS.getAllFilesFromDir(params.outdir, false, UTILS.exclusionRegexesForUnstableFileNames + UTILS_PIPELINE.exclusionRegexesForUnstableFileContents)
+            def stable_path = getAllFilesFromDir(params.outdir, false, null, 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    UTILS.removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
                     // All stable path name
                     stable_name*.name,
                     // All files with stable contents

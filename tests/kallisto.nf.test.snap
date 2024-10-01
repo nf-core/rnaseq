@@ -99,11 +99,11 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T15:25:12.683541"
+        "timestamp": "2024-08-23.16.05:12.683541"
     },
     "versions": {
         "content": [
-            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_FASTQ={cat=8.3}, CUSTOM_CATADDITIONALFASTA={python=3.9.5}, CUSTOM_GETCHROMSIZES={getchromsizes=1.2}, CUSTOM_TX2GENE={python=3.9.5}, FQ_SUBSAMPLE={fq=0.9.1 (2022-02-22)}, GTF2BED={perl=5.26.2}, GTF_FILTER={python=3.9.5}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.1}, GUNZIP_GTF={gunzip=1.1}, KALLISTO_INDEX={kallisto=0.48.0}, KALLISTO_QUANT={kallisto=0.48.0}, SALMON_QUANT={salmon=1.10.1}, SE_GENE={bioconductor-summarizedexperiment=1.32.0}, TRIMGALORE={trimgalore=0.6.7, cutadapt=3.4}, TXIMETA_TXIMPORT={bioconductor-tximeta=1.20.1}, UNTAR_SALMON_INDEX={untar=1.34}, Workflow={nf-core/rnaseq=v3.15.2}}"
+            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_FASTQ={cat=8.3}, CUSTOM_CATADDITIONALFASTA={python=3.9.5}, CUSTOM_GETCHROMSIZES={getchromsizes=1.2}, CUSTOM_TX2GENE={python=3.9.5}, FQ_SUBSAMPLE={fq=0.9.1 (2022-02-22)}, GTF2BED={perl=5.26.2}, GTF_FILTER={python=3.9.5}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.1}, GUNZIP_GTF={gunzip=1.1}, KALLISTO_INDEX={kallisto=0.48.0}, KALLISTO_QUANT={kallisto=0.48.0}, SALMON_QUANT={salmon=1.10.1}, SE_GENE={bioconductor-summarizedexperiment=1.32.0}, TRIMGALORE={trimgalore=0.6.7, cutadapt=3.4}, TXIMETA_TXIMPORT={bioconductor-tximeta=1.20.1}, UNTAR_SALMON_INDEX={untar=1.34}, Workflow={nf-core/rnaseq=v3.16.0}}"
         ],
         "meta": {
             "nf-test": "0.9.0",
@@ -134,7 +134,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T15:25:12.695474"
+        "timestamp": "2024-08-23.16.05:12.695474"
     },
     "multiqc_plots": {
         "content": [
@@ -215,11 +215,11 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-23T15:25:12.672876"
+        "timestamp": "2024-08-23.16.05:12.672876"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [
-            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_FASTQ={cat=8.3}, CUSTOM_CATADDITIONALFASTA={python=null}, CUSTOM_GETCHROMSIZES={getchromsizes=1.2}, GTF2BED={perl=5.26.2}, GTF_FILTER={python=3.9.5}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.1}, GUNZIP_GTF={gunzip=1.1}, KALLISTO_INDEX={kallisto=0.48.0}, TRIMGALORE={trimgalore=0.6.7, cutadapt=3.4}, UNTAR_SALMON_INDEX={untar=1.34}, Workflow={nf-core/rnaseq=v3.15.2}}",
+            "{BBMAP_BBSPLIT={bbmap=39.01}, CAT_FASTQ={cat=8.3}, CUSTOM_CATADDITIONALFASTA={python=null}, CUSTOM_GETCHROMSIZES={getchromsizes=1.2}, GTF2BED={perl=5.26.2}, GTF_FILTER={python=3.9.5}, GUNZIP_ADDITIONAL_FASTA={gunzip=1.1}, GUNZIP_GTF={gunzip=1.1}, KALLISTO_INDEX={kallisto=0.48.0}, TRIMGALORE={trimgalore=0.6.7, cutadapt=3.4}, UNTAR_SALMON_INDEX={untar=1.34}, Workflow={nf-core/rnaseq=v3.16.0}}",
             "genome_transcriptome.fasta",
             "genome_transcriptome.gtf",
             "multiqc_report.html",

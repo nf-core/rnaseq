@@ -26,17 +26,7 @@
 **/*{pos,seq}.DupRate.xls
 **/*{salmon,star_salmon,star_rsem}_deseq2_clustering-plot*{pdf,png,txt}
 **/Junction*.png
-**/RAP1_IAA_30M_REP1.log
-**/RAP1_IAA_30M_REP1.txt
-**/RAP1_UNINDUCED_REP1.log
-**/RAP1_UNINDUCED_REP1.txt
-**/RAP1_UNINDUCED_REP2.log
-**/RAP1_UNINDUCED_REP2.txt
 **/Reads*.png
-**/WT_REP1.log
-**/WT_REP1.txt
-**/WT_REP2.log
-**/WT_REP2.txt
 **/abundance.{h5,tsv}
 **/cutadapt_filtered_reads_plot-{cnt,pct}.{pdf,svg}
 **/cutadapt_trimmed_sequences_*{pdf,svg}
@@ -129,4 +119,7 @@
 **/{salmon,star_rsem}_deseq2_{pca,pca}-plot.{pdf,png,svg}
 **/{samtools,star}_alignment_plot*
 **/{star_rsem,star_salmon}_deseq2_{clustering,pca}-plot*{pdf,png,svg}
+bbsplit/*.stats.txt
 pipeline_info/*.{html,json,txt,yml}
+salmon/deseq2_qc/size_factors/*.txt
+star_rsem/log/*.log

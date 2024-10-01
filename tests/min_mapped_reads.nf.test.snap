@@ -134,7 +134,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.16.0dev"
+                    "nf-core/rnaseq": "v3.15.2"
                 }
             },
             [
@@ -1321,7 +1321,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.16.0dev"
+                    "nf-core/rnaseq": "v3.15.2"
                 }
             },
             [

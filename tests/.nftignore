@@ -121,5 +121,5 @@
 **/{star_rsem,star_salmon}_deseq2_{clustering,pca}-plot*{pdf,png,svg}
 bbsplit/*.stats.txt
 pipeline_info/*.{html,json,txt,yml}
-salmon/deseq2_qc/size_factors/*.txt
+**/deseq2_qc/size_factors/*.txt
 star_rsem/log/*.log

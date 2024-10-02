@@ -259,7 +259,7 @@ def validateInputParameters() {
     //General checks for if contaminant screening is used
     if (params.contaminant_screening) {
         if (params.aligner == 'star_rsem') {
-            error("Contaminant screeneing cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
+            error("Contaminant screening cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
         }
     }
 
@@ -268,7 +268,7 @@ def validateInputParameters() {
         if (!params.kraken_db) {
             error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
         }
-    //Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
+    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
     } else {
         if (!params.bracken_precision.equals('S')) {
             brackenPrecisionWithoutKrakenDBWarn()

@@ -518,6 +518,18 @@
                     "fa_icon": "fas fa-save",
                     "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
                     "help_text": "This may either be in the form of FastQ or BAM files depending on the options available for that particular tool."
+                },
+                "save_kraken_assignments": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Save read-by-read assignments from Kraken2.",
+                    "help_text": "`--kraken_db` parameter must be provided."
+                },
+                "save_kraken_unassigned": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Save reads that were not given assignment from Kraken2.",
+                    "help_text": "`--kraken_db` parameter must be provided."
                 }
             }
         },
@@ -539,6 +551,26 @@
                     "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
                     "fa_icon": "fas fa-chart-pie",
                     "description": "Specify the RSeQC modules to run."
+                },
+                "contaminant_screening": {
+                    "type": "string",
+                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
+                    "fa_icon": "fas fa-virus-slash",
+                    "enum": ["kraken2", "kraken2_bracken"]
+                },
+                "kraken_db": {
+                    "type": "string",
+                    "description": "Database when using Kraken2/Bracken for contaminant screening.",
+                    "help_text": "See the usage tab for more information",
+                    "fa_icon": "fas fa-fish"
+                },
+                "bracken_precision": {
+                    "type": "string",
+                    "default": "S",
+                    "fa_icon": "fas fa-tree",
+                    "description": "Taxonomic level for Bracken abundance estimations.",
+                    "help_text": "First letter of Domain / Phylum / Class / Order / Family / Genus / Species",
+                    "enum": ["D", "P", "C", "O", "F", "G", "S"]
                 }
             }
         },

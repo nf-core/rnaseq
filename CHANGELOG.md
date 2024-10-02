@@ -3,6 +3,29 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Maxime Garcia](https://github.com/maxulysse)
+
+### Enhancements & fixes
+
+- [PR #1396](https://github.com/nf-core/rnaseq/pull/1396) - Back to dev
+
+### Parameters
+
+### Software dependencies
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+
 ## [[3.16.0](https://github.com/nf-core/rnaseq/releases/tag/3.16.0)] - 2024-10-02
 
 ### Credits

@@ -645,7 +645,7 @@
                 "skip_qc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip all QC steps except for MultiQC."
+                    "description": "Skip all QC steps in stage 4 and 5, except for MultiQC."
                 }
             }
         },

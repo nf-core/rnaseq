@@ -24,8 +24,8 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
-                    // All stable path name
-                    stable_name*.name,
+                    // All stable path name, with a relative path
+                    getRelativePath(stable_name, outputDir),
                     // All files with stable contents
                     stable_path
                 ).match() }

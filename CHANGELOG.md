@@ -25,7 +25,6 @@ Special thanks to the following for their contributions to the release:
 >
 > **NB:** Dependency has been **removed** if new version information isn't present.
 
-
 ## [[3.16.0](https://github.com/nf-core/rnaseq/releases/tag/3.16.0)] - 2024-10-02
 
 ### Credits

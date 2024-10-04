@@ -13,6 +13,12 @@
                     "bedtools/genomecov": {
                         "branch": "master",
                         "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/bedtools/genomecov/bedtools-genomecov.diff"
+                    },
+                    "bracken/bracken": {
+                        "branch": "master",
+                        "git_sha": "c214fad97b328eb6d6233f779be9ba44814a9136",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -68,7 +74,8 @@
                     "hisat2/align": {
                         "branch": "master",
                         "git_sha": "ad30f90cfc383dfaa505771d24f9e292c53157ab",
-                        "installed_by": ["fastq_align_hisat2"]
+                        "installed_by": ["fastq_align_hisat2"],
+                        "patch": "modules/nf-core/hisat2/align/hisat2-align.diff"
                     },
                     "hisat2/build": {
                         "branch": "master",
@@ -89,6 +96,11 @@
                         "branch": "master",
                         "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
+                    },
+                    "kraken2/kraken2": {
+                        "branch": "master",
+                        "git_sha": "a13d5d945742a60bbef6e5c177e81cda540f75dc",
+                        "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",

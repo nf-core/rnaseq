@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Credits
+
+### Enhancements & fixes
+
+- [PR #1398](https://github.com/nf-core/rnaseq/pull/1398) - Bump pipeline version to 3.17.0dev
+
+### Parameters
+
+### Software dependencies
+
 ## [[3.16.0](https://github.com/nf-core/rnaseq/releases/tag/3.16.0)] - 2024-10-02
 
 ### Credits
@@ -37,7 +49,9 @@ Special thanks to the following for their contributions to the release:
 |               | `--bracken_precision`       |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
 > **NB:** Parameter has been **added** if just the new parameter information is present.
+>
 > **NB:** Parameter has been **removed** if new parameter information isn't present.
 
 ### Software dependencies

@@ -1,0 +1,117 @@
+nextflow_workflow {
+
+    name "Test Subworkflow UTILS_NFSCHEMA_PLUGIN"
+    script "../main.nf"
+    workflow "UTILS_NFSCHEMA_PLUGIN"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/utils_nfschema_plugin"
+    tag "plugin/nf-schema"
+
+    config "./nextflow.config"
+
+    test("Should run nothing") {
+
+        when {
+
+            params {
+                test_data   = ''
+            }
+
+            workflow {
+                """
+                validate_params = false
+                input[0] = workflow
+                input[1] = validate_params
+                input[2] = ""
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success }
+            )
+        }
+    }
+
+    test("Should validate params") {
+
+        when {
+
+            params {
+                test_data   = ''
+                outdir      = 1
+            }
+
+            workflow {
+                """
+                validate_params = true
+                input[0] = workflow
+                input[1] = validate_params
+                input[2] = ""
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains('ERROR ~ Validation of pipeline parameters failed!') } }
+            )
+        }
+    }
+
+    test("Should run nothing - custom schema") {
+
+        when {
+
+            params {
+                test_data   = ''
+            }
+
+            workflow {
+                """
+                validate_params = false
+                input[0] = workflow
+                input[1] = validate_params
+                input[2] = "${projectDir}/subworkflows/nf-core/utils_nfschema_plugin/tests/nextflow_schema.json"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success }
+            )
+        }
+    }
+
+    test("Should validate params - custom schema") {
+
+        when {
+
+            params {
+                test_data   = ''
+                outdir      = 1
+            }
+
+            workflow {
+                """
+                validate_params = true
+                input[0] = workflow
+                input[1] = validate_params
+                input[2] = "${projectDir}/subworkflows/nf-core/utils_nfschema_plugin/tests/nextflow_schema.json"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains('ERROR ~ Validation of pipeline parameters failed!') } }
+            )
+        }
+    }
+}

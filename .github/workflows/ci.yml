@@ -7,6 +7,7 @@ on:
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   NXF_ANSI_LOG: false
@@ -24,7 +25,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "23.04.0"
+          - "24.04.2"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
@@ -38,9 +39,21 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
-      - name: Run pipeline with test data
+      - name: Run pipeline with test data (docker)
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+
+      - name: Run pipeline with test data (singularity)
+        # TODO nf-core: You can customise CI pipeline run tests as required
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --outdir ./results
+        if: "${{ github.base_ref == 'master' }}"
+
+      - name: Run pipeline with test data (conda)
+        # TODO nf-core: You can customise CI pipeline run tests as required
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,conda --outdir ./results
+        if: "${{ github.base_ref == 'master' }}"

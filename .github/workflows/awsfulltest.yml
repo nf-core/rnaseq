@@ -1,18 +1,33 @@
 name: nf-core AWS full size tests
-# This workflow is triggered on published releases.
+# This workflow is triggered on PRs opened against the master branch.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
 # It runs the -profile 'test_full' on AWS batch
 
 on:
-  release:
-    types: [published]
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
+  pull_request_review:
+    types: [submitted]
+
 jobs:
   run-platform:
     name: Run AWS full tests
-    if: github.repository == 'nf-core/rnaseq'
+    if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
+      - uses: octokit/request-action@v2.x
+        id: check_approvals
+        with:
+          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.review.number }}/reviews
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: test_variables
+        run: |
+          JSON_RESPONSE='${{ steps.check_approvals.outputs.data }}'
+          CURRENT_APPROVALS_COUNT=$(echo $JSON_RESPONSE | jq -c '[.[] | select(.state | contains("APPROVED")) ] | length')
+          test $CURRENT_APPROVALS_COUNT -ge 2 || exit 1 # At least 2 approvals are required
       - name: Launch workflow via Seqera Platform
         uses: seqeralabs/action-tower-launch@v2
         # TODO nf-core: You can customise AWS full pipeline tests as required

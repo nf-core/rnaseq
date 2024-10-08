@@ -1,6 +1,6 @@
 name: nf-core linting
 # This workflow is triggered on pushes and PRs to the repository.
-# It runs the `nf-core lint` and markdown lint tests to ensure
+# It runs the `nf-core pipelines lint` and markdown lint tests to ensure
 # that the code meets the nf-core guidelines.
 on:
   push:
@@ -41,17 +41,32 @@ jobs:
           python-version: "3.12"
           architecture: "x64"
 
+      - name: read .nf-core.yml
+        uses: pietrobolcato/action-read-yaml@1.0.0
+        id: read_yml
+        with:
+          config: ${{ github.workspace }}/.nf-core.yaml
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install nf-core
+          pip install nf-core==${{ steps.read_yml.outputs['nf_core_version'] }}
 
-      - name: Run nf-core lint
+      - name: Run nf-core pipelines lint
+        if: ${{ github.base_ref != 'master' }}
         env:
           GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
-        run: nf-core -l lint_log.txt lint --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
+        run: nf-core -l lint_log.txt pipelines lint --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
+
+      - name: Run nf-core pipelines lint --release
+        if: ${{ github.base_ref == 'master' }}
+        env:
+          GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: nf-core -l lint_log.txt pipelines lint --release --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
 
       - name: Save PR number
         if: ${{ always() }}

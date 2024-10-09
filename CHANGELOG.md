@@ -7,13 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
+Special thanks to the following for their contributions to the release:
+
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+
 ### Enhancements & fixes
 
 - [PR #1398](https://github.com/nf-core/rnaseq/pull/1398) - Bump pipeline version to 3.17.0dev
+- [PR #1401](https://github.com/nf-core/rnaseq/pull/1401) - Template update for nf-core/tools v3.0.1
 
 ### Parameters
 
+| Old parameter                        | New parameter   |
+| ------------------------------------ | --------------- |
+|                                      | `--help_full`   |
+|                                      | `--show_hidden` |
+| `--validationFailUnrecognisedParams` |                 |
+| `--validationLenientMode`            |                 |
+| `--validationSchemaIgnoreParams`     |                 |
+| `--validationShowHiddenParams`       |                 |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+>
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
 ### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `MultiQC`  | 1.24.1      | 1.25.1      |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
 
 ## [[3.16.0](https://github.com/nf-core/rnaseq/releases/tag/3.16.0)] - 2024-10-02
 
@@ -58,8 +89,8 @@ Special thanks to the following for their contributions to the release:
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| `Kraken2`  | ----------- | 2.1.3       |
-| `Bracken`  | ----------- | 2.9         |
+| `Kraken2`  |             | 2.1.3       |
+| `Bracken`  |             | 2.9         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

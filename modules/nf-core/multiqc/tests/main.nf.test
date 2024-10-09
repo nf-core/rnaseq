@@ -5,8 +5,6 @@ nextflow_process {
     process "MULTIQC"
     config "./nextflow.config"
 
-    config "./nextflow.config"
-
     test("sarscov2 single-end [fastqc]") {
 
         when {

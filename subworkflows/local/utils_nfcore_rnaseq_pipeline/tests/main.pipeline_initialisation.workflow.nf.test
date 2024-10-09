@@ -28,11 +28,11 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = false                               // version (boolean)
-                input[2] = true                                // validate_parameters (boolean)
-                input[3] = true                                // monochrome_logs (boolean)
-                input[4] = args                                // args (array)
-                input[5] = file("$outputDir")                  // outdir (string)
+                input[0] = false                // version (boolean)
+                input[1] = true                 // validate_parameters (boolean)
+                input[2] = true                 // monochrome_logs (boolean)
+                input[3] = args                 // args (array)
+                input[4] = file("$outputDir")   // outdir (string)
                 """
             }
         }

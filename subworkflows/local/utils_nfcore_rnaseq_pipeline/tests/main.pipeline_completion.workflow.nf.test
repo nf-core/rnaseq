@@ -9,17 +9,16 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = "${projectDir}/nextflow_schema.json" // schema (string)
-                input[1] = null // email (string)
-                input[2] = null // email_on_fail (string)
-                input[3] = true // plaintext_email (boolean)
-                input[4] = "${outputDir}" // outputDir (string)
-                input[5] = true // monochrome_logs (boolean)
-                input[6] = null // hook_url (string)
-                input[7] = "${outputDir}/multiqc_report.html" // multiqc_report (string)
+                input[0] = null // email (string)
+                input[1] = null // email_on_fail (string)
+                input[2] = true // plaintext_email (boolean)
+                input[3] = "${outputDir}" // outputDir (string)
+                input[4] = true // monochrome_logs (boolean)
+                input[5] = null // hook_url (string)
+                input[6] = "${outputDir}/multiqc_report.html" // multiqc_report (string)
+                input[7] = Channel.of(['test_sample', true])
                 input[8] = Channel.of(['test_sample', true])
                 input[9] = Channel.of(['test_sample', true])
-                input[10] = Channel.of(['test_sample', true])
                 """
             }
         }

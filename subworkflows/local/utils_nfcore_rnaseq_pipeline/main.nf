@@ -256,6 +256,29 @@ def validateInputParameters() {
         }
     }
 
+    //General checks for if contaminant screening is used
+    if (params.contaminant_screening) {
+        if (params.aligner == 'star_rsem') {
+            error("Contaminant screening cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
+        }
+    }
+
+    // Check that Kraken/Bracken database provided if using kraken2/bracken
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
+        if (!params.kraken_db) {
+            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
+        }
+    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
+    } else {
+        if (!params.bracken_precision.equals('S')) {
+            brackenPrecisionWithoutKrakenDBWarn()
+        }
+
+        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
+            krakenArgumentsWithoutKrakenDBWarn()
+        }
+    }
+
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
     def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
@@ -468,6 +491,26 @@ def additionaFastaIndexWarn(index) {
         "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/556\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
+//
+def krakenArgumentsWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
+        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+///
+/// Print a warning if --bracken-precision is provided without --kraken_db
+///
+def brackenPrecisionWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
+        "  Bracken will not run so precision will not be set.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

@@ -38,6 +38,8 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
+    ch_versions = Channel.empty()
+
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
@@ -86,14 +88,10 @@ workflow PIPELINE_INITIALISATION {
                 }
         }
         .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
-        }
         .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
+            checkSamplesAfterGrouping(it)
         }
-        .set { ch_samplesheet }
+        .set{ ch_samplesheet }
 
     emit:
     samplesheet = ch_samplesheet

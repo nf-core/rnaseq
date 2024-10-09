@@ -628,8 +628,8 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
         if (pe_antisense_matcher) reverseFragments = pe_antisense_matcher[0][1].toFloat() * 100
     }
 
-    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
     // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
 
 //

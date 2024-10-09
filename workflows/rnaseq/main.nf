@@ -50,7 +50,7 @@ include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../mod
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
 include { paramsSummaryMap                 } from 'plugin/nf-schema'
-include { fromList                         } from 'plugin/nf-schema'
+include { samplesheetToList                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'

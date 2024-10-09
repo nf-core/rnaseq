@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 env:
-  NXF_ANSI_LOG: false
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
   NFT_VER: "0.9.0"
   NFT_WORKDIR: "~"
-  NFT_DIFF: "pdiff"
-  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+  NXF_ANSI_LOG: false
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -62,6 +62,11 @@ jobs:
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Install nf-test
+        uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFT_VER }}
 
       - uses: actions/setup-python@v4
         with:

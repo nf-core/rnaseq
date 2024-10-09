@@ -5,6 +5,7 @@ kallisto/*/kallisto_quant.log
 kallisto/*/run_info.json
 kallisto/kallisto.*
 multiqc/multiqc_report.html
+multiqc/multiqc_report_data/fastqc_trimmed_top_overrepresented_sequences_table.txt
 multiqc/multiqc_report_data/kallisto_alignment.txt
 multiqc/multiqc_report_data/multiqc_data.json
 multiqc/multiqc_report_data/multiqc_general_stats.txt

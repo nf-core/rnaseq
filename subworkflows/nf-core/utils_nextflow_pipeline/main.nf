@@ -3,13 +3,12 @@
 //
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW DEFINITION
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow UTILS_NEXTFLOW_PIPELINE {
-
     take:
     print_version        // boolean: print version
     dump_parameters      // boolean: dump parameters
@@ -22,7 +21,7 @@ workflow UTILS_NEXTFLOW_PIPELINE {
     // Print workflow version and exit on --version
     //
     if (print_version) {
-        log.info "${workflow.manifest.name} ${getWorkflowVersion()}"
+        log.info("${workflow.manifest.name} ${getWorkflowVersion()}")
         System.exit(0)
     }
 
@@ -45,9 +44,9 @@ workflow UTILS_NEXTFLOW_PIPELINE {
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     FUNCTIONS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 //
@@ -72,11 +71,11 @@ def getWorkflowVersion() {
 // Dump pipeline parameters to a JSON file
 //
 def dumpParametersToJSON(outdir) {
-    def timestamp  = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
-    def filename   = "params_${timestamp}.json"
-    def temp_pf    = new File(workflow.launchDir.toString(), ".${filename}")
-    def jsonStr    = groovy.json.JsonOutput.toJson(params)
-    temp_pf.text   = groovy.json.JsonOutput.prettyPrint(jsonStr)
+    def timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    def filename  = "params_${timestamp}.json"
+    def temp_pf   = new File(workflow.launchDir.toString(), ".${filename}")
+    def jsonStr   = groovy.json.JsonOutput.toJson(params)
+    temp_pf.text  = groovy.json.JsonOutput.prettyPrint(jsonStr)
 
     nextflow.extension.FilesEx.copyTo(temp_pf.toPath(), "${outdir}/pipeline_info/params_${timestamp}.json")
     temp_pf.delete()
@@ -91,9 +90,14 @@ def checkCondaChannels() {
     try {
         def config = parser.load("conda config --show channels".execute().text)
         channels = config.channels
-    } catch(NullPointerException | IOException e) {
-        log.warn "Could not verify conda channel configuration."
-        return
+    }
+    catch (NullPointerException e) {
+        log.warn("Could not verify conda channel configuration.")
+        return null
+    }
+    catch (IOException e) {
+        log.warn("Could not verify conda channel configuration.")
+        return null
     }
 
     // Check that all channels are present
@@ -106,19 +110,13 @@ def checkCondaChannels() {
 
     required_channels_in_order.eachWithIndex { channel, index ->
         if (index < required_channels_in_order.size() - 1) {
-            channel_priority_violation |= !(channels.indexOf(channel) < channels.indexOf(required_channels_in_order[index+1]))
+            channel_priority_violation |= !(channels.indexOf(channel) < channels.indexOf(required_channels_in_order[index + 1]))
         }
     }
 
     if (channels_missing | channel_priority_violation) {
-        log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-            "  There is a problem with your Conda configuration!\n\n" +
-            "  You will need to set-up the conda-forge and bioconda channels correctly.\n" +
-            "  Please refer to https://bioconda.github.io/\n" +
-            "  The observed channel order is \n" +
-            "  ${channels}\n" +
-            "  but the following channel order is required:\n" +
-            "  ${required_channels_in_order}\n" +
-            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        log.warn(
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  There is a problem with your Conda configuration!\n\n" + "  You will need to set-up the conda-forge and bioconda channels correctly.\n" + "  Please refer to https://bioconda.github.io/\n" + "  The observed channel order is \n" + "  ${channels}\n" + "  but the following channel order is required:\n" + "  ${required_channels_in_order}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        )
     }
 }

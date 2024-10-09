@@ -12,7 +12,7 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.0.0
+nf_core_version: 3.0.1
 org_path: null
 repository_type: pipeline
 template:
@@ -25,5 +25,5 @@ template:
   org: nf-core
   outdir: .
   skip_features: null
-  version: 3.16.0
+  version: 3.17.0dev
 update: null

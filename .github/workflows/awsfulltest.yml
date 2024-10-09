@@ -14,16 +14,18 @@ on:
 jobs:
   run-platform:
     name: Run AWS full tests
-    if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved'
+    # run only if the PR is approved by at least 2 reviewers and against the master branch or manually triggered
+    if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'master' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: octokit/request-action@v2.x
         id: check_approvals
         with:
-          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.review.number }}/reviews
+          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: test_variables
+        if: github.event_name != 'workflow_dispatch'
         run: |
           JSON_RESPONSE='${{ steps.check_approvals.outputs.data }}'
           CURRENT_APPROVALS_COUNT=$(echo $JSON_RESPONSE | jq -c '[.[] | select(.state | contains("APPROVED")) ] | length')

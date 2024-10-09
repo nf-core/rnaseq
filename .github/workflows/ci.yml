@@ -78,8 +78,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pdiff
 
-      - uses: nf-core/setup-nf-test@v1
-
       - name: Run nf-test
         run: |
           nf-test test --verbose ${{ matrix.nf_test_files }} --profile "+${{ matrix.profile }}" --junitxml=test.xml --tap=test.tap

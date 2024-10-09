@@ -1,0 +1,138 @@
+{
+    "pe - no stats - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:40:46.802233"
+    },
+    "pe - with stats - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:40:59.501624"
+    },
+    "pe - with stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,350e942a0d45e8356fa24bc8c47dc1ed"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_edit_distance.tsv:md5,65186b0964e2f8d970cc04d736d8b119"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_per_umi.tsv:md5,8e6783a4a79437b095f095f2aefe7c01"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup_per_umi_per_position.tsv:md5,9386db4a104b8e4e32f3ca4a84efa4ac"
+                ]
+            ],
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:27:24.231325"
+    },
+    "se - no stats - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:40:34.598176"
+    },
+    "se - no stats": {
+        "content": [
+            "a114abd9fccce6fe2869852b5cd18964",
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T13:45:48.553561"
+    },
+    "pe - no stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.dedup.bam:md5,350e942a0d45e8356fa24bc8c47dc1ed"
+                ]
+            ],
+            [
+                "versions.yml:md5,e2f5146464c09bf7ae98c85ea5410e50"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T11:27:06.957467"
+    }
+}

@@ -1,0 +1,71 @@
+nextflow_pipeline {
+
+    name "Test pipeline with Salmon, skipping both QC and alignment"
+    script "../main.nf"
+
+    test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'salmon'
+                skip_qc = true
+                skip_alignment = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, true, ['pipeline_info/*.{html,json,txt}'], null)
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, false, null, 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    getRelativePath(stable_name, outputDir),
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'salmon'
+                skip_qc = true
+                skip_alignment = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, true, ['pipeline_info/*.{html,json,txt}'], null)
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, false, null, 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    getRelativePath(stable_name, outputDir),
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

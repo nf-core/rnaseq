@@ -1,0 +1,121 @@
+{
+    "parse count data correctly - stub": {
+        "content": [
+            {
+                "0": [
+                    "deseq2.plots.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "deseq2.dds.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    "deseq2.pca.vals.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "3": [
+
+                ],
+                "4": [
+                    "deseq2.sample.dists.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "5": [
+
+                ],
+                "6": [
+                    "R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "7": [
+                    [
+                        "RAP1_IAA_30M_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "deseq2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    "versions.yml:md5,60f8e4f473397a4b5d1a3dc490c93ec5"
+                ],
+                "dists_multiqc": [
+
+                ],
+                "dists_txt": [
+                    "deseq2.sample.dists.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "log": [
+                    "R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "pca_multiqc": [
+
+                ],
+                "pca_txt": [
+                    "deseq2.pca.vals.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "pdf": [
+                    "deseq2.plots.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "rdata": [
+                    "deseq2.dds.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "size_factors": [
+                    [
+                        "RAP1_IAA_30M_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "deseq2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,60f8e4f473397a4b5d1a3dc490c93ec5"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:38:08.92794"
+    },
+    "parse count data correctly": {
+        "content": [
+            [
+
+            ],
+            [
+                "deseq2.sample.dists.txt:md5,1616ce40eb58ee75640efed219c6bbec"
+            ],
+            [
+                "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676"
+            ],
+            [
+
+            ],
+            [
+                "deseq2.pca.vals.txt:md5,4cda8e32ec39326c1350e77b4b607aad"
+            ],
+            [
+                "deseq2.dds.RData:md5,c7c1872e7566321d0c3f7ca56c463088"
+            ],
+            [
+                [
+                    "RAP1_IAA_30M_REP1.txt:md5,ce4ff0b74aeedc3dc12a764c3504c9df",
+                    "RAP1_UNINDUCED_REP1.txt:md5,51c9b23be5e82670aceb14f7e58dd867",
+                    "RAP1_UNINDUCED_REP2.txt:md5,2c56106abcd9d31980f672b6e2862ee8",
+                    "WT_REP1.txt:md5,5e3fe5f7e9b7f300be43649a8b496352",
+                    "WT_REP2.txt:md5,2ce093f2c2e92c1bde1cd3da91ac884c",
+                    "deseq2.size_factors.RData:md5,51c6643a0f8a9edabbff8df0165451f2"
+                ]
+            ],
+            [
+                "versions.yml:md5,60f8e4f473397a4b5d1a3dc490c93ec5"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:21:20.349616"
+    }
+}

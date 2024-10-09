@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::star=2.6.1d
+  - bioconda::samtools=1.10
+  - conda-forge::gawk=5.1.0

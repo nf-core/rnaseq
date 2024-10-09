@@ -350,8 +350,12 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     def colors = logColours(monochrome_logs) as Map
     if (email_address) {
         try {
+<<<<<<< HEAD
             if (plaintext_email) {
 new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML')            }
+=======
+            if (plaintext_email) { throw new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML') }
+>>>>>>> dev
             // Try to send HTML e-mail using sendmail
             def sendmail_tf = new File(workflow.launchDir.toString(), ".sendmail_tmp.html")
             sendmail_tf.withWriter { w -> w << sendmail_html }
@@ -369,13 +373,21 @@ new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML')      
     // Write summary e-mail HTML to a file
     def output_hf = new File(workflow.launchDir.toString(), ".pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
+<<<<<<< HEAD
     nextflow.extension.FilesEx.copyTo(output_hf.toPath(), "${outdir}/pipeline_info/pipeline_report.html")
+=======
+    nextflow.extension.FilesEx.copyTo(output_hf.toPath(), "${outdir}/pipeline_info/pipeline_report.html");
+>>>>>>> dev
     output_hf.delete()
 
     // Write summary e-mail TXT to a file
     def output_tf = new File(workflow.launchDir.toString(), ".pipeline_report.txt")
     output_tf.withWriter { w -> w << email_txt }
+<<<<<<< HEAD
     nextflow.extension.FilesEx.copyTo(output_tf.toPath(), "${outdir}/pipeline_info/pipeline_report.txt")
+=======
+    nextflow.extension.FilesEx.copyTo(output_tf.toPath(), "${outdir}/pipeline_info/pipeline_report.txt");
+>>>>>>> dev
     output_tf.delete()
 }
 
@@ -402,12 +414,18 @@ def completionSummary(monochrome_logs=true) {
 //
 def imNotification(summary_params, hook_url) {
     def summary = [:]
+<<<<<<< HEAD
     summary_params
         .keySet()
         .sort()
         .each { group ->
             summary << summary_params[group]
         }
+=======
+    summary_params.keySet().sort().each { group ->
+        summary << summary_params[group]
+    }
+>>>>>>> dev
 
     def misc_fields = [:]
     misc_fields['start']          = workflow.start

@@ -1,0 +1,55 @@
+nextflow_process {
+
+    name "Test Process SALMON_INDEX"
+    script "../main.nf"
+    process "SALMON_INDEX"
+
+    test("sarscov2") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.index.get(0)).exists() },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+
+    }
+
+     test("sarscov2 stub") {
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.index.get(0)).exists() },
+                { assert snapshot(process.out.versions).match("versions stub") }
+            )
+        }
+
+    }
+
+}

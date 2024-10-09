@@ -1,2 +1,0 @@
-multiqc:
-  - modules/nf-core/multiqc/**

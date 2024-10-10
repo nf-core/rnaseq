@@ -37,6 +37,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1388](https://github.com/nf-core/rnaseq/pull/1388) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
 - [PR #1389](https://github.com/nf-core/rnaseq/pull/1389) - Update animated subway map
 - [PR #1393](https://github.com/nf-core/rnaseq/pull/1393) - Use quay.io for bedtools/genomecov to solve issue with nf-core download
+- [PR #1405](https://github.com/nf-core/rnaseq/pull/1405) - Fix bad variable name in subworkflow
 
 ### Parameters
 

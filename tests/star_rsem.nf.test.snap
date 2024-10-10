@@ -1158,7 +1158,6 @@
                 "qualimap_gene_coverage_profile_Counts.txt:md5,387c07f2a93e3d13048c4cd788d1fcc3",
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,35f0b71796622269bc51cf1e7a0650ab",
                 "qualimap_rnaseq_cov_hist.txt:md5,a620cb9d1878e86e10e87500e98122f1",
-                "rsem_multimapping_rates.txt:md5,05878dd307fa1666dd4cc1888de6257a",
                 "rseqc_infer_experiment_plot.txt:md5,c0ddf72b026cdc54ad03e75eaa636f7e",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,3e67e07b5c978fa363965e8e90356eef",

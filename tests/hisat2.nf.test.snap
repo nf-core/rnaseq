@@ -1309,28 +1309,6 @@
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
-            ],
-            [
-                [
-                    "RAP1_IAA_30M_REP1.markdup.sorted.bam",
-                    "4bf1f3b76f3530504adfdb43b2108d8b"
-                ],
-                [
-                    "RAP1_UNINDUCED_REP1.markdup.sorted.bam",
-                    "2296ff6525d6efb9ffa5b3dcc870dd0d"
-                ],
-                [
-                    "RAP1_UNINDUCED_REP2.markdup.sorted.bam",
-                    "799583958cd2ca6ad49be00651a33359"
-                ],
-                [
-                    "WT_REP1.markdup.sorted.bam",
-                    "aea452c12ed0a10dee2f1b004a7dad95"
-                ],
-                [
-                    "WT_REP2.markdup.sorted.bam",
-                    "6c30c16afec17c44cddfcc9eacea5cd2"
-                ]
             ]
         ],
         "meta": {

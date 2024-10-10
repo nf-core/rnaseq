@@ -337,7 +337,7 @@
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
-                        "git_sha": "ee3b8b84da02320fff5f3f2dc1d6f9b72d7cd5af",
+                        "git_sha": "aef0e7467478130e861365232c3c4cc3247938ec",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

@@ -345,7 +345,7 @@ The above pipeline run specified with a params file in yaml format:
 nextflow run nf-core/rnaseq -profile docker -params-file params.yaml
 ```
 
-with `params.yaml` containing:
+with:
 
 ```yaml
 input: <SAMPLESHEET>

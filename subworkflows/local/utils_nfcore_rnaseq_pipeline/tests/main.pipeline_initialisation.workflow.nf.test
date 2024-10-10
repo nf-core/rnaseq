@@ -28,13 +28,11 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = false                               // version (boolean)
-                input[1] = false                               // help (boolean)
-                input[2] = "${projectDir}/nextflow_schema.json" // schema (string)
-                input[3] = true                                // validate_parameters (boolean)
-                input[4] = true                                // monochrome_logs (boolean)
-                input[5] = args                                // args (array)
-                input[6] = file("$outputDir")                   // outdir (string)
+                input[0] = false                // version (boolean)
+                input[1] = true                 // validate_parameters (boolean)
+                input[2] = true                 // monochrome_logs (boolean)
+                input[3] = args                 // args (array)
+                input[4] = file("$outputDir")   // outdir (string)
                 """
             }
         }

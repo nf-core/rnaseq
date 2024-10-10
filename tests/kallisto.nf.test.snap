@@ -244,7 +244,6 @@
                 "fastqc_trimmed_per_sequence_quality_scores_plot.txt:md5,0f9834cc19f76dd5c87cf8cba7435a7c",
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,6ae4db60425cae4f78b13c798ad1dcf3",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
-                "multiqc.log:md5,8ad099f7085cbd858f2a8feadd603c71",
                 "multiqc_citations.txt:md5,4cece87a056a29c1338277736855e6ee",
                 "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,26528b0b0d3df6304b80ca8f09619233"

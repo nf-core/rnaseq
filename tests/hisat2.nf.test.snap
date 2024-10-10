@@ -761,6 +761,7 @@
                 "multiqc/hisat2/multiqc_report_data/fastqc_raw_per_sequence_quality_scores_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_raw_sequence_counts_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_raw_sequence_duplication_levels_plot.txt",
+                "multiqc/hisat2/multiqc_report_data/fastqc_raw_top_overrepresented_sequences_table.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_sequence_length_distribution_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_trimmed-status-check-heatmap.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_trimmed_overrepresented_sequences_plot.txt",
@@ -1192,11 +1193,6 @@
                 "WT_REP2.biotype_counts_mqc.tsv:md5,74a5436a716a7d99f425f73914cb2794",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
                 "WT_REP2.featureCounts.txt:md5,702446d50a5019c84fcef85d1cfef78c",
-                "RAP1_IAA_30M_REP1.hisat2.summary.log:md5,4273e7a9d0fa8a93ec62e25a70a7e212",
-                "RAP1_UNINDUCED_REP1.hisat2.summary.log:md5,e322e4f7bce12d889a59db517c2ad678",
-                "RAP1_UNINDUCED_REP2.hisat2.summary.log:md5,3f41605b1fbd4d40983915617f8a91f9",
-                "WT_REP1.hisat2.summary.log:md5,50cd2a4fe1f041774c572d09156d4ae8",
-                "WT_REP2.hisat2.summary.log:md5,e622496abff3ce68afcd1c21a7a1e0df",
                 "coverage_profile_along_genes_(high).txt:md5,b56043c3546cac003461c57abad93536",
                 "coverage_profile_along_genes_(low).txt:md5,1b55d86defcc541643137497c4c6bb06",
                 "coverage_profile_along_genes_(total).txt:md5,1b55d86defcc541643137497c4c6bb06",
@@ -1250,7 +1246,6 @@
                 "fastqc_raw_per_sequence_quality_scores_plot.txt:md5,b5f9a02933e3065952237afd2ec9ce82",
                 "fastqc_raw_sequence_counts_plot.txt:md5,cbae4979d5db66d3b894abcf8d1c453c",
                 "fastqc_raw_sequence_duplication_levels_plot.txt:md5,8812cee16f6ca65e2c33635754de1772",
-                "fastqc_raw_top_overrepresented_sequences_table.txt:md5,b2c138ad689c01aaae91b5850112a964",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
                 "fastqc_trimmed-status-check-heatmap.txt:md5,22a03548736b88b23be6bc0c9ef1b4a6",
                 "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,4adfeacd3a3a6c7c808f121b24e6b247",
@@ -1315,6 +1310,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-10T10:25:14.209047"
+        "timestamp": "2024-10-10T12:37:31.888584"
     }
 }

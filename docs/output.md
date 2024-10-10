@@ -14,40 +14,50 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [Preprocessing](#preprocessing)
-  - [cat](#cat) - Merge re-sequenced FastQ files
-  - [FastQC](#fastqc) - Raw read QC
-  - [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
-  - [TrimGalore](#trimgalore) - Adapter and quality trimming
-  - [fastp](#fastp) - Adapter and quality trimming
-  - [BBSplit](#bbsplit) - Removal of genome contaminants
-  - [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
-- [Alignment and quantification](#alignment-and-quantification)
-  - [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
-  - [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
-  - [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
-- [Alignment post-processing](#alignment-post-processing)
-  - [SAMtools](#samtools) - Sort and index alignments
-  - [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
-  - [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
-- [Other steps](#other-steps)
-  - [StringTie](#stringtie) - Transcript assembly and quantification
-  - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
-- [Quality control](#quality-control)
-  - [RSeQC](#rseqc) - Various RNA-seq QC metrics
-  - [Qualimap](#qualimap) - Various RNA-seq QC metrics
-  - [dupRadar](#dupradar) - Assessment of technical / biological read duplication
-  - [Preseq](#preseq) - Estimation of library complexity
-  - [featureCounts](#featurecounts) - Read counting relative to gene biotype
-  - [DESeq2](#deseq2) - PCA plot and sample pairwise distance heatmap and dendrogram
-  - [Kraken2/Bracken](#kraken2bracken) - Taxonomic classification of unaligned reads
-  - [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
-- [Pseudoalignment and quantification](#pseudoalignment-and-quantification)
-  - [Salmon](#pseudoalignment) - Wicked fast gene and isoform quantification relative to the transcriptome
-  - [Kallisto](#pseudoalignment) - Near-optimal probabilistic RNA-seq quantification
-- [Workflow reporting and genomes](#workflow-reporting-and-genomes)
-  - [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
-  - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+- [nf-core/rnaseq: Output](#nf-corernaseq-output)
+  - [Introduction](#introduction)
+  - [Pipeline overview](#pipeline-overview)
+  - [Preprocessing](#preprocessing)
+    - [cat](#cat)
+    - [FastQC](#fastqc)
+    - [UMI-tools extract](#umi-tools-extract)
+    - [TrimGalore](#trimgalore)
+    - [fastp](#fastp)
+    - [BBSplit](#bbsplit)
+    - [SortMeRNA](#sortmerna)
+  - [Alignment and quantification](#alignment-and-quantification)
+    - [STAR, Salmon and Kallisto](#star-salmon-and-kallisto)
+    - [STAR via RSEM](#star-via-rsem)
+    - [HISAT2](#hisat2)
+  - [Alignment post-processing](#alignment-post-processing)
+    - [SAMtools](#samtools)
+    - [UMI-tools dedup](#umi-tools-dedup)
+    - [picard MarkDuplicates](#picard-markduplicates)
+  - [Other steps](#other-steps)
+    - [StringTie](#stringtie)
+    - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig)
+  - [Quality control](#quality-control)
+    - [RSeQC](#rseqc)
+      - [Infer experiment](#infer-experiment)
+      - [Read distribution](#read-distribution)
+      - [Junction annotation](#junction-annotation)
+      - [Inner distance](#inner-distance)
+      - [Junction saturation](#junction-saturation)
+      - [Read duplication](#read-duplication)
+      - [BAM stat](#bam-stat)
+      - [TIN](#tin)
+    - [Qualimap](#qualimap)
+    - [dupRadar](#dupradar)
+    - [Preseq](#preseq)
+    - [featureCounts](#featurecounts)
+    - [DESeq2](#deseq2)
+    - [Kraken2/Bracken](#kraken2bracken)
+    - [MultiQC](#multiqc)
+  - [Pseudoalignment and quantification](#pseudoalignment-and-quantification)
+    - [Pseudoalignment](#pseudoalignment)
+  - [Workflow reporting and genomes](#workflow-reporting-and-genomes)
+    - [Reference genome files](#reference-genome-files)
+    - [Pipeline information](#pipeline-information)
 
 ## Preprocessing
 

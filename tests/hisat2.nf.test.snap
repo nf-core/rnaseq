@@ -761,7 +761,6 @@
                 "multiqc/hisat2/multiqc_report_data/fastqc_raw_per_sequence_quality_scores_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_raw_sequence_counts_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_raw_sequence_duplication_levels_plot.txt",
-                "multiqc/hisat2/multiqc_report_data/fastqc_raw_top_overrepresented_sequences_table.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_sequence_length_distribution_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_trimmed-status-check-heatmap.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_trimmed_overrepresented_sequences_plot.txt",

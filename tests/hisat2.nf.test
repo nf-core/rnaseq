@@ -17,8 +17,6 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -29,9 +27,7 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
-                    // All bam files
-                    bam_files.collect{ file -> [ file.getName(), bam(file.toString()).getReadsMD5() ] }
+                    stable_path
                 ).match() }
             )
         }

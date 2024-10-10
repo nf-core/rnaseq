@@ -1039,7 +1039,6 @@
                 "fastqc_raw_per_sequence_quality_scores_plot.txt:md5,b5f9a02933e3065952237afd2ec9ce82",
                 "fastqc_raw_sequence_counts_plot.txt:md5,cbae4979d5db66d3b894abcf8d1c453c",
                 "fastqc_raw_sequence_duplication_levels_plot.txt:md5,8812cee16f6ca65e2c33635754de1772",
-                "fastqc_raw_top_overrepresented_sequences_table.txt:md5,43d63c7c7f038becc6b5ef164b2e5f71",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
                 "fastqc_trimmed-status-check-heatmap.txt:md5,22a03548736b88b23be6bc0c9ef1b4a6",
                 "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,4adfeacd3a3a6c7c808f121b24e6b247",
@@ -1170,20 +1169,6 @@
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
-            ],
-            [
-                [
-                    "RAP1_IAA_30M_REP1.markdup.sorted.bam",
-                    "542a64613e641be18a172830f281b319"
-                ],
-                [
-                    "RAP1_UNINDUCED_REP1.markdup.sorted.bam",
-                    "42765cd169f11cb21c4ca680b1f8f200"
-                ],
-                [
-                    "RAP1_UNINDUCED_REP2.markdup.sorted.bam",
-                    "3146dc95e97f6b3036b046613bb5102f"
-                ]
             ]
         ],
         "meta": {

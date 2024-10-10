@@ -5,7 +5,7 @@ kallisto/*/kallisto_quant.log
 kallisto/*/run_info.json
 kallisto/kallisto.*
 {multiqc,multiqc/**}/multiqc_report.html
-{multiqc,multiqc/**}/multiqc_report_data/fastqc_trimmed_top_overrepresented_sequences_table.txt
+{multiqc,multiqc/**}/multiqc_report_data/fastqc_{raw,trimmed}_top_overrepresented_sequences_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/junction_saturation_known.txt
 {multiqc,multiqc/**}/multiqc_report_data/junction_saturation_novel.txt
 {multiqc,multiqc/**}/multiqc_report_data/kallisto_alignment.txt

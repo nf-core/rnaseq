@@ -16,6 +16,7 @@ Special thanks to the following for their contributions to the release:
 
 - [PR #1398](https://github.com/nf-core/rnaseq/pull/1398) - Bump pipeline version to 3.17.0dev
 - [PR #1401](https://github.com/nf-core/rnaseq/pull/1401) - Template update for nf-core/tools v3.0.1
+- [PR #1405](https://github.com/nf-core/rnaseq/pull/1405) - Fix bad variable name in subworkflow
 
 ### Parameters
 

@@ -62,7 +62,7 @@ def checkProfileProvided(nextflow_cli_args) {
 def workflowCitation() {
     def temp_doi_ref = ""
     def manifest_doi = workflow.manifest.doi.tokenize(",")
-    // Using a loop to handle multiple DOIs
+    // Handling multiple DOIs
     // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
     // Removing ` ` since the manifest.doi is a string and not a proper list
     manifest_doi.each { doi_ref ->

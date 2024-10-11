@@ -121,10 +121,10 @@ workflow RNASEQ {
                 }
         }
         .groupTuple()
-        .map {
-            checkSamplesAfterGrouping(it)
+        .map { samplesheet ->
+            checkSamplesAfterGrouping(samplesheet)
         }
-        .set{ ch_fastq }
+        .set { ch_fastq }
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow

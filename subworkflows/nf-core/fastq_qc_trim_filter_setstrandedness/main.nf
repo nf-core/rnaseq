@@ -20,7 +20,7 @@ def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragment
     def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
     def totalStrandedFragments = forwardFragments + reverseFragments
 
-    def library_strandedness = 'undetermined'
+    def strandedness = 'undetermined'
     if (totalStrandedFragments > 0) {
         def forwardProportion = forwardFragments / (totalStrandedFragments as double)
         def reverseProportion = reverseFragments / (totalStrandedFragments as double)

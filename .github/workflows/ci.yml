@@ -52,6 +52,7 @@ jobs:
         NXF_VER:
           - "24.04.2"
           - "latest-everything"
+        nf_test_files: ["${{ fromJson(needs.nf-test-changes.outputs.nf_test_files) }}"]
         profile:
           - "conda"
           - "docker"

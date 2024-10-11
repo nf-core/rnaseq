@@ -56,8 +56,6 @@ jobs:
           - "conda"
           - "docker"
           - "singularity"
-        test_name:
-          - "test"
         isMaster:
           - ${{ github.base_ref == 'master' }}
         # Exclude conda and singularity on dev

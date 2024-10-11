@@ -1,0 +1,46 @@
+name: untar
+description: Extract files.
+keywords:
+  - untar
+  - uncompress
+  - extract
+tools:
+  - untar:
+      description: |
+        Extract tar.gz files.
+      documentation: https://www.gnu.org/software/tar/manual/
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - archive:
+      type: file
+      description: File to be untar
+      pattern: "*.{tar}.{gz}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - untar:
+      type: directory
+      description: Directory containing contents of archive
+      pattern: "*/"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@matthdsm"
+  - "@jfy133"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@matthdsm"
+  - "@jfy133"

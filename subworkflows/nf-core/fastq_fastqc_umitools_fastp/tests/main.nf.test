@@ -1,0 +1,964 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_FASTQC_UMITOOLS_FASTP"
+    script "../main.nf"
+    workflow "FASTQ_FASTQC_UMITOOLS_FASTP"
+    config './nextflow.config'
+
+    test("sarscov2 paired-end [fastq]") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("skip_fastqc") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = true
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert !workflow.out.fastqc_raw_html },
+                { assert !workflow.out.fastqc_raw_zip },
+                { assert !workflow.out.fastqc_trim_html },
+                { assert !workflow.out.fastqc_trim_zip },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("with_umi") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = true
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+
+    test("skip_umi_extract") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = true
+                skip_umi_extract  = true
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("umi_discard_read = 2") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = true
+                skip_umi_extract  = true
+                umi_discard_read  = 2
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("skip_trimming") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = true
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert !workflow.out.fastqc_trim_html },
+                { assert !workflow.out.fastqc_trim_zip },
+                { assert !workflow.out.trim_html },
+                { assert !workflow.out.trim_log },
+                { assert snapshot(
+                        // If we skip trimming then input is output, so not snapshotting
+                        workflow.out.adapter_seq,
+                        workflow.out.reads.get(0).get(0), // Reads meta map
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("save_trimmed_fail") {
+
+        config './nextflow.save_trimmed.config'
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = true
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("save_merged") {
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = true
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("min_trimmed_reads = 26") {
+        // Subworkflow should stop after FASTP which trims down to 25 reads
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = true
+                min_trimmed_reads = 26
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.fastqc_raw_html },
+                { assert workflow.out.fastqc_raw_zip },
+                { assert workflow.out.fastqc_trim_html },
+                { assert workflow.out.fastqc_trim_zip },
+                { assert workflow.out.trim_html },
+                { assert workflow.out.trim_log },
+                { assert snapshot(
+                        workflow.out.adapter_seq,
+                        workflow.out.reads,
+                        workflow.out.trim_json,
+                        workflow.out.trim_read_count,
+                        workflow.out.trim_reads_fail,
+                        workflow.out.trim_reads_merged,
+                        workflow.out.umi_log,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end [fastq] - stub") {
+
+        options '-stub'
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("skip_fastqc - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = true
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("with_umi - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = true
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+
+    test("skip_umi_extract - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = true
+                skip_umi_extract  = true
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("umi_discard_read = 2 - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = true
+                skip_umi_extract  = true
+                umi_discard_read  = 2
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("skip_trimming - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = true
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.adapter_seq,
+                    workflow.out.fastqc_raw_html,
+                    workflow.out.fastqc_raw_zip,
+                    workflow.out.fastqc_trim_html,
+                    workflow.out.fastqc_trim_zip,
+                    workflow.out.trim_html,
+                    workflow.out.trim_json,
+                    workflow.out.trim_log,
+                    workflow.out.trim_read_count,
+                    workflow.out.trim_reads_fail,
+                    workflow.out.trim_reads_merged,
+                    workflow.out.umi_log,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+
+    test("save_trimmed_fail - stub") {
+
+        options "-stub"
+
+        config './nextflow.save_trimmed.config'
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = true
+                save_merged       = false
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("save_merged - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = true
+                min_trimmed_reads = 1
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("min_trimmed_reads = 26 - stub") {
+        // Subworkflow should stop after FASTP which trims down to 25 reads
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                skip_fastqc       = false
+                with_umi          = false
+                skip_umi_extract  = false
+                umi_discard_read  = 1
+                skip_trimming     = false
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = true
+                min_trimmed_reads = 26
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = skip_fastqc
+                input[2] = with_umi
+                input[3] = skip_umi_extract
+                input[4] = umi_discard_read
+                input[5] = skip_trimming
+                input[6] = adapter_fasta
+                input[7] = save_trimmed_fail
+                input[8] = save_merged
+                input[9] = min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}

@@ -1,0 +1,37 @@
+Changes in module 'nf-core/bedtools/genomecov'
+Changes in 'bedtools/genomecov/main.nf':
+--- modules/nf-core/bedtools/genomecov/main.nf
++++ modules/nf-core/bedtools/genomecov/main.nf
+@@ -4,8 +4,8 @@
+ 
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'oras://community.wave.seqera.io/library/bedtools_coreutils:ba273c06a3909a15':
+-        'community.wave.seqera.io/library/bedtools_coreutils:a623c13f66d5262b' }"
++        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/6397750e9730a3fbcc5b4c43f14bd141c64c723fd7dad80e47921a68a7c3cd21/data':
++        'nf-core/bedtools_coreutils:a623c13f66d5262b' }"
+ 
+     input:
+     tuple val(meta), path(intervals), val(scale)
+
+'modules/nf-core/bedtools/genomecov/meta.yml' is unchanged
+'modules/nf-core/bedtools/genomecov/environment.yml' is unchanged
+'modules/nf-core/bedtools/genomecov/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bedtools/genomecov/tests/nextflow.config' is unchanged
+Changes in 'bedtools/genomecov/tests/main.nf.test':
+--- modules/nf-core/bedtools/genomecov/tests/main.nf.test
++++ modules/nf-core/bedtools/genomecov/tests/main.nf.test
+@@ -3,11 +3,6 @@
+     script "../main.nf"
+     process "BEDTOOLS_GENOMECOV"
+     config "./nextflow.config"
+-
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "bedtools"
+-    tag "bedtools/genomecov"
+ 
+     test("sarscov2 - no scale") {
+         when {
+
+************************************************************

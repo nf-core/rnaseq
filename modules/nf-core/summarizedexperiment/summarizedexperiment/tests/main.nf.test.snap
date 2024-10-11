@@ -1,0 +1,198 @@
+{
+    "gene_log_multi_matrix_rowdata_coldataa_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:41:31.796715"
+    },
+    "gene_log_single_matrix_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:42:47.12955"
+    },
+    "versions_single_matrix": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-08T14:45:26.13363"
+    },
+    "gene_log_multi_matrix_rowdata_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:41:54.028064"
+    },
+    "gene_log_multi_matrix_rowdata": {
+        "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-09T14:02:24.430008757"
+    },
+    "versions_multi_matrix_rowdata_stub": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:41:54.080728"
+    },
+    "versions_multi_matrix_stub": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:42:21.425746"
+    },
+    "versions_multi_matrix_rowdata_coldata_stub": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:41:31.837174"
+    },
+    "gene_log_multi_matrix": {
+        "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-09T14:02:46.367962336"
+    },
+    "gene_log_multi_matrix_stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:42:21.370562"
+    },
+    "gene_log_single_matrix": {
+        "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-09T14:03:08.330328893"
+    },
+    "versions_single_matrix_stub": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-11T16:42:47.173221"
+    },
+    "versions_multi_matrix_rowdata": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-08T14:44:42.420728"
+    },
+    "gene_log_multi_matrix_rowdata_coldata": {
+        "content": "7c35131fdd46dcdba6c71f7f11d5b2c7",
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-09T14:02:01.244907114"
+    },
+    "versions_multi_matrix": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-08T14:45:04.188507"
+    },
+    "versions_multi_matrix_rowdata_coldata": {
+        "content": [
+            [
+                "versions.yml:md5,9fb424df9dedf0dc55c95215ae802bb9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-08T14:44:20.698714"
+    }
+}

@@ -1,0 +1,104 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_SUBSAMPLE_FQ_SALMON"
+    script "../main.nf"
+    workflow "FASTQ_SUBSAMPLE_FQ_SALMON"
+    config "./nextflow.config"
+
+    test("homo_sapiens paired-end [fastq]") {
+
+        setup {
+            run("SALMON_INDEX") {
+                script "../../../../modules/nf-core/salmon/index/main.nf"
+                process {
+                """
+                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                make_index = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
+                input[4] = SALMON_INDEX.out.index
+                input[5] = make_index
+                """
+            }
+        }
+
+        then {
+            def readlines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def readlines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.index },
+                { assert workflow.out.json_info },
+                { assert workflow.out.results },
+                { assert snapshot(
+                    readlines1[0..5],
+                    readlines1.size(),
+                    readlines2[0..5],
+                    readlines2.size(),
+                    workflow.out.lib_format_counts,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens paired-end [fastq] - stub") {
+
+        options "-stub"
+
+        setup {
+            run("SALMON_INDEX") {
+                script "../../../../modules/nf-core/salmon/index/main.nf"
+                process {
+                """
+                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                make_index = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
+                input[4] = SALMON_INDEX.out.index
+                input[5] = make_index
+                """
+            }
+        }
+
+        then {
+            def readlines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def readlines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}

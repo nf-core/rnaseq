@@ -100,12 +100,6 @@ jobs:
           echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
           echo $(realpath python) >> $GITHUB_PATH
 
-      - name: Clean up Disk space
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
-
-      - name: "Run pipeline with test data ${{ matrix.NXF_VER }} | ${{ matrix.test_name }} | ${{ matrix.profile }}"
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},${{ matrix.profile }} --outdir ./results
       - name: Install nf-test
         uses: nf-core/setup-nf-test@v1
         with:
@@ -120,6 +114,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pdiff
+
+      - name: Clean up Disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run nf-test
         run: |

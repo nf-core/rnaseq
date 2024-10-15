@@ -327,17 +327,17 @@
                     },
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
+                        "git_sha": "4026bab16a91b1b0b18d80ff465819ca725f33fd",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
-                        "git_sha": "53fcc37e256ea30818fb793bbe98b63e4a40deb8",
+                        "git_sha": "4026bab16a91b1b0b18d80ff465819ca725f33fd",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
-                        "git_sha": "aef0e7467478130e861365232c3c4cc3247938ec",
+                        "git_sha": "9082d6440bdffbb4f5d9bd9d753361933b3febcb",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_subsample_fq_salmon": {

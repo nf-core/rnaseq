@@ -160,5 +160,5 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_trim_html   // channel: [ val(meta), [ html ] ]
     fastqc_trim_zip    // channel: [ val(meta), [ zip ] ]
 
-    versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+    versions = ch_versions // channel: [ versions.yml ]
 }

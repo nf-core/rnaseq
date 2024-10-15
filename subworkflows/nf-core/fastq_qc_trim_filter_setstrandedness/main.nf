@@ -139,7 +139,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
     //
-    if (trimmer == 'trimgalore') {
+    if (trimmer == 'trimgalore' && !skip_trimming) {
         FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
             ch_filtered_reads,
             skip_fastqc,
@@ -162,7 +162,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with fastp
     //
-    if (trimmer == 'fastp') {
+    if (trimmer == 'fastp' && !skip_trimming) {
         FASTQ_FASTQC_UMITOOLS_FASTP (
             ch_filtered_reads,
             skip_fastqc,

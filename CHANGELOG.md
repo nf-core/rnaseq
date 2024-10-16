@@ -21,7 +21,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1409](https://github.com/nf-core/rnaseq/pull/1409) - Fix manifest DOI text
 - [PR #1410](https://github.com/nf-core/rnaseq/pull/1410) - Fix issues caused by empty versions from trimming subworkflows
 - [PR #1412](https://github.com/nf-core/rnaseq/pull/1412) - Reset versions back to 3.16.1 for patch release
-- [PR #1414](https://github.com/nf-core/rnaseq/pull/1414) - Disable pipeline level conda tests
+- [PR #1415](https://github.com/nf-core/rnaseq/pull/1415) - Disable pipeline level conda tests
 
 ### Parameters
 

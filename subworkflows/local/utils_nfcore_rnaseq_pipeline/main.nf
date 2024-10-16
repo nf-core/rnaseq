@@ -216,6 +216,10 @@ def validateInputParameters() {
         }
     }
 
+    if (params.with_umi && params.umi_dedup_tool == "umicollapse" && params.umitools_grouping_method !in ['directional', 'adjacency', 'cluster']) {
+        error("UMI grouping method '${params.umitools_grouping_method}' unsupported for umicollapse, supported methods are 'cluster', 'adjacency' and 'directional'")
+    }
+
     if (params.skip_alignment) {
         skipAlignmentWarn()
     }

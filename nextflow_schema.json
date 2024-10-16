@@ -305,6 +305,13 @@
                     "fa_icon": "fas fa-barcode",
                     "description": "Enable UMI-based read deduplication."
                 },
+                "umi_dedup_tool": {
+                    "type": "string",
+                    "default": "umitools",
+                    "description": "Specifies the tool to use for UMI deduplication - available options are 'umitools' and 'umicollapse'.",
+                    "fa_icon": "fas fa-barcode",
+                    "enum": ["umitools", "umicollapse"]
+                },
                 "umitools_extract_method": {
                     "type": "string",
                     "default": "string",

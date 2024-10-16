@@ -3,6 +3,56 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+
+### Enhancements & fixes
+
+- [PR #1398](https://github.com/nf-core/rnaseq/pull/1398) - Bump pipeline version to 3.17.0dev
+- [PR #1401](https://github.com/nf-core/rnaseq/pull/1401) - Template update for nf-core/tools v3.0.1
+- [PR #1405](https://github.com/nf-core/rnaseq/pull/1405) - Fix bad variable name in subworkflow
+- [PR #1406](https://github.com/nf-core/rnaseq/pull/1406) - Keep only one samplesheetToList
+- [PR #1409](https://github.com/nf-core/rnaseq/pull/1409) - Fix manifest DOI text
+- [PR #1410](https://github.com/nf-core/rnaseq/pull/1410) - Fix issues caused by empty versions from trimming subworkflows
+- [PR #1412](https://github.com/nf-core/rnaseq/pull/1412) - Reset versions back to 3.16.1 for patch release
+- [PR #1415](https://github.com/nf-core/rnaseq/pull/1415) - Disable pipeline level conda tests
+- [PR #1416](https://github.com/nf-core/rnaseq/pull/1416) - Really disable pipeline level conda tests
+
+### Parameters
+
+| Old parameter                        | New parameter   |
+| ------------------------------------ | --------------- |
+|                                      | `--help_full`   |
+|                                      | `--show_hidden` |
+| `--validationFailUnrecognisedParams` |                 |
+| `--validationLenientMode`            |                 |
+| `--validationSchemaIgnoreParams`     |                 |
+| `--validationShowHiddenParams`       |                 |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+>
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `MultiQC`  | 1.24.1      | 1.25.1      |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.16.0](https://github.com/nf-core/rnaseq/releases/tag/3.16.0)] - 2024-10-02
 
 ### Credits
@@ -37,15 +87,17 @@ Special thanks to the following for their contributions to the release:
 |               | `--bracken_precision`       |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
 > **NB:** Parameter has been **added** if just the new parameter information is present.
+>
 > **NB:** Parameter has been **removed** if new parameter information isn't present.
 
 ### Software dependencies
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| `Kraken2`  | ----------- | 2.1.3       |
-| `Bracken`  | ----------- | 2.9         |
+| `Kraken2`  |             | 2.1.3       |
+| `Bracken`  |             | 2.9         |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

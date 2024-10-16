@@ -119,5 +119,5 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     trim_log           // channel: [ val(meta), [ txt ] ]
     trim_read_count    // channel: [ val(meta), val(count) ]
 
-    versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+    versions = ch_versions // channel: [ versions.yml ]
 }

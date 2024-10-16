@@ -382,9 +382,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.09.0"
         },
-        "timestamp": "2024-07-22T17:05:49.455992"
+        "timestamp": "2024-10-09T19:19:22.192915"
     },
     "test single end read with UMI - stub": {
         "content": [

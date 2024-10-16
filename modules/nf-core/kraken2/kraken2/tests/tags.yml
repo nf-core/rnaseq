@@ -1,3 +1,0 @@
-kraken2/kraken2:
-  - modules/nf-core/kraken2/kraken2/**
-  - modules/nf-core/untar/**

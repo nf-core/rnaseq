@@ -18,8 +18,10 @@ Special thanks to the following for their contributions to the release:
 - [PR #1401](https://github.com/nf-core/rnaseq/pull/1401) - Template update for nf-core/tools v3.0.1
 - [PR #1405](https://github.com/nf-core/rnaseq/pull/1405) - Fix bad variable name in subworkflow
 - [PR #1406](https://github.com/nf-core/rnaseq/pull/1406) - Keep only one samplesheetToList
+- [PR #1409](https://github.com/nf-core/rnaseq/pull/1409) - Fix manifest DOI text
 - [PR #1410](https://github.com/nf-core/rnaseq/pull/1410) - Fix issues caused by empty versions from trimming subworkflows
 - [PR #1412](https://github.com/nf-core/rnaseq/pull/1412) - Reset versions back to 3.16.1 for patch release
+- [PR #1414](https://github.com/nf-core/rnaseq/pull/1414) - Disable pipeline level conda tests
 
 ### Parameters
 

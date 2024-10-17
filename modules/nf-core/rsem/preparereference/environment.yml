@@ -1,9 +1,7 @@
-name: rsem_preparereference
 channels:
   - seqera
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - seqera::rsem
   - seqera::star=2.6.1d

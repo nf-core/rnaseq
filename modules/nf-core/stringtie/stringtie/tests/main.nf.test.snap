@@ -1,91 +1,5 @@
 {
-    "fs_abundance": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:55:41.032044613"
-    },
-    "fs_transcript_gtf": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.transcripts.gtf:md5,569137af5be452413086b50653a97203"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:55:41.017978904"
-    },
-    "rs_abundance": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:13.601112933"
-    },
-    "fs_gtf_versions": {
-        "content": [
-            [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:00.523797974"
-    },
-    "fs_gtf_transcript_gtf": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.transcripts.gtf:md5,f56cf8aba2c4a5673bc7963ba5f12d04"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:00.475164879"
-    },
-    "rs_versions": {
-        "content": [
-            [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:13.623892691"
-    },
-    "rs_gtf_transcript_gtf": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.transcripts.gtf:md5,bb346053a8c156b803b055133376c7fa"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:22.693599559"
-    },
-    "fs_gtf_abundance": {
+    "sarscov2 [bam] - forward strandedness + reference annotation": {
         "content": [
             [
                 [
@@ -95,54 +9,7 @@
                     },
                     "test.gene.abundance.txt:md5,7d8bce7f2a922e367cedccae7267c22e"
                 ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:00.482135418"
-    },
-    "rs_gtf_ballgown": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    [
-                        "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
-                        "e_data.ctab:md5,879b6696029d19c4737b562e9d149218",
-                        "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
-                        "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
-                        "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
-                    ]
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:22.715698347"
-    },
-    "rs_transcript_gtf": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.transcripts.gtf:md5,31c34aec2bf36bb0ea3c16c2afeeeb1f"
-                ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:13.590054035"
-    },
-    "rs_gtf_versions": {
-        "content": [
-            [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:22.725513476"
-    },
-    "fs_gtf_ballgown": {
-        "content": [
+            ],
             [
                 [
                     {
@@ -157,19 +24,413 @@
                         "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
                     ]
                 ]
-            ]
-        ],
-        "timestamp": "2023-11-23T13:56:00.494299817"
-    },
-    "fs_versions": {
-        "content": [
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.transcripts.gtf:md5,f56cf8aba2c4a5673bc7963ba5f12d04"
+                ]
+            ],
             [
                 "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
             ]
         ],
-        "timestamp": "2023-11-23T13:55:41.049417582"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:33:44.299962"
     },
-    "rs_gtf_abundance": {
+    "sarscov2 [bam] - forward strandedness": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.transcripts.gtf:md5,569137af5be452413086b50653a97203"
+                ]
+            ],
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:33:35.177738"
+    },
+    "sarscov2 [bam] - forward strandedness - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ],
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:36:32.885078"
+    },
+    "sarscov2 [bam] - forward strandedness + reference annotation - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ],
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:36:43.325777"
+    },
+    "sarscov2 [bam] - reverse strandedness + reference annotation - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ],
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:37:06.085936"
+    },
+    "sarscov2 [bam] - reverse strandedness - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ],
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:36:53.837578"
+    },
+    "sarscov2 [bam] - reverse strandedness + reference annotation": {
         "content": [
             [
                 [
@@ -179,8 +440,69 @@
                     },
                     "test.gene.abundance.txt:md5,7385b870b955dae2c2ab78a70cf05cce"
                 ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    [
+                        "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                        "e_data.ctab:md5,879b6696029d19c4737b562e9d149218",
+                        "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                        "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                        "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.transcripts.gtf:md5,bb346053a8c156b803b055133376c7fa"
+                ]
+            ],
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
             ]
         ],
-        "timestamp": "2023-11-23T13:56:22.701059059"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:34:03.114695"
+    },
+    "sarscov2 [bam] - reverse strandedness": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "reverse"
+                    },
+                    "test.transcripts.gtf:md5,31c34aec2bf36bb0ea3c16c2afeeeb1f"
+                ]
+            ],
+            [
+                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T12:33:52.874479"
     }
 }

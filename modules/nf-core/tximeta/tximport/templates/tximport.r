@@ -26,7 +26,7 @@ library(tximport)
 #' @return A data frame combining the first two columns of the rowData with the assay data from the specified slot.
 
 build_table <- function(se.obj, slot) {
-    cbind(rowData(se.obj)[,1:2], assays(se.obj)[[slot]])
+    data.frame(cbind(rowData(se.obj)[,1:2], assays(se.obj)[[slot]]), check.names = FALSE)
 }
 
 #' Write a table to a file from a SummarizedExperiment object with given parameters
@@ -153,8 +153,7 @@ if ("tx2gene" %in% names(transcript_info) && !is.null(transcript_info\$tx2gene))
     gi.s <- summarizeToGene(txi, tx2gene = tx2gene, countsFromAbundance = "scaledTPM")
 
     gene_info <- transcript_info\$gene[match(rownames(gi[[1]]), transcript_info\$gene[["gene_id"]]),]
-    rownames(gene_info) <- gene_info[["tx"]]
-
+    rownames(gene_info) <- NULL
     col_data_frame <- DataFrame(coldata)
 
     # Create gene-level SummarizedExperiment objects
@@ -169,9 +168,7 @@ if ("tx2gene" %in% names(transcript_info) && !is.null(transcript_info\$tx2gene))
         list(obj = gse, slot = "length", suffix = "gene_lengths.tsv"),
         list(obj = gse, slot = "abundance", suffix = "gene_tpm.tsv"),
         list(obj = gse, slot = "counts", suffix = "gene_counts.tsv"),
-        list(obj = gse.ls, slot = "abundance", suffix = "gene_tpm_length_scaled.tsv"),
         list(obj = gse.ls, slot = "counts", suffix = "gene_counts_length_scaled.tsv"),
-        list(obj = gse.s, slot = "abundance", suffix = "gene_tpm_scaled.tsv"),
         list(obj = gse.s, slot = "counts", suffix = "gene_counts_scaled.tsv")
     ))
 }

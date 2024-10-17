@@ -1,8 +1,6 @@
-name: hisat2_align
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::hisat2
   - bioconda::samtools

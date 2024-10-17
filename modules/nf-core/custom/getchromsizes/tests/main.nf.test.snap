@@ -1,4 +1,69 @@
 {
+    "test_custom_getchromsizes_bgzip - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.gz.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.gz.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.gz.gzi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
+                ],
+                "fai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.gz.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "gzi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.gz.gzi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sizes": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.gz.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T12:38:36.927106"
+    },
     "test_custom_getchromsizes": {
         "content": [
             {
@@ -22,7 +87,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ],
                 "fai": [
                     [
@@ -44,11 +109,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ]
             }
         ],
-        "timestamp": "2024-01-17T17:48:35.562918"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-20T13:22:34.14237"
     },
     "test_custom_getchromsizes_bgzip": {
         "content": [
@@ -78,7 +147,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ],
                 "fai": [
                     [
@@ -105,10 +174,69 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,45a83c5f3dddbc5dcab30035169f7ce8"
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
                 ]
             }
         ],
-        "timestamp": "2024-01-17T17:49:02.562311"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-20T13:23:06.241379"
+    },
+    "test_custom_getchromsizes - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
+                ],
+                "fai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "gzi": [
+                    
+                ],
+                "sizes": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0d5a7c33bddcb1edad6bf0705b258e6f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T12:24:05.697845"
     }
 }

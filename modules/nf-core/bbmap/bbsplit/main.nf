@@ -54,7 +54,6 @@ process BBMAP_BBSPLIT {
             log.error 'ERROR: Please specify as input a primary fasta file along with names and paths to non-primary fasta files.'
         }
     } else {
-        index_files = ''
         if (index) {
             index_files = "path=$index"
         } else if (primary_ref && other_ref_names && other_ref_paths) {
@@ -105,4 +104,28 @@ process BBMAP_BBSPLIT {
     END_VERSIONS
     """
 
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def other_refs = ''
+    other_ref_names.eachWithIndex { name, index ->
+        other_refs += "echo '' | gzip > ${prefix}_${name}.fastq.gz"
+    }
+    """
+    if [ ! -d bbsplit ]; then
+        mkdir bbsplit
+    fi
+
+    if ! (${only_build_index}); then
+        echo '' | gzip >  ${prefix}_primary.fastq.gz
+        ${other_refs}
+        touch ${prefix}.stats.txt
+    fi
+
+    touch ${prefix}.log
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
+    END_VERSIONS
+    """
 }

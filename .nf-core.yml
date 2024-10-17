@@ -1,15 +1,29 @@
-repository_type: pipeline
-nf_core_version: "2.14.1"
+bump_version: null
 lint:
+  actions_ci: false
+  files_exist:
+    - conf/modules.config
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
     - .gitignore
-  files_exist:
-    - conf/modules.config
-  actions_ci: false
-  multiqc_config: false
   modules_config: false
+  multiqc_config: false
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
+nf_core_version: 3.0.2
+org_path: null
+repository_type: pipeline
+template:
+  author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"
+  description: RNA sequencing analysis pipeline for gene/isoform quantification and
+    extensive quality control.
+  force: false
+  is_nfcore: true
+  name: rnaseq
+  org: nf-core
+  outdir: .
+  skip_features: null
+  version: 3.17.0dev
+update: null

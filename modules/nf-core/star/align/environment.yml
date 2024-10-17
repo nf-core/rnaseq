@@ -1,8 +1,6 @@
-name: star_align
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::star
   - bioconda::samtools

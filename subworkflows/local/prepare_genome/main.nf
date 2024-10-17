@@ -70,10 +70,10 @@ workflow PREPARE_GENOME {
     // Uncompress genome fasta file if required
     //
     if (fasta.endsWith('.gz')) {
-        ch_fasta    = GUNZIP_FASTA ( [ [:], fasta ] ).gunzip.map { it[1] }
+        ch_fasta    = GUNZIP_FASTA ( [ [:], file(fasta, checkIfExists: true) ] ).gunzip.map { it[1] }
         ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
     } else {
-        ch_fasta = Channel.value(file(fasta))
+        ch_fasta = Channel.value(file(fasta, checkIfExists: true))
     }
 
     //
@@ -82,19 +82,19 @@ workflow PREPARE_GENOME {
     if (gtf || gff) {
         if (gtf) {
             if (gtf.endsWith('.gz')) {
-                ch_gtf      = GUNZIP_GTF ( [ [:], gtf ] ).gunzip.map { it[1] }
+                ch_gtf      = GUNZIP_GTF ( [ [:], file(gtf, checkIfExists: true) ] ).gunzip.map { it[1] }
                 ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
             } else {
-                ch_gtf = Channel.value(file(gtf))
+                ch_gtf = Channel.value(file(gtf, checkIfExists: true))
             }
         } else if (gff) {
             if (gff.endsWith('.gz')) {
-                ch_gff      = GUNZIP_GFF ( [ [:], gff ] ).gunzip.map { it[1] }
+                ch_gff      = GUNZIP_GFF ( [ [:], file(gff, checkIfExists: true) ] ).gunzip
                 ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
             } else {
-                ch_gff = Channel.value(file(gff))
+                ch_gff = Channel.value(file(gff, checkIfExists: true)).map { [ [:], it ] }
             }
-            ch_gtf      = GFFREAD ( ch_gff ).gtf
+            ch_gtf      = GFFREAD ( ch_gff, [] ).gtf.map { it[1] }
             ch_versions = ch_versions.mix(GFFREAD.out.versions)
         }
 
@@ -129,10 +129,10 @@ workflow PREPARE_GENOME {
     def biotype = gencode ? "gene_type" : featurecounts_group_type
     if (additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], additional_fasta ] ).gunzip.map { it[1] }
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA ( [ [:], file(additional_fasta, checkIfExists: true) ] ).gunzip.map { it[1] }
             ch_versions  = ch_versions.mix(GUNZIP_ADDITIONAL_FASTA.out.versions)
         } else {
-            ch_add_fasta = Channel.value(file(additional_fasta))
+            ch_add_fasta = Channel.value(file(additional_fasta, checkIfExists: true))
         }
 
         CUSTOM_CATADDITIONALFASTA (
@@ -150,10 +150,10 @@ workflow PREPARE_GENOME {
     //
     if (gene_bed) {
         if (gene_bed.endsWith('.gz')) {
-            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], gene_bed ] ).gunzip.map { it[1] }
+            ch_gene_bed = GUNZIP_GENE_BED ( [ [:], file(gene_bed, checkIfExists: true) ] ).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GENE_BED.out.versions)
         } else {
-            ch_gene_bed = Channel.value(file(gene_bed))
+            ch_gene_bed = Channel.value(file(gene_bed, checkIfExists: true))
         }
     } else {
         ch_gene_bed = GTF2BED ( ch_gtf ).bed
@@ -165,10 +165,10 @@ workflow PREPARE_GENOME {
     //
     if (transcript_fasta) {
         if (transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], transcript_fasta ] ).gunzip.map { it[1] }
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ( [ [:], file(transcript_fasta, checkIfExists: true) ] ).gunzip.map { it[1] }
             ch_versions         = ch_versions.mix(GUNZIP_TRANSCRIPT_FASTA.out.versions)
         } else {
-            ch_transcript_fasta = Channel.value(file(transcript_fasta))
+            ch_transcript_fasta = Channel.value(file(transcript_fasta, checkIfExists: true))
         }
         if (gencode) {
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE ( ch_transcript_fasta )
@@ -228,7 +228,11 @@ workflow PREPARE_GENOME {
     // Uncompress sortmerna index or generate from scratch if required
     //
     ch_sortmerna_index = Channel.empty()
+    ch_rrna_fastas = Channel.empty()
+
     if ('sortmerna' in prepare_tool_indices) {
+        ribo_db = file(sortmerna_fasta_list)
+
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {
                 ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ( [ [:], sortmerna_index ] ).untar.map { it[1] }
@@ -237,14 +241,12 @@ workflow PREPARE_GENOME {
                 ch_sortmerna_index = Channel.value(file(sortmerna_index))
             }
         } else {
-            ch_sortmerna_fastas = Channel.from(file(sortmerna_fasta_list).readLines())
+            ch_rrna_fastas = Channel.from(ribo_db.readLines())
                 .map { row -> file(row, checkIfExists: true) }
-                .collect()
-                .map { [ 'rrna_refs', it ] }
 
             SORTMERNA_INDEX (
                 Channel.of([ [],[] ]),
-                ch_sortmerna_fastas,
+                ch_rrna_fastas.collect().map { [ 'rrna_refs', it ] },
                 Channel.of([ [],[] ])
             )
             ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
@@ -370,6 +372,7 @@ workflow PREPARE_GENOME {
     chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
     splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
     bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    rrna_fastas      = ch_rrna_fastas            // channel: path(sortmerna_fasta_list)
     sortmerna_index  = ch_sortmerna_index        // channel: path(sortmerna/index/)
     star_index       = ch_star_index             // channel: path(star/index/)
     rsem_index       = ch_rsem_index             // channel: path(rsem/index/)

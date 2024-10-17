@@ -81,6 +81,8 @@ process STAR_ALIGN {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
+    echo "" | gzip > ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}Xd.out.bam
     touch ${prefix}.Log.final.out
     touch ${prefix}.Log.out
@@ -89,8 +91,6 @@ process STAR_ALIGN {
     touch ${prefix}.toTranscriptome.out.bam
     touch ${prefix}.Aligned.unsort.out.bam
     touch ${prefix}.Aligned.sortedByCoord.out.bam
-    touch ${prefix}.unmapped_1.fastq.gz
-    touch ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}.tab
     touch ${prefix}.SJ.out.tab
     touch ${prefix}.ReadsPerGene.out.tab

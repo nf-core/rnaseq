@@ -33,4 +33,16 @@ process RSEQC_TIN {
         rseqc: \$(tin.py --version | sed -e "s/tin.py //g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${bam.fileName}.summary.txt
+    touch ${bam.fileName}.tin.xls
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(tin.py --version | sed -e "s/tin.py //g")
+    END_VERSIONS
+    """
 }

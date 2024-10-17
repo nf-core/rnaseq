@@ -13,7 +13,7 @@ library(SummarizedExperiment)
 #'
 #' @return output Data frame
 
-read_delim_flexible <- function(file, header = TRUE, row.names = NULL, check.names = TRUE, stringsAsFactors = FALSE){
+read_delim_flexible <- function(file, header = TRUE, row.names = NULL, check.names = FALSE, stringsAsFactors = FALSE){
 
     ext <- tolower(tail(strsplit(basename(file), split = "\\\\.")[[1]], 1))
 
@@ -120,6 +120,9 @@ parse_metadata <- function(metadata_path, ids, metadata_id_col = NULL){
     if (is.null(metadata_id_col)){
         metadata_id_col <- findColumnWithAllEntries(ids, metadata)
     }
+
+    # Remove any all-NA columns
+    metadata <-  metadata[, colSums(is.na(metadata)) != nrow(metadata)]
 
     # Allow for duplicate rows by the id column
     metadata <- aggregate(

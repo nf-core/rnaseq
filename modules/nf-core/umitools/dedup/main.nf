@@ -47,6 +47,7 @@ process UMITOOLS_DEDUP {
     """
 
     stub:
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bam
     touch ${prefix}.log

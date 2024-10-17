@@ -1,5 +1,6 @@
 name: multiqc
-description: Aggregate results from bioinformatics analyses across many samples into a single report
+description: Aggregate results from bioinformatics analyses across many samples into
+  a single report
 keywords:
   - QC
   - bioinformatics tools
@@ -12,40 +13,59 @@ tools:
       homepage: https://multiqc.info/
       documentation: https://multiqc.info/docs/
       licence: ["GPL-3.0-or-later"]
+      identifier: biotools:multiqc
 input:
-  - multiqc_files:
-      type: file
-      description: |
-        List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
-  - multiqc_config:
-      type: file
-      description: Optional config yml for MultiQC
-      pattern: "*.{yml,yaml}"
-  - extra_multiqc_config:
-      type: file
-      description: Second optional config yml for MultiQC. Will override common sections in multiqc_config.
-      pattern: "*.{yml,yaml}"
-  - multiqc_logo:
-      type: file
-      description: Optional logo file for MultiQC
-      pattern: "*.{png}"
+  - - multiqc_files:
+        type: file
+        description: |
+          List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+  - - multiqc_config:
+        type: file
+        description: Optional config yml for MultiQC
+        pattern: "*.{yml,yaml}"
+  - - extra_multiqc_config:
+        type: file
+        description: Second optional config yml for MultiQC. Will override common sections
+          in multiqc_config.
+        pattern: "*.{yml,yaml}"
+  - - multiqc_logo:
+        type: file
+        description: Optional logo file for MultiQC
+        pattern: "*.{png}"
+  - - replace_names:
+        type: file
+        description: |
+          Optional two-column sample renaming file. First column a set of
+          patterns, second column a set of corresponding replacements. Passed via
+          MultiQC's `--replace-names` option.
+        pattern: "*.{tsv}"
+  - - sample_names:
+        type: file
+        description: |
+          Optional TSV file with headers, passed to the MultiQC --sample_names
+          argument.
+        pattern: "*.{tsv}"
 output:
   - report:
-      type: file
-      description: MultiQC report file
-      pattern: "multiqc_report.html"
+      - "*multiqc_report.html":
+          type: file
+          description: MultiQC report file
+          pattern: "multiqc_report.html"
   - data:
-      type: directory
-      description: MultiQC data dir
-      pattern: "multiqc_data"
+      - "*_data":
+          type: directory
+          description: MultiQC data dir
+          pattern: "multiqc_data"
   - plots:
-      type: file
-      description: Plots created by MultiQC
-      pattern: "*_data"
+      - "*_plots":
+          type: file
+          description: Plots created by MultiQC
+          pattern: "*_data"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@abhi18av"
   - "@bunop"

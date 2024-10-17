@@ -4,8 +4,7 @@ nextflow_function {
     name "Test Functions"
     script "subworkflows/nf-core/utils_nextflow_pipeline/main.nf"
     config "subworkflows/nf-core/utils_nextflow_pipeline/tests/nextflow.config"
-    tag "UTILS_NEXTFLOW_PIPELINE"
-    
+
     test("Test Function getWorkflowVersion") {
 
         function "getWorkflowVersion"

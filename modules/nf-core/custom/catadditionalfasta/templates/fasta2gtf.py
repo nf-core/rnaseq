@@ -2,11 +2,11 @@
 
 # Written by Pranathi Vemuri, later modified by Jonathan Manning and released under the MIT license.
 
-import os
 import logging
+import os
 import platform
-from typing import Iterator, Tuple
 from itertools import groupby
+from typing import Iterator, Tuple
 
 
 def setup_logging() -> logging.Logger:

@@ -10,35 +10,34 @@ import groovy.json.JsonSlurper
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-validation'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { dashedLine                } from '../../nf-core/utils_nfcore_pipeline'
-include { nfCoreLogo                } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
+include { calculateStrandedness     } from '../../nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow PIPELINE_INITIALISATION {
 
     take:
     version           // boolean: Display version and exit
-    help              // boolean: Display help text
-    schema            //  string: Path to the JSON schema file
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
     monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args  //   array: List of positional nextflow CLI args
+    nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
 
     main:
+
+    ch_versions = Channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -53,16 +52,10 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    pre_help_text = nfCoreLogo(monochrome_logs)
-    post_help_text = '\n' + workflowCitation() + '\n' + dashedLine(monochrome_logs)
-    def String workflow_command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --genome GRCh37 --outdir <OUTDIR>"
-    UTILS_NFVALIDATION_PLUGIN (
-        help,
-        workflow_command,
-        pre_help_text,
-        post_help_text,
+    UTILS_NFSCHEMA_PLUGIN (
+        workflow,
         validate_params,
-        schema
+        null
     )
 
     //
@@ -77,18 +70,23 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
+    emit:
+    versions    = ch_versions
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW FOR PIPELINE COMPLETION
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+def pass_mapped_reads  = [:]
+def pass_trimmed_reads = [:]
+def pass_strand_check  = [:]
 
 workflow PIPELINE_COMPLETION {
 
     take:
-    schema          //  string: Path to the JSON schema file
     email           //  string: email address
     email_on_fail   //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML
@@ -96,20 +94,45 @@ workflow PIPELINE_COMPLETION {
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     hook_url        //  string: hook URL for notifications
     multiqc_report  //  string: Path to MultiQC report
+    trim_status        // map: pass/fail status per sample for trimming
+    map_status         // map: pass/fail status per sample for mapping
+    strand_status      // map: pass/fail status per sample for strandedness check
 
     main:
+    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
 
-    summary_params = paramsSummaryMap(workflow, parameters_schema: schema)
+    trim_status
+        .map{
+            id, status -> pass_trimmed_reads[id] = status
+        }
+
+    map_status
+        .map{
+            id, status -> pass_mapped_reads[id] = status
+        }
+
+    strand_status
+        .map{
+            id, status -> pass_strand_check[id] = status
+        }
 
     //
     // Completion email and summary
     //
     workflow.onComplete {
         if (email || email_on_fail) {
-            completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
+            completionEmail(
+                summary_params,
+                email,
+                email_on_fail,
+                plaintext_email,
+                outdir,
+                monochrome_logs,
+                multiqc_report.toList()
+            )
         }
 
-        completionSummary(monochrome_logs)
+        rnaseqSummary(monochrome_logs=monochrome_logs, pass_mapped_reads=pass_mapped_reads, pass_trimmed_reads=pass_trimmed_reads, pass_strand_check=pass_strand_check)
 
         if (hook_url) {
             imNotification(summary_params, hook_url)
@@ -122,9 +145,9 @@ workflow PIPELINE_COMPLETION {
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     FUNCTIONS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 //
@@ -140,7 +163,7 @@ def checkSamplesAfterGrouping(input) {
     }
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
+    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
     if (!endedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
@@ -233,6 +256,29 @@ def validateInputParameters() {
         }
     }
 
+    //General checks for if contaminant screening is used
+    if (params.contaminant_screening) {
+        if (params.aligner == 'star_rsem') {
+            error("Contaminant screening cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
+        }
+    }
+
+    // Check that Kraken/Bracken database provided if using kraken2/bracken
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
+        if (!params.kraken_db) {
+            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
+        }
+    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
+    } else {
+        if (!params.bracken_precision.equals('S')) {
+            brackenPrecisionWithoutKrakenDBWarn()
+        }
+
+        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
+            krakenArgumentsWithoutKrakenDBWarn()
+        }
+    }
+
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
     def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
@@ -270,7 +316,6 @@ def genomeExistsError() {
         error(error_string)
     }
 }
-
 //
 // Generate methods description for MultiQC
 //
@@ -312,8 +357,10 @@ def methodsDescriptionText(mqc_methods_yaml) {
         // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
         // Removing ` ` since the manifest.doi is a string and not a proper list
         def temp_doi_ref = ""
-        String[] manifest_doi = meta.manifest_map.doi.tokenize(",")
-        for (String doi_ref: manifest_doi) temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
+        def manifest_doi = meta.manifest_map.doi.tokenize(",")
+        manifest_doi.each { doi_ref ->
+            temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
+        }
         meta["doi_text"] = temp_doi_ref.substring(0, temp_doi_ref.length() - 2)
     } else meta["doi_text"] = ""
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
@@ -449,6 +496,26 @@ def additionaFastaIndexWarn(index) {
 }
 
 //
+// Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
+//
+def krakenArgumentsWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
+        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+///
+/// Print a warning if --bracken-precision is provided without --kraken_db
+///
+def brackenPrecisionWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
+        "  Bracken will not run so precision will not be set.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //
 def checkMaxContigSize(fai_file) {
@@ -468,36 +535,6 @@ def checkMaxContigSize(fai_file) {
             error(error_string)
         }
     }
-}
-
-//
-// Create MultiQC tsv custom content from a list of values
-//
-def multiqcTsvFromList(tsv_data, header) {
-    def tsv_string = ""
-    if (tsv_data.size() > 0) {
-        tsv_string += "${header.join('\t')}\n"
-        tsv_string += tsv_data.join('\n')
-    }
-    return tsv_string
-}
-
-//
-// Function that parses Salmon quant 'meta_info.json' output file to get inferred strandedness
-//
-def getSalmonInferredStrandedness(json_file) {
-    def lib_type = new JsonSlurper().parseText(json_file.text).get('library_types')[0]
-    def strandedness = 'reverse'
-    if (lib_type) {
-        if (lib_type in ['U', 'IU']) {
-            strandedness = 'unstranded'
-        } else if (lib_type in ['SF', 'ISF']) {
-            strandedness = 'forward'
-        } else if (lib_type in ['SR', 'ISR']) {
-            strandedness = 'reverse'
-        }
-    }
-    return strandedness
 }
 
 //
@@ -545,29 +582,63 @@ def biotypeInGtf(gtf_file, biotype) {
 }
 
 //
-// Function that parses and returns the predicted strandedness from the RSeQC infer_experiment.py output
+// Function that parses RSeQC infer_experiment output file to get inferred strandedness
 //
-def getInferexperimentStrandedness(inferexperiment_file, cutoff=30) {
-    def sense        = 0
-    def antisense    = 0
-    def undetermined = 0
+def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    def forwardFragments = 0
+    def reverseFragments = 0
+    def unstrandedFragments = 0
+
     inferexperiment_file.eachLine { line ->
-        def undetermined_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
-        def se_sense_matcher     = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
+        def unstranded_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
+        def se_sense_matcher = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
         def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
-        def pe_sense_matcher     = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
+        def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
         def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
-        if (undetermined_matcher) undetermined = undetermined_matcher[0][1].toFloat() * 100
-        if (se_sense_matcher)     sense        = se_sense_matcher[0][1].toFloat() * 100
-        if (se_antisense_matcher) antisense    = se_antisense_matcher[0][1].toFloat() * 100
-        if (pe_sense_matcher)     sense        = pe_sense_matcher[0][1].toFloat() * 100
-        if (pe_antisense_matcher) antisense    = pe_antisense_matcher[0][1].toFloat() * 100
+
+        if (unstranded_matcher) unstrandedFragments = unstranded_matcher[0][1].toFloat() * 100
+        if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
+        if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
+        if (pe_sense_matcher) forwardFragments = pe_sense_matcher[0][1].toFloat() * 100
+        if (pe_antisense_matcher) reverseFragments = pe_antisense_matcher[0][1].toFloat() * 100
     }
-    def strandedness = 'unstranded'
-    if (sense >= 100-cutoff) {
-        strandedness = 'forward'
-    } else if (antisense >= 100-cutoff) {
-        strandedness = 'reverse'
-    }
-    return [ strandedness, sense, antisense, undetermined ]
+
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
+
+//
+// Print pipeline summary on completion
+//
+def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
+    def colors = logColours(monochrome_logs)
+
+    def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
+    def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
+    def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+    if (workflow.success) {
+        def color = colors.green
+        def status = []
+        if (workflow.stats.ignoredCount != 0) {
+            color = colors.yellow
+            status += ['with errored process(es)']
+        }
+        if (fail_mapped_count > 0 || fail_trimmed_count > 0) {
+            color = colors.yellow
+            status += ['with skipped sampl(es)']
+        }
+        log.info "-${colors.purple}[$workflow.manifest.name]${color} Pipeline completed successfully ${status.join(', ')}${colors.reset}-"
+        if (fail_trimmed_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_trimmed_count}/${pass_trimmed_reads.size()} samples skipped since they failed ${params.min_trimmed_reads} trimmed read threshold.${colors.reset}-"
+        }
+        if (fail_mapped_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
+        }
+        if (fail_strand_count > 0) {
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_strand_count}/${pass_strand_check.size()} samples failed strandedness check.${colors.reset}-"
+        }
+    } else {
+        log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
+    }
+}
+

@@ -1,4 +1,41 @@
 {
+    "Should run without failures - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e36ef3cd73d19ccf2378c9358fe942c0"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e36ef3cd73d19ccf2378c9358fe942c0"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-20T18:18:08.896422"
+    },
     "Should run without failures": {
         "content": [
             {
@@ -44,6 +81,10 @@
                 ]
             }
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
         "timestamp": "2023-10-16T14:42:22.381609786"
     }
 }

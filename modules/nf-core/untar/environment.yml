@@ -1,10 +1,6 @@
-name: untar
-
 channels:
   - conda-forge
   - bioconda
-  - defaults
-
 dependencies:
   - conda-forge::grep
   - conda-forge::sed

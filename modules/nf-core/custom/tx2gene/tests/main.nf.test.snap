@@ -1,60 +1,68 @@
 {
-    "versions": {
+    "saccharomyces_cerevisiae - gtf": {
         "content": [
-            [
-                "versions.yml:md5,fb8145d7fbc6043ba031249b23ecda50"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-02-26T13:14:18.218251"
-    },
-    "tx2gene": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,fb8145d7fbc6043ba031249b23ecda50"
+                ],
+                "tx2gene": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,fb8145d7fbc6043ba031249b23ecda50"
                 ]
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-02-26T13:14:18.21054"
+        "timestamp": "2024-07-05T13:13:11.305047"
     },
-    "tx2gene - stub": {
+    "saccharomyces_cerevisiae - gtf - stub": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5613eefbca41377128f1d8dc09b9fb60"
+                ],
+                "tx2gene": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5613eefbca41377128f1d8dc09b9fb60"
                 ]
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-02-26T13:14:25.915434"
-    },
-    "versions - stub": {
-        "content": [
-            [
-                "versions.yml:md5,5613eefbca41377128f1d8dc09b9fb60"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
-        },
-        "timestamp": "2024-02-26T13:14:25.919243"
+        "timestamp": "2024-07-10T15:15:34.064489"
     }
 }

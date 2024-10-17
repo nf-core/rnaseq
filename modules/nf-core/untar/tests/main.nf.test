@@ -17,10 +17,9 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out.untar).match("test_untar") },
+                { assert snapshot(process.out).match() },
             )
         }
-
     }
 
     test("test_untar_onlyfiles") {
@@ -36,10 +35,48 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out.untar).match("test_untar_onlyfiles") },
+                { assert snapshot(process.out).match() },
             )
         }
-
     }
 
+    test("test_untar - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/db/kraken2.tar.gz', checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+            )
+        }
+    }
+
+    test("test_untar_onlyfiles - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [], file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+            )
+        }
+    }
 }

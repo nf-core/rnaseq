@@ -1,8 +1,6 @@
-name: rseqc_inferexperiment
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::rseqc
   - conda-forge::r-base

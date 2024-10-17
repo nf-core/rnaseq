@@ -1,28 +1,5 @@
 {
-    "test_reads_1_size": {
-        "content": [
-            1066944
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-01-11T10:33:54.747992124"
-    },
-    "versions": {
-        "content": [
-            [
-                "versions.yml:md5,12c0d1f67c2afb97470ae0974e5e01bb",
-                "versions.yml:md5,885fde9e7beac002b3a17b66b92db4bd"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2023-11-26T16:41:10.396971682"
-    },
-    "test_reads_1_lines": {
+    "homo_sapiens paired-end [fastq]": {
         "content": [
             [
                 "@normal#21#998579#1/1",
@@ -31,16 +8,8 @@
                 "102302000331;3333;23133320233330*33/233333333333333/313232333/3;3;3/333000;11/00;;01//103*1032323233",
                 "@normal#21#998572#2/1",
                 "CTCCTCTCCTTCTACCTGCTGGGGTTGCTTGTCAGTAGCGGGCAAGGTCGGAGTGTTGCGCTTTATTGCATTTACTTTCCCTCCCCCTTCCACCCGGCCA"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-01-11T10:33:54.730250665"
-    },
-    "test_reads_2_lines": {
-        "content": [
+            ],
+            1066944,
             [
                 "@normal#21#998579#1/2",
                 "AAAAAAAAAGAAGAAGCAGAAGCTGTTTCCCTGGATATCCTGCTCACCGATTCCCCTCTCCAATTCTGTATTTTCCCTTCTCTTATTTAAGGGTCTCCAC",
@@ -48,22 +17,165 @@
                 "023333233332333310333302333211/3333;0300;*/;000/32;201003031/22;21333032;;11/23030322;2332333313/030",
                 "@normal#21#998572#2/2",
                 "TTCCCCTCTCCAATTGAGTATTTTCCCTTCTCTTATTTAAGGGTCTCCACACAAACAGATACAATTTTAGGGACAGCTAGGAGAAAGAACGAAAATAATAA"
+            ],
+            1066944,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,0b0e2dc090e5ad88f9a9d6dbe9c3e4a0"
+                ]
+            ],
+            [
+                "versions.yml:md5,12c0d1f67c2afb97470ae0974e5e01bb",
+                "versions.yml:md5,885fde9e7beac002b3a17b66b92db4bd"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-01-11T10:33:54.756723613"
+        "timestamp": "2024-07-03T15:08:35.832206"
     },
-    "test_reads_2_size": {
+    "homo_sapiens paired-end [fastq] - stub": {
         "content": [
-            1066944
+            {
+                "0": [
+                    [
+                        "complete_ref_lens.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "ctable.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "ctg_offsets.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "mphf.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "pos.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "pre_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "rank.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refAccumLengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "ref_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "reflengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "seq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "versionInfo.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_meta_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    "versions.yml:md5,12c0d1f67c2afb97470ae0974e5e01bb",
+                    "versions.yml:md5,885fde9e7beac002b3a17b66b92db4bd"
+                ],
+                "index": [
+                    [
+                        "complete_ref_lens.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "ctable.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "ctg_offsets.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "mphf.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "pos.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "pre_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "rank.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refAccumLengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "ref_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "reflengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "seq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "versionInfo.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_meta_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,12c0d1f67c2afb97470ae0974e5e01bb",
+                    "versions.yml:md5,885fde9e7beac002b3a17b66b92db4bd"
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-01-11T10:33:54.763399473"
+        "timestamp": "2024-07-03T15:08:56.819"
     }
 }

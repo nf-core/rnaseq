@@ -34,4 +34,18 @@ process RSEQC_READDUPLICATION {
         rseqc: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.seq.DupRate.xls
+    touch ${prefix}.pos.DupRate.xls
+    touch ${prefix}.DupRate_plot.pdf
+    touch ${prefix}.DupRate_plot.r
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
+    END_VERSIONS
+    """
 }

@@ -54,4 +54,22 @@ process RSEM_CALCULATEEXPRESSION {
         star: \$(STAR --version | sed -e "s/STAR_//g")
     END_VERSIONS
     """
+
+    stub:
+    prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.genes.results
+    touch ${prefix}.isoforms.results
+    touch ${prefix}.stat
+    touch ${prefix}.log
+    touch ${prefix}.STAR.genome.bam
+    touch ${prefix}.genome.bam
+    touch ${prefix}.transcript.bam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
+        star: \$(STAR --version | sed -e "s/STAR_//g")
+    END_VERSIONS
+    """
 }

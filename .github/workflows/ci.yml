@@ -1,19 +1,19 @@
 name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
-  push:
-    branches:
-      - dev
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
-  NXF_ANSI_LOG: false
-  NFT_VER: "0.8.4"
-  NFT_WORKDIR: "~"
   NFT_DIFF: "pdiff"
-  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
+  NFT_VER: "0.9.0"
+  NFT_WORKDIR: "~"
+  NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -23,37 +23,26 @@ jobs:
     name: Check for changes
     runs-on: ubuntu-latest
     outputs:
-      nf_test_files: ${{ steps.list.outputs.nf_test_files }}
+      nf_test_files: ${{ steps.list.outputs.components }}
     steps:
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-          architecture: "x64"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install gitpython pyyaml
-
-      - name: list nf_test_files
+      - name: List nf-test files
         id: list
-        run: |
-          echo nf_test_files=$(python \
-            .github/python/find_changed_files.py \
-            -t pipeline workflow process \
-            --head_ref ${{ github.sha }} \
-            --base_ref origin/${{ github.base_ref }} \
-          ) >> $GITHUB_OUTPUT
+        uses: adamrtalbot/detect-nf-test-changes@v0.0.2
+        with:
+          head: ${{ github.sha }}
+          base: origin/${{ github.base_ref }}
+          include: .github/include.yaml
 
-      - name: debug
+      - name: print list of nf-test files
         run: |
-          echo ${{ steps.list.outputs.nf_test_files }}
+          echo ${{ steps.list.outputs.components }}
 
   test:
-    name: ${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }}
+    name: "Run tests (${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }})"
     needs: [nf-test-changes]
     if: needs.nf-test-changes.outputs.nf_test_files != '[]'
     runs-on: ubuntu-latest
@@ -61,20 +50,59 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
+          - "24.04.2"
           - "latest-everything"
-          - "23.04"
         nf_test_files: ["${{ fromJson(needs.nf-test-changes.outputs.nf_test_files) }}"]
         profile:
+          - "conda"
           - "docker"
-
+          - "singularity"
+        isMaster:
+          - ${{ github.base_ref == 'master' }}
+        # Exclude conda and singularity on dev
+        exclude:
+          - isMaster: false
+            profile: "conda"
+          - isMaster: false
+            profile: "singularity"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
-      - name: Install Nextflow
+      - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Set up Apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Set up Miniconda
+        if: matrix.profile == 'conda'
+        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
+        with:
+          miniconda-version: "latest"
+          auto-update-conda: true
+          conda-solver: libmamba
+          channels: conda-forge,bioconda
+
+      - name: Set up Conda
+        if: matrix.profile == 'conda'
+        run: |
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
+
+      - name: Install nf-test
+        uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFT_VER }}
 
       - uses: actions/setup-python@v4
         with:
@@ -86,20 +114,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install pdiff
 
-      - name: Cache nf-test installation
-        id: cache-software
-        uses: actions/cache@v3
-        with:
-          path: |
-            /usr/local/bin/nf-test
-            /home/runner/.nf-test/nf-test.jar
-          key: ${{ runner.os }}-${{ env.NFT_VER }}-nftest
-
-      - name: Install nf-test
-        if: steps.cache-software.outputs.cache-hit != 'true'
-        run: |
-          wget -qO- https://code.askimed.com/install/nf-test | bash
-          sudo mv nf-test /usr/local/bin/
+      - name: Clean up Disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run nf-test
         run: |

@@ -1,28 +1,16 @@
 {
     "kallisto": {
         "content": [
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.gene_tpm.tsv:md5,23fa0c64cfbd198806b53897de791b8b"
-                ]
-            ],
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
             [
                 [
                     {
                         "id": "all_samples"
                     },
                     "all_samples.gene_counts.tsv:md5,4ba44e5ebc9ed0ca2ca008d10a1dddc3"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.gene_lengths.tsv:md5,b031192af7a8f64dcc887978a69fdbb7"
                 ]
             ],
             [
@@ -38,7 +26,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.transcript_tpm.tsv:md5,de458e1c2a579e53bd7671c5176f5d0c"
+                    "all_samples.gene_lengths.tsv:md5,b031192af7a8f64dcc887978a69fdbb7"
                 ]
             ],
             [
@@ -50,46 +38,552 @@
                 ]
             ],
             [
-                "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
-                "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
-                "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
-                "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm.tsv:md5,23fa0c64cfbd198806b53897de791b8b"
+                ]
             ],
-            "all_samples.SummarizedExperiment.rds",
-            "all_samples.SummarizedExperiment.rds",
-            "all_samples.SummarizedExperiment.rds",
-            "all_samples.SummarizedExperiment.rds"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-03T17:29:13.487959"
-    },
-    "salmon": {
-        "content": [
             [
                 [
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.gene_tpm.tsv:md5,9711ed8364c3a1ea4fc87bd5e0780835"
+                    "all_samples.transcript_tpm.tsv:md5,de458e1c2a579e53bd7671c5176f5d0c"
                 ]
             ],
+            [
+                "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
+                "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
+                "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T15:36:19.861809"
+    },
+    "salmon - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    "versions.yml:md5,4c3564e1ba17d8ce2b0ee784251ddd87",
+                    "versions.yml:md5,7afb76ee798ceb1e5dff5879d28ef85a",
+                    "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                    "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_length_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds_length_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_transcript_rds": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "tpm_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tpm_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4c3564e1ba17d8ce2b0ee784251ddd87",
+                    "versions.yml:md5,7afb76ee798ceb1e5dff5879d28ef85a",
+                    "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                    "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T15:36:55.281379"
+    },
+    "kallisto - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    "versions.yml:md5,7afb76ee798ceb1e5dff5879d28ef85a",
+                    "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                    "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
+                    "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_length_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds_length_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_transcript_rds": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "tpm_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tpm_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7afb76ee798ceb1e5dff5879d28ef85a",
+                    "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
+                    "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed",
+                    "versions.yml:md5,ea39658f8685118d81d42acd451e66ea"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T15:37:29.239014"
+    },
+    "salmon": {
+        "content": [
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
+            "all_samples.SummarizedExperiment.rds",
             [
                 [
                     {
                         "id": "all_samples"
                     },
                     "all_samples.gene_counts.tsv:md5,865a4706b8bf47f476d8298fdd344902"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "all_samples"
-                    },
-                    "all_samples.gene_lengths.tsv:md5,158e17a7bda7827b3d528f379e81d2bd"
                 ]
             ],
             [
@@ -105,7 +599,7 @@
                     {
                         "id": "all_samples"
                     },
-                    "all_samples.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
+                    "all_samples.gene_lengths.tsv:md5,158e17a7bda7827b3d528f379e81d2bd"
                 ]
             ],
             [
@@ -119,20 +613,32 @@
             null,
             null,
             [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.gene_tpm.tsv:md5,9711ed8364c3a1ea4fc87bd5e0780835"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "all_samples.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
+                ]
+            ],
+            [
                 "versions.yml:md5,4c3564e1ba17d8ce2b0ee784251ddd87",
                 "versions.yml:md5,b44caeec65491d47e098c7ddaf024b96",
                 "versions.yml:md5,d5243289a32cde9e90e20f1a202bb566",
                 "versions.yml:md5,e9e7d18c3de83f1113fb1ff0c55d35ed"
-            ],
-            "all_samples.SummarizedExperiment.rds",
-            "all_samples.SummarizedExperiment.rds",
-            "all_samples.SummarizedExperiment.rds",
-            "all_samples.SummarizedExperiment.rds"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-03T17:28:43.74907"
+        "timestamp": "2024-07-03T15:35:48.954002"
     }
 }

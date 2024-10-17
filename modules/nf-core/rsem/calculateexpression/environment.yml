@@ -1,7 +1,6 @@
 channels:
-  - seqera
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::rsem
-  - bioconda::star
+  - bioconda::rsem=1.3.3
+  - bioconda::star=2.7.10a

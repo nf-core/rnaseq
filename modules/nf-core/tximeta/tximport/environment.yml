@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::bioconductor-tximeta"
+  - "bioconda::bioconductor-tximeta=1.20.1"

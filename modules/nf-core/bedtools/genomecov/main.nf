@@ -27,7 +27,6 @@ process BEDTOOLS_GENOMECOV {
     if (!args_list.contains('-bg') && (scale > 0 && scale != 1)) {
         args += " -bg"
     }
-    
     // Sorts output file by chromosome and position using additional options for performance and consistency
     // See https://www.biostars.org/p/66927/ for further details
     def buffer   = task.memory ? "--buffer-size=${task.memory.toGiga().intdiv(2)}G" : ''

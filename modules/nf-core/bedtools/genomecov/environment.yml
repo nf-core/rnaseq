@@ -1,6 +1,5 @@
 channels:
-  - seqera
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::bedtools
+  - bioconda::bedtools=2.31.1

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements & fixes
 
 - [PR #1418](https://github.com/nf-core/rnaseq/pull/1418) - Bump versions back to 3.17.0 after release
+- [PR #1422](https://github.com/nf-core/rnaseq/pull/1422) - Bump lots of modules so that conda versions have arm builds
 
 ## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
 

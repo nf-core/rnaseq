@@ -9,30 +9,36 @@ tools:
       description: Remove lines from bed file that refer to off-chromosome locations.
       homepage: http://hgdownload.cse.ucsc.edu/admin/exe/
       licence: ["varies; see http://genome.ucsc.edu/license"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bedgraph:
-      type: file
-      description: bedGraph file
-      pattern: "*.{bedgraph}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bedgraph:
+        type: file
+        description: bedGraph file
+        pattern: "*.{bedgraph}"
+  - - sizes:
+        type: file
+        description: Chromosome sizes file
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - bedgraph:
-      type: file
-      description: bedGraph file
-      pattern: "*.{bedgraph}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bedGraph":
+          type: file
+          description: bedGraph file
+          pattern: "*.{bedgraph}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
 maintainers:

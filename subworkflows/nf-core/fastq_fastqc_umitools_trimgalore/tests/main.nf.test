@@ -5,6 +5,7 @@ nextflow_workflow {
     workflow "FASTQ_FASTQC_UMITOOLS_TRIMGALORE"
     config './nextflow.config'
 
+
     test("test single end read with UMI") {
 
         when {

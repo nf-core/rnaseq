@@ -1,7 +1,5 @@
-name: bracken_bracken
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - "bioconda::bracken=2.9"

@@ -3,8 +3,8 @@ process CUSTOM_CATADDITIONALFASTA {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/python:3.9--1' :
-        'biocontainers/python:3.9--1' }"
+        'https://depot.galaxyproject.org/singularity/python:3.12' :
+        'biocontainers/python:3.12' }"
 
     input:
     tuple val(meta), path(fasta), path(gtf)

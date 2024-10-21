@@ -3,6 +3,8 @@ nextflow_process {
     name "Test Process RSEQC_BAMSTAT"
     script "../main.nf"
     process "RSEQC_BAMSTAT"
+
+
     config "./nextflow.config"
 
     test("sarscov2 - [meta] - bam") {

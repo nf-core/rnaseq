@@ -4,6 +4,7 @@ nextflow_process {
     script "../main.nf"
     process "FQ_SUBSAMPLE"
 
+
     test("test_fq_subsample_no_args") {
         config "./nextflow_no_args.config"
         when {

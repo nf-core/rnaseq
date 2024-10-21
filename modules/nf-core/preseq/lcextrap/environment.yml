@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::preseq=3.1.2
+  - bioconda::preseq=3.2.0

@@ -4,19 +4,19 @@ process SAMTOOLS_SORT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.20--h50ea8bc_0' :
-        'biocontainers/samtools:1.20--h50ea8bc_0' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
+        'biocontainers/samtools:1.21--h50ea8bc_0' }"
 
     input:
     tuple val(meta) , path(bam)
     tuple val(meta2), path(fasta)
 
     output:
-    tuple val(meta), path("*.bam"),     emit: bam,  optional: true
-    tuple val(meta), path("*.cram"),    emit: cram, optional: true
-    tuple val(meta), path("*.crai"),    emit: crai, optional: true
-    tuple val(meta), path("*.csi"),     emit: csi,  optional: true
-    path  "versions.yml"          , emit: versions
+    tuple val(meta), path("*.bam"),  emit: bam,  optional: true
+    tuple val(meta), path("*.cram"), emit: cram, optional: true
+    tuple val(meta), path("*.crai"), emit: crai, optional: true
+    tuple val(meta), path("*.csi"),  emit: csi,  optional: true
+    path  "versions.yml",            emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,7 +32,6 @@ process SAMTOOLS_SORT {
 
     """
     samtools cat \\
-        --threads $task.cpus \\
         ${bam} \\
     | \\
     samtools sort \\

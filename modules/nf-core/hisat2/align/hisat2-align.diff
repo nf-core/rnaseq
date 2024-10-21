@@ -1,4 +1,7 @@
 Changes in module 'nf-core/hisat2/align'
+'modules/nf-core/hisat2/align/environment.yml' is unchanged
+'modules/nf-core/hisat2/align/meta.yml' is unchanged
+Changes in 'hisat2/align/main.nf':
 --- modules/nf-core/hisat2/align/main.nf
 +++ modules/nf-core/hisat2/align/main.nf
 @@ -34,7 +34,7 @@
@@ -30,6 +33,17 @@ Changes in module 'nf-core/hisat2/align'
      ${unaligned}
  
 
+'modules/nf-core/hisat2/align/tests/main.nf.test.snap' is unchanged
+Changes in 'hisat2/align/tests/tags.yml':
+--- modules/nf-core/hisat2/align/tests/tags.yml
++++ modules/nf-core/hisat2/align/tests/tags.yml
+@@ -1,4 +0,0 @@
+-hisat2/align:
+-  - modules/nf-core/hisat2/align/**
+-  - modules/nf-core/hisat2/build/**
+-  - modules/nf-core/hisat2/extractsplicesites/**
+
+Changes in 'hisat2/align/tests/main.nf.test':
 --- modules/nf-core/hisat2/align/tests/main.nf.test
 +++ modules/nf-core/hisat2/align/tests/main.nf.test
 @@ -3,12 +3,6 @@
@@ -45,13 +59,5 @@ Changes in module 'nf-core/hisat2/align'
  
      test("Single-End") {
  
-
---- modules/nf-core/hisat2/align/tests/tags.yml
-+++ /dev/null
-@@ -1,4 +0,0 @@
--hisat2/align:
--  - modules/nf-core/hisat2/align/**
--  - modules/nf-core/hisat2/build/**
--  - modules/nf-core/hisat2/extractsplicesites/**
 
 ************************************************************

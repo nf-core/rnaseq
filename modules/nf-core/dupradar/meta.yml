@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "dupradar"
 description: Assessment of duplication rates in RNA-Seq datasets
@@ -14,71 +13,109 @@ tools:
       tool_dev_url: "https://github.com/ssayols/dupRadar"
       doi: "10.1186/s12859-016-1276-2"
       licence: ["GPL v3"]
+      identifier: biotools:dupradar
 
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM/SAM file containing read alignments
-      pattern: "*.{bam}"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'human' ]
-  - gtf:
-      type: file
-      description: Genomic features annotation in GTF or SAF
-      pattern: "*.{gtf}"
-
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: BAM/SAM file containing read alignments
+        pattern: "*.{bam}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'human' ]
+    - gtf:
+        type: file
+        description: Genomic features annotation in GTF or SAF
+        pattern: "*.{gtf}"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. `[ id:'sample1', single_end:false ]`
   - scatter2d:
-      type: file
-      description: PDF duplication rate against total read count plot
-      pattern: "*_duprateExpDens.pdf"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_duprateExpDens.pdf":
+          type: file
+          description: PDF duplication rate against total read count plot
+          pattern: "*_duprateExpDens.pdf"
   - boxplot:
-      type: file
-      description: |
-        PDF duplication rate ~ total reads per kilobase (RPK) boxplot
-      pattern: "*_duprateExpBoxplot.pdf"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_duprateExpBoxplot.pdf":
+          type: file
+          description: |
+            PDF duplication rate ~ total reads per kilobase (RPK) boxplot
+          pattern: "*_duprateExpBoxplot.pdf"
   - hist:
-      type: file
-      description: |
-        PDF expression histogram
-      pattern: "*.pdf"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_expressionHist.pdf":
+          type: file
+          description: |
+            PDF expression histogram
+          pattern: "*.pdf"
   - dupmatrix:
-      type: file
-      description: |
-        Text file containing tags falling on the features described in the GTF
-        file
-      pattern: "*_dupMatrix.txt"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_dupMatrix.txt":
+          type: file
+          description: |
+            Text file containing tags falling on the features described in the GTF
+            file
+          pattern: "*_dupMatrix.txt"
   - intercept_slope:
-      type: file
-      description: |
-        Text file containing intercept and slope from dupRadar modelling
-      pattern: "*_intercept_slope.txt"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_intercept_slope.txt":
+          type: file
+          description: |
+            Text file containing intercept and slope from dupRadar modelling
+          pattern: "*_intercept_slope.txt"
   - multiqc:
-      type: file
-      description: |
-        dupRadar files for passing to MultiQC
-      pattern: "*_multiqc.txt"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_mqc.txt":
+          type: file
+          description: |
+            dupRadar files for passing to MultiQC
+          pattern: "*_multiqc.txt"
   - session_info:
-      type: file
-      description: dump of R SessionInfo
-      pattern: "*.log"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*.R_sessionInfo.log":
+          type: file
+          description: dump of R SessionInfo
+          pattern: "*.log"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@pinin4fjords"
 maintainers:

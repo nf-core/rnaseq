@@ -20,14 +20,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,26f47339777a265af57338ac7f0f8798"
+                "versions.yml:md5,5917ae30ad1ee71ad6b62659d5b628d1"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T12:19:28.965471"
+        "timestamp": "2024-10-19T21:07:02.01253345"
     },
     "sarscov2 - fastq - gtf - stub": {
         "content": [
@@ -77,9 +77,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T12:19:38.549677"
+        "timestamp": "2024-10-19T21:07:12.9817063"
     }
 }

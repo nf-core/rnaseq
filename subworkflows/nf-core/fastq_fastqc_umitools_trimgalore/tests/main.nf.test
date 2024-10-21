@@ -6,7 +6,6 @@ nextflow_workflow {
     config './nextflow.config'
 
 
-
     test("test single end read with UMI") {
 
         when {

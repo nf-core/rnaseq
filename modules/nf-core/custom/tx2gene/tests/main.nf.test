@@ -4,7 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "CUSTOM_TX2GENE"
 
-
     test("saccharomyces_cerevisiae - gtf") {
 
         setup {

@@ -4,7 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "RSEQC_JUNCTIONSATURATION"
 
-
     test("sarscov2 paired-end [bam]") {
 
         when {

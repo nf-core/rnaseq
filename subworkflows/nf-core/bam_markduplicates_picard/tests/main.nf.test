@@ -4,7 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BAM_MARKDUPLICATES_PICARD"
 
-
     test("sarscov2 - bam") {
 
         when {

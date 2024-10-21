@@ -5,7 +5,6 @@ nextflow_process {
     process "RSEQC_INFEREXPERIMENT"
     config "./nextflow.config"
 
-
     test("sarscov2 - [[meta] - bam] - bed") {
 
         when {

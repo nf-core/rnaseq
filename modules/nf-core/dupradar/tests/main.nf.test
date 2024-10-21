@@ -4,7 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "DUPRADAR"
 
-
     test("sarscov2 - bam - single_end") {
 
         config './nextflow.config'

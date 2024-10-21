@@ -28,8 +28,8 @@
                     "gunzip": 1.1
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "TRIMGALORE": {
@@ -76,7 +76,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T16:32:13.845479978"
+        "timestamp": "2024-10-21T20:14:28.433411196"
     },
     "Params: --skip_qc": {
         "content": [
@@ -140,13 +140,13 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_ALIGN": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -692,13 +692,13 @@
                 "multiqc_citations.txt:md5,ef51c78faebdd32bad296ba14406b41e",
                 "multiqc_cutadapt.txt:md5,bc6ed9f59180b9346f22fb0f1e395dfa",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,26528b0b0d3df6304b80ca8f09619233",
-                "multiqc_samtools_idxstats.txt:md5,fd7d03a91f0b9e01a6939941f7f2243f",
+                "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,01637c600d3840500851eb4118564cc6",
+                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,3e57c1686c863035b6e6569210dfd4a8",
                 "ambig_info.tsv:md5,de973a4b22a4457217ae3dc04caf9401",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -773,7 +773,7 @@
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,9aa371befc36478d7720d3ea275e6f4d",
+                "e_data.ctab:md5,7cc6dedfc89b50e4be8c3ba82ba4f8aa",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,907ab2e06346df131cbdb929afc005a8",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
@@ -787,6 +787,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T16:31:26.493628799"
+        "timestamp": "2024-10-21T20:13:44.078197492"
     }
 }

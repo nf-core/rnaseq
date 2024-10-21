@@ -102,13 +102,13 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_ALIGN": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -1257,6 +1257,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T16:42:37.90820776"
+        "timestamp": "2024-10-21T20:23:07.88998048"
     }
 }

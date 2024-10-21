@@ -102,13 +102,13 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_ALIGN": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -1055,7 +1055,7 @@
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,26528b0b0d3df6304b80ca8f09619233",
                 "multiqc_featurecounts_biotype_plot.txt:md5,d0e3792631b78e393de8e6bbbb49d476",
-                "multiqc_samtools_idxstats.txt:md5,fd7d03a91f0b9e01a6939941f7f2243f",
+                "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1065,7 +1065,7 @@
                 "rseqc_infer_experiment_plot.txt:md5,749a802379ada3ec9d2083ecbe6aef7e",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,01637c600d3840500851eb4118564cc6",
+                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,3e57c1686c863035b6e6569210dfd4a8",
                 "ambig_info.tsv:md5,de973a4b22a4457217ae3dc04caf9401",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1175,7 +1175,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T15:58:09.750638828"
+        "timestamp": "2024-10-21T19:45:32.241828903"
     },
     "Params: --min_mapped_reads 90 - stub": {
         "content": [
@@ -1209,8 +1209,8 @@
                     "gunzip": 1.1
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "TRIMGALORE": {
@@ -1268,6 +1268,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T15:59:03.576783452"
+        "timestamp": "2024-10-21T19:46:21.485818867"
     }
 }

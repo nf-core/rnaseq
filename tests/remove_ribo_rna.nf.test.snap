@@ -102,10 +102,10 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "SORTMERNA": {
-                    "sortmerna": "4.3.6"
+                    "sortmerna": "4.3.7"
                 },
                 "SORTMERNA_INDEX": {
-                    "sortmerna": "4.3.6"
+                    "sortmerna": "4.3.7"
                 },
                 "STAR_ALIGN": {
                     "star": "2.7.11b",
@@ -1386,7 +1386,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T20:02:26.804814864"
+        "timestamp": "2024-10-22T12:24:58.795267716"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -1420,7 +1420,7 @@
                     "gunzip": 1.1
                 },
                 "SORTMERNA_INDEX": {
-                    "sortmerna": "4.3.6"
+                    "sortmerna": "4.3.7"
                 },
                 "STAR_GENOMEGENERATE": {
                     "star": "2.7.11b",
@@ -1482,6 +1482,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T20:03:16.221160765"
+        "timestamp": "2024-10-22T12:26:10.797017969"
     }
 }

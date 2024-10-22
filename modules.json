@@ -215,7 +215,8 @@
                     "sortmerna": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"],
+                        "patch": "modules/nf-core/sortmerna/sortmerna.diff"
                     },
                     "star/align": {
                         "branch": "master",

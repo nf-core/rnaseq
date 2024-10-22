@@ -230,8 +230,8 @@
                 ]
             ],
             [
-                "versions.yml:md5,35c1cc21d26d9d8f00e6ec87e97fb634",
                 "versions.yml:md5,5ad5e88ee4e52ccabeef61dcd368d30b",
+                "versions.yml:md5,708098dd31c984730b066ead621a33f7",
                 "versions.yml:md5,92f25606f0ee994dac8c00fe49676e5a",
                 "versions.yml:md5,9611f602102b5aed0fe2b947f9d2270c",
                 "versions.yml:md5,b92d6ad60847882b0089f551c5cfc366",
@@ -242,7 +242,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T14:53:57.659042129"
+        "timestamp": "2024-10-21T20:42:29.835710637"
     },
     "star - no igenomes": {
         "content": [
@@ -254,7 +254,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bam.bai:md5,5b46703bf3e1294c8f0f98811bd661f9"
+                    "test.bam.bai:md5,59e8552f0e50c540d41198496bf34251"
                 ]
             ],
             [
@@ -263,7 +263,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bam:md5,ac4e5cffcb5b580a119b1b03697f4621"
+                    "test.bam:md5,0d47a5f971c1548eadc1f3c39dab0dbf"
                 ]
             ],
             [
@@ -311,7 +311,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
+                    "test.Aligned.sortedByCoord.out.bam:md5,4e917b4befbbe216fd666d06af0298af"
                 ]
             ],
             [
@@ -333,8 +333,8 @@
                 ]
             ],
             [
-                "versions.yml:md5,35c1cc21d26d9d8f00e6ec87e97fb634",
                 "versions.yml:md5,5ad5e88ee4e52ccabeef61dcd368d30b",
+                "versions.yml:md5,708098dd31c984730b066ead621a33f7",
                 "versions.yml:md5,92f25606f0ee994dac8c00fe49676e5a",
                 "versions.yml:md5,9611f602102b5aed0fe2b947f9d2270c",
                 "versions.yml:md5,b92d6ad60847882b0089f551c5cfc366",
@@ -345,7 +345,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T14:52:10.983503052"
+        "timestamp": "2024-10-21T20:40:55.299198285"
     },
     "star - with igenomes - stub": {
         "content": [

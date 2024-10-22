@@ -91,15 +91,15 @@
         "content": [
             [
                 "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-22T10:40:14.159307146"
+        "timestamp": "2024-10-22T12:02:37.578808801"
     },
     "versions_single_end_premade_index": {
         "content": [
@@ -117,8 +117,8 @@
         "content": [
             [
                 "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
             ],
             [
                 "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
@@ -128,7 +128,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-22T10:38:39.794977786"
+        "timestamp": "2024-10-22T11:59:11.705138075"
     },
     "sarscov2 paired_end-for_stub_match": {
         "content": [
@@ -151,15 +151,15 @@
         "content": [
             [
                 "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-22T10:39:48.72523749"
+        "timestamp": "2024-10-22T12:01:29.664107565"
     },
     "sarscov2 single_end_premade_index_match_stub": {
         "content": [
@@ -284,15 +284,15 @@
         "content": [
             [
                 "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-22T10:39:09.050777261"
+        "timestamp": "2024-10-22T12:00:30.580004574"
     },
     "sarscov2 single_end_premade_index_match": {
         "content": [

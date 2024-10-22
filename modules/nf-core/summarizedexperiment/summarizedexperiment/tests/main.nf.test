@@ -4,6 +4,7 @@ nextflow_process {
     script "../main.nf"
     process "SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT"
 
+
     setup {
 
         run("UNTAR") {

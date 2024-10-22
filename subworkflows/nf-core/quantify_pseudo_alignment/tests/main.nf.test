@@ -4,6 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "QUANTIFY_PSEUDO_ALIGNMENT"
 
+
     test("salmon") {
 
         setup {

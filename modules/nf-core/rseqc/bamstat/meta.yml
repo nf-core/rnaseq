@@ -13,25 +13,32 @@ tools:
       documentation: http://rseqc.sourceforge.net/
       doi: 10.1093/bioinformatics/bts356
       licence: ["GPL-3.0-or-later"]
+      identifier: biotools:rseqc
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: the bam file to calculate statistics of
-      pattern: "*.{bam}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: the bam file to calculate statistics of
+        pattern: "*.{bam}"
 output:
   - txt:
-      type: file
-      description: bam statistics report
-      pattern: "*.bam_stat.txt"
+      - meta:
+          type: file
+          description: bam statistics report
+          pattern: "*.bam_stat.txt"
+      - "*.bam_stat.txt":
+          type: file
+          description: bam statistics report
+          pattern: "*.bam_stat.txt"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"

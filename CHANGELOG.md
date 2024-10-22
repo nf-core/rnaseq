@@ -3,6 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Credits
+
+### Enhancements & fixes
+
+- [PR #1418](https://github.com/nf-core/rnaseq/pull/1418) - Bump versions back to 3.17.0 after release
+- [PR #1422](https://github.com/nf-core/rnaseq/pull/1422) - Bump lots of modules so that conda versions have ARM builds
+- [PR #1423](https://github.com/nf-core/rnaseq/pull/1423) - Bump STAR version for version with ARM Conda build
+- [PR #1424](https://github.com/nf-core/rnaseq/pull/1424) - Patch sortmerna to 4.3.7 for ARM compatibility
+
 ## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
 
 ### Credits
@@ -18,8 +29,11 @@ Special thanks to the following for their contributions to the release:
 - [PR #1401](https://github.com/nf-core/rnaseq/pull/1401) - Template update for nf-core/tools v3.0.1
 - [PR #1405](https://github.com/nf-core/rnaseq/pull/1405) - Fix bad variable name in subworkflow
 - [PR #1406](https://github.com/nf-core/rnaseq/pull/1406) - Keep only one samplesheetToList
+- [PR #1409](https://github.com/nf-core/rnaseq/pull/1409) - Fix manifest DOI text
 - [PR #1410](https://github.com/nf-core/rnaseq/pull/1410) - Fix issues caused by empty versions from trimming subworkflows
 - [PR #1412](https://github.com/nf-core/rnaseq/pull/1412) - Reset versions back to 3.16.1 for patch release
+- [PR #1415](https://github.com/nf-core/rnaseq/pull/1415) - Disable pipeline level conda tests
+- [PR #1416](https://github.com/nf-core/rnaseq/pull/1416) - Really disable pipeline level conda tests
 
 ### Parameters
 

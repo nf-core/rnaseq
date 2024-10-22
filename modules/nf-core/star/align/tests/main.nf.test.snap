@@ -26,7 +26,11 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "11": [
@@ -35,7 +39,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -44,7 +48,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "13": [
@@ -53,7 +57,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "14": [
@@ -62,10 +66,19 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
                     [
                         {
                             "id": "test",
@@ -84,7 +97,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "4": [
                     [
@@ -105,10 +118,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
@@ -117,7 +127,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "7": [
@@ -126,7 +136,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "8": [
@@ -135,10 +145,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "9": [
@@ -148,9 +155,8 @@
                             "single_end": true
                         },
                         [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -173,10 +179,16 @@
                             "id": "test",
                             "single_end": true
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam_transcript": [
@@ -295,7 +307,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "wig": [
                     [
@@ -310,9 +322,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T15:16:04.712114"
+        "timestamp": "2024-10-20T17:09:08.738074176"
     },
     "homo_sapiens - paired_end - arriba - stub": {
         "content": [
@@ -341,7 +353,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "11": [
@@ -350,7 +366,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -359,7 +375,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "13": [
@@ -368,7 +384,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "14": [
@@ -377,10 +393,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
                     [
                         {
                             "id": "test",
@@ -399,7 +424,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "4": [
                     [
@@ -420,10 +445,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
@@ -432,7 +454,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "7": [
@@ -441,7 +463,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "8": [
@@ -450,10 +472,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "9": [
@@ -463,9 +482,8 @@
                             "single_end": false
                         },
                         [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -488,10 +506,16 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam_transcript": [
@@ -610,7 +634,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "wig": [
                     [
@@ -625,39 +649,17 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T15:16:28.874293"
+        "timestamp": "2024-10-20T17:09:36.122131869"
     },
     "homo_sapiens - single_end": {
         "content": [
             "test.Log.final.out",
             "test.Log.out",
             "test.Log.progress.out",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.Aligned.sortedByCoord.out.bam:md5,c6cfaccaf91bc7fdabed3cfe236d4535"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.Aligned.sortedByCoord.out.bam:md5,c6cfaccaf91bc7fdabed3cfe236d4535"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
+            "9f76be49a6607613a64f760101bdddce",
+            "9f76be49a6607613a64f760101bdddce",
             [
                 [
                     {
@@ -680,9 +682,6 @@
                 
             ],
             [
-                
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -704,44 +703,22 @@
                 
             ],
             [
-                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T18:02:34.35338"
+        "timestamp": "2024-10-20T17:01:22.197991909"
     },
     "homo_sapiens - paired_end": {
         "content": [
             "test.Log.final.out",
             "test.Log.out",
             "test.Log.progress.out",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.sortedByCoord.out.bam:md5,b9ee1c607e07323bc1652ef3babb543f"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
+            "db9a8324b5163b025bcc0c33e848486",
+            "db9a8324b5163b025bcc0c33e848486",
             [
                 [
                     {
@@ -764,9 +741,6 @@
                 
             ],
             [
-                
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -788,14 +762,14 @@
                 
             ],
             [
-                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T18:03:16.701923"
+        "timestamp": "2024-10-20T17:02:06.988663857"
     },
     "homo_sapiens - paired_end - multiple - stub": {
         "content": [
@@ -824,7 +798,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "11": [
@@ -833,7 +811,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -842,7 +820,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "13": [
@@ -851,7 +829,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "14": [
@@ -860,10 +838,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
                     [
                         {
                             "id": "test",
@@ -882,7 +869,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "4": [
                     [
@@ -903,10 +890,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
@@ -915,7 +899,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "7": [
@@ -924,7 +908,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "8": [
@@ -933,10 +917,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "9": [
@@ -946,9 +927,8 @@
                             "single_end": false
                         },
                         [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -971,10 +951,16 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam_transcript": [
@@ -1093,7 +1079,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "wig": [
                     [
@@ -1108,39 +1094,17 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T15:16:51.360287"
+        "timestamp": "2024-10-20T17:10:12.005468781"
     },
     "homo_sapiens - paired_end - multiple": {
         "content": [
             "test.Log.final.out",
             "test.Log.out",
             "test.Log.progress.out",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.sortedByCoord.out.bam:md5,ab07c21d63ab0a6c07d171d213c81d5a"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.sortedByCoord.out.bam:md5,ab07c21d63ab0a6c07d171d213c81d5a"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
+            "3e54e45f5dc3e9c1f2fc55bc41531a87",
+            "3e54e45f5dc3e9c1f2fc55bc41531a87",
             [
                 [
                     {
@@ -1163,9 +1127,6 @@
                 
             ],
             [
-                
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -1187,14 +1148,14 @@
                 
             ],
             [
-                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T13:13:28.987438"
+        "timestamp": "2024-10-20T17:08:54.877286681"
     },
     "homo_sapiens - paired_end - stub": {
         "content": [
@@ -1223,7 +1184,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "11": [
@@ -1232,7 +1197,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -1241,7 +1206,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "13": [
@@ -1250,7 +1215,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "14": [
@@ -1259,10 +1224,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
                     [
                         {
                             "id": "test",
@@ -1281,7 +1255,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "4": [
                     [
@@ -1302,10 +1276,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
@@ -1314,7 +1285,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "7": [
@@ -1323,7 +1294,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "8": [
@@ -1332,10 +1303,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "9": [
@@ -1345,9 +1313,8 @@
                             "single_end": false
                         },
                         [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -1370,10 +1337,16 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam_transcript": [
@@ -1492,7 +1465,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "wig": [
                     [
@@ -1507,47 +1480,22 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T15:16:16.798018"
+        "timestamp": "2024-10-20T17:09:20.911466345"
     },
     "homo_sapiens - paired_end - starfusion": {
         "content": [
             "test.Log.final.out",
             "test.Log.out",
             "test.Log.progress.out",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.out.bam:md5,bcad07b838f6762fc01eea52b5cd3f84"
-                ]
-            ],
+            "test.Chimeric.out.junction",
+            "caee9dcda13882d4913456973c25b57a",
             [
                 
             ],
             [
                 
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Chimeric.out.junction:md5,c10ef219f4a30e83711b995bc5e40dba"
-                ]
             ],
             [
                 
@@ -1577,41 +1525,21 @@
                 
             ],
             [
-                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T13:10:55.371956"
+        "timestamp": "2024-10-20T17:07:25.0639914"
     },
     "homo_sapiens - paired_end - arriba": {
         "content": [
             "test.Log.final.out",
             "test.Log.out",
             "test.Log.progress.out",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.out.bam:md5,c1b1747f5873f2d17762725636e891d5"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
+            "1a3abe88fb2490589c58497d39921bcc",
             [
                 
             ],
@@ -1646,14 +1574,14 @@
                 
             ],
             [
-                "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T13:05:10.7534"
+        "timestamp": "2024-10-20T17:04:00.685784211"
     },
     "homo_sapiens - paired_end - starfusion - stub": {
         "content": [
@@ -1682,7 +1610,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "11": [
@@ -1691,7 +1623,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -1700,7 +1632,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "13": [
@@ -1709,7 +1641,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "14": [
@@ -1718,10 +1650,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
                     [
                         {
                             "id": "test",
@@ -1740,7 +1681,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "4": [
                     [
@@ -1761,10 +1702,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
@@ -1773,7 +1711,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "7": [
@@ -1782,7 +1720,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "8": [
@@ -1791,10 +1729,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "9": [
@@ -1804,9 +1739,8 @@
                             "single_end": false
                         },
                         [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
                 ],
@@ -1829,10 +1763,16 @@
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam_transcript": [
@@ -1951,7 +1891,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2e6b6d8809f5a17f38f4d27c45dcb22f"
+                    "versions.yml:md5,a149bba1dbb5194560abdd813c7848e3"
                 ],
                 "wig": [
                     [
@@ -1966,8 +1906,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T15:16:40.64399"
+        "timestamp": "2024-10-20T17:09:53.173671551"
     }
 }

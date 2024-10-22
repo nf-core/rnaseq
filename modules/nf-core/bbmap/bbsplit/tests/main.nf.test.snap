@@ -9,26 +9,26 @@
                 "namelist.txt:md5,45e7a4cdc7a11a39ada56844ca3a1e30"
             ],
             [
-                "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+                "versions.yml:md5,97dfea8bc38fdb0ec800ee936e0c6e27"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T11:41:32.116928"
+        "timestamp": "2024-10-19T16:03:51.869574777"
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - index": {
         "content": [
             [
-                "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+                "versions.yml:md5,97dfea8bc38fdb0ec800ee936e0c6e27"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T11:41:06.072212"
+        "timestamp": "2024-10-19T15:47:22.996403051"
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - index - stub": {
         "content": [
@@ -56,7 +56,7 @@
                     ]
                 ],
                 "5": [
-                    "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+                    "versions.yml:md5,97dfea8bc38fdb0ec800ee936e0c6e27"
                 ],
                 "all_fastq": [
                     
@@ -81,15 +81,15 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+                    "versions.yml:md5,97dfea8bc38fdb0ec800ee936e0c6e27"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T11:45:21.48352"
+        "timestamp": "2024-10-19T16:03:10.27746726"
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - stub": {
         "content": [
@@ -139,7 +139,7 @@
                     ]
                 ],
                 "5": [
-                    "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+                    "versions.yml:md5,97dfea8bc38fdb0ec800ee936e0c6e27"
                 ],
                 "all_fastq": [
                     [
@@ -186,14 +186,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,cb7f0e697ab2537f8ced951bfade90d4"
+                    "versions.yml:md5,97dfea8bc38fdb0ec800ee936e0c6e27"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T11:51:38.805111"
+        "timestamp": "2024-10-19T16:04:18.416324262"
     }
 }

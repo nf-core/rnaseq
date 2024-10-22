@@ -60,13 +60,13 @@
                     "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "17": [
+                    "versions.yml:md5,0f2bbea6c0412d2b185eab2dd0db06d5",
+                    "versions.yml:md5,2a8e04c552c56aacc9a2d158fbc23a89",
                     "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,3399809728955f4654ab781f37ea42d3",
-                    "versions.yml:md5,4219f710ca21b71a7c7db6b02ac19bb3",
-                    "versions.yml:md5,912c613bca84f899b3e890985ecc6fc2",
-                    "versions.yml:md5,a4755dd9acbfa60dbc38e172ffda193f",
+                    "versions.yml:md5,7696e625e0eda9d9ae30c8d5b3d23d9f",
                     "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c",
-                    "versions.yml:md5,f645ee5b20a4e89c6ed48fdc27c21791"
+                    "versions.yml:md5,f151349bd7086cb08134496033e78cea",
+                    "versions.yml:md5,ff8adbe60177b3dba23d91b3424b10b6"
                 ],
                 "2": [
                     [
@@ -258,21 +258,21 @@
                     ]
                 ],
                 "versions": [
+                    "versions.yml:md5,0f2bbea6c0412d2b185eab2dd0db06d5",
+                    "versions.yml:md5,2a8e04c552c56aacc9a2d158fbc23a89",
                     "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,3399809728955f4654ab781f37ea42d3",
-                    "versions.yml:md5,4219f710ca21b71a7c7db6b02ac19bb3",
-                    "versions.yml:md5,912c613bca84f899b3e890985ecc6fc2",
-                    "versions.yml:md5,a4755dd9acbfa60dbc38e172ffda193f",
+                    "versions.yml:md5,7696e625e0eda9d9ae30c8d5b3d23d9f",
                     "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c",
-                    "versions.yml:md5,f645ee5b20a4e89c6ed48fdc27c21791"
+                    "versions.yml:md5,f151349bd7086cb08134496033e78cea",
+                    "versions.yml:md5,ff8adbe60177b3dba23d91b3424b10b6"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T19:32:06.579549"
+        "timestamp": "2024-10-21T14:49:44.270456428"
     },
     "homo_sapiens": {
         "content": [

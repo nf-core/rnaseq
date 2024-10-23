@@ -87,17 +87,11 @@ jobs:
               --debug \
               --verbose \
               --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
-              --tap=test.tap \
               --shard ${{ matrix.shard }}/5 \
               --changed-since HEAD^ \
               --follow-dependencies \
               --profile "+${{ matrix.profile }}" \
               --filter ${{ matrix.filter }}
-
-      - uses: pcolby/tap-summary@v1
-        with:
-          path: >-
-            test.tap
 
       - name: Output log on failure
         if: failure()

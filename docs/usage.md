@@ -366,6 +366,10 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 ### Running on Linux ARM architectures
 
+:::warning
+Please note that the ARM profile is experimental. It is expected to function correctly in all cases unless explicitly indicated otherwise—currently, exceptions include the use of the hisat2 aligner and contaminant screening via kraken2. However, because testing is presently conducted manually, we cannot guarantee its reliability.
+:::
+
 The pipeline can be executed in an ARM compatible mode by specifying the ARM profile, for example:
 
 ```bash
@@ -378,11 +382,7 @@ nextflow run \
     -profile docker,arm
 ```
 
-This will use ARM-compatible containers, and apply a small number of overrides to Conda definitions to support ARM operation.
-
-:::warning
-Please note that the ARM profile is experimental. It is expected to function correctly in all cases unless explicitly indicated otherwise—currently, exceptions include the use of the hisat2 aligner and contaminant screening via kraken2. However, because testing is presently conducted manually, we cannot guarantee its reliability.
-:::
+This will use ARM-compatible containers, and apply a small number of overrides to Conda definitions to support ARM operations.
 
 ### Updating the pipeline
 
@@ -449,11 +449,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `arm`
-  - A configuration profile that will set `docker.runOptions` appropriately for ARM architectures, and apply overrides supplying ARM-compatible containers and Conda environments.
-
-:::warning
-Please note that the ARM profile is experimental. It is expected to function correctly in all cases unless explicitly indicated otherwise—currently, exceptions include the use of the hisat2 aligner and contaminant screening via kraken2. However, because testing is presently conducted manually, we cannot guarantee its reliability.
-:::
+  - A configuration profile that will set `docker.runOptions` appropriately for ARM architectures, and apply overrides supplying ARM-compatible containers and Conda environments. See [Running on Linux ARM architectures](#running-on-linux-arm-architectures).
 
 ### `-resume`
 

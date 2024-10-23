@@ -22,6 +22,37 @@ Special thanks to the following for their contributions to the release:
 - [PR #1425](https://github.com/nf-core/rnaseq/pull/1425) - Add profile for ARM compatibility
 - [PR #1432](https://github.com/nf-core/rnaseq/pull/1432) - Bump versions for 3.17.0 release
 - [PR #1434](https://github.com/nf-core/rnaseq/pull/1434) - Default registry is quay.io for all containers
+- [PR #1437](https://github.com/nf-core/rnaseq/pull/1437) - Update software dependencies
+
+### Software dependencies
+
+| Dependency                    | Old version | New version |
+| ----------------------------- | ----------- | ----------- |
+| `bbmap`                       | 39.01       | 39.10       |
+| `coreutils`                   | 8.30        | 9.5         |
+| `fq`                          | 0.9.1       | 0.12.0      |
+| `python (catadditionalfasta)` | 3.9.5       | 3.12.2      |
+| `python (tx2gene)`            | 3.9.5       | 3.10.4      |
+| `cutadapt`                    | 3.4         | 4.9         |
+| `htslib (star)`               | 1.18        | 1.20        |
+| `htslib`                      | 1.20        | 1.21        |
+| `kallisto`                    | 0.48.0      | 0.51.1      |
+| `preseq`                      | 3.1.2       | 3.2.0       |
+| `salmon`                      | 1.10.1      | 1.10.3      |
+| `samtools (star)`             | 1.18        | 1.20        |
+| `samtools`                    | 1.20        | 1.21        |
+| `sortmerna`                   | 4.3.6       | 4.3.7       |
+| `star`                        | 2.7.10a     | =2.7.11b    |
+| `stringtie`                   | 2.2.1       | 2.2.3       |
+| `subread`                     | 2.0.1       | 2.0.6       |
+| `trim-galore`                 | 0.6.7       | 0.6.10      |
+| `ucsc-bedgraphtobigwig`       | 445         | 469         |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
 
 ## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
 

@@ -21,6 +21,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1424](https://github.com/nf-core/rnaseq/pull/1424) - Patch sortmerna to 4.3.7 for ARM compatibility
 - [PR #1425](https://github.com/nf-core/rnaseq/pull/1425) - Add profile for ARM compatibility
 - [PR #1432](https://github.com/nf-core/rnaseq/pull/1432) - Bump versions for 3.17.0 release
+- [PR #1434](https://github.com/nf-core/rnaseq/pull/1434) - Default registry is quay.io for all containers
 
 ## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
 

@@ -3,9 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [[3.17.0](https://github.com/nf-core/rnaseq/releases/tag/3.17.0)] - 2024-10-23
 
 ### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Pablo Gonzalez de Aledo](https://github.com/pabloaledo)
 
 ### Enhancements & fixes
 
@@ -14,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1423](https://github.com/nf-core/rnaseq/pull/1423) - Bump STAR version for version with ARM Conda build
 - [PR #1424](https://github.com/nf-core/rnaseq/pull/1424) - Patch sortmerna to 4.3.7 for ARM compatibility
 - [PR #1425](https://github.com/nf-core/rnaseq/pull/1425) - Add profile for ARM compatibility
+- [PR #1432](https://github.com/nf-core/rnaseq/pull/1432) - Bump versions for 3.17.0 release
 
 ## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
 

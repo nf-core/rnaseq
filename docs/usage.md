@@ -366,7 +366,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 ### Running on Linux ARM architectures
 
-The pipeline can be executed in an ARM compatible mode by specifying the ARM profile, for example:  
+The pipeline can be executed in an ARM compatible mode by specifying the ARM profile, for example:
 
 ```bash
 nextflow run \
@@ -378,7 +378,7 @@ nextflow run \
     -profile docker,arm
 ```
 
-This will use ARM-compatible containers, and apply a small number of overrides to Conda definitions to support ARM operation. 
+This will use ARM-compatible containers, and apply a small number of overrides to Conda definitions to support ARM operation.
 
 :::warning
 Please note that the ARM profile is experimental. It is expected to function correctly in all cases unless explicitly indicated otherwise—currently, exceptions include the use of the hisat2 aligner and contaminant screening via kraken2. However, because testing is presently conducted manually, we cannot guarantee its reliability.

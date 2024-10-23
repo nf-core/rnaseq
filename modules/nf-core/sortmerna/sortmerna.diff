@@ -1,4 +1,5 @@
 Changes in module 'nf-core/sortmerna'
+'modules/nf-core/sortmerna/nextflow.config' was created
 Changes in 'sortmerna/main.nf':
 --- modules/nf-core/sortmerna/main.nf
 +++ modules/nf-core/sortmerna/main.nf
@@ -9,11 +10,12 @@ Changes in 'sortmerna/main.nf':
 -        'https://depot.galaxyproject.org/singularity/sortmerna:4.3.6--h9ee0642_0' :
 -        'biocontainers/sortmerna:4.3.6--h9ee0642_0' }"
 +        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/15/15b50826336c394eab2bf6d731f00729921598ffc6463278da6316e768b16b8b/data' :
-+        'community.wave.seqera.io/library/sortmerna:4.3.7--6502243397c065ba' }"
++        'nf-core/sortmerna:4.3.7--6502243397c065ba' }"
  
      input:
      tuple val(meta), path(reads)
 
+'modules/nf-core/sortmerna/meta.yml' is unchanged
 Changes in 'sortmerna/environment.yml':
 --- modules/nf-core/sortmerna/environment.yml
 +++ modules/nf-core/sortmerna/environment.yml
@@ -24,8 +26,6 @@ Changes in 'sortmerna/environment.yml':
 -  - bioconda::sortmerna=4.3.6
 +  - seqera::sortmerna=4.3.7
 
-'modules/nf-core/sortmerna/meta.yml' is unchanged
-'modules/nf-core/sortmerna/nextflow.config' was created
 Changes in 'sortmerna/tests/main.nf.test.snap':
 --- modules/nf-core/sortmerna/tests/main.nf.test.snap
 +++ modules/nf-core/sortmerna/tests/main.nf.test.snap
@@ -174,15 +174,15 @@ Changes in 'sortmerna/tests/main.nf.test.snap':
 -        },
 -        "timestamp": "2024-02-26T15:01:53.832643452"
 +                "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
++                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
++                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
 +            ]
 +        ],
 +        "meta": {
 +            "nf-test": "0.9.0",
 +            "nextflow": "24.04.4"
 +        },
-+        "timestamp": "2024-10-22T10:40:14.159307146"
++        "timestamp": "2024-10-22T12:02:37.578808801"
      },
      "versions_single_end_premade_index": {
          "content": [
@@ -208,8 +208,8 @@ Changes in 'sortmerna/tests/main.nf.test.snap':
 +        "content": [
 +            [
 +                "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
++                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
++                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
 +            ],
 +            [
 +                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
@@ -219,7 +219,7 @@ Changes in 'sortmerna/tests/main.nf.test.snap':
 +            "nf-test": "0.9.0",
 +            "nextflow": "24.04.4"
 +        },
-+        "timestamp": "2024-10-22T10:38:39.794977786"
++        "timestamp": "2024-10-22T11:59:11.705138075"
      },
      "sarscov2 paired_end-for_stub_match": {
          "content": [
@@ -258,15 +258,15 @@ Changes in 'sortmerna/tests/main.nf.test.snap':
 -        },
 -        "timestamp": "2024-02-26T14:24:14.272659781"
 +                "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
++                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
++                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
 +            ]
 +        ],
 +        "meta": {
 +            "nf-test": "0.9.0",
 +            "nextflow": "24.04.4"
 +        },
-+        "timestamp": "2024-10-22T10:39:48.72523749"
++        "timestamp": "2024-10-22T12:01:29.664107565"
      },
      "sarscov2 single_end_premade_index_match_stub": {
          "content": [
@@ -463,15 +463,15 @@ Changes in 'sortmerna/tests/main.nf.test.snap':
 -        },
 -        "timestamp": "2024-02-26T15:00:35.34089252"
 +                "2415186086593376314.bursttrie_0.dat:md5,74f7f020e8d46e24a8a2e9c5fbcd564a",
-+                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef",
-+                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7"
++                "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
++                "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
 +            ]
 +        ],
 +        "meta": {
 +            "nf-test": "0.9.0",
 +            "nextflow": "24.04.4"
 +        },
-+        "timestamp": "2024-10-22T10:39:09.050777261"
++        "timestamp": "2024-10-22T12:00:30.580004574"
      },
      "sarscov2 single_end_premade_index_match": {
          "content": [
@@ -492,48 +492,88 @@ Changes in 'sortmerna/tests/main.nf.test.snap':
 Changes in 'sortmerna/tests/main.nf.test':
 --- modules/nf-core/sortmerna/tests/main.nf.test
 +++ modules/nf-core/sortmerna/tests/main.nf.test
-@@ -27,8 +27,10 @@
+@@ -24,11 +24,17 @@
+         }
+ 
+         then {
++            def index_files = file(process.out.index[0][1]).listFiles()
++                .findAll { !it.name.endsWith('.stats') }
++                .sort { a, b -> a.name <=> b.name }
++            
              assertAll(
                  { assert process.success },
                  { assert ! process.out.reads },
 -                { assert snapshot(process.out.index).match("index_index_only") },
 -                { assert snapshot(process.out.versions).match("versions_index_only") }
 +                { assert snapshot(
-+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") },
++                    index_files,
 +                    process.out.versions                   
 +                ).match() },
              )
          }
  
-@@ -92,7 +94,7 @@
+@@ -79,6 +85,10 @@
+         }
+ 
+         then {
++            def index_files = file(process.out.index[0][1]).listFiles()
++                .findAll { !it.name.endsWith('.stats') }
++                .sort { a, b -> a.name <=> b.name }
++            
+             assertAll(
+                 { assert process.success },
+                 { assert process.out.reads },
+@@ -92,7 +102,7 @@
                          ).sort()
                      ).match("sarscov2 single_end_match")
                  },
 -                { assert snapshot(process.out.index).match("index_single_end") },
-+                { assert snapshot(file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats")}).match("index_single_end") },
++                { assert snapshot(index_files).match("index_single_end") },
                  { assert snapshot(process.out.versions).match("versions_single_end") }
              )
          }
-@@ -170,7 +172,7 @@
+@@ -157,6 +167,10 @@
+         }
+ 
+         then {
++            def index_files = file(process.out.index[0][1]).listFiles()
++                .findAll { !it.name.endsWith('.stats') }
++                .sort { a, b -> a.name <=> b.name }
++
+             assertAll(
+                 { assert process.success },
+                 { assert process.out.reads },
+@@ -170,7 +184,7 @@
                          ).sort()
                      ).match("sarscov2 paired_end_match")
                  },
 -                { assert snapshot(process.out.index).match("index_paired_end") },
-+                { assert snapshot(file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats")}).match("index_paired_end") },
++                { assert snapshot(index_files).match("index_paired_end") },
                  { assert snapshot(process.out.versions).match("versions_paired_end") }
              )
          }
-@@ -265,7 +267,7 @@
+@@ -252,6 +266,10 @@
+         }
+ 
+         then {
++            def index_files = file(process.out.index[0][1]).listFiles()
++                .findAll { !it.name.endsWith('.stats') }
++                .sort { a, b -> a.name <=> b.name }
++
+             assertAll(
+                 { assert process.success },
+                 { assert process.out.reads },
+@@ -265,7 +283,7 @@
                          ).sort()
                      ).match("sarscov2 single_end_premade_index_match")
                  },
 -                { assert snapshot(process.out.index).match("index_single_end_premade_index") },
-+                { assert snapshot(file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }).match("index_single_end_premade_index") },
++                { assert snapshot(index_files).match("index_single_end_premade_index") },
                  { assert snapshot(process.out.versions).match("versions_single_end_premade_index") }
              )
          }
 
-'modules/nf-core/sortmerna/tests/tags.yml' is unchanged
-'modules/nf-core/sortmerna/tests/premade_index.config' is unchanged
 'modules/nf-core/sortmerna/tests/indexing_only.config' is unchanged
+'modules/nf-core/sortmerna/tests/premade_index.config' is unchanged
+'modules/nf-core/sortmerna/tests/tags.yml' was removed
 ************************************************************

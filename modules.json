@@ -24,7 +24,8 @@
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "a1abf90966a2a4016d3c3e41e228bfcbd4811ccc",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"],
+                        "patch": "modules/nf-core/cat/fastq/cat-fastq.diff"
                     },
                     "custom/catadditionalfasta": {
                         "branch": "master",
@@ -221,12 +222,14 @@
                     "star/align": {
                         "branch": "master",
                         "git_sha": "a5ad53288c79fa52c5ae708c317e09ec2dd149ab",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/star/align/star-align.diff"
                     },
                     "star/genomegenerate": {
                         "branch": "master",
                         "git_sha": "a5ad53288c79fa52c5ae708c317e09ec2dd149ab",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/star/genomegenerate/star-genomegenerate.diff"
                     },
                     "stringtie/stringtie": {
                         "branch": "master",

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1422](https://github.com/nf-core/rnaseq/pull/1422) - Bump lots of modules so that conda versions have ARM builds
 - [PR #1423](https://github.com/nf-core/rnaseq/pull/1423) - Bump STAR version for version with ARM Conda build
 - [PR #1424](https://github.com/nf-core/rnaseq/pull/1424) - Patch sortmerna to 4.3.7 for ARM compatibility
+- [PR #1425](https://github.com/nf-core/rnaseq/pull/1425) - Add profile for ARM compatibility
 
 ## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
 

@@ -23,7 +23,6 @@ Special thanks to the following for their contributions to the release:
 - [PR #1432](https://github.com/nf-core/rnaseq/pull/1432) - Bump versions for 3.17.0 release
 - [PR #1434](https://github.com/nf-core/rnaseq/pull/1434) - Default registry is quay.io for all containers
 - [PR #1437](https://github.com/nf-core/rnaseq/pull/1437) - Update software dependencies
-- [PR #1437](https://github.com/nf-core/rnaseq/pull/1437) - Fix CI triggers
 
 ### Software dependencies
 

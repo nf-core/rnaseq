@@ -34,7 +34,7 @@
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10",
-                    "cutadapt": 4.2
+                    "cutadapt": 4.9
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -76,7 +76,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T20:14:28.433411196"
+        "timestamp": "2024-10-23T11:50:42.323505833"
     },
     "Params: --skip_qc": {
         "content": [
@@ -154,7 +154,7 @@
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10",
-                    "cutadapt": 4.2
+                    "cutadapt": 4.9
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -681,17 +681,17 @@
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
                 "fastqc_trimmed-status-check-heatmap.txt:md5,22a03548736b88b23be6bc0c9ef1b4a6",
-                "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,4adfeacd3a3a6c7c808f121b24e6b247",
+                "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,c755e9d044ea1a82b2c8edde867b4878",
                 "fastqc_trimmed_per_base_n_content_plot.txt:md5,418610c1ce119cb786ad434db75d366e",
                 "fastqc_trimmed_per_base_sequence_quality_plot.txt:md5,bd22e06e41c096ad4f745d40fe96a1e5",
                 "fastqc_trimmed_per_sequence_gc_content_plot_Counts.txt:md5,004c60768ceb6197765154e3eaa37b7a",
                 "fastqc_trimmed_per_sequence_gc_content_plot_Percentages.txt:md5,95d29060b687f745288ad1ec47750037",
                 "fastqc_trimmed_per_sequence_quality_scores_plot.txt:md5,0f9834cc19f76dd5c87cf8cba7435a7c",
-                "fastqc_trimmed_sequence_counts_plot.txt:md5,6ae4db60425cae4f78b13c798ad1dcf3",
-                "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
+                "fastqc_trimmed_sequence_counts_plot.txt:md5,9fd642bdd1da354f296bb8092205608f",
+                "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
                 "multiqc_citations.txt:md5,ef51c78faebdd32bad296ba14406b41e",
-                "multiqc_cutadapt.txt:md5,bc6ed9f59180b9346f22fb0f1e395dfa",
-                "multiqc_fastqc_fastqc_trimmed.txt:md5,26528b0b0d3df6304b80ca8f09619233",
+                "multiqc_cutadapt.txt:md5,583b7b9ba76b26162bb9610ed746454b",
+                "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -787,6 +787,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-21T20:13:44.078197492"
+        "timestamp": "2024-10-23T11:49:49.131172185"
     }
 }

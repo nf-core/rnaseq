@@ -44,7 +44,6 @@ jobs:
   test:
     name: "Run tests (${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }})"
     needs: [nf-test-changes]
-    if: nf-test-changes.outputs.nf_test_files != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

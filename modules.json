@@ -198,6 +198,7 @@
                         "branch": "master",
                         "git_sha": "b13f07be4c508d6ff6312d354d09f2493243e208",
                         "installed_by": [
+                            "bam_dedup_stats_samtools_umicollapse",
                             "bam_dedup_stats_samtools_umitools",
                             "bam_markduplicates_picard",
                             "bam_sort_stats_samtools"
@@ -266,6 +267,11 @@
                         "git_sha": "49f4e50534fe4b64101e62ea41d5dc43b1324358",
                         "installed_by": ["bedgraph_bedclip_bedgraphtobigwig"]
                     },
+                    "umicollapse": {
+                        "branch": "master",
+                        "git_sha": "18e452a645bd56d1a539f53c7656e3d2915246f7",
+                        "installed_by": ["bam_dedup_stats_samtools_umicollapse"]
+                    },
                     "umitools/dedup": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
@@ -290,6 +296,11 @@
             },
             "subworkflows": {
                 "nf-core": {
+                    "bam_dedup_stats_samtools_umicollapse": {
+                        "branch": "master",
+                        "git_sha": "ab80a04707104a4baf39341581dfbced5da05479",
+                        "installed_by": ["subworkflows"]
+                    },
                     "bam_dedup_stats_samtools_umitools": {
                         "branch": "master",
                         "git_sha": "763d4b5c05ffda3ac1ac969dc67f7458cfb2eb1d",
@@ -314,6 +325,7 @@
                         "branch": "master",
                         "git_sha": "763d4b5c05ffda3ac1ac969dc67f7458cfb2eb1d",
                         "installed_by": [
+                            "bam_dedup_stats_samtools_umicollapse",
                             "bam_dedup_stats_samtools_umitools",
                             "bam_markduplicates_picard",
                             "bam_sort_stats_samtools"

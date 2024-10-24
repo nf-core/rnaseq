@@ -1,0 +1,249 @@
+nextflow_process {
+
+    name "Test Process UMICOLLAPSE"
+    script "../main.nf"
+    process "UMICOLLAPSE"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "umicollapse"
+    tag "umitools/extract"
+    tag "samtools/index"
+    tag "bwa/index"
+    tag "bwa/mem"
+
+    test("umicollapse single end test") {
+        setup{
+            run("UMITOOLS_EXTRACT"){
+                script "../../umitools/extract/main.nf"
+                config "./nextflow_SE.config"
+                process{
+                    """
+                    input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                    ]
+                    """
+                }
+            }
+
+            run("BWA_INDEX"){
+                script "../../bwa/index/main.nf"
+                process{
+                    """
+                    input[0] = [[ id:'sarscov2'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                    """
+                }
+            }
+            run("BWA_MEM"){
+                script "../../bwa/mem/main.nf"
+                process{
+                    """
+                    input[0] = UMITOOLS_EXTRACT.out.reads
+                    input[1] = BWA_INDEX.out.index
+                    input[2] = [[ id:'sarscov2'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                    input[3] = true
+                    """
+                }
+            }
+            run("SAMTOOLS_INDEX"){
+                script "../../samtools/index/main.nf"
+                process{
+                    """
+                    input[0] = BWA_MEM.out.bam
+                    """
+                }
+            }
+        }
+
+        when {
+            config "./nextflow_SE.config"
+            process {
+                """
+                input[0] =  BWA_MEM.out.bam.join(SAMTOOLS_INDEX.out.bai, by: [0])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.bam,
+                    process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("umicollapse paired tests") {
+            setup{
+            run("UMITOOLS_EXTRACT"){
+                script "../../umitools/extract/main.nf"
+                config "./nextflow_PE.config"
+                process{
+                    """
+                    input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                    ]
+                    """
+                }
+            }
+
+            run("BWA_INDEX"){
+                script "../../bwa/index/main.nf"
+                process{
+                    """
+                    input[0] = [
+                            [ id:'sarscov2'],
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                            ]
+                    """
+                }
+            }
+            run("BWA_MEM"){
+                script "../../bwa/mem/main.nf"
+                process{
+                    """
+                    input[0] = UMITOOLS_EXTRACT.out.reads
+                    input[1] = BWA_INDEX.out.index
+                    input[2] = [[ id:'sarscov2'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                    input[3] = true
+                    """
+                }
+            }
+            run("SAMTOOLS_INDEX"){
+                script "../../samtools/index/main.nf"
+                process{
+                    """
+                    input[0] = BWA_MEM.out.bam
+                    """
+                }
+            }
+        }
+
+        when {
+            config "./nextflow_PE.config"
+            process {
+                """
+                input[0] =  BWA_MEM.out.bam.join(SAMTOOLS_INDEX.out.bai, by: [0])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.bam,
+                    process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("umicollapse fastq tests") {
+
+            when {
+                config "./nextflow_SE.config"
+                process {
+                    """
+                    input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    []
+                    ]
+                    input[1] = 'fastq'
+                    """
+                }
+            }
+
+            then {
+                assertAll(
+                    { assert process.success },
+                    { assert snapshot(
+                        process.out.fastq,
+                        process.out.versions).match() }
+                )
+            }
+    }
+
+    test("umicollapse stub tests") {
+        options "-stub-run"
+            setup{
+            run("UMITOOLS_EXTRACT"){
+                script "../../umitools/extract/main.nf"
+                config "./nextflow_PE.config"
+                process{
+                    """
+                    input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                    ]
+                    """
+                }
+            }
+
+            run("BWA_INDEX"){
+                script "../../bwa/index/main.nf"
+                process{
+                    """
+                    input[0] = [
+                            [ id:'sarscov2'],
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                            ]
+                    """
+                }
+            }
+            run("BWA_MEM"){
+                script "../../bwa/mem/main.nf"
+                process{
+                    """
+                    input[0] = UMITOOLS_EXTRACT.out.reads
+                    input[1] = BWA_INDEX.out.index
+                    input[2] = [[ id:'sarscov2'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                    input[3] = true
+                    """
+                }
+            }
+            run("SAMTOOLS_INDEX"){
+                script "../../samtools/index/main.nf"
+                process{
+                    """
+                    input[0] = BWA_MEM.out.bam
+                    """
+                }
+            }
+        }
+        when {
+            config "./nextflow_PE.config"
+            process {
+                """
+                input[0] =  BWA_MEM.out.bam.join(SAMTOOLS_INDEX.out.bai, by: [0])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

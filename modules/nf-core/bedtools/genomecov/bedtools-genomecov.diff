@@ -2,12 +2,14 @@ Changes in module 'nf-core/bedtools/genomecov'
 Changes in 'bedtools/genomecov/main.nf':
 --- modules/nf-core/bedtools/genomecov/main.nf
 +++ modules/nf-core/bedtools/genomecov/main.nf
-@@ -5,7 +5,7 @@
+@@ -3,9 +3,7 @@
+     label 'process_single'
+ 
      conda "${moduleDir}/environment.yml"
-     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/6397750e9730a3fbcc5b4c43f14bd141c64c723fd7dad80e47921a68a7c3cd21/data':
+-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/6397750e9730a3fbcc5b4c43f14bd141c64c723fd7dad80e47921a68a7c3cd21/data':
 -        'community.wave.seqera.io/library/bedtools_coreutils:a623c13f66d5262b' }"
-+        'nf-core/bedtools_coreutils:a623c13f66d5262b' }"
++    container 'nf-core/bedtools_coreutils:a623c13f66d5262b'
  
      input:
      tuple val(meta), path(intervals), val(scale)

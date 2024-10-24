@@ -1,0 +1,40 @@
+Changes in module 'nf-core/star/align'
+Changes in 'star/align/main.nf':
+--- modules/nf-core/star/align/main.nf
++++ modules/nf-core/star/align/main.nf
+@@ -3,9 +3,7 @@
+     label 'process_high'
+ 
+     conda "${moduleDir}/environment.yml"
+-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b4/b425bc2a95806d878993f9a66dae3ae80ac2dafff4c208c5ae01b7a90a32fa91/data' :
+-        'community.wave.seqera.io/library/star_samtools_htslib_gawk:10c6e8c834460019' }"
++    container 'nf-core/star_samtools_htslib_gawk:10c6e8c834460019'
+ 
+     input:
+     tuple val(meta), path(reads, stageAs: "input*/*")
+
+'modules/nf-core/star/align/meta.yml' is unchanged
+'modules/nf-core/star/align/environment.yml' is unchanged
+'modules/nf-core/star/align/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/star/align/tests/nextflow.config' is unchanged
+'modules/nf-core/star/align/tests/nextflow.starfusion.config' is unchanged
+'modules/nf-core/star/align/tests/nextflow.arriba.config' is unchanged
+Changes in 'star/align/tests/main.nf.test':
+--- modules/nf-core/star/align/tests/main.nf.test
++++ modules/nf-core/star/align/tests/main.nf.test
+@@ -3,11 +3,6 @@
+     name "Test Process STAR_ALIGN"
+     script "../main.nf"
+     process "STAR_ALIGN"
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "star"
+-    tag "star/align"
+-    tag "star/genomegenerate"
+ 
+     test("homo_sapiens - single_end") {
+         config "./nextflow.config"
+
+'modules/nf-core/star/align/tests/tags.yml' was removed
+************************************************************

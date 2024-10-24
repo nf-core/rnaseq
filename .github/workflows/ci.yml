@@ -54,7 +54,6 @@ jobs:
           - "latest-everything"
         nf_test_files: ["${{ fromJson(needs.nf-test-changes.outputs.nf_test_files) }}"]
         profile:
-          - "conda"
           - "docker"
           - "singularity"
         isMaster:
@@ -62,29 +61,9 @@ jobs:
         # Exclude conda and singularity on dev
         exclude:
           - isMaster: false
-            profile: "conda"
-          - isMaster: false
             profile: "singularity"
-          - profile: "conda"
-            nf_test_files: "tests/default.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/featurecounts_group_type.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/hisat2.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/kallisto.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/min_mapped_reads.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/remove_ribo_rna.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/salmon.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/skip_qc.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/skip_trimming.nf.test"
-          - profile: "conda"
-            nf_test_files: "tests/star_rsem.nf.test"
+          - NXF_VER: "latest-everything"
+            profile: "singularity"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -103,21 +82,6 @@ jobs:
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
-
-      - name: Set up Miniconda
-        if: matrix.profile == 'conda'
-        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          conda-solver: libmamba
-          channels: conda-forge,bioconda
-
-      - name: Set up Conda
-        if: matrix.profile == 'conda'
-        run: |
-          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
-          echo $(realpath python) >> $GITHUB_PATH
 
       - name: Install nf-test
         uses: nf-core/setup-nf-test@v1

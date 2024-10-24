@@ -1,5 +1,6 @@
 name: "fq_subsample"
-description: fq subsample outputs a subset of records from single or paired FASTQ files. This requires a seed (--seed) to be set in ext.args.
+description: fq subsample outputs a subset of records from single or paired FASTQ
+  files. This requires a seed (--seed) to be set in ext.args.
 keywords:
   - fastq
   - fq
@@ -11,30 +12,33 @@ tools:
       documentation: "https://github.com/stjude-rust-labs/fq"
       tool_dev_url: "https://github.com/stjude-rust-labs/fq"
       licence: ["MIT"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - fastq:
-      type: file
-      description: FASTQ file
-      pattern: "*.{fq,fastq}{,.gz}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fastq:
+        type: file
+        description: FASTQ file
+        pattern: "*.{fq,fastq}{,.gz}"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - fastq:
-      type: file
-      description: Randomly sampled FASTQ files.
-      pattern: "*_R[12].fastq.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fastq.gz":
+          type: file
+          description: Randomly sampled FASTQ files.
+          pattern: "*_R[12].fastq.gz"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@adamrtalbot"
 maintainers:

@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::bbmap=39.01
+  - bioconda::bbmap=39.10

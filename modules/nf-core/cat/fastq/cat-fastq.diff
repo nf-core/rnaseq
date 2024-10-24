@@ -1,0 +1,37 @@
+Changes in module 'nf-core/cat/fastq'
+'modules/nf-core/cat/fastq/nextflow.config' was created
+Changes in 'cat/fastq/main.nf':
+--- modules/nf-core/cat/fastq/main.nf
++++ modules/nf-core/cat/fastq/main.nf
+@@ -3,9 +3,7 @@
+     label 'process_single'
+ 
+     conda "${moduleDir}/environment.yml"
+-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c2/c262fc09eca59edb5a724080eeceb00fb06396f510aefb229c2d2c6897e63975/data' :
+-        'community.wave.seqera.io/library/coreutils:9.5--ae99c88a9b28c264' }"
++    container 'nf-core/coreutils:9.5--ae99c88a9b28c264'
+ 
+     input:
+     tuple val(meta), path(reads, stageAs: "input*/*")
+
+'modules/nf-core/cat/fastq/meta.yml' is unchanged
+'modules/nf-core/cat/fastq/environment.yml' is unchanged
+'modules/nf-core/cat/fastq/tests/main.nf.test.snap' is unchanged
+Changes in 'cat/fastq/tests/main.nf.test':
+--- modules/nf-core/cat/fastq/tests/main.nf.test
++++ modules/nf-core/cat/fastq/tests/main.nf.test
+@@ -5,10 +5,6 @@
+     name "Test Process CAT_FASTQ"
+     script "../main.nf"
+     process "CAT_FASTQ"
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "cat"
+-    tag "cat/fastq"
+ 
+     test("test_cat_fastq_single_end") {
+ 
+
+'modules/nf-core/cat/fastq/tests/tags.yml' was removed
+************************************************************

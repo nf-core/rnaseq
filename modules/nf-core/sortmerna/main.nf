@@ -3,9 +3,7 @@ process SORTMERNA {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sortmerna:4.3.6--h9ee0642_0' :
-        'biocontainers/sortmerna:4.3.6--h9ee0642_0' }"
+    container 'nf-core/sortmerna:4.3.7--6502243397c065ba'
 
     input:
     tuple val(meta), path(reads)

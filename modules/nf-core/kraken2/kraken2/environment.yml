@@ -1,8 +1,6 @@
-name: kraken2_kraken2
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - "bioconda::kraken2=2.1.3"
   - "coreutils=9.4"

@@ -3,9 +3,7 @@ process CAT_FASTQ {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+    container 'nf-core/coreutils:9.5--ae99c88a9b28c264'
 
     input:
     tuple val(meta), path(reads, stageAs: "input*/*")

@@ -14,37 +14,40 @@ tools:
       manual: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
       doi: 10.1093/bioinformatics/bts635
       licence: ["MIT"]
+      identifier: biotools:star
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - fasta:
-      type: file
-      description: Fasta file of the reference genome
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test' ]
-  - gtf:
-      type: file
-      description: GTF file of the reference genome
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Fasta file of the reference genome
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - gtf:
+        type: file
+        description: GTF file of the reference genome
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - index:
-      type: directory
-      description: Folder containing the star index files
-      pattern: "star"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - star:
+          type: directory
+          description: Folder containing the star index files
+          pattern: "star"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@kevinmenden"
   - "@drpatelh"

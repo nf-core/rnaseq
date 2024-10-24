@@ -4,22 +4,22 @@
             205,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.01
+                    "bbmap": 39.1
                 },
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 8.3
+                    "cat": 9.5
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
-                    "python": "3.9.5"
+                    "python": "3.12.2"
                 },
                 "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.2
+                    "getchromsizes": 1.21
                 },
                 "CUSTOM_TX2GENE": {
-                    "python": "3.9.5"
+                    "python": "3.10.4"
                 },
                 "DESEQ2_QC_PSEUDO": {
                     "r-base": "4.0.3",
@@ -36,7 +36,7 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.9.1 (2022-02-22)"
+                    "fq": "0.12.0 (2024-07-08)"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -81,51 +81,51 @@
                     "rseqc": "5.0.2"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "1.10.1"
+                    "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "SE_GENE": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "SORTMERNA": {
-                    "sortmerna": "4.3.6"
+                    "sortmerna": "4.3.7"
                 },
                 "SORTMERNA_INDEX": {
-                    "sortmerna": "4.3.6"
+                    "sortmerna": "4.3.7"
                 },
                 "STAR_ALIGN": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.1"
+                    "stringtie": "2.2.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
-                    "subread": "2.0.1"
+                    "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.7",
-                    "cutadapt": 3.4
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -134,13 +134,13 @@
                     "ucsc": 377
                 },
                 "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 445
+                    "ucsc": 469
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.16.1"
+                    "nf-core/rnaseq": "v3.17.0"
                 }
             },
             [
@@ -1227,59 +1227,59 @@
                 "fastqc_raw_sequence_duplication_levels_plot.txt:md5,8812cee16f6ca65e2c33635754de1772",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
                 "fastqc_trimmed-status-check-heatmap.txt:md5,22a03548736b88b23be6bc0c9ef1b4a6",
-                "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,4adfeacd3a3a6c7c808f121b24e6b247",
+                "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,c755e9d044ea1a82b2c8edde867b4878",
                 "fastqc_trimmed_per_base_n_content_plot.txt:md5,418610c1ce119cb786ad434db75d366e",
                 "fastqc_trimmed_per_base_sequence_quality_plot.txt:md5,bd22e06e41c096ad4f745d40fe96a1e5",
                 "fastqc_trimmed_per_sequence_gc_content_plot_Counts.txt:md5,004c60768ceb6197765154e3eaa37b7a",
                 "fastqc_trimmed_per_sequence_gc_content_plot_Percentages.txt:md5,95d29060b687f745288ad1ec47750037",
                 "fastqc_trimmed_per_sequence_quality_scores_plot.txt:md5,0f9834cc19f76dd5c87cf8cba7435a7c",
-                "fastqc_trimmed_sequence_counts_plot.txt:md5,6ae4db60425cae4f78b13c798ad1dcf3",
-                "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,c73407d55fc532e864fa1dc8dbc12874",
+                "fastqc_trimmed_sequence_counts_plot.txt:md5,9fd642bdd1da354f296bb8092205608f",
+                "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
                 "multiqc_citations.txt:md5,bfa9fd61367cd7265e324d009c974778",
-                "multiqc_cutadapt.txt:md5,aac9581a5670cb55edf564f3d6c1f9a7",
+                "multiqc_cutadapt.txt:md5,583b7b9ba76b26162bb9610ed746454b",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
-                "multiqc_fastqc_fastqc_trimmed.txt:md5,26528b0b0d3df6304b80ca8f09619233",
-                "multiqc_featurecounts_biotype_plot.txt:md5,54f0eef4ab0ecf6a03505b18752b43cd",
-                "multiqc_samtools_idxstats.txt:md5,413ba06f3d8e4ab0dbde8ef8952c4b32",
+                "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
+                "multiqc_featurecounts_biotype_plot.txt:md5,f4de303d3277d862031df94b509527ba",
+                "multiqc_samtools_idxstats.txt:md5,58f19b28617037a2825f812d58d55e2e",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "qualimap_gene_coverage_profile_Counts.txt:md5,50e9209baeaafe181ce3b5caa05cf789",
-                "qualimap_gene_coverage_profile_Normalised.txt:md5,6ed32f112c679e73396350cbe5cb9459",
-                "qualimap_rnaseq_cov_hist.txt:md5,a895b3af229f661da1edbc21ec72edaa",
+                "qualimap_gene_coverage_profile_Counts.txt:md5,286d47f67e1d034a88e122091ae30f3d",
+                "qualimap_gene_coverage_profile_Normalised.txt:md5,3297068282f57506f40070b8bc6ad1b5",
+                "qualimap_rnaseq_cov_hist.txt:md5,a523cfcb52fe8f2d5902d933568a790d",
                 "rseqc_infer_experiment_plot.txt:md5,d8741451248f1a5a4ebe3230c1af9c95",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,53addd7b78d8ae224920ec9b97489d72",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,97fc7bde65a7efc5ab3af48ef0400c20",
+                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,4ff26c0457ddceb4a03e874222b46f00",
                 "ambig_info.tsv:md5,25ced9693254994a7878241225baabb6",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,306609f606004616a89ec50dc59f22b0",
+                "cmd_info.json:md5,3fa4eede50b6057d7ea52ca8aff1d641",
                 "lib_format_counts.json:md5,b814fed52bd197a64544086dba0f127a",
                 "ambig_info.tsv:md5,c83b0f9ebe9b8dfc284595ec56d4f092",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,6b367a9cdd2837b88890209459acf45f",
+                "cmd_info.json:md5,c5c31cc1202236ae2c800526c8a72827",
                 "lib_format_counts.json:md5,3f4d67ace359562564dd336aa47a479c",
                 "ambig_info.tsv:md5,00a1f9de7095a68dfb43e0a0301b6ecd",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,c8c6208e1082ec150de56679b2b8cfe3",
+                "cmd_info.json:md5,e20c14f481b4468e11664f04ac06b166",
                 "lib_format_counts.json:md5,f56087bcbd494c7fa78200f65a2400e2",
                 "ambig_info.tsv:md5,54d942ddf69b4e8f1598064e09428256",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,5523405c02d30489d276e5d734cb54da",
+                "cmd_info.json:md5,8e239ec68573adbfcbcbac9238a1d433",
                 "lib_format_counts.json:md5,43fc5463eada79e466d6ba9848739f06",
                 "ambig_info.tsv:md5,933feffdaf6cf6ff407469ade0d7684d",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,998c89efb00fa5e63fd1d18c0602a019",
+                "cmd_info.json:md5,fa7b659f1ba90e16b0d0a375ff318b01",
                 "lib_format_counts.json:md5,e6e3d7746e9abee6a0e097ae0ee1781a",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
@@ -1287,53 +1287,53 @@
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,4cc2492f557e5e0a2911a0bd83a51020",
+                "cmd_info.json:md5,21395500c85658c70ce5fa0ac05b339a",
                 "ambig_info.tsv:md5,8611b6c03f6aa1a5f3dfceb0e65ad4ef",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,dc750c3564c63da54979c852794d58a5",
+                "cmd_info.json:md5,faf70330c73fdce087631bb06de8a12f",
                 "ambig_info.tsv:md5,1b69f9b651dfa6799e310004c1e3309f",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,db43ed650e6e7b42cd2c5b8101bb6748",
+                "cmd_info.json:md5,563fd8191cc965524621c2afea7983ff",
                 "ambig_info.tsv:md5,070c7d50eab5ce0f211cdb06f9d7cc29",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,e418b4e899623449c6babdf53e5aabde",
+                "cmd_info.json:md5,867de0b90aeccb5f9627e821a973aea7",
                 "ambig_info.tsv:md5,b8c61854b56a1c9a0fc8f158ea0c7599",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,f234c8d322df3b59d990594c63b24eae",
+                "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,ddadea4a08511aae6faeb632eb6aafea",
                 "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,1db4c86723cf69052c4386760a9750bb",
                 "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,c0bf1135d2d70c5918d87f706c0c54bc",
-                "WT_REP1_dupMatrix.txt:md5,b0de1683f2a9bfa42437e924a11648fd",
+                "WT_REP1_dupMatrix.txt:md5,b82c4fed335d03e85c414c91c2efd461",
                 "WT_REP2_dupMatrix.txt:md5,bab18079153627205e5d907d8dfba677",
                 "RAP1_IAA_30M_REP1_intercept_slope.txt:md5,b21a53b0156b0afdfc28c237cb11218d",
                 "RAP1_UNINDUCED_REP1_intercept_slope.txt:md5,eccc5ca37855c717d35477e684188695",
                 "RAP1_UNINDUCED_REP2_intercept_slope.txt:md5,c3900f3bb24cd339d0e0ecf65ae43217",
-                "WT_REP1_intercept_slope.txt:md5,f38c8525b7fcb990b7158f1518e451ad",
+                "WT_REP1_intercept_slope.txt:md5,7db7a898152e8eaab96b1aaf0e567e50",
                 "WT_REP2_intercept_slope.txt:md5,9bcbc18d0d331fe3c972538456ffd5b2",
-                "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,f36792d25b268b6d556f8728300f4afc",
+                "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,accedae963f399d3b47effd8eda41edb",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.txt:md5,c5865ded7168476d93057d2aedaec694",
+                "RAP1_IAA_30M_REP1.featureCounts.txt:md5,e37ededa12690a8ccae2eb42dac47ed6",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,782f5001d411ba79314ba77f7d36b157",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,a0fb30c2b937a5a41ac865ab09367af7",
+                "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,84cdcb79270d27007457fcaed5a1ad1b",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,1c9d07d9f9d12219d2b9f761f854eced",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,de016e691f5d56b13bbaa626ce2cc93e",
-                "WT_REP1.biotype_counts_mqc.tsv:md5,eca4a76b9243248d01df5f4289b8201e",
+                "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,109c8988ccc98e6d2a45c3d55b07f2bd",
+                "WT_REP1.biotype_counts_mqc.tsv:md5,97caee79e83b5fce6e5504c0daefe474",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.txt:md5,7aadafd0a26f5047a9ae7266eccfce05",
-                "WT_REP2.biotype_counts_mqc.tsv:md5,530605b80da27915a90d452249f3243a",
+                "WT_REP1.featureCounts.txt:md5,2d37cf435f77164dc9dfd11725b60528",
+                "WT_REP2.biotype_counts_mqc.tsv:md5,e6bec82076f4cb2eff39f0d1bae70dc9",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.txt:md5,809af01851125c401d576c21efca7b5a",
+                "WT_REP2.featureCounts.txt:md5,dd94f2f0c2ca58b9436429e33effd524",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -1348,9 +1348,9 @@
                 "coverage_profile_along_genes_(high).txt:md5,634f447f91db940d2148af74cf36febd",
                 "coverage_profile_along_genes_(low).txt:md5,db2e0acbe9f07c68bcd7e08e036f02d3",
                 "coverage_profile_along_genes_(total).txt:md5,db2e0acbe9f07c68bcd7e08e036f02d3",
-                "coverage_profile_along_genes_(high).txt:md5,a349232d75f6c0adab6afcd9f6cbbafb",
-                "coverage_profile_along_genes_(low).txt:md5,b2c696661e6c524b1641eb7267c70edc",
-                "coverage_profile_along_genes_(total).txt:md5,b2c696661e6c524b1641eb7267c70edc",
+                "coverage_profile_along_genes_(high).txt:md5,40b488dc478b4bf6d802319e89846c0a",
+                "coverage_profile_along_genes_(low).txt:md5,9f1e68e98d4d663aac436305c99cceaf",
+                "coverage_profile_along_genes_(total).txt:md5,9f1e68e98d4d663aac436305c99cceaf",
                 "coverage_profile_along_genes_(high).txt:md5,3f76529bd723d5320c86cc407fbb3294",
                 "coverage_profile_along_genes_(low).txt:md5,b9be191fdec82c78057e083d3adf20dd",
                 "coverage_profile_along_genes_(total).txt:md5,b9be191fdec82c78057e083d3adf20dd",
@@ -1372,7 +1372,7 @@
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,682817a9d0a1ac9c1637249e007d3514",
+                "e_data.ctab:md5,68812b283993f721b237ae6cdecc30d5",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,907ab2e06346df131cbdb929afc005a8",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
@@ -1384,25 +1384,25 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-10T11:03:32.596507"
+        "timestamp": "2024-10-23T11:36:09.902195192"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
             24,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.01
+                    "bbmap": 39.1
                 },
                 "CAT_FASTQ": {
-                    "cat": 8.3
+                    "cat": 9.5
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": null
                 },
                 "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.2
+                    "getchromsizes": 1.21
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -1420,22 +1420,22 @@
                     "gunzip": 1.1
                 },
                 "SORTMERNA_INDEX": {
-                    "sortmerna": "4.3.6"
+                    "sortmerna": "4.3.7"
                 },
                 "STAR_GENOMEGENERATE": {
-                    "star": "2.7.10a",
-                    "samtools": 1.18,
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
                     "gawk": "5.1.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.7",
-                    "cutadapt": 3.4
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.16.1"
+                    "nf-core/rnaseq": "v3.17.0"
                 }
             },
             [
@@ -1480,8 +1480,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-10T11:04:25.816703"
+        "timestamp": "2024-10-23T11:37:11.90905171"
     }
 }

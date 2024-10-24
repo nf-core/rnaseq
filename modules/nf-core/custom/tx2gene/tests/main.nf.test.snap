@@ -11,7 +11,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,fb8145d7fbc6043ba031249b23ecda50"
+                    "versions.yml:md5,e504b95d76ef4cf65ba0b38cddce2840"
                 ],
                 "tx2gene": [
                     [
@@ -22,15 +22,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,fb8145d7fbc6043ba031249b23ecda50"
+                    "versions.yml:md5,e504b95d76ef4cf65ba0b38cddce2840"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-05T13:13:11.305047"
+        "timestamp": "2024-10-18T10:24:12.19104487"
     },
     "saccharomyces_cerevisiae - gtf - stub": {
         "content": [
@@ -44,7 +44,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5613eefbca41377128f1d8dc09b9fb60"
+                    "versions.yml:md5,48194bffef8cb833e82e31166f3d486c"
                 ],
                 "tx2gene": [
                     [
@@ -55,14 +55,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,5613eefbca41377128f1d8dc09b9fb60"
+                    "versions.yml:md5,48194bffef8cb833e82e31166f3d486c"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-10T15:15:34.064489"
+        "timestamp": "2024-10-18T10:24:24.729694098"
     }
 }

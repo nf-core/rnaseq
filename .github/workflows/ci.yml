@@ -62,6 +62,8 @@ jobs:
         exclude:
           - isMaster: false
             profile: "singularity"
+          - NXF_VER: "latest-everything"
+            profile: "singularity"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4

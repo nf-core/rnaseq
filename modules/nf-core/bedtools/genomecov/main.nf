@@ -3,9 +3,7 @@ process BEDTOOLS_GENOMECOV {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/bedtools_coreutils:ba273c06a3909a15':
-        'community.wave.seqera.io/library/bedtools_coreutils:a623c13f66d5262b' }"
+    container 'nf-core/bedtools_coreutils:a623c13f66d5262b'
 
     input:
     tuple val(meta), path(intervals), val(scale)

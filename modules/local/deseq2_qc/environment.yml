@@ -1,8 +1,6 @@
-name: deseq2_qc
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - conda-forge::r-base
   - conda-forge::r-optparse

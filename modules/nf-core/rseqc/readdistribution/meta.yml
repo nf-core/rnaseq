@@ -13,29 +13,36 @@ tools:
       documentation: http://rseqc.sourceforge.net/
       doi: 10.1093/bioinformatics/bts356
       licence: ["GPL-3.0-or-later"]
+      identifier: biotools:rseqc
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: the alignment in bam format
-      pattern: "*.{bam}"
-  - bed:
-      type: file
-      description: a bed file for the reference gene model
-      pattern: "*.{bed}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: the alignment in bam format
+        pattern: "*.{bam}"
+  - - bed:
+        type: file
+        description: a bed file for the reference gene model
+        pattern: "*.{bed}"
 output:
   - txt:
-      type: file
-      description: the read distribution report
-      pattern: "*.read_distribution.txt"
+      - meta:
+          type: file
+          description: the read distribution report
+          pattern: "*.read_distribution.txt"
+      - "*.read_distribution.txt":
+          type: file
+          description: the read distribution report
+          pattern: "*.read_distribution.txt"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"

@@ -10,36 +10,34 @@ import groovy.json.JsonSlurper
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-validation'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { dashedLine                } from '../../nf-core/utils_nfcore_pipeline'
-include { nfCoreLogo                } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
 include { calculateStrandedness     } from '../../nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow PIPELINE_INITIALISATION {
 
     take:
     version           // boolean: Display version and exit
-    help              // boolean: Display help text
-    schema            //  string: Path to the JSON schema file
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
     monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args  //   array: List of positional nextflow CLI args
+    nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
 
     main:
+
+    ch_versions = Channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -54,16 +52,10 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    pre_help_text = nfCoreLogo(monochrome_logs)
-    post_help_text = '\n' + workflowCitation() + '\n' + dashedLine(monochrome_logs)
-    def String workflow_command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --genome GRCh37 --outdir <OUTDIR>"
-    UTILS_NFVALIDATION_PLUGIN (
-        help,
-        workflow_command,
-        pre_help_text,
-        post_help_text,
+    UTILS_NFSCHEMA_PLUGIN (
+        workflow,
         validate_params,
-        schema
+        null
     )
 
     //
@@ -78,12 +70,14 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
+    emit:
+    versions    = ch_versions
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW FOR PIPELINE COMPLETION
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 def pass_mapped_reads  = [:]
@@ -93,21 +87,19 @@ def pass_strand_check  = [:]
 workflow PIPELINE_COMPLETION {
 
     take:
-    schema             //  string: Path to the JSON schema file
-    email              //  string: email address
-    email_on_fail      //  string: email address sent on pipeline failure
-    plaintext_email    // boolean: Send plain-text email instead of HTML
-    outdir             //    path: Path to output directory where results will be published
-    monochrome_logs    // boolean: Disable ANSI colour codes in log output
-    hook_url           //  string: hook URL for notifications
-    multiqc_report     //  string: Path to MultiQC report
+    email           //  string: email address
+    email_on_fail   //  string: email address sent on pipeline failure
+    plaintext_email // boolean: Send plain-text email instead of HTML
+    outdir          //    path: Path to output directory where results will be published
+    monochrome_logs // boolean: Disable ANSI colour codes in log output
+    hook_url        //  string: hook URL for notifications
+    multiqc_report  //  string: Path to MultiQC report
     trim_status        // map: pass/fail status per sample for trimming
     map_status         // map: pass/fail status per sample for mapping
     strand_status      // map: pass/fail status per sample for strandedness check
 
     main:
-
-    summary_params = paramsSummaryMap(workflow, parameters_schema: schema)
+    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
 
     trim_status
         .map{
@@ -129,7 +121,15 @@ workflow PIPELINE_COMPLETION {
     //
     workflow.onComplete {
         if (email || email_on_fail) {
-            completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
+            completionEmail(
+                summary_params,
+                email,
+                email_on_fail,
+                plaintext_email,
+                outdir,
+                monochrome_logs,
+                multiqc_report.toList()
+            )
         }
 
         rnaseqSummary(monochrome_logs=monochrome_logs, pass_mapped_reads=pass_mapped_reads, pass_trimmed_reads=pass_trimmed_reads, pass_strand_check=pass_strand_check)
@@ -145,9 +145,9 @@ workflow PIPELINE_COMPLETION {
 }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     FUNCTIONS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 //
@@ -163,7 +163,7 @@ def checkSamplesAfterGrouping(input) {
     }
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
+    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
     if (!endedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
@@ -260,6 +260,29 @@ def validateInputParameters() {
         }
     }
 
+    //General checks for if contaminant screening is used
+    if (params.contaminant_screening) {
+        if (params.aligner == 'star_rsem') {
+            error("Contaminant screening cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
+        }
+    }
+
+    // Check that Kraken/Bracken database provided if using kraken2/bracken
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
+        if (!params.kraken_db) {
+            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
+        }
+    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
+    } else {
+        if (!params.bracken_precision.equals('S')) {
+            brackenPrecisionWithoutKrakenDBWarn()
+        }
+
+        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
+            krakenArgumentsWithoutKrakenDBWarn()
+        }
+    }
+
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
     def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
@@ -297,7 +320,6 @@ def genomeExistsError() {
         error(error_string)
     }
 }
-
 //
 // Generate methods description for MultiQC
 //
@@ -339,8 +361,10 @@ def methodsDescriptionText(mqc_methods_yaml) {
         // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
         // Removing ` ` since the manifest.doi is a string and not a proper list
         def temp_doi_ref = ""
-        String[] manifest_doi = meta.manifest_map.doi.tokenize(",")
-        for (String doi_ref: manifest_doi) temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
+        def manifest_doi = meta.manifest_map.doi.tokenize(",")
+        manifest_doi.each { doi_ref ->
+            temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
+        }
         meta["doi_text"] = temp_doi_ref.substring(0, temp_doi_ref.length() - 2)
     } else meta["doi_text"] = ""
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
@@ -472,6 +496,26 @@ def additionaFastaIndexWarn(index) {
         "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/556\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
+//
+def krakenArgumentsWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
+        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+///
+/// Print a warning if --bracken-precision is provided without --kraken_db
+///
+def brackenPrecisionWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
+        "  Bracken will not run so precision will not be set.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

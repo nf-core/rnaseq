@@ -1,7 +1,5 @@
-name: salmon_index
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::salmon=1.10.1
+  - bioconda::salmon=1.10.3

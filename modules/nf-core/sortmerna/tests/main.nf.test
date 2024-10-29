@@ -3,9 +3,12 @@ nextflow_process {
     name "Test Process SORTMERNA"
     script "../main.nf"
     process "SORTMERNA"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "sortmerna"
 
     test("sarscov2 indexing only") {
-
+ 
         config './indexing_only.config'
 
         when {
@@ -21,11 +24,17 @@ nextflow_process {
         }
 
         then {
+            def index_files = file(process.out.index[0][1]).listFiles()
+                .findAll { !it.name.endsWith('.stats') }
+                .sort { a, b -> a.name <=> b.name }
+            
             assertAll(
                 { assert process.success },
                 { assert ! process.out.reads },
-                { assert snapshot(process.out.index).match("index_index_only") },
-                { assert snapshot(process.out.versions).match("versions_index_only") }
+                { assert snapshot(
+                    index_files,
+                    process.out.versions                   
+                ).match() },
             )
         }
 
@@ -76,6 +85,10 @@ nextflow_process {
         }
 
         then {
+            def index_files = file(process.out.index[0][1]).listFiles()
+                .findAll { !it.name.endsWith('.stats') }
+                .sort { a, b -> a.name <=> b.name }
+            
             assertAll(
                 { assert process.success },
                 { assert process.out.reads },
@@ -89,7 +102,7 @@ nextflow_process {
                         ).sort()
                     ).match("sarscov2 single_end_match")
                 },
-                { assert snapshot(process.out.index).match("index_single_end") },
+                { assert snapshot(index_files).match("index_single_end") },
                 { assert snapshot(process.out.versions).match("versions_single_end") }
             )
         }
@@ -154,6 +167,10 @@ nextflow_process {
         }
 
         then {
+            def index_files = file(process.out.index[0][1]).listFiles()
+                .findAll { !it.name.endsWith('.stats') }
+                .sort { a, b -> a.name <=> b.name }
+
             assertAll(
                 { assert process.success },
                 { assert process.out.reads },
@@ -167,7 +184,7 @@ nextflow_process {
                         ).sort()
                     ).match("sarscov2 paired_end_match")
                 },
-                { assert snapshot(process.out.index).match("index_paired_end") },
+                { assert snapshot(index_files).match("index_paired_end") },
                 { assert snapshot(process.out.versions).match("versions_paired_end") }
             )
         }
@@ -249,6 +266,10 @@ nextflow_process {
         }
 
         then {
+            def index_files = file(process.out.index[0][1]).listFiles()
+                .findAll { !it.name.endsWith('.stats') }
+                .sort { a, b -> a.name <=> b.name }
+
             assertAll(
                 { assert process.success },
                 { assert process.out.reads },
@@ -262,7 +283,7 @@ nextflow_process {
                         ).sort()
                     ).match("sarscov2 single_end_premade_index_match")
                 },
-                { assert snapshot(process.out.index).match("index_single_end_premade_index") },
+                { assert snapshot(index_files).match("index_single_end_premade_index") },
                 { assert snapshot(process.out.versions).match("versions_single_end_premade_index") }
             )
         }

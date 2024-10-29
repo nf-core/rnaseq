@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "utils_nfschema_plugin"
+description: Run nf-schema to validate parameters and create a summary of changed parameters
+keywords:
+  - validation
+  - JSON schema
+  - plugin
+  - parameters
+  - summary
+components: []
+input:
+  - input_workflow:
+      type: object
+      description: |
+        The workflow object of the used pipeline.
+        This object contains meta data used to create the params summary log
+  - validate_params:
+      type: boolean
+      description: Validate the parameters and error if invalid.
+  - parameters_schema:
+      type: string
+      description: |
+        Path to the parameters JSON schema.
+        This has to be the same as the schema given to the `validation.parametersSchema` config
+        option. When this input is empty it will automatically use the configured schema or
+        "${projectDir}/nextflow_schema.json" as default. The schema should not be given in this way
+        for meta pipelines.
+output:
+  - dummy_emit:
+      type: boolean
+      description: Dummy emit to make nf-core subworkflows lint happy
+authors:
+  - "@nvnieuwk"
+maintainers:
+  - "@nvnieuwk"

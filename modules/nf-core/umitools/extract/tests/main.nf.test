@@ -4,7 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "UMITOOLS_EXTRACT"
     config "./nextflow.config"
-
     test("single end") {
 
         when {

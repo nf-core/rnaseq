@@ -1,7 +1,5 @@
-name: ucsc_bedgraphtobigwig
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::ucsc-bedgraphtobigwig=445
+  - bioconda::ucsc-bedgraphtobigwig=469

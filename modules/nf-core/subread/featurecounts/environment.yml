@@ -1,7 +1,5 @@
-name: subread_featurecounts
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::subread=2.0.1
+  - bioconda::subread=2.0.6

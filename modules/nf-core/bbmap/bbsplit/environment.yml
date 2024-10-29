@@ -1,7 +1,5 @@
-name: bbmap_bbsplit
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::bbmap=39.01
+  - bioconda::bbmap=39.10

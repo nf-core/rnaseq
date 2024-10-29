@@ -3,7 +3,174 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.15.0dev - [date]
+## [[3.17.0](https://github.com/nf-core/rnaseq/releases/tag/3.17.0)] - 2024-10-23
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Pablo Gonzalez de Aledo](https://github.com/pabloaledo)
+
+### Enhancements & fixes
+
+- [PR #1418](https://github.com/nf-core/rnaseq/pull/1418) - Bump versions back to 3.17.0 after release
+- [PR #1422](https://github.com/nf-core/rnaseq/pull/1422) - Bump lots of modules so that conda versions have ARM builds
+- [PR #1423](https://github.com/nf-core/rnaseq/pull/1423) - Bump STAR version for version with ARM Conda build
+- [PR #1424](https://github.com/nf-core/rnaseq/pull/1424) - Patch sortmerna to 4.3.7 for ARM compatibility
+- [PR #1425](https://github.com/nf-core/rnaseq/pull/1425) - Add profile for ARM compatibility
+- [PR #1432](https://github.com/nf-core/rnaseq/pull/1432) - Bump versions for 3.17.0 release
+- [PR #1434](https://github.com/nf-core/rnaseq/pull/1434) - Default registry is quay.io for all containers
+- [PR #1437](https://github.com/nf-core/rnaseq/pull/1437) - Update software dependencies
+- [PR #1437](https://github.com/nf-core/rnaseq/pull/1437) - Remove conda from test matrix
+- [PR #1440](https://github.com/nf-core/rnaseq/pull/1440) - Further reduce matrix
+- [PR #1441](https://github.com/nf-core/rnaseq/pull/1441) - Force some containers to be converted from docker to singularity to fix nf-core download tests
+
+### Software dependencies
+
+| Dependency                    | Old version | New version |
+| ----------------------------- | ----------- | ----------- |
+| `bbmap`                       | 39.01       | 39.10       |
+| `coreutils`                   | 8.30        | 9.5         |
+| `fq`                          | 0.9.1       | 0.12.0      |
+| `python (catadditionalfasta)` | 3.9.5       | 3.12.2      |
+| `python (tx2gene)`            | 3.9.5       | 3.10.4      |
+| `cutadapt`                    | 3.4         | 4.9         |
+| `htslib (star)`               | 1.18        | 1.20        |
+| `htslib`                      | 1.20        | 1.21        |
+| `kallisto`                    | 0.48.0      | 0.51.1      |
+| `preseq`                      | 3.1.2       | 3.2.0       |
+| `salmon`                      | 1.10.1      | 1.10.3      |
+| `samtools (star)`             | 1.18        | 1.20        |
+| `samtools`                    | 1.20        | 1.21        |
+| `sortmerna`                   | 4.3.6       | 4.3.7       |
+| `star`                        | 2.7.10a     | =2.7.11b    |
+| `stringtie`                   | 2.2.1       | 2.2.3       |
+| `subread`                     | 2.0.1       | 2.0.6       |
+| `trim-galore`                 | 0.6.7       | 0.6.10      |
+| `ucsc-bedgraphtobigwig`       | 445         | 469         |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+## [[3.16.1](https://github.com/nf-core/rnaseq/releases/tag/3.16.1)] - 2024-10-16
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+
+### Enhancements & fixes
+
+- [PR #1398](https://github.com/nf-core/rnaseq/pull/1398) - Bump pipeline version to 3.17.0dev
+- [PR #1401](https://github.com/nf-core/rnaseq/pull/1401) - Template update for nf-core/tools v3.0.1
+- [PR #1405](https://github.com/nf-core/rnaseq/pull/1405) - Fix bad variable name in subworkflow
+- [PR #1406](https://github.com/nf-core/rnaseq/pull/1406) - Keep only one samplesheetToList
+- [PR #1409](https://github.com/nf-core/rnaseq/pull/1409) - Fix manifest DOI text
+- [PR #1410](https://github.com/nf-core/rnaseq/pull/1410) - Fix issues caused by empty versions from trimming subworkflows
+- [PR #1412](https://github.com/nf-core/rnaseq/pull/1412) - Reset versions back to 3.16.1 for patch release
+- [PR #1415](https://github.com/nf-core/rnaseq/pull/1415) - Disable pipeline level conda tests
+- [PR #1416](https://github.com/nf-core/rnaseq/pull/1416) - Really disable pipeline level conda tests
+
+### Parameters
+
+| Old parameter                        | New parameter   |
+| ------------------------------------ | --------------- |
+|                                      | `--help_full`   |
+|                                      | `--show_hidden` |
+| `--validationFailUnrecognisedParams` |                 |
+| `--validationLenientMode`            |                 |
+| `--validationSchemaIgnoreParams`     |                 |
+| `--validationShowHiddenParams`       |                 |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+>
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `MultiQC`  | 1.24.1      | 1.25.1      |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+## [[3.16.0](https://github.com/nf-core/rnaseq/releases/tag/3.16.0)] - 2024-10-02
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Ezra Greenberg](https://github.com/egreenberg7)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Phil Ewels](https://github.com/ewels)
+- [Shaun Regenbaum](https://github.com/Shaun-Regenbaum)
+
+### Enhancements & fixes
+
+- [PR #1376](https://github.com/nf-core/rnaseq/pull/1376) - Fix invalid named parameter syntax
+- [PR #1386](https://github.com/nf-core/rnaseq/pull/1386) - Bump pipeline version to 3.16.0dev
+- [PR #1388](https://github.com/nf-core/rnaseq/pull/1388) - Adding Kraken2/Bracken on unaligned reads as an additional quality control step to detect sample contamination
+- [PR #1389](https://github.com/nf-core/rnaseq/pull/1389) - Update animated subway map
+- [PR #1393](https://github.com/nf-core/rnaseq/pull/1393) - Use quay.io for bedtools/genomecov to solve issue with nf-core download
+
+### Parameters
+
+| Old parameter | New parameter               |
+| ------------- | --------------------------- |
+|               | `--contaminant_screening`   |
+|               | `--kraken_db`               |
+|               | `--save_kraken_assignments` |
+|               | `--save_kraken_unassigned`  |
+|               | `--bracken_precision`       |
+
+> **NB:** Parameter has been **updated** if both old and new parameter information is present.
+>
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+>
+> **NB:** Parameter has been **removed** if new parameter information isn't present.
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `Kraken2`  |             | 2.1.3       |
+| `Bracken`  |             | 2.9         |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
+## [[3.15.1](https://github.com/nf-core/rnaseq/releases/tag/3.15.1)] - 2024-09-16
+
+### Enhancements & fixes
+
+- [PR #1374](https://github.com/nf-core/rnaseq/pull/1374) - Bump pipeline version to 3.16.0dev
+- [PR #1379](https://github.com/nf-core/rnaseq/pull/1379) - Enhance pipeline level test snapshots
+- [PR #1380](https://github.com/nf-core/rnaseq/pull/1380) - Fix issues with R modules changing sample names
+- [PR #1381](https://github.com/nf-core/rnaseq/pull/1381) - Update all modules following massive conda usage update in nf-core modules
+- [PR #1382](https://github.com/nf-core/rnaseq/pull/1381) - Slight fixes for rnaseq preprocessing
+- [P$ #1383](https://github.com/nf-core/rnaseq/pull/1383) - Prerelease 3.15.1 version bumps
+
+## [[3.15.0](https://github.com/nf-core/rnaseq/releases/tag/3.15.0)] - 2024-09-04
 
 ### Credits
 
@@ -17,6 +184,7 @@ Special thanks to the following for their contributions to the release:
 - [Luke Zappia](https://github.com/lazappi)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime Garcia](https://github.com/maxulysse)
+- [Pieter Moris](https://github.com/pmoris)
 - [Rob Syme](https://github.com/robsyme)
 - [Thomas Danhorn](https://github.com/tdanhorn)
 
@@ -24,6 +192,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Enhancements & fixes
 
+- [PR #1180](https://github.com/nf-core/rnaseq/pull/1180) - Bump pipeline version to 3.15.0dev
 - [PR #1186](https://github.com/nf-core/rnaseq/pull/1186) - Properly update qualimap/rnaseq module (ie not patch)
 - [PR #1197](https://github.com/nf-core/rnaseq/pull/1197) - Delete lib directory and replace with utils\_\* subworkflows
 - [PR #1199](https://github.com/nf-core/rnaseq/pull/1199) - Replace modules.config with more modular config files per module/subworkflow/workflow
@@ -74,7 +243,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1272](https://github.com/nf-core/rnaseq/pull/1272) - Simple pipeline level nf-tests
 - [PR #1274](https://github.com/nf-core/rnaseq/pull/1274) - Update bam_markduplicates_picard subworkflow
 - [PR #1278](https://github.com/nf-core/rnaseq/pull/1278) - Delocalise pseudo quant workflow
-- [PR #1279](https://github.com/nf-core/rnaseq/pull/1279) - Add psueudoaligner pipeline level tests to test suite
+- [PR #1279](https://github.com/nf-core/rnaseq/pull/1279) - Add pseudoaligner pipeline level tests to test suite
 - [PR #1280](https://github.com/nf-core/rnaseq/pull/1280) - Reorganise pipeline level tests into flat directory structure
 - [PR #1282](https://github.com/nf-core/rnaseq/pull/1282) - Fix CHANGELOG error
 - [PR #1283](https://github.com/nf-core/rnaseq/pull/1283) - Add output files to nf-test snapshot
@@ -103,14 +272,14 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1331](https://github.com/nf-core/rnaseq/pull/1331) - Adding stubs for local modules
 - [PR #1334](https://github.com/nf-core/rnaseq/pull/1334) - Update all nf-core/modules and subworkflows with stubs
 - [PR #1335](https://github.com/nf-core/rnaseq/pull/1335) - Adding stubs at all levels
-- [PR #1336](https://github.com/nf-core/rnaseq/pull/1334) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
+- [PR #1336](https://github.com/nf-core/rnaseq/pull/1336) - Use nf-core/setup-nf-test to install nf-test from cache during CI/CD
 - [PR #1340](https://github.com/nf-core/rnaseq/pull/1340) - Remove out-of-date Azure specific guidance
 - [PR #1341](https://github.com/nf-core/rnaseq/pull/1341) - Add rename in the MultiQC report for samples without techreps
 - [PR #1342](https://github.com/nf-core/rnaseq/pull/1342) - Factor out preprocessing
 - [PR #1345](https://github.com/nf-core/rnaseq/pull/1345) - Fix preprocessing call
 - [PR #1350](https://github.com/nf-core/rnaseq/pull/1350) - Reduce resource usage for sort process in bedtools/genomecov
-- [PR #1353](https://github.com/nf-core/rnaseq/pull/1353) - Correct conditional for salmon indexing in preprocessing workflow
 - [PR #1352](https://github.com/nf-core/rnaseq/pull/1352) - Assorted fixes to MultiQC usage
+- [PR #1353](https://github.com/nf-core/rnaseq/pull/1353) - Correct conditional for salmon indexing in preprocessing workflow
 - [PR #1355](https://github.com/nf-core/rnaseq/pull/1355) - Make all curves on subway map better looking, and all lines now have the same width
 - [PR #1357](https://github.com/nf-core/rnaseq/pull/1357) - Fix anchor issue in multiqc
 - [PR #1358](https://github.com/nf-core/rnaseq/pull/1358) - Update test profiles to restore a static URI for megatests
@@ -120,6 +289,11 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 - [PR #1362](https://github.com/nf-core/rnaseq/pull/1362) - Move multiqc module prefix for nf-test to module
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Minor updates of nf-core modules and subworkflows
 - [PR #1363](https://github.com/nf-core/rnaseq/pull/1363) - Update dupradar script
+- [PR #1366](https://github.com/nf-core/rnaseq/pull/1366) - Clarify docs on different tximport count files
+- [PR #1367](https://github.com/nf-core/rnaseq/pull/1367) - Clarify design formula and blind dispersion estimation
+- [PR #1370](https://github.com/nf-core/rnaseq/pull/1370) - Bump versions for 3.15.0
+- [PR #1371](https://github.com/nf-core/rnaseq/pull/1371) - Apply Maxime's CHANGELOG edits
+- [PR #1372](https://github.com/nf-core/rnaseq/pull/1372) - Bump tximeta/tximport for gene table row names fix
 
 ### Parameters
 

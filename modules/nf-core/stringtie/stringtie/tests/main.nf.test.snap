@@ -31,18 +31,18 @@
                         "id": "test",
                         "strandedness": "forward"
                     },
-                    "test.transcripts.gtf:md5,f56cf8aba2c4a5673bc7963ba5f12d04"
+                    "test.transcripts.gtf:md5,37154e7bda96544f24506ee902bb561d"
                 ]
             ],
             [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:33:44.299962"
+        "timestamp": "2024-10-18T09:56:50.294157199"
     },
     "sarscov2 [bam] - forward strandedness": {
         "content": [
@@ -61,18 +61,18 @@
                         "id": "test",
                         "strandedness": "forward"
                     },
-                    "test.transcripts.gtf:md5,569137af5be452413086b50653a97203"
+                    "test.transcripts.gtf:md5,6087dfc9700a52d9e4a1ae3fcd1d1dfd"
                 ]
             ],
             [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:33:35.177738"
+        "timestamp": "2024-10-18T09:56:39.4249133"
     },
     "sarscov2 [bam] - forward strandedness - stub": {
         "content": [
@@ -114,7 +114,7 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ],
                 "abundance": [
                     [
@@ -153,15 +153,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:36:32.885078"
+        "timestamp": "2024-10-18T09:57:23.008470065"
     },
     "sarscov2 [bam] - forward strandedness + reference annotation - stub": {
         "content": [
@@ -203,7 +203,7 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ],
                 "abundance": [
                     [
@@ -242,15 +242,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:36:43.325777"
+        "timestamp": "2024-10-18T09:57:33.622824981"
     },
     "sarscov2 [bam] - reverse strandedness + reference annotation - stub": {
         "content": [
@@ -292,7 +292,7 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ],
                 "abundance": [
                     [
@@ -331,15 +331,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:37:06.085936"
+        "timestamp": "2024-10-18T09:57:55.803421433"
     },
     "sarscov2 [bam] - reverse strandedness - stub": {
         "content": [
@@ -381,7 +381,7 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ],
                 "abundance": [
                     [
@@ -420,15 +420,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:36:53.837578"
+        "timestamp": "2024-10-18T09:57:44.825389635"
     },
     "sarscov2 [bam] - reverse strandedness + reference annotation": {
         "content": [
@@ -462,18 +462,18 @@
                         "id": "test",
                         "strandedness": "reverse"
                     },
-                    "test.transcripts.gtf:md5,bb346053a8c156b803b055133376c7fa"
+                    "test.transcripts.gtf:md5,fbabb4e3888bbede67f11f692e484880"
                 ]
             ],
             [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:34:03.114695"
+        "timestamp": "2024-10-18T09:57:11.793664242"
     },
     "sarscov2 [bam] - reverse strandedness": {
         "content": [
@@ -492,17 +492,17 @@
                         "id": "test",
                         "strandedness": "reverse"
                     },
-                    "test.transcripts.gtf:md5,31c34aec2bf36bb0ea3c16c2afeeeb1f"
+                    "test.transcripts.gtf:md5,01d6da00a3c458420841e57427297183"
                 ]
             ],
             [
-                "versions.yml:md5,3410e8ac349d18c85ddee89337851d38"
+                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-22T12:33:52.874479"
+        "timestamp": "2024-10-18T09:57:01.166309777"
     }
 }

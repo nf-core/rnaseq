@@ -181,7 +181,6 @@ nextflow_workflow {
         }
     }
 
-
     test("skip_umi_extract") {
 
         when {
@@ -674,7 +673,6 @@ nextflow_workflow {
             )
         }
     }
-
 
     test("skip_umi_extract - stub") {
 

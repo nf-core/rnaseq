@@ -33,13 +33,15 @@ include { methodsDescriptionText         } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { DUPRADAR                } from '../../modules/nf-core/dupradar'
-include { SAMTOOLS_SORT           } from '../../modules/nf-core/samtools/sort'
-include { PRESEQ_LCEXTRAP         } from '../../modules/nf-core/preseq/lcextrap'
-include { QUALIMAP_RNASEQ         } from '../../modules/nf-core/qualimap/rnaseq'
-include { STRINGTIE_STRINGTIE     } from '../../modules/nf-core/stringtie/stringtie'
-include { SUBREAD_FEATURECOUNTS   } from '../../modules/nf-core/subread/featurecounts'
-include { MULTIQC                 } from '../../modules/nf-core/multiqc'
+include { DUPRADAR                   } from '../../modules/nf-core/dupradar'
+include { SAMTOOLS_SORT              } from '../../modules/nf-core/samtools/sort'
+include { PRESEQ_LCEXTRAP            } from '../../modules/nf-core/preseq/lcextrap'
+include { QUALIMAP_RNASEQ            } from '../../modules/nf-core/qualimap/rnaseq'
+include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/stringtie'
+include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
+include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
+include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
+include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
@@ -47,8 +49,8 @@ include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../mod
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { paramsSummaryMap                 } from 'plugin/nf-validation'
-include { fromSamplesheet                  } from 'plugin/nf-validation'
+include { paramsSummaryMap                 } from 'plugin/nf-schema'
+include { samplesheetToList                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
@@ -111,7 +113,7 @@ workflow RNASEQ {
     // Create channel from input file provided through params.input
     //
     Channel
-        .fromSamplesheet("input")
+        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2 ->
                 if (!fastq_2) {
@@ -121,10 +123,10 @@ workflow RNASEQ {
                 }
         }
         .groupTuple()
-        .map {
-            checkSamplesAfterGrouping(it)
+        .map { samplesheet ->
+            checkSamplesAfterGrouping(samplesheet)
         }
-        .set{ ch_fastq }
+        .set { ch_fastq }
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -169,32 +171,14 @@ workflow RNASEQ {
             meta, num_reads ->
                 return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
         }
-    //
-    // Get list of samples that failed trimming threshold for MultiQC report
-    //
-    ch_trim_read_count
-        .map {
-            meta, num_reads ->
-                if (num_reads <= params.min_trimmed_reads.toFloat()) {
-                    return [ "$meta.id\t$num_reads" ]
-                }
-        }
-        .collect()
-        .map {
-            tsv_data ->
-                def header = ["Sample", "Reads after trimming"]
-                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
-        }
-        .set { ch_fail_trimming_multiqc }
-
-    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_trimming_multiqc.collectFile(name: 'fail_trimmed_samples_mqc.tsv'))
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
-    ch_genome_bam       = Channel.empty()
-    ch_genome_bam_index = Channel.empty()
-    ch_star_log         = Channel.empty()
+    ch_genome_bam          = Channel.empty()
+    ch_genome_bam_index    = Channel.empty()
+    ch_star_log            = Channel.empty()
+    ch_unaligned_sequences = Channel.empty()
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
         def is_aws_igenome = false
@@ -214,10 +198,11 @@ workflow RNASEQ {
             is_aws_igenome,
             ch_fasta.map { [ [:], it ] }
         )
-        ch_genome_bam        = ALIGN_STAR.out.bam
-        ch_genome_bam_index  = ALIGN_STAR.out.bai
-        ch_transcriptome_bam = ALIGN_STAR.out.bam_transcript
-        ch_star_log          = ALIGN_STAR.out.log_final
+        ch_genome_bam          = ALIGN_STAR.out.bam
+        ch_genome_bam_index    = ALIGN_STAR.out.bai
+        ch_transcriptome_bam   = ALIGN_STAR.out.bam_transcript
+        ch_star_log            = ALIGN_STAR.out.log_final
+        ch_unaligned_sequences = ALIGN_STAR.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.idxstats.collect{it[1]})
@@ -392,8 +377,9 @@ workflow RNASEQ {
             ch_splicesites.map { [ [:], it ] },
             ch_fasta.map { [ [:], it ] }
         )
-        ch_genome_bam       = FASTQ_ALIGN_HISAT2.out.bam
-        ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.bai
+        ch_genome_bam          = FASTQ_ALIGN_HISAT2.out.bam
+        ch_genome_bam_index    = FASTQ_ALIGN_HISAT2.out.bai
+        ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{it[1]})
@@ -645,7 +631,7 @@ workflow RNASEQ {
             ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
                 .map {
                     meta, strand_log ->
-                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, stranded_threshold = params.stranded_threshold, unstranded_threshold = params.unstranded_threshold)
+                        def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, params.stranded_threshold, params.unstranded_threshold)
                         rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
 
                         def status = 'fail'
@@ -699,6 +685,28 @@ workflow RNASEQ {
                 .set { ch_fail_strand_multiqc }
 
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
+        }
+
+        if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
+            KRAKEN2 (
+                ch_unaligned_sequences,
+                params.kraken_db,
+                params.save_kraken_assignments,
+                params.save_kraken_unassigned
+            )
+            ch_kraken_reports = KRAKEN2.out.report
+            ch_versions = ch_versions.mix(KRAKEN2.out.versions)
+
+            if (params.contaminant_screening == 'kraken2') {
+                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]})
+            } else if (params.contaminant_screening == 'kraken2_bracken') {
+                BRACKEN (
+                    ch_kraken_reports,
+                    params.kraken_db
+                )
+                ch_versions = ch_versions.mix(BRACKEN.out.versions)
+                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{it[1]})
+            }
         }
     }
 

@@ -5,6 +5,9 @@ nextflow_workflow {
     workflow "FASTQ_ALIGN_HISAT2"
     config "./nextflow.config"
 
+
+
+
         setup {
             run("HISAT2_EXTRACTSPLICESITES") {
                 script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"

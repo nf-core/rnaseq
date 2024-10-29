@@ -2,13 +2,12 @@
 
 # Written by Lorena Pantano with subsequent reworking by Jonathan Manning. Released under the MIT license.
 
-import logging
-import argparse
 import glob
+import logging
 import os
 import platform
 import re
-from collections import Counter, defaultdict, OrderedDict
+from collections import Counter, OrderedDict
 from collections.abc import Set
 from typing import Dict
 
@@ -52,7 +51,7 @@ def read_top_transcripts(quant_dir: str, file_pattern: str) -> Set[str]:
     try:
         # Find the quantification file within the directory
         quant_file_path = glob.glob(os.path.join(quant_dir, "*", file_pattern))[0]
-        with open(quant_file_path, "r") as file_handle:
+        with open(quant_file_path) as file_handle:
             # Read the file and extract the top 100 transcripts
             return {line.split()[0] for i, line in enumerate(file_handle) if i > 0 and i <= 100}
     except IndexError:

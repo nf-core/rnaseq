@@ -1,7 +1,5 @@
-name: preseq_lcextrap
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::preseq=3.1.2
+  - bioconda::preseq=3.2.0

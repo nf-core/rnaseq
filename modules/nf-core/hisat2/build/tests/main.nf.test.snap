@@ -1,27 +1,4 @@
 {
-    "test - stub": {
-        "content": [
-            {
-                "0": [
-
-                ],
-                "1": [
-
-                ],
-                "index": [
-
-                ],
-                "versions": [
-
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2024-06-20T17:29:31.567024"
-    },
     "Should run without failures - stub": {
         "content": [
             {
@@ -31,7 +8,7 @@
                             "id": "genome"
                         },
                         [
-
+                            
                         ]
                     ]
                 ],
@@ -44,7 +21,7 @@
                             "id": "genome"
                         },
                         [
-
+                            
                         ]
                     ]
                 ],

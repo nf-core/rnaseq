@@ -7,43 +7,55 @@ keywords:
   - reference
 tools:
   - featurecounts:
-      description: featureCounts is a highly efficient general-purpose read summarization program that counts mapped reads for genomic features such as genes, exons, promoter, gene bodies, genomic bins and chromosomal locations. It can be used to count both RNA-seq and genomic DNA-seq reads.
+      description: featureCounts is a highly efficient general-purpose read summarization
+        program that counts mapped reads for genomic features such as genes, exons,
+        promoter, gene bodies, genomic bins and chromosomal locations. It can be used
+        to count both RNA-seq and genomic DNA-seq reads.
       homepage: http://bioinf.wehi.edu.au/featureCounts/
       documentation: http://bioinf.wehi.edu.au/subread-package/SubreadUsersGuide.pdf
       doi: "10.1093/bioinformatics/btt656"
       licence: ["GPL v3"]
+      identifier: biotools:subread
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM/SAM file containing read alignments
-      pattern: "*.{bam}"
-  - annotation:
-      type: file
-      description: Genomic features annotation in GTF or SAF
-      pattern: "*.{gtf,saf}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bams:
+        type: file
+        description: BAM files containing mapped reads
+        pattern: "*.bam"
+    - annotation:
+        type: file
+        description: Genomic features annotation in GTF or SAF
+        pattern: "*.{gtf,saf}"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - counts:
-      type: file
-      description: Counts of reads mapping to features
-      pattern: "*featureCounts.txt"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*featureCounts.txt":
+          type: file
+          description: Counts of reads mapping to features
+          pattern: "*featureCounts.txt"
   - summary:
-      type: file
-      description: Summary log file
-      pattern: "*.featureCounts.txt.summary"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*featureCounts.txt.summary":
+          type: file
+          description: Summary log file
+          pattern: "*.featureCounts.txt.summary"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@ntoda03"
 maintainers:

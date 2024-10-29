@@ -2,13 +2,18 @@ name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
 
 env:
-  NXF_ANSI_LOG: false
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
   NFT_VER: "0.9.0"
   NFT_WORKDIR: "~"
-  NFT_DIFF: "pdiff"
-  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+  NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -37,7 +42,7 @@ jobs:
           echo ${{ steps.list.outputs.components }}
 
   test:
-    name: ${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }}
+    name: "Run tests (${{ matrix.nf_test_files }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }})"
     needs: [nf-test-changes]
     if: needs.nf-test-changes.outputs.nf_test_files != '[]'
     runs-on: ubuntu-latest
@@ -45,20 +50,43 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
+          - "24.04.2"
           - "latest-everything"
-          - "23.04"
         nf_test_files: ["${{ fromJson(needs.nf-test-changes.outputs.nf_test_files) }}"]
         profile:
           - "docker"
-
+          - "singularity"
+        isMaster:
+          - ${{ github.base_ref == 'master' }}
+        # Exclude conda and singularity on dev
+        exclude:
+          - isMaster: false
+            profile: "singularity"
+          - NXF_VER: "latest-everything"
+            profile: "singularity"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
-      - name: Install Nextflow
+      - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Set up Apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Install nf-test
+        uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFT_VER }}
 
       - uses: actions/setup-python@v4
         with:
@@ -70,7 +98,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install pdiff
 
-      - uses: nf-core/setup-nf-test@v1
+      - name: Clean up Disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run nf-test
         run: |

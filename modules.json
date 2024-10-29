@@ -269,7 +269,7 @@
                     },
                     "umicollapse": {
                         "branch": "master",
-                        "git_sha": "18e452a645bd56d1a539f53c7656e3d2915246f7",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["bam_dedup_stats_samtools_umicollapse"]
                     },
                     "umitools/dedup": {
@@ -298,7 +298,7 @@
                 "nf-core": {
                     "bam_dedup_stats_samtools_umicollapse": {
                         "branch": "master",
-                        "git_sha": "ab80a04707104a4baf39341581dfbced5da05479",
+                        "git_sha": "763d4b5c05ffda3ac1ac969dc67f7458cfb2eb1d",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_dedup_stats_samtools_umitools": {

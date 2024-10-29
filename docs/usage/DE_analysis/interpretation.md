@@ -10,7 +10,6 @@ Once DE genes have been identified, the next crucial step is to interpret the re
 
     The results illustrated in this section might show slight variations compared to your runs due to randomness in the STAR algorithm. This randomness arises from using variable seed values and parallel processing, leading to minor differences in results between runs on the same data. These small discrepancies are not biologically significant and may affect counts and subsequent plots (such as PCA and count plots). However, the overall patterns and main findings should remain consistent. While exact reproducibility is ideal, minor variations are acceptable in practice, as long as they do not impact the main conclusions of the study.
 
-
 ## Quality control plots
 
 The first plot we will examine is the Principal Component Analysis (PCA) plot. Since we're working with simulated data, our metadata is relatively simple, consisting of just three variables: sample, condition and replica. In a typical RNA-seq experiment, however, metadata can be complex and encompass a wide range of variables that could contribute to sample variation, such as sex, age and developmental stage.
@@ -26,7 +25,6 @@ Next, we will examine the hierarchical clustering plot to explore the relationsh
 Remember that to create this plot, we utilized the `dist()` function, so in the legend on the right, a value of 0 corresponds to high correlation, while a value of 5 corresponds to very low correlation. Similar to PCA, we can see that samples tend to cluster together according to `condition`, indeed we can observe a high degree of correlation between the three control samples and between the three treated samples.
 
 Overall, the integration of these plots suggests that we are working with high-quality data and we can confidently proceed to the differential expression analysis.
-
 
 ## Differential expression results
 
@@ -58,14 +56,13 @@ After the identification of DE genes, it's informative to visualise the expressi
 
 ![RNAseq](./img/plotCounts.png)
 
-In our example, post-treatment, we observe a significant increase in the expression of the *ENSG00000142192* gene, highlighting its responsiveness to the experimental conditions.
+In our example, post-treatment, we observe a significant increase in the expression of the _ENSG00000142192_ gene, highlighting its responsiveness to the experimental conditions.
 
 Finally, we can create a heatmap using the normalised expression counts of DE genes. The resulting heatmap visualises how the expression of significant genes varies across samples. Each row represents a gene, and each column represents a sample. The color intensity in the heatmap reflects the normalised expression levels: red colors indicate higher expression, while blue colors indicate lower expression.
 
 ![RNAseq](./img/heatmap_DE_genes.png)
 
 By examining the heatmap, we can visually identify the expression patterns of our five significant differentially expressed genes. This visualization allows us to identify how these genes respond to the treatment. The heatmap provides a clear and intuitive way to explore gene expression dynamics.
-
 
 ## Over Representation Analysis (ORA)
 
@@ -74,7 +71,6 @@ Finally, we can attempt to assign biological significance to our differentially 
 ![RNAseq](./img/enrichment_plot.png)
 
 The enrichment analysis reveals a possible involvement of cellular structures and processes, including "clathrin-coated pit", "dendritic spine", "neuron spine" and "endoplasmic reticulum lumen". These terms suggest a focus on cellular transport, structural integrity and protein processing, especially in neural contexts. This pattern points to pathways related to cellular organization and maintenance, possibly playing an important role in the biological condition under study.
-
 
 ## Conclusions
 

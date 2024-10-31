@@ -1,5 +1,6 @@
 ---
-order: 1
+enableToc: false
+title: "nf-core/rnaseq tutorial"
 ---
 
 ## Welcome
@@ -19,6 +20,7 @@ By the end of this workshop, you will be able to:
 
 Let's get started!
 
+
 ## Running with Gitpod
 
 In order to run this using GitPod, please make sure:
@@ -28,16 +30,20 @@ In order to run this using GitPod, please make sure:
 
 Now you're all set and can use the following button to launch the service:
 
+
 [![Open in GitPod](https://img.shields.io/badge/Gitpod-%20Open%20in%20Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/lescai-teaching/rnaseq-tutorial)
+
+
 
 ## Additional documentation
 
 - You can find detailed documentation on **Nextflow** [here](https://www.nextflow.io/docs/latest/)
 - You can find additional training on [these pages](https://training.nextflow.io)
 
+
 ## Credits & Copyright
 
-This training material has been written and completed during the [nf-core](https://nf-co.re) Hackathon in Barcellona, 2024, by Lorenzo Sola, Francesco Lescai, Mariangela Santorsola and Victoria Cepeda. The tutorial is aimed at anyone who is interested in using nf-core pipelines for their studies or research activities.
+This training material has been written and completed during the [nf-core](https://nf-co.re) Hackathon in Barcellona, 2024, by Lorenzo Sola, Francesco Lescai and Mariangela Santorsola, with special thanks to Victoria Cepeda for her contributions to the tutorial's revision. The tutorial is aimed at anyone who is interested in using nf-core pipelines for their studies or research activities.
 
 The Docker image and Gitpod environment used in this repository have been created by [Seqera](https://seqera.io) but have been made open-source ([CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/4.0/)) for the community.
 

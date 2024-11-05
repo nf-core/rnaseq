@@ -11,14 +11,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+                "versions.yml:md5,03fdbcb1ba9bd40325ca42859d39deb1"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-20T08:47:11.402203361"
+        "timestamp": "2024-10-22T10:43:04.890267074"
     },
     "umicollapse fastq tests": {
         "content": [
@@ -32,14 +32,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+                "versions.yml:md5,03fdbcb1ba9bd40325ca42859d39deb1"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-01-30T10:45:56.053352008"
+        "timestamp": "2024-10-22T10:43:45.691571914"
     },
     "umicollapse stub tests": {
         "content": [
@@ -112,13 +112,13 @@
                 ]
             ],
             [
-                "versions.yml:md5,c1e0275d81b1c97a9344d216f9154996"
+                "versions.yml:md5,03fdbcb1ba9bd40325ca42859d39deb1"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-20T08:47:30.028323337"
+        "timestamp": "2024-10-22T10:43:33.250587075"
     }
 }

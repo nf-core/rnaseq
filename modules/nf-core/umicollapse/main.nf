@@ -5,8 +5,8 @@ process UMICOLLAPSE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/umicollapse:1.0.0--hdfd78af_1' :
-        'biocontainers/umicollapse:1.0.0--hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/umicollapse:1.1.0--hdfd78af_0' :
+        'biocontainers/umicollapse:1.1.0--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input), path(bai)
@@ -24,7 +24,7 @@ process UMICOLLAPSE {
     script:
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '1.0.0-1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    def VERSION = '1.1.0-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     // Memory allocation: We need to make sure that both heap and stack size is sufficiently large for
     // umicollapse. We set the stack size to 5% of the available memory, the heap size to 90%
     // which leaves 5% for stuff happening outside of java without the scheduler killing the process.

@@ -49,7 +49,7 @@
             [
                 "versions.yml:md5,20605eb79c410c0ed179ba660d82f75b",
                 "versions.yml:md5,23617661d2c899996bee2b05db027e25",
-                "versions.yml:md5,268e43f34038d4c6146ed050630f95b4",
+                "versions.yml:md5,657bce03545b4c57f9c5fc4314bf85f7",
                 "versions.yml:md5,e02a62a393a833778e16542eeed0d148",
                 "versions.yml:md5,ef00762e264b99ac45713dc0dedf4060"
             ]
@@ -58,7 +58,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-16T08:04:02.126366857"
+        "timestamp": "2024-10-22T10:44:38.266860983"
     },
     "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
         "content": [

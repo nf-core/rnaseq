@@ -11,7 +11,7 @@ tools:
         (UMIs)/Random Molecular Tags (RMTs)."
       homepage: "https://github.com/Daniel-Liu-c0deb0t/UMICollapse"
       documentation: "https://github.com/Daniel-Liu-c0deb0t/UMICollapse"
-      tool_dev_url: "https://github.com/Daniel-Liu-c0deb0t/UMICollapse"
+      tool_dev_url: "https://github.com/siddharthab/UMICollapse"
       doi: "10.7717/peerj.8275"
       licence: ["MIT"]
       identifier: ""
@@ -78,4 +78,5 @@ maintainers:
   - "@CharlotteAnne"
   - "@chris-cheshire"
   - "@apeltzer"
+  - "@siddharthab"
   - "@MatthiasZepper"

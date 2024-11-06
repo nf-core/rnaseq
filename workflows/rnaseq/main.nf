@@ -222,28 +222,28 @@ workflow RNASEQ {
                 BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME (
                     ch_genome_bam.join(ch_genome_bam_index, by: [0])
                 )
-                umi_dedup_genome = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.dedup_stats.collect{it[1]}.ifEmpty([]))
+                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
+                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.dedup_stats.collect{it[1]}.ifEmpty([]))
             } else if (params.umi_dedup_tool == "umitools") {
                 BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                     ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                     params.umitools_dedup_stats
                 )
-                umi_dedup_genome = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.deduplog.collect{it[1]})
+                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
+                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.deduplog.collect{it[1]})
             } else {
                 error("Unknown umi_dedup_tool '${params.umi_dedup_tool}'")
             }
-            ch_genome_bam       = umi_dedup_genome.out.bam
-            ch_genome_bam_index = umi_dedup_genome.out.bai
-            ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.stats.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.flagstat.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.idxstats.collect{it[1]})
+            ch_genome_bam       = UMI_DEDUP_GENOME.out.bam
+            ch_genome_bam_index = UMI_DEDUP_GENOME.out.bai
+            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.stats.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.flagstat.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.idxstats.collect{it[1]})
 
             if (params.bam_csi_index) {
-                ch_genome_bam_index  = umi_dedup_genome.out.csi
+                ch_genome_bam_index  = UMI_DEDUP_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(umi_dedup_genome.out.versions)
+            ch_versions = ch_versions.mix(UMI_DEDUP_GENOME.out.versions)
 
             // Co-ordinate sort, index and run stats on transcriptome BAM
             BAM_SORT_STATS_SAMTOOLS (
@@ -258,20 +258,20 @@ workflow RNASEQ {
                 BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME (
                     ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
                 )
-                umi_dedup_transcriptome = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME
+                UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME
             } else if (params.umi_dedup_tool == "umitools") {
                 BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
                     ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
                     params.umitools_dedup_stats
                 )
-                umi_dedup_transcriptome = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
+                UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
             } else {
                 error("Unknown umi_dedup_tool '${params.umi_dedup_tool}'")
             }
 
             // Name sort BAM before passing to Salmon
             SAMTOOLS_SORT (
-                umi_dedup_transcriptome.out.bam,
+                UMI_DEDUP_TRANSCRIPTOME.out.bam,
                 ch_fasta.map { [ [:], it ] }
             )
 
@@ -398,27 +398,27 @@ workflow RNASEQ {
                 BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME (
                     ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 )
-                umi_dedup_genome = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.dedup_stats.collect{it[1]}.ifEmpty([]))
+                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
+                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.dedup_stats.collect{it[1]}.ifEmpty([]))
             } else if (params.umi_dedup_tool == "umitools") {
                 BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
                     ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                     params.umitools_dedup_stats
                 )
-                umi_dedup_genome = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.deduplog.collect{it[1]})
+                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
+                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.deduplog.collect{it[1]})
             } else {
                 error("Unknown umi_dedup_tool '${params.umi_dedup_tool}'")
             }
-            ch_genome_bam       = umi_dedup_genome.out.bam
-            ch_genome_bam_index = umi_dedup_genome.out.bai
-            ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.stats.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.flagstat.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(umi_dedup_genome.out.idxstats.collect{it[1]})
+            ch_genome_bam       = UMI_DEDUP_GENOME.out.bam
+            ch_genome_bam_index = UMI_DEDUP_GENOME.out.bai
+            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.stats.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.flagstat.collect{it[1]})
+            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.idxstats.collect{it[1]})
             if (params.bam_csi_index) {
-                ch_genome_bam_index = umi_dedup_genome.out.csi
+                ch_genome_bam_index = UMI_DEDUP_GENOME.out.csi
             }
-            ch_versions = ch_versions.mix(umi_dedup_genome.out.versions)
+            ch_versions = ch_versions.mix(UMI_DEDUP_GENOME.out.versions)
         }
     }
 

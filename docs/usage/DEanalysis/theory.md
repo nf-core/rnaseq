@@ -149,7 +149,9 @@ While normalised counts are useful for downstream visualisation of results, they
 DESeq2 addresses this issue by employing the **negative binomial distribution**, which generalises the Poisson distribution by introducing an additional dispersion parameter. This parameter quantifies the extra variability present in RNA-seq data, providing a more realistic representation than the Poisson distribution, which assumes mean = variance. DESeq2 starts by estimating the **common dispersion**, a single estimate of dispersion applicable to all genes in the dataset. This estimate provides a baseline for variability across all genes in the dataset. Next, DESeq2 estimates **gene-wise dispersion**, a separate estimate of dispersion for each individual gene, taking into account that different genes may exhibit varying levels of expression variability due to biological differences.
 The dispersion parameter (α) is related to the mean (μ), and variance of the data, as described by the equation:
 
-`Var = μ + α ⋅ μ²`
+$$
+Var = μ + α ⋅ μ²
+$$
 
 A key feature of DESeq2's dispersion estimates is their negative correlation with the mean, and positive correlation with the variance. Genes with low expression tend to have higher dispersion values, while genes with high expression tend to have lower dispersion.
 

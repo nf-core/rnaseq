@@ -2,11 +2,9 @@
 order: 4
 ---
 
-
 # Differential Analysis with DESeq2
 
 In this section of the tutorial, we will guide you through the practical steps necessary to set up the RStudio environment, load the required libraries and data, and execute the DESeq2 analysis. By the end of this section, you will have a fully functional DESeq2 analysis pipeline set up in RStudio, ready to uncover the differentially expressed genes in your dataset.
-
 
 ## Launching the RStudio environment
 
@@ -27,20 +25,19 @@ Password: pass
 Using `sleep` will keep the Gitpod session active, preventing disconnection and providing enough time to complete our analysis without interruptions
 :::
 
-
 ## Differential Expression Analysis
 
 As in all analysis, firstly we need to create a new project:
 
-1) Go to the **File** menu and select **New Project**;
+1. Go to the **File** menu and select **New Project**;
 
-2) Select **New Directory**, **New Project**, name the project as shown below and click on **Create Project**;
+2. Select **New Directory**, **New Project**, name the project as shown below and click on **Create Project**;
 
 <figure markdown="span">
   ![r_project](./img/project_R.png){ width="400" }
 </figure>
 
-3) The new project will be automatically opened in RStudio.
+3. The new project will be automatically opened in RStudio.
 
 We can check whether we are in the correct working directory with `getwd()`. The path `/workspace/gitpod/training/DE_analysis/` should appear on your console.
 To store our results in an organized way, we will create a folder named **de_results** using the **New Folder** button in the bottom right panel. We will save all our resulting tables and plots in this folder. Next, go to the **File menu**, select **New File** and then **R Script** to create a script editor in which we will save all commands required for the analysis. In the editor type:
@@ -97,9 +94,7 @@ In DESEq2, the `dds` object is a central data structure that contains the follow
 
 - `countData`: a matrix of raw count data, where each row represents a gene and each column represents a sample;
 
-
 - `colData`: a data frame containing information about the samples, such as the experimental design, treatment and other relevant metadata;
-
 
 - `design`: a formula specifying the experimental design utilised to estimate the dispersion and the log2 fold change.
 
@@ -201,9 +196,7 @@ The `DESeq()` function is a high-level wrapper that simplifies the process of di
 
 - `estimateSizeFactors`: to normalise the count data;
 
-
 - `estimateDispersion`: to estimate the dispersion;
-
 
 - `nbinomWaldTest`: to perform differential expression test.
 
@@ -235,7 +228,6 @@ rld <- rlog(dds_final, blind = TRUE)
 The `rlog` and the `vst` transformations have an argument, **blind** that can be set to:
 
 - **TRUE** (default): useful for QC analysis because it re-estimates the dispersion, allowing for comparison of samples in an unbiased manner with respect to experimental conditions;
-
 
 - **FALSE**: the function utilizes the already estimated dispersion, generally applied when differences in counts are expected to be due to the experimental design.
 
@@ -325,18 +317,13 @@ The `results()` function in DESeq2 is used to extract the results of the DE anal
 
 - **baseMean**: the average expression level of the gene across all samples;
 
-
 - **log2FoldChange**: the log2 fold change of the gene between the condition of interest and the reference level;
-
 
 - **lfcSE**: the standard error of the log2 fold change;
 
-
 - **stat**: the Wald statistic, which is used to calculate the p-value;
 
-
 - **pvalue**: the p-value from the Wald test indicates the probability of observing the measured difference in gene expression (log2 fold change) by chance, assuming no true difference exists (null hypothesis). A low p-value suggests that the observed expression change between samples is unlikely due to random chance, so we can reject the null hypothesis --> the gene is differentially expressed;
-
 
 - **padj**: the adjusted p-value, which takes into account multiple testing corrections, (Benjamini-Hochberg method default) to control the false discovery rate;
 
@@ -386,7 +373,7 @@ res_viz <- as_tibble(res_viz) %>%
 write.csv(res_viz, file = "de_results/de_result_table.csv")
 ```
 
-In the *Experimental Design* section, we emphasised the importance of estimating the log2 fold change threshold using a statistical power calculation, rather than selecting it arbitrarily. This approach ensures that the chosen threshold is statistically appropriate and tailored to the specifics of the experiment. However, since we are working with simulated data for demonstration purposes, we will use a padj threshold of 0.05 and consider genes with a log2 fold change of at least 1 or -1 as differentially expressed.
+In the _Experimental Design_ section, we emphasised the importance of estimating the log2 fold change threshold using a statistical power calculation, rather than selecting it arbitrarily. This approach ensures that the chosen threshold is statistically appropriate and tailored to the specifics of the experiment. However, since we are working with simulated data for demonstration purposes, we will use a padj threshold of 0.05 and consider genes with a log2 fold change of at least 1 or -1 as differentially expressed.
 
 ```r
 #### Extract significant DE genes from the results ####
@@ -412,7 +399,6 @@ resSig
 
 write.csv(resSig, file = "de_results/sig_de_genes.csv")
 ```
-
 
 ## Plot the results
 
@@ -533,7 +519,6 @@ volcano_plot <- ggplot(data = res_tb, aes(x = log2FoldChange, y = -log10(padj), 
 ggsave("de_results/volcano_plot.png", plot = volcano_plot, width = 6, height = 5, dpi = 300)
 ```
 
-
 ## Functional analysis
 
 The output of the differential expression analysis is a list of significant DE genes. To uncover the underlying biological mechanisms, various downstream analyses can be performed, such as functional enrichment analysis (identify overrepresented biological processes, molecular functions, cellular components or pathways), and network analysis (group genes based on similar expression patterns to identify novel interactions). To facilitate the interpretation of the resulting list of DE genes, a range of freely available web- and R-based tools can be employed.
@@ -542,9 +527,7 @@ In this tutorial, we will explore an enrichment analysis technique known as Over
 
 - **Universe**: the background list of genes (for example the genes annotated in a genome);
 
-
 - **GeneSet**: a collection of genes annotated by a reference database (such as Gene Ontology), and known to be involved in a particular biological pathway or process;
-
 
 - **Gene List**: the differentially expressed genes.
 

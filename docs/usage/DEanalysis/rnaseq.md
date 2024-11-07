@@ -2,11 +2,9 @@
 order: 3
 ---
 
-
 # The nf-core/rnaseq pipeline
 
 In order to carry out a RNA-Seq analysis we will use the nf-core pipeline [rnaseq](https://nf-co.re/rnaseq/3.14.0).
-
 
 ## Overview
 
@@ -20,9 +18,7 @@ In each process, the users can choose among a range of different options. Import
 
 - traditional alignment and quantification (stage 2);
 
-
 - lightweight alignment and quantification (stage 3).
-
 
 ## Experimental Design
 
@@ -32,14 +28,11 @@ The number of reads and the number of biological replicates are two critical fac
 This concept must not be confused with technical replicates that asses the technical variability of the sequencing platform by sequencing the same RNA sample multiple time.
 :::
 
-
 To obtain optimal results, it is crucial to balance the number of biological replicates and the sequencing depth. While increasing the depth of sequencing enhances the ability to detect genes with low expression levels, there is a plateau beyond which no further benefits are gained. Statistical power calculations can inform experimental design by estimating the optimal number of reads and replicates required. For instance, this approach helps to establish a suitable log2 fold change threshold for the DE analysis. By incorporating multiple biological replicates into the design and optimizing sequencing depth, researchers can enhance the statistical power of the analysis, reducing the number of false positive results, and increasing the reliability of the findings.
-
 
 ## Library design
 
 RNA-seq library design involves important decisions, particularly the choice between paired-end and single-end sequencing. Paired-end sequencing offers insights into structural variations and transcript isoforms, significantly improving mapping accuracy for longer transcripts and repetitive regions. In contrast, single-end sequencing—where only one end of the fragment is sequenced—can be a more cost-effective option while still delivering high-quality data for gene expression analysis. The choice between these two methods ultimately depends on the research question and experimental objectives. Paired-end sequencing is ideal for identifying novel transcripts or characterizing isoforms, whereas single-end sequencing is often sufficient for quantifying gene expression. Factors such as the type of RNA (e.g., mRNA or total RNA), read length, budget, and available computational resources also influence this decision.
-
 
 ## Reference genome
 
@@ -53,7 +46,6 @@ In this tutorial we will edit the config file, since the data we will be using h
 
 The two files are `/workspace/gitpod/training/data/refs/Homo_sapiens_assembly38_chr21.fa` and `/workspace/gitpod/training/data/refs/Homo_sapiens_assembly38_chr21.fa.fai`, respectively.
 
-
 ## Reference annoation
 
 The reference annotation plays a crucial role in the RNA-seq analysis. Without a high-quality reference annotation, RNA-seq analysis would result in inaccurate or incomplete results. The reference annotation provides a precise guide for aligning sequencing reads to specific genomic regions, allowing to identify genes, transcripts, and regulatory elements, as well as novel transcripts and alternative splicing events.
@@ -65,7 +57,6 @@ Similarly to the approach utilised for the genome, in this tutorial we will edit
 
 The two files are `/workspace/gitpod/training/data/refs/gencode_v29_chr21.gff` and `/workspace/gitpod/training/data/refs/gencode_v29_transcripts_chr21.fa`, respectively.
 
-
 ## Input files
 
 The input data should be provided in a CSV file, according to a format that is largely common for nf-core pipelines.
@@ -73,22 +64,17 @@ The format is described in the [rnaseq usage page](https://nf-co.re/rnaseq/3.14.
 
 The input file is `/workspace/gitpod/training/data/reads/rnaseq_samplesheet.csv`.
 
-
 ## Running nf-core/rnaseq
 
 In the following sections we will:
 
 - prepare our references;
 
-
 - set our computational resources in order to be able to run the pipeline on a gitpod VM;
-
 
 - edit the optional settings;
 
-
 - run the pipeline.
-
 
 ## Reference and annotation files
 
@@ -110,7 +96,6 @@ genomes {
 ```
 
 To speed up the analysis we will include the `star_index` and the `salmon_index` in the config. These files have already been created locally.
-
 
 ## Computing resources
 

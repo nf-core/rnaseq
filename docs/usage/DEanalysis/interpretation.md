@@ -33,7 +33,7 @@ By default, genes are coloured in blue if the padj is less than 0.1 and the log2
 
 After filtering our genes of interest according to our threshold, let's have a look to our significatnt genes:
 
-```bash
+```tsv
 gene                baseMean        log2FoldChange     lfcSE          stat            pvalue              padj
 ENSG00000205726     121645.5908     2.894480           0.1515387      19.100600       2.496005e-81        5.840651e-79
 ENSG00000142192     51065.3192      3.025489           0.1891258      15.997230       1.335883e-57        1.562983e-55

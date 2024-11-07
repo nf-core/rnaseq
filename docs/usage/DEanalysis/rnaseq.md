@@ -67,7 +67,7 @@ In the following sections we will:
 Following the considerations above, we will first of all edit the `nextflow.config` file in our working directory to add a new genome.
 It is sufficient to add the following code to the `parameters` directive in the config.
 
-```groovy
+```groovy title="nextflow.config"
 igenomes_base = '/workspace/gitpod/training/data/refs/'
 genomes {
         'GRCh38chr21' {

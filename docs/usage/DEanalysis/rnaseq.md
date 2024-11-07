@@ -19,7 +19,8 @@ The number of reads and the number of biological replicates are two critical fac
 
 ::: note
 
-    This concept must not be confused with technical replicates that asses the technical variability of the sequencing platform by sequencing the same RNA sample multiple time.
+This concept must not be confused with technical replicates that asses the technical variability of the sequencing platform by sequencing the same RNA sample multiple time.
+:::
 
 To obtain optimal results, it is crucial to balance the number of biological replicates and sequencing depth. While deeper sequencing improves the detection of lowly expressed genes, it reaches a plateau, beyond which no additional benefits are gained. Statistical power calculations can inform experimental design by estimating the optimal number of reads and replicates required. For instance, this approach helps establish a suitable log2 fold change (log2FC) threshold for the DE analysis. By incorporating multiple biological replicates into the design and optimizing sequencing depth, researchers can enhance the statistical power of the analysis, reducing the number of false positive results and increasing the reliability of the findings.
 

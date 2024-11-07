@@ -1,3 +1,8 @@
+---
+order: 5
+---
+
+
 # Interpretation
 
 Once DE genes have been identified, the next crucial step is to interpret the results. This involves the inspection of tables and plots generated during the analysis to understand the biological significance of the data. In this part of the tutorial, we will explore the results by discussing the significant DE genes and we will examine various plots generated during the analysis.

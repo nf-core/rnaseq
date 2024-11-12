@@ -17,9 +17,9 @@ Special thanks to the following for their contributions to the release:
 
 ### Software dependencies
 
-| Dependency     | Old version | New version |
-| -------------- | ----------- | ----------- |
-| `UMICollapse`  |             | 1.1.0       |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `UMICollapse` |             | 1.1.0       |
 
 > **NB:** Dependency has been **updated** if both old and new version information is present.
 >

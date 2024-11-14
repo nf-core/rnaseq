@@ -18,6 +18,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Introduction](#introduction)
   - [Pipeline overview](#pipeline-overview)
   - [Preprocessing](#preprocessing)
+    - [fq lint](#fq-lint)
     - [cat](#cat)
     - [FastQC](#fastqc)
     - [UMI-tools extract](#umi-tools-extract)
@@ -60,6 +61,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Pipeline information](#pipeline-information)
 
 ## Preprocessing
+
+### fq lint
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fq_lint/`
+  - `*.fq_lint.txt`: If `--save_linting_log` is specified, fq lint logs for each sample will be placed in this directory.
+
+</details>
+
+[fq lint](https://github.com/stjude-rust-labs/fq#lint) is a tool to validate both single-end and paired-end FastQ files.
 
 ### cat
 

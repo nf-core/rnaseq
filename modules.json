@@ -57,6 +57,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
                     },
+                    "fq/lint": {
+                        "branch": "master",
+                        "git_sha": "a1abf90966a2a4016d3c3e41e228bfcbd4811ccc",
+                        "installed_by": ["modules"]
+                    },
                     "fq/subsample": {
                         "branch": "master",
                         "git_sha": "a1abf90966a2a4016d3c3e41e228bfcbd4811ccc",

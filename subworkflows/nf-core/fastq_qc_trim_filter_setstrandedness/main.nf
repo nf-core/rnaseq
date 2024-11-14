@@ -4,6 +4,7 @@ include { BBMAP_BBSPLIT                   } from '../../../modules/nf-core/bbmap
 include { CAT_FASTQ                       } from '../../../modules/nf-core/cat/fastq/main'
 include { SORTMERNA                       } from '../../../modules/nf-core/sortmerna/main'
 include { SORTMERNA as SORTMERNA_INDEX    } from '../../../modules/nf-core/sortmerna/main'
+include { FQ_LINT                         } from '../../../modules/nf-core/fq/lint/main'
 
 include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../fastq_fastqc_umitools_trimgalore'
@@ -106,6 +107,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     umi_discard_read     // integer: 0, 1 or 2
     stranded_threshold   // float: The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5
     unstranded_threshold // float: The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
+    skip_lint            // boolean: true/false
 
     main:
 
@@ -113,6 +115,23 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_filtered_reads  = Channel.empty()
     ch_trim_read_count = Channel.empty()
     ch_multiqc_files   = Channel.empty()
+
+    ch_reads
+        .map {
+            meta, fastqs ->
+            return [meta, fastqs.flatten()]
+        }
+        .set { ch_fastq_lint }
+    
+    //
+    // MODULE: Lint FastQ files
+    //
+    if (!skip_linting) {
+        FQ_LINT (
+            ch_fastq_lint
+        )
+        ch_versions = ch_versions.mix(FQ_LINT.out.versions.first())
+    }
 
     ch_reads
         .branch {

@@ -1,0 +1,2 @@
+fq/lint:
+  - modules/nf-core/fq/lint/**

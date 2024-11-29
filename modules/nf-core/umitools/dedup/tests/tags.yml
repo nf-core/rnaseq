@@ -1,0 +1,2 @@
+umitools/dedup:
+  - "modules/nf-core/umitools/dedup/**"

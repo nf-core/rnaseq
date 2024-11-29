@@ -298,12 +298,12 @@
                 "nf-core": {
                     "bam_dedup_stats_samtools_umicollapse": {
                         "branch": "master",
-                        "git_sha": "78991a2306e7631c006498a372e87f135a4212db",
+                        "git_sha": "0b27602842d3d79fd0e8db79f4afa764967fc3d1",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_dedup_stats_samtools_umitools": {
                         "branch": "master",
-                        "git_sha": "763d4b5c05ffda3ac1ac969dc67f7458cfb2eb1d",
+                        "git_sha": "0b27602842d3d79fd0e8db79f4afa764967fc3d1",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_markduplicates_picard": {

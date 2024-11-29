@@ -34,25 +34,6 @@
         <p>The full error message was:</p>
         <pre style="white-space: pre-wrap; overflow: visible; margin-bottom: 0">${errorReport}</pre>
       </div>
-      """ } else if(skip_sample_count > 0) { out << """
-      <div
-        style="
-          color: #856404;
-          background-color: #fff3cd;
-          border-color: #ffeeba;
-          padding: 15px;
-          margin-bottom: 20px;
-          border: 1px solid transparent;
-          border-radius: 4px;
-        "
-      >
-        <h4 style="margin-top: 0; color: inherit">nf-core/rnaseq execution completed with warnings!</h4>
-        <p>
-          The pipeline finished successfully, but samples were skipped. Please check warnings at the top of the MultiQC report.
-        </p>
-        <p></p>
-      </div>
-
       """ } else { out << """
       <div
         style="

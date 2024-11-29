@@ -269,7 +269,7 @@
                     },
                     "umicollapse": {
                         "branch": "master",
-                        "git_sha": "78991a2306e7631c006498a372e87f135a4212db",
+                        "git_sha": "0b27602842d3d79fd0e8db79f4afa764967fc3d1",
                         "installed_by": ["bam_dedup_stats_samtools_umicollapse"]
                     },
                     "umitools/dedup": {

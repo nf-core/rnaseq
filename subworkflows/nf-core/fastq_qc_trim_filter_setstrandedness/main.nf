@@ -1,13 +1,17 @@
 import groovy.json.JsonSlurper
 
-include { BBMAP_BBSPLIT                   } from '../../../modules/nf-core/bbmap/bbsplit'
-include { CAT_FASTQ                       } from '../../../modules/nf-core/cat/fastq/main'
-include { SORTMERNA                       } from '../../../modules/nf-core/sortmerna/main'
-include { SORTMERNA as SORTMERNA_INDEX    } from '../../../modules/nf-core/sortmerna/main'
+include { BBMAP_BBSPLIT                      } from '../../../modules/nf-core/bbmap/bbsplit'
+include { CAT_FASTQ                          } from '../../../modules/nf-core/cat/fastq/main'
+include { SORTMERNA                          } from '../../../modules/nf-core/sortmerna/main'
+include { SORTMERNA as SORTMERNA_INDEX       } from '../../../modules/nf-core/sortmerna/main'
+include { FQ_LINT                            } from '../../../modules/nf-core/fq/lint/main'
+include { FQ_LINT as FQ_LINT_AFTER_TRIMMING  } from '../../../modules/nf-core/fq/lint/main'
+include { FQ_LINT as FQ_LINT_AFTER_BBMAP     } from '../../../modules/nf-core/fq/lint/main'
+include { FQ_LINT as FQ_LINT_AFTER_SORTMERNA } from '../../../modules/nf-core/fq/lint/main'
 
-include { FASTQ_SUBSAMPLE_FQ_SALMON        } from '../fastq_subsample_fq_salmon'
-include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../fastq_fastqc_umitools_trimgalore'
-include { FASTQ_FASTQC_UMITOOLS_FASTP      } from '../fastq_fastqc_umitools_fastp'
+include { FASTQ_SUBSAMPLE_FQ_SALMON          } from '../fastq_subsample_fq_salmon'
+include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE   } from '../fastq_fastqc_umitools_trimgalore'
+include { FASTQ_FASTQC_UMITOOLS_FASTP        } from '../fastq_fastqc_umitools_fastp'
 
 def pass_trimmed_reads = [:]
 
@@ -106,6 +110,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     umi_discard_read     // integer: 0, 1 or 2
     stranded_threshold   // float: The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5
     unstranded_threshold // float: The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
+    skip_linting         // boolean: true/false
 
     main:
 
@@ -113,6 +118,19 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_filtered_reads  = Channel.empty()
     ch_trim_read_count = Channel.empty()
     ch_multiqc_files   = Channel.empty()
+    ch_lint_log        = Channel.empty()
+
+    //
+    // MODULE: Lint FastQ files
+    //
+    if(!skip_linting) {
+        FQ_LINT (
+            ch_reads.map{ meta, fastqs -> [meta, fastqs.flatten()] }
+        )
+        ch_versions = ch_versions.mix(FQ_LINT.out.versions.first())
+        ch_lint_log = ch_lint_log.mix(FQ_LINT.out.lint)
+        ch_reads = ch_reads.join(FQ_LINT.out.lint.map{it[0]})
+    }
 
     ch_reads
         .branch {
@@ -212,6 +230,14 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                 .map { [[:], it] }
         )
 
+    if((!skip_linting) && (!skip_trimming)) {
+        FQ_LINT_AFTER_TRIMMING (
+            ch_filtered_reads
+        )
+        ch_lint_log = ch_lint_log.mix(FQ_LINT_AFTER_TRIMMING.out.lint)
+        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.lint.map{it[0]})
+    }
+
     //
     // MODULE: Remove genome contaminant reads
     //
@@ -228,6 +254,14 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             .set { ch_filtered_reads }
 
         ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions.first())
+
+        if(!skip_linting) {
+            FQ_LINT_AFTER_BBSPLIT (
+                ch_filtered_reads
+            )
+            ch_lint_log = ch_lint_log.mix(FQ_LINT_AFTER_BBSPLIT.out.lint)
+            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_BBSPLIT.out.lint.map{it[0]})
+        }
     }
 
     //
@@ -260,6 +294,14 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             .mix(SORTMERNA.out.log)
 
         ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
+
+        if(!skip_linting) {
+            FQ_LINT_AFTER_SORTMERNA (
+                ch_filtered_reads
+            )
+            ch_lint_log = ch_lint_log.mix(FQ_LINT_AFTER_SORTMERNA.out.lint)
+            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_SORTMERNA.out.lint.map{it[0]})
+        }
     }
 
     // Branch FastQ channels if 'auto' specified to infer strandedness
@@ -312,6 +354,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     emit:
 
+    lint_log        = ch_lint_log
     reads           = ch_strand_inferred_fastq
     trim_read_count = ch_trim_read_count
 

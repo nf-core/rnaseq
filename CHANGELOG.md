@@ -26,6 +26,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1437](https://github.com/nf-core/rnaseq/pull/1437) - Remove conda from test matrix
 - [PR #1440](https://github.com/nf-core/rnaseq/pull/1440) - Further reduce matrix
 - [PR #1441](https://github.com/nf-core/rnaseq/pull/1441) - Force some containers to be converted from docker to singularity to fix nf-core download tests
+- [PR #1461](https://github.com/nf-core/rnaseq/pull/1461) - Add FASTQ linting during preprocessing
 
 ### Software dependencies
 

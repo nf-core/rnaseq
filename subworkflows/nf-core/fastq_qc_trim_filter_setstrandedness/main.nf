@@ -6,7 +6,7 @@ include { SORTMERNA                          } from '../../../modules/nf-core/so
 include { SORTMERNA as SORTMERNA_INDEX       } from '../../../modules/nf-core/sortmerna/main'
 include { FQ_LINT                            } from '../../../modules/nf-core/fq/lint/main'
 include { FQ_LINT as FQ_LINT_AFTER_TRIMMING  } from '../../../modules/nf-core/fq/lint/main'
-include { FQ_LINT as FQ_LINT_AFTER_BBMAP     } from '../../../modules/nf-core/fq/lint/main'
+include { FQ_LINT as FQ_LINT_AFTER_BBSPLIT   } from '../../../modules/nf-core/fq/lint/main'
 include { FQ_LINT as FQ_LINT_AFTER_SORTMERNA } from '../../../modules/nf-core/fq/lint/main'
 
 include { FASTQ_SUBSAMPLE_FQ_SALMON          } from '../fastq_subsample_fq_salmon'
@@ -120,18 +120,6 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_multiqc_files   = Channel.empty()
     ch_lint_log        = Channel.empty()
 
-    //
-    // MODULE: Lint FastQ files
-    //
-    if(!skip_linting) {
-        FQ_LINT (
-            ch_reads.map{ meta, fastqs -> [meta, fastqs.flatten()] }
-        )
-        ch_versions = ch_versions.mix(FQ_LINT.out.versions.first())
-        ch_lint_log = ch_lint_log.mix(FQ_LINT.out.lint)
-        ch_reads = ch_reads.join(FQ_LINT.out.lint.map{it[0]})
-    }
-
     ch_reads
         .branch {
             meta, fastqs ->
@@ -153,6 +141,19 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     .set { ch_filtered_reads }
 
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
+
+    //
+    // MODULE: Lint FastQ files
+    //
+
+    if(!skip_linting) {
+        FQ_LINT (
+            ch_filtered_reads
+        )
+        ch_versions = ch_versions.mix(FQ_LINT.out.versions.first())
+        ch_lint_log = ch_lint_log.mix(FQ_LINT.out.lint)
+        ch_reads = ch_reads.join(FQ_LINT.out.lint.map{it[0]})
+    }
 
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!

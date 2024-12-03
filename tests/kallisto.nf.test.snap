@@ -1,7 +1,7 @@
 {
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment": {
         "content": [
-            35,
+            50,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -17,6 +17,9 @@
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
+                },
+                "FQ_LINT": {
+                    "fq": "0.12.0 (2024-07-08)"
                 },
                 "FQ_SUBSAMPLE": {
                     "fq": "0.12.0 (2024-07-08)"
@@ -88,6 +91,25 @@
                 "fastqc/trim/WT_REP2_trimmed_1_val_1_fastqc.zip",
                 "fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.html",
                 "fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.zip",
+                "fq_lint",
+                "fq_lint/raw",
+                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/raw/WT_REP1.fq_lint.txt",
+                "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "fq_lint/sortmerna",
+                "fq_lint/sortmerna/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/sortmerna/WT_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/WT_REP2.fq_lint.txt",
+                "fq_lint/trimmed",
+                "fq_lint/trimmed/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/trimmed/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/trimmed/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/trimmed/WT_REP1.fq_lint.txt",
+                "fq_lint/trimmed/WT_REP2.fq_lint.txt",
                 "kallisto",
                 "kallisto/RAP1_IAA_30M_REP1",
                 "kallisto/RAP1_IAA_30M_REP1/abundance.h5",
@@ -251,13 +273,13 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-23T11:04:57.579312846"
+        "timestamp": "2024-12-03T17:48:16.536464395"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [
-            17,
+            22,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -270,6 +292,9 @@
                 },
                 "CUSTOM_GETCHROMSIZES": {
                     "getchromsizes": 1.21
+                },
+                "FQ_LINT": {
+                    "fq": "0.12.0 (2024-07-08)"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -304,6 +329,13 @@
                 "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/trim",
+                "fq_lint",
+                "fq_lint/raw",
+                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/raw/WT_REP1.fq_lint.txt",
+                "fq_lint/raw/WT_REP2.fq_lint.txt",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_plots",
@@ -327,8 +359,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-23T11:05:54.052864085"
+        "timestamp": "2024-12-03T17:49:02.306667165"
     }
 }

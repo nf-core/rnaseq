@@ -1,7 +1,7 @@
 {
     "Params: --skip_trimming": {
         "content": [
-            193,
+            203,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -34,6 +34,9 @@
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FQ_LINT": {
+                    "fq": "0.12.0 (2024-07-08)"
                 },
                 "FQ_SUBSAMPLE": {
                     "fq": "0.12.0 (2024-07-08)"
@@ -162,6 +165,19 @@
                 "fastqc/raw/WT_REP2_raw_1_fastqc.zip",
                 "fastqc/raw/WT_REP2_raw_2_fastqc.html",
                 "fastqc/raw/WT_REP2_raw_2_fastqc.zip",
+                "fq_lint",
+                "fq_lint/raw",
+                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/raw/WT_REP1.fq_lint.txt",
+                "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "fq_lint/sortmerna",
+                "fq_lint/sortmerna/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/sortmerna/WT_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/WT_REP2.fq_lint.txt",
                 "multiqc",
                 "multiqc/star_salmon",
                 "multiqc/star_salmon/multiqc_report.html",
@@ -1255,8 +1271,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-21T20:23:07.88998048"
+        "timestamp": "2024-12-03T18:28:59.906095781"
     }
 }

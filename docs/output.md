@@ -19,6 +19,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Pipeline overview](#pipeline-overview)
   - [Preprocessing](#preprocessing)
     - [cat](#cat)
+      [fq lint](#fq-lint)
     - [FastQC](#fastqc)
     - [UMI-tools extract](#umi-tools-extract)
     - [TrimGalore](#trimgalore)
@@ -72,6 +73,20 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 </details>
 
 If multiple libraries/runs have been provided for the same sample in the input samplesheet (e.g. to increase sequencing depth) then these will be merged at the very beginning of the pipeline in order to have consistent sample naming throughout the pipeline. Please refer to the [usage documentation](https://nf-co.re/rnaseq/usage#samplesheet-input) to see how to specify these samples in the input samplesheet.
+
+# fq lint
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fq_lint/*`
+  - `*.fq_lint.txt`: Linting report per library from `fq lint`.
+
+> **NB:** You will see subdirectories here based on the stage of preprocessing for the files that have been linted, for example `raw`, `trimmed`.
+
+</details>
+
+[fq lint](https://github.com/stjude-rust-labs/fq) runs several checks on input FASTQ files. It will fail with a non-zero error code when issues are found, which will terminate the workflow execution. In the absence of this, the successful linting produces the logs you will find here.
 
 ### FastQC
 

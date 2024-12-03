@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their contributions to the release:
 
-- [Caitlin Winkler](oligomyeggo)
+- [Caitlin Winkler](https://github.com/oligomyeggo)
 
 ### Enhancements & fixes
 

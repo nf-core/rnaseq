@@ -539,6 +539,12 @@
             "description": "Additional quality control options.",
             "default": "",
             "properties": {
+                "extra_fqlint_args": {
+                    "type": "string",
+                    "default": "--disable-validator P001",
+                    "description": "Extra arguments to pass to the fq lint command.",
+                    "fa_icon": "far fa-check-square"
+                },
                 "deseq2_vst": {
                     "type": "boolean",
                     "description": "Use vst transformation instead of rlog with DESeq2.",

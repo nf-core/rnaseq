@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# 3.18.0dev - xxxx-xx-xx
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Caitlin Winkler](https://github.com/oligomyeggo)
+
+### Enhancements & fixes
+
+- [PR #1461](https://github.com/nf-core/rnaseq/pull/1461) - Add FASTQ linting during preprocessing
+
 ## [[3.17.0](https://github.com/nf-core/rnaseq/releases/tag/3.17.0)] - 2024-10-23
 
 ### Credits

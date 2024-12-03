@@ -30,4 +30,15 @@ process FQ_LINT {
         fq: \$(echo \$(fq lint --version | sed 's/fq-lint //g'))
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.fq_lint.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        fq: \$(echo \$(fq lint --version | sed 's/fq-lint //g'))
+    END_VERSIONS
+    """
 }

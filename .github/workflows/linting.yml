@@ -33,7 +33,7 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
-      - name: Install Nextflow
+      - name: Install Nextflow test
         uses: nf-core/setup-nextflow@v2
 
       - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5

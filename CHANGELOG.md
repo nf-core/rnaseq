@@ -10,10 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Special thanks to the following for their contributions to the release:
 
 - [Caitlin Winkler](https://github.com/oligomyeggo)
+- [Siddhartha Bagaria](https://github.com/siddharthab)
 
 ### Enhancements & fixes
 
+- [PR #1369](https://github.com/nf-core/rnaseq/pull/1369) - Add umicollapse as an alternative to umi-tools
 - [PR #1461](https://github.com/nf-core/rnaseq/pull/1461) - Add FASTQ linting during preprocessing
+
+### Software dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `UMICollapse` |             | 1.1.0       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
 
 ## [[3.17.0](https://github.com/nf-core/rnaseq/releases/tag/3.17.0)] - 2024-10-23
 
@@ -1019,14 +1033,14 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 
 ### Parameters
 
-| Old parameter               | New parameter                          |
-| --------------------------- | -------------------------------------- |
-| `--fc_extra_attributes`     | `--gtf_extra_attributes`               |
-|  `--fc_group_features`      |  `--gtf_group_features`                |
-|  `--fc_count_type`          |  `--gtf_count_type`                    |
-|  `--fc_group_features_type` |  `--gtf_group_features_type`           |
-|                             |  `--singularity_pull_docker_container` |
-|  `--skip_featurecounts`     |                                        |
+| Old parameter              | New parameter                         |
+| -------------------------- | ------------------------------------- |
+| `--fc_extra_attributes`    | `--gtf_extra_attributes`              |
+| `--fc_group_features`      | `--gtf_group_features`                |
+| `--fc_count_type`          | `--gtf_count_type`                    |
+| `--fc_group_features_type` | `--gtf_group_features_type`           |
+|                            | `--singularity_pull_docker_container` |
+| `--skip_featurecounts`     |                                       |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.
@@ -1104,28 +1118,28 @@ Note, since the pipeline is now using Nextflow DSL2, each process will be run wi
 
 #### Updated
 
-| Old parameter                 | New parameter               |
-| ----------------------------- | --------------------------- |
-| `--reads`                     | `--input`                   |
-|  `--igenomesIgnore`           |  `--igenomes_ignore`        |
-|  `--removeRiboRNA`            |  `--remove_ribo_rna`        |
-|  `--rRNA_database_manifest`   |  `--ribo_database_manifest` |
-|  `--save_nonrRNA_reads`       |  `--save_non_ribo_reads`    |
-|  `--saveAlignedIntermediates` |  `--save_align_intermeds`   |
-|  `--saveReference`            |  `--save_reference`         |
-|  `--saveTrimmed`              |  `--save_trimmed`           |
-|  `--saveUnaligned`            |  `--save_unaligned`         |
-|  `--skipAlignment`            |  `--skip_alignment`         |
-|  `--skipBiotypeQC`            |  `--skip_biotype_qc`        |
-|  `--skipDupRadar`             |  `--skip_dupradar`          |
-|  `--skipFastQC`               |  `--skip_fastqc`            |
-|  `--skipMultiQC`              |  `--skip_multiqc`           |
-|  `--skipPreseq`               |  `--skip_preseq`            |
-|  `--skipQC`                   |  `--skip_qc`                |
-|  `--skipQualimap`             |  `--skip_qualimap`          |
-|  `--skipRseQC`                |  `--skip_rseqc`             |
-|  `--skipTrimming`             |  `--skip_trimming`          |
-|  `--stringTieIgnoreGTF`       |  `--stringtie_ignore_gtf`   |
+| Old parameter                | New parameter              |
+| ---------------------------- | -------------------------- |
+| `--reads`                    | `--input`                  |
+| `--igenomesIgnore`           | `--igenomes_ignore`        |
+| `--removeRiboRNA`            | `--remove_ribo_rna`        |
+| `--rRNA_database_manifest`   | `--ribo_database_manifest` |
+| `--save_nonrRNA_reads`       | `--save_non_ribo_reads`    |
+| `--saveAlignedIntermediates` | `--save_align_intermeds`   |
+| `--saveReference`            | `--save_reference`         |
+| `--saveTrimmed`              | `--save_trimmed`           |
+| `--saveUnaligned`            | `--save_unaligned`         |
+| `--skipAlignment`            | `--skip_alignment`         |
+| `--skipBiotypeQC`            | `--skip_biotype_qc`        |
+| `--skipDupRadar`             | `--skip_dupradar`          |
+| `--skipFastQC`               | `--skip_fastqc`            |
+| `--skipMultiQC`              | `--skip_multiqc`           |
+| `--skipPreseq`               | `--skip_preseq`            |
+| `--skipQC`                   | `--skip_qc`                |
+| `--skipQualimap`             | `--skip_qualimap`          |
+| `--skipRseQC`                | `--skip_rseqc`             |
+| `--skipTrimming`             | `--skip_trimming`          |
+| `--stringTieIgnoreGTF`       | `--stringtie_ignore_gtf`   |
 
 #### Added
 

@@ -1,3 +1,4 @@
+fq_lint/*/*.fq_lint.txt
 bbsplit/*.stats.txt
 fastqc/*/*.{html,zip}
 hisat2/log/*.hisat2.summary.log

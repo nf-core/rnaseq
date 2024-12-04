@@ -158,7 +158,8 @@ workflow RNASEQ {
         params.with_umi,
         params.umi_discard_read,
         params.stranded_threshold,
-        params.unstranded_threshold
+        params.unstranded_threshold,
+        params.skip_linting
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)

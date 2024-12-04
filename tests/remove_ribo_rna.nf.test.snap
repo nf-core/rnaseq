@@ -1,7 +1,7 @@
 {
     "Params: --remove_ribo_rna": {
         "content": [
-            205,
+            225,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -34,6 +34,9 @@
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FQ_LINT": {
+                    "fq": "0.12.0 (2024-07-08)"
                 },
                 "FQ_SUBSAMPLE": {
                     "fq": "0.12.0 (2024-07-08)"
@@ -140,7 +143,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.17.0"
+                    "nf-core/rnaseq": "v3.18.0dev"
                 }
             },
             [
@@ -189,6 +192,25 @@
                 "fastqc/trim/WT_REP2_trimmed_1_val_1_fastqc.zip",
                 "fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.html",
                 "fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.zip",
+                "fq_lint",
+                "fq_lint/raw",
+                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/raw/WT_REP1.fq_lint.txt",
+                "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "fq_lint/sortmerna",
+                "fq_lint/sortmerna/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/sortmerna/WT_REP1.fq_lint.txt",
+                "fq_lint/sortmerna/WT_REP2.fq_lint.txt",
+                "fq_lint/trimmed",
+                "fq_lint/trimmed/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/trimmed/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/trimmed/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/trimmed/WT_REP1.fq_lint.txt",
+                "fq_lint/trimmed/WT_REP2.fq_lint.txt",
                 "multiqc",
                 "multiqc/star_salmon",
                 "multiqc/star_salmon/multiqc_report.html",
@@ -1384,13 +1406,13 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-23T11:36:09.902195192"
+        "timestamp": "2024-12-03T18:13:03.469655405"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
-            24,
+            29,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -1406,6 +1428,9 @@
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FQ_LINT": {
+                    "fq": "0.12.0 (2024-07-08)"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -1435,7 +1460,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.17.0"
+                    "nf-core/rnaseq": "v3.18.0dev"
                 }
             },
             [
@@ -1456,6 +1481,13 @@
                 "fastqc/raw/WT_REP2_raw.html",
                 "fastqc/raw/WT_REP2_raw.zip",
                 "fastqc/trim",
+                "fq_lint",
+                "fq_lint/raw",
+                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/raw/WT_REP1.fq_lint.txt",
+                "fq_lint/raw/WT_REP2.fq_lint.txt",
                 "multiqc",
                 "multiqc/star_salmon",
                 "multiqc/star_salmon/multiqc_data",
@@ -1480,8 +1512,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-23T11:37:11.90905171"
+        "timestamp": "2024-12-03T18:13:56.979730403"
     }
 }

@@ -3,17 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+# 3.18.0dev - xxxx-xx-xx
 
 ### Credits
 
 Special thanks to the following for their contributions to the release:
 
+- [Caitlin Winkler](https://github.com/oligomyeggo)
 - [Siddhartha Bagaria](https://github.com/siddharthab)
 
 ### Enhancements & fixes
 
 - [PR #1369](https://github.com/nf-core/rnaseq/pull/1369) - Add umicollapse as an alternative to umi-tools
+- [PR #1461](https://github.com/nf-core/rnaseq/pull/1461) - Add FASTQ linting during preprocessing
 
 ### Software dependencies
 

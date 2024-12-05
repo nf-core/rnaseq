@@ -116,6 +116,8 @@ workflow PIPELINE_COMPLETION {
             id, status -> pass_strand_check[id] = status
         }
 
+    def multiqc_report_list = multiqc_report.toList()
+
     //
     // Completion email and summary
     //
@@ -128,7 +130,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report.toList()
+                multiqc_report_list.getVal()
             )
         }
 

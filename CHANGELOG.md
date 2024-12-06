@@ -16,6 +16,7 @@ Special thanks to the following for their contributions to the release:
 
 - [PR #1369](https://github.com/nf-core/rnaseq/pull/1369) - Add umicollapse as an alternative to umi-tools
 - [PR #1461](https://github.com/nf-core/rnaseq/pull/1461) - Add FASTQ linting during preprocessing
+- [PR #1463](https://github.com/nf-core/rnaseq/pull/1463) - Move channel operations outside of the onComplete() block
 
 ### Software dependencies
 

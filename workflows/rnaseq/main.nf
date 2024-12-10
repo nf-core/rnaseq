@@ -15,9 +15,11 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
-include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
-include { BAM_DEDUP_UMI } from '../../subworkflows/local/bam_dedup_umi'
+include { ALIGN_STAR                           } from '../../subworkflows/local/align_star'
+include { QUANTIFY_RSEM                        } from '../../subworkflows/local/quantify_rsem'
+include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR  } from '../../subworkflows/local/bam_dedup_umi'
+include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT } from '../../subworkflows/local/bam_dedup_umi'
+
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -35,7 +37,6 @@ include { methodsDescriptionText         } from '../../subworkflows/local/utils_
 // MODULE: Installed directly from nf-core/modules
 //
 include { DUPRADAR                   } from '../../modules/nf-core/dupradar'
-include { SAMTOOLS_SORT              } from '../../modules/nf-core/samtools/sort'
 include { PRESEQ_LCEXTRAP            } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ            } from '../../modules/nf-core/qualimap/rnaseq'
 include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/stringtie'
@@ -43,7 +44,6 @@ include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featu
 include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
 include { MULTIQC                    } from '../../modules/nf-core/multiqc'
-include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../../modules/nf-core/umitools/prepareforrsem'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 
@@ -220,27 +220,23 @@ workflow RNASEQ {
         //
         if (params.with_umi) {
 
-            BAM_DEDUP_UMI(
+            BAM_DEDUP_UMI_STAR(
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                ch_fasta,
+                ch_fasta.map { [ [:], it ] },
                 params.umi_dedup_tool,
                 params.umitools_dedup_stats,
                 params.bam_csi_index,
-                BAM_SORT_STATS_SAMTOOLS.out.bam.join(BAM_SORT_STATS_SAMTOOLS.out.bai, by: [0])
+                ch_transcriptome_bam,
+                ch_transcript_fasta.map { [ [:], it ] }
             )
 
-            ch_genome_bam        = BAM_DEDUP_UMI.out.bam
-            ch_transcriptome_bam = BAM_DEDUP_UMI.out.bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI.out.bai
-            ch_versions          = BAM_DEDUP_UMI.out.versions
+            ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
+            ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
+            ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
+            ch_versions          = BAM_DEDUP_UMI_STAR.out.versions
 
-            ch_multiqc_files    = ch_multiqc_files
-                .mix(
-                    BAM_DEDUP_UMI.dedup_log
-                        .concat(BAM_DEDUP_UMI.out.stats)
-                        .concat(BAM_DEDUP_UMI.out.flagstat)
-                        .concat(BAM_DEDUP_UMI.out.idxstats)
-                )
+            ch_multiqc_files = ch_multiqc_files
+                .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
         }
 
         //
@@ -335,32 +331,25 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
+
         if (params.with_umi) {
-            if (params.umi_dedup_tool == "umicollapse") {
-                BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME (
-                    ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                )
-                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.dedup_stats.collect{it[1]}.ifEmpty([]))
-            } else if (params.umi_dedup_tool == "umitools") {
-                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
-                    ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                    params.umitools_dedup_stats
-                )
-                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.deduplog.collect{it[1]})
-            } else {
-                error("Unknown umi_dedup_tool '${params.umi_dedup_tool}'")
-            }
-            ch_genome_bam       = UMI_DEDUP_GENOME.out.bam
-            ch_genome_bam_index = UMI_DEDUP_GENOME.out.bai
-            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.stats.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.flagstat.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.idxstats.collect{it[1]})
-            if (params.bam_csi_index) {
-                ch_genome_bam_index = UMI_DEDUP_GENOME.out.csi
-            }
-            ch_versions = ch_versions.mix(UMI_DEDUP_GENOME.out.versions)
+
+            BAM_DEDUP_UMI_HISAT2(
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                ch_fasta.map { [ [:], it ] },
+                params.umi_dedup_tool,
+                params.umitools_dedup_stats,
+                params.bam_csi_index,
+                [[],[]],
+                [[],[]]
+            )
+
+            ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
+            ch_versions          = BAM_DEDUP_UMI_HISAT2.out.versions
+
+            ch_multiqc_files = ch_multiqc_files
+                .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
         }
     }
 

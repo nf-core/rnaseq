@@ -2,21 +2,23 @@
 // BAM deduplication with UMI processing
 //
 
-include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS    } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
-include { BAM_SORT_STATS_SAMTOOLS              } from '../../../subworkflows/nf-core/bam_sort_stats_samtools'
-include { UMITOOLS_PREPAREFORRSEM              } from '../../../modules/nf-core/umitools/prepareforrsem'
-include { SAMTOOLS_SORT                        } from '../../../modules/nf-core/samtools/sort/main'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME       } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME        } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME              } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
+include { BAM_SORT_STATS_SAMTOOLS                            } from '../../../subworkflows/nf-core/bam_sort_stats_samtools'
+include { UMITOOLS_PREPAREFORRSEM                            } from '../../../modules/nf-core/umitools/prepareforrsem'
+include { SAMTOOLS_SORT                                      } from '../../../modules/nf-core/samtools/sort/main'
 
 workflow BAM_DEDUP_UMI {
     take:
     ch_genome_bam         // channel: [ val(meta), path(bam), path(bai) ]
-    ch_fasta              // channel: [ path(fasta) ]
+    ch_fasta              // channel: [ val(meta), path(fasta) ]
     umi_dedup_tool        // string: 'umicollapse' or 'umitools'
     umitools_dedup_stats  // boolean: whether to generate UMI-tools dedup stats
     bam_csi_index         // boolean: whether to generate CSI index
-    ch_transcriptome_bam  //
-    ch_transcript_fasta
+    ch_transcriptome_bam  // channel: [ val(meta), path(bam) ]
+    ch_transcript_fasta   // channel: [ val(meta), path(fasta) ]
 
     main:
     ch_versions = Channel.empty()
@@ -27,18 +29,18 @@ workflow BAM_DEDUP_UMI {
 
     // Genome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE (
+        BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME (
             ch_genome_bam
         )
-        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE
+        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
         ch_dedup_log = UMI_DEDUP_GENOME.out.dedup_stats
 
     } else if (umi_dedup_tool == "umitools") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS (
+        BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
             ch_genome_bam,
             umitools_dedup_stats
         )
-        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS
+        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
         ch_dedup_log = UMI_DEDUP_GENOME.out.deduplog
     }
 
@@ -51,32 +53,32 @@ workflow BAM_DEDUP_UMI {
 
     BAM_SORT_STATS_SAMTOOLS (
         ch_transcriptome_bam,
-        ch_transcript_fasta.map { [ [:], it ] }
+        ch_transcript_fasta
     )
     ch_sorted_transcriptome_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
         .join(BAM_SORT_STATS_SAMTOOLS.out.bai)
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE (
+        BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME (
             ch_sorted_transcriptome_bam
         )
-        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE
-        ch_dedup_log = UMI_DEDUP_GENOME.out.dedup_stats
+        UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME
+        ch_dedup_log = dedup_log.mix(UMI_DEDUP_GENOME.out.dedup_stats)
 
     } else if (umi_dedup_tool == "umitools") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS (
+        BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
             ch_sorted_transcriptome_bam,
             umitools_dedup_stats
         )
-        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS
-        ch_dedup_log = UMI_DEDUP_GENOME.out.deduplog
+        UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
+        ch_dedup_log = ch_dedup_log.mix(UMI_DEDUP_GENOME.out.deduplog)
     }
 
     // 3. Restore name sorting
     SAMTOOLS_SORT (
         UMI_DEDUP_TRANSCRIPTOME.out.bam,
-        ch_fasta.map { [ [:], it ] }
+        ch_fasta
     )
 
     // 4. Run prepare_for_rsem.py on paired-end BAM files
@@ -91,28 +93,46 @@ workflow BAM_DEDUP_UMI {
                     return [ meta, bam ]
         }
 
-    UMITOOLS_PREPAREFORSALMON (
+    UMITOOLS_PREPAREFORRSEM (
         ended_transcriptome_dedup_bam.paired_end
             .map { meta, bam -> [ meta, bam, [] ] }
     )
 
-    ch_dedup_transcriptome_bam = ch_transcriptome_bam
-        .single_end
-        .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
+    ch_dedup_transcriptome_bam = ended_transcriptome_dedup_bam.single_end
+        .mix(UMITOOLS_PREPAREFORRSEM.out.bam)
+
+    // Collect files useful for MultiQC into one helpful emission
+
+    ch_stats = UMI_DEDUP_GENOME.out.stats
+        .mix(UMI_DEDUP_TRANSCRIPTOME.out.stats)
+
+    ch_flagstat = UMI_DEDUP_GENOME.out.flagstat
+        .mix(UMI_DEDUP_TRANSCRIPTOME.out.flagstat)
+
+    ch_idxstats = UMI_DEDUP_GENOME.out.idxstats
+        .mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats)
+
+    ch_multiqc_files = ch_dedup_log
+        .mix(ch_stats)
+        .mix(ch_flagstat)
+        .mix(ch_idxstats)
+        .transpose()
+        .map{it[1]}
 
     // Record versions
 
     ch_versions = UMI_DEDUP_GENOME.out.versions
         .mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
-        .mix(UMITOOLS_PREPAREFORSALMON.out.versions)
+        .mix(UMITOOLS_PREPAREFORRSEM.out.versions)
 
     emit:
     bam                = UMI_DEDUP_GENOME.out.bam                                             // channel: [ val(meta), path(bam) ]
-    bam_index          = bam_csi_index ? UMI_DEDUP_GENOME.out.csi : UMI_DEDUP_GENOME.out.bai  // channel: [ val(meta), path(bai) ]
+    bai                = bam_csi_index ? UMI_DEDUP_GENOME.out.csi : UMI_DEDUP_GENOME.out.bai  // channel: [ val(meta), path(bai) ]
     dedup_log          = ch_dedup_log                                                         // channel: [ val(meta), path(log) ]
-    stats              = UMI_DEDUP_GENOME.out.stats
-    flagstat           = UMI_DEDUP_GENOME.out.flagstat
-    idxstats           = UMI_DEDUP_GENOME.out.idxstats
+    stats              = ch_stats
+    flagstat           = ch_flagstat
+    idxstats           = ch_idxstats
+    multiqc_files      = ch_multiqc_files
     transcriptome_bam  = ch_dedup_transcriptome_bam     // channel: [ val(meta), path(bam) ]
     versions            = ch_versions                   // channel: [ path(versions.yml) ]
 }

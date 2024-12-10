@@ -17,6 +17,7 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 include { ALIGN_STAR    } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM } from '../../subworkflows/local/quantify_rsem'
+include { BAM_DEDUP_UMI } from '../../subworkflows/local/bam_dedup_umi'
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -218,88 +219,28 @@ workflow RNASEQ {
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
         if (params.with_umi) {
-            // Deduplicate genome BAM file before downstream analysis
-            if (params.umi_dedup_tool == "umicollapse") {
-                BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME (
-                    ch_genome_bam.join(ch_genome_bam_index, by: [0])
-                )
-                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.dedup_stats.collect{it[1]}.ifEmpty([]))
-            } else if (params.umi_dedup_tool == "umitools") {
-                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME (
-                    ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                    params.umitools_dedup_stats
-                )
-                UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
-                ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.deduplog.collect{it[1]})
-            } else {
-                error("Unknown umi_dedup_tool '${params.umi_dedup_tool}'")
-            }
-            ch_genome_bam       = UMI_DEDUP_GENOME.out.bam
-            ch_genome_bam_index = UMI_DEDUP_GENOME.out.bai
-            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.stats.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.flagstat.collect{it[1]})
-            ch_multiqc_files = ch_multiqc_files.mix(UMI_DEDUP_GENOME.out.idxstats.collect{it[1]})
 
-            if (params.bam_csi_index) {
-                ch_genome_bam_index  = UMI_DEDUP_GENOME.out.csi
-            }
-            ch_versions = ch_versions.mix(UMI_DEDUP_GENOME.out.versions)
-
-            // Co-ordinate sort, index and run stats on transcriptome BAM
-            BAM_SORT_STATS_SAMTOOLS (
-                ch_transcriptome_bam,
-                ch_transcript_fasta.map { [ [:], it ] }
-            )
-            ch_transcriptome_sorted_bam = BAM_SORT_STATS_SAMTOOLS.out.bam
-            ch_transcriptome_sorted_bai = BAM_SORT_STATS_SAMTOOLS.out.bai
-
-            // Deduplicate transcriptome BAM file before read counting with Salmon
-            if (params.umi_dedup_tool == "umicollapse") {
-                BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME (
-                    ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0])
-                )
-                UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME
-            } else if (params.umi_dedup_tool == "umitools") {
-                BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (
-                    ch_transcriptome_sorted_bam.join(ch_transcriptome_sorted_bai, by: [0]),
-                    params.umitools_dedup_stats
-                )
-                UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
-            } else {
-                error("Unknown umi_dedup_tool '${params.umi_dedup_tool}'")
-            }
-
-            // Name sort BAM before passing to Salmon
-            SAMTOOLS_SORT (
-                UMI_DEDUP_TRANSCRIPTOME.out.bam,
-                ch_fasta.map { [ [:], it ] }
+            BAM_DEDUP_UMI(
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                ch_fasta,
+                params.umi_dedup_tool,
+                params.umitools_dedup_stats,
+                params.bam_csi_index,
+                BAM_SORT_STATS_SAMTOOLS.out.bam.join(BAM_SORT_STATS_SAMTOOLS.out.bai, by: [0])
             )
 
-            // Only run prepare_for_rsem.py on paired-end BAM files
-            SAMTOOLS_SORT
-                .out
-                .bam
-                .branch {
-                    meta, bam ->
-                        single_end: meta.single_end
-                            return [ meta, bam ]
-                        paired_end: !meta.single_end
-                            return [ meta, bam ]
-                }
-                .set { ch_dedup_bam }
+            ch_genome_bam        = BAM_DEDUP_UMI.out.bam
+            ch_transcriptome_bam = BAM_DEDUP_UMI.out.bam
+            ch_genome_bam_index  = BAM_DEDUP_UMI.out.bai
+            ch_versions          = BAM_DEDUP_UMI.out.versions
 
-            // Fix paired-end reads in name sorted BAM file
-            // See: https://github.com/nf-core/rnaseq/issues/828
-            UMITOOLS_PREPAREFORSALMON (
-                ch_dedup_bam.paired_end.map { meta, bam -> [ meta, bam, [] ] }
-            )
-            ch_versions = ch_versions.mix(UMITOOLS_PREPAREFORSALMON.out.versions.first())
-
-            ch_dedup_bam
-                .single_end
-                .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
-                .set { ch_transcriptome_bam }
+            ch_multiqc_files    = ch_multiqc_files
+                .mix(
+                    BAM_DEDUP_UMI.dedup_log
+                        .concat(BAM_DEDUP_UMI.out.stats)
+                        .concat(BAM_DEDUP_UMI.out.flagstat)
+                        .concat(BAM_DEDUP_UMI.out.idxstats)
+                )
         }
 
         //

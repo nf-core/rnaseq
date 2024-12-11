@@ -204,9 +204,6 @@ workflow RNASEQ {
         ch_transcriptome_bam   = ALIGN_STAR.out.bam_transcript
         ch_star_log            = ALIGN_STAR.out.log_final
         ch_unaligned_sequences = ALIGN_STAR.out.fastq
-        ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.stats.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.flagstat.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.idxstats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
 
         if (params.bam_csi_index) {
@@ -300,6 +297,14 @@ workflow RNASEQ {
                 .single_end
                 .mix(UMITOOLS_PREPAREFORSALMON.out.bam)
                 .set { ch_transcriptome_bam }
+        } else {
+            // The deduplicated stats should take priority for MultiQC, but use
+            // them straight out of the aligner otherwise
+
+            ch_multiqc_files = ch_multiqc_files
+                .mix(ALIGN_STAR.out.stats.collect{it[1]})
+                .mix(ALIGN_STAR.out.flagstat.collect{it[1]})
+                .mix(ALIGN_STAR.out.idxstats.collect{it[1]})
         }
 
         //
@@ -381,9 +386,6 @@ workflow RNASEQ {
         ch_genome_bam          = FASTQ_ALIGN_HISAT2.out.bam
         ch_genome_bam_index    = FASTQ_ALIGN_HISAT2.out.bai
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{it[1]})
 
         if (params.bam_csi_index) {
@@ -420,6 +422,13 @@ workflow RNASEQ {
                 ch_genome_bam_index = UMI_DEDUP_GENOME.out.csi
             }
             ch_versions = ch_versions.mix(UMI_DEDUP_GENOME.out.versions)
+        } else {
+            // The deduplicated stats should take priority for MultiQC, but use
+            // them straight out of the aligner otherwise
+            ch_multiqc_files = ch_multiqc_files
+                .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
+                .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})
+                .mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{it[1]})
         }
     }
 

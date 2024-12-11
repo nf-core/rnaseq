@@ -7,11 +7,11 @@ nextflow_pipeline {
 
         when {
             params {
-                //with_umi = true
-                extra_umitools_extract_args = '--random-seed 1234'
+                with_umi = true
                 umitools_extract_method = "regex"
                 umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umitools_dedup_stats = true
+                skip_bbsplit = true
                 umi_dedup_tool = 'umicollapse'
                 aligner = 'hisat2'
                 outdir = "$outputDir"
@@ -43,11 +43,11 @@ nextflow_pipeline {
 
         when {
             params {
-                //with_umi = true
-                extra_umitools_extract_args = '--random-seed 1234'
+                with_umi = true
                 umitools_extract_method = "regex"
                 umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umitools_dedup_stats = true
+                skip_bbsplit = true
                 outdir = "$outputDir"
             }
         }

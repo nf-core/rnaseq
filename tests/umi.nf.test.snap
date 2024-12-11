@@ -2709,5 +2709,117 @@
             "nextflow": "24.10.2"
         },
         "timestamp": "2024-12-11T17:17:19.399917398"
+    },
+    "--umi_dedup_tool 'umitools - stub": {
+        "content": [
+            32,
+            {
+                "BBMAP_BBSPLIT": {
+                    "bbmap": 39.1
+                },
+                "CAT_FASTQ": {
+                    "cat": 9.5
+                },
+                "CUSTOM_CATADDITIONALFASTA": {
+                    "python": null
+                },
+                "CUSTOM_GETCHROMSIZES": {
+                    "getchromsizes": 1.21
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "FQ_LINT": {
+                    "fq": "0.12.0 (2024-07-08)"
+                },
+                "GTF2BED": {
+                    "perl": "5.26.2"
+                },
+                "GTF_FILTER": {
+                    "python": "3.9.5"
+                },
+                "GUNZIP_ADDITIONAL_FASTA": {
+                    "gunzip": 1.1
+                },
+                "GUNZIP_GTF": {
+                    "gunzip": 1.1
+                },
+                "STAR_GENOMEGENERATE": {
+                    "star": "2.7.11b",
+                    "samtools": 1.2,
+                    "gawk": "5.1.0"
+                },
+                "TRIMGALORE": {
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9
+                },
+                "UMITOOLS_EXTRACT": {
+                    "umitools": "1.1.5"
+                },
+                "UNTAR_SALMON_INDEX": {
+                    "untar": 1.34
+                },
+                "Workflow": {
+                    "nf-core/rnaseq": "v3.18.0dev"
+                }
+            },
+            [
+                "custom",
+                "custom/out",
+                "custom/out/genome_transcriptome.fasta",
+                "custom/out/genome_transcriptome.gtf",
+                "fastqc",
+                "fastqc/raw",
+                "fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
+                "fastqc/raw/RAP1_IAA_30M_REP1_raw.zip",
+                "fastqc/raw/RAP1_UNINDUCED_REP1_raw.html",
+                "fastqc/raw/RAP1_UNINDUCED_REP1_raw.zip",
+                "fastqc/raw/RAP1_UNINDUCED_REP2_raw.html",
+                "fastqc/raw/RAP1_UNINDUCED_REP2_raw.zip",
+                "fastqc/raw/WT_REP1_raw.html",
+                "fastqc/raw/WT_REP1_raw.zip",
+                "fastqc/raw/WT_REP2_raw.html",
+                "fastqc/raw/WT_REP2_raw.zip",
+                "fastqc/trim",
+                "fq_lint",
+                "fq_lint/raw",
+                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/raw/WT_REP1.fq_lint.txt",
+                "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "multiqc",
+                "multiqc/star_salmon",
+                "multiqc/star_salmon/multiqc_data",
+                "multiqc/star_salmon/multiqc_plots",
+                "multiqc/star_salmon/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
+                "trimgalore",
+                "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
+                "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
+                "trimgalore/RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt",
+                "trimgalore/RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt",
+                "trimgalore/WT_REP1_trimmed_1.fastq.gz_trimming_report.txt",
+                "trimgalore/WT_REP1_trimmed_2.fastq.gz_trimming_report.txt",
+                "trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
+                "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt",
+                "umitools",
+                "umitools/RAP1_IAA_30M_REP1.umi_extract.log",
+                "umitools/RAP1_UNINDUCED_REP1.umi_extract.log",
+                "umitools/RAP1_UNINDUCED_REP2.umi_extract.log",
+                "umitools/WT_REP1.umi_extract.log",
+                "umitools/WT_REP2.umi_extract.log"
+            ],
+            [
+                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-11T17:36:56.031072985"
     }
 }

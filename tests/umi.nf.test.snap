@@ -1467,27 +1467,14 @@
                 "WT_REP2.umi_dedup.sorted_per_umi_per_position.tsv:md5,6f5656947a7f0076df446e6f40430027",
                 "WT_REP2.umi_dedup.transcriptome.sorted_edit_distance.tsv:md5,3e3c6a7e8996e566350742e9911366d3",
                 "WT_REP2.umi_dedup.transcriptome.sorted_per_umi.tsv:md5,0c986c4cb7a77f650a19e2c454b9b179",
-                "WT_REP2.umi_dedup.transcriptome.sorted_per_umi_per_position.tsv:md5,af9028dbdab81de3854a32cd1d19ac8b",
-                "RAP1_IAA_30M_REP1.umi_dedup.sorted.log:md5,0001a4ebfeaedfa164311e075b4c6c8a",
-                "RAP1_UNINDUCED_REP1.umi_dedup.sorted.log:md5,150b19399146d766746e991cf2f20834",
-                "RAP1_UNINDUCED_REP2.umi_dedup.sorted.log:md5,218313d63828b1bd97bf0f379bad5e8f",
-                "WT_REP1.umi_dedup.sorted.log:md5,982c5089b199ca8647511f4b10e3a713",
-                "WT_REP2.umi_dedup.sorted.log:md5,3f2cc0f12cdc53db11a7f7409dde7d62",
-                "RAP1_IAA_30M_REP1.umi_dedup.transcriptome.filtered.prepare_for_rsem.log:md5,a7c8743ab54408ec184c669d42b53907",
-                "WT_REP1.umi_dedup.transcriptome.filtered.prepare_for_rsem.log:md5,5c334da8161e17825c08fc6a2522d187",
-                "WT_REP2.umi_dedup.transcriptome.filtered.prepare_for_rsem.log:md5,ddc19f73d0a622abc3bae9000a3daa4e",
-                "RAP1_IAA_30M_REP1.umi_dedup.transcriptome.sorted.log:md5,058d0796e29f1037460d936947cf2ba8",
-                "RAP1_UNINDUCED_REP1.umi_dedup.transcriptome.sorted.log:md5,5c93e408bbfd13061ad2f2b432747abe",
-                "RAP1_UNINDUCED_REP2.umi_dedup.transcriptome.sorted.log:md5,15bcb30ad07c9a71852ff38c40f9e79f",
-                "WT_REP1.umi_dedup.transcriptome.sorted.log:md5,8938cfbb06f7ec98635687b64151d098",
-                "WT_REP2.umi_dedup.transcriptome.sorted.log:md5,08cd52b814d3e2f4f4adc688643641c6"
+                "WT_REP2.umi_dedup.transcriptome.sorted_per_umi_per_position.tsv:md5,af9028dbdab81de3854a32cd1d19ac8b"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.10.2"
         },
-        "timestamp": "2024-12-11T17:23:58.835430691"
+        "timestamp": "2024-12-11T18:07:55.751564456"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -2708,7 +2695,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.10.2"
         },
-        "timestamp": "2024-12-11T17:17:19.399917398"
+        "timestamp": "2024-12-11T18:01:45.228731692"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [
@@ -2820,6 +2807,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.10.2"
         },
-        "timestamp": "2024-12-11T17:36:56.031072985"
+        "timestamp": "2024-12-11T18:08:48.404716766"
     }
 }

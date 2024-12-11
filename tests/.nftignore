@@ -83,6 +83,8 @@ umitools/*.umi_extract.log
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.sample.dists.txt
 {salmon,star_rsem,star_salmon}/deseq2_qc/size_factors/*.txt
 {salmon,star_rsem,star_salmon}/deseq2_qc/size_factors/deseq2.size_factors.RData
+{salmon,star_rsem,star_salmon}/umitools/{genomic,transcriptomic}_dedup_log/*
+{salmon,star_rsem,star_salmon}/umitools/prepare_for_salmon_log/*
 {salmon,star_salmon}/*/aux_info/fld.gz
 {salmon,star_salmon}/*/aux_info/meta_info.json
 {salmon,star_salmon}/*/libParams/flenDist.txt

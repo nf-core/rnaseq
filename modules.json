@@ -212,7 +212,7 @@
                     "samtools/sort": {
                         "branch": "master",
                         "git_sha": "b7800db9b069ed505db3f9d91b8c72faea9be17b",
-                        "installed_by": ["bam_sort_stats_samtools"]
+                        "installed_by": ["bam_dedup_umi", "bam_sort_stats_samtools"]
                     },
                     "samtools/stats": {
                         "branch": "master",
@@ -290,7 +290,7 @@
                     "umitools/prepareforrsem": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["modules"]
+                        "installed_by": ["bam_dedup_umi", "modules"]
                     },
                     "untar": {
                         "branch": "master",
@@ -304,11 +304,16 @@
                     "bam_dedup_stats_samtools_umicollapse": {
                         "branch": "master",
                         "git_sha": "0b27602842d3d79fd0e8db79f4afa764967fc3d1",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["bam_dedup_umi", "subworkflows"]
                     },
                     "bam_dedup_stats_samtools_umitools": {
                         "branch": "master",
                         "git_sha": "0b27602842d3d79fd0e8db79f4afa764967fc3d1",
+                        "installed_by": ["bam_dedup_umi", "subworkflows"]
+                    },
+                    "bam_dedup_umi": {
+                        "branch": "master",
+                        "git_sha": "b5828f47c17c41ce3a4c70b863c99207e3f6d37c",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_markduplicates_picard": {
@@ -324,7 +329,7 @@
                     "bam_sort_stats_samtools": {
                         "branch": "master",
                         "git_sha": "763d4b5c05ffda3ac1ac969dc67f7458cfb2eb1d",
-                        "installed_by": ["fastq_align_hisat2"]
+                        "installed_by": ["bam_dedup_umi", "fastq_align_hisat2"]
                     },
                     "bam_stats_samtools": {
                         "branch": "master",

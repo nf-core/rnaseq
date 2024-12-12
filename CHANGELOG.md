@@ -18,6 +18,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1461](https://github.com/nf-core/rnaseq/pull/1461) - Add FASTQ linting during preprocessing
 - [PR #1463](https://github.com/nf-core/rnaseq/pull/1463) - Move channel operations outside of the onComplete() block
 - [PR #1467](https://github.com/nf-core/rnaseq/pull/1467) - Add test suite for UMI handling functionality
+- [PR #1466](https://github.com/nf-core/rnaseq/pull/1466) - Factor out UMI handling
 
 ### Software dependencies
 

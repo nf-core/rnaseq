@@ -23,7 +23,7 @@ workflow BAM_DEDUP_UMI {
     main:
     ch_versions = Channel.empty()
 
-    if (umi_dedup_tool == "umicollapse" && umi_dedup_tool != "umitools"){
+    if (umi_dedup_tool != "umicollapse" && umi_dedup_tool != "umitools"){
         error("Unknown umi_dedup_tool '${umi_dedup_tool}'")
     }
 
@@ -64,7 +64,7 @@ workflow BAM_DEDUP_UMI {
             ch_sorted_transcriptome_bam
         )
         UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME
-        ch_dedup_log = dedup_log.mix(UMI_DEDUP_GENOME.out.dedup_stats)
+        ch_dedup_log = ch_dedup_log.mix(UMI_DEDUP_GENOME.out.dedup_stats)
 
     } else if (umi_dedup_tool == "umitools") {
         BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME (

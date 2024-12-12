@@ -101,21 +101,14 @@ workflow BAM_DEDUP_UMI {
     ch_dedup_transcriptome_bam = ended_transcriptome_dedup_bam.single_end
         .mix(UMITOOLS_PREPAREFORRSEM.out.bam)
 
-    // Collect files useful for MultiQC into one helpful emission
-
-    ch_stats = UMI_DEDUP_GENOME.out.stats
-        .mix(UMI_DEDUP_TRANSCRIPTOME.out.stats)
-
-    ch_flagstat = UMI_DEDUP_GENOME.out.flagstat
-        .mix(UMI_DEDUP_TRANSCRIPTOME.out.flagstat)
-
-    ch_idxstats = UMI_DEDUP_GENOME.out.idxstats
-        .mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats)
+    // Collect files useful for MultiQC into one helpful emission. Don't
+    // automatically add transcriptome stats- difficult to separate in multiqc
+    // without a bit more work
 
     ch_multiqc_files = ch_dedup_log
-        .mix(ch_stats)
-        .mix(ch_flagstat)
-        .mix(ch_idxstats)
+        .mix(UMI_DEDUP_GENOME.out.stats)
+        .mix(UMI_DEDUP_GENOME.out.flagstat)
+        .mix(UMI_DEDUP_GENOME.out.idxstats)
         .transpose()
         .map{it[1]}
 
@@ -129,9 +122,9 @@ workflow BAM_DEDUP_UMI {
     bam                = UMI_DEDUP_GENOME.out.bam                                             // channel: [ val(meta), path(bam) ]
     bai                = bam_csi_index ? UMI_DEDUP_GENOME.out.csi : UMI_DEDUP_GENOME.out.bai  // channel: [ val(meta), path(bai) ]
     dedup_log          = ch_dedup_log                                                         // channel: [ val(meta), path(log) ]
-    stats              = ch_stats
-    flagstat           = ch_flagstat
-    idxstats           = ch_idxstats
+    stats              = UMI_DEDUP_GENOME.out.stats.mix(UMI_DEDUP_TRANSCRIPTOME.out.stats)
+    flagstat           = UMI_DEDUP_GENOME.out.flagstat.mix(UMI_DEDUP_TRANSCRIPTOME.out.flagstat)
+    idxstats           = UMI_DEDUP_GENOME.out.idxstats.mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats)
     multiqc_files      = ch_multiqc_files
     transcriptome_bam  = ch_dedup_transcriptome_bam     // channel: [ val(meta), path(bam) ]
     versions            = ch_versions                   // channel: [ path(versions.yml) ]

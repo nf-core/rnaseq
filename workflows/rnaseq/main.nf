@@ -181,6 +181,8 @@ workflow RNASEQ {
     ch_genome_bam_index    = Channel.empty()
     ch_star_log            = Channel.empty()
     ch_unaligned_sequences = Channel.empty()
+    ch_transcriptome_bam   = Channel.empty()
+
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
         def is_aws_igenome = false
@@ -230,7 +232,7 @@ workflow RNASEQ {
             ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
             ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
             ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
-            ch_versions          = BAM_DEDUP_UMI_STAR.out.versions
+            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
@@ -343,13 +345,13 @@ workflow RNASEQ {
                 params.umi_dedup_tool,
                 params.umitools_dedup_stats,
                 params.bam_csi_index,
-                [[],[]],
-                [[],[]]
+                ch_transcriptome_bam,
+                ch_transcript_fasta.map { [ [:], it ] }
             )
 
             ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
             ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
-            ch_versions          = BAM_DEDUP_UMI_HISAT2.out.versions
+            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)

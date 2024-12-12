@@ -52,10 +52,12 @@ nextflow_workflow {
         }
 
         then {
-            assertAll(
-                { assert workflow.success },
-                { assert workflow.stdout.contains("nextflow_workflow v9.9.9") }
-            )
+            expect {
+                with(workflow) {
+                    assert success
+                    assert "nextflow_workflow v9.9.9" in stdout
+                }
+            }
         }
     }
 

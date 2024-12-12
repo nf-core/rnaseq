@@ -2,7 +2,7 @@ name: Test successful pipeline download with 'nf-core pipelines download'
 
 # Run the workflow when:
 #  - dispatched manually
-#  - when a PR is opened or reopened to master branch
+#  - when a PR is opened or reopened to main/master branch
 #  - the head branch of the pull request is updated, i.e. if fixes for a release are pushed last minute to dev.
 on:
   workflow_dispatch:
@@ -17,9 +17,11 @@ on:
       - edited
       - synchronize
     branches:
+      - main
       - master
   pull_request_target:
     branches:
+      - main
       - master
 
 env:
@@ -35,7 +37,7 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
-      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
         with:
           python-version: "3.12"
           architecture: "x64"
@@ -69,7 +71,7 @@ jobs:
           --outdir ./${{ env.REPOTITLE_LOWERCASE }} \
           --compress "none" \
           --container-system 'singularity' \
-          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io" \
+          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io/library/" \
           --container-cache-utilisation 'amend' \
           --download-configuration 'yes'
 

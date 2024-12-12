@@ -6,12 +6,5 @@ tasks:
       nextflow self-update
 
 vscode:
-  extensions: # based on nf-core.nf-core-extensionpack
-    #- esbenp.prettier-vscode # Markdown/CommonMark linting and style checking for Visual Studio Code
-    - EditorConfig.EditorConfig # override user/workspace settings with settings found in .editorconfig files
-    - Gruntfuggly.todo-tree # Display TODO and FIXME in a tree view in the activity bar
-    - mechatroner.rainbow-csv # Highlight columns in csv files in different colors
-    - nextflow.nextflow # Nextflow syntax highlighting
-    - oderwat.indent-rainbow # Highlight indentation level
-    - streetsidesoftware.code-spell-checker # Spelling checker for source code
-    - charliermarsh.ruff # Code linter Ruff
+  extensions:
+    - nf-core.nf-core-extensionpack # https://github.com/nf-core/vscode-extensionpack

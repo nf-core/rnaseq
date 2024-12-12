@@ -41,58 +41,6 @@ nextflow_function {
         }
     }
 
-    test("Test Function workflowCitation") {
-
-        function "workflowCitation"
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-    }
-
-    test("Test Function nfCoreLogo") {
-
-        function "nfCoreLogo"
-
-        when {
-            function {
-                """
-                input[0] = false
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-    }
-
-    test("Test Function dashedLine") {
-
-        function "dashedLine"
-
-        when {
-            function {
-                """
-                input[0] = false
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert function.success },
-                { assert snapshot(function.result).match() }
-            )
-        }
-    }
-
     test("Test Function without logColours") {
 
         function "logColours"
@@ -128,6 +76,50 @@ nextflow_function {
             assertAll(
                 { assert function.success },
                 { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function getSingleReport with a single file") {
+        function "getSingleReport"
+
+        when {
+            function {
+                """
+                input[0] = file(params.modules_testdata_base_path + '/generic/tsv/test.tsv', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result.contains("test.tsv") }
+            )
+        }
+    }
+
+    test("Test Function getSingleReport with multiple files") {
+        function "getSingleReport"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    file(params.modules_testdata_base_path + '/generic/tsv/test.tsv', checkIfExists: true),
+                    file(params.modules_testdata_base_path + '/generic/tsv/network.tsv', checkIfExists: true),
+                    file(params.modules_testdata_base_path + '/generic/tsv/expression.tsv', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result.contains("test.tsv") },
+                { assert !function.result.contains("network.tsv") },
+                { assert !function.result.contains("expression.tsv") }
             )
         }
     }

@@ -15,10 +15,10 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { ALIGN_STAR                           } from '../../subworkflows/local/align_star'
-include { QUANTIFY_RSEM                        } from '../../subworkflows/local/quantify_rsem'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR  } from '../../subworkflows/local/bam_dedup_umi'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT } from '../../subworkflows/local/bam_dedup_umi'
+include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
+include { QUANTIFY_RSEM                         } from '../../subworkflows/local/quantify_rsem'
+include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR   } from '../../subworkflows/local/bam_dedup_umi'
+include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/local/bam_dedup_umi'
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'

@@ -2,13 +2,14 @@
 // BAM deduplication with UMI processing
 //
 
-include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME       } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME        } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME              } from '../../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
-include { BAM_SORT_STATS_SAMTOOLS                            } from '../../../subworkflows/nf-core/bam_sort_stats_samtools'
-include { UMITOOLS_PREPAREFORRSEM                            } from '../../../modules/nf-core/umitools/prepareforrsem'
-include { SAMTOOLS_SORT                                      } from '../../../modules/nf-core/samtools/sort/main'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME } from '../bam_dedup_stats_samtools_umicollapse'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME       } from '../bam_dedup_stats_samtools_umitools'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME        } from '../bam_dedup_stats_samtools_umicollapse'
+include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME              } from '../bam_dedup_stats_samtools_umitools'
+include { BAM_SORT_STATS_SAMTOOLS                                                                    } from '../bam_sort_stats_samtools'
+
+include { UMITOOLS_PREPAREFORRSEM  } from '../../../modules/nf-core/umitools/prepareforrsem'
+include { SAMTOOLS_SORT            } from '../../../modules/nf-core/samtools/sort/main'
 
 workflow BAM_DEDUP_UMI {
     take:
@@ -119,13 +120,13 @@ workflow BAM_DEDUP_UMI {
         .mix(UMITOOLS_PREPAREFORRSEM.out.versions)
 
     emit:
-    bam                = UMI_DEDUP_GENOME.out.bam                                             // channel: [ val(meta), path(bam) ]
-    bai                = bam_csi_index ? UMI_DEDUP_GENOME.out.csi : UMI_DEDUP_GENOME.out.bai  // channel: [ val(meta), path(bai) ]
-    dedup_log          = ch_dedup_log                                                         // channel: [ val(meta), path(log) ]
-    stats              = UMI_DEDUP_GENOME.out.stats.mix(UMI_DEDUP_TRANSCRIPTOME.out.stats)
-    flagstat           = UMI_DEDUP_GENOME.out.flagstat.mix(UMI_DEDUP_TRANSCRIPTOME.out.flagstat)
-    idxstats           = UMI_DEDUP_GENOME.out.idxstats.mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats)
-    multiqc_files      = ch_multiqc_files
-    transcriptome_bam  = ch_dedup_transcriptome_bam     // channel: [ val(meta), path(bam) ]
-    versions            = ch_versions                   // channel: [ path(versions.yml) ]
+    bam                = UMI_DEDUP_GENOME.out.bam                                                // channel: [ val(meta), path(bam) ]
+    bai                = bam_csi_index ? UMI_DEDUP_GENOME.out.csi : UMI_DEDUP_GENOME.out.bai     // channel: [ val(meta), path(bai) ]
+    dedup_log          = ch_dedup_log                                                            // channel: [ val(meta), path(log) ]
+    stats              = UMI_DEDUP_GENOME.out.stats.mix(UMI_DEDUP_TRANSCRIPTOME.out.stats)       // channel: [ val(meta), path(stats)]
+    flagstat           = UMI_DEDUP_GENOME.out.flagstat.mix(UMI_DEDUP_TRANSCRIPTOME.out.flagstat) // channel: [ val(meta), path(flagstat)]
+    idxstats           = UMI_DEDUP_GENOME.out.idxstats.mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats) // channel: [ val(meta), path(idxstats)]
+    multiqc_files      = ch_multiqc_files                                                        // channel: file
+    transcriptome_bam  = ch_dedup_transcriptome_bam                                              // channel: [ val(meta), path(bam) ]
+    versions            = ch_versions                                                            // channel: [ path(versions.yml) ]
 }

@@ -17,8 +17,8 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
 include { QUANTIFY_RSEM                         } from '../../subworkflows/local/quantify_rsem'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR   } from '../../subworkflows/local/bam_dedup_umi'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/local/bam_dedup_umi'
+include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR   } from '../../subworkflows/nf-core/bam_dedup_umi'
+include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/nf-core/bam_dedup_umi'
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
@@ -57,10 +57,6 @@ include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/ut
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
 include { BAM_RSEQC                        } from '../../subworkflows/nf-core/bam_rseqc'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME } from '../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE as BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME } from '../../subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME        } from '../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
-include { BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS as BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME } from '../../subworkflows/nf-core/bam_dedup_stats_samtools_umitools'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'

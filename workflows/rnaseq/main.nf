@@ -354,7 +354,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
         } else {
-        
+
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise
             ch_multiqc_files = ch_multiqc_files

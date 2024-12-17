@@ -19,6 +19,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1463](https://github.com/nf-core/rnaseq/pull/1463) - Move channel operations outside of the onComplete() block
 - [PR #1467](https://github.com/nf-core/rnaseq/pull/1467) - Add test suite for UMI handling functionality
 - [PR #1466](https://github.com/nf-core/rnaseq/pull/1466) - Factor out UMI handling
+- [PR #1469](https://github.com/nf-core/rnaseq/pull/1469) - Minor docs fix
 
 ### Software dependencies
 

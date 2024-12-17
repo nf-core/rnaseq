@@ -1,12 +1,13 @@
 {
     "sarscov2_bam_bai": {
         "content": [
+            "b7be15ac7aae194b04bdbb56f3534495",
             [
                 [
                     {
                         "id": "test"
                     },
-                    "test.stats:md5,84891a894010aeb882c4092db9248d2c"
+                    "test.stats:md5,41ba57a9b90b54587e7d154e5405ea5e"
                 ]
             ],
             [
@@ -14,7 +15,7 @@
                     {
                         "id": "test"
                     },
-                    "test.flagstat:md5,0bb716e40fae381b97484b58e0b16efe"
+                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
                 ]
             ],
             [
@@ -22,7 +23,7 @@
                     {
                         "id": "test"
                     },
-                    "test.idxstats:md5,1adb27b52d4d64b826f48b59d61dcd4d"
+                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
                 ]
             ],
             [
@@ -34,10 +35,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-09-16T08:04:23.444693448"
+        "timestamp": "2024-11-25T17:23:13.841219"
     },
     "sarscov2_bam_bai - stub": {
         "content": [

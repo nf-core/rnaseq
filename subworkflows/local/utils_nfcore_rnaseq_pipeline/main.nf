@@ -116,6 +116,8 @@ workflow PIPELINE_COMPLETION {
             id, status -> pass_strand_check[id] = status
         }
 
+    def multiqc_report_list = multiqc_report.toList()
+
     //
     // Completion email and summary
     //
@@ -128,7 +130,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report.toList()
+                multiqc_report_list.getVal()
             )
         }
 
@@ -214,6 +216,10 @@ def validateInputParameters() {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")
         }
+    }
+
+    if (params.with_umi && params.umi_dedup_tool == "umicollapse" && params.umitools_grouping_method !in ['directional', 'adjacency', 'cluster']) {
+        error("UMI grouping method '${params.umitools_grouping_method}' unsupported for umicollapse, supported methods are 'cluster', 'adjacency' and 'directional'")
     }
 
     if (params.skip_alignment) {

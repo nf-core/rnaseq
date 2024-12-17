@@ -1,0 +1,181 @@
+name: "bam_dedup_umi"
+description: BAM deduplication with UMI processing for both genome and transcriptome alignments
+keywords:
+  - deduplication
+  - UMI
+  - BAM
+  - genome
+  - transcriptome
+  - umicollapse
+  - umitools
+
+components:
+  - umitools/prepareforrsem
+  - samtools/sort
+  - bam_dedup_stats_samtools_umicollapse
+  - bam_dedup_stats_samtools_umitools
+  - bam_sort_stats_samtools
+
+input:
+  - ch_genome_bam:
+      description: Channel with genome BAM files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: BAM file
+            pattern: "*.bam"
+        - bai:
+            type: file
+            description: BAM index file
+            pattern: "*.bai"
+  - ch_fasta:
+      description: Channel with genome FASTA file
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Genome FASTA file
+            pattern: "*.{fa,fasta}"
+  - umi_dedup_tool:
+      description: UMI deduplication tool to use
+      structure:
+        - value:
+            type: string
+            description: Either 'umicollapse' or 'umitools'
+  - umitools_dedup_stats:
+      description: Whether to generate UMI-tools deduplication stats
+      structure:
+        - value:
+            type: boolean
+            description: True or False
+  - bam_csi_index:
+      description: Whether to generate CSI index
+      structure:
+        - value:
+            type: boolean
+            description: True or False
+  - ch_transcriptome_bam:
+      description: Channel with transcriptome BAM files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: BAM file
+            pattern: "*.bam"
+  - ch_transcript_fasta:
+      description: Channel with transcript FASTA file
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Transcript FASTA file
+            pattern: "*.{fa,fasta}"
+
+output:
+  - bam:
+      description: Channel containing deduplicated genome BAM files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: Deduplicated BAM file
+            pattern: "*.bam"
+  - bai:
+      description: Channel containing indexed BAM (BAI) files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bai:
+            type: file
+            description: BAM index file
+            pattern: "*.bai"
+  - csi:
+      description: Channel containing CSI files (if bam_csi_index is true)
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - csi:
+            type: file
+            description: CSI index file
+            pattern: "*.csi"
+  - dedup_log:
+      description: Channel containing deduplication log files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - log:
+            type: file
+            description: Deduplication log file
+            pattern: "*.log"
+  - stats:
+      description: Channel containing BAM statistics files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - stats:
+            type: file
+            description: BAM statistics file
+            pattern: "*.stats"
+  - flagstat:
+      description: Channel containing flagstat files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - flagstat:
+            type: file
+            description: Flagstat file
+            pattern: "*.flagstat"
+  - idxstats:
+      description: Channel containing idxstats files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - idxstats:
+            type: file
+            description: Idxstats file
+            pattern: "*.idxstats"
+  - multiqc_files:
+      description: Channel containing files for MultiQC
+      structure:
+        - file:
+            type: file
+            description: File for MultiQC
+  - transcriptome_bam:
+      description: Channel containing deduplicated transcriptome BAM files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: Deduplicated transcriptome BAM file
+            pattern: "*.bam"
+  - versions:
+      description: Channel containing software versions file
+      structure:
+        - versions:
+            type: file
+            description: File containing versions of the software used
+            pattern: "versions.yml"
+
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

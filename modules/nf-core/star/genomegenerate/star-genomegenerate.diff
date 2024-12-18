@@ -1,4 +1,6 @@
 Changes in module 'nf-core/star/genomegenerate'
+'modules/nf-core/star/genomegenerate/environment.yml' is unchanged
+'modules/nf-core/star/genomegenerate/meta.yml' is unchanged
 Changes in 'star/genomegenerate/main.nf':
 --- modules/nf-core/star/genomegenerate/main.nf
 +++ modules/nf-core/star/genomegenerate/main.nf
@@ -7,16 +9,15 @@ Changes in 'star/genomegenerate/main.nf':
  
      conda "${moduleDir}/environment.yml"
 -    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
--        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b4/b425bc2a95806d878993f9a66dae3ae80ac2dafff4c208c5ae01b7a90a32fa91/data' :
--        'community.wave.seqera.io/library/star_samtools_htslib_gawk:10c6e8c834460019' }"
-+    container 'nf-core/star_samtools_htslib_gawk:10c6e8c834460019'
+-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/10/101ea47973178f85ff66a34de6a7462aaf99d947d3924c27ce8a2d5a63009065/data' :
+-        'community.wave.seqera.io/library/htslib_samtools_star_gawk:311d422a50e6d829' }"
++    container 'nf-core/htslib_samtools_star_gawk:311d422a50e6d829'
  
      input:
      tuple val(meta), path(fasta)
 
-'modules/nf-core/star/genomegenerate/meta.yml' is unchanged
-'modules/nf-core/star/genomegenerate/environment.yml' is unchanged
 'modules/nf-core/star/genomegenerate/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/star/genomegenerate/tests/tags.yml' is unchanged
 Changes in 'star/genomegenerate/tests/main.nf.test':
 --- modules/nf-core/star/genomegenerate/tests/main.nf.test
 +++ modules/nf-core/star/genomegenerate/tests/main.nf.test
@@ -32,5 +33,4 @@ Changes in 'star/genomegenerate/tests/main.nf.test':
      test("fasta_gtf") {
  
 
-'modules/nf-core/star/genomegenerate/tests/tags.yml' was removed
 ************************************************************

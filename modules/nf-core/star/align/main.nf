@@ -3,7 +3,7 @@ process STAR_ALIGN {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container 'nf-core/star_samtools_htslib_gawk:10c6e8c834460019'
+    container 'nf-core/htslib_samtools_star_gawk:311d422a50e6d829'
 
     input:
     tuple val(meta), path(reads, stageAs: "input*/*")

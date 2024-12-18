@@ -3,7 +3,7 @@ channels:
   - bioconda
 
 dependencies:
-  - bioconda::htslib=1.20
-  - bioconda::samtools=1.20
+  - bioconda::htslib=1.21
+  - bioconda::samtools=1.21
   - bioconda::star=2.7.11b
   - conda-forge::gawk=5.1.0

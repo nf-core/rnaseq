@@ -74,7 +74,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 If multiple libraries/runs have been provided for the same sample in the input samplesheet (e.g. to increase sequencing depth) then these will be merged at the very beginning of the pipeline in order to have consistent sample naming throughout the pipeline. Please refer to the [usage documentation](https://nf-co.re/rnaseq/usage#samplesheet-input) to see how to specify these samples in the input samplesheet.
 
-# fq lint
+### fq lint
 
 <details markdown="1">
 <summary>Output files</summary>

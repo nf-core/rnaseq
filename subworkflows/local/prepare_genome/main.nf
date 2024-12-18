@@ -233,16 +233,18 @@ workflow PREPARE_GENOME {
     if ('sortmerna' in prepare_tool_indices) {
         ribo_db = file(sortmerna_fasta_list)
 
+        // SortMeRNA needs the rRNAs even if we're providing the index
+        ch_rrna_fastas = Channel.from(ribo_db.readLines())
+            .map { row -> file(row, checkIfExists: true) }
+
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {
                 ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ( [ [:], sortmerna_index ] ).untar.map { it[1] }
                 ch_versions = ch_versions.mix(UNTAR_SORTMERNA_INDEX.out.versions)
             } else {
-                ch_sortmerna_index = Channel.value(file(sortmerna_index))
+                ch_sortmerna_index = Channel.value([[:], file(sortmerna_index)])
             }
         } else {
-            ch_rrna_fastas = Channel.from(ribo_db.readLines())
-                .map { row -> file(row, checkIfExists: true) }
 
             SORTMERNA_INDEX (
                 Channel.of([ [],[] ]),

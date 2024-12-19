@@ -3,14 +3,14 @@
         "content": [
             "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]",
             [
-                "versions.yml:md5,14b05d04c9eca568e9ed4888aaf26fa6"
+                "versions.yml:md5,0c6c5fab50cc8601f9072268a2f49aad"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-19T20:37:47.410432728"
+        "timestamp": "2024-12-11T16:29:40.748676908"
     },
     "fasta_gtf_stub": {
         "content": [
@@ -41,7 +41,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,14b05d04c9eca568e9ed4888aaf26fa6"
+                    "versions.yml:md5,0c6c5fab50cc8601f9072268a2f49aad"
                 ],
                 "index": [
                     [
@@ -69,15 +69,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,14b05d04c9eca568e9ed4888aaf26fa6"
+                    "versions.yml:md5,0c6c5fab50cc8601f9072268a2f49aad"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-19T20:38:09.165234795"
+        "timestamp": "2024-12-11T16:30:11.024076742"
     },
     "fasta_stub": {
         "content": [
@@ -101,7 +101,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,14b05d04c9eca568e9ed4888aaf26fa6"
+                    "versions.yml:md5,0c6c5fab50cc8601f9072268a2f49aad"
                 ],
                 "index": [
                     [
@@ -122,27 +122,27 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,14b05d04c9eca568e9ed4888aaf26fa6"
+                    "versions.yml:md5,0c6c5fab50cc8601f9072268a2f49aad"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-19T20:38:19.530862664"
+        "timestamp": "2024-12-11T16:30:22.674364031"
     },
     "fasta": {
         "content": [
             "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, genomeParameters.txt]",
             [
-                "versions.yml:md5,14b05d04c9eca568e9ed4888aaf26fa6"
+                "versions.yml:md5,0c6c5fab50cc8601f9072268a2f49aad"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-10-19T20:37:58.667436398"
+        "timestamp": "2024-12-11T16:29:57.958812354"
     }
 }

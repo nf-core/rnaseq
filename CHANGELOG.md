@@ -23,6 +23,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1469](https://github.com/nf-core/rnaseq/pull/1469) - Minor docs fix
 - [PR #1459](https://github.com/nf-core/rnaseq/pull/1466) - Remove reference to unused "skip_sample_count" value in email templates
 - [PR #1471](https://github.com/nf-core/rnaseq/pull/1471) - Fix prepare_genome subworkflow for sortmerna
+- [PR #1473](https://github.com/nf-core/rnaseq/pull/1473) - Bump STAR modules
 
 ### Software dependencies
 

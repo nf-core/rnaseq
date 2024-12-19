@@ -3,15 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# 3.18.0 - 2024-12-19
+# 3.18.0dev - xxxx-xx-xx
 
 ### Credits
 
 Special thanks to the following for their contributions to the release:
 
 - [Caitlin Winkler](https://github.com/oligomyeggo)
-- [Jonathan Manning](https://github.com/pinin4fjords)
-- [Maxime Garcia](https://github.com/maxulysse)
 - [Siddhartha Bagaria](https://github.com/siddharthab)
 
 ### Enhancements & fixes
@@ -26,12 +24,6 @@ Special thanks to the following for their contributions to the release:
 - [PR #1459](https://github.com/nf-core/rnaseq/pull/1466) - Remove reference to unused "skip_sample_count" value in email templates
 - [PR #1471](https://github.com/nf-core/rnaseq/pull/1471) - Fix prepare_genome subworkflow for sortmerna
 - [PR #1473](https://github.com/nf-core/rnaseq/pull/1473) - Bump STAR modules
-
-### Parameters
-
-| Old parameter                        | New parameter    |
-| ------------------------------------ | ---------------- |
-|                                      | `--skip_linting` |
 
 ### Software dependencies
 
@@ -122,11 +114,14 @@ Special thanks to the following for their contributions to the release:
 
 ### Parameters
 
-| Old parameter | New parameter         |
-| ------------- | --------------------- |
-|               | `--skip_linting`      |
-|               | `--extra_fqlint_args` |
-|               | `--umi_dedup_tool`    |
+| Old parameter                        | New parameter   |
+| ------------------------------------ | --------------- |
+|                                      | `--help_full`   |
+|                                      | `--show_hidden` |
+| `--validationFailUnrecognisedParams` |                 |
+| `--validationLenientMode`            |                 |
+| `--validationSchemaIgnoreParams`     |                 |
+| `--validationShowHiddenParams`       |                 |
 
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 >

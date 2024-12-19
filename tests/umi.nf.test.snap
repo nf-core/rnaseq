@@ -100,12 +100,12 @@
                 },
                 "STAR_ALIGN": {
                     "star": "2.7.11b",
-                    "samtools": 1.2,
+                    "samtools": 1.21,
                     "gawk": "5.1.0"
                 },
                 "STAR_GENOMEGENERATE": {
                     "star": "2.7.11b",
-                    "samtools": 1.2,
+                    "samtools": 1.21,
                     "gawk": "5.1.0"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -2733,7 +2733,7 @@
                 },
                 "STAR_GENOMEGENERATE": {
                     "star": "2.7.11b",
-                    "samtools": 1.2,
+                    "samtools": 1.21,
                     "gawk": "5.1.0"
                 },
                 "TRIMGALORE": {

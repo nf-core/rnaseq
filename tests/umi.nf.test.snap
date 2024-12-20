@@ -1508,7 +1508,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2024-12-19T21:54:27.627773754"
+        "timestamp": "2024-12-20T00:02:04.611696704"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -2749,8 +2749,11 @@
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [
-            31,
+            32,
             {
+                "BBMAP_BBSPLIT": {
+                    "bbmap": 39.1
+                },
                 "CAT_FASTQ": {
                     "cat": 9.5
                 },
@@ -2840,36 +2843,20 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt",
                 "umitools",
                 "umitools/RAP1_IAA_30M_REP1.umi_extract.log",
-                "umitools/RAP1_IAA_30M_REP1.umi_extract_1.fastq.gz",
-                "umitools/RAP1_IAA_30M_REP1.umi_extract_2.fastq.gz",
-                "umitools/RAP1_UNINDUCED_REP1.umi_extract.fastq.gz",
                 "umitools/RAP1_UNINDUCED_REP1.umi_extract.log",
-                "umitools/RAP1_UNINDUCED_REP2.umi_extract.fastq.gz",
                 "umitools/RAP1_UNINDUCED_REP2.umi_extract.log",
                 "umitools/WT_REP1.umi_extract.log",
-                "umitools/WT_REP1.umi_extract_1.fastq.gz",
-                "umitools/WT_REP1.umi_extract_2.fastq.gz",
-                "umitools/WT_REP2.umi_extract.log",
-                "umitools/WT_REP2.umi_extract_1.fastq.gz",
-                "umitools/WT_REP2.umi_extract_2.fastq.gz"
+                "umitools/WT_REP2.umi_extract.log"
             ],
             [
                 "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "RAP1_IAA_30M_REP1.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "RAP1_IAA_30M_REP1.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "RAP1_UNINDUCED_REP1.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "RAP1_UNINDUCED_REP2.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "WT_REP1.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "WT_REP1.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "WT_REP2.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "WT_REP2.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2024-12-19T21:55:24.38516136"
+        "timestamp": "2024-12-19T23:28:01.570835895"
     }
 }

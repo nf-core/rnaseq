@@ -1,3 +1,4 @@
+fq_lint/*/*.fq_lint.txt
 bbsplit/*.stats.txt
 fastqc/*/*.{html,zip}
 hisat2/log/*.hisat2.summary.log
@@ -12,6 +13,7 @@ star_rsem/*.{genes,isoforms}.results
 star_rsem/log/*.log
 star_salmon/log/*.Log.{final.out,out,progress.out}
 trimgalore/*fastq.gz_trimming_report.txt
+umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/*.{bam,bam.bai}
 {hisat2,star_rsem,star_salmon}/bigwig/*.{forward,reverse}.bigWig
 {hisat2,star_rsem,star_salmon}/dupradar/box_plot/*_duprateExpBoxplot.pdf
@@ -30,6 +32,7 @@ trimgalore/*fastq.gz_trimming_report.txt
 {hisat2,star_rsem,star_salmon}/stringtie/*.ballgown/t_data.ctab
 {hisat2,star_rsem,star_salmon}/stringtie/*.gene.abundance.txt
 {hisat2,star_rsem,star_salmon}/stringtie/*.{coverage,transcripts}.gtf
+{hisat2,star_rsem,star_salmon}/{umitools,umicollapse}/{genomic,transcriptomic}_dedup_log/*.log
 {multiqc,multiqc/**}/multiqc_report.html
 {multiqc,multiqc/**}/multiqc_report_data/fastqc_{raw,trimmed}_top_overrepresented_sequences_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/hisat2_pe_plot.txt
@@ -80,6 +83,8 @@ trimgalore/*fastq.gz_trimming_report.txt
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.sample.dists.txt
 {salmon,star_rsem,star_salmon}/deseq2_qc/size_factors/*.txt
 {salmon,star_rsem,star_salmon}/deseq2_qc/size_factors/deseq2.size_factors.RData
+{salmon,star_rsem,star_salmon}/umitools/{genomic,transcriptomic}_dedup_log/*
+{salmon,star_rsem,star_salmon}/umitools/prepare_for_salmon_log/*
 {salmon,star_salmon}/*/aux_info/fld.gz
 {salmon,star_salmon}/*/aux_info/meta_info.json
 {salmon,star_salmon}/*/libParams/flenDist.txt

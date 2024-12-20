@@ -4,6 +4,11 @@ nextflow_process {
     script "../main.nf"
     process "UMITOOLS_DEDUP"
 
+    tag "modules"
+    tag "modules_nfcore"
+    tag "umitools"
+    tag "umitools/dedup"
+
     test("se - no stats") {
         config "./nextflow.config"
 
@@ -14,8 +19,8 @@ nextflow_process {
 
                 input[0] = [
                     [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam.bai", checkIfExists: true)
                 ]
                 input[1] = get_output_stats
                 """
@@ -43,8 +48,8 @@ nextflow_process {
 
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
                 ]
                 input[1] = get_output_stats
                 """
@@ -56,7 +61,7 @@ nextflow_process {
                 { assert process.success },
                 { assert path("${process.out.log[0][1]}").exists() },
                 { assert snapshot(
-                    process.out.bam,
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
                     process.out.versions).match() }
             )
         }
@@ -72,8 +77,8 @@ nextflow_process {
 
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
                 ]
                 input[1] = get_output_stats
                 """
@@ -85,7 +90,7 @@ nextflow_process {
                 { assert process.success },
                 { assert path("${process.out.log[0][1]}").exists() },
                 { assert snapshot(
-                    process.out.bam,
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
                     process.out.tsv_edit_distance,
                     process.out.tsv_per_umi,
                     process.out.tsv_umi_per_position,
@@ -107,8 +112,8 @@ nextflow_process {
 
                 input[0] = [
                     [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam.bai", checkIfExists: true)
                 ]
                 input[1] = get_output_stats
                 """
@@ -136,8 +141,8 @@ nextflow_process {
 
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
                 ]
                 input[1] = get_output_stats
                 """
@@ -165,8 +170,8 @@ nextflow_process {
 
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
                 ]
                 input[1] = get_output_stats
                 """

@@ -28,8 +28,12 @@ env:
   NXF_ANSI_LOG: false
 
 jobs:
-  download:
+  configure:
     runs-on: ubuntu-latest
+    outputs:
+      REPO_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPO_LOWERCASE }}
+      REPOTITLE_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPOTITLE_LOWERCASE }}
+      REPO_BRANCH: ${{ steps.get_repo_properties.outputs.REPO_BRANCH }}
     steps:
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v2
@@ -53,22 +57,27 @@ jobs:
           pip install git+https://github.com/nf-core/tools.git@dev
 
       - name: Get the repository name and current branch set as environment variable
+        id: get_repo_properties
         run: |
-          echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-          echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> ${GITHUB_ENV}
-          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> ${GITHUB_ENV}
+          echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> "$GITHUB_OUTPUT"
+          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> "$GITHUB_OUTPUT"
 
       - name: Make a cache directory for the container images
         run: |
           mkdir -p ./singularity_container_images
 
+  download:
+    runs-on: ubuntu-latest
+    needs: configure
+    steps:
       - name: Download the pipeline
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
         run: |
-          nf-core pipelines download ${{ env.REPO_LOWERCASE }} \
-          --revision ${{ env.REPO_BRANCH }} \
-          --outdir ./${{ env.REPOTITLE_LOWERCASE }} \
+          nf-core pipelines download ${{ needs.configure.outputs.REPO_LOWERCASE }} \
+          --revision ${{ needs.configure.outputs.REPO_BRANCH }} \
+          --outdir ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }} \
           --compress "none" \
           --container-system 'singularity' \
           --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io/library/" \
@@ -76,14 +85,14 @@ jobs:
           --download-configuration 'yes'
 
       - name: Inspect download
-        run: tree ./${{ env.REPOTITLE_LOWERCASE }}
+        run: tree ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }}
 
       - name: Count the downloaded number of container images
         id: count_initial
         run: |
           image_count=$(ls -1 ./singularity_container_images | wc -l | xargs)
           echo "Initial container image count: $image_count"
-          echo "IMAGE_COUNT_INITIAL=$image_count" >> ${GITHUB_ENV}
+          echo "IMAGE_COUNT_INITIAL=$image_count" >> "$GITHUB_OUTPUT"
 
       - name: Run the downloaded pipeline (stub)
         id: stub_run_pipeline
@@ -91,27 +100,27 @@ jobs:
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
           NXF_SINGULARITY_HOME_MOUNT: true
-        run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results
+        run: nextflow run ./${{needs.configure.outputs.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ needs.configure.outputs.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results
       - name: Run the downloaded pipeline (stub run not supported)
         id: run_pipeline
-        if: ${{ job.steps.stub_run_pipeline.status == failure() }}
+        if: ${{ steps.stub_run_pipeline.outcome == 'failure' }}
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
           NXF_SINGULARITY_HOME_MOUNT: true
-        run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -profile test,singularity --outdir ./results
+        run: nextflow run ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ needs.configure.outputs.REPO_BRANCH }}) -profile test,singularity --outdir ./results
 
       - name: Count the downloaded number of container images
         id: count_afterwards
         run: |
           image_count=$(ls -1 ./singularity_container_images | wc -l | xargs)
           echo "Post-pipeline run container image count: $image_count"
-          echo "IMAGE_COUNT_AFTER=$image_count" >> ${GITHUB_ENV}
+          echo "IMAGE_COUNT_AFTER=$image_count" >> "$GITHUB_OUTPUT"
 
       - name: Compare container image counts
         run: |
-          if [ "${{ env.IMAGE_COUNT_INITIAL }}" -ne "${{ env.IMAGE_COUNT_AFTER }}" ]; then
-            initial_count=${{ env.IMAGE_COUNT_INITIAL }}
-            final_count=${{ env.IMAGE_COUNT_AFTER }}
+          if [ "${{ steps.count_initial.outputs.IMAGE_COUNT_INITIAL }}" -ne "${{ steps.count_afterwards.outputs.IMAGE_COUNT_AFTER }}" ]; then
+            initial_count=${{ steps.count_initial.outputs.IMAGE_COUNT_INITIAL }}
+            final_count=${{ steps.count_afterwards.outputs.IMAGE_COUNT_AFTER }}
             difference=$((final_count - initial_count))
             echo "$difference additional container images were \n downloaded at runtime . The pipeline has no support for offline runs!"
             tree ./singularity_container_images

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements & fixes
 
+- [PR #1480](https://github.com/nf-core/rnaseq/pull/1480) - Bump versions after release 3.18.0
+
 # 3.18.0 - 2024-12-19
 
 ### Credits

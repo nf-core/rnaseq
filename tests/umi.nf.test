@@ -15,6 +15,7 @@ nextflow_pipeline {
                 umi_dedup_tool = 'umicollapse'
                 aligner = 'hisat2'
                 outdir = "$outputDir"
+                save_umi_intermeds = true
             }
         }
 
@@ -49,6 +50,7 @@ nextflow_pipeline {
                 umitools_dedup_stats = true
                 skip_bbsplit = true
                 outdir = "$outputDir"
+                save_umi_intermeds = true
             }
         }
 

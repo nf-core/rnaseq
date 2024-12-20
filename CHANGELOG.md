@@ -27,6 +27,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1471](https://github.com/nf-core/rnaseq/pull/1471) - Fix prepare_genome subworkflow for sortmerna
 - [PR #1473](https://github.com/nf-core/rnaseq/pull/1473) - Bump STAR modules
 - [PR #1474](https://github.com/nf-core/rnaseq/pull/1474) - Bump versions to 3.18.0
+- [PR #1475](https://github.com/nf-core/rnaseq/pull/1475) - Fix log publishing around umitools/ umicollapse
 
 ## Parameters
 

@@ -32,7 +32,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/stringtie/*.ballgown/t_data.ctab
 {hisat2,star_rsem,star_salmon}/stringtie/*.gene.abundance.txt
 {hisat2,star_rsem,star_salmon}/stringtie/*.{coverage,transcripts}.gtf
-{hisat2,star_rsem,star_salmon}/umitools/genomic_dedup_log/*_UMICollapse.log
+{hisat2,star_rsem,star_salmon}/{umitools,umicollapse}/{genomic,transcriptomic}_dedup_log/*.log
 {multiqc,multiqc/**}/multiqc_report.html
 {multiqc,multiqc/**}/multiqc_report_data/fastqc_{raw,trimmed}_top_overrepresented_sequences_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/hisat2_pe_plot.txt

@@ -227,13 +227,13 @@
                     },
                     "star/align": {
                         "branch": "master",
-                        "git_sha": "6a367612c2c27aa659293c656afa764361223db4",
+                        "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/star/align/star-align.diff"
                     },
                     "star/genomegenerate": {
                         "branch": "master",
-                        "git_sha": "6a367612c2c27aa659293c656afa764361223db4",
+                        "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/star/genomegenerate/star-genomegenerate.diff"
                     },

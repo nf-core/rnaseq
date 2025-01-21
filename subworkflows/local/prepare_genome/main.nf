@@ -1,5 +1,5 @@
 //
-// Example: Grouping FASTA-dependent steps while preserving "index-provided" logic
+// Uncompress and prepare reference genome files
 //
 
 include { GUNZIP as GUNZIP_FASTA            } from '../../../modules/nf-core/gunzip'

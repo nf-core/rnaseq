@@ -54,15 +54,15 @@ workflow PREPARE_GENOME {
     hisat2_index             // directory: /path/to/hisat2/index/
     bbsplit_index            // directory: /path/to/bbsplit/index/
     sortmerna_index          // directory: /path/to/sortmerna/index/
-    gencode                  // boolean
-    featurecounts_group_type // string
-    aligner                  // string: 'star_salmon', 'star_rsem', 'hisat2'
-    pseudo_aligner           // string (e.g. 'salmon')
-    skip_gtf_filter          // boolean
-    skip_bbsplit             // boolean
-    skip_sortmerna           // boolean
-    skip_alignment           // boolean
-    skip_pseudo_alignment    // boolean
+    gencode                  // boolean: whether the genome is from GENCODE
+    featurecounts_group_type // string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts
+    aligner                  // string: Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'
+    pseudo_aligner           // string: Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'
+    skip_gtf_filter          // boolean: Skip filtering of GTF for valid scaffolds and/ or transcript IDs
+    skip_bbsplit             // boolean: Skip BBSplit for removal of non-reference genome reads
+    skip_sortmerna           // boolean: Skip sortmerna for removal of reads mapping to sequences in sortmerna_fasta_list
+    skip_alignment           // boolean: Skip all of the alignment-based processes within the pipeline
+    skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
 
     main:
     // Versions collector

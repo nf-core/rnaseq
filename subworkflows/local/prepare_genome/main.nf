@@ -361,10 +361,7 @@ workflow PREPARE_GENOME {
     //------------------------------------------------------
     // 14) Salmon index -> can skip genome if transcript_fasta is enough
     //------------------------------------------------------
-    ch_salmon_index = Channel.empty()
-    //
-    // Uncompress Salmon index or generate from scratch if required
-    //
+
     ch_salmon_index = Channel.empty()
     if (salmon_index) {
         if (salmon_index.endsWith('.tar.gz')) {
@@ -375,28 +372,6 @@ workflow PREPARE_GENOME {
         }
     } else if ('salmon' in prepare_tool_indices) {
         if (ch_transcript_fasta && fasta_provided) {
-            // build from transcript FASTA + genome FASTA
-            ch_salmon_index = SALMON_INDEX(ch_fasta, ch_transcript_fasta).index
-            ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
-        }
-        else if (ch_transcript_fasta) {
-            // some Salmon module can run with just a transcript FASTA
-            ch_salmon_index = SALMON_INDEX([], ch_transcript_fasta).index
-            ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
-        }
-    }
-
-    if ('salmon' in prepare_tool_indices) {
-        if (salmon_index) {
-            // use user-provided salmon index
-            if (salmon_index.endsWith('.tar.gz')) {
-                ch_salmon_index = UNTAR_SALMON_INDEX ([ [:], file(salmon_index, checkIfExists: true) ]).untar.map { it[1] }
-                ch_versions     = ch_versions.mix(UNTAR_SALMON_INDEX.out.versions)
-            } else {
-                ch_salmon_index = Channel.value(file(salmon_index, checkIfExists: true))
-            }
-        }
-        else if (ch_transcript_fasta && fasta_provided) {
             // build from transcript FASTA + genome FASTA
             ch_salmon_index = SALMON_INDEX(ch_fasta, ch_transcript_fasta).index
             ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)

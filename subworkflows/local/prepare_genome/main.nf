@@ -74,7 +74,7 @@ workflow PREPARE_GENOME {
     ch_gtf = Channel.empty()
     if (gtf) {
         if (gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ([ [:], file(gtf) ]).gunzip.map { it[1] }.first()
+            ch_gtf      = GUNZIP_GTF ([ [:], file(gtf) ]).gunzip.map { it[1] }
             ch_versions = ch_versions.mix(GUNZIP_GTF.out.versions)
         } else {
             ch_gtf = Channel.value(file(gtf))
@@ -82,12 +82,12 @@ workflow PREPARE_GENOME {
     } else if (gff) {
         def ch_gff
         if (gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ([ [:], file(gff) ]).gunzip.first()
+            ch_gff      = GUNZIP_GFF ([ [:], file(gff) ]).gunzip
             ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
         } else {
             ch_gff = Channel.value(file(gff)).map { [ [:], it ] }
         }
-        ch_gtf      = GFFREAD(ch_gff, []).gtf.map { it[1] }.first()
+        ch_gtf      = GFFREAD(ch_gff, []).gtf.map { it[1] }
         ch_versions = ch_versions.mix(GFFREAD.out.versions)
     }
 
@@ -252,7 +252,7 @@ workflow PREPARE_GENOME {
         // We always need the rRNA FASTAs
         def ribo_db = file(sortmerna_fasta_list)
         ch_rrna_fastas = Channel.from(ribo_db.readLines())
-                              .map { row -> file(row) }
+            .map { row -> file(row) }
 
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {

@@ -407,20 +407,20 @@ workflow PREPARE_GENOME {
     // 16) Emit channels
     //------------------
     emit:
-    fasta            = ch_fasta
-    gtf              = ch_gtf
-    fai              = ch_fai
-    gene_bed         = ch_gene_bed
-    transcript_fasta = ch_transcript_fasta
-    chrom_sizes      = ch_chrom_sizes
-    splicesites      = ch_splicesites
-    bbsplit_index    = ch_bbsplit_index
-    rrna_fastas      = ch_rrna_fastas
-    sortmerna_index  = ch_sortmerna_index
-    star_index       = ch_star_index
-    rsem_index       = ch_rsem_index
-    hisat2_index     = ch_hisat2_index
-    salmon_index     = ch_salmon_index
-    kallisto_index   = ch_kallisto_index
-    versions         = ch_versions.ifEmpty(null)
+    fasta            = ch_fasta                  // channel: path(genome.fasta)
+    gtf              = ch_gtf                    // channel: path(genome.gtf)
+    fai              = ch_fai                    // channel: path(genome.fai)
+    gene_bed         = ch_gene_bed               // channel: path(gene.bed)
+    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
+    chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
+    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
+    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    rrna_fastas      = ch_rrna_fastas            // channel: path(sortmerna_fasta_list)
+    sortmerna_index  = ch_sortmerna_index        // channel: path(sortmerna/index/)
+    star_index       = ch_star_index             // channel: path(star/index/)
+    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
+    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
+    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
+    kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

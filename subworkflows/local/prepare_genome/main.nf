@@ -135,7 +135,7 @@ workflow PREPARE_GENOME {
         }
 
         CUSTOM_CATADDITIONALFASTA(
-            ch_fasta.combine(ch_gtf).map { f, g -> [ [:], f, g ] },
+            ch_fasta.combine(ch_gtf).map { fasta, gtf -> [ [:], fasta, gtf ] },
             ch_add_fasta.map { [ [:], it ] },
             gencode ? "gene_type" : featurecounts_group_type
         )
@@ -224,11 +224,11 @@ workflow PREPARE_GENOME {
             // Build it from scratch if we have FASTA
             Channel
                 .from(file(bbsplit_fasta_list, checkIfExists: true))
-                .splitCsv()
-                .flatMap { id, fafile -> [ [ 'id', id ], [ 'fasta', file(fafile, checkIfExists: true) ] ] }
+                .splitCsv() // Read in 2 column csv file: short_name,path_to_fasta
+                .flatMap { id, fafile -> [ [ 'id', id ], [ 'fasta', file(fafile, checkIfExists: true) ] ] } // Flatten entries to be able to groupTuple by a common key
                 .groupTuple()
-                .map { it -> it[1] }
-                .collect { [ it ] }
+                .map { it -> it[1] } // Get rid of keys and keep grouped values
+                .collect { [ it ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module
                 .set { ch_bbsplit_fasta_list }
 
             ch_bbsplit_index = BBMAP_BBSPLIT(
@@ -362,6 +362,30 @@ workflow PREPARE_GENOME {
     // 14) Salmon index -> can skip genome if transcript_fasta is enough
     //------------------------------------------------------
     ch_salmon_index = Channel.empty()
+    //
+    // Uncompress Salmon index or generate from scratch if required
+    //
+    ch_salmon_index = Channel.empty()
+    if (salmon_index) {
+        if (salmon_index.endsWith('.tar.gz')) {
+            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.map { it[1] }
+            ch_versions     = ch_versions.mix(UNTAR_SALMON_INDEX.out.versions)
+        } else {
+            ch_salmon_index = Channel.value(file(salmon_index))
+        }
+    } else if ('salmon' in prepare_tool_indices) {
+        if (ch_transcript_fasta && fasta_provided) {
+            // build from transcript FASTA + genome FASTA
+            ch_salmon_index = SALMON_INDEX(ch_fasta, ch_transcript_fasta).index
+            ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
+        }
+        else if (ch_transcript_fasta) {
+            // some Salmon module can run with just a transcript FASTA
+            ch_salmon_index = SALMON_INDEX([], ch_transcript_fasta).index
+            ch_versions     = ch_versions.mix(SALMON_INDEX.out.versions)
+        }
+    }
+
     if ('salmon' in prepare_tool_indices) {
         if (salmon_index) {
             // use user-provided salmon index
@@ -388,18 +412,17 @@ workflow PREPARE_GENOME {
     // 15) Kallisto index -> only needs transcript FASTA
     //--------------------------------------------------
     ch_kallisto_index = Channel.empty()
-    if ('kallisto' in prepare_tool_indices) {
-        if (kallisto_index) {
-            if (kallisto_index.endsWith('.tar.gz')) {
-                ch_kallisto_index = UNTAR_KALLISTO_INDEX ([ [:], file(kallisto_index, checkIfExists: true) ]).untar
-                ch_versions       = ch_versions.mix(UNTAR_KALLISTO_INDEX.out.versions)
-            } else {
-                ch_kallisto_index = Channel.value([ [:], file(kallisto_index, checkIfExists: true) ])
-            }
+    if (kallisto_index) {
+        if (kallisto_index.endsWith('.tar.gz')) {
+            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar
+            ch_versions     = ch_versions.mix(UNTAR_KALLISTO_INDEX.out.versions)
+        } else {
+            ch_kallisto_index = Channel.value([[:], file(kallisto_index)])
         }
-        else if (ch_transcript_fasta) {
-            ch_kallisto_index = KALLISTO_INDEX(ch_transcript_fasta.map { [ [:], it ] }).index
-            ch_versions       = ch_versions.mix(KALLISTO_INDEX.out.versions)
+    } else {
+        if ('kallisto' in prepare_tool_indices) {
+            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map { [ [:], it] } ).index
+            ch_versions     = ch_versions.mix(KALLISTO_INDEX.out.versions)
         }
     }
 

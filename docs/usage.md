@@ -209,7 +209,7 @@ When supplying reference files as discussed below, it is important to be consist
 
 ### Explicit reference file specification (recommended)
 
-The minimum reference genome requirements for this pipeline are a FASTA file (genome and/ or trnascriptome) and GTF file, all other files required to run the pipeline can be generated from these files. For example, the latest reference files for human can be derived from Ensembl like:
+The minimum reference genome requirements for this pipeline are a FASTA file (genome and/ or transcriptome) and GTF file, all other files required to run the pipeline can be generated from these files. For example, the latest reference files for human can be derived from Ensembl like:
 
 ```
 latest_release=$(curl -s 'http://rest.ensembl.org/info/software?content-type=application/json' | grep -o '"release":[0-9]*' | cut -d: -f2)
@@ -227,7 +227,7 @@ Notes:
 - If `--gene_bed` is not provided then it will be generated from the GTF file.
 - If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
 - When using `--aligner star_rsem`, both the STAR and RSEM indices should be present in the path specified by `--rsem_index` (see [#568](https://github.com/nf-core/rnaseq/issues/568)).
-- If the `--skip_alignment` option is used along with `--transcript_fasta`, the pipeline can technically run without providing the genomic FASTA (`--fasta`). However, this approach is **not recommended**, as any dynamically generated Salmon index will lack decoys. To ensure optimal indexing with decoys, it is **highly recommended** to include the genomic FASTA (`--fasta`) whenever possible—unless a pre-existing decoy-aware Salmon index is supplied. For more details on the benefits of decoy-aware indexing, refer to the [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode).
+- If the `--skip_alignment` option is used along with `--transcript_fasta`, the pipeline can technically run without providing the genomic FASTA (`--fasta`). However, this approach is **not recommended**, as any dynamically generated Salmon index will lack decoys. To ensure optimal indexing with decoys, it is **highly recommended** to include the genomic FASTA (`--fasta`) whenever possible, unless a pre-existing decoy-aware Salmon index is supplied. For more details on the benefits of decoy-aware indexing, refer to the [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode).
 
 #### Reference genome
 

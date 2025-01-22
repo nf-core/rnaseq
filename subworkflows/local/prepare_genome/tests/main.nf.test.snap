@@ -457,7 +457,7 @@
                 "genome.fasta.fai:md5,2cd76d936cbfa386b14154506c2041b2"
             ],
             [
-                "genome.filtered.bed:md5,e507dc33673e76c32abe344f4dc07952"
+                "genes_with_empty_tid.filtered.bed:md5,e507dc33673e76c32abe344f4dc07952"
             ],
             [
                 "genome.fasta.sizes:md5,29218009212157c49dbc6596621ec780"
@@ -669,7 +669,7 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genes_with_empty_tid.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 "genes_with_empty_tid.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"

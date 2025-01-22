@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR #1480](https://github.com/nf-core/rnaseq/pull/1480) - Bump version after release 3.18.0
 - [PR #1482](https://github.com/nf-core/rnaseq/pull/1482) - Update trimgalore module for save_unpaired fix
-- [pR #1486](https://github.com/nf-core/rnaseq/pull/1486) - Bump STAR build for multiprocessing fix
+- [PR #1486](https://github.com/nf-core/rnaseq/pull/1486) - Bump STAR build for multiprocessing fix
+- [PR #1490](https://github.com/nf-core/rnaseq/pull/1490) - Make genomic FASTA input optional
 
 # 3.18.0 - 2024-12-19
 

@@ -451,7 +451,7 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome.filtered.gtf:md5,ef6fccd153a21c329670462d602ed2d0"
+                "genes_with_empty_tid.filtered.gtf:md5,ef6fccd153a21c329670462d602ed2d0"
             ],
             [
                 "genome.fasta.fai:md5,2cd76d936cbfa386b14154506c2041b2"
@@ -672,7 +672,7 @@
                 "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genes_with_empty_tid.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 

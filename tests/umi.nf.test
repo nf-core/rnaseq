@@ -1,0 +1,112 @@
+nextflow_pipeline {
+
+    name "Test pipeline with dummy UMI settings"
+    script "../main.nf"
+
+    test("Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'") {
+
+        when {
+            params {
+                with_umi = true
+                umitools_extract_method = "regex"
+                umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
+                umitools_dedup_stats = true
+                skip_bbsplit = true
+                umi_dedup_tool = 'umicollapse'
+                aligner = 'hisat2'
+                outdir = "$outputDir"
+                save_umi_intermeds = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("--umi_dedup_tool 'umitools'") {
+
+        when {
+            params {
+                with_umi = true
+                umitools_extract_method = "regex"
+                umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
+                umitools_dedup_stats = true
+                skip_bbsplit = true
+                outdir = "$outputDir"
+                save_umi_intermeds = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("--umi_dedup_tool 'umitools - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                with_umi = true
+                umitools_extract_method = "regex"
+                umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
+                umitools_dedup_stats = true
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

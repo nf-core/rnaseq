@@ -116,6 +116,8 @@ workflow PIPELINE_COMPLETION {
             id, status -> pass_strand_check[id] = status
         }
 
+    def multiqc_report_list = multiqc_report.toList()
+
     //
     // Completion email and summary
     //
@@ -128,7 +130,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report.toList()
+                multiqc_report_list.getVal()
             )
         }
 
@@ -178,8 +180,14 @@ def validateInputParameters() {
 
     genomeExistsError()
 
-    if (!params.fasta) {
-        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
+    if (
+        !params.fasta &&
+        (
+            ! params.skip_alignment ||  // Alignment needs fasta
+            ! params.transcript_fasta // Dynamically making a transcript fasta needs the fasta
+        )
+    ) {
+        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file. You must supply a genome FASTA file or use --skip_alignment and provide your own transcript fasta using --transcript_fasta for use in quantification.")
     }
 
     if (!params.gtf && !params.gff) {

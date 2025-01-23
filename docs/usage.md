@@ -132,7 +132,7 @@ You also have the option to pseudoalign and quantify your data directly with [Sa
 
 The library preparation protocol (library type) used by Salmon quantification is inferred by the pipeline based on the information provided in the samplesheet, however, you can override it using the `--salmon_quant_libtype` parameter. You can find the available options in the [Salmon documentation](https://salmon.readthedocs.io/en/latest/library_type.html). Similarly, strandedness is taken from the sample sheet or calculated automatically, and passed to Kallisto on a per-library basis, but you can apply a global override by setting the Kallisto strandedness parameters in `--extra_kallisto_quant_args` like `--extra_kallisto_quant_args '--fr-stranded'` see the [Kallisto documentation](https://pachterlab.github.io/kallisto/manual).
 
-When running Salmon in mapping-based mode via `--pseudo_aligner salmon` the entire genome of the organism is used by default for the decoy-aware transcriptome when creating the indices (see second bulleted option in [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)).
+When running Salmon in mapping-based mode via `--pseudo_aligner salmon`, supplying a genome fasta via `--fasta` and not supplying a Salmon index, the entire genome of the organism is used by default for the decoy-aware transcriptome when creating the indices, as is recommended (see second bulleted option in [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)). If you do not supply a FASTA file or an index, Salmon will index without those decoys, using only transcript sequences in the index. This second option is not usually recommended, but may be useful in limited circumstances. Note that Kallisto does not index with genomic sequences.
 
 Two additional parameters `--extra_star_align_args` and `--extra_salmon_quant_args` were added in v3.10 of the pipeline that allow you to append any custom parameters to the STAR align and Salmon quant commands, respectively. Note, the `--seqBias` and `--gcBias` are not provided to Salmon quant by default so you can provide these via `--extra_salmon_quant_args '--seqBias --gcBias'` if required. You can now also supply additional arguments to Kallisto via `--extra_kallisto_quant_args`.
 
@@ -209,7 +209,7 @@ When supplying reference files as discussed below, it is important to be consist
 
 ### Explicit reference file specification (recommended)
 
-The minimum reference genome requirements for this pipeline are a FASTA and GTF file, all other files required to run the pipeline can be generated from these files. For example, the latest reference files for human can be derived from Ensembl like:
+The minimum reference genome requirements for this pipeline are a FASTA file (genome and/ or transcriptome) and GTF file, all other files required to run the pipeline can be generated from these files. For example, the latest reference files for human can be derived from Ensembl like:
 
 ```
 latest_release=$(curl -s 'http://rest.ensembl.org/info/software?content-type=application/json' | grep -o '"release":[0-9]*' | cut -d: -f2)
@@ -227,6 +227,7 @@ Notes:
 - If `--gene_bed` is not provided then it will be generated from the GTF file.
 - If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
 - When using `--aligner star_rsem`, both the STAR and RSEM indices should be present in the path specified by `--rsem_index` (see [#568](https://github.com/nf-core/rnaseq/issues/568)).
+- If the `--skip_alignment` option is used along with `--transcript_fasta`, the pipeline can technically run without providing the genomic FASTA (`--fasta`). However, this approach is **not recommended** with `--pseudo_aligner salmon`, as any dynamically generated Salmon index will lack decoys. To ensure optimal indexing with decoys, it is **highly recommended** to include the genomic FASTA (`--fasta`) with Salmon, unless a pre-existing decoy-aware Salmon index is supplied. For more details on the benefits of decoy-aware indexing, refer to the [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode).
 
 #### Reference genome
 
@@ -304,7 +305,7 @@ Notes:
 
 ### GTF filtering
 
-By default, the input GTF file will be filtered to ensure that sequence names correspond to those in the genome fasta file, and to remove rows with empty transcript identifiers. Filtering can be bypassed completely where you are confident it is not necessary, using the `--skip_gtf_filter` parameter. If you just want to skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline this can be disabled specifically using the `--skip_gtf_transcript_filter` parameter.
+By default, the input GTF file will be filtered to ensure that sequence names correspond to those in the genome fasta file (where supplied), and to remove rows with empty transcript identifiers. Filtering can be bypassed completely where you are confident it is not necessary, using the `--skip_gtf_filter` parameter. If you just want to skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline this can be disabled specifically using the `--skip_gtf_transcript_filter` parameter.
 
 ## Contamination screening options
 
@@ -331,6 +332,21 @@ nextflow run \
     --fasta <GENOME FASTA> \
     -profile docker
 ```
+
+You can also run without a genomic FASTA file, provided you skip the alignment step and provide a transcriptome FASTA directly:
+
+```bash
+nextflow run \
+    nf-core/rnaseq \
+    --input <SAMPLESHEET> \
+    --outdir <OUTDIR> \
+    --gtf <GTF> \
+    --transcript_fasta <TRANSCRIPTOME FASTA> \
+    --skip_alignment \
+    -profile docker
+```
+
+This is not usually recommended with Salmon unless you also supply a previously generated decoy-aware Salmon transcriptome index.
 
 > **NB:** Loading iGenomes configuration remains the default for reasons of consistency with other workflows, but should be disabled when not using iGenomes, applying the recommended usage above.
 

@@ -106,12 +106,12 @@
                 },
                 "STAR_ALIGN": {
                     "star": "2.7.11b",
-                    "samtools": 1.2,
+                    "samtools": 1.21,
                     "gawk": "5.1.0"
                 },
                 "STAR_GENOMEGENERATE": {
                     "star": "2.7.11b",
-                    "samtools": 1.2,
+                    "samtools": 1.21,
                     "gawk": "5.1.0"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -133,7 +133,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.18.0dev"
+                    "nf-core/rnaseq": "v3.19.0dev"
                 }
             },
             [

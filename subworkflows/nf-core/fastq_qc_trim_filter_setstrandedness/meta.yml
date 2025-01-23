@@ -142,6 +142,10 @@ input:
   - skip_linting:
       type: boolean
       description: Whether to skip linting of FastQ files
+  - fastp_merge:
+      type: boolean
+      description: |
+        For FASTP, save merged fastqs stitching together read1 and read2 for paired end reads
 
 output:
   - reads:

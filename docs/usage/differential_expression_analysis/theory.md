@@ -12,7 +12,7 @@ Given the central role of RNA in a wide range of molecular functions, RNA-seq ha
 
 After RNA extraction and reverse transcription into complementary DNA (cDNA), the biological material is sequenced, generating NGS "reads" that correspond to the RNA captured in a specific cell, tissue, or organ at a given time. The sequencing data is then bioinformatically processed through a typical workflow summarised in the diagram below:
 
-![excalidraw](../img/Excalidraw_RNAseq.png)
+![excalidraw](../differential_expression_analysis/img/Excalidraw_RNAseq.png)
 
 In the scheme, we can identify three key phases in the workflow:
 
@@ -92,11 +92,11 @@ The results will not be affected by the order of variables but the common practi
 
 RNA-seq data typically contain a large number of genes with low expression counts, indicating that many genes are expressed at very low levels across samples. At the same time, RNA-seq data exhibit a skewed distribution with a long right tail due to the absence of an upper limit for gene expression levels. This means that while most genes have low to moderate expression levels, a small number are expressed at high levels. Accurate statistical modelling must therefore account for this distribution to avoid misleading conclusions.
 
-![count_distribution](../img/count_distribution.png)
+![count_distribution](../differential_expression_analysis/img/count_distribution.png)
 
 The core of the differential expression analysis is the `DESeq()` function, a wrapper that streamlines several key steps into a single command. The different functions are listed below:
 
-![deseq2_function](../img/DESeq_function.png)
+![deseq2_function](../differential_expression_analysis/img/DESeq_function.png)
 
 :::note
 While `DESeq()` combines these steps, a user could choose to perform each function separately to have more control over the whole process.
@@ -122,7 +122,7 @@ While normalised counts are useful for downstream visualisation of results, they
 
 2. **Estimate dispersion and gene-wise dispersion**: the dispersion is a measure of how much the variance deviates from the mean. The dispersion estimates indicate the variance in gene expression at a specific mean expression level. Importantly, RNA-seq data are characterised by **overdispersion**, where the variance in gene expression levels often exceeds the mean (variance > mean).
 
-![overdispersion](../img/overdispersion.png)
+![overdispersion](../differential_expression_analysis/img/overdispersion.png)
 
 DESeq2 addresses this issue by employing the **negative binomial distribution**, which generalises the Poisson distribution by introducing an additional dispersion parameter. This parameter quantifies the extra variability present in RNA-seq data, providing a more realistic representation than the Poisson distribution, which assumes mean = variance. DESeq2 starts by estimating the **common dispersion**, a single estimate of dispersion applicable to all genes in the dataset. This estimate provides a baseline for variability across all genes in the dataset. Next, DESeq2 estimates **gene-wise dispersion**, a separate estimate of dispersion for each individual gene, taking into account that different genes may exhibit varying levels of expression variability due to biological differences.
 The dispersion parameter (α) is related to the mean (μ), and variance of the data, as described by the equation:
@@ -137,7 +137,7 @@ A key feature of DESeq2's dispersion estimates is their negative correlation wit
 
 4. **Final dispersion estimates**: DESeq2 refines the gene-wise dispersion by shrinking it towards the fitted curve. The "shrinkage" helps control for overfitting, and makes the dispersion estimates more reliable. The strength of the shrinkage depends on the sample size (more samples = less shrinkage), and how close the initial estimates are to the fitted curve.
 
-![dispersion](../img/dispersion_estimates.png)
+![dispersion](../differential_expression_analysis/img/dispersion_estimates.png)
 
 The initial estimates (black dots) are shrunk toward the fitted curve (red line) to obtain the final estimates (blue dots). However, genes with exceptionally high dispersion values are not shrunk, as they likely deviate from the model assumptions exhibiting elevated variability due to biological or technical factors. Shrinking these values could lead to false positives.
 

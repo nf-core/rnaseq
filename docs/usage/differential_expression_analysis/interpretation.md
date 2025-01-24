@@ -33,7 +33,7 @@ After running the `results()` function, a good way to start to have an idea abou
 
 ![ma_plot](../differential_expression_analysis/img/MA_plot.png)
 
-By default, genes are coloured in blue if the padj is less than 0.1 and the log2 fold change greater than or less than 0. Genes that fall outside the plotting region are represented as open triangles. At this stage, we have not yet applied a filter to select only significant DE genes, which we define as those with a padj value less than 0.5 and a log2 fold change of at least 1 or -1.
+By default, genes are coloured in blue if the padj is less than 0.1 and the log2 fold change greater than or less than 0. Genes that fall outside the plotting region are represented as open triangles. At this stage, we have not yet applied a filter to select only significant DE genes, which we define as those with a padj value less than 0.05 and a log2 fold change of at least 1 or -1.
 
 After filtering our genes of interest according to our threshold, let's have a look to our significatnt genes:
 

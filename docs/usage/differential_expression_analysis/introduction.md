@@ -6,7 +6,9 @@ order: 1
 
 These pages are a tutorial workshop for the [Nextflow](https://www.nextflow.io) pipeline [nf-core/rnaseq](https://nf-co.re/rnaseq).
 
-In this workshop, we will recap the application of next generation sequencing to identify differentially expressed genes. You will learn how to use the rnaseq pipeline to carry out this data-intensive workflow efficiently. We will cover topics such as configuration of the pipeline, code execution and data interpretation.
+In this workshop, we will recap the application of next generation sequencing to identify differentially expressed genes.
+You will learn how to use the rnaseq pipeline to carry out this data-intensive workflow efficiently.
+We will cover topics such as configuration of the pipeline, code execution and data interpretation.
 
 Please note that this is not an introductory workshop, and we will assume some basic familiarity with Nextflow.
 
@@ -37,7 +39,9 @@ Now you're all set and can use the following button to launch the service:
 
 ## Credits & Copyright
 
-This training material has been written and completed by [Lorenzo Sola](https://github.com/LorenzoS96), [Francesco Lescai](https://github.com/lescai), and [Mariangela Santorsola](https://github.com/msantorsola) during the [nf-core](https://nf-co.re) Hackathon in Barcellona, 2024. Thank you to [Victoria Cepeda](https://github.com/vcepeda) for her contributions to the tutorial's revision. The tutorial is aimed at anyone who is interested in using nf-core pipelines for their studies or research activities.
+This training material has been written and completed by [Lorenzo Sola](https://github.com/LorenzoS96), [Francesco Lescai](https://github.com/lescai), and [Mariangela Santorsola](https://github.com/msantorsola) during the [nf-core](https://nf-co.re) Hackathon in Barcellona, 2024.
+Thank you to [Victoria Cepeda](https://github.com/vcepeda) for her contributions to the tutorial's revision.
+The tutorial is aimed at anyone who is interested in using nf-core pipelines for their studies or research activities.
 
 The Docker image and Gitpod environment used in this repository have been created by [Seqera](https://seqera.io) but have been made open-source ([CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/4.0/)) for the community.
 

@@ -433,7 +433,7 @@ plotCounts(dds_final, gene = "ENSG00000142192")
 dev.off()
 ```
 
-**heatmap**: plot of the normalised counts for all the significant genes obtained with the `pheatmap()` function. The heatmap provides insights into genes and sample relationships that may not be apparent from individual gene plots alone.
+- **heatmap**: plot of the normalised counts for all the significant genes obtained with the `pheatmap()` function. The heatmap provides insights into genes and sample relationships that may not be apparent from individual gene plots alone.
 
 ```r
 #### Heatmap ####

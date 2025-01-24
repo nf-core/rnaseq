@@ -40,6 +40,13 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                },
+                "enable_multiqc_ai": {
+                    "type": "boolean",
+                    "description": "Enable AI-powered summaries in MultiQC report",
+                    "fa_icon": "fas fa-robot",
+                    "default": false,
+                    "help_text": "When enabled, MultiQC will use AI to generate summaries of the quality control results."
                 }
             }
         },

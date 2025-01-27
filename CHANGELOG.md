@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1490](https://github.com/nf-core/rnaseq/pull/1490) - Make genomic FASTA input optional
 - [PR #1495](https://github.com/nf-core/rnaseq/pull/1495) - Activate multiqc AI summaries
 
+## Parameters
+
+| Old parameter | New parameter           |
+| ------------- | ----------------------- |
+|               | `--enable_multiqc_ai`   |
+|               | `--multiqc_ai_type`     |
+|               | `--multiqc_ai_provider` |
+
 # 3.18.0 - 2024-12-19
 
 ### Credits

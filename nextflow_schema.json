@@ -56,7 +56,7 @@
                 },
                 "multiqc_ai_provider": {
                     "type": "string",
-                    "default": "concise",
+                    "default": "seqera",
                     "description": "MultiQC AI summary provider.",
                     "fa_icon": "fas fa-font",
                     "enum": ["seqera", "openai", "anthropic"]

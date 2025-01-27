@@ -319,6 +319,20 @@ It is important to note that the accuracy of Kraken2 is [highly dependent on the
 
 While Kraken2 is capable of detecting low-abundance contaminants in a sample, false positives can occur. Therefore, if only a very small number of reads from a contaminating species are detected, these results should be interpreted with caution.
 
+## AI summaries with MultiQC
+
+As of version 1.27, MultiQC has [AI-driven summarisation functionality](https://docs.seqera.io/multiqc/ai). You can activate this functionality in this workflow by passing `--enable_multiqc_ai`.
+
+You use any of Seqera AI, OpenAI, or Anthropic as your provider of AI services, setting `--multiqc_ai_provider` correctly and defining the appropriate environment variable to provide the API key:
+
+| `--multiqc_ai_provider` | Environment variable |
+| ----------------------- | -------------------- |
+| seqera                  | SEQERA_ACCESS_TOKEN  |
+| openai                  | OPENAI_API_KEY       |
+| anthropic               | ANTHROPIC_API_KEY    |
+
+Default behaviour is a concise summary, you can opt for a fuller summary by setting `--multiqc_ai_type` to 'full'.
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:

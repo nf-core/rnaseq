@@ -27,39 +27,6 @@ jobs:
 
             ${{ steps.get_topics.outputs.topics }} #nfcore #openscience #nextflow #bioinformatics
 
-  send-tweet:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
-        with:
-          python-version: "3.10"
-      - name: Install dependencies
-        run: pip install tweepy==4.14.0
-      - name: Send tweet
-        shell: python
-        run: |
-          import os
-          import tweepy
-
-          client = tweepy.Client(
-              access_token=os.getenv("TWITTER_ACCESS_TOKEN"),
-              access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
-              consumer_key=os.getenv("TWITTER_CONSUMER_KEY"),
-              consumer_secret=os.getenv("TWITTER_CONSUMER_SECRET"),
-          )
-          tweet = os.getenv("TWEET")
-          client.create_tweet(text=tweet)
-        env:
-          TWEET: |
-            Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!
-
-            Please see the changelog: ${{ github.event.release.html_url }}
-          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
-          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-
   bsky-post:
     runs-on: ubuntu-latest
     steps:

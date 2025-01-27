@@ -7,12 +7,12 @@
                 "nf-core": {
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "dc94b6ee04a05ddb9f7ae050712ff30a13149164",
+                        "git_sha": "08108058ea36a63f141c25c4e75f9f872a5b2296",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
+                        "git_sha": "f0719ae309075ae4a291533883847c3f7c441dad",
                         "installed_by": ["modules"]
                     }
                 }

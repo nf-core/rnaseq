@@ -1,0 +1,48 @@
+{
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
+                ],
+                "bed": [
+                    "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:46:28.123826"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            {
+                "0": [
+                    "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
+                ],
+                "bed": [
+                    "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-07T15:00:44.458214"
+    }
+}

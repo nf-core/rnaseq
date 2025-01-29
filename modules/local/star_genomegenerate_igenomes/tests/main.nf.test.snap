@@ -1,0 +1,128 @@
+{
+    "fasta with gtf": {
+        "content": [
+            "[]",
+            [
+                "versions.yml:md5,562a70f12dd9e695449b59fbf604e98d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T20:14:17.250178"
+    },
+    "fasta no gtf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,562a70f12dd9e695449b59fbf604e98d"
+                ],
+                "index": [
+                    [
+                        "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,562a70f12dd9e695449b59fbf604e98d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T20:15:09.671637"
+    },
+    "fasta no gtf": {
+        "content": [
+            "[]",
+            [
+                "versions.yml:md5,562a70f12dd9e695449b59fbf604e98d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T20:14:35.674278"
+    },
+    "fasta with gtf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "exonGeTrInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "exonInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "geneInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sjdbInfo.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sjdbList.fromGTF.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,562a70f12dd9e695449b59fbf604e98d"
+                ],
+                "index": [
+                    [
+                        "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "exonGeTrInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "exonInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "geneInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sjdbInfo.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sjdbList.fromGTF.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,562a70f12dd9e695449b59fbf604e98d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T20:14:52.732323"
+    }
+}

@@ -1,0 +1,185 @@
+nextflow_process {
+
+    name "Test Process TRIMGALORE"
+    script "../main.nf"
+    process "TRIMGALORE"
+
+    test("test_trimgalore_single_end") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            def read_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+								"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+								"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+								"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1",
+								"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+								"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            def report1_lines = ["1	19	25.0	0	19",
+                                    "2	10	6.2	0	10",
+                                    "3	1	1.6	0	1"]
+            assertAll(
+                { assert process.success },
+                { read_lines.each { read_line ->
+                    { assert path(process.out.reads.get(0).get(1)).linesGzip.contains(read_line) }
+                    }
+                },
+                { report1_lines.each { report1_line ->
+                    { assert path(process.out.log.get(0).get(1)).getText().contains(report1_line) }
+                    }
+                },
+                { assert snapshot(path(process.out.versions.get(0)).yaml).match() },
+            )
+        }
+    }
+
+    test("test_trimgalore_single_end - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions.get(0)).yaml
+                ).match() },
+            )
+        }
+    }
+
+    test("test_trimgalore_paired_end") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            def read1_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
+									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
+									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/1",
+									"ACTGTTTTCTTTGTAGAAAACATCCGTAATAGGACCTTTGTATTCTGAGGACTTTGTAAGTAAAGCACCGTCTATGC",
+									"AAA6AEEEEEEEEEAEEE/6EEAEEEAEEEEEAEEEEEEEEEEEEEEEEEEEEE<AAEEEEEEEEEEE</EEEA/AE"]
+            def read2_lines = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/2",
+									"ATGTGTACATTGGCGACCCTGCTCAATTACCTGCACCACGCACATTGCTAACTAAGGGCACACTAGAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGTCCTG",
+									"AAAAAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEEEEAEEEEEAAEEEEEEEEEAAEAAA<<EAAEEEEEEEAAA<<<AE",
+									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/2",
+									"GCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT",
+									"AAAAA6EEAEEEEEAEEAEEAEEEEEEA6EEEEAEEAEEEEE6EEEEEEAEEEEA///A<<EEEEEEEEEAEEEEEE"]
+            def report1_lines = ["1	19	25.0	0	19",
+                                    "2	10	6.2	0	10",
+                                    "3	1	1.6	0	1"]
+            def report2_lines = ["1	28	25.0	0	28",
+                                    "2	10	6.2	0	10",
+                                    "3	1	1.6	0	1"]
+            assertAll(
+                { assert process.success },
+                { read1_lines.each { read1_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(0)).linesGzip.contains(read1_line) }
+                    }
+                },
+                { read2_lines.each { read2_line ->
+                    { assert path(process.out.reads.get(0).get(1).get(1)).linesGzip.contains(read2_line) }
+                    }
+                },
+                { report1_lines.each { report1_line ->
+                    { assert path(process.out.log.get(0).get(1).get(0)).getText().contains(report1_line) }
+                    }
+                },
+                { report2_lines.each { report2_line ->
+                    { assert path(process.out.log.get(0).get(1).get(1)).getText().contains(report2_line) }
+                    }
+                },
+                { assert snapshot(path(process.out.versions.get(0)).yaml).match() },
+            )
+        }
+    }
+
+    test("test_trimgalore_paired_end_keep_unpaired") {
+
+        config "./nextflow.config"
+
+        when {
+
+            params {
+                module_args = '--retain_unpaired --length 150'
+            }
+
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    path(process.out.versions.get(0)).yaml,
+                    process.out.reads,
+                    process.out.unpaired
+                ).match() },
+            )
+        }
+    }
+
+    test("test_trimgalore_paired_end - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(path(process.out.versions.get(0)).yaml).match("versions") },
+            )
+        }
+    }
+}

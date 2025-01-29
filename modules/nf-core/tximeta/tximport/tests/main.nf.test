@@ -1,0 +1,186 @@
+nextflow_process {
+
+    name "Test Process TXIMETA_TXIMPORT"
+    script "../main.nf"
+    process "TXIMETA_TXIMPORT"
+
+    test("saccharomyces_cerevisiae - kallisto - gtf") {
+
+        setup {
+
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'kallisto'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'kallisto'
+                """
+            }
+        }
+
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts_gene).match('counts_gene_kallisto') },
+                { assert snapshot(process.out.counts_gene_length_scaled).match('counts_gene_length_scaled_kallisto') },
+                { assert snapshot(process.out.counts_gene_scaled).match('counts_gene_scaled_kallisto') },
+                { assert snapshot(process.out.counts_transcript).match('counts_transcript_kallisto') },
+                { assert snapshot(process.out.lengths_gene).match('lengths_gene_kallisto') },
+                { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_kallisto') },
+                { assert snapshot(process.out.tpm_gene).match('tpm_gene_kallisto') },
+                { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_kallisto') },
+                { assert snapshot(process.out.versions).match('versions_kallisto') }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - kallisto - gtf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [], [] ])
+                input[1] = Channel.of([ [], [] ])
+                input[2] = 'kallisto'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts_gene).match('counts_gene_kallisto - stub') },
+                { assert snapshot(process.out.counts_gene_length_scaled).match('counts_gene_length_scaled_kallisto - stub') },
+                { assert snapshot(process.out.counts_gene_scaled).match('counts_gene_scaled_kallisto - stub') },
+                { assert snapshot(process.out.counts_transcript).match('counts_transcript_kallisto - stub') },
+                { assert snapshot(process.out.lengths_gene).match('lengths_gene_kallisto - stub') },
+                { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_kallisto - stub') },
+                { assert snapshot(process.out.tpm_gene).match('tpm_gene_kallisto - stub') },
+                { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_kallisto - stub') },
+                { assert snapshot(process.out.versions).match('versions_kallisto - stub') }
+            )
+        }
+
+    }
+    test("saccharomyces_cerevisiae - salmon - gtf") {
+
+        setup {
+
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'salmon'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'salmon'
+                """
+            }
+        }
+
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts_gene).match('counts_gene_salmon') },
+                { assert snapshot(process.out.counts_gene_length_scaled).match('counts_gene_length_scaled_salmon') },
+                { assert snapshot(process.out.counts_gene_scaled).match('counts_gene_scaled_salmon') },
+                { assert snapshot(process.out.counts_transcript).match('counts_transcript_salmon') },
+                { assert snapshot(process.out.lengths_gene).match('lengths_gene_salmon') },
+                { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_salmon') },
+                { assert snapshot(process.out.tpm_gene).match('tpm_gene_salmon') },
+                { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_salmon') },
+                { assert snapshot(process.out.versions).match('versions_salmon') }
+            )
+        }
+
+    }
+
+    test("saccharomyces_cerevisiae - salmon - gtf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [], [] ])
+                input[1] = Channel.of([ [], [] ])
+                input[2] = 'salmon'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.counts_gene).match('counts_gene_salmon - stub') },
+                { assert snapshot(process.out.counts_gene_length_scaled).match('counts_gene_length_scaled_salmon - stub') },
+                { assert snapshot(process.out.counts_gene_scaled).match('counts_gene_scaled_salmon - stub') },
+                { assert snapshot(process.out.counts_transcript).match('counts_transcript_salmon - stub') },
+                { assert snapshot(process.out.lengths_gene).match('lengths_gene_salmon - stub') },
+                { assert snapshot(process.out.lengths_transcript).match('lengths_transcript_salmon - stub') },
+                { assert snapshot(process.out.tpm_gene).match('tpm_gene_salmon - stub') },
+                { assert snapshot(process.out.tpm_transcript).match('tpm_transcript_salmon - stub') },
+                { assert snapshot(process.out.versions).match('versions_salmon - stub') }
+            )
+        }
+    }
+}
+

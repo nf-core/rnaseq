@@ -1,0 +1,903 @@
+{
+    "sarscov2 paired-end [bam]": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance.txt:md5,a1acc9def0f64a5500d4c4cb47cbe32b"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_freq.txt:md5,3fc037501f5899b5da009c8ce02fc25e"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_mean.txt:md5,58398b7d5a29a5e564f9e3c50b55996c"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.inner_distance_plot.r:md5,5859fbd5b42046d47e8b9aa85077f4ea"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.junction_annotation.log:md5,d75e0f5d62fada8aa9449991b209554c"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.junctionSaturation_plot.r:md5,caa6e63dcb477aabb169882b2f30dadd"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.DupRate_plot.r:md5,3c0325095cee4835b921e57d61c23dca"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.pos.DupRate.xls:md5,a859bc2031d46bf1cc4336205847caa3"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.seq.DupRate.xls:md5,ee8783399eec5a18522a6f08bece338b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                ]
+            ],
+            [
+                "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
+                "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
+                "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
+                "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
+                "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
+                "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
+                "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
+                "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T12:07:54.452949"
+    },
+    "sarscov2 paired-end [bam] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_freq.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_mean.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "15": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "17": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "18": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "19": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.read_distribution.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "20": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "21": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "22": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "23": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "24": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "25": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "26": [
+                    "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
+                    "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
+                    "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
+                    "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
+                    "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
+                    "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
+                    "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
+                    "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_freq.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_mean.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bamstat_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "inferexperiment_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "innerdistance_all": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_freq.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_mean.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "innerdistance_distance": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "innerdistance_freq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_freq.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "innerdistance_mean": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_mean.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "innerdistance_pdf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "innerdistance_rscript": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.inner_distance_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_all": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_events_pdf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_interact_bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_pdf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_rscript": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionannotation_xls": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionsaturation_all": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionsaturation_pdf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "junctionsaturation_rscript": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.junctionSaturation_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "readdistribution_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.read_distribution.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "readduplication_all": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "readduplication_pdf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "readduplication_pos_xls": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "readduplication_rscript": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "readduplication_seq_xls": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tin_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
+                    "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
+                    "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
+                    "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
+                    "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
+                    "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
+                    "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
+                    "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T12:08:17.304769"
+    },
+    "sarscov2 paired-end [bam] no modules - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "20": [
+                    
+                ],
+                "21": [
+                    
+                ],
+                "22": [
+                    
+                ],
+                "23": [
+                    
+                ],
+                "24": [
+                    
+                ],
+                "25": [
+                    
+                ],
+                "26": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bamstat_txt": [
+                    
+                ],
+                "inferexperiment_txt": [
+                    
+                ],
+                "innerdistance_all": [
+                    
+                ],
+                "innerdistance_distance": [
+                    
+                ],
+                "innerdistance_freq": [
+                    
+                ],
+                "innerdistance_mean": [
+                    
+                ],
+                "innerdistance_pdf": [
+                    
+                ],
+                "innerdistance_rscript": [
+                    
+                ],
+                "junctionannotation_all": [
+                    
+                ],
+                "junctionannotation_bed": [
+                    
+                ],
+                "junctionannotation_events_pdf": [
+                    
+                ],
+                "junctionannotation_interact_bed": [
+                    
+                ],
+                "junctionannotation_log": [
+                    
+                ],
+                "junctionannotation_pdf": [
+                    
+                ],
+                "junctionannotation_rscript": [
+                    
+                ],
+                "junctionannotation_xls": [
+                    
+                ],
+                "junctionsaturation_all": [
+                    
+                ],
+                "junctionsaturation_pdf": [
+                    
+                ],
+                "junctionsaturation_rscript": [
+                    
+                ],
+                "readdistribution_txt": [
+                    
+                ],
+                "readduplication_all": [
+                    
+                ],
+                "readduplication_pdf": [
+                    
+                ],
+                "readduplication_pos_xls": [
+                    
+                ],
+                "readduplication_rscript": [
+                    
+                ],
+                "readduplication_seq_xls": [
+                    
+                ],
+                "tin_txt": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-03T12:08:24.443731"
+    }
+}

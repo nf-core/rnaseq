@@ -3,7 +3,6 @@ nextflow_process {
     name "Test Process MULTIQC"
     script "../main.nf"
     process "MULTIQC"
-
     config "./nextflow.config"
 
     test("sarscov2 single-end [fastqc]") {

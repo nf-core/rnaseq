@@ -273,10 +273,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-03T17:48:16.536464395"
+        "timestamp": "2025-01-28T13:49:54.341502957"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [
@@ -360,9 +360,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-03T17:49:02.306667165"
+        "timestamp": "2025-01-28T13:50:34.753130451"
     }
 }

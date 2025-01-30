@@ -42,13 +42,17 @@ process DESEQ2_QC {
         $args
 
     if [ -f "R_sessionInfo.log" ]; then
-        sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc >tmp.txt
-        sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" tmp.txt
-        cat tmp.txt *.pca.vals.txt > ${label_lower}.pca.vals_mqc.tsv
+        # Handle PCA files
+        sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc > pca_header.tmp
+        sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" pca_header.tmp
+        cat pca_header.tmp *.pca.vals.txt > ${label_lower}.pca.vals_mqc.tsv
+        rm pca_header.tmp
 
-        sed "s/deseq2_clustering/${label_lower}_deseq2_clustering/g" <$clustering_header_multiqc >tmp.txt
-        sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" tmp.txt
-        cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
+        # Handle clustering files
+        sed "s/deseq2_clustering/${label_lower}_deseq2_clustering/g" <$clustering_header_multiqc > clustering_header.tmp
+        sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" clustering_header.tmp
+        cat clustering_header.tmp *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
+        rm clustering_header.tmp
     fi
 
     cat <<-END_VERSIONS > versions.yml
@@ -78,7 +82,7 @@ process DESEQ2_QC {
         touch size_factors/\${i}.size_factors.RData
     done
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS >|versions.yml
     "${task.process}":
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")

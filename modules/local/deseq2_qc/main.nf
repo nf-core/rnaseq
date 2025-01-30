@@ -82,7 +82,7 @@ process DESEQ2_QC {
         touch size_factors/\${i}.size_factors.RData
     done
 
-    cat <<-END_VERSIONS >|versions.yml
+    cat <<-END_VERSIONS >versions.yml
     "${task.process}":
         r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
         bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")

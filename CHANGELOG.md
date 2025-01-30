@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1486](https://github.com/nf-core/rnaseq/pull/1486) - Bump STAR build for multiprocessing fix
 - [PR #1490](https://github.com/nf-core/rnaseq/pull/1490) - Make genomic FASTA input optional
 - [PR #1496](https://github.com/nf-core/rnaseq/pull/1496) - Template update for nf-core/tools v3.2.0
+- [PR #1499](https://github.com/nf-core/rnaseq/pull/1499) - Bump MultiQC module to 1.27
 
 # 3.18.0 - 2024-12-19
 

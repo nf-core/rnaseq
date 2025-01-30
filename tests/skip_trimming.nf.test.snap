@@ -219,10 +219,10 @@
                 "multiqc/star_salmon/multiqc_report_data/multiqc_software_versions.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_sources.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_star.txt",
+                "multiqc/star_salmon/multiqc_report_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "multiqc/star_salmon/multiqc_report_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/star_salmon/multiqc_report_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/star_salmon/multiqc_report_data/picard_deduplication.txt",
-                "multiqc/star_salmon/multiqc_report_data/picard_histogram.txt",
-                "multiqc/star_salmon/multiqc_report_data/picard_histogram_1.txt",
-                "multiqc/star_salmon/multiqc_report_data/picard_histogram_2.txt",
                 "multiqc/star_salmon/multiqc_report_data/qualimap_gene_coverage_profile_Counts.txt",
                 "multiqc/star_salmon/multiqc_report_data/qualimap_gene_coverage_profile_Normalised.txt",
                 "multiqc/star_salmon/multiqc_report_data/qualimap_genomic_origin.txt",
@@ -1126,11 +1126,11 @@
                 "fastqc_raw_sequence_duplication_levels_plot.txt:md5,8812cee16f6ca65e2c33635754de1772",
                 "multiqc_citations.txt:md5,1f80cefb6f0103d9a316c396a9441a90",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
-                "multiqc_featurecounts_biotype_plot.txt:md5,91d4ea5a6d4b02091be666eeab952443",
+                "multiqc_featurecounts_biotype_plot.txt:md5,2fffc21e7bef2a357f5651ba64bb6cd4",
                 "multiqc_samtools_idxstats.txt:md5,adf5f32fa1485ad0f4dacdfedc7b4bbc",
-                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "qualimap_gene_coverage_profile_Counts.txt:md5,b16bc0437cb340aaf6fa1472888b6930",
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,209b0020fcd4c3c497e3abbd1f8cd593",
                 "qualimap_rnaseq_cov_hist.txt:md5,3be7bc41531ce84b42092a742bfeb0ab",
@@ -1270,9 +1270,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-03T18:28:59.906095781"
+        "timestamp": "2025-01-28T14:35:13.246904514"
     }
 }

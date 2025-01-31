@@ -11,6 +11,7 @@ tools:
         FastQC gives general quality metrics about your reads.
         It provides information about the quality score distribution
         across your reads, the per base sequence content (%A/C/G/T).
+
         You get information about adapter contamination and other
         overrepresented sequences.
       homepage: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/

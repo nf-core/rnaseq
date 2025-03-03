@@ -38,7 +38,7 @@ nextflow_workflow {
 
             params {
                 test_data   = ''
-                outdir      = 1
+                outdir      = null
             }
 
             workflow {
@@ -90,7 +90,7 @@ nextflow_workflow {
 
             params {
                 test_data   = ''
-                outdir      = 1
+                outdir      = null
             }
 
             workflow {

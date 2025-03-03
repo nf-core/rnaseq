@@ -110,7 +110,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
+                        "git_sha": "f0719ae309075ae4a291533883847c3f7c441dad",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {
@@ -181,7 +181,7 @@
                     },
                     "salmon/index": {
                         "branch": "master",
-                        "git_sha": "49f4e50534fe4b64101e62ea41d5dc43b1324358",
+                        "git_sha": "25ddc0bb25292280923eed07e6351789a671e86a",
                         "installed_by": ["fastq_subsample_fq_salmon"]
                     },
                     "salmon/quant": {
@@ -227,13 +227,13 @@
                     },
                     "star/align": {
                         "branch": "master",
-                        "git_sha": "6a367612c2c27aa659293c656afa764361223db4",
+                        "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/star/align/star-align.diff"
                     },
                     "star/genomegenerate": {
                         "branch": "master",
-                        "git_sha": "6a367612c2c27aa659293c656afa764361223db4",
+                        "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/star/genomegenerate/star-genomegenerate.diff"
                     },
@@ -254,7 +254,7 @@
                     },
                     "trimgalore": {
                         "branch": "master",
-                        "git_sha": "8c5eeedd45e295fc9a4f164631da6a8b37e6b9c6",
+                        "git_sha": "8d3e71002c5008e3f68a691ad8cd32c346356258",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore"]
                     },
                     "tximeta/tximport": {
@@ -358,7 +358,7 @@
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
-                        "git_sha": "8c5eeedd45e295fc9a4f164631da6a8b37e6b9c6",
+                        "git_sha": "4c2d06a5e79abf08ba7f04c58e39c7dad75f094d",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
@@ -378,17 +378,17 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "3aa0aec1d52d492fe241919f0c6100ebf0074082",
+                        "git_sha": "c2b22d85f30a706a3073387f30380704fcae013b",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "1b6b9a3338d011367137808b49b923515080e3ba",
+                        "git_sha": "51ae5406a030d4da1e49e4dab49756844fdd6c7a",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "bbd5a41f4535a8defafe6080e00ea74c45f4f96c",
+                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
                         "installed_by": ["subworkflows"]
                     }
                 }

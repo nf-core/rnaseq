@@ -57,21 +57,6 @@ def checkProfileProvided(nextflow_cli_args) {
 }
 
 //
-// Citation string for pipeline
-//
-def workflowCitation() {
-    def temp_doi_ref = ""
-    def manifest_doi = workflow.manifest.doi.tokenize(",")
-    // Handling multiple DOIs
-    // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
-    // Removing ` ` since the manifest.doi is a string and not a proper list
-    manifest_doi.each { doi_ref ->
-        temp_doi_ref += "  https://doi.org/${doi_ref.replace('https://doi.org/', '').replace(' ', '')}\n"
-    }
-    return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" + "* The pipeline\n" + temp_doi_ref + "\n" + "* The nf-core framework\n" + "  https://doi.org/10.1038/s41587-020-0439-x\n\n" + "* Software dependencies\n" + "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
-}
-
-//
 // Generate workflow version string
 //
 def getWorkflowVersion() {
@@ -151,33 +136,6 @@ def paramsSummaryMultiqc(summary_params) {
 }
 
 //
-// nf-core logo
-//
-def nfCoreLogo(monochrome_logs=true) {
-    def colors = logColours(monochrome_logs) as Map
-    String.format(
-        """\n
-        ${dashedLine(monochrome_logs)}
-                                                ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
-        ${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
-        ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
-        ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
-                                                ${colors.green}`._,._,\'${colors.reset}
-        ${colors.purple}  ${workflow.manifest.name} ${getWorkflowVersion()}${colors.reset}
-        ${dashedLine(monochrome_logs)}
-        """.stripIndent()
-    )
-}
-
-//
-// Return dashed line
-//
-def dashedLine(monochrome_logs=true) {
-    def colors = logColours(monochrome_logs) as Map
-    return "-${colors.dim}----------------------------------------------------${colors.reset}-"
-}
-
-//
 // ANSII colours used for terminal logging
 //
 def logColours(monochrome_logs=true) {
@@ -245,28 +203,24 @@ def logColours(monochrome_logs=true) {
     return colorcodes
 }
 
+// Return a single report from an object that may be a Path or List
 //
-// Attach the multiqc report to email
-//
-def attachMultiqcReport(multiqc_report) {
-    def mqc_report = null
-    try {
-        if (workflow.success) {
-            mqc_report = multiqc_report.getVal()
-            if (mqc_report.getClass() == ArrayList && mqc_report.size() >= 1) {
-                if (mqc_report.size() > 1) {
-                    log.warn("[${workflow.manifest.name}] Found multiple reports from process 'MULTIQC', will use only one")
-                }
-                mqc_report = mqc_report[0]
-            }
+def getSingleReport(multiqc_reports) {
+    if (multiqc_reports instanceof Path) {
+        return multiqc_reports
+    } else if (multiqc_reports instanceof List) {
+        if (multiqc_reports.size() == 0) {
+            log.warn("[${workflow.manifest.name}] No reports found from process 'MULTIQC'")
+            return null
+        } else if (multiqc_reports.size() == 1) {
+            return multiqc_reports.first()
+        } else {
+            log.warn("[${workflow.manifest.name}] Found multiple reports from process 'MULTIQC', will use only one")
+            return multiqc_reports.first()
         }
+    } else {
+        return null
     }
-    catch (Exception all) {
-        if (multiqc_report) {
-            log.warn("[${workflow.manifest.name}] Could not attach MultiQC report to summary email")
-        }
-    }
-    return mqc_report
 }
 
 //
@@ -320,7 +274,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     email_fields['summary']      = summary << misc_fields
 
     // On success try attach the multiqc report
-    def mqc_report = attachMultiqcReport(multiqc_report)
+    def mqc_report = getSingleReport(multiqc_report)
 
     // Check if we are only sending emails on failure
     def email_address = email
@@ -340,7 +294,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     def email_html    = html_template.toString()
 
     // Render the sendmail template
-    def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as nextflow.util.MemoryUnit
+    def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as MemoryUnit
     def smail_fields           = [email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "${workflow.projectDir}", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes()]
     def sf                     = new File("${workflow.projectDir}/assets/sendmail_template.txt")
     def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
@@ -351,14 +305,17 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     if (email_address) {
         try {
             if (plaintext_email) {
-new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML')            }
+                new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML')
+            }
             // Try to send HTML e-mail using sendmail
             def sendmail_tf = new File(workflow.launchDir.toString(), ".sendmail_tmp.html")
             sendmail_tf.withWriter { w -> w << sendmail_html }
             ['sendmail', '-t'].execute() << sendmail_html
             log.info("-${colors.purple}[${workflow.manifest.name}]${colors.green} Sent summary e-mail to ${email_address} (sendmail)-")
         }
-        catch (Exception all) {
+        catch (Exception msg) {
+            log.debug(msg.toString())
+            log.debug("Trying with mail instead of sendmail")
             // Catch failures and try with plaintext
             def mail_cmd = ['mail', '-s', subject, '--content-type=text/html', email_address]
             mail_cmd.execute() << email_html

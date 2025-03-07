@@ -160,7 +160,7 @@ sp:
   samtools/idxstats:
     fn: "*.idxstats*"
   kraken:
-    - fn: "*report.txt"
+    - fn: "*.kraken2.report.txt"
     - fn: "*.kraken2.report_bracken.txt"
   rseqc/bam_stat:
     fn: "*.bam_stat.txt"

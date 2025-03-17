@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  # FIXME Remove these and only run on release or PRs to main
+  push:
+    branches: [main,dev]
+  pull_request:
+    branches: [main,dev]
+  release:
+    types: [published]
+  # TODO workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 1
+    # TODO matrix:
+    steps:
+      # TODO
+      # - uses: earthly/actions/setup-earthly@v1
+      #   with:
+      #     version: v0.8.13
+      - uses: actions/checkout@v2
+      - uses: nf-core/setup-nextflow@v2
+        with:
+          version: "25.01.0-edge"
+      - name: Snapshot containers
+        run: |
+          nextflow inspect . -profile wave,docker -format config > conf/containers/docker.config
+

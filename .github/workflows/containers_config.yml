@@ -1,4 +1,4 @@
-name: CI
+name: Container Configs
 
 on:
   # FIXME Remove these and only run on release or PRs to main

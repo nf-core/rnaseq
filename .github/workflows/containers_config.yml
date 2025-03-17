@@ -15,16 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_COLOR: 1
-    strategy:
-      matrix:
-        container_type: ['docker', 'singularity'] # TODO , "singularity_oras"]
-        architecture: ['amd64', 'arm64']
     steps:
-      # TODO
-      # - uses: earthly/actions/setup-earthly@v1
-      #   with:
-      #     version: v0.8.13
-      # Use the @nf-core-bot token to check out so we can push later
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           token: ${{ secrets.nf_core_bot_auth_token }}
@@ -34,12 +25,17 @@ jobs:
           version: "25.01.0-edge"
       - name: Snapshot containers
         run: |
-          if [ "${{ matrix.architecture }}" == "arm64" ]; then
-            profile="wave,${{ matrix.container_type }},arm"
-          else
-            profile="wave,${{ matrix.container_type }}"
-          fi
-          nextflow inspect . -profile $profile -format config > conf/containers/containers_${{ matrix.container_type }}_${{ matrix.architecture }}.config
+          mkdir -p conf/containers
+          for container in docker singularity; do
+            for arch in amd64 arm64; do
+              if [ "$arch" = "arm64" ]; then
+                profile="wave,$container,arm"
+              else
+                profile="wave,$container"
+              fi
+              nextflow inspect . -profile $profile -format config > conf/containers/containers_${container}_${arch}.config
+            done
+          done
       - name: Commit & push changes
         id: commit-and-push
         run: |

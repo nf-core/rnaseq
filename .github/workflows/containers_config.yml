@@ -24,7 +24,10 @@ jobs:
       # - uses: earthly/actions/setup-earthly@v1
       #   with:
       #     version: v0.8.13
-      - uses: actions/checkout@v2
+      # Use the @nf-core-bot token to check out so we can push later
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          token: ${{ secrets.nf_core_bot_auth_token }}
       - uses: nf-core/setup-nextflow@v2
         with:
           version: "25.01.0-edge"
@@ -42,7 +45,7 @@ jobs:
           git config user.email "core@nf-co.re"
           git config user.name "nf-core-bot"
           git config push.default upstream
-          git add .
+          git add conf/containers/
           git status
           git commit -m "[automated] Update container configs"
           git push

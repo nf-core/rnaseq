@@ -1,7 +1,7 @@
 name: Container Configs
 
 on:
-  # FIXME Remove these and only run on release or PRs to main
+  # FIXME Remove these and only run on release or PRs to main or TEMPLATE updates
   push:
     branches: [main,dev]
   pull_request:
@@ -36,4 +36,14 @@ jobs:
             profile="wave,${{ matrix.container_type }}"
           fi
           nextflow inspect . -profile $profile -format config > conf/containers/containers_${{ matrix.container_type }}_${{ matrix.architecture }}.config
+      - name: Commit & push changes
+        id: commit-and-push
+        run: |
+          git config user.email "core@nf-co.re"
+          git config user.name "nf-core-bot"
+          git config push.default upstream
+          git add .
+          git status
+          git commit -m "[automated] Update container configs"
+          git push
 

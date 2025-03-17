@@ -28,6 +28,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           token: ${{ secrets.nf_core_bot_auth_token }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: nf-core/setup-nextflow@v2
         with:
           version: "25.01.0-edge"

@@ -46,7 +46,7 @@ jobs:
           git config user.email "core@nf-co.re"
           git config user.name "nf-core-bot"
           git config push.default upstream
-          git add conf/containers/
+          git add conf/containers/.
           git status
           git commit -m "[automated] Update container configs"
           git push

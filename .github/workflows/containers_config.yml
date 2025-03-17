@@ -15,7 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_COLOR: 1
-    # TODO matrix:
+    strategy:
+      matrix:
+        container_type: ['docker', 'singularity'] # TODO , "singularity_oras"]
+        architecture: ['amd64', 'arm64']
     steps:
       # TODO
       # - uses: earthly/actions/setup-earthly@v1
@@ -27,5 +30,10 @@ jobs:
           version: "25.01.0-edge"
       - name: Snapshot containers
         run: |
-          nextflow inspect . -profile wave,docker -format config > conf/containers/docker.config
+          if [ "${{ matrix.architecture }}" == "arm64" ]; then
+            profile="wave,${{ matrix.container_type }},arm"
+          else
+            profile="wave,${{ matrix.container_type }}"
+          fi
+          nextflow inspect . -profile $profile -format config > conf/containers/containers_${{ matrix.container_type }}_${{ matrix.architecture }}.config
 

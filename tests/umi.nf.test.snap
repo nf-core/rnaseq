@@ -116,7 +116,8 @@
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10",
-                    "cutadapt": 4.9
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -140,7 +141,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.18.0"
+                    "nf-core/rnaseq": "v3.19.0dev"
                 }
             },
             [
@@ -1322,7 +1323,7 @@
                 "multiqc_cutadapt.txt:md5,0937983d3ddfeccd4ccc5b0d74477558",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
-                "multiqc_featurecounts_biotype_plot.txt:md5,5d1c33f3ff898b9bb95ed161e4235011",
+                "multiqc_featurecounts_biotype_plot.txt:md5,263834175c1a124e529c686b433fd005",
                 "multiqc_samtools_idxstats.txt:md5,bdf185faa6d15d22efedb39d38c84943",
                 "multiqc_umitools_dedup.txt:md5,bad73f567baddb2272488b0e78e208cb",
                 "multiqc_umitools_extract.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1506,9 +1507,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-20T00:02:04.611696704"
+        "timestamp": "2025-01-28T15:37:17.975884153"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -1620,7 +1621,8 @@
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10",
-                    "cutadapt": 4.9
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1644,7 +1646,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.18.0"
+                    "nf-core/rnaseq": "v3.19.0dev"
                 }
             },
             [
@@ -2690,7 +2692,7 @@
                 "multiqc_cutadapt.txt:md5,0937983d3ddfeccd4ccc5b0d74477558",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
-                "multiqc_featurecounts_biotype_plot.txt:md5,078841c35fb163ad1e7c99393015ecac",
+                "multiqc_featurecounts_biotype_plot.txt:md5,aa03c08d5d2fba14d6770085bc042dbc",
                 "multiqc_samtools_idxstats.txt:md5,35fe3b73df5ab19b53c117d3269e7e72",
                 "qualimap_gene_coverage_profile_Counts.txt:md5,54613117acef91c2271327e31203242c",
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,f2884314cb4296877eb6ffd03a12a5b8",
@@ -2743,9 +2745,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-19T22:33:42.012684597"
+        "timestamp": "2025-01-28T15:28:11.592812818"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [
@@ -2788,7 +2790,8 @@
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10",
-                    "cutadapt": 4.9
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
                 },
                 "UMITOOLS_EXTRACT": {
                     "umitools": "1.1.5"
@@ -2797,7 +2800,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.18.0"
+                    "nf-core/rnaseq": "v3.19.0dev"
                 }
             },
             [
@@ -2855,8 +2858,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-19T23:28:01.570835895"
+        "timestamp": "2025-01-28T15:38:40.145569546"
     }
 }

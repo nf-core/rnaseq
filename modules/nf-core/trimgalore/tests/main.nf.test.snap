@@ -1,15 +1,19 @@
 {
     "test_trimgalore_single_end": {
         "content": [
-            [
-                "versions.yml:md5,81a0b49f3a9e1315fe564f9946eb8c50"
-            ]
+            {
+                "TRIMGALORE": {
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
+                }
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-10-22T19:23:17.969056957"
+        "timestamp": "2025-01-06T12:25:01.330769598"
     },
     "test_trimgalore_single_end - stub": {
         "content": [
@@ -42,7 +46,7 @@
                     
                 ],
                 "5": [
-                    "versions.yml:md5,81a0b49f3a9e1315fe564f9946eb8c50"
+                    "versions.yml:md5,5928323d579768de37e83c56c821757f"
                 ],
                 "html": [
                     
@@ -69,18 +73,25 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,81a0b49f3a9e1315fe564f9946eb8c50"
+                    "versions.yml:md5,5928323d579768de37e83c56c821757f"
                 ],
                 "zip": [
                     
                 ]
+            },
+            {
+                "TRIMGALORE": {
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-10-22T19:23:28.617831159"
+        "timestamp": "2025-01-06T12:25:15.582246999"
     },
     "test_trimgalore_paired_end - stub": {
         "content": [
@@ -119,7 +130,7 @@
                     
                 ],
                 "5": [
-                    "versions.yml:md5,81a0b49f3a9e1315fe564f9946eb8c50"
+                    "versions.yml:md5,5928323d579768de37e83c56c821757f"
                 ],
                 "html": [
                     
@@ -152,7 +163,7 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,81a0b49f3a9e1315fe564f9946eb8c50"
+                    "versions.yml:md5,5928323d579768de37e83c56c821757f"
                 ],
                 "zip": [
                     
@@ -160,21 +171,81 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-10-22T19:23:51.539787731"
+        "timestamp": "2025-01-06T12:26:05.201562315"
+    },
+    "versions": {
+        "content": [
+            {
+                "TRIMGALORE": {
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-06T12:26:05.229598492"
     },
     "test_trimgalore_paired_end": {
         "content": [
+            {
+                "TRIMGALORE": {
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-06T12:25:33.510924538"
+    },
+    "test_trimgalore_paired_end_keep_unpaired": {
+        "content": [
+            {
+                "TRIMGALORE": {
+                    "trimgalore": "0.6.10",
+                    "cutadapt": 4.9,
+                    "pigz": 2.8
+                }
+            },
             [
-                "versions.yml:md5,81a0b49f3a9e1315fe564f9946eb8c50"
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_val_1.fq.gz:md5,75413e85910bbc2e1556e12f6479f935",
+                        "test_2_val_2.fq.gz:md5,d3c588c12646ebd36a0812fe02d0bda6"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_unpaired_1.fq.gz:md5,17e0e878f6d0e93b9008a05f128660b6",
+                        "test_2_unpaired_2.fq.gz:md5,b09a064368a867e099e66df5ef69b044"
+                    ]
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-10-22T19:23:41.16485915"
+        "timestamp": "2025-01-06T12:25:46.461002981"
     }
 }

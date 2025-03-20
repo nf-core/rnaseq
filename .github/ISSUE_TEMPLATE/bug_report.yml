@@ -9,7 +9,6 @@ body:
 
         - [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
         - [nf-core/rnaseq pipeline documentation](https://nf-co.re/rnaseq/usage)
-
   - type: textarea
     id: description
     attributes:

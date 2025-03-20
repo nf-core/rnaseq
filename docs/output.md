@@ -697,7 +697,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 </details>
 
-[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
+[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
 
 ![MultiQC - Bracken top species plot](images/bracken-top-n-plot.png)
 

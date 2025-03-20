@@ -1,5 +1,6 @@
 ---
 order: 3
+shortTitle: rnaseq pipeline
 ---
 
 # The nf-core/rnaseq pipeline
@@ -10,9 +11,7 @@ In order to carry out a RNA-Seq analysis we will use the nf-core pipeline [rnase
 
 The pipeline is organised following the diffent blocks shown below: pre-processing, traditional alignment (or lightweight alignment) and quantification, post-processing and final QC.
 
-<figure markdown="span">
-  ![metromap](./img/nf-core-rnaseq_metro_map_grey.png){ width="1000"}
-</figure>
+![metromap](../differential_expression_analysis/img/nf-core-rnaseq_metro_map_grey.png)
 
 In each process, the users can choose among a range of different options. Importantly, the users can decide to follow one of the two different routes in the alignment and quantification step:
 
@@ -25,7 +24,7 @@ In each process, the users can choose among a range of different options. Import
 The number of reads and the number of biological replicates are two critical factors that researchers need to carefully consider during the design of a RNA-seq experiment. While it may seem intuitive that having a large number of reads is always desirable, an excessive number can lead to unnecessary costs and computational burdens, without providing significant improvements. Instead, it is often more beneficial to prioritise the number of biological replicates, as it allows to capture the natural biological variation of the data. Biological replicates involve collecting and sequencing RNA from distinct biological samples (e.g., different individuals, tissues, or time points), helping to detect genuine changes in gene expression.
 
 :::warning
-This concept must not be confused with technical replicates that asses the technical variability of the sequencing platform by sequencing the same RNA sample multiple time.
+This concept must not be confused with technical replicates that asses the technical variability of the sequencing platform by sequencing the same RNA sample multiple times.
 :::
 
 To obtain optimal results, it is crucial to balance the number of biological replicates and the sequencing depth. While increasing the depth of sequencing enhances the ability to detect genes with low expression levels, there is a plateau beyond which no further benefits are gained. Statistical power calculations can inform experimental design by estimating the optimal number of reads and replicates required. For instance, this approach helps to establish a suitable log2 fold change threshold for the DE analysis. By incorporating multiple biological replicates into the design and optimizing sequencing depth, researchers can enhance the statistical power of the analysis, reducing the number of false positive results, and increasing the reliability of the findings.

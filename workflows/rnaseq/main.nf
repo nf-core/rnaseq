@@ -141,7 +141,7 @@ workflow RNASEQ {
         ch_sortmerna_index,
         ch_bbsplit_index,
         ch_ribo_db,
-        params.skip_bbsplit,
+        params.skip_bbsplit || ! params.fasta,
         params.skip_fastqc || params.skip_qc,
         params.skip_trimming,
         params.skip_umi_extract,

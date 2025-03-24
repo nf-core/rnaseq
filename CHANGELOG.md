@@ -13,7 +13,7 @@ Special thanks to the following for their contributions to the release:
 
 ### Enhancements & fixes
 
-- [PR #1524](https://github.com/nf-core/rnaseq/pull/1524) - Fix naming of GFFREAD outputs (`null.gtf`).
+- [PR #1526](https://github.com/nf-core/rnaseq/pull/1526) - Fix naming of GFFREAD outputs (`null.gtf`).
 
 # 3.18.0 - 2024-12-19
 

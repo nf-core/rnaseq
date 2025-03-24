@@ -92,7 +92,8 @@ workflow PREPARE_GENOME {
                 ch_gff      = GUNZIP_GFF ( [ [:], file(gff, checkIfExists: true) ] ).gunzip
                 ch_versions = ch_versions.mix(GUNZIP_GFF.out.versions)
             } else {
-                ch_gff = Channel.value(file(gff, checkIfExists: true)).map { [ [:], it ] }
+                gff_file = file(gff, checkIfExists: true)
+                ch_gff   = Channel.value( gff_file ).map { [ ['id': "${gff_file.baseName}"], it ] }
             }
             ch_gtf      = GFFREAD ( ch_gff, [] ).gtf.map { it[1] }
             ch_versions = ch_versions.mix(GFFREAD.out.versions)

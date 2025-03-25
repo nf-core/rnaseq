@@ -2,7 +2,7 @@ name: Test successful pipeline download with 'nf-core pipelines download'
 
 # Run the workflow when:
 #  - dispatched manually
-#  - when a PR is opened or reopened to master branch
+#  - when a PR is opened or reopened to main/master branch
 #  - the head branch of the pull request is updated, i.e. if fixes for a release are pushed last minute to dev.
 on:
   workflow_dispatch:
@@ -17,17 +17,34 @@ on:
       - edited
       - synchronize
     branches:
+      - main
       - master
   pull_request_target:
     branches:
+      - main
       - master
 
 env:
   NXF_ANSI_LOG: false
 
 jobs:
+  configure:
+    runs-on: ubuntu-latest
+    outputs:
+      REPO_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPO_LOWERCASE }}
+      REPOTITLE_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPOTITLE_LOWERCASE }}
+      REPO_BRANCH: ${{ steps.get_repo_properties.outputs.REPO_BRANCH }}
+    steps:
+      - name: Get the repository name and current branch
+        id: get_repo_properties
+        run: |
+          echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> "$GITHUB_OUTPUT"
+          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> "$GITHUB_OUTPUT"
+
   download:
     runs-on: ubuntu-latest
+    needs: configure
     steps:
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v2
@@ -35,7 +52,7 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
-      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
         with:
           python-version: "3.12"
           architecture: "x64"
@@ -50,12 +67,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://github.com/nf-core/tools.git@dev
 
-      - name: Get the repository name and current branch set as environment variable
-        run: |
-          echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-          echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> ${GITHUB_ENV}
-          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> ${GITHUB_ENV}
-
       - name: Make a cache directory for the container images
         run: |
           mkdir -p ./singularity_container_images
@@ -64,24 +75,27 @@ jobs:
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
         run: |
-          nf-core pipelines download ${{ env.REPO_LOWERCASE }} \
-          --revision ${{ env.REPO_BRANCH }} \
-          --outdir ./${{ env.REPOTITLE_LOWERCASE }} \
+          nf-core pipelines download ${{ needs.configure.outputs.REPO_LOWERCASE }} \
+          --revision ${{ needs.configure.outputs.REPO_BRANCH }} \
+          --outdir ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }} \
           --compress "none" \
           --container-system 'singularity' \
-          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io" \
+          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io/library/" \
           --container-cache-utilisation 'amend' \
           --download-configuration 'yes'
 
       - name: Inspect download
-        run: tree ./${{ env.REPOTITLE_LOWERCASE }}
+        run: tree ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }}
+
+      - name: Inspect container images
+        run: tree ./singularity_container_images | tee ./container_initial
 
       - name: Count the downloaded number of container images
         id: count_initial
         run: |
           image_count=$(ls -1 ./singularity_container_images | wc -l | xargs)
           echo "Initial container image count: $image_count"
-          echo "IMAGE_COUNT_INITIAL=$image_count" >> ${GITHUB_ENV}
+          echo "IMAGE_COUNT_INITIAL=$image_count" >> "$GITHUB_OUTPUT"
 
       - name: Run the downloaded pipeline (stub)
         id: stub_run_pipeline
@@ -89,30 +103,31 @@ jobs:
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
           NXF_SINGULARITY_HOME_MOUNT: true
-        run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results
+        run: nextflow run ./${{needs.configure.outputs.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ needs.configure.outputs.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results
       - name: Run the downloaded pipeline (stub run not supported)
         id: run_pipeline
-        if: ${{ job.steps.stub_run_pipeline.status == failure() }}
+        if: ${{ steps.stub_run_pipeline.outcome == 'failure' }}
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
           NXF_SINGULARITY_HOME_MOUNT: true
-        run: nextflow run ./${{ env.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ env.REPO_BRANCH }}) -profile test,singularity --outdir ./results
+        run: nextflow run ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ needs.configure.outputs.REPO_BRANCH }}) -profile test,singularity --outdir ./results
 
       - name: Count the downloaded number of container images
         id: count_afterwards
         run: |
           image_count=$(ls -1 ./singularity_container_images | wc -l | xargs)
           echo "Post-pipeline run container image count: $image_count"
-          echo "IMAGE_COUNT_AFTER=$image_count" >> ${GITHUB_ENV}
+          echo "IMAGE_COUNT_AFTER=$image_count" >> "$GITHUB_OUTPUT"
 
       - name: Compare container image counts
         run: |
-          if [ "${{ env.IMAGE_COUNT_INITIAL }}" -ne "${{ env.IMAGE_COUNT_AFTER }}" ]; then
-            initial_count=${{ env.IMAGE_COUNT_INITIAL }}
-            final_count=${{ env.IMAGE_COUNT_AFTER }}
+          if [ "${{ steps.count_initial.outputs.IMAGE_COUNT_INITIAL }}" -ne "${{ steps.count_afterwards.outputs.IMAGE_COUNT_AFTER }}" ]; then
+            initial_count=${{ steps.count_initial.outputs.IMAGE_COUNT_INITIAL }}
+            final_count=${{ steps.count_afterwards.outputs.IMAGE_COUNT_AFTER }}
             difference=$((final_count - initial_count))
             echo "$difference additional container images were \n downloaded at runtime . The pipeline has no support for offline runs!"
-            tree ./singularity_container_images
+            tree ./singularity_container_images > ./container_afterwards
+            diff ./container_initial ./container_afterwards
             exit 1
           else
             echo "The pipeline can be downloaded successfully!"

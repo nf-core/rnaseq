@@ -100,6 +100,7 @@ workflow PIPELINE_COMPLETION {
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def multiqc_reports = multiqc_report.toList()
 
     trim_status
         .map{
@@ -130,7 +131,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report_list.getVal()
+                multiqc_reports.getVal(),
             )
         }
 
@@ -180,8 +181,14 @@ def validateInputParameters() {
 
     genomeExistsError()
 
-    if (!params.fasta) {
-        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
+    if (
+        !params.fasta &&
+        (
+            ! params.skip_alignment ||  // Alignment needs fasta
+            ! params.transcript_fasta // Dynamically making a transcript fasta needs the fasta
+        )
+    ) {
+        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file. You must supply a genome FASTA file or use --skip_alignment and provide your own transcript fasta using --transcript_fasta for use in quantification.")
     }
 
     if (!params.gtf && !params.gff) {
@@ -352,7 +359,7 @@ def toolBibliographyText() {
 }
 
 def methodsDescriptionText(mqc_methods_yaml) {
-    // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+    // Convert  to a named map so can be used as with familiar NXF ${workflow} variable syntax in the MultiQC YML file
     def meta = [:]
     meta.workflow = workflow.toMap()
     meta["manifest_map"] = workflow.manifest.toMap()

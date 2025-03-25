@@ -3,7 +3,7 @@ process STAR_GENOMEGENERATE {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container 'nf-core/htslib_samtools_star_gawk:311d422a50e6d829'
+    container 'nf-core/htslib_samtools_star_gawk:ae438e9a604351a4'
 
     input:
     tuple val(meta), path(fasta)

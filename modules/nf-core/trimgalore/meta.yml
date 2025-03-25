@@ -33,21 +33,24 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*{3prime,5prime,trimmed,val}*.fq.gz":
-          type: file
+      - "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz":
+          type: map
           description: |
-            List of input adapter trimmed FastQ files of size 1 and 2 for
-            single-end and paired-end data, respectively.
-          pattern: "*{3prime,5prime,trimmed,val}*.fq.gz"
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz"
   - log:
       - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
+          pattern: "*_{report.txt}"
       - "*report.txt":
-          type: file
-          description: Trim Galore! trimming report
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*_{report.txt}"
   - unpaired:
       - meta:
@@ -55,10 +58,11 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*unpaired*.fq.gz":
-          type: file
+      - "*unpaired{,_1,_2}.fq.gz":
+          type: map
           description: |
-            FastQ files containing unpaired reads from read 1 or read 2
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*unpaired*.fq.gz"
   - html:
       - meta:
@@ -66,9 +70,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.html}"
       - "*.html":
-          type: file
-          description: FastQC report (optional)
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*_{fastqc.html}"
   - zip:
       - meta:
@@ -76,9 +83,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.zip}"
       - "*.zip":
-          type: file
-          description: FastQC report archive (optional)
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*_{fastqc.zip}"
   - versions:
       - versions.yml:

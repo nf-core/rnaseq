@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -20,8 +23,9 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
-                    "fa_icon": "fas fa-file-csv"
+                    "help_text": "Create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It must be a comma-separated file with 4 columns and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
+                    "fa_icon": "fas fa-file-csv",
+                    "errorMessage": "The input must be a valid CSV file path with no spaces, ending in '.csv', and must exist."
                 },
                 "outdir": {
                     "type": "string",
@@ -34,7 +38,8 @@
                     "description": "Email address for completion summary.",
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "errorMessage": "The email must be a valid address in the format 'name@example.com' and must not contain spaces."
                 },
                 "multiqc_title": {
                     "type": "string",
@@ -63,7 +68,8 @@
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have the appropriate alignment index available this will be generated for you automatically. Combine with `--save_reference` to save alignment index for future runs.",
-                    "fa_icon": "far fa-file-code"
+                    "fa_icon": "far fa-file-code",
+                    "errorMessage": "The FASTA file path must end with .fa, .fna, .fasta optionally with .gz, must not contain spaces, and must exist."
                 },
                 "gtf": {
                     "type": "string",
@@ -73,7 +79,8 @@
                     "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
                     "fa_icon": "fas fa-code-branch",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified."
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
+                    "errorMessage": "The GTF file must have a .gtf or .gtf.gz extension, must not contain spaces, and must exist."
                 },
                 "gff": {
                     "type": "string",
@@ -83,7 +90,8 @@
                     "pattern": "^\\S+\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Path to GFF3 annotation file.",
-                    "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified."
+                    "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified.",
+                    "errorMessage": "The GFF file must have a .gff or .gff.gz extension, must not contain spaces, and must exist."
                 },
                 "gene_bed": {
                     "type": "string",
@@ -92,7 +100,8 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
-                    "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
+                    "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified.",
+                    "errorMessage": "The BED file must have a .bed or .bed.gz extension, must not contain spaces, and must exist."
                 },
                 "transcript_fasta": {
                     "type": "string",
@@ -162,7 +171,8 @@
                     "fa_icon": "fas fa-memory",
                     "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "description": "Minimum memory required to use splice sites and exons in the HiSAT2 index build process.",
-                    "help_text": "HiSAT2 requires a huge amount of RAM to build a genome index for larger genomes, if including splice sites and exons e.g. the human genome might typically require 200GB. If you specify less than this threshold for the `HISAT2_BUILD` process then the splice sites and exons will be ignored, meaning that the process will require a lot less memory. If you are working with a small genome, set this parameter to a lower value to reduce the threshold for skipping this check. If using a larger genome, consider supplying more memory to the `HISAT2_BUILD` process."
+                    "help_text": "HiSAT2 requires a huge amount of RAM to build a genome index for larger genomes, if including splice sites and exons e.g. the human genome might typically require 200GB. If you specify less than this threshold for the `HISAT2_BUILD` process then the splice sites and exons will be ignored, meaning that the process will require a lot less memory. If you are working with a small genome, set this parameter to a lower value to reduce the threshold for skipping this check. If using a larger genome, consider supplying more memory to the `HISAT2_BUILD` process.",
+                    "errorMessage": "Memory format must be a valid string like '200.GB', '16.MB', '8KB'."
                 },
                 "gencode": {
                     "type": "boolean",
@@ -224,7 +234,10 @@
                     "default": "trimgalore",
                     "description": "Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'.",
                     "fa_icon": "fas fa-cut",
-                    "enum": ["trimgalore", "fastp"]
+                    "enum": [
+                        "trimgalore",
+                        "fastp"
+                    ]
                 },
                 "extra_trimgalore_args": {
                     "type": "string",
@@ -310,7 +323,10 @@
                     "default": "umitools",
                     "description": "Specifies the tool to use for UMI deduplication - available options are 'umitools' and 'umicollapse'.",
                     "fa_icon": "fas fa-barcode",
-                    "enum": ["umitools", "umicollapse"]
+                    "enum": [
+                        "umitools",
+                        "umicollapse"
+                    ]
                 },
                 "umitools_extract_method": {
                     "type": "string",
@@ -345,7 +361,13 @@
                     "default": "directional",
                     "fa_icon": "far fa-object-ungroup",
                     "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
-                    "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
+                    "enum": [
+                        "unique",
+                        "percentile",
+                        "cluster",
+                        "adjacency",
+                        "directional"
+                    ]
                 },
                 "umitools_dedup_stats": {
                     "type": "boolean",
@@ -367,13 +389,20 @@
                     "default": "star_salmon",
                     "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
                     "fa_icon": "fas fa-map-signs",
-                    "enum": ["star_salmon", "star_rsem", "hisat2"]
+                    "enum": [
+                        "star_salmon",
+                        "star_rsem",
+                        "hisat2"
+                    ]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": ["salmon", "kallisto"]
+                    "enum": [
+                        "salmon",
+                        "kallisto"
+                    ]
                 },
                 "pseudo_aligner_kmer_size": {
                     "type": "integer",
@@ -569,7 +598,10 @@
                     "type": "string",
                     "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
-                    "enum": ["kraken2", "kraken2_bracken"]
+                    "enum": [
+                        "kraken2",
+                        "kraken2_bracken"
+                    ]
                 },
                 "kraken_db": {
                     "type": "string",
@@ -583,7 +615,15 @@
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
                     "help_text": "First letter of Domain / Phylum / Class / Order / Family / Genus / Species",
-                    "enum": ["D", "P", "C", "O", "F", "G", "S"]
+                    "enum": [
+                        "D",
+                        "P",
+                        "C",
+                        "O",
+                        "F",
+                        "G",
+                        "S"
+                    ]
                 }
             }
         },
@@ -597,12 +637,12 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
                     "description": "Skip filtering of GTF for valid scaffolds and/ or transcript IDs.",
-                    "help_text": "If you're confident on the validity of the GTF with respect to the genome fasta file, or wish to disregard failures thriggered by the filtering module, activate this option."
+                    "help_text": "If you're confident in the validity of the GTF with respect to the genome FASTA file, or wish to disregard failures triggered by the filtering module, activate this option."
                 },
                 "skip_gtf_transcript_filter": {
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
-                    "description": "Skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline."
+                    "errorMessage": "Skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline. Ensure the GTF file is valid."
                 },
                 "skip_bbsplit": {
                     "type": "boolean",
@@ -766,7 +806,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {

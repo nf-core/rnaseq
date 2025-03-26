@@ -44,6 +44,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1474](https://github.com/nf-core/rnaseq/pull/1474) - Bump versions to 3.18.0
 - [PR #1475](https://github.com/nf-core/rnaseq/pull/1475) - Fix log publishing around umitools/ umicollapse
 - [PR #1447](https://github.com/nf-core/rnaseq/pull/1447) - Add tutorial series for analysing count data
+- [PR #1518](https://github.com/nf-core/rnaseq/pull/1518) - Remove duplicated text in README.md
 
 ## Parameters
 

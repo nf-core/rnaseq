@@ -17,19 +17,20 @@
             "properties": {
                 "input": {
                     "type": "string",
+                    "description": "Path to the sample sheet (CSV) containing metadata about the experimental samples.",
+                    "help_text": "Provide the full path to a comma-separated sample sheet with 4 columns and a header row. This file is required to run the pipeline. See the [nf-core/rnaseq sample sheet documentation](https://nf-co.re/rnaseq/usage#samplesheet-input) for example format.",
                     "format": "file-path",
                     "exists": true,
                     "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "Create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It must be a comma-separated file with 4 columns and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv",
                     "errorMessage": "The input must be a valid CSV file path with no spaces, ending in '.csv', and must exist."
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
+                    "minLength": 1,
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
@@ -37,7 +38,7 @@
                     "type": "string",
                     "description": "Email address for completion summary.",
                     "fa_icon": "fas fa-envelope",
-                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "help_text": "Provide your email address to receive a summary report when the workflow completes. If set in your user config file (`~/.nextflow/config`), you don't need to specify this for each run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
                     "errorMessage": "The email must be a valid address in the format 'name@example.com' and must not contain spaces."
                 },
@@ -58,7 +59,10 @@
                     "type": "string",
                     "description": "Name of iGenomes reference.",
                     "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes (not recommended), use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                    "minLength": 1,
+                    "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                    "errorMessage": "The genome name must not contain spaces and must be a valid identifier.",
+                    "help_text": "If using a reference genome configured with iGenomes (not recommended), provide the ID for the reference (e.g., `--genome GRCh38`). This builds paths for all required reference files. See the [nf-core documentation](https://nf-co.re/usage/reference_genomes) for details."
                 },
                 "fasta": {
                     "type": "string",
@@ -67,7 +71,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have the appropriate alignment index available this will be generated for you automatically. Combine with `--save_reference` to save alignment index for future runs.",
+                    "help_text": "This parameter is mandatory if `--genome` is not specified. If you don't have the appropriate alignment index, it will be generated automatically. Use with `--save_reference` to store the index for future runs.",
                     "fa_icon": "far fa-file-code",
                     "errorMessage": "The FASTA file path must end with .fa, .fna, .fasta optionally with .gz, must not contain spaces, and must exist."
                 },
@@ -79,7 +83,7 @@
                     "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
                     "fa_icon": "fas fa-code-branch",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
+                    "help_text": "This parameter is mandatory if `--genome` is not specified.",
                     "errorMessage": "The GTF file must have a .gtf or .gtf.gz extension, must not contain spaces, and must exist."
                 },
                 "gff": {
@@ -90,7 +94,7 @@
                     "pattern": "^\\S+\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Path to GFF3 annotation file.",
-                    "help_text": "This parameter must be specified if `--genome` or `--gtf` are not specified.",
+                    "help_text": "This parameter must be specified if neither `--genome` nor `--gtf` is provided.",
                     "errorMessage": "The GFF file must have a .gff or .gff.gz extension, must not contain spaces, and must exist."
                 },
                 "gene_bed": {
@@ -120,7 +124,7 @@
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences.",
-                    "help_text": "If provided, the sequences in this file will get concatenated to the existing genome FASTA file, a GTF file will be automatically created using the entire sequence as the gene, transcript, and exon features, and any alignment index will get created from the combined FASTA and GTF. It is recommended to save the reference with `--save_reference` to re-use the index for future runs so you do not need to create it again."
+                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs."
                 },
                 "splicesites": {
                     "type": "string",
@@ -171,21 +175,21 @@
                     "fa_icon": "fas fa-memory",
                     "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "description": "Minimum memory required to use splice sites and exons in the HiSAT2 index build process.",
-                    "help_text": "HiSAT2 requires a huge amount of RAM to build a genome index for larger genomes, if including splice sites and exons e.g. the human genome might typically require 200GB. If you specify less than this threshold for the `HISAT2_BUILD` process then the splice sites and exons will be ignored, meaning that the process will require a lot less memory. If you are working with a small genome, set this parameter to a lower value to reduce the threshold for skipping this check. If using a larger genome, consider supplying more memory to the `HISAT2_BUILD` process.",
+                    "help_text": "HiSAT2 requires significant RAM to build genome indices for large genomes with splice sites and exons (human genome typically needs 200GB). If you provide less memory than this threshold, splice sites and exons will be ignored, reducing memory requirements. For small genomes, set a lower value; for larger genomes, provide more memory.",
                     "errorMessage": "Memory format must be a valid string like '200.GB', '16.MB', '8KB'."
                 },
                 "gencode": {
                     "type": "boolean",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Specify if your GTF annotation is in GENCODE format.",
-                    "help_text": "If your GTF file is in GENCODE format and you would like to run Salmon i.e. `--pseudo_aligner salmon`, you will need to provide this parameter in order to build the Salmon index appropriately."
+                    "help_text": "If your GTF file is in GENCODE format and you want to run Salmon (using `--pseudo_aligner salmon`), enable this parameter to build the Salmon index correctly."
                 },
                 "gtf_extra_attributes": {
                     "type": "string",
                     "default": "gene_name",
                     "fa_icon": "fas fa-plus-square",
                     "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file when running Salmon.",
-                    "help_text": "This behaviour can be modified by specifying `--gtf_extra_attributes` when running the pipeline. Note that you can also specify more than one desired value, separated by a comma e.g. `--gtf_extra_attributes gene_id,...`.\n"
+                    "help_text": "Modify this parameter to change which attributes are extracted from the GTF file when running Salmon. You can specify multiple values separated by commas (e.g., `--gtf_extra_attributes gene_id,transcript_id`)."
                 },
                 "gtf_group_features": {
                     "type": "string",
@@ -204,14 +208,14 @@
                     "default": "exon",
                     "description": "By default, the pipeline assigns reads based on the 'exon' attribute within the GTF file.",
                     "fa_icon": "fas fa-indent",
-                    "help_text": "The feature type used from the GTF file when generating the biotype plot with featureCounts."
+                    "help_text": "Specifies the feature type from the GTF file to use when generating the biotype plot with featureCounts."
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "help_text": "Prevent loading of `igenomes.config` when running the pipeline. Use this option if you encounter conflicts between custom parameters and those in the iGenomes configuration."
                 },
                 "igenomes_base": {
                     "type": "string",
@@ -241,11 +245,13 @@
                 },
                 "extra_trimgalore_args": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_fastp_args": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "Extra arguments to pass to fastp command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
                 },
@@ -270,7 +276,7 @@
                     "mimetype": "text/plain",
                     "fa_icon": "fas fa-list-alt",
                     "description": "Path to comma-separated file containing a list of reference genomes to filter reads against with BBSplit. You have to also explicitly set `--skip_bbsplit false` if you want to use BBSplit.",
-                    "help_text": "The file should contain 2 columns: short name and full path to reference genome(s) e.g. \n```\nmm10,/path/to/mm10.fa\necoli,/path/to/ecoli.fa\n```"
+                    "help_text": "The file should contain 2 columns: short name and full path to reference genome(s), for example:\n```\nmm10,/path/to/mm10.fa\necoli,/path/to/ecoli.fa\n```"
                 },
                 "bbsplit_index": {
                     "type": "string",
@@ -278,7 +284,7 @@
                     "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built BBSplit index.",
-                    "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference` to save index). It can then be provided via `--bbsplit_index` for future runs."
+                    "help_text": "The BBSplit index must be built at least once with this pipeline. Use `--save_reference` to save the index, which can then be provided via `--bbsplit_index` for future runs."
                 },
                 "sortmerna_index": {
                     "type": "string",
@@ -286,13 +292,13 @@
                     "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built sortmerna index.",
-                    "help_text": "The sortmerna index will have to be built at least once with this pipeline (see `--save_reference` to save index). It can then be provided via `--sortmerna_index` for future runs."
+                    "help_text": "The SortMeRNA index must be built at least once with this pipeline. Use `--save_reference` to save the index, which can then be provided via `--sortmerna_index` for future runs."
                 },
                 "remove_ribo_rna": {
                     "type": "boolean",
                     "fa_icon": "fas fa-trash-alt",
                     "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
-                    "help_text": "Any patterns found in the sequences defined by the '--ribo_database_manifest' parameter will be used."
+                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering."
                 },
                 "ribo_database_manifest": {
                     "type": "string",
@@ -302,7 +308,7 @@
                     "default": "${projectDir}/workflows/rnaseq/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database",
                     "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
-                    "help_text": "By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline Github repository in `assets/rrna-default-dbs.txt`.\nPlease note that commercial/non-academic entities require [`licensing for SILVA`](https://www.arb-silva.de/silva-license-information) for these default databases."
+                    "help_text": "By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) from the SortMeRNA GitHub repository are used. See the example in `assets/rrna-default-dbs.txt`. Note: commercial/non-academic entities require [SILVA licensing](https://www.arb-silva.de/silva-license-information) for these databases."
                 }
             },
             "fa_icon": "fas fa-trash-alt"
@@ -333,16 +339,18 @@
                     "default": "string",
                     "fa_icon": "fas fa-barcode",
                     "description": "UMI pattern to use. Can be either 'string' (default) or 'regex'.",
-                    "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).\n"
+                    "help_text": "Detailed information can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method)."
                 },
                 "umitools_bc_pattern": {
                     "type": "string",
+                    "minLength": 1,
                     "fa_icon": "fas fa-barcode",
-                    "help_text": "More details can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
+                    "help_text": "Detailed information can be found in the [UMI-tools documentation](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method).",
                     "description": "The UMI barcode pattern to use e.g. 'NNNNNN' indicates that the first 6 nucleotides of the read are from the UMI."
                 },
                 "umitools_bc_pattern2": {
                     "type": "string",
+                    "minLength": 1,
                     "fa_icon": "fas fa-barcode",
                     "description": "The UMI barcode pattern to use if the UMI is located in read 2."
                 },
@@ -353,6 +361,8 @@
                 },
                 "umitools_umi_separator": {
                     "type": "string",
+                    "pattern": "^\\S+$",
+                    "errorMessage": "The UMI separator must not contain spaces and must be a single character (e.g., ':').",
                     "fa_icon": "fas fa-star-half-alt",
                     "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
                 },
@@ -372,7 +382,7 @@
                 "umitools_dedup_stats": {
                     "type": "boolean",
                     "fa_icon": "fas fa-barcode",
-                    "help_text": "It can be quite time consuming generating these output stats - see [#827](https://github.com/nf-core/rnaseq/issues/827).",
+                    "help_text": "Generating these output statistics can be time-consuming. See [issue #827](https://github.com/nf-core/rnaseq/issues/827) for more information.",
                     "description": "Generate output stats when running \"umi_tools dedup\"."
                 }
             },
@@ -408,7 +418,7 @@
                     "type": "integer",
                     "default": 31,
                     "description": "Kmer length passed to indexing step of pseudoaligners",
-                    "help_text": "Failure to set a good kmer size could cause issues with quantification with Kallisto or Salmon. This is mostly an issue for short reads (<50bp), where the default kmer size of 31 is an problem.",
+                    "help_text": "Setting an appropriate kmer size is crucial for quantification with Kallisto or Salmon. This is particularly important for short reads (<50bp), where the default size of 31 can cause problems.",
                     "fa_icon": "fas fa-ruler-horizontal"
                 },
                 "bam_csi_index": {
@@ -425,7 +435,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-fast-forward",
                     "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
-                    "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html).",
+                    "help_text": "Refer to the [Salmon documentation](https://salmon.readthedocs.io/en/latest/library_type.html) for details on library types.",
                     "enum": [
                         "A",
                         "IS",
@@ -450,10 +460,11 @@
                     "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
-                    "help_text": "Some downstream steps in the pipeline will fail if this threshold is too low."
+                    "help_text": "Downstream pipeline steps may fail if this threshold is set too low."
                 },
                 "seq_center": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "Sequencing center information to be added to read group of BAM files.",
                     "fa_icon": "fas fa-synagogue"
                 },
@@ -464,16 +475,19 @@
                 },
                 "extra_star_align_args": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline. Only available for the STAR-Salmon route.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_salmon_quant_args": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_kallisto_quant_args": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "Extra arguments to pass to Kallisto quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
                 },
@@ -534,38 +548,38 @@
                 "save_reference": {
                     "type": "boolean",
                     "description": "If generated by the pipeline save the STAR index in the results directory.",
-                    "help_text": "If an alignment index is generated by the pipeline use this parameter to save it to your results folder. These can then be used for future pipeline runs, reducing processing times.",
+                    "help_text": "If the pipeline generates an alignment index, use this parameter to save it to your results folder for future pipeline runs, reducing processing time.",
                     "fa_icon": "fas fa-save"
                 },
                 "save_trimmed": {
                     "type": "boolean",
                     "description": "Save the trimmed FastQ files in the results directory.",
-                    "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete.",
+                    "help_text": "By default, trimmed FastQ files are not saved. Enable this option to copy these files to the results directory.",
                     "fa_icon": "fas fa-save"
                 },
                 "save_align_intermeds": {
                     "type": "boolean",
                     "description": "Save the intermediate BAM files from the alignment step.",
-                    "help_text": "By default, intermediate BAM files will not be saved. The final BAM files created after the appropriate filtering step are always saved to limit storage usage. Set this parameter to also save other intermediate BAM files.",
+                    "help_text": "By default, only final filtered BAM files are saved to conserve storage. Enable this option to also save intermediate BAM files from the alignment process.",
                     "fa_icon": "fas fa-save"
                 },
                 "save_unaligned": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
                     "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
-                    "help_text": "This may either be in the form of FastQ or BAM files depending on the options available for that particular tool."
+                    "help_text": "Output may be in FastQ or BAM format depending on the options available for the specific alignment tool used."
                 },
                 "save_kraken_assignments": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
                     "description": "Save read-by-read assignments from Kraken2.",
-                    "help_text": "`--kraken_db` parameter must be provided."
+                    "help_text": "The `--kraken_db` parameter must be provided to use this option."
                 },
                 "save_kraken_unassigned": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
                     "description": "Save reads that were not given assignment from Kraken2.",
-                    "help_text": "`--kraken_db` parameter must be provided."
+                    "help_text": "The `--kraken_db` parameter must be provided to use this option."
                 }
             }
         },
@@ -577,6 +591,7 @@
             "properties": {
                 "extra_fqlint_args": {
                     "type": "string",
+                    "minLength": 1,
                     "default": "--disable-validator P001",
                     "description": "Extra arguments to pass to the fq lint command.",
                     "fa_icon": "far fa-check-square"
@@ -584,15 +599,18 @@
                 "deseq2_vst": {
                     "type": "boolean",
                     "description": "Use vst transformation instead of rlog with DESeq2.",
-                    "help_text": "See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization).",
+                    "help_text": "See the [DESeq2 documentation](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) for details on transformations.",
                     "fa_icon": "fas fa-dolly",
                     "default": true
                 },
                 "rseqc_modules": {
                     "type": "string",
+                    "description": "Comma-separated list of RSeQC modules to run.",
+                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication.",
+                    "errorMessage": "The RSeQC modules must be a comma-separated list of valid module names.",
+                    "minLength": 1,
                     "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
-                    "fa_icon": "fas fa-chart-pie",
-                    "description": "Specify the RSeQC modules to run."
+                    "fa_icon": "fas fa-chart-pie"
                 },
                 "contaminant_screening": {
                     "type": "string",
@@ -605,8 +623,9 @@
                 },
                 "kraken_db": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Database when using Kraken2/Bracken for contaminant screening.",
-                    "help_text": "See the usage tab for more information",
+                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases.",
                     "fa_icon": "fas fa-fish"
                 },
                 "bracken_precision": {
@@ -614,7 +633,7 @@
                     "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
-                    "help_text": "First letter of Domain / Phylum / Class / Order / Family / Genus / Species",
+                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species.",
                     "enum": [
                         "D",
                         "P",
@@ -637,7 +656,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
                     "description": "Skip filtering of GTF for valid scaffolds and/ or transcript IDs.",
-                    "help_text": "If you're confident in the validity of the GTF with respect to the genome FASTA file, or wish to disregard failures triggered by the filtering module, activate this option."
+                    "help_text": "If you're confident in your GTF file's compatibility with the genome FASTA file, or want to ignore filtering errors, enable this option."
                 },
                 "skip_gtf_transcript_filter": {
                     "type": "boolean",
@@ -663,7 +682,7 @@
                 "skip_trimming": {
                     "type": "boolean",
                     "description": "Skip the adapter trimming step.",
-                    "help_text": "Use this if your input FastQ files have already been trimmed outside of the workflow or if you're very confident that there is no adapter contamination in your data.",
+                    "help_text": "Use this option if your FastQ files have already been trimmed or if you're certain they contain no adapter contamination.",
                     "fa_icon": "fas fa-fast-forward"
                 },
                 "skip_alignment": {
@@ -744,7 +763,7 @@
             "type": "object",
             "fa_icon": "fas fa-university",
             "description": "Parameters used to describe centralised config profiles. These should not be edited.",
-            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "help_text": "These parameters define centralized configuration profiles that appear in the Nextflow log when you run a pipeline. You typically don't need to modify these values.",
             "properties": {
                 "custom_config_version": {
                     "type": "string",
@@ -758,7 +777,7 @@
                     "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
-                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
+                    "help_text": "When running offline, Nextflow cannot retrieve institutional configuration files from the internet. If needed, download these files from the repository and specify their location with this parameter.",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "config_profile_name": {
@@ -792,7 +811,7 @@
             "type": "object",
             "fa_icon": "fas fa-file-import",
             "description": "Less common options for the pipeline, typically set in a config file.",
-            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "help_text": "These options are common across all nf-core pipelines and control core pipeline behavior. Typically set in a Nextflow config file (e.g., `~/.nextflow/config`) for all pipeline runs.",
             "properties": {
                 "version": {
                     "type": "boolean",
@@ -804,7 +823,7 @@
                     "type": "string",
                     "default": "copy",
                     "description": "Method used to save pipeline results to output directory.",
-                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "help_text": "Controls how files are saved to the output directory through Nextflow's `publishDir` directive. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/process.html#publishdir) for available options.",
                     "fa_icon": "fas fa-copy",
                     "enum": [
                         "symlink",
@@ -821,7 +840,7 @@
                     "description": "Email address for completion summary, only when pipeline fails.",
                     "fa_icon": "fas fa-exclamation-triangle",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-                    "help_text": "An email address to send a summary email to when the pipeline is completed - ONLY sent if the pipeline does not exit successfully.",
+                    "help_text": "Specify an email address to receive a summary report only when the pipeline fails to complete successfully.",
                     "hidden": true
                 },
                 "plaintext_email": {
@@ -845,9 +864,11 @@
                 },
                 "hook_url": {
                     "type": "string",
-                    "description": "Incoming hook URL for messaging service",
+                    "format": "uri",
+                    "minLength": 1,
+                    "description": "Incoming Webhook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "help_text": "URL for messaging service integration. Currently supports Microsoft Teams and Slack.",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -885,6 +906,8 @@
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
+                    "minLength": 1,
+                    "pattern": "^(https?://\\S+|/[^\\s]+|\\.{0,2}/[^\\s]+)$",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/",
@@ -892,8 +915,12 @@
                 },
                 "trace_report_suffix": {
                     "type": "string",
-                    "fa_icon": "far calendar",
-                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "pattern": "^[a-zA-Z0-9_\\-\\.{}]+$",
+                    "default": "{date}",
+                    "fa_icon": "far fa-calendar-alt",
+                    "description": "Suffix to add to the trace report filename.",
+                    "help_text": "You can use '{date}' as a placeholder which will be replaced with the current date and time in the format 'yyyy-MM-dd_HH-mm-ss'. For example, 'run_{date}' will become 'run_2023-05-15_14-30-45'.",
+                    "errorMessage": "The trace report suffix must only contain alphanumeric characters, underscores, hyphens, dots, and curly braces for date placeholders.",
                     "hidden": true
                 }
             }

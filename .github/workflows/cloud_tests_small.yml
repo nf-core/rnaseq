@@ -17,19 +17,23 @@ jobs:
   run-small-tests-on-aws:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        aligner: ["star_salmon", "star_rsem"]
+        arch: ["arm64", "x86_64"]
     steps:
       - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
+          compute_env: ${{ matrix.arch == 'arm64' && secrets.TOWER_CE_AWS_CPU_ARM64 || secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "aws_rnaseq_small"
+          run_name: "aws_rnaseq_small_${{ matrix.arch }}"
           revision: ${{ github.sha }}
-          profiles: test
+          profiles: test${{ matrix.arch == 'arm64' && ',wave,arm' || '' }}
           parameters: |
             {
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}/"
+                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}/${{ matrix.arch }}/aligner_${{ matrix.aligner }}/"
             }
       - uses: actions/upload-artifact@v3
         with:

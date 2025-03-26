@@ -362,6 +362,7 @@
                 "umitools_umi_separator": {
                     "type": "string",
                     "pattern": "^\\S+$",
+                    "minLength": 1,
                     "errorMessage": "The UMI separator must not contain spaces and must be a single character (e.g., ':').",
                     "fa_icon": "fas fa-star-half-alt",
                     "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."

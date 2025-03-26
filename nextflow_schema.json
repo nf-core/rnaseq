@@ -917,7 +917,6 @@
                 "trace_report_suffix": {
                     "type": "string",
                     "pattern": "^[a-zA-Z0-9_\\-\\.{}]+$",
-                    "default": "yyyy-MM-dd_HH-mm-ss",
                     "fa_icon": "far fa-calendar-alt",
                     "description": "Suffix to add to the trace report filename.",
                     "help_text": "You can use '{date}' as a placeholder which will be replaced with the current date and time in the format 'yyyy-MM-dd_HH-mm-ss'. For example, 'run_{date}' will become 'run_2023-05-15_14-30-45'.",

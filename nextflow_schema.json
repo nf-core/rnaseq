@@ -662,7 +662,7 @@
                 "skip_gtf_transcript_filter": {
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
-                    "errorMessage": "Skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline. Ensure the GTF file is valid."
+                    "description": "Skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline. Ensure the GTF file is valid."
                 },
                 "skip_bbsplit": {
                     "type": "boolean",

@@ -10,10 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": [
-                "input",
-                "outdir"
-            ],
+            "required": ["input", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -238,10 +235,7 @@
                     "default": "trimgalore",
                     "description": "Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'.",
                     "fa_icon": "fas fa-cut",
-                    "enum": [
-                        "trimgalore",
-                        "fastp"
-                    ]
+                    "enum": ["trimgalore", "fastp"]
                 },
                 "extra_trimgalore_args": {
                     "type": "string",
@@ -329,10 +323,7 @@
                     "default": "umitools",
                     "description": "Specifies the tool to use for UMI deduplication - available options are 'umitools' and 'umicollapse'.",
                     "fa_icon": "fas fa-barcode",
-                    "enum": [
-                        "umitools",
-                        "umicollapse"
-                    ]
+                    "enum": ["umitools", "umicollapse"]
                 },
                 "umitools_extract_method": {
                     "type": "string",
@@ -373,13 +364,7 @@
                     "default": "directional",
                     "fa_icon": "far fa-object-ungroup",
                     "description": "Method to use to determine read groups by subsuming those with similar UMIs. All methods start by identifying the reads with the same mapping position, but treat similar yet nonidentical UMIs differently.",
-                    "enum": [
-                        "unique",
-                        "percentile",
-                        "cluster",
-                        "adjacency",
-                        "directional"
-                    ]
+                    "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
                 },
                 "umitools_dedup_stats": {
                     "type": "boolean",
@@ -401,20 +386,13 @@
                     "default": "star_salmon",
                     "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
                     "fa_icon": "fas fa-map-signs",
-                    "enum": [
-                        "star_salmon",
-                        "star_rsem",
-                        "hisat2"
-                    ]
+                    "enum": ["star_salmon", "star_rsem", "hisat2"]
                 },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
                     "fa_icon": "fas fa-hamburger",
-                    "enum": [
-                        "salmon",
-                        "kallisto"
-                    ]
+                    "enum": ["salmon", "kallisto"]
                 },
                 "pseudo_aligner_kmer_size": {
                     "type": "integer",
@@ -618,10 +596,7 @@
                     "type": "string",
                     "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
-                    "enum": [
-                        "kraken2",
-                        "kraken2_bracken"
-                    ]
+                    "enum": ["kraken2", "kraken2_bracken"]
                 },
                 "kraken_db": {
                     "type": "string",
@@ -636,15 +611,7 @@
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
                     "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species.",
-                    "enum": [
-                        "D",
-                        "P",
-                        "C",
-                        "O",
-                        "F",
-                        "G",
-                        "S"
-                    ]
+                    "enum": ["D", "P", "C", "O", "F", "G", "S"]
                 }
             }
         },
@@ -827,14 +794,7 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "Controls how files are saved to the output directory through Nextflow's `publishDir` directive. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/process.html#publishdir) for available options.",
                     "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ],
+                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
                 "email_on_fail": {

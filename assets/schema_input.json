@@ -11,9 +11,7 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "fastq_1": {
                 "type": "string",
@@ -32,21 +30,10 @@
             "strandedness": {
                 "type": "string",
                 "errorMessage": "Strandedness must be provided and be one of 'auto', 'forward', 'reverse' or 'unstranded'",
-                "enum": [
-                    "forward",
-                    "reverse",
-                    "unstranded",
-                    "auto"
-                ],
-                "meta": [
-                    "strandedness"
-                ]
+                "enum": ["forward", "reverse", "unstranded", "auto"],
+                "meta": ["strandedness"]
             }
         },
-        "required": [
-            "sample",
-            "fastq_1",
-            "strandedness"
-        ]
+        "required": ["sample", "fastq_1", "strandedness"]
     }
 }

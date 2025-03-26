@@ -910,6 +910,7 @@
                     "type": "string",
                     "minLength": 1,
                     "fa_icon": "far fa-check-circle",
+                    "format": "directory-path",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/",
                     "hidden": true

@@ -48,6 +48,7 @@ jobs:
     runs-on:
       - runs-on=${{ github.run_id }}
       - runner=4cpu-linux-${{ matrix.arch }}
+      - image=ubuntu22-full-${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:

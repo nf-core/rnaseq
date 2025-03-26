@@ -363,6 +363,7 @@
                     "type": "string",
                     "pattern": "^\\S+$",
                     "minLength": 1,
+                    "maxLength": 1,
                     "errorMessage": "The UMI separator must not contain spaces and must be a single character (e.g., ':').",
                     "fa_icon": "fas fa-star-half-alt",
                     "description": "The character that separates the UMI in the read name. Most likely a colon if you skipped the extraction with UMI-tools and used other software."
@@ -908,7 +909,6 @@
                 "pipelines_testdata_base_path": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(https?://\\S+|/[^\\s]+|\\.{0,2}/[^\\s]+)$",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/",

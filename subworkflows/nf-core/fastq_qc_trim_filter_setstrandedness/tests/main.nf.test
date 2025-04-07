@@ -13,6 +13,7 @@ nextflow_workflow {
     tag "cat"
     tag "cat/fastq"
     tag "fastqc"
+    tag "fq/lint"
     tag "sortmerna"
     tag "subworkflows/fastq_fastqc_umitools_trimgalore"
     tag "subworkflows/fastq_fastqc_umitools_fastp"

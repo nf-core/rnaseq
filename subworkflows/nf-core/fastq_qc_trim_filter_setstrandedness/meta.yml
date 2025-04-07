@@ -13,6 +13,7 @@ components:
   - samtools/index
   - cat
   - cat/fastq
+  - fq/lint
   - sortmerna
   - fastq_subsample_fq_salmon
   - fastq_fastqc_umitools_trimgalore

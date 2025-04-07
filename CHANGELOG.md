@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1499](https://github.com/nf-core/rnaseq/pull/1499) - Bump MultiQC module to 1.27
 - [PR #1508](https://github.com/nf-core/rnaseq/pull/1508) - Fix missing Bracken results in the MultiQC report
 - [PR #1523](https://github.com/nf-core/rnaseq/pull/1523) - Update preprocessing subworkflow to fix linting block on trimming
+- [PR #1521](https://github.com/nf-core/rnaseq/pull/1521) - Updated Perl conda package version for local module gtf2bed for Arm compatibility.
 
 # 3.18.0 - 2024-12-19
 

@@ -30,7 +30,7 @@ jobs:
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
           run_name: "aws_rnaseq_small_${{ matrix.arch }}"
           revision: ${{ github.sha }}
-          profiles: test${{ matrix.arch == 'arm64' && ',wave,arm' || '' }}
+          profiles: test${{ matrix.arch == 'arm64' && ',wave,graviton' || '' }}
           parameters: |
             {
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}/${{ matrix.arch }}/aligner_${{ matrix.aligner }}/"

@@ -41,7 +41,7 @@ jobs:
             }
       - uses: actions/upload-artifact@v4
         with:
-          name: Tower debug log file
+          name: Tower_debug_action-${{ matrix.aligner }}-${{ matrix.arch }}.log
           path: tower_action_*.log
 
   run-full-tests-on-azure:

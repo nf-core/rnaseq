@@ -32,7 +32,7 @@ jobs:
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
           run_name: "aws_rnaseq_full_${{ matrix.aligner }}_${{ matrix.arch }}"
           revision: ${{ github.sha }}
-          profiles: test_full_aws${{ matrix.arch == 'arm64' && ',wave,graviton' || '' }}
+          profiles: test_full_aws${{ matrix.arch == 'arm64' && ',docker_arm' || '' }}
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",

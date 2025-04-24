@@ -3,7 +3,6 @@
 .nextflow*
 .nf-test.log
 data/
-nf-test
 .nf-test*
 results/
 test.xml

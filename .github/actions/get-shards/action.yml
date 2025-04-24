@@ -7,6 +7,9 @@ inputs:
   paths:
     description: "Component paths to test"
     required: false
+  tags:
+    description: "Tags to pass as argument for nf-test --tag parameter"
+    required: false
 outputs:
   shard:
     description: "Array of shard numbers"
@@ -27,9 +30,9 @@ runs:
       run: |
         # Run nf-test with dynamic parameter
         nftest_output=$(nf-test test \
-          --dry-run \
           --profile +docker \
-          --filter function,workflow,pipeline \
+          $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
+          --dry-run \
           --ci \
           --changed-since HEAD^) || {
             echo "nf-test command failed with exit code $?"

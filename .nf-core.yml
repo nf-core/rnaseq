@@ -1,6 +1,7 @@
 lint:
   actions_ci: false
   files_exist:
+    - .github/workflows/ci.yml
     - conf/modules.config
   files_unchanged:
     - assets/email_template.html

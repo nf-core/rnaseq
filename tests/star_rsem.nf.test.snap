@@ -1216,8 +1216,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "all_samples_gene.SummarizedExperiment.rds:md5,f1d87dbdc3f7523115d4c90f716a7adf",
-                "all_samples_transcript.SummarizedExperiment.rds:md5,778471a1436c249f1df5e1500c117470",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
@@ -1296,7 +1294,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T17:23:03.561712424"
+        "timestamp": "2025-05-02T20:07:25.787433287"
     },
     "Params: --aligner star_rsem - stub": {
         "content": [

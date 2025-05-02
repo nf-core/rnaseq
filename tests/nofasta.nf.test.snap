@@ -417,8 +417,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3e6d06d032abd3f5cd7e79df1b5bcde0",
                 "lib_format_counts.json:md5,fce2c4840048c294c016f45f0df15384",
-                "all_samples_gene.SummarizedExperiment.rds:md5,9374be23b333ce1cd865e7baf3d3c9cc",
-                "all_samples_transcript.SummarizedExperiment.rds:md5,5887511793e75ecd158e295a66e001d6",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "tx2gene.tsv:md5,1be389a28cc26d94b19ea918959ac72e"
             ]
@@ -427,6 +425,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T16:34:02.48152685"
+        "timestamp": "2025-05-02T19:16:45.468836741"
     }
 }

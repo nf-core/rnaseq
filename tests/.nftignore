@@ -92,3 +92,4 @@ umitools/*.umi_extract.log
 {salmon,star_salmon}/*/quant.genes.sf
 {salmon,star_salmon}/*/quant.sf
 {salmon,star_salmon}/salmon.*
+{salmon,kallisto}/all_samples_{gene,transcript}.SummarizedExperiment.rds

@@ -346,8 +346,8 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "all_samples_gene.SummarizedExperiment.rds:md5,59e6f2987c78baa03a2edfa14367e460",
-                "all_samples_transcript.SummarizedExperiment.rds:md5,0f19fe29fd2f31e57ffd8a3ff6f8b115",
+                "all_samples_gene.SummarizedExperiment.rds:md5,d8d958d0e4dc43b128a3ea1e85a5556f",
+                "all_samples_transcript.SummarizedExperiment.rds:md5,b708a0313e3bc5853d597bad9ba595d9",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
@@ -355,7 +355,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-30T14:50:07.041035732"
+        "timestamp": "2025-05-02T16:51:23.617475353"
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
         "content": [

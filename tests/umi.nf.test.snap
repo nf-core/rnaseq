@@ -1,7 +1,7 @@
 {
     "--umi_dedup_tool 'umitools'": {
         "content": [
-            265,
+            261,
             {
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -95,7 +95,10 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "SE_GENE": {
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_ALIGN": {
@@ -583,6 +586,8 @@
                 "salmon/WT_REP2/logs/salmon_quant.log",
                 "salmon/WT_REP2/quant.genes.sf",
                 "salmon/WT_REP2/quant.sf",
+                "salmon/all_samples_gene.SummarizedExperiment.rds",
+                "salmon/all_samples_transcript.SummarizedExperiment.rds",
                 "salmon/deseq2_qc",
                 "salmon/deseq2_qc/R_sessionInfo.log",
                 "salmon/deseq2_qc/deseq2.dds.RData",
@@ -596,15 +601,11 @@
                 "salmon/deseq2_qc/size_factors/WT_REP1.txt",
                 "salmon/deseq2_qc/size_factors/WT_REP2.txt",
                 "salmon/deseq2_qc/size_factors/deseq2.size_factors.RData",
-                "salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts.tsv",
-                "salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_scaled.tsv",
                 "salmon/salmon.merged.gene_lengths.tsv",
                 "salmon/salmon.merged.gene_tpm.tsv",
-                "salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
@@ -1117,15 +1118,12 @@
                 "star_salmon/rseqc/read_duplication/xls/WT_REP1.seq.DupRate.xls",
                 "star_salmon/rseqc/read_duplication/xls/WT_REP2.pos.DupRate.xls",
                 "star_salmon/rseqc/read_duplication/xls/WT_REP2.seq.DupRate.xls",
-                "star_salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
+                "star_salmon/salmon.merged.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts.tsv",
-                "star_salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "star_salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts_scaled.tsv",
                 "star_salmon/salmon.merged.gene_lengths.tsv",
                 "star_salmon/salmon.merged.gene_tpm.tsv",
-                "star_salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
@@ -1366,6 +1364,8 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,809380ddce725a8fab75dd7741b64bf6",
                 "lib_format_counts.json:md5,d231ba7624b67eb654989f69530e2925",
+                "all_samples_gene.SummarizedExperiment.rds:md5,c9f3fb99bb418123d97931fc69c07bd5",
+                "all_samples_transcript.SummarizedExperiment.rds:md5,d00f0f57f399fcd4095572348ed80e2b",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,0f0e3687e731243392685c550fb1d93f",
@@ -1507,13 +1507,13 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-01-28T15:37:17.975884153"
+        "timestamp": "2025-05-02T17:41:34.57543678"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
-            196,
+            194,
             {
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -1610,7 +1610,10 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "SE_GENE": {
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -2547,6 +2550,8 @@
                 "salmon/WT_REP2/logs/salmon_quant.log",
                 "salmon/WT_REP2/quant.genes.sf",
                 "salmon/WT_REP2/quant.sf",
+                "salmon/all_samples_gene.SummarizedExperiment.rds",
+                "salmon/all_samples_transcript.SummarizedExperiment.rds",
                 "salmon/deseq2_qc",
                 "salmon/deseq2_qc/R_sessionInfo.log",
                 "salmon/deseq2_qc/deseq2.dds.RData",
@@ -2560,15 +2565,11 @@
                 "salmon/deseq2_qc/size_factors/WT_REP1.txt",
                 "salmon/deseq2_qc/size_factors/WT_REP2.txt",
                 "salmon/deseq2_qc/size_factors/deseq2.size_factors.RData",
-                "salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts.tsv",
-                "salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_scaled.tsv",
                 "salmon/salmon.merged.gene_lengths.tsv",
                 "salmon/salmon.merged.gene_tpm.tsv",
-                "salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
@@ -2731,6 +2732,8 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,809380ddce725a8fab75dd7741b64bf6",
                 "lib_format_counts.json:md5,d231ba7624b67eb654989f69530e2925",
+                "all_samples_gene.SummarizedExperiment.rds:md5,492681cde948aab1bad52e8015b88c85",
+                "all_samples_transcript.SummarizedExperiment.rds:md5,e933f66abcb521faa61e39bf7555c142",
                 "R_sessionInfo.log:md5,fb0da0d7ad6994ed66a8e68348b19676",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "RAP1_IAA_30M_REP1.umi_extract_1.fastq.gz:md5,e83d7f738fbbfaa541a2e71fe4663447",
@@ -2745,9 +2748,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-01-28T15:28:11.592812818"
+        "timestamp": "2025-05-02T17:31:03.791729809"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [

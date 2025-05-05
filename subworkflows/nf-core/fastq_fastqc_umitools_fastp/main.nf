@@ -10,13 +10,12 @@ include { FASTP                 } from '../../../modules/nf-core/fastp/main'
 //
 // Function that parses fastp json output file to get total number of reads after trimming
 //
-import groovy.json.JsonSlurper
 
 def getFastpReadsAfterFiltering(json_file, min_num_reads) {
 
     if ( workflow.stubRun ) { return min_num_reads }
 
-    def Map json = (Map) new JsonSlurper().parseText(json_file.text).get('summary')
+    def json = new groovy.json.JsonSlurper().parseText(json_file.text).get('summary') as Map
     return json['after_filtering']['total_reads'].toLong()
 }
 
@@ -24,13 +23,12 @@ def getFastpAdapterSequence(json_file){
 
     if ( workflow.stubRun ) { return "" }
 
-    def Map json = (Map) new JsonSlurper().parseText(json_file.text)
+    def json = new groovy.json.JsonSlurper().parseText(json_file.text) as Map
     try{
-        adapter = json['adapter_cutting']['read1_adapter_sequence']
+        return json['adapter_cutting']['read1_adapter_sequence']
     } catch(Exception ex){
-        adapter = ""
+        return ""
     }
-    return adapter
 }
 
 workflow FASTQ_FASTQC_UMITOOLS_FASTP {

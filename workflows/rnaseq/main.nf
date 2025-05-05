@@ -69,13 +69,6 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Header files for MultiQC
-ch_pca_header_multiqc           = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
-sample_status_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
-ch_clustering_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
-ch_biotypes_header_multiqc      = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-ch_dummy_file                   = ch_pca_header_multiqc
-
 workflow RNASEQ {
 
     take:
@@ -99,6 +92,13 @@ workflow RNASEQ {
     make_sortmerna_index // boolean: Whether to create an index before running sortmerna
 
     main:
+
+    // Header files for MultiQC
+    ch_pca_header_multiqc           = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
+    sample_status_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
+    ch_clustering_header_multiqc    = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
+    ch_biotypes_header_multiqc      = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+    ch_dummy_file                   = ch_pca_header_multiqc
 
     ch_multiqc_files = Channel.empty()
     ch_trim_status = Channel.empty()
@@ -545,7 +545,7 @@ workflow RNASEQ {
         // Get RSeqC modules to run
         def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
         if (params.bam_csi_index) {
-            for (rseqc_module in ['read_distribution', 'inner_distance', 'tin']) {
+            ['read_distribution', 'inner_distance', 'tin'].each { rseqc_module ->
                 if (rseqc_modules.contains(rseqc_module)) {
                     rseqc_modules.remove(rseqc_module)
                 }
@@ -572,12 +572,12 @@ workflow RNASEQ {
                 .map {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, params.stranded_threshold, params.unstranded_threshold)
-                        rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
+                        def rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
 
                         def status = 'fail'
                         def multiqc_lines = []
                         if (meta.salmon_strand_analysis) {
-                            salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
+                            def salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
 
                             if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined') {
                                 status = 'pass'

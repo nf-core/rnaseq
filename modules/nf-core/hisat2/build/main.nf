@@ -33,7 +33,7 @@ process HISAT2_BUILD {
     def ss = ''
     def exon = ''
     def extract_exons = ''
-    def hisat2_build_memory = params.hisat2_build_memory ? (params.hisat2_build_memory as nextflow.util.MemoryUnit).toGiga() : 0
+    def hisat2_build_memory = params.hisat2_build_memory ? (params.hisat2_build_memory as MemoryUnit).toGiga() : 0
     if (avail_mem >= hisat2_build_memory) {
         log.info "[HISAT2 index build] At least ${hisat2_build_memory} GB available, so using splice sites and exons to build HISAT2 index"
         extract_exons = gtf ? "hisat2_extract_exons.py $gtf > ${gtf.baseName}.exons.txt" : ""

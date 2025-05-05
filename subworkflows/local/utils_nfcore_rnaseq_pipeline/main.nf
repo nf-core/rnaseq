@@ -2,8 +2,6 @@
 // Subworkflow with functionality specific to the nf-core/rnaseq pipeline
 //
 
-import groovy.json.JsonSlurper
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
@@ -80,10 +78,6 @@ workflow PIPELINE_INITIALISATION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def pass_mapped_reads  = [:]
-def pass_trimmed_reads = [:]
-def pass_strand_check  = [:]
-
 workflow PIPELINE_COMPLETION {
 
     take:
@@ -99,6 +93,10 @@ workflow PIPELINE_COMPLETION {
     strand_status      // map: pass/fail status per sample for strandedness check
 
     main:
+    def pass_mapped_reads  = [:]
+    def pass_trimmed_reads = [:]
+    def pass_strand_check  = [:]
+
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     def multiqc_reports = multiqc_report.toList()
 
@@ -117,8 +115,6 @@ workflow PIPELINE_COMPLETION {
             id, status -> pass_strand_check[id] = status
         }
 
-    def multiqc_report_list = multiqc_report.toList()
-
     //
     // Completion email and summary
     //
@@ -135,7 +131,7 @@ workflow PIPELINE_COMPLETION {
             )
         }
 
-        rnaseqSummary(monochrome_logs=monochrome_logs, pass_mapped_reads=pass_mapped_reads, pass_trimmed_reads=pass_trimmed_reads, pass_strand_check=pass_strand_check)
+        rnaseqSummary(monochrome_logs, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 
         if (hook_url) {
             imNotification(summary_params, hook_url)
@@ -301,7 +297,7 @@ def validateInputParameters() {
 
     // Check rRNA databases for sortmerna
     if (params.remove_ribo_rna) {
-        ch_ribo_db = file(params.ribo_database_manifest)
+        def ch_ribo_db = file(params.ribo_database_manifest)
         if (ch_ribo_db.isEmpty()) {
             error("File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!")
         }
@@ -309,7 +305,7 @@ def validateInputParameters() {
 
     // Check if file with list of fastas is provided when running BBSplit
     if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
-        ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
+        def ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
         if (ch_bbsplit_fasta_list.isEmpty()) {
             error("File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!")
         }

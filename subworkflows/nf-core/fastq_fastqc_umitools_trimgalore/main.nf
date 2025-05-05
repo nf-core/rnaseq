@@ -87,7 +87,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
             .map {
                 meta, reads, trim_log ->
                     if (trim_log) {
-                        num_reads = getTrimGaloreReadsAfterFiltering(meta.single_end ? trim_log : trim_log[-1])
+                        def num_reads = getTrimGaloreReadsAfterFiltering(meta.single_end ? trim_log : trim_log[-1])
                         [ meta, reads, num_reads ]
                     } else {
                         [ meta, reads, min_trimmed_reads.toFloat() + 1 ]

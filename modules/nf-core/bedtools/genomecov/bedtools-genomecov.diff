@@ -1,4 +1,6 @@
-Changes in module 'nf-core/bedtools/genomecov'
+Changes in component 'nf-core/bedtools/genomecov'
+'modules/nf-core/bedtools/genomecov/environment.yml' is unchanged
+'modules/nf-core/bedtools/genomecov/meta.yml' is unchanged
 Changes in 'bedtools/genomecov/main.nf':
 --- modules/nf-core/bedtools/genomecov/main.nf
 +++ modules/nf-core/bedtools/genomecov/main.nf
@@ -14,8 +16,6 @@ Changes in 'bedtools/genomecov/main.nf':
      input:
      tuple val(meta), path(intervals), val(scale)
 
-'modules/nf-core/bedtools/genomecov/meta.yml' is unchanged
-'modules/nf-core/bedtools/genomecov/environment.yml' is unchanged
 'modules/nf-core/bedtools/genomecov/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/bedtools/genomecov/tests/nextflow.config' is unchanged
 Changes in 'bedtools/genomecov/tests/main.nf.test':

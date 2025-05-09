@@ -4,6 +4,11 @@ nextflow_process {
     script "../main.nf"
     process "SAMTOOLS_STATS"
 
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/stats"
+
     test("bam") {
 
         when {

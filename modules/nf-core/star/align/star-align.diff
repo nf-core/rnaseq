@@ -1,4 +1,4 @@
-Changes in module 'nf-core/star/align'
+Changes in component 'nf-core/star/align'
 'modules/nf-core/star/align/environment.yml' is unchanged
 'modules/nf-core/star/align/meta.yml' is unchanged
 Changes in 'star/align/main.nf':
@@ -18,7 +18,6 @@ Changes in 'star/align/main.nf':
 
 'modules/nf-core/star/align/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/star/align/tests/nextflow.arriba.config' is unchanged
-'modules/nf-core/star/align/tests/tags.yml' is unchanged
 'modules/nf-core/star/align/tests/nextflow.starfusion.config' is unchanged
 'modules/nf-core/star/align/tests/nextflow.config' is unchanged
 Changes in 'star/align/tests/main.nf.test':

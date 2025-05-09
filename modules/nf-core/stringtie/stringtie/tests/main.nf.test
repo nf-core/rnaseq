@@ -4,6 +4,10 @@ nextflow_process {
     script "../main.nf"
     process "STRINGTIE_STRINGTIE"
     config "./nextflow.config"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "stringtie"
+    tag "stringtie/stringtie"
 
     test("sarscov2 [bam] - forward strandedness") {
 

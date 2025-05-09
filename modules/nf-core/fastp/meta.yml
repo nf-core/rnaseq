@@ -30,8 +30,9 @@ input:
         pattern: "*.{fasta,fna,fas,fa}"
   - - discard_trimmed_pass:
         type: boolean
-        description: Specify true to not write any reads that pass trimming thresholds.
-          | This can be used to use fastp for the output report only.
+        description: |
+          Specify true to not write any reads that pass trimming thresholds.
+          This can be used to use fastp for the output report only.
   - - save_trimmed_fail:
         type: boolean
         description: Specify true to save files that failed to pass trimming thresholds

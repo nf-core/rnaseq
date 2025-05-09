@@ -1,4 +1,4 @@
-Changes in module 'nf-core/star/genomegenerate'
+Changes in component 'nf-core/star/genomegenerate'
 'modules/nf-core/star/genomegenerate/environment.yml' is unchanged
 'modules/nf-core/star/genomegenerate/meta.yml' is unchanged
 Changes in 'star/genomegenerate/main.nf':
@@ -17,7 +17,6 @@ Changes in 'star/genomegenerate/main.nf':
      tuple val(meta), path(fasta)
 
 'modules/nf-core/star/genomegenerate/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/star/genomegenerate/tests/tags.yml' is unchanged
 Changes in 'star/genomegenerate/tests/main.nf.test':
 --- modules/nf-core/star/genomegenerate/tests/main.nf.test
 +++ modules/nf-core/star/genomegenerate/tests/main.nf.test

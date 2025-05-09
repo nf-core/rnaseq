@@ -22,25 +22,26 @@ jobs:
     strategy:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
+        arch: ["arm64", "x86_64"]
     steps:
       - uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
+          compute_env: ${{ matrix.arch == 'arm64' && secrets.TOWER_CE_AWS_CPU_ARM64 || secrets.TOWER_CE_AWS_CPU }}
           workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "aws_rnaseq_full_${{ matrix.aligner }}"
+          run_name: "aws_rnaseq_full_${{ matrix.aligner }}_${{ matrix.arch }}"
           revision: ${{ github.sha }}
-          profiles: test_full_aws
+          profiles: test_full_aws${{ matrix.arch == 'arm64' && ',docker_arm' || '' }}
           parameters: |
             {
                 "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
                 "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
+                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/${{ matrix.arch }}/aligner_${{ matrix.aligner }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: Tower debug log file
+          name: Tower_debug_action-${{ matrix.aligner }}-${{ matrix.arch }}.log
           path: tower_action_*.log
 
   run-full-tests-on-azure:
@@ -66,7 +67,7 @@ jobs:
                 "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/",
                 "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Tower debug log file
           path: tower_action_*.log
@@ -93,7 +94,7 @@ jobs:
                 "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Tower debug log file
           path: tower_action_*.log

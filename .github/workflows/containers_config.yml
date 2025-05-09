@@ -1,0 +1,51 @@
+name: Container Configs
+
+on:
+  # FIXME Remove these and only run on release or PRs to main or TEMPLATE updates
+  push:
+    branches: [main,dev]
+  pull_request:
+    branches: [main,dev]
+  release:
+    types: [published]
+  # TODO workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 1
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          token: ${{ secrets.nf_core_bot_auth_token }}
+          ref: ${{ github.head_ref }}
+      - uses: nf-core/setup-nextflow@v2
+        with:
+          version: "25.01.0-edge"
+      - name: Snapshot containers
+        run: |
+          mkdir -p conf/containers
+          for container in docker singularity; do
+            for arch in amd64 arm64; do
+              if [ "$arch" = "arm64" ]; then
+                profile="wave,$container,arm"
+              else
+                profile="wave,$container"
+              fi
+              nextflow inspect . -profile $profile -format config > conf/containers/containers_${container}_${arch}.config
+              echo "Created conf/containers/containers_${container}_${arch}.config"
+              sort -o conf/containers/containers_${container}_${arch}.config conf/containers/containers_${container}_${arch}.config
+            done
+          done
+      - name: Commit & push changes
+        id: commit-and-push
+        run: |
+          git config user.email "core@nf-co.re"
+          git config user.name "nf-core-bot"
+          git config push.default upstream
+          git add conf/containers/.
+          git status
+          git commit -m "[automated] Update container configs"
+          git push
+

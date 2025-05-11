@@ -8,21 +8,21 @@ process DUPRADAR {
         'biocontainers/bioconductor-dupradar:1.32.0--r43hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    meta    : Map
+    bam     : Path
+    gtf     : Path
 
     output:
-    tuple val(meta), path("*_duprateExpDens.pdf")   , emit: scatter2d
-    tuple val(meta), path("*_duprateExpBoxplot.pdf"), emit: boxplot
-    tuple val(meta), path("*_expressionHist.pdf")   , emit: hist
-    tuple val(meta), path("*_dupMatrix.txt")        , emit: dupmatrix
-    tuple val(meta), path("*_intercept_slope.txt")  , emit: intercept_slope
-    tuple val(meta), path("*_mqc.txt")              , emit: multiqc
-    tuple val(meta), path("*.R_sessionInfo.log")    , emit: session_info
-    path "versions.yml"                             , emit: versions
+    scatter2d       : Path = file("*_duprateExpDens.pdf")
+    boxplot         : Path = file("*_duprateExpBoxplot.pdf")
+    hist            : Path = file("*_expressionHist.pdf")
+    dupmatrix       : Path = file("*_dupMatrix.txt")
+    intercept_slope : Path = file("*_intercept_slope.txt")
+    session_info    : Path = file("*.R_sessionInfo.log")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*_mqc.txt') >> 'logs'
 
     script:
     template 'dupradar.r'
@@ -36,10 +36,5 @@ process DUPRADAR {
     touch ${meta.id}_intercept_slope.txt
     touch ${meta.id}_mqc.txt
     touch ${meta.id}.R_sessionInfo.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
-    END_VERSIONS
     """
 }

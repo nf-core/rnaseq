@@ -10,16 +10,12 @@ process HISAT2_BUILD {
         'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
 
     input:
-    tuple val(meta), path(fasta)
-    tuple val(meta2), path(gtf)
-    tuple val(meta3), path(splicesites)
+    fasta       : Path
+    gtf         : Path
+    splicesites : Path
 
     output:
-    tuple val(meta), path("hisat2") , emit: index
-    path "versions.yml"             , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("hisat2")
 
     script:
     def args = task.ext.args ?: ''
@@ -55,10 +51,5 @@ process HISAT2_BUILD {
         $args \\
         $fasta \\
         hisat2/${fasta.baseName}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hisat2: $VERSION
-    END_VERSIONS
     """
 }

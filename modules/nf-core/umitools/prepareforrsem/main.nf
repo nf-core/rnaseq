@@ -8,15 +8,12 @@ process UMITOOLS_PREPAREFORRSEM {
         'biocontainers/umi_tools:1.1.5--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    meta    : Map
+    bam     : Path
 
     output:
-    tuple val(meta), path('*.bam'), emit: bam
-    tuple val(meta), path('*.log'), emit: log
-    path  "versions.yml"          , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    bam     : Path = file('*.bam')
+    log     : Path = file('*.log')
 
     script:
     def args = task.ext.args ?: ''
@@ -28,21 +25,11 @@ process UMITOOLS_PREPAREFORRSEM {
         --stdout=${prefix}.bam \\
         --log=${prefix}.prepare_for_rsem.log \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 
     stub:
     """
     touch ${meta.id}.bam
     touch ${meta.id}.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 }

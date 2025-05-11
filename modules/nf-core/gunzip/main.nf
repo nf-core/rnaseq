@@ -8,14 +8,10 @@ process GUNZIP {
         'nf-core/ubuntu:20.04' }"
 
     input:
-    tuple val(meta), path(archive)
+    archive : Path
 
     output:
-    tuple val(meta), path("$gunzip"), emit: gunzip
-    path "versions.yml"             , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file(gunzip)
 
     script:
     def args = task.ext.args ?: ''
@@ -29,20 +25,11 @@ process GUNZIP {
         $args \\
         $archive \\
         > $gunzip
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
-    END_VERSIONS
     """
 
     stub:
     gunzip = archive.toString() - '.gz'
     """
     touch $gunzip
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
-    END_VERSIONS
     """
 }

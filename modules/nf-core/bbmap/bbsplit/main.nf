@@ -9,22 +9,20 @@ process BBMAP_BBSPLIT {
         'biocontainers/bbmap:39.01--h5c4e2a8_0' }"
 
     input:
-    tuple val(meta), path(reads)
-    path  index
-    path  primary_ref
-    tuple val(other_ref_names), path(other_ref_paths)
-    val   only_build_index
+    meta                : Map
+    reads               : List<Path>
+    index               : Path
+    primary_ref         : Path
+    other_ref_names     : List<String>
+    other_ref_paths     : List<Path>
+    only_build_index    : boolean
 
     output:
-    path "bbsplit"                            , optional:true, emit: index
-    tuple val(meta), path('*primary*fastq.gz'), optional:true, emit: primary_fastq
-    tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
-    tuple val(meta), path('*txt')             , optional:true, emit: stats
-    tuple val(meta), path('*.log')            , optional:true, emit: log
-    path "versions.yml"                       , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    index               : Path? = file("bbsplit")
+    primary_fastq       : Path? = file('*primary*fastq.gz')
+    all_fastq           : Path? = file('*fastq.gz')
+    stats               : Path? = file('*txt')
+    log                 : Path? = file('*.log')
 
     script:
     def args = task.ext.args ?: ''
@@ -98,11 +96,6 @@ process BBMAP_BBSPLIT {
         src=\$(grep '^source' "\$summary_file" | cut -f2- -d\$'\\t' | sed 's|.*/bbsplit|bbsplit|')
         sed "s|^source.*|source\\t\$src|" "\$summary_file" > \${summary_file}.tmp && mv \${summary_file}.tmp \${summary_file}
     done
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
-    END_VERSIONS
     """
 
 }

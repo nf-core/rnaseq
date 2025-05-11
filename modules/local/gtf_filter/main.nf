@@ -7,15 +7,11 @@ process GTF_FILTER {
         'biocontainers/python:3.9--1' }"
 
     input:
-    path fasta
-    path gtf
+    fasta   : Path
+    gtf     : Path
 
     output:
-    path "*.filtered.gtf", emit: genome_gtf
-    path "versions.yml"  , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    filtered_gtf: Path = file("*.filtered.gtf")
 
     script: // filter_gtf.py is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
@@ -23,10 +19,5 @@ process GTF_FILTER {
         --gtf $gtf \\
         --fasta $fasta \\
         --prefix ${fasta.baseName}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 }

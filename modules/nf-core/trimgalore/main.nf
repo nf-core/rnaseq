@@ -8,18 +8,19 @@ process TRIMGALORE {
         'biocontainers/trim-galore:0.6.7--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(reads)
+    meta    : Map
+    reads   : List<Path>
 
     output:
-    tuple val(meta), path("*{3prime,5prime,trimmed,val}*.fq.gz"), emit: reads
-    tuple val(meta), path("*report.txt")                        , emit: log     , optional: true
-    tuple val(meta), path("*unpaired*.fq.gz")                   , emit: unpaired, optional: true
-    tuple val(meta), path("*.html")                             , emit: html    , optional: true
-    tuple val(meta), path("*.zip")                              , emit: zip     , optional: true
-    path "versions.yml"                                         , emit: versions
+    reads       : List<Path> = files("*{3prime,5prime,trimmed,val}*.fq.gz")
+    log         : List<Path> = files("*report.txt")
+    unpaired    : List<Path> = files("*unpaired*.fq.gz")
+    html        : Path? = file("*.html")
+    zip         : Path? = file("*.zip")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    files("*report.txt") >> 'logs'
+    file("*.zip") >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -46,12 +47,6 @@ process TRIMGALORE {
             --cores $cores \\
             --gzip \\
             ${prefix}.fastq.gz
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
-            cutadapt: \$(cutadapt --version)
-        END_VERSIONS
         """
     } else {
         """
@@ -64,12 +59,6 @@ process TRIMGALORE {
             --gzip \\
             ${prefix}_1.fastq.gz \\
             ${prefix}_2.fastq.gz
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            trimgalore: \$(echo \$(trim_galore --version 2>&1) | sed 's/^.*version //; s/Last.*\$//')
-            cutadapt: \$(cutadapt --version)
-        END_VERSIONS
         """
     }
 }

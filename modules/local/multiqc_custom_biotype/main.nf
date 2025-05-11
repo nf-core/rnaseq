@@ -7,15 +7,16 @@ process MULTIQC_CUSTOM_BIOTYPE {
         'biocontainers/python:3.9--1' }"
 
     input:
-    tuple val(meta), path(count)
-    path  header
+    meta    : Map
+    count   : Path
+    header  : Path
 
     output:
-    tuple val(meta), path("*.tsv"), emit: tsv
-    path "versions.yml"           , emit: versions
+    file("*.tsv")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file("*.tsv") >> 'logs'
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
@@ -27,10 +28,5 @@ process MULTIQC_CUSTOM_BIOTYPE {
         -s $meta.id \\
         -f rRNA \\
         -o ${prefix}.biotype_counts_rrna_mqc.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 }

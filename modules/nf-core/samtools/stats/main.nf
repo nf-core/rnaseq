@@ -8,15 +8,17 @@ process SAMTOOLS_STATS {
         'biocontainers/samtools:1.19.2--h50ea8bc_0' }"
 
     input:
-    tuple val(meta), path(input), path(input_index)
-    tuple val(meta2), path(fasta)
+    meta        : Map
+    input       : Path
+    input_index : Path
+    fasta       : Path?
 
     output:
-    tuple val(meta), path("*.stats"), emit: stats
-    path  "versions.yml"            , emit: versions
+    file("*.stats")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file("*.stats") >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -29,21 +31,11 @@ process SAMTOOLS_STATS {
         ${reference} \\
         ${input} \\
         > ${prefix}.stats
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.stats
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

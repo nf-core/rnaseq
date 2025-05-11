@@ -8,21 +8,22 @@ process KALLISTO_QUANT {
         'biocontainers/kallisto:0.48.0--h15996b6_2' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(index)
-    path gtf
-    path chromosomes
-    val fragment_length
-    val fragment_length_sd
+    meta                : Map
+    reads               : List<Path>
+    index               : Path
+    gtf                 : Path
+    chromosomes         : Path?
+    fragment_length     : int
+    fragment_length_sd  : int
 
     output:
-    tuple val(meta), path("${prefix}")        , emit: results
-    tuple val(meta), path("*.run_info.json")  , emit: json_info
-    tuple val(meta), path("*.log")            , emit: log
-    path "versions.yml"                       , emit: versions
+    results     : Path = file("${prefix}")
+    json_info   : Path = file("*.run_info.json")
+    log         : Path = file("*.log")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.log') >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -61,18 +62,9 @@ process KALLISTO_QUANT {
 
     cp ${prefix}/kallisto_quant.log ${prefix}.log
     cp ${prefix}/run_info.json ${prefix}.run_info.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )
-    END_VERSIONS
     """
 
     stub:
     """
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )
-    END_VERSIONS
     """
 }

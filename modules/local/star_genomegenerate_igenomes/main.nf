@@ -8,15 +8,11 @@ process STAR_GENOMEGENERATE_IGENOMES {
         'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0' }"
 
     input:
-    path fasta
-    path gtf
+    fasta   : Path
+    gtf     : Path
 
     output:
-    path "star"        , emit: index
-    path "versions.yml", emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    path "star"
 
     script:
     def args = task.ext.args ?: ''
@@ -34,13 +30,6 @@ process STAR_GENOMEGENERATE_IGENOMES {
             --runThreadN $task.cpus \\
             $memory \\
             $args
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            star: \$(STAR --version | sed -e "s/STAR_//g")
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-            gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-        END_VERSIONS
         """
     } else {
         """
@@ -57,13 +46,6 @@ process STAR_GENOMEGENERATE_IGENOMES {
             --genomeSAindexNbases \$NUM_BASES \\
             $memory \\
             $args
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            star: \$(STAR --version | sed -e "s/STAR_//g")
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-            gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
-        END_VERSIONS
         """
     }
 }

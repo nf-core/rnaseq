@@ -8,15 +8,16 @@ process QUALIMAP_RNASEQ {
         'biocontainers/qualimap:2.3--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    meta    : Map
+    bam     : Path
+    gtf     : Path
 
     output:
-    tuple val(meta), path("${prefix}"), emit: results
-    path  "versions.yml"              , emit: versions
+    file("${prefix}")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file("${prefix}") >> 'logs'
 
     script:
     def args = task.ext.args   ?: ''
@@ -43,21 +44,11 @@ process QUALIMAP_RNASEQ {
         -p $strandedness \\
         $paired_end \\
         -outdir $prefix
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
-    END_VERSIONS
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir ${prefix}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
-    END_VERSIONS
     """
 }

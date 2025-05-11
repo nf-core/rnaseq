@@ -7,17 +7,15 @@ process CUSTOM_CATADDITIONALFASTA {
         'biocontainers/python:3.9--1' }"
 
     input:
-    tuple val(meta), path(fasta), path(gtf)
-    tuple val(meta2), path(add_fasta)
-    val  biotype
+    fasta       : Path
+    gtf         : Path
+    add_fasta   : Path
+    biotype     : String
+    prefix      : String = ''
 
     output:
-    tuple val(meta), path("*/*.fasta") , emit: fasta
-    tuple val(meta), path("*/*.gtf")   , emit: gtf
-    path "versions.yml"                , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    fasta       : Path = file("*/*.fasta")
+    gtf         : Path = file("*/*.gtf")
 
     script:
     template 'fasta2gtf.py'

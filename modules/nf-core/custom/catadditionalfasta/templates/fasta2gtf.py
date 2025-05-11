@@ -120,8 +120,8 @@ def main() -> None:
         else os.path.splitext(os.path.basename("$fasta"))[0]
     )
     output_prefix = (
-        "$task.ext.prefix"
-        if "$task.ext.prefix" != "null"
+        "$prefix"
+        if "$prefix" != "null"
         else f"{genome_name}_{add_name}"
     )
 

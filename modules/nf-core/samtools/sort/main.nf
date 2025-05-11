@@ -8,18 +8,15 @@ process SAMTOOLS_SORT {
         'biocontainers/samtools:1.19.2--h50ea8bc_0' }"
 
     input:
-    tuple val(meta) , path(bam)
-    tuple val(meta2), path(fasta)
+    meta    : Map
+    bam     : Path
+    fasta   : Path
 
     output:
-    tuple val(meta), path("*.bam"),     emit: bam,  optional: true
-    tuple val(meta), path("*.cram"),    emit: cram, optional: true
-    tuple val(meta), path("*.crai"),    emit: crai, optional: true
-    tuple val(meta), path("*.csi"),     emit: csi,  optional: true
-    path  "versions.yml"          , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    bam     : Path = file("*.bam")
+    cram    : Path = file("*.cram")
+    crai    : Path = file("*.crai")
+    csi     : Path = file("*.csi")
 
     script:
     def args = task.ext.args ?: ''
@@ -42,11 +39,6 @@ process SAMTOOLS_SORT {
         ${reference} \\
         -o ${prefix}.${extension} \\
         -
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -54,10 +46,5 @@ process SAMTOOLS_SORT {
     """
     touch ${prefix}.bam
     touch ${prefix}.bam.csi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

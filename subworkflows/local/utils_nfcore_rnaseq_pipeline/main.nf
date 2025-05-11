@@ -130,22 +130,19 @@ workflow PIPELINE_COMPLETION {
 //
 // Function to check samples are internally consistent after being grouped
 //
-def checkSamplesAfterGrouping(input) {
-    def (metas, fastqs) = input[1..2]
-
+def checkSamplesAfterGrouping(runs) {
+    def metas = runs.collcet { meta, fastqs -> meta }
     // Check that multiple runs of the same sample are of the same strandedness
-    def strandedness_ok = metas.collect{ it.strandedness }.unique().size == 1
+    def strandedness_ok = metas.collect { meta -> meta.strandedness }.unique().size == 1
     if (!strandedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
+        error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas.first().id}")
     }
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
+    def endedness_ok = metas.collect { meta -> meta.single_end }.unique().size == 1
     if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas.first().id}")
     }
-
-    return [ metas[0], fastqs ]
 }
 
 //
@@ -313,7 +310,7 @@ def methodsDescriptionText(mqc_methods_yaml) {
         // Removing ` ` since the manifest.doi is a string and not a proper list
         def temp_doi_ref = ""
         String[] manifest_doi = meta.manifest_map.doi.tokenize(",")
-        for (String doi_ref: manifest_doi) temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
+        // for (String doi_ref: manifest_doi) temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
         meta["doi_text"] = temp_doi_ref.substring(0, temp_doi_ref.length() - 2)
     } else meta["doi_text"] = ""
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
@@ -468,18 +465,6 @@ def checkMaxContigSize(fai_file) {
             error(error_string)
         }
     }
-}
-
-//
-// Create MultiQC tsv custom content from a list of values
-//
-def multiqcTsvFromList(tsv_data, header) {
-    def tsv_string = ""
-    if (tsv_data.size() > 0) {
-        tsv_string += "${header.join('\t')}\n"
-        tsv_string += tsv_data.join('\n')
-    }
-    return tsv_string
 }
 
 //

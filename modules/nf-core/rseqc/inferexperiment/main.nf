@@ -8,15 +8,16 @@ process RSEQC_INFEREXPERIMENT {
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    path  bed
+    meta    : Map
+    bam     : Path
+    bed     : Path
 
     output:
-    tuple val(meta), path("*.infer_experiment.txt"), emit: txt
-    path  "versions.yml"                           , emit: versions
+    file("*.infer_experiment.txt")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file("*.infer_experiment.txt") >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -27,10 +28,5 @@ process RSEQC_INFEREXPERIMENT {
         -r $bed \\
         $args \\
         > ${prefix}.infer_experiment.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(infer_experiment.py --version | sed -e "s/infer_experiment.py //g")
-    END_VERSIONS
     """
 }

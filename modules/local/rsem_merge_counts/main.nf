@@ -7,18 +7,18 @@ process RSEM_MERGE_COUNTS {
         'nf-core/ubuntu:20.04' }"
 
     input:
-    path ('genes/*')
-    path ('isoforms/*')
+    genes       : List<Path>
+    transcripts : List<Path>
+
+    stage:
+    stageAs 'genes/*', genes
+    stageAs 'isoforms/*', transcripts
 
     output:
-    path "rsem.merged.gene_counts.tsv"      , emit: counts_gene
-    path "rsem.merged.gene_tpm.tsv"         , emit: tpm_gene
-    path "rsem.merged.transcript_counts.tsv", emit: counts_transcript
-    path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
-    path "versions.yml"                     , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    counts_gene         : Path = file("rsem.merged.gene_counts.tsv")
+    tpm_gene            : Path = file("rsem.merged.gene_tpm.tsv")
+    counts_transcript   : Path = file("rsem.merged.transcript_counts.tsv")
+    tpm_transcript      : Path = file("rsem.merged.transcript_tpm.tsv")
 
     script:
     """
@@ -46,10 +46,5 @@ process RSEM_MERGE_COUNTS {
     paste gene_ids.txt tmp/genes/*.tpm.txt > rsem.merged.gene_tpm.tsv
     paste transcript_ids.txt tmp/isoforms/*.counts.txt > rsem.merged.transcript_counts.tsv
     paste transcript_ids.txt tmp/isoforms/*.tpm.txt > rsem.merged.transcript_tpm.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
-    END_VERSIONS
     """
 }

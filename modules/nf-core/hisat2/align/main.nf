@@ -9,18 +9,19 @@ process HISAT2_ALIGN {
         'biocontainers/mulled-v2-a97e90b3b802d1da3d6958e0867610c718cb5eb1:2cdf6bf1e92acbeb9b2834b1c58754167173a410-0' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(index)
-    tuple val(meta3), path(splicesites)
+    meta        : Map
+    reads       : List<Path>
+    index       : Path
+    splicesites : Path
 
     output:
-    tuple val(meta), path("*.bam")                   , emit: bam
-    tuple val(meta), path("*.log")                   , emit: summary
-    tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
-    path  "versions.yml"                             , emit: versions
+    bam     : Path = file("*.bam")
+    summary : Path = file("*.log")
+    fastq   : List<Path> = files("*fastq.gz")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.log') >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -50,12 +51,6 @@ process HISAT2_ALIGN {
             $unaligned \\
             $args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hisat2: $VERSION
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        END_VERSIONS
         """
     } else {
         def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -82,12 +77,6 @@ process HISAT2_ALIGN {
         if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
             mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
         fi
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hisat2: $VERSION
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        END_VERSIONS
         """
     }
 }

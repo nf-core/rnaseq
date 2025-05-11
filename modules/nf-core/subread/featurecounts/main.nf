@@ -8,15 +8,13 @@ process SUBREAD_FEATURECOUNTS {
         'biocontainers/subread:2.0.1--hed695b0_0' }"
 
     input:
-    tuple val(meta), path(bams), path(annotation)
+    meta        : Map
+    bams        : List<Path>
+    annotation  : Path
 
     output:
-    tuple val(meta), path("*featureCounts.txt")        , emit: counts
-    tuple val(meta), path("*featureCounts.txt.summary"), emit: summary
-    path "versions.yml"                                , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    counts      : Path = file("*featureCounts.txt")
+    summary     : Path = file("*featureCounts.txt.summary")
 
     script:
     def args = task.ext.args ?: ''
@@ -38,10 +36,5 @@ process SUBREAD_FEATURECOUNTS {
         -s $strandedness \\
         -o ${prefix}.featureCounts.txt \\
         ${bams.join(' ')}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
-    END_VERSIONS
     """
 }

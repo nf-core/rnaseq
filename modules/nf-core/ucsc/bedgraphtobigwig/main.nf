@@ -9,15 +9,12 @@ process UCSC_BEDGRAPHTOBIGWIG {
         'biocontainers/ucsc-bedgraphtobigwig:445--h954228d_0' }"
 
     input:
-    tuple val(meta), path(bedgraph)
+    tuple val(meta), file(bedgraph)
     path  sizes
 
     output:
-    tuple val(meta), path("*.bigWig"), emit: bigwig
+    tuple val(meta), file("*.bigWig"), emit: bigwig
     path "versions.yml"              , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

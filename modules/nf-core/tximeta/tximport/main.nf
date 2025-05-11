@@ -7,23 +7,23 @@ process TXIMETA_TXIMPORT {
         'biocontainers/bioconductor-tximeta:1.20.1--r43hdfd78af_0' }"
 
     input:
-    tuple val(meta), path("quants/*")
-    tuple val(meta2), path(tx2gene)
-    val quant_type
+    meta        : Map
+    quants      : List<Path>
+    tx2gene     : Path
+    quant_type  : String
+
+    stage:
+    stageAs "quants/*", quants
 
     output:
-    tuple val(meta), path("*gene_tpm.tsv")                 , emit: tpm_gene
-    tuple val(meta), path("*gene_counts.tsv")              , emit: counts_gene
-    tuple val(meta), path("*gene_counts_length_scaled.tsv"), emit: counts_gene_length_scaled
-    tuple val(meta), path("*gene_counts_scaled.tsv")       , emit: counts_gene_scaled
-    tuple val(meta), path("*gene_lengths.tsv")             , emit: lengths_gene
-    tuple val(meta), path("*transcript_tpm.tsv")           , emit: tpm_transcript
-    tuple val(meta), path("*transcript_counts.tsv")        , emit: counts_transcript
-    tuple val(meta), path("*transcript_lengths.tsv")       , emit: lengths_transcript
-    path "versions.yml"                                    , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    tpm_gene                    : Path = file("*gene_tpm.tsv")
+    counts_gene                 : Path = file("*gene_counts.tsv")
+    counts_gene_length_scaled   : Path = file("*gene_counts_length_scaled.tsv")
+    counts_gene_scaled          : Path = file("*gene_counts_scaled.tsv")
+    lengths_gene                : Path = file("*gene_lengths.tsv")
+    tpm_transcript              : Path = file("*transcript_tpm.tsv")
+    counts_transcript           : Path = file("*transcript_counts.tsv")
+    lengths_transcript          : Path = file("*transcript_lengths.tsv")
 
     script:
     template 'tximport.r'
@@ -38,10 +38,5 @@ process TXIMETA_TXIMPORT {
     touch ${meta.id}.transcript_tpm.tsv
     touch ${meta.id}.transcript_counts.tsv
     touch ${meta.id}.transcript_lengths.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
-    END_VERSIONS
     """
 }

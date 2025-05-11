@@ -8,15 +8,16 @@ process RSEQC_READDISTRIBUTION {
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    path  bed
+    meta    : Map
+    bam     : Path
+    bed     : Path
 
     output:
-    tuple val(meta), path("*.read_distribution.txt"), emit: txt
-    path  "versions.yml"                            , emit: versions
+    file("*.read_distribution.txt")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.read_distribution.txt') >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -26,10 +27,5 @@ process RSEQC_READDISTRIBUTION {
         -i $bam \\
         -r $bed \\
         > ${prefix}.read_distribution.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(read_distribution.py --version | sed -e "s/read_distribution.py //g")
-    END_VERSIONS
     """
 }

@@ -8,14 +8,15 @@ process RSEQC_BAMSTAT {
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    meta    : Map
+    bam     : Path
 
     output:
-    tuple val(meta), path("*.bam_stat.txt"), emit: txt
-    path  "versions.yml"                   , emit: versions
+    file("*.bam_stat.txt")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.bam_stat.txt') >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -25,10 +26,5 @@ process RSEQC_BAMSTAT {
         -i $bam \\
         $args \\
         > ${prefix}.bam_stat.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(bam_stat.py --version | sed -e "s/bam_stat.py //g")
-    END_VERSIONS
     """
 }

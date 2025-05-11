@@ -9,15 +9,13 @@ process UCSC_BEDCLIP {
         'biocontainers/ucsc-bedclip:377--h0b8a92a_2' }"
 
     input:
-    tuple val(meta), path(bedgraph)
-    path  sizes
+    meta        : Map
+    bedgraph    : Path
+    sizes       : Path
 
     output:
-    tuple val(meta), path("*.bedGraph"), emit: bedgraph
+    tuple val(meta), file("*.bedGraph"), emit: bedgraph
     path "versions.yml"                , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

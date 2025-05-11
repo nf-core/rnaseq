@@ -8,18 +8,15 @@ process STRINGTIE_STRINGTIE {
         'biocontainers/stringtie:2.2.1--hecb563c_2' }"
 
     input:
-    tuple val(meta), path(bam)
-    path  annotation_gtf
+    meta            : Map
+    bam             : Path
+    annotation_gtf  : Path
 
     output:
-    tuple val(meta), path("*.transcripts.gtf"), emit: transcript_gtf
-    tuple val(meta), path("*.abundance.txt")  , emit: abundance
-    tuple val(meta), path("*.coverage.gtf")   , optional: true, emit: coverage_gtf
-    tuple val(meta), path("*.ballgown")       , optional: true, emit: ballgown
-    path  "versions.yml"                      , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    transcript_gtf  : Path  = file("*.transcripts.gtf")
+    abundance       : Path  = file("*.abundance.txt")
+    coverage_gtf    : Path? = file("*.coverage.gtf")
+    ballgown        : Path? = file("*.ballgown")
 
     script:
     def args      = task.ext.args ?: ''
@@ -45,11 +42,6 @@ process STRINGTIE_STRINGTIE {
         $ballgown \\
         -p $task.cpus \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        stringtie: \$(stringtie --version 2>&1)
-    END_VERSIONS
     """
 
     stub:
@@ -59,10 +51,5 @@ process STRINGTIE_STRINGTIE {
     touch ${prefix}.gene.abundance.txt
     touch ${prefix}.coverage.gtf
     touch ${prefix}.ballgown
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        stringtie: \$(stringtie --version 2>&1)
-    END_VERSIONS
     """
 }

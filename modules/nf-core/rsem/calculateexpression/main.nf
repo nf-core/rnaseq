@@ -8,22 +8,24 @@ process RSEM_CALCULATEEXPRESSION {
         'biocontainers/mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b:64aad4a4e144878400649e71f42105311be7ed87-0' }"
 
     input:
-    tuple val(meta), path(reads)
-    path  index
+    meta    : Map
+    reads   : List<Path>
+    index   : Path
 
     output:
-    tuple val(meta), path("*.genes.results")   , emit: counts_gene
-    tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
-    tuple val(meta), path("*.stat")            , emit: stat
-    tuple val(meta), path("*.log")             , emit: logs
-    path  "versions.yml"                       , emit: versions
+    counts_gene         : Path = file("*.genes.results")
+    counts_transcript   : Path = file("*.isoforms.results")
+    stat                : Path = file("*.stat")
+    logs                : Path = file("*.log")
 
-    tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
-    tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
-    tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
+    bam_star        : Path? = file("*.STAR.genome.bam")
+    bam_genome      : Path? = file("${prefix}.genome.bam")
+    bam_transcript  : Path? = file("${prefix}.transcript.bam")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file("*.stat") >> 'logs'
+    file("*.log") >> 'logs'
 
     script:
     def args = task.ext.args   ?: ''
@@ -47,11 +49,5 @@ process RSEM_CALCULATEEXPRESSION {
         $reads \\
         \$INDEX \\
         $prefix
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-    END_VERSIONS
     """
 }

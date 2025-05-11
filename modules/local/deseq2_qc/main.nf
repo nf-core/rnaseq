@@ -9,23 +9,22 @@ process DESEQ2_QC {
         'biocontainers/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0' }"
 
     input:
-    path counts
-    path pca_header_multiqc
-    path clustering_header_multiqc
+    counts                      : Path
+    pca_header_multiqc          : Path
+    clustering_header_multiqc   : Path
 
     output:
-    path "*.pdf"                , optional:true, emit: pdf
-    path "*.RData"              , optional:true, emit: rdata
-    path "*pca.vals.txt"        , optional:true, emit: pca_txt
-    path "*pca.vals_mqc.tsv"    , optional:true, emit: pca_multiqc
-    path "*sample.dists.txt"    , optional:true, emit: dists_txt
-    path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
-    path "*.log"                , optional:true, emit: log
-    path "size_factors"         , optional:true, emit: size_factors
-    path "versions.yml"         , emit: versions
+    pdf             : Path? = file("*.pdf")
+    rdata           : Path? = file("*.RData")
+    pca_txt         : Path? = file("*pca.vals.txt")
+    dists_txt       : Path? = file("*sample.dists.txt")
+    log             : Path? = file("*.log")
+    size_factors    : Path? = file("size_factors")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*pca.vals_mqc.tsv') >> 'logs'
+    file('*sample.dists_mqc.tsv') >> 'logs'
 
     script:
     def args  = task.ext.args  ?: ''
@@ -50,11 +49,5 @@ process DESEQ2_QC {
         sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" tmp.txt
         cat tmp.txt *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
-    END_VERSIONS
     """
 }

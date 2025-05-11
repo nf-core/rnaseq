@@ -8,21 +8,22 @@ process RSEQC_JUNCTIONANNOTATION {
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    path  bed
+    meta    : Map
+    bam     : Path
+    bed     : Path
 
     output:
-    tuple val(meta), path("*.xls")         , emit: xls
-    tuple val(meta), path("*.r")           , emit: rscript
-    tuple val(meta), path("*.log")         , emit: log
-    tuple val(meta), path("*.junction.bed"), optional:true, emit: bed
-    tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
-    tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
-    tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
-    path  "versions.yml"                   , emit: versions
+    xls             : Path = file("*.xls")
+    rscript         : Path = file("*.r")
+    log             : Path = file("*.log")
+    bed             : Path? = file("*.junction.bed")
+    interact_bed    : Path? = file("*.Interact.bed")
+    pdf             : Path? = file("*junction.pdf")
+    events_pdf      : Path? = file("*events.pdf")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.log') >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -34,10 +35,5 @@ process RSEQC_JUNCTIONANNOTATION {
         -o $prefix \\
         $args \\
         2> >(grep -v 'E::idx_find_and_load' | tee ${prefix}.junction_annotation.log >&2)
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(junction_annotation.py --version | sed -e "s/junction_annotation.py //g")
-    END_VERSIONS
     """
 }

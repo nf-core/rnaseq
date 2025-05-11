@@ -8,18 +8,19 @@ process SORTMERNA {
         'biocontainers/sortmerna:4.3.6--h9ee0642_0' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(fastas)
-    tuple val(meta3), path(index)
+    meta    : Map
+    reads   : List<Path>
+    fastas  : List<Path>
+    index   : Path?
 
     output:
-    tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads, optional: true
-    tuple val(meta), path("*.log")             , emit: log, optional: true
-    tuple val(meta2), path("idx")              , emit: index, optional: true
-    path  "versions.yml"                       , emit: versions
+    reads   : List<Path> = files("*non_rRNA.fastq.gz")
+    log     : Path? = file("*.log")
+    index   : Path? = file("idx")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.log') >> 'logs'
 
     script:
     def args          = task.ext.args  ?: ''
@@ -67,11 +68,6 @@ process SORTMERNA {
         $args
 
     $mv_cmd
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -101,10 +97,5 @@ process SORTMERNA {
     $mv_cmd
     mkdir -p idx
     touch ${prefix}.sortmerna.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
-    END_VERSIONS
     """
 }

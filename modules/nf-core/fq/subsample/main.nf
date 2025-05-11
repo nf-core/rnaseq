@@ -8,14 +8,11 @@ process FQ_SUBSAMPLE {
         'biocontainers/fq:0.9.1--h9ee0642_0' }"
 
     input:
-    tuple val(meta), path(fastq)
+    meta    : Map
+    fastq   : List<Path>
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: fastq
-    path "versions.yml"                , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("*.fastq.gz")
 
     script:
     /* args requires:
@@ -29,7 +26,7 @@ process FQ_SUBSAMPLE {
         error "FQ/SUBSAMPLE requires --probability (-p) or --record-count (-n) specified in task.ext.args!"
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def n_fastq = fastq instanceof List ? fastq.size() : 1
+    def n_fastq = fastq.size()
     log.debug "FQ/SUBSAMPLE found ${n_fastq} FASTQ files"
     if ( n_fastq == 1 ){
         fastq1_output = "--r1-dst ${prefix}.fastq.gz"
@@ -46,10 +43,5 @@ process FQ_SUBSAMPLE {
         $fastq \\
         $fastq1_output \\
         $fastq2_output
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fq: \$(echo \$(fq subsample --version | sed 's/fq-subsample //g'))
-    END_VERSIONS
     """
 }

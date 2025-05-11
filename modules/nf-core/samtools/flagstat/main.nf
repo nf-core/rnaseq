@@ -8,14 +8,16 @@ process SAMTOOLS_FLAGSTAT {
         'biocontainers/samtools:1.19.2--h50ea8bc_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    meta    : Map
+    bam     : Path
+    bai     : Path
 
     output:
-    tuple val(meta), path("*.flagstat"), emit: flagstat
-    path  "versions.yml"               , emit: versions
+    file("*.flagstat")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file("*.flagstat") >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -26,21 +28,11 @@ process SAMTOOLS_FLAGSTAT {
         --threads ${task.cpus} \\
         $bam \\
         > ${prefix}.flagstat
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.flagstat
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

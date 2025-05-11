@@ -8,18 +8,18 @@ process CUSTOM_TX2GENE {
         'biocontainers/python:3.9--1' }"
 
     input:
-    tuple val(meta), path(gtf)
-    tuple val(meta2), path ("quants/*")
-    val quant_type
-    val id
-    val extra
+    meta        : Map
+    gtf         : Path
+    quants      : List<Path>
+    quant_type  : String
+    id          : String
+    extra       : String
+
+    stage:
+    stageAs "quants/*", quants
 
     output:
-    tuple val(meta), path("*tx2gene.tsv"), emit: tx2gene
-    path "versions.yml"                  , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("*tx2gene.tsv")
 
     script:
     template 'tx2gene.py'
@@ -27,10 +27,5 @@ process CUSTOM_TX2GENE {
     stub:
     """
     touch ${meta.id}.tx2gene.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 }

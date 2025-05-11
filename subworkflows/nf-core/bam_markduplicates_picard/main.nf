@@ -9,46 +9,41 @@ include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
 workflow BAM_MARKDUPLICATES_PICARD {
 
     take:
-    ch_reads   // channel: [ val(meta), path(reads) ]
-    ch_fasta // channel: [ path(fasta) ]
-    ch_fai   // channel: [ path(fai) ]
+    reads   // channel: [ meta: Map, input: Path ]
+    fasta   // file
+    fai     // file
 
     main:
 
-    ch_versions = Channel.empty()
+    markdup = reads.map { meta, input ->
+        def out = PICARD_MARKDUPLICATES ( meta, input, fasta, fai )
+        [ meta, out ]
+    }
 
-    PICARD_MARKDUPLICATES ( ch_reads, ch_fasta, ch_fai )
-    ch_versions = ch_versions.mix(PICARD_MARKDUPLICATES.out.versions.first())
-
-    ch_markdup = PICARD_MARKDUPLICATES.out.bam.mix(PICARD_MARKDUPLICATES.out.cram)
-
-    SAMTOOLS_INDEX ( ch_markdup )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
-
-    ch_reads_index = ch_markdup
-        .join(SAMTOOLS_INDEX.out.bai,  by: [0], remainder: true)
-        .join(SAMTOOLS_INDEX.out.crai, by: [0], remainder: true)
-        .join(SAMTOOLS_INDEX.out.csi,  by: [0], remainder: true)
-        .map{meta, reads, bai, crai, csi ->
-            if (bai) [ meta, reads, bai ]
-            else if (crai) [ meta, reads, crai ]
-            else [ meta, reads, csi ]
+    markdup_indexed = markdup
+        .flatMap { meta, out ->
+            def result = []
+            if( out.bam )
+                result << [ meta, out.bam ]
+            if( out.cram )
+                result << [ meta, out.cram ]
+            result
+        }
+        .map { meta, bam_cram ->
+            def index = SAMTOOLS_INDEX ( meta, bam_cram )
+            [ meta, bam_cram, index.bai ?: index.crai ?: index.csi ]
         }
 
-    BAM_STATS_SAMTOOLS ( ch_reads_index, ch_fasta )
-    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
+    indexed = markdup_indexed.map { meta, _bam_cram, index -> [ meta, index ] }
+
+    stats = BAM_STATS_SAMTOOLS (
+        markdup_indexed,
+        fasta
+    )
 
     emit:
-    bam      = PICARD_MARKDUPLICATES.out.bam     // channel: [ val(meta), path(bam) ]
-    cram     = PICARD_MARKDUPLICATES.out.cram    // channel: [ val(meta), path(cram) ]
-    metrics  = PICARD_MARKDUPLICATES.out.metrics // channel: [ val(meta), path(metrics) ]
-    bai      = SAMTOOLS_INDEX.out.bai            // channel: [ val(meta), path(bai) ]
-    crai     = SAMTOOLS_INDEX.out.crai           // channel: [ val(meta), path(crai) ]
-    csi      = SAMTOOLS_INDEX.out.csi            // channel: [ val(meta), path(csi) ]
+    markdup     // channel: [ meta: Map, bam: Path, cram: Path, metrics: Path ]
+    indexed     // channel: [ meta: Map, bai: Path, crai: Path, csi: Path ]
+    stats       // channel: [ meta: Map, stats: Path, flagstat: Path, idxstats: Path ]
 
-    stats    = BAM_STATS_SAMTOOLS.out.stats      // channel: [ val(meta), path(stats) ]
-    flagstat = BAM_STATS_SAMTOOLS.out.flagstat   // channel: [ val(meta), path(flagstat) ]
-    idxstats = BAM_STATS_SAMTOOLS.out.idxstats   // channel: [ val(meta), path(idxstats) ]
-
-    versions = ch_versions                       // channel: [ versions.yml ]
 }

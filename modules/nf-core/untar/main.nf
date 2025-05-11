@@ -8,14 +8,11 @@ process UNTAR {
         'nf-core/ubuntu:20.04' }"
 
     input:
-    tuple val(meta), path(archive)
+    meta        : Map
+    archive     : Path
 
     output:
-    tuple val(meta), path("$prefix"), emit: untar
-    path "versions.yml"             , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("$prefix")
 
     script:
     def args  = task.ext.args ?: ''
@@ -42,11 +39,6 @@ process UNTAR {
             $archive \\
             $args2
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        untar: \$(echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -54,10 +46,5 @@ process UNTAR {
     """
     mkdir $prefix
     touch ${prefix}/file.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        untar: \$(echo \$(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*\$//')
-    END_VERSIONS
     """
 }

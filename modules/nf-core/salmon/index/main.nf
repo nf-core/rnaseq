@@ -8,15 +8,11 @@ process SALMON_INDEX {
         'biocontainers/salmon:1.10.1--h7e5ed60_0' }"
 
     input:
-    path genome_fasta
-    path transcript_fasta
+    genome_fasta        : Path
+    transcript_fasta    : Path
 
     output:
-    path "salmon"      , emit: index
-    path "versions.yml", emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("salmon")
 
     script:
     def args = task.ext.args ?: ''
@@ -38,10 +34,5 @@ process SALMON_INDEX {
         -d decoys.txt \\
         $args \\
         -i salmon
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
-    END_VERSIONS
     """
 }

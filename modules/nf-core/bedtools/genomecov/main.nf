@@ -8,17 +8,15 @@ process BEDTOOLS_GENOMECOV {
         'biocontainers/bedtools:2.31.1--hf5e1c6e_0' }"
 
     input:
-    tuple val(meta), path(intervals), val(scale)
-    path  sizes
-    val   extension
-    val   sort
+    meta        : Map
+    intervals   : Path
+    scale       : int
+    sizes       : Path
+    extension   : String
+    sort        : boolean
 
     output:
-    tuple val(meta), path("*.${extension}"), emit: genomecov
-    path  "versions.yml"                   , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("*.${extension}")
 
     script:
     def args = task.ext.args ?: ''
@@ -38,11 +36,6 @@ process BEDTOOLS_GENOMECOV {
             $args \\
             $sort_cmd \\
             > ${prefix}.${extension}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
-        END_VERSIONS
         """
     } else {
         """
@@ -53,11 +46,6 @@ process BEDTOOLS_GENOMECOV {
             $args \\
             $sort_cmd \\
             > ${prefix}.${extension}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
-        END_VERSIONS
         """
     }
 
@@ -65,10 +53,5 @@ process BEDTOOLS_GENOMECOV {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch  ${prefix}.${extension}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
-    END_VERSIONS
     """
 }

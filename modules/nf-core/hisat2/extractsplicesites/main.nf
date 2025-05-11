@@ -9,23 +9,15 @@ process HISAT2_EXTRACTSPLICESITES {
         'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
 
     input:
-    tuple val(meta), path(gtf)
+    gtf     : Path
 
     output:
-    tuple val(meta), path("*.splice_sites.txt"), emit: txt
-    path "versions.yml"                        , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    file("*.splice_sites.txt")
 
     script:
     def args = task.ext.args ?: ''
     def VERSION = '2.2.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.splice_sites.txt
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hisat2: $VERSION
-    END_VERSIONS
     """
 }

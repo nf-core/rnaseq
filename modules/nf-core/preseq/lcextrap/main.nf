@@ -9,15 +9,16 @@ process PRESEQ_LCEXTRAP {
         'biocontainers/preseq:3.1.2--h445547b_2' }"
 
     input:
-    tuple val(meta), path(bam)
+    meta    : Map
+    bam     : Path
 
     output:
-    tuple val(meta), path("*.lc_extrap.txt"), emit: lc_extrap
-    tuple val(meta), path("*.log")          , emit: log
-    path  "versions.yml"                    , emit: versions
+    lc_extrap   : Path = file("*.lc_extrap.txt")
+    log         : Path = file("*.command.log")
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
+    file('*.lc_extrap.txt') >> 'logs'
 
     script:
     def args = task.ext.args ?: ''
@@ -31,10 +32,5 @@ process PRESEQ_LCEXTRAP {
         -output ${prefix}.lc_extrap.txt \\
         $bam
     cp .command.err ${prefix}.command.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
-    END_VERSIONS
     """
 }

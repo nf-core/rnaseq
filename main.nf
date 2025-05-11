@@ -9,7 +9,7 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
+nextflow.preview.types = true
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,23 +45,41 @@ include { checkMaxContigSize      } from './subworkflows/local/utils_nfcore_rnas
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
+    RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// WORKFLOW: Run main analysis pipeline
-//
-workflow NFCORE_RNASEQ {
+params {
+    input: List<FastqRun> {
+        // ...
+    }
+
+    trimmer: Trimmer {
+        // ...
+    }
+}
+
+workflow {
 
     main:
 
-    ch_versions = Channel.empty()
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.help,
+        "nextflow_schema.json",
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        workflow.outputDir
+    )
 
     //
     // SUBWORKFLOW: Prepare reference genome files
     //
-    PREPARE_GENOME (
+    genome = PREPARE_GENOME (
         params.fasta,
         params.gtf,
         params.gff,
@@ -88,73 +106,33 @@ workflow NFCORE_RNASEQ {
         params.skip_alignment,
         params.skip_pseudo_alignment
     )
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
-        PREPARE_GENOME
-            .out
-            .fai
-            .map { checkMaxContigSize(it) }
+        checkMaxContigSize(genome.fai)
     }
 
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
-    RNASEQ (
-        ch_samplesheet,
-        ch_versions,
-        PREPARE_GENOME.out.fasta,
-        PREPARE_GENOME.out.gtf,
-        PREPARE_GENOME.out.fai,
-        PREPARE_GENOME.out.chrom_sizes,
-        PREPARE_GENOME.out.gene_bed,
-        PREPARE_GENOME.out.transcript_fasta,
-        PREPARE_GENOME.out.star_index,
-        PREPARE_GENOME.out.rsem_index,
-        PREPARE_GENOME.out.hisat2_index,
-        PREPARE_GENOME.out.salmon_index,
-        PREPARE_GENOME.out.kallisto_index,
-        PREPARE_GENOME.out.bbsplit_index,
-        PREPARE_GENOME.out.sortmerna_index,
-        PREPARE_GENOME.out.splicesites,
+    rnaseq = RNASEQ (
+        params.input,
+        genome.fasta,
+        genome.gtf,
+        genome.fai,
+        genome.chrom_sizes,
+        genome.gene_bed,
+        genome.transcript_fasta,
+        genome.star_index,
+        genome.rsem_index,
+        genome.hisat2_index,
+        genome.salmon_index,
+        genome.kallisto_index,
+        genome.bbsplit_index,
+        genome.sortmerna_index,
+        genome.splicesites,
         !params.remove_ribo_rna && params.remove_ribo_rna
     )
-    ch_versions = ch_versions.mix(RNASEQ.out.versions)
-
-    emit:
-    multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
-    versions       = ch_versions               // channel: [version1, version2, ...]
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-workflow {
-
-    main:
-
-    //
-    // SUBWORKFLOW: Run initialisation tasks
-    //
-    PIPELINE_INITIALISATION (
-        params.version,
-        params.help,
-        "nextflow_schema.json",
-        params.validate_params,
-        params.monochrome_logs,
-        args,
-        params.outdir
-    )
-
-    //
-    // WORKFLOW: Run main workflow
-    //
-    NFCORE_RNASEQ ()
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -164,11 +142,58 @@ workflow {
         params.email,
         params.email_on_fail,
         params.plaintext_email,
-        params.outdir,
+        workflow.outputDir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_RNASEQ.out.multiqc_report
+        rnaseq.multiqc_report
     )
+
+    publish:
+    genome = [
+        genome.fasta,
+        genome.gtf,
+        genome.gff,
+        genome.add_fasta,
+        genome.gene_bed,
+        genome.transcript_fasta,
+        genome.fai,
+        genome.chrom_sizes,
+    ]
+    genome_index = [
+        genome.splicesites,
+        genome.bbsplit_index,
+        genome.star_index,
+        genome.rsem_index,
+        genome.hisat2_index,
+        genome.salmon_index,
+        genome.kallisto_index,
+    ]
+    samples = rnaseq.samples
+    summary = rnaseq.multiqc_report
+}
+
+output {
+    genome { // : List<Path>
+        enabled params.save_reference
+        path 'genome/index'
+    }
+
+    genome_index { // : List<Path>
+        enabled params.save_reference
+        path 'genome'
+    }
+
+    samples { // : List<Sample>
+        path {
+            // TODO: organize files by tool
+        }
+        index {
+            path 'samples.json'
+        }
+    }
+
+    summary { // : Path
+    }
 }
 
 /*

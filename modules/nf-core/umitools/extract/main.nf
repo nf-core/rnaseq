@@ -9,15 +9,12 @@ process UMITOOLS_EXTRACT {
         'biocontainers/umi_tools:1.1.5--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(reads)
+    meta    : Map
+    reads   : List<Path>
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: reads
-    tuple val(meta), path("*.log")     , emit: log
-    path  "versions.yml"               , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    reads   : List<Path> = files("*.fastq.gz")
+    log     : Path = file("*.log")
 
     script:
     def args = task.ext.args ?: ''
@@ -30,11 +27,6 @@ process UMITOOLS_EXTRACT {
             -S ${prefix}.umi_extract.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-        END_VERSIONS
         """
     }  else {
         """
@@ -46,11 +38,6 @@ process UMITOOLS_EXTRACT {
             --read2-out=${prefix}.umi_extract_2.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-        END_VERSIONS
         """
     }
 }

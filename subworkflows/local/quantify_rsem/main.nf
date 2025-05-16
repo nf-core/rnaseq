@@ -14,19 +14,15 @@ workflow QUANTIFY_RSEM {
 
     main:
 
-    ch_versions = Channel.empty()
-
     //
     // Quantify reads with RSEM
     //
     RSEM_CALCULATEEXPRESSION ( reads, index )
-    ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
     BAM_SORT_STATS_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star, fasta )
-    ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     //
     // Merge counts across samples
@@ -35,7 +31,6 @@ workflow QUANTIFY_RSEM {
         RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
         RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]}
     )
-    ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 
     emit:
     counts_gene              = RSEM_CALCULATEEXPRESSION.out.counts_gene       // channel: [ val(meta), counts ]
@@ -58,5 +53,4 @@ workflow QUANTIFY_RSEM {
     merged_counts_transcript = RSEM_MERGE_COUNTS.out.counts_transcript        //    path: *.transcript_counts.tsv
     merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.tsv
 
-    versions                 = ch_versions                                    // channel: [ versions.yml ]
 }

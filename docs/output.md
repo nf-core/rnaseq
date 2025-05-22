@@ -734,8 +734,28 @@ The principal output files are the same between Salmon and Kallisto:
   - `<pseudo_aligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
   - `<pseudo_aligner>.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
   - `<pseudo_aligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `all_samples_transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
   - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
+  - `all_samples_transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+
+> [!TIP]
+> You can access specific assay matrices from the `SummarizedExperiment` RDS object with the following R code:
+
+```r
+  library(SummarizedExperiment)
+
+  # Load the RDS object
+  se <- readRDS("all_samples_gene.SummarizedExperiment.rds")
+
+  # View available assays
+  assayNames(se)
+
+  # Access a specific assay, e.g., length-scaled counts
+  counts_length_scaled <- assay(se, "counts_length_scaled")
+
+  # Print the matrix
+  print(counts_length_scaled)
+```
+
   </details>
 
 An additional subset of files are distinct to each tool, for Salmon:

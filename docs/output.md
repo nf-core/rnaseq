@@ -737,8 +737,7 @@ The principal output files are the same between Salmon and Kallisto:
   - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
   - `all_samples_transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
 
-> [!TIP]
-> You can access specific assay matrices from the `SummarizedExperiment` RDS object with the following R code:
+> **TIP:** You can access specific assay matrices from the `SummarizedExperiment` RDS object with the following R code:
 
 ```r
   library(SummarizedExperiment)

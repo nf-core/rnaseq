@@ -105,7 +105,7 @@
     },
     "Params: default": {
         "content": [
-            213,
+            209,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -205,7 +205,10 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "SE_GENE": {
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_ALIGN": {
@@ -694,6 +697,8 @@
                 "salmon/WT_REP2/logs/salmon_quant.log",
                 "salmon/WT_REP2/quant.genes.sf",
                 "salmon/WT_REP2/quant.sf",
+                "salmon/all_samples_gene.SummarizedExperiment.rds",
+                "salmon/all_samples_transcript.SummarizedExperiment.rds",
                 "salmon/deseq2_qc",
                 "salmon/deseq2_qc/R_sessionInfo.log",
                 "salmon/deseq2_qc/deseq2.dds.RData",
@@ -707,15 +712,11 @@
                 "salmon/deseq2_qc/size_factors/WT_REP1.txt",
                 "salmon/deseq2_qc/size_factors/WT_REP2.txt",
                 "salmon/deseq2_qc/size_factors/deseq2.size_factors.RData",
-                "salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts.tsv",
-                "salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_scaled.tsv",
                 "salmon/salmon.merged.gene_lengths.tsv",
                 "salmon/salmon.merged.gene_tpm.tsv",
-                "salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
@@ -1216,15 +1217,12 @@
                 "star_salmon/rseqc/read_duplication/xls/WT_REP1.seq.DupRate.xls",
                 "star_salmon/rseqc/read_duplication/xls/WT_REP2.pos.DupRate.xls",
                 "star_salmon/rseqc/read_duplication/xls/WT_REP2.seq.DupRate.xls",
-                "star_salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
+                "star_salmon/salmon.merged.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts.tsv",
-                "star_salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "star_salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts_scaled.tsv",
                 "star_salmon/salmon.merged.gene_lengths.tsv",
                 "star_salmon/salmon.merged.gene_tpm.tsv",
-                "star_salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
@@ -1491,8 +1489,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-01-28T13:24:46.099038947"
+        "timestamp": "2025-05-02T18:28:55.976743746"
     }
 }

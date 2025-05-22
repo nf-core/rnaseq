@@ -373,7 +373,7 @@
                     },
                     "quantify_pseudo_alignment": {
                         "branch": "master",
-                        "git_sha": "a1abf90966a2a4016d3c3e41e228bfcbd4811ccc",
+                        "git_sha": "1f008221e451e7a4738226c49e69aaa2eb731369",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {

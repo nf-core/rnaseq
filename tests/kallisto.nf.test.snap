@@ -1,7 +1,7 @@
 {
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment": {
         "content": [
-            50,
+            48,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -45,7 +45,10 @@
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
                 },
-                "SE_GENE": {
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
@@ -137,15 +140,13 @@
                 "kallisto/WT_REP2/abundance.tsv",
                 "kallisto/WT_REP2/kallisto_quant.log",
                 "kallisto/WT_REP2/run_info.json",
-                "kallisto/kallisto.merged.gene_counts.SummarizedExperiment.rds",
+                "kallisto/all_samples_gene.SummarizedExperiment.rds",
+                "kallisto/all_samples_transcript.SummarizedExperiment.rds",
                 "kallisto/kallisto.merged.gene_counts.tsv",
-                "kallisto/kallisto.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "kallisto/kallisto.merged.gene_counts_length_scaled.tsv",
-                "kallisto/kallisto.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "kallisto/kallisto.merged.gene_counts_scaled.tsv",
                 "kallisto/kallisto.merged.gene_lengths.tsv",
                 "kallisto/kallisto.merged.gene_tpm.tsv",
-                "kallisto/kallisto.merged.transcript_counts.SummarizedExperiment.rds",
                 "kallisto/kallisto.merged.transcript_counts.tsv",
                 "kallisto/kallisto.merged.transcript_lengths.tsv",
                 "kallisto/kallisto.merged.transcript_tpm.tsv",
@@ -274,9 +275,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-01-28T13:49:54.341502957"
+        "timestamp": "2025-05-02T19:02:06.6706681"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [

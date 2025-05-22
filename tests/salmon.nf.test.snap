@@ -1,7 +1,7 @@
 {
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment": {
         "content": [
-            49,
+            47,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -39,7 +39,10 @@
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
                 },
-                "SE_GENE": {
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
@@ -273,15 +276,13 @@
                 "salmon/WT_REP2/logs/salmon_quant.log",
                 "salmon/WT_REP2/quant.genes.sf",
                 "salmon/WT_REP2/quant.sf",
-                "salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
+                "salmon/all_samples_gene.SummarizedExperiment.rds",
+                "salmon/all_samples_transcript.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts.tsv",
-                "salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_scaled.tsv",
                 "salmon/salmon.merged.gene_lengths.tsv",
                 "salmon/salmon.merged.gene_tpm.tsv",
-                "salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
@@ -350,9 +351,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-01-28T14:18:40.084965809"
+        "timestamp": "2025-05-02T19:38:03.700997798"
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
         "content": [

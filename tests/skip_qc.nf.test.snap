@@ -91,7 +91,7 @@
     },
     "Params: --skip_qc": {
         "content": [
-            151,
+            147,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -150,7 +150,10 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "SE_GENE": {
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_ALIGN": {
@@ -470,15 +473,13 @@
                 "salmon/WT_REP2/logs/salmon_quant.log",
                 "salmon/WT_REP2/quant.genes.sf",
                 "salmon/WT_REP2/quant.sf",
-                "salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
+                "salmon/all_samples_gene.SummarizedExperiment.rds",
+                "salmon/all_samples_transcript.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts.tsv",
-                "salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "salmon/salmon.merged.gene_counts_scaled.tsv",
                 "salmon/salmon.merged.gene_lengths.tsv",
                 "salmon/salmon.merged.gene_tpm.tsv",
-                "salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
@@ -607,15 +608,12 @@
                 "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
                 "star_salmon/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
                 "star_salmon/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/salmon.merged.gene_counts.SummarizedExperiment.rds",
+                "star_salmon/salmon.merged.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts.tsv",
-                "star_salmon/salmon.merged.gene_counts_length_scaled.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts_length_scaled.tsv",
-                "star_salmon/salmon.merged.gene_counts_scaled.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts_scaled.tsv",
                 "star_salmon/salmon.merged.gene_lengths.tsv",
                 "star_salmon/salmon.merged.gene_tpm.tsv",
-                "star_salmon/salmon.merged.transcript_counts.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
@@ -819,8 +817,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-01-28T14:25:33.060222508"
+        "timestamp": "2025-05-02T19:46:18.144171012"
     }
 }

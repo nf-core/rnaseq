@@ -18,14 +18,13 @@
                     },
                     "bracken/bracken": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "a1abf90966a2a4016d3c3e41e228bfcbd4811ccc",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"],
-                        "patch": "modules/nf-core/cat/fastq/cat-fastq.diff"
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "custom/catadditionalfasta": {
                         "branch": "master",
@@ -79,18 +78,18 @@
                     },
                     "hisat2/align": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["fastq_align_hisat2"],
                         "patch": "modules/nf-core/hisat2/align/hisat2-align.diff"
                     },
                     "hisat2/build": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["modules"]
                     },
                     "hisat2/extractsplicesites": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["modules"]
                     },
                     "kallisto/index": {
@@ -105,7 +104,7 @@
                     },
                     "kraken2/kraken2": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -131,12 +130,12 @@
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["modules"]
                     },
                     "rsem/preparereference": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["modules"]
                     },
                     "rseqc/bamstat": {
@@ -221,21 +220,18 @@
                     },
                     "sortmerna": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"],
-                        "patch": "modules/nf-core/sortmerna/sortmerna.diff"
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "star/align": {
                         "branch": "master",
                         "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/star/align/star-align.diff"
+                        "installed_by": ["modules"]
                     },
                     "star/genomegenerate": {
                         "branch": "master",
                         "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/star/genomegenerate/star-genomegenerate.diff"
+                        "installed_by": ["modules"]
                     },
                     "stringtie/stringtie": {
                         "branch": "master",

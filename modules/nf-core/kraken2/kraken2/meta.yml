@@ -84,7 +84,7 @@ output:
           type: file
           description: |
             Kraken2 report containing stats about classified
-            and not classifed reads.
+            and not classified reads.
           pattern: "*.{report.txt}"
   - versions:
       - versions.yml:

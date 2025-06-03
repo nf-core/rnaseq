@@ -1,0 +1,142 @@
+name: Run nf-test
+on:
+  push:
+    paths-ignore:
+      - "docs/**"
+      - "**/meta.yml"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/meta.yml"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NFT_VER: "0.9.2"
+  NFT_WORKDIR: "~"
+  NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+
+jobs:
+  nf-test-changes:
+    name: nf-test-changes
+    runs-on: # use self-hosted runners
+      - runs-on=$-nf-test-changes
+      - runner=4cpu-linux-x64
+    outputs:
+      shard: ${{ steps.set-shards.outputs.shard }}
+      total_shards: ${{ steps.set-shards.outputs.total_shards }}
+    steps:
+      - name: Clean Workspace # Purge the workspace in case it's running on a self-hosted runner
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: get number of shards
+        id: set-shards
+        uses: ./.github/actions/get-shards
+        env:
+          NFT_VER: ${{ env.NFT_VER }}
+        with:
+          max_shards: 7
+
+      - name: debug
+        run: |
+          echo ${{ steps.set-shards.outputs.shard }}
+          echo ${{ steps.set-shards.outputs.total_shards }}
+
+  nf-test:
+    name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
+    needs: [nf-test-changes]
+    if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
+    runs-on: # use self-hosted runners
+      - runs-on=$-nf-test
+      - runner=4cpu-linux-x64
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
+        profile: [conda, docker, singularity]
+        isMain:
+          - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
+        # Exclude conda and singularity on dev
+        exclude:
+          - isMain: false
+            profile: "conda"
+          - isMain: false
+            profile: "singularity"
+        NXF_VER:
+          - "24.04.2"
+          - "latest-everything"
+    env:
+      NXF_ANSI_LOG: false
+      TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Run nf-test
+        uses: ./.github/actions/nf-test
+        env:
+          NFT_DIFF: ${{ env.NFT_DIFF }}
+          NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
+          NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+        with:
+          profile: ${{ matrix.profile }}
+          shard: ${{ matrix.shard }}
+          total_shards: ${{ env.TOTAL_SHARDS }}
+  confirm-pass:
+    needs: [nf-test]
+    if: always()
+    runs-on: # use self-hosted runners
+      - runs-on=$-confirm-pass
+      - runner=2cpu-linux-x64
+    steps:
+      - name: One or more tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+
+      - name: One or more tests cancelled
+        if: ${{ contains(needs.*.result, 'cancelled') }}
+        run: exit 1
+
+      - name: All tests ok
+        if: ${{ contains(needs.*.result, 'success') }}
+        run: exit 0
+
+      - name: debug-print
+        if: always()
+        run: |
+          echo "::group::DEBUG: `needs` Contents"
+          echo "DEBUG: toJSON(needs) = ${{ toJSON(needs) }}"
+          echo "DEBUG: toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
+          echo "::endgroup::"
+
+      - name: Clean Workspace # Purge the workspace in case it's running on a self-hosted runner
+        if: always()
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./

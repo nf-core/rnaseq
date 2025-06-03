@@ -14,7 +14,7 @@ jobs:
   run-platform:
     name: Run AWS full tests
     # run only if the PR is approved by at least 2 reviewers and against the master/main branch or manually triggered
-    if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch'
+    if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Set revision variable
@@ -40,7 +40,7 @@ jobs:
             }
           profiles: test_full
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: Seqera Platform debug log file
           path: |

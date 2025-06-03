@@ -1,0 +1,113 @@
+name: "nf-test Action"
+description: "Runs nf-test with common setup steps"
+inputs:
+  profile:
+    description: "Profile to use"
+    required: true
+  shard:
+    description: "Shard number for this CI job"
+    required: true
+  total_shards:
+    description: "Total number of test shards(NOT the total number of matrix jobs)"
+    required: true
+  paths:
+    description: "Test paths"
+    required: true
+  tags:
+    description: "Tags to pass as argument for nf-test --tag parameter"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Nextflow
+      uses: nf-core/setup-nextflow@v2
+      with:
+        version: "${{ env.NXF_VERSION }}"
+
+    - name: Set up Python
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      with:
+        python-version: "3.13"
+
+    - name: Install nf-test
+      uses: nf-core/setup-nf-test@v1
+      with:
+        version: "${{ env.NFT_VER }}"
+        install-pdiff: true
+
+    - name: Setup apptainer
+      if: contains(inputs.profile, 'singularity')
+      uses: eWaterCycle/setup-apptainer@main
+
+    - name: Set up Singularity
+      if: contains(inputs.profile, 'singularity')
+      shell: bash
+      run: |
+        mkdir -p $NXF_SINGULARITY_CACHEDIR
+        mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+    - name: Conda setup
+      if: contains(inputs.profile, 'conda')
+      uses: conda-incubator/setup-miniconda@505e6394dae86d6a5c7fbb6e3fb8938e3e863830 # v3
+      with:
+        auto-update-conda: true
+        conda-solver: libmamba
+        conda-remove-defaults: true
+
+      # TODO Skip failing conda tests and document their failures
+      # https://github.com/nf-core/modules/issues/7017
+    - name: Run nf-test
+      shell: bash
+      env:
+        NFT_DIFF: ${{ env.NFT_DIFF }}
+        NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
+        NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+      run: |
+        nf-test test \
+          --profile=+${{ inputs.profile }} \
+          $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
+          --ci \
+          --changed-since HEAD^ \
+          --verbose \
+          --tap=test.tap \
+          --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
+
+          # Save the absolute path of the test.tap file to the output
+          echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
+
+    - name: Generate test summary
+      if: always()
+      shell: bash
+      run: |
+        # Add header if it doesn't exist (using a token file to track this)
+        if [ ! -f ".summary_header" ]; then
+          echo "# 🚀 nf-test results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Status | Test Name | Profile | Shard |" >> $GITHUB_STEP_SUMMARY
+          echo "|:------:|-----------|---------|-------|" >> $GITHUB_STEP_SUMMARY
+          touch .summary_header
+        fi
+
+        if [ -f test.tap ]; then
+          while IFS= read -r line; do
+            if [[ $line =~ ^ok ]]; then
+              test_name="${line#ok }"
+              # Remove the test number from the beginning
+              test_name="${test_name#* }"
+              echo "| ✅ | ${test_name} | ${{ inputs.profile }} | ${{ inputs.shard }}/${{ inputs.total_shards }} |" >> $GITHUB_STEP_SUMMARY
+            elif [[ $line =~ ^not\ ok ]]; then
+              test_name="${line#not ok }"
+              # Remove the test number from the beginning
+              test_name="${test_name#* }"
+              echo "| ❌ | ${test_name} | ${{ inputs.profile }} | ${{ inputs.shard }}/${{ inputs.total_shards }} |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done < test.tap
+        else
+          echo "| ⚠️ | No test results found | ${{ inputs.profile }} | ${{ inputs.shard }}/${{ inputs.total_shards }} |" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Clean up
+      if: always()
+      shell: bash
+      run: |
+        sudo rm -rf /home/ubuntu/tests/

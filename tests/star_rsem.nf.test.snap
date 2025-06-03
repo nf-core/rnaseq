@@ -1291,7 +1291,7 @@
     },
     "Params: --aligner star_rsem - stub": {
         "content": [
-            26,
+            27,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.1
@@ -1363,6 +1363,11 @@
                 "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
                 "fq_lint/raw/WT_REP1.fq_lint.txt",
                 "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "multiqc",
+                "multiqc/star_rsem",
+                "multiqc/star_rsem/multiqc_data",
+                "multiqc/star_rsem/multiqc_plots",
+                "multiqc/star_rsem/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
                 "trimgalore",
@@ -1384,6 +1389,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-03T19:13:26.589673682"
+        "timestamp": "2025-06-03T20:30:37.383920745"
     }
 }

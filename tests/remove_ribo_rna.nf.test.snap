@@ -1267,8 +1267,6 @@
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,3297068282f57506f40070b8bc6ad1b5",
                 "qualimap_rnaseq_cov_hist.txt:md5,a523cfcb52fe8f2d5902d933568a790d",
                 "rseqc_infer_experiment_plot.txt:md5,d8741451248f1a5a4ebe3230c1af9c95",
-                "samtools-flagstat-pct-table.txt:md5,811c13b6c26200f0507149247dd03404",
-                "samtools-flagstat-table.txt:md5,f6de841b5c18f6b29417ecc8869948af",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,53addd7b78d8ae224920ec9b97489d72",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,4ff26c0457ddceb4a03e874222b46f00",
@@ -1335,11 +1333,6 @@
                 "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,c0bf1135d2d70c5918d87f706c0c54bc",
                 "WT_REP1_dupMatrix.txt:md5,b82c4fed335d03e85c414c91c2efd461",
                 "WT_REP2_dupMatrix.txt:md5,bab18079153627205e5d907d8dfba677",
-                "RAP1_IAA_30M_REP1_intercept_slope.txt:md5,b21a53b0156b0afdfc28c237cb11218d",
-                "RAP1_UNINDUCED_REP1_intercept_slope.txt:md5,eccc5ca37855c717d35477e684188695",
-                "RAP1_UNINDUCED_REP2_intercept_slope.txt:md5,b0cbd0122c0fc5dd1821450eb41ba577",
-                "WT_REP1_intercept_slope.txt:md5,7db7a898152e8eaab96b1aaf0e567e50",
-                "WT_REP2_intercept_slope.txt:md5,c16fb72dbde510dc74ac0286b635d0aa",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,accedae963f399d3b47effd8eda41edb",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.txt:md5,e37ededa12690a8ccae2eb42dac47ed6",
@@ -1407,7 +1400,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-03T13:08:56.053404337"
+        "timestamp": "2025-06-03T18:18:03.365506226"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [

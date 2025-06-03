@@ -2,11 +2,6 @@ nextflow_process {
     name "Test Process KRAKEN2_KRAKEN2"
     script "../main.nf"
     process "KRAKEN2_KRAKEN2"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "untar"
-    tag "kraken2"
-    tag "kraken2/kraken2"
 
     setup {
         run("UNTAR") {

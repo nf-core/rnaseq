@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "RSEM_CALCULATEEXPRESSION"
     config "./nextflow.config"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rsem"
-    tag "rsem/calculateexpression"
-    tag "rsem/preparereference"
 
     test("homo_sapiens") {
 

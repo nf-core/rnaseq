@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - conda-forge::sortmerna=4.3.7
+  - seqera::sortmerna=4.3.7

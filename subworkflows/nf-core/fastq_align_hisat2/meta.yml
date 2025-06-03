@@ -51,7 +51,7 @@ output:
       pattern: "*.{bam}"
   - summary:
       type: file
-      description: Aligment log
+      description: Alignment log
       pattern: "*.log"
   - fastq:
       type: file

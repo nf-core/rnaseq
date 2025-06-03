@@ -344,7 +344,7 @@
                     },
                     "fastq_align_hisat2": {
                         "branch": "master",
-                        "git_sha": "763d4b5c05ffda3ac1ac969dc67f7458cfb2eb1d",
+                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_fastqc_umitools_fastp": {

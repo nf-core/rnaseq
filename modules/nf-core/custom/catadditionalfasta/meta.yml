@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "custom_catadditionalfasta"
+description: Custom module to Add a new fasta file to an old one and update an associated
+  GTF
+keywords:
+  - fasta
+  - gtf
+  - genomics
+tools:
+  - "custom":
+      description: "Custom module to Add a new fasta file to an old one and update an
+        associated GTF"
+      tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/catadditionalfasta/main.nf"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing fasta information
+    - fasta:
+        type: file
+        description: FASTA-format sequence file
+        pattern: "*.{fasta,fa}"
+    - gtf:
+        type: file
+        description: GTF-format annotation file for fasta
+        pattern: "*.gtf"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing additional fasta information
+    - add_fasta:
+        type: file
+        description: FASTA-format file of additional sequences
+        pattern: "*.fa"
+  - - biotype:
+        type: string
+        description: Biotype to apply to new GTF entries
+output:
+  - fasta:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing fasta information
+      - "*/*.fasta":
+          type: file
+          description: FASTA-format combined sequence file
+          pattern: "*.{fasta,fa}"
+  - gtf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing fasta information
+      - "*/*.gtf":
+          type: file
+          description: GTF-format combined annotation file
+          pattern: "*.gtf"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

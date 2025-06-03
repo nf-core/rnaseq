@@ -1,0 +1,74 @@
+{
+    "sarscov2 illumina single end [fastq]": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
+                ]
+            ],
+            [
+                "versions.yml:md5,79adf2ca1cfc625cb77e391b27142c43"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-04T18:47:03.745692"
+    },
+    "sarscov2 illumina paired end [fastq]": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
+                ]
+            ],
+            [
+                "versions.yml:md5,79adf2ca1cfc625cb77e391b27142c43"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-04T18:47:13.75649"
+    },
+    "sarscov2 illumina single end [fastq] + save_reads_assignment": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.kraken2.classifiedreads.txt:md5,e7a90531f0d8d777316515c36fe4cae0"
+                ]
+            ],
+            [
+                "versions.yml:md5,79adf2ca1cfc625cb77e391b27142c43"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-04T18:47:22.459465"
+    }
+}

@@ -1,0 +1,138 @@
+nextflow_process {
+    name "Test Process KRAKEN2_KRAKEN2"
+    script "../main.nf"
+    process "KRAKEN2_KRAKEN2"
+
+    setup {
+        run("UNTAR") {
+            script "modules/nf-core/untar/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [],
+                    file(
+                        params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz",
+                        checkIfExists: true
+                    )
+                ])
+                """
+            }
+        }
+    }
+
+    test("sarscov2 illumina single end [fastq]") {
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(
+                        params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
+                        checkIfExists: true
+                    )]
+                ]
+                input[1] = UNTAR.out.untar.map{ it[1] }
+                input[2] = true
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                    process.out.report,
+                    process.out.versions,
+                ).match()
+            },
+            { assert process.out.classified_reads_fastq.get(0).get(1) ==~ ".*/test.classified.fastq.gz" },
+            { assert process.out.unclassified_reads_fastq.get(0).get(1) ==~ ".*/test.unclassified.fastq.gz" },
+            )
+        }
+    }
+
+    test("sarscov2 illumina paired end [fastq]") {
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(
+                            params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
+                            checkIfExists: true
+                        ),
+                        file(
+                            params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz",
+                            checkIfExists: true
+                        )
+
+                        ]
+                    ]
+                input[1] = UNTAR.out.untar.map{ it[1] }
+                input[2] = true
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                    process.out.report,
+                    process.out.versions,
+                ).match()
+            },
+            { assert process.out.classified_reads_fastq.get(0).get(1).get(0)
+                ==~ ".*/test.classified_1.fastq.gz" },
+            { assert process.out.classified_reads_fastq.get(0).get(1).get(1)
+                ==~ ".*/test.classified_2.fastq.gz" },
+            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(0)
+                ==~ ".*/test.unclassified_1.fastq.gz" },
+            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(1)
+                ==~ ".*/test.unclassified_2.fastq.gz" },
+            )
+        }
+    }
+
+    test("sarscov2 illumina single end [fastq] + save_reads_assignment") {
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(
+                        params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
+                        checkIfExists: true
+                    )]
+                ]
+                input[1] = UNTAR.out.untar.map{ it[1] }
+                input[2] = false
+                input[3] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                    process.out.report,
+                    process.out.classified_reads_assignment,
+                    process.out.versions,
+                ).match()
+            },
+            )
+        }
+    }
+}

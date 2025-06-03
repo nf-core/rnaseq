@@ -1,0 +1,2 @@
+subworkflows/bam_dedup_stats_samtools_umicollapse:
+  - subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse/**

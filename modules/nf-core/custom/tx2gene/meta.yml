@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "custom_tx2gene"
+description: Make a transcript/gene mapping from a GTF and cross-reference with transcript
+  quantifications.
+keywords:
+  - gene
+  - gtf
+  - pseudoalignment
+  - transcript
+tools:
+  - "custom":
+      description: |
+        "Custom module to create a transcript to gene mapping from a GTF and
+        check it against transcript quantifications"
+      tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/tx2gene/main.nf"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information related to the GTF file
+          e.g. `[ id:'yeast' ]`
+    - gtf:
+        type: file
+        description: An annotation file of the reference genome in GTF format
+        pattern: "*.gtf"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing information related to the experiment as a whole
+          e.g. `[ id:'SRP123456' ]`
+    - '"quants/*"':
+        type: file
+        description: quants file
+  - - quant_type:
+        type: string
+        description: Quantification type, 'kallisto' or 'salmon'
+  - - id:
+        type: string
+        description: Gene ID attribute in the GTF file (default= gene_id)
+  - - extra:
+        type: string
+        description: Extra gene attribute in the GTF file (default= gene_name)
+output:
+  - tx2gene:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information related to the GTF file
+            e.g. `[ id:'yeast' ]`
+      - "*tx2gene.tsv":
+          type: file
+          description: A transcript/ gene mapping table in TSV format
+          pattern: "*.tx2gene.tsv"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

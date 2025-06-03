@@ -8,7 +8,7 @@ nextflow_process {
     tag "sortmerna"
 
     test("sarscov2 indexing only") {
- 
+
         config './indexing_only.config'
 
         when {
@@ -27,15 +27,17 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert ! process.out.reads },
-                { assert snapshot(process.out.index).match("index_index_only") },
-                { assert snapshot(process.out.versions).match("versions_index_only") }
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name },
+                    process.out.versions
+                ).match() }
             )
         }
 
     }
-    
+
     test("sarscov2 indexing only stub") {
- 
+
         options '-stub'
         config './indexing_only.config'
 
@@ -92,7 +94,9 @@ nextflow_process {
                         ).sort()
                     ).match("sarscov2 single_end_match")
                 },
-                { assert snapshot(process.out.index).match("index_single_end") },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name }
+                ).match("index_single_end")},
                 { assert snapshot(process.out.versions).match("versions_single_end") }
             )
         }
@@ -141,9 +145,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ 
+                input[0] = [
                     [ id:'test' ], // meta map
-                    [ 
+                    [
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
@@ -170,8 +174,11 @@ nextflow_process {
                         ).sort()
                     ).match("sarscov2 paired_end_match")
                 },
-                { assert snapshot(process.out.index).match("index_paired_end") },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name }
+                ).match("index_paired_end") },
                 { assert snapshot(process.out.versions).match("versions_paired_end") }
+
             )
         }
 
@@ -185,7 +192,7 @@ nextflow_process {
             process {
                 """
                 input[0] = [ [ id:'test' ], // meta map
-                    [ 
+                    [
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
@@ -220,7 +227,7 @@ nextflow_process {
     test("sarscov2 single_end premade_index") {
 
         config './premade_index.config'
-    
+
         setup {
 
             run("SORTMERNA", alias: "SORTMERNA_INDEX") {
@@ -236,7 +243,7 @@ nextflow_process {
                 }
             }
         }
-        
+
         when {
             process {
                 """
@@ -265,7 +272,9 @@ nextflow_process {
                         ).sort()
                     ).match("sarscov2 single_end_premade_index_match")
                 },
-                { assert snapshot(process.out.index).match("index_single_end_premade_index") },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort{ it.name }
+                ).match("index_single_end_premade_index") },
                 { assert snapshot(process.out.versions).match("versions_single_end_premade_index") }
             )
         }
@@ -275,7 +284,7 @@ nextflow_process {
 
         config './premade_index.config'
         options '-stub'
-    
+
         setup {
 
             run("SORTMERNA", alias: "SORTMERNA_INDEX") {
@@ -291,7 +300,7 @@ nextflow_process {
                 }
             }
         }
-        
+
         when {
             process {
                 """

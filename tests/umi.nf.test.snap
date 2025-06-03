@@ -1292,7 +1292,6 @@
             [
                 "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
                 "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
-                "BETA-multiqc.parquet:md5,ec0edcd018e976423add3cb5c4ba04bc",
                 "cutadapt_filtered_reads_plot.txt:md5,3f122969fa288888e5abef061b7963f2",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,5e8a821c9a4deb46c11bc65969b8864f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,bf8abefa7c5f2f1e1140749983279d9d",
@@ -2663,7 +2662,6 @@
                 "e_data.ctab:md5,593daf0b84f008c0c64319990ef2fd42",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,01c675638f918a70ea689f618a2610bc",
-                "BETA-multiqc.parquet:md5,37ad20c453d16ff08fc094b2f7813363",
                 "cutadapt_filtered_reads_plot.txt:md5,3f122969fa288888e5abef061b7963f2",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,5e8a821c9a4deb46c11bc65969b8864f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,bf8abefa7c5f2f1e1140749983279d9d",

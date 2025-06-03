@@ -253,7 +253,6 @@
                 "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
                 "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-                "BETA-multiqc.parquet:md5,551eb6d2bac259036b0d8021d008e87d",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",

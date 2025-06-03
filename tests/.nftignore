@@ -19,6 +19,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/dupradar/box_plot/*_duprateExpBoxplot.pdf
 {hisat2,star_rsem,star_salmon}/dupradar/histogram/*_expressionHist.pdf
 {hisat2,star_rsem,star_salmon}/dupradar/scatter_plot/*_duprateExpDens.pdf
+{hisat2,star_rsem,star_salmon}/dupradar/intercepts_slope/*_intercept_slope.txt
 {hisat2,star_rsem,star_salmon}/featurecounts/*.featureCounts.txt.summary
 {hisat2,star_rsem,star_salmon}/picard_metrics/*.MarkDuplicates.metrics.txt
 {hisat2,star_rsem,star_salmon}/qualimap/*/css/*
@@ -77,6 +78,8 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/star_alignment_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/star_summary_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/BETA-multiqc.parquet
+{multiqc,multiqc/**}/multiqc_report_data/samtools-flagstat-pct-table.txt
+{multiqc,multiqc/**}/multiqc_report_data/samtools-flagstat-table.txt
 {multiqc,multiqc/**}/multiqc_report_plots/{pdf,png,svg}/*.{pdf,png,svg}
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.dds.RData
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.pca.vals.txt

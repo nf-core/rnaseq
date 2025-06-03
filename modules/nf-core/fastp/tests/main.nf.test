@@ -1,0 +1,573 @@
+nextflow_process {
+
+    name "Test Process FASTP"
+    script "../main.nf"
+    process "FASTP"
+
+    test("test_fastp_single_end") {
+
+        when {
+
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("single end (151 cycles)") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("reads passed filter: 99") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end") {
+
+        when {
+
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_pass = true
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("The input has little adapter percentage (~0.000000%), probably it's trimmed before.") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("Q30 bases: 12281(88.3716%)") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("fastp test_fastp_interleaved") {
+
+        config './nextflow.interleaved.config'
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("paired end (151 cycles + 151 cycles)") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("reads passed filter: 162") },
+                { assert process.out.reads_fail == [] },
+                { assert process.out.reads_merged == [] },
+                { assert snapshot(
+                    process.out.reads,
+                    process.out.json,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_single_end_trim_fail") {
+
+        when {
+
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = true
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("single end (151 cycles)") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("reads passed filter: 99") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_trim_fail") {
+
+        config './nextflow.save_failed.config'
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = true
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("The input has little adapter percentage (~0.000000%), probably it's trimmed before.") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("reads passed filter: 162") },
+                { assert snapshot(
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.json,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("The input has little adapter percentage (~0.000000%), probably it's trimmed before.") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("total reads: 75") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.versions).match() },
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged_adapterlist") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] =  Channel.of([ file(params.modules_testdata_base_path + 'delete_me/fastp/adapters.fasta', checkIfExists: true) ])
+                input[2] = false
+                input[3] = false
+                input[4] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("<div id='After_filtering__merged__quality'>") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("total bases: 13683") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_single_end_qc_only") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = true
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("single end (151 cycles)") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("reads passed filter: 99") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.reads_merged,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_qc_only") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = true
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.html.get(0).get(1)).getText().contains("The input has little adapter percentage (~0.000000%), probably it's trimmed before.") },
+                { assert path(process.out.log.get(0).get(1)).getText().contains("Q30 bases: 12281(88.3716%)") },
+                { assert snapshot(
+                    process.out.json,
+                    process.out.reads,
+                    process.out.reads,
+                    process.out.reads_fail,
+                    process.out.reads_fail,
+                    process.out.reads_merged,
+                    process.out.reads_merged,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_fastp_single_end - stub") {
+
+        options "-stub"
+
+        when {
+
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end - stub") {
+
+        options "-stub"
+
+        when {
+
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_pass = true
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("fastp - stub test_fastp_interleaved") {
+
+        options "-stub"
+
+        config './nextflow.interleaved.config'
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_single_end_trim_fail - stub") {
+
+        options "-stub"
+
+        when {
+
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = true
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_trim_fail - stub") {
+
+        options "-stub"
+
+        config './nextflow.save_failed.config'
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = true
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = false
+                input[3] = false
+                input[4] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged_adapterlist - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] =  Channel.of([ file(params.modules_testdata_base_path + 'delete_me/fastp/adapters.fasta', checkIfExists: true) ])
+                input[2] = false
+                input[3] = false
+                input[4] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_single_end_qc_only - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = true
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_qc_only - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = []
+                input[2] = true
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

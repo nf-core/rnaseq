@@ -1,0 +1,79 @@
+name: stringtie_stringtie
+description: Transcript assembly and quantification for RNA-Se
+keywords:
+  - transcript
+  - assembly
+  - quantification
+  - gtf
+tools:
+  - stringtie2:
+      description: |
+        Transcript assembly and quantification for RNA-Seq
+      homepage: https://ccb.jhu.edu/software/stringtie/index.shtml
+      documentation: https://ccb.jhu.edu/software/stringtie/index.shtml?t=manual
+      licence: ["MIT"]
+      identifier: biotools:stringtie
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: |
+          Stringtie transcript gtf output(s).
+  - - annotation_gtf:
+        type: file
+        description: |
+          Annotation gtf file (optional).
+output:
+  - transcript_gtf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.transcripts.gtf":
+          type: file
+          description: transcript gtf
+          pattern: "*.{transcripts.gtf}"
+  - abundance:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.abundance.txt":
+          type: file
+          description: abundance
+          pattern: "*.{abundance.txt}"
+  - coverage_gtf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.coverage.gtf":
+          type: file
+          description: coverage gtf
+          pattern: "*.{coverage.gtf}"
+  - ballgown:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.ballgown":
+          type: file
+          description: for running ballgown
+          pattern: "*.{ballgown}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+maintainers:
+  - "@drpatelh"

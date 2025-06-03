@@ -1,0 +1,63 @@
+name: umitools_prepareforrsem
+description: Make the output from umi_tools dedup or group compatible with RSEM
+keywords:
+  - umitools
+  - rsem
+  - salmon
+  - dedup
+tools:
+  - umi_tools:
+      description: >
+        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random
+        Molecular Tags (RMTs) and single cell RNA-Seq cell barcodes
+      documentation: https://umi-tools.readthedocs.io/en/latest/
+      license: ["MIT"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: |
+          BAM file containing reads to be deduplicated via UMIs.
+        pattern: "*.{bam}"
+    - bai:
+        type: file
+        description: |
+          BAM index files corresponding to the input BAM file.
+        pattern: "*.{bai}"
+output:
+  - bam:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Prepared BAM file.
+          pattern: "*.{bam}"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.log":
+          type: file
+          description: File with logging information
+          pattern: "*.{log}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@pinin4fjords"
+maintainers:
+  - "@drpatelh"
+  - "@pinin4fjords"

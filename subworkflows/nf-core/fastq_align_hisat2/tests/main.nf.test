@@ -1,0 +1,210 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTQ_ALIGN_HISAT2"
+    script "../main.nf"
+    workflow "FASTQ_ALIGN_HISAT2"
+    config "./nextflow.config"
+
+
+
+
+        setup {
+            run("HISAT2_EXTRACTSPLICESITES") {
+                script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+
+            run("HISAT2_EXTRACTSPLICESITES", alias: "HISAT2_EXTRACTSPLICESITES_STUB") {
+                script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+
+            run("HISAT2_BUILD") {
+                script "../../../../modules/nf-core/hisat2/build/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                    ])
+                    input[1] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ])
+                    input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                    """
+                }
+            }
+
+            run("HISAT2_BUILD", alias: "HISAT2_BUILD_STUB") {
+                script "../../../../modules/nf-core/hisat2/build/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                    ])
+                    input[1] = Channel.of([
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ])
+                    input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.txt
+                    """
+                }
+            }
+        }
+
+    test("sarscov2 - bam - single_end") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = HISAT2_BUILD.out.index
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                input[3] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.bai[0][1]).name,
+                    file(workflow.out.bam[0][1]).name,
+                    file(workflow.out.orig_bam[0][1]).name,
+                    workflow.out.csi,
+                    workflow.out.fastq,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    workflow.out.stats,
+                    workflow.out.summary,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+    test("sarscov2 - bam - paired_end") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = HISAT2_BUILD.out.index
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                input[3] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.bai[0][1]).name,
+                    file(workflow.out.bam[0][1]).name,
+                    file(workflow.out.orig_bam[0][1]).name,
+                    workflow.out.csi,
+                    workflow.out.fastq,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    workflow.out.stats,
+                    workflow.out.summary,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("sarscov2 - bam - single_end - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = HISAT2_BUILD_STUB.out.index
+                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.txt
+                input[3] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+    test("sarscov2 - bam - paired_end - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = HISAT2_BUILD_STUB.out.index
+                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.txt
+                input[3] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

@@ -1,0 +1,84 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "3": [
+                    "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "4": [
+                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
+                ],
+                "counts_gene": [
+                    "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "counts_transcript": [
+                    "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "tpm_gene": [
+                    "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "tpm_transcript": [
+                    "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:55:29.45389"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "rsem.merged.gene_counts.tsv:md5,7d1da94077dc2f90cfb2c793ca5b7446"
+                ],
+                "1": [
+                    "rsem.merged.gene_tpm.tsv:md5,39bad606eb012456bba1d995fe0feb5f"
+                ],
+                "2": [
+                    "rsem.merged.transcript_counts.tsv:md5,e40bba0aafc5904361513b3513c217ad"
+                ],
+                "3": [
+                    "rsem.merged.transcript_tpm.tsv:md5,abbaac45f9938716c58d604299ea284e"
+                ],
+                "4": [
+                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
+                ],
+                "counts_gene": [
+                    "rsem.merged.gene_counts.tsv:md5,7d1da94077dc2f90cfb2c793ca5b7446"
+                ],
+                "counts_transcript": [
+                    "rsem.merged.transcript_counts.tsv:md5,e40bba0aafc5904361513b3513c217ad"
+                ],
+                "tpm_gene": [
+                    "rsem.merged.gene_tpm.tsv:md5,39bad606eb012456bba1d995fe0feb5f"
+                ],
+                "tpm_transcript": [
+                    "rsem.merged.transcript_tpm.tsv:md5,abbaac45f9938716c58d604299ea284e"
+                ],
+                "versions": [
+                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-09T17:13:37.377348"
+    }
+}

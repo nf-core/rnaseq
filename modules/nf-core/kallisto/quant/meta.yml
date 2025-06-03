@@ -1,0 +1,91 @@
+name: "kallisto_quant"
+description: Computes equivalence classes for reads and quantifies abundances
+keywords:
+  - quant
+  - kallisto
+  - pseudoalignment
+tools:
+  - "kallisto":
+      description: "Quantifying abundances of transcripts from RNA-Seq data, or more
+        generally of target sequences using high-throughput sequencing reads."
+      homepage: https://pachterlab.github.io/kallisto/
+      documentation: https://pachterlab.github.io/kallisto/manual
+      tool_dev_url: https://github.com/pachterlab/kallisto
+      doi: "10.1038/nbt.3519"
+      licence: ["BSD_2_clause"]
+      identifier: biotools:kallisto
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+          respectively.
+        pattern: "*.{fastq,fastq.gz}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - index:
+        type: file
+        description: Kallisto genome index.
+        pattern: "*.idx"
+  - - gtf:
+        type: file
+        description: Optional gtf file for translation of transcripts into genomic coordinates.
+        pattern: "*.gtf"
+  - - chromosomes:
+        type: file
+        description: Optional tab separated file with chromosome names and lengths.
+        pattern: "*.tsv"
+  - - fragment_length:
+        type: integer
+        description: For single-end mode only, the estimated average fragment length.
+  - - fragment_length_sd:
+        type: integer
+        description: For single-end mode only, the estimated standard deviation of the
+          fragment length.
+output:
+  - results:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}:
+          type: file
+          description: Kallisto output file
+  - json_info:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.run_info.json":
+          type: file
+          description: JSON file containing information about the run
+          pattern: "*.run_info.json"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.log":
+          type: file
+          description: File containing log information from running kallisto quant
+          pattern: "*.log.txt"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@anoronh4"
+maintainers:
+  - "@anoronh4"

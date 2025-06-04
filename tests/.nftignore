@@ -22,7 +22,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/dupradar/histogram/*_expressionHist.pdf
 {hisat2,star_rsem,star_salmon}/dupradar/scatter_plot/*_duprateExpDens.pdf
 {hisat2,star_rsem,star_salmon}/dupradar/intercepts_slope/*_intercept_slope.txt
-{hisat2,star_rsem,star_salmon}/featurecounts/*.featureCounts.{txt,tsv}.summary
+{hisat2,star_rsem,star_salmon}/featurecounts/*.featureCounts.txt.summary
 {hisat2,star_rsem,star_salmon}/picard_metrics/*.MarkDuplicates.metrics.txt
 {hisat2,star_rsem,star_salmon}/qualimap/*/css/*
 {hisat2,star_rsem,star_salmon}/qualimap/*/images_qualimapReport/*

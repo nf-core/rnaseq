@@ -31,10 +31,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -379,10 +379,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10",

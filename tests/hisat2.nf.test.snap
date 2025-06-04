@@ -28,10 +28,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
                     "hisat2": "2.2.1"
@@ -149,10 +149,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "HISAT2_ALIGN": {
                     "hisat2": "2.2.1",

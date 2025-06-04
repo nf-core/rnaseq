@@ -82,6 +82,8 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/BETA-multiqc.parquet
 {multiqc,multiqc/**}/multiqc_report_data/samtools-flagstat-pct-table.txt
 {multiqc,multiqc/**}/multiqc_report_data/samtools-flagstat-table.txt
+{multiqc,multiqc/**}/multiqc_report_data/umitools_deduplication_barplot.txt
+{multiqc,multiqc/**}/multiqc_report_data/umitools_stats_violin.txt
 {multiqc,multiqc/**}/multiqc_report_plots/{pdf,png,svg}/*.{pdf,png,svg}
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.dds.RData
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.pca.vals.txt

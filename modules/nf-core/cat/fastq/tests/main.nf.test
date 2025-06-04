@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process CAT_FASTQ"
     script "../main.nf"
     process "CAT_FASTQ"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "cat"
-    tag "cat/fastq"
 
     test("test_cat_fastq_single_end") {
 

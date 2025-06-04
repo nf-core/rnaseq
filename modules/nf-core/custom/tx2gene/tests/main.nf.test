@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "CUSTOM_TX2GENE"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "custom"
-    tag "custom/tx2gene"
-    tag "untar"
 
     test("saccharomyces_cerevisiae - gtf") {
 

@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process SAMTOOLS_IDXSTATS"
     script "../main.nf"
     process "SAMTOOLS_IDXSTATS"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "samtools"
-    tag "samtools/idxstats"
 
     test("bam") {
 

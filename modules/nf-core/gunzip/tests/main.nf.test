@@ -3,9 +3,6 @@ nextflow_process {
     name "Test Process GUNZIP"
     script "../main.nf"
     process "GUNZIP"
-    tag "gunzip"
-    tag "modules_nfcore"
-    tag "modules"
 
     test("Should run without failures") {
 

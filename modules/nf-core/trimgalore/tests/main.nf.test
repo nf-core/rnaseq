@@ -3,9 +3,6 @@ nextflow_process {
     name "Test Process TRIMGALORE"
     script "../main.nf"
     process "TRIMGALORE"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "trimgalore"
 
     test("test_trimgalore_single_end") {
 

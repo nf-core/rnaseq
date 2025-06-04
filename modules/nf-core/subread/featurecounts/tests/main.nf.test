@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "SUBREAD_FEATURECOUNTS"
     config "./nextflow.config"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "subread"
-    tag "subread/featurecounts"
 
     test("sarscov2 [bam] - forward") {
 

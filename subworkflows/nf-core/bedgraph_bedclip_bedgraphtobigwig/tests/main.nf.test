@@ -4,13 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG"
     config "./nextflow.config"
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/bedgraph_bedclip_bedgraphtobigwig"
-    tag "bedgraph_bedclip_bedgraphtobigwig"
-    tag "ucsc"
-    tag "ucsc/bedclip"
-    tag "ucsc/bedgraphtobigwig"
 
     test("sarscov2 [bedgraph] [genome_sizes]") {
 

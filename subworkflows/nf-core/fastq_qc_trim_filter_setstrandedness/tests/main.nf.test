@@ -5,19 +5,7 @@ nextflow_workflow {
     workflow "FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS"
     config "./nextflow.config"
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/fastq_qc_trim_filter_setstrandedness"
 
-    tag "bbmap/bbsplit"
-    tag "cat"
-    tag "cat/fastq"
-    tag "fastqc"
-    tag "fq/lint"
-    tag "sortmerna"
-    tag "subworkflows/fastq_fastqc_umitools_trimgalore"
-    tag "subworkflows/fastq_fastqc_umitools_fastp"
-    tag "subworkflows/fastq_subsample_fq_salmon"
 
 
 

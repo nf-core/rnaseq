@@ -20,7 +20,6 @@ Special thanks to the following for their contributions to the release:
 - [Milos Micik](https://github.com/milos7250)
 - [Maxime Garcia](https://github.com/maxulysse)
 
-
 ### Enhancements & fixes
 
 - [PR #1480](https://github.com/nf-core/rnaseq/pull/1480) - Bump version after release 3.18.0

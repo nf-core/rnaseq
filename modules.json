@@ -309,7 +309,7 @@
                     },
                     "bam_dedup_umi": {
                         "branch": "master",
-                        "git_sha": "b5828f47c17c41ce3a4c70b863c99207e3f6d37c",
+                        "git_sha": "328ce676b3688b05ed9001f6af0a42f66eaaa094",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_markduplicates_picard": {

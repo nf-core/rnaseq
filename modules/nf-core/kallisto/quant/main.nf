@@ -57,7 +57,7 @@ process KALLISTO_QUANT {
             ${strandedness} \\
             ${args} \\
             -o $prefix \\
-            ${reads} 2> >(tee -a ${prefix}/kallisto_quant.log >&2)
+            ${reads} 2>| >(tee -a ${prefix}/kallisto_quant.log >&2)
 
     cp ${prefix}/kallisto_quant.log ${prefix}.log
     cp ${prefix}/run_info.json ${prefix}.run_info.json

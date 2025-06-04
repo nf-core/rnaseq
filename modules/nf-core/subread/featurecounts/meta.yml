@@ -37,20 +37,20 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*featureCounts.txt":
+      - "*featureCounts.tsv":
           type: file
           description: Counts of reads mapping to features
-          pattern: "*featureCounts.txt"
+          pattern: "*featureCounts.tsv"
   - summary:
       - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*featureCounts.txt.summary":
+      - "*featureCounts.tsv.summary":
           type: file
           description: Summary log file
-          pattern: "*.featureCounts.txt.summary"
+          pattern: "*.featureCounts.tsv.summary"
   - versions:
       - versions.yml:
           type: file

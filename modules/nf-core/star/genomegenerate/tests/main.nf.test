@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process STAR_GENOMEGENERATE"
     script "../main.nf"
     process "STAR_GENOMEGENERATE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "star"
+    tag "star/genomegenerate"
 
     test("fasta_gtf") {
 

@@ -1,10 +1,12 @@
-// NOTE The version snaps may not be consistant
-// https://github.com/nf-core/modules/pull/4087#issuecomment-1767948035
 nextflow_process {
 
     name "Test Process CAT_FASTQ"
     script "../main.nf"
     process "CAT_FASTQ"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "cat"
+    tag "cat/fastq"
 
     test("test_cat_fastq_single_end") {
 
@@ -238,6 +240,94 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_cat_fastq_single_end_no_files") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert snapshot(process.stdout.find { it.contains("-- Check script") }.split(" -- Check script")[0]).match() }
+            )
+        }
+    }
+
+    test("test_cat_fastq_paired_end_no_files") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert snapshot(process.stdout.find { it.contains("-- Check script") }.split(" -- Check script")[0]).match() }
+            )
+        }
+    }
+
+    test("test_cat_fastq_single_end_no_files - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert snapshot(process.stdout.find { it.contains("-- Check script") }.split(" -- Check script")[0]).match() }
+            )
+        }
+    }
+
+    test("test_cat_fastq_paired_end_no_files - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert snapshot(process.stdout.find { it.contains("-- Check script") }.split(" -- Check script")[0]).match() }
             )
         }
     }

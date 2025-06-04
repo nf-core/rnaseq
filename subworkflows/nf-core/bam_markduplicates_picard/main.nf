@@ -10,8 +10,8 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     take:
     ch_reads   // channel: [ val(meta), path(reads) ]
-    ch_fasta // channel: [ path(fasta) ]
-    ch_fai   // channel: [ path(fai) ]
+    ch_fasta // channel: [ val(meta), path(fasta) ]
+    ch_fai   // channel: [ val(meta), path(fai) ]
 
     main:
 

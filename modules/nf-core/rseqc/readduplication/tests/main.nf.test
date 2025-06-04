@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process RSEQC_READDUPLICATION"
     script "../main.nf"
     process "RSEQC_READDUPLICATION"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rseqc"
+    tag "rseqc/readduplication"
 
     test("sarscov2 paired-end [bam]") {
 

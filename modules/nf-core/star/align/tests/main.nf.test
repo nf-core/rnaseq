@@ -3,6 +3,11 @@ nextflow_process {
     name "Test Process STAR_ALIGN"
     script "../main.nf"
     process "STAR_ALIGN"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "star"
+    tag "star/align"
+    tag "star/genomegenerate"
 
     test("homo_sapiens - single_end") {
         config "./nextflow.config"

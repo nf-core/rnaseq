@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::bioconductor-summarizedexperiment=1.32.0"
+  - bioconda::bioconductor-summarizedexperiment=1.32.0

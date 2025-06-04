@@ -1,5 +1,5 @@
 name: rseqc_tin
-description: Calculte TIN (transcript integrity number) from RNA-seq reads
+description: Calculate TIN (transcript integrity number) from RNA-seq reads
 keywords:
   - rnaseq
   - transcript

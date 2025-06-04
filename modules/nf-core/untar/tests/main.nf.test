@@ -3,6 +3,9 @@ nextflow_process {
     name "Test Process UNTAR"
     script "../main.nf"
     process "UNTAR"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "untar"
 
     test("test_untar") {
 

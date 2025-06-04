@@ -14,7 +14,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Read template version from .nf-core.yml
-        uses: nichmor/minimal-read-yaml@v0.0.2
+        uses: nichmor/minimal-read-yaml@1f7205277e25e156e1f63815781db80a6d490b8f # v0.0.2
         id: read_yml
         with:
           config: ${{ github.workspace }}/.nf-core.yml

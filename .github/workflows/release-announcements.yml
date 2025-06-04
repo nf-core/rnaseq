@@ -30,7 +30,7 @@ jobs:
   bsky-post:
     runs-on: ubuntu-latest
     steps:
-      - uses: zentered/bluesky-post-action@80dbe0a7697de18c15ad22f4619919ceb5ccf597 # v0.1.0
+      - uses: zentered/bluesky-post-action@4aa83560bb3eac05dbad1e5f221ee339118abdd2 # v0.2.0
         with:
           post: |
             Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!

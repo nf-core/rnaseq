@@ -654,4 +654,3 @@ def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_read
         log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
     }
 }
-

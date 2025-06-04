@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
+Special thanks to the following for their contributions to the release:
+
+- [Alena Nikolaeva](https://github.com/AlenaNik)
+- [Anabella Trigila](https://github.com/atrigila)
+- [Angel Pizarro](https://github.com/delagoya)
+- [Ben Sherman](https://github.com/bentsherman)
+- [Dave Carlson](https://github.com/davidecarlson)
+- [Gabriel Lichtenstein](https://github.com/glichtenstein)
+- [Lorenzo Fontana](https://github.com/fntlnz)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Milos Micik](https://github.com/milos7250)
+- [Maxime Garcia](https://github.com/maxulysse)
+
 ### Enhancements & fixes
 
 - [PR #1480](https://github.com/nf-core/rnaseq/pull/1480) - Bump version after release 3.18.0
@@ -23,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1553](https://github.com/nf-core/rnaseq/pull/1553) - Make jobs automatically resubmit for exit code 175
 - [PR #1556](https://github.com/nf-core/rnaseq/pull/1556) - Update index docs to remove references to 'indexing only mode'
 - [PR #1558](https://github.com/nf-core/rnaseq/pull/1558) - Remove patches and bump modules for ARM compat
+- [PR #1560](https://github.com/nf-core/rnaseq/pull/1560) - General modules update, include updating subworkflows for stats fixes
 
 # 3.18.0 - 2024-12-19
 

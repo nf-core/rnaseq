@@ -4,7 +4,7 @@
             220,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.1
+                    "bbmap": 39.18
                 },
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -48,10 +48,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "MULTIQC_CUSTOM_BIOTYPE": {
                     "python": "3.9.5"
@@ -779,24 +779,24 @@
                 "star_salmon/featurecounts",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/WT_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/WT_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/WT_REP2.featureCounts.txt",
-                "star_salmon/featurecounts/WT_REP2.featureCounts.txt.summary",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "star_salmon/log",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.final.out",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.out",
@@ -1335,19 +1335,19 @@
                 "WT_REP2_dupMatrix.txt:md5,bab18079153627205e5d907d8dfba677",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,accedae963f399d3b47effd8eda41edb",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.txt:md5,e37ededa12690a8ccae2eb42dac47ed6",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,1769902d5214f137e12f89156c5334c9",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,782f5001d411ba79314ba77f7d36b157",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,84cdcb79270d27007457fcaed5a1ad1b",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,5b9b5bbbb20c0cab3df44c0e26cc9e65",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,1c9d07d9f9d12219d2b9f761f854eced",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,109c8988ccc98e6d2a45c3d55b07f2bd",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,83037849e03ca42702e2a7df0e01b7c4",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,97caee79e83b5fce6e5504c0daefe474",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.txt:md5,2d37cf435f77164dc9dfd11725b60528",
+                "WT_REP1.featureCounts.tsv:md5,2aa40a90f397b5efd8409b8df8f3d520",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,e6bec82076f4cb2eff39f0d1bae70dc9",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.txt:md5,dd94f2f0c2ca58b9436429e33effd524",
+                "WT_REP2.featureCounts.tsv:md5,120171de51a8697aee507a6acb424191",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -1400,14 +1400,14 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-03T18:18:03.365506226"
+        "timestamp": "2025-06-04T12:28:33.590557228"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
             28,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.1
+                    "bbmap": 39.18
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -1431,10 +1431,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "SORTMERNA_INDEX": {
                     "sortmerna": "4.3.7"

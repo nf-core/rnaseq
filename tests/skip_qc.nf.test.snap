@@ -4,7 +4,7 @@
             22,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.1
+                    "bbmap": 39.18
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -25,10 +25,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "STAR_GENOMEGENERATE": {
                     "star": "2.7.11b",
@@ -94,7 +94,7 @@
             147,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.1
+                    "bbmap": 39.18
                 },
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -124,10 +124,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.1.1"

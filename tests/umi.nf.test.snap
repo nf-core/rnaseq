@@ -45,10 +45,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "MULTIQC_CUSTOM_BIOTYPE": {
                     "python": "3.9.5"
@@ -770,24 +770,24 @@
                 "star_salmon/featurecounts",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/WT_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/WT_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/WT_REP2.featureCounts.txt",
-                "star_salmon/featurecounts/WT_REP2.featureCounts.txt.summary",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "star_salmon/log",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.final.out",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.out",
@@ -1321,7 +1321,6 @@
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,263834175c1a124e529c686b433fd005",
                 "multiqc_samtools_idxstats.txt:md5,bdf185faa6d15d22efedb39d38c84943",
-                "multiqc_umitools_dedup.txt:md5,bad73f567baddb2272488b0e78e208cb",
                 "multiqc_umitools_extract.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "qualimap_gene_coverage_profile_Counts.txt:md5,48d6c0b4df0f6f535a4526fc74b0fd47",
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,8974b37cbdbbc2a23ca103a3a4c10dd4",
@@ -1330,8 +1329,6 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,53addd7b78d8ae224920ec9b97489d72",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,2cae5122b2e6371f068722ed666678a1",
-                "umitools_deduplication_barplot.txt:md5,a2d6295db66f53d1044b261a05352782",
-                "umitools_stats_violin.txt:md5,136374122cf99fb0771667fcb9b48aee",
                 "ambig_info.tsv:md5,0b462f9b2d8eff1b4d76b7433434899c",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1397,19 +1394,19 @@
                 "WT_REP2_dupMatrix.txt:md5,60e583c84a0d8b31cb667703c56d6c33",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,d0e2b4a2e14fa97ad49c4baacfb1d5e3",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.txt:md5,c90762d8ee1df9219dc643b68e464ca0",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,3f65cd0875ee679cc608d64c42daa40a",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,619bb912961ef626647f713335935a5f",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,4e0769c943c89adcaa3bab14b6d1cd88",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,493c34e3bffcb1833bf47c052d35d168",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,1b2f0f0a41e2c85592ccbfdb2a77f99e",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,42f5e8ab19f3791494e78a827d8d2c9f",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,6e9b9ffcb46068a9b8fb12af96e0671a",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,76e6acbdf45a12e2053c5bc80c16736a",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.txt:md5,10b18e11692373de8ca48fe944ba45fb",
+                "WT_REP1.featureCounts.tsv:md5,aed088e05bf4139f5bc2c1fa513365f4",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,e859f48881b11b5e4e60f729391de069",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.txt:md5,19befeb287117a2f2ccd9104736be554",
+                "WT_REP2.featureCounts.tsv:md5,91fd688a5dec53b0f2597b92d8599845",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,d604a0a313ab69f8a4283270af18ae32",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,b19277790e74ab9437f849953493f04b",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,9329f50423971eaf6ae2a6a896a46660",
@@ -1500,7 +1497,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-03T19:52:30.858362722"
+        "timestamp": "2025-06-04T16:42:54.063240312"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -1544,10 +1541,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "HISAT2_ALIGN": {
                     "hisat2": "2.2.1",
@@ -1752,24 +1749,24 @@
                 "hisat2/featurecounts",
                 "hisat2/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv",
-                "hisat2/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt",
-                "hisat2/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt.summary",
+                "hisat2/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv",
+                "hisat2/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv.summary",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv",
-                "hisat2/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt",
-                "hisat2/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt.summary",
+                "hisat2/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv",
+                "hisat2/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv.summary",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv",
-                "hisat2/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt",
-                "hisat2/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt.summary",
+                "hisat2/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv",
+                "hisat2/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv.summary",
                 "hisat2/featurecounts/WT_REP1.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/WT_REP1.biotype_counts_rrna_mqc.tsv",
-                "hisat2/featurecounts/WT_REP1.featureCounts.txt",
-                "hisat2/featurecounts/WT_REP1.featureCounts.txt.summary",
+                "hisat2/featurecounts/WT_REP1.featureCounts.tsv",
+                "hisat2/featurecounts/WT_REP1.featureCounts.tsv.summary",
                 "hisat2/featurecounts/WT_REP2.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
-                "hisat2/featurecounts/WT_REP2.featureCounts.txt",
-                "hisat2/featurecounts/WT_REP2.featureCounts.txt.summary",
+                "hisat2/featurecounts/WT_REP2.featureCounts.tsv",
+                "hisat2/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "hisat2/log",
                 "hisat2/log/RAP1_IAA_30M_REP1.hisat2.summary.log",
                 "hisat2/log/RAP1_UNINDUCED_REP1.hisat2.summary.log",
@@ -2597,19 +2594,19 @@
                 "WT_REP2_dupMatrix.txt:md5,b944b0f71ef8a98b5a4d53f4542c8e6f",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,8433a395e65315feb0f8bfca4a1d1aba",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.txt:md5,1ecf699b693201b29cadd187bb0f2971",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,783a4395a02312e94b9f890fb9e18f6e",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,036ab790c1e5fb2625c543ddccbf492d",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,5776b0c29cfbf0551a1e9020c1d799c0",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,cf7743483c5b41d91b66a7de10429605",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,5784c14524d6d06a927a745f1398d90e",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,9a53ceb0d1357e8015dedbd77cf620cc",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,5636fc34fd0b6da8397932fcf0c98dff",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,e9b102b8576a141a6cc0ce4876b1b5ea",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.txt:md5,fcda1cfb8b3664e95962c65cbbd45b9e",
+                "WT_REP1.featureCounts.tsv:md5,5beaa06717eed87f776e7b0a3dbe3170",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,6760be59877c02cb7ca5128e5be05f8e",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.txt:md5,a2b116e5a1ddbf47659eba4c02ca9c84",
+                "WT_REP2.featureCounts.tsv:md5,0b1b36c514e031fcab19a2b227e265fa",
                 "coverage_profile_along_genes_(high).txt:md5,b10337c576a87e918a30c0e1f497752d",
                 "coverage_profile_along_genes_(low).txt:md5,0d7a6b63a10241843b5380f1ab16a160",
                 "coverage_profile_along_genes_(total).txt:md5,0d7a6b63a10241843b5380f1ab16a160",
@@ -2732,14 +2729,14 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-03T19:41:01.203286997"
+        "timestamp": "2025-06-04T16:31:08.76843776"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [
             32,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.1
+                    "bbmap": 39.18
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -2763,10 +2760,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "STAR_GENOMEGENERATE": {
                     "star": "2.7.11b",

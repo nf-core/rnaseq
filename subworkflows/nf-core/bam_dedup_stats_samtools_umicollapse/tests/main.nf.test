@@ -5,20 +5,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE"
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/bam_dedup_stats_samtools_umicollapse"
-    tag "subworkflows/bam_stats_samtools"
-    tag "bam_stats_samtools"
-    tag "bwa/index"
-    tag "bwa/mem"
-    tag "samtools"
-    tag "samtools/index"
-    tag "samtools/stats"
-    tag "samtools/idxstats"
-    tag "samtools/flagstat"
-    tag "umicollapse"
-    tag "umitools/extract"
 
     test("sarscov2_bam_bai") {
 

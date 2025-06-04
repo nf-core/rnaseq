@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::bioconductor-dupradar=1.32.0"
+  - bioconda::bioconductor-dupradar=1.32.0

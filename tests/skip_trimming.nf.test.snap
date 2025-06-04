@@ -4,7 +4,7 @@
             199,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.1
+                    "bbmap": 39.18
                 },
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -48,10 +48,10 @@
                     "python": "3.9.5"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.1
+                    "gunzip": 1.13
                 },
                 "MULTIQC_CUSTOM_BIOTYPE": {
                     "python": "3.9.5"
@@ -667,24 +667,24 @@
                 "star_salmon/featurecounts",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt",
-                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.txt.summary",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/WT_REP1.featureCounts.txt",
-                "star_salmon/featurecounts/WT_REP1.featureCounts.txt.summary",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
-                "star_salmon/featurecounts/WT_REP2.featureCounts.txt",
-                "star_salmon/featurecounts/WT_REP2.featureCounts.txt.summary",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "star_salmon/log",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.final.out",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.out",
@@ -1199,19 +1199,19 @@
                 "WT_REP2_dupMatrix.txt:md5,5052efd01f5086d394499b9c4626deb1",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,bc80cee5887507179965623c3dfef4f9",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.txt:md5,b1ed22e51a94a0ca8f030ff4e09295aa",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,efc257c3c0f9a9d7eabc0449bbbf0f10",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,2e1d531352e9ad5935308e588dbaffe7",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.txt:md5,a0ba869a8538e9bff9bf5976cdeecda6",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,9c2cec5af63193074170637b6807f3bc",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,6fedc1d11bc8d558f61c4c4a6060040f",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.txt:md5,392538c1d377a72f6d89e5ace7e69bcd",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,6121b3a17fb3b441eb0357ec01c029bf",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,159e8125673fd75086d352ca1359d7b7",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.txt:md5,f244c5de5ffa4afdf4d23becf4fa8c8d",
+                "WT_REP1.featureCounts.tsv:md5,d55a3f4a92e22ad5f52a8f5d762e0851",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,70bdca053da2f6f8a1aa29a5e32d2228",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.txt:md5,24b7f969ede9c698de30aa0b3f881b8b",
+                "WT_REP2.featureCounts.tsv:md5,a1a4bfa395782a0c24303e285e156c91",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,20c790387ef68e041bc4ffdcd032a22f",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,ba2636236fa1d26aa72f7aff73bd41f8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1c0458f66e4af56a56f4409c120434b3",
@@ -1264,6 +1264,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-03T17:56:51.374055108"
+        "timestamp": "2025-06-04T13:13:59.406911822"
     }
 }

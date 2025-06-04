@@ -5,15 +5,6 @@ nextflow_workflow {
     workflow "BAM_DEDUP_UMI"
     config "./nextflow.config"
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/bam_dedup_umi"
-    tag "bam_dedup_stats_samtools_umicollapse"
-    tag "bam_dedup_stats_samtools_umitools"
-    tag "bam_sort_stats_samtools"
-    tag "umitools/prepareforrsem"
-    tag "samtools/sort"
-
     test("sarscov2_bam_bai - umitools - with transcriptome bams") {
 
         when {

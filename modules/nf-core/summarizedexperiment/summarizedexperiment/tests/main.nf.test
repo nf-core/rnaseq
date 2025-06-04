@@ -18,7 +18,7 @@ nextflow_process {
                 """
             }
         }
-        run("CUSTOM_TX2GENE") { 
+        run("CUSTOM_TX2GENE") {
             script "../../../custom/tx2gene/main.nf"
             process {
                 """
@@ -28,7 +28,7 @@ nextflow_process {
                 ]
                 input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
-                input[3] = 'gene_id' 
+                input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 """
             }
@@ -42,13 +42,47 @@ nextflow_process {
                 input[2] = 'kallisto'
                 """
             }
-        } 
+        }
+    }
+    test("saccharomyces_cerevisiae - multi_matrix - rowdata - coldata - unify summarized experiment") {
+
+        config "./unify.config"
+
+        when {
+            process {
+                """
+                input[0] = TXIMETA_TXIMPORT.out.counts_gene
+                        .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled)
+                        .join(TXIMETA_TXIMPORT.out.counts_gene_scaled)
+                        .join(TXIMETA_TXIMPORT.out.lengths_gene)
+                        .join(TXIMETA_TXIMPORT.out.tpm_gene)
+                        .map{tuple(it[0], [it[1], it[2], it[3], it[4], it[5]])}
+
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+		input[2] = [
+                    [ id:'gene'], // meta map
+                    file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            // Some of the log will vary between conda runs- but top bit should be fine
+            def loglines = path(process.out.log[0][1]).readLines()[0..14]
+
+            assertAll(
+                { assert process.success },
+                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata_coldata_unify") },
+                { assert snapshot(process.out.versions).match('versions_multi_matrix_rowdata_coldata_unify') }
+            )
+        }
     }
 
     test("saccharomyces_cerevisiae - multi_matrix - rowdata - coldata") {
-    
+
         config "./multi_matrix.config"
-        
+
         when {
             process {
                 """
@@ -73,11 +107,11 @@ nextflow_process {
             )
         }
     }
-    
+
     test("saccharomyces_cerevisiae - multi_matrix - rowdata") {
-        
+
         config "./multi_matrix.config"
-        
+
         when {
             process {
                 """
@@ -99,11 +133,11 @@ nextflow_process {
             )
         }
     }
-    
+
     test("saccharomyces_cerevisiae - multi_matrix") {
-        
+
         config "./multi_matrix.config"
-        
+
         when {
             process {
                 """
@@ -125,11 +159,11 @@ nextflow_process {
             )
         }
     }
-    
+
     test("saccharomyces_cerevisiae - single_matrix") {
-        
+
         config "./single_matrix.config"
-        
+
         when {
             process {
                 """
@@ -153,10 +187,10 @@ nextflow_process {
     }
 
     test("saccharomyces_cerevisiae - multi_matrix - rowdata - coldata - stub") {
-    
+
         config "./multi_matrix.config"
         options "-stub"
-        
+
         when {
             process {
                 """
@@ -178,12 +212,12 @@ nextflow_process {
             )
         }
     }
-    
+
     test("saccharomyces_cerevisiae - multi_matrix - rowdata - stub") {
-        
+
         config "./multi_matrix.config"
         options "-stub"
-        
+
         when {
             process {
                 """
@@ -202,12 +236,12 @@ nextflow_process {
             )
         }
     }
-    
+
     test("saccharomyces_cerevisiae - multi_matrix - stub") {
-        
+
         config "./multi_matrix.config"
         options "-stub"
-        
+
         when {
             process {
                 """
@@ -226,12 +260,12 @@ nextflow_process {
             )
         }
     }
-    
+
     test("saccharomyces_cerevisiae - single_matrix - stub") {
-        
+
         config "./single_matrix.config"
         options "-stub"
-        
+
         when {
             process {
                 """
@@ -251,4 +285,3 @@ nextflow_process {
         }
     }
 }
-

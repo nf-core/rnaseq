@@ -288,6 +288,8 @@
                 "multiqc/star_salmon/multiqc_report_data/samtools_alignment_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/star_alignment_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/star_summary_table.txt",
+                "multiqc/star_salmon/multiqc_report_data/umitools_deduplication_barplot.txt",
+                "multiqc/star_salmon/multiqc_report_data/umitools_stats_violin.txt",
                 "multiqc/star_salmon/multiqc_report_plots",
                 "multiqc/star_salmon/multiqc_report_plots/pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/cutadapt_filtered_reads_plot-cnt.pdf",
@@ -769,18 +771,23 @@
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv",
                 "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP1.biotype_counts_rrna_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP1.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP1.featureCounts.tsv.summary",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
                 "star_salmon/featurecounts/WT_REP2.featureCounts.tsv",
+                "star_salmon/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "star_salmon/log",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.final.out",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.out",
@@ -1491,7 +1498,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-04T13:48:30.729450267"
+        "timestamp": "2025-06-04T16:42:54.063240312"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -1744,18 +1751,23 @@
                 "hisat2/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv",
                 "hisat2/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv",
+                "hisat2/featurecounts/RAP1_IAA_30M_REP1.featureCounts.tsv.summary",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv",
+                "hisat2/featurecounts/RAP1_UNINDUCED_REP1.featureCounts.tsv.summary",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv",
                 "hisat2/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv",
+                "hisat2/featurecounts/RAP1_UNINDUCED_REP2.featureCounts.tsv.summary",
                 "hisat2/featurecounts/WT_REP1.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/WT_REP1.biotype_counts_rrna_mqc.tsv",
                 "hisat2/featurecounts/WT_REP1.featureCounts.tsv",
+                "hisat2/featurecounts/WT_REP1.featureCounts.tsv.summary",
                 "hisat2/featurecounts/WT_REP2.biotype_counts_mqc.tsv",
                 "hisat2/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
                 "hisat2/featurecounts/WT_REP2.featureCounts.tsv",
+                "hisat2/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "hisat2/log",
                 "hisat2/log/RAP1_IAA_30M_REP1.hisat2.summary.log",
                 "hisat2/log/RAP1_UNINDUCED_REP1.hisat2.summary.log",
@@ -2718,7 +2730,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-04T13:36:42.906515367"
+        "timestamp": "2025-06-04T16:31:08.76843776"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [

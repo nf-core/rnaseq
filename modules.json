@@ -354,7 +354,7 @@
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
-                        "git_sha": "4c2d06a5e79abf08ba7f04c58e39c7dad75f094d",
+                        "git_sha": "f232063fa5ecf4837df2da7db7857b5ddd62a3d5",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_qc_trim_filter_setstrandedness": {

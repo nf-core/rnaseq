@@ -220,9 +220,8 @@
                     },
                     "sortmerna": {
                         "branch": "master",
-                        "git_sha": "8c44d9ce28f5f8abdbe08c21f08bd8c329fcb235",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"],
-                        "patch": "modules/nf-core/sortmerna/sortmerna.diff"
+                        "git_sha": "d4a425ce59fc803a11e520f16680ede9af09761f",
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "star/align": {
                         "branch": "master",

@@ -4,8 +4,8 @@ process SORTMERNA {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/46/467e19acaf6359da17ec40d1694d8425f20a1293a88336f209469ff2355fc012/data' :
-        'community.wave.seqera.io/library/sortmerna:4.3.7--e67882513698de44' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/91/919d9c8f5f2c3221a94efe96b81bde0c953c13ebb0a1eca6b690b90666006cad/data' :
+        'community.wave.seqera.io/library/sortmerna:4.3.7--b730cad73fc42b8e' }"
 
     input:
     tuple val(meta), path(reads)

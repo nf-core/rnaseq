@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1553](https://github.com/nf-core/rnaseq/pull/1553) - Make jobs automatically resubmit for exit code 175
 - [PR #1556](https://github.com/nf-core/rnaseq/pull/1556) - Update index docs to remove references to 'indexing only mode'
 - [PR #1558](https://github.com/nf-core/rnaseq/pull/1558) - Remove patches and bump modules for ARM compat
+- [PR #1560](https://github.com/nf-core/rnaseq/pull/1560) - General modules update, include updating subworkflows for stats fixes
 
 # 3.18.0 - 2024-12-19
 

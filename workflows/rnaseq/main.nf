@@ -96,7 +96,6 @@ workflow RNASEQ {
     ch_ribo_db           // channel: path(sortmerna_fasta_list)
     ch_sortmerna_index   // channel: path(sortmerna/index/)
     ch_splicesites       // channel: path(genome.splicesites.txt)
-    make_sortmerna_index // boolean: Whether to create an index before running sortmerna
 
     main:
 
@@ -146,7 +145,7 @@ workflow RNASEQ {
         params.skip_trimming,
         params.skip_umi_extract,
         !salmon_index_available,
-        !params.sortmerna_index && params.remove_ribo_rna,
+        false,
         params.trimmer,
         params.min_trimmed_reads,
         params.save_trimmed,

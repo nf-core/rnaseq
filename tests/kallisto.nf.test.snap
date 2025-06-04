@@ -154,6 +154,7 @@
                 "multiqc",
                 "multiqc/multiqc_report.html",
                 "multiqc/multiqc_report_data",
+                "multiqc/multiqc_report_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_report_data/cutadapt_filtered_reads_plot.txt",
                 "multiqc/multiqc_report_data/cutadapt_trimmed_sequences_plot_3_Counts.txt",
                 "multiqc/multiqc_report_data/cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt",
@@ -196,7 +197,6 @@
                 "multiqc/multiqc_report_plots/pdf/fastqc_trimmed_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_report_plots/pdf/fastqc_trimmed_sequence_duplication_levels_plot.pdf",
                 "multiqc/multiqc_report_plots/pdf/fastqc_trimmed_top_overrepresented_sequences_table.pdf",
-                "multiqc/multiqc_report_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_report_plots/pdf/kallisto_alignment-cnt.pdf",
                 "multiqc/multiqc_report_plots/pdf/kallisto_alignment-pct.pdf",
                 "multiqc/multiqc_report_plots/png",
@@ -216,7 +216,6 @@
                 "multiqc/multiqc_report_plots/png/fastqc_trimmed_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_report_plots/png/fastqc_trimmed_sequence_duplication_levels_plot.png",
                 "multiqc/multiqc_report_plots/png/fastqc_trimmed_top_overrepresented_sequences_table.png",
-                "multiqc/multiqc_report_plots/png/general_stats_table.png",
                 "multiqc/multiqc_report_plots/png/kallisto_alignment-cnt.png",
                 "multiqc/multiqc_report_plots/png/kallisto_alignment-pct.png",
                 "multiqc/multiqc_report_plots/svg",
@@ -236,7 +235,6 @@
                 "multiqc/multiqc_report_plots/svg/fastqc_trimmed_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_report_plots/svg/fastqc_trimmed_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_report_plots/svg/fastqc_trimmed_top_overrepresented_sequences_table.svg",
-                "multiqc/multiqc_report_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_report_plots/svg/kallisto_alignment-cnt.svg",
                 "multiqc/multiqc_report_plots/svg/kallisto_alignment-pct.svg",
                 "pipeline_info",
@@ -275,9 +273,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2025-05-02T19:02:06.6706681"
+        "timestamp": "2025-06-03T15:00:01.384299008"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [

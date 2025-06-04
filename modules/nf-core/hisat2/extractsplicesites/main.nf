@@ -4,8 +4,8 @@ process HISAT2_EXTRACTSPLICESITES {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/hisat2:2.2.1--h1b792b2_3' :
-        'biocontainers/hisat2:2.2.1--h1b792b2_3' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d2/d2ec9b73c6b92e99334c6500b1b622edaac316315ac1708f0b425df3131d0a83/data' :
+        'community.wave.seqera.io/library/hisat2_samtools:6be64e12472a7b75' }"
 
     input:
     tuple val(meta), path(gtf)

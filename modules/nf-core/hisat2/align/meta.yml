@@ -63,7 +63,7 @@ output:
             e.g. [ id:'test', single_end:false ]
       - "*.log":
           type: file
-          description: Aligment log
+          description: Alignment log
           pattern: "*.log"
   - fastq:
       - meta:

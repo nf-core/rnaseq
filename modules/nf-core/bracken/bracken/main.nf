@@ -4,8 +4,8 @@ process BRACKEN_BRACKEN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bracken:2.9--py38h2494328_0':
-        'biocontainers/bracken:2.9--py38h2494328_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f3/f30aa99d8d4f6ff1104f56dbacac95c1dc0905578fb250c80f145b6e80703bd1/data':
+        'community.wave.seqera.io/library/bracken:3.1--22a4e66ce04c5e01' }"
 
     input:
     tuple val(meta), path(kraken_report)

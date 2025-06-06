@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - conda-forge::perl>=5.26.2
+  - conda-forge::perl=5.26.2

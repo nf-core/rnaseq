@@ -52,7 +52,7 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "Workflow": {
-                    "nf-core/rnaseq": "v3.19.0dev"
+                    "nf-core/rnaseq": "v3.19.0"
                 }
             },
             [

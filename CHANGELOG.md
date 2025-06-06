@@ -37,6 +37,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1556](https://github.com/nf-core/rnaseq/pull/1556) - Update index docs to remove references to 'indexing only mode'
 - [PR #1558](https://github.com/nf-core/rnaseq/pull/1558) - Remove patches and bump modules for ARM compat
 - [PR #1560](https://github.com/nf-core/rnaseq/pull/1560) - General modules update, include updating subworkflows for stats fixes
+- [PR #1563](https://github.com/nf-core/rnaseq/pull/1563) - Version bumps ahead of 3.19.0 release
 
 # 3.18.0 - 2024-12-19
 

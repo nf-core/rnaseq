@@ -40,7 +40,6 @@ Special thanks to the following for their contributions to the release:
 - [PR #1563](https://github.com/nf-core/rnaseq/pull/1563) - Version bumps ahead of 3.19.0 release
 - [PR #1565](https://github.com/nf-core/rnaseq/pull/1565) - Improve reproducibility with Conda
 
-
 # 3.18.0 - 2024-12-19
 
 ### Credits

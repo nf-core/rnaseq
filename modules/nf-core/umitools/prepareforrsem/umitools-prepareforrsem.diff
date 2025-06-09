@@ -1,0 +1,23 @@
+Changes in component 'nf-core/umitools/prepareforrsem'
+Changes in 'umitools/prepareforrsem/environment.yml':
+--- modules/nf-core/umitools/prepareforrsem/environment.yml
++++ modules/nf-core/umitools/prepareforrsem/environment.yml
+@@ -5,3 +5,12 @@
+   - bioconda
+ dependencies:
+   - bioconda::umi_tools=1.1.5
++  - python=3.9.18
++  - matplotlib=3.8.2
++  - scipy=1.12.0
++  - regex=2023.12.25
++  - numpy=1.26.4
++  - pandas=2.2.0
++  - pysam=0.22.0
++  - future=0.18.3
++  - pybktree=1.1
+
+'modules/nf-core/umitools/prepareforrsem/meta.yml' is unchanged
+'modules/nf-core/umitools/prepareforrsem/main.nf' is unchanged
+'modules/nf-core/umitools/prepareforrsem/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/umitools/prepareforrsem/tests/main.nf.test' is unchanged
+************************************************************

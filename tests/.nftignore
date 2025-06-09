@@ -87,6 +87,7 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/umitools_stats_violin.txt
 {multiqc,multiqc/**}/multiqc_report_plots/{pdf,png,svg}/*.{pdf,png,svg}
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.dds.RData
+{salmon,star_rsem,star_salmon}/deseq2_qc/R_sessionInfo.log
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.pca.vals.txt
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.plots.pdf
 {salmon,star_rsem,star_salmon}/deseq2_qc/deseq2.sample.dists.txt

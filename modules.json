@@ -275,17 +275,20 @@
                     "umitools/dedup": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["bam_dedup_stats_samtools_umitools"]
+                        "installed_by": ["bam_dedup_stats_samtools_umitools", "modules"],
+                        "patch": "modules/nf-core/umitools/dedup/umitools-dedup.diff"
                     },
                     "umitools/extract": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
+                        "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore", "modules"],
+                        "patch": "modules/nf-core/umitools/extract/umitools-extract.diff"
                     },
                     "umitools/prepareforrsem": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["bam_dedup_umi", "modules"]
+                        "installed_by": ["bam_dedup_umi", "modules"],
+                        "patch": "modules/nf-core/umitools/prepareforrsem/umitools-prepareforrsem.diff"
                     },
                     "untar": {
                         "branch": "master",

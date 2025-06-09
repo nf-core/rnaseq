@@ -5,7 +5,7 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "bbmap/bbsplit": {
+                    "bbmap/bbsplit":   {
                         "branch": "master",
                         "git_sha": "8864afe586537bf562eac7b83349c26207f3cb4d",
                         "installed_by":  ["fastq_qc_trim_filter_setstrandedness","modules"]
